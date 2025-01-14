@@ -11,9 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodYou"
+        android:name=".infrastructure.android.FoodYouApplication"
         tools:targetApi="31">
         <activity
-            android:name=".infrastructure.MainActivity"
+            android:name=".infrastructure.android.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.FoodYou"
             android:windowSoftInputMode="adjustResize">

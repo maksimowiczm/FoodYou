@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.infrastructure
+package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
