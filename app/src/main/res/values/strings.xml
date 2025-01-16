@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">FoodYou</string>
+    <string name="app_name" translatable="false">FoodYou</string>
+
+    <string name="meal_name_breakfast">Breakfast</string>
+    <string name="meal_name_lunch">Lunch</string>
+    <string name="meal_name_dinner">Dinner</string>
+    <string name="meal_name_snacks">Snacks</string>
+
+    <string name="x_out_of_y_kcal">%1$s / %2$s kcal</string>
+
+    <string name="headline_diary">Diary</string>
+
+    <string name="action_go_to_today">Go to today</string>
+    <string name="action_add_product">Add product</string>
 </resources>

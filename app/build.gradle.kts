@@ -3,6 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.gradle.ktlint)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -11,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.maksimowiczm.foodyou"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -34,14 +37,28 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
-        allWarningsAsErrors = true
     }
     buildFeatures {
         compose = true
     }
 }
 
+room {
+    schemaDirectory("$projectDir/src/main/assets/schemas")
+}
+
 dependencies {
+
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.androidx.datastore.preferences)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    implementation(libs.androidx.foundation)
 
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
