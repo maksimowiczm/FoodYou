@@ -20,8 +20,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
-import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +32,7 @@ import java.time.LocalDate
 
 @Composable
 fun DiaryScreen(
-    onAddProductToMeal: (Meal) -> Unit,
+    onAddProductToMeal: (Meal, LocalDate) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiaryViewModel = koinViewModel()
 ) {
@@ -61,7 +61,9 @@ fun DiaryScreen(
         formatMonthYear = viewModel::formatMonthYear,
         formatFullDate = viewModel::formatFullDate,
         observeDiaryDay = viewModel::observeDiaryDay,
-        onAddProductToMeal = onAddProductToMeal,
+        onAddProductToMeal = {
+            onAddProductToMeal(it, diaryState.selectedDate)
+        },
         modifier = modifier
     )
 }

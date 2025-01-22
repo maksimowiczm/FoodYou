@@ -4,7 +4,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import okio.Path
 
 fun createDataStore(productFile: () -> Path): DataStore<Preferences> {
@@ -17,6 +19,12 @@ fun <T> DataStore<Preferences>.observe(
     key: Preferences.Key<T>
 ) = data.map { preferences ->
     preferences[key]
+}
+
+suspend fun <T> DataStore<Preferences>.get(
+    key: Preferences.Key<T>
+): T? {
+    return observe(key).first()
 }
 
 suspend fun DataStore<Preferences>.set(

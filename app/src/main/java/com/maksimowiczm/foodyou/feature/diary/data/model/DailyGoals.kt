@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.data.model
 
+import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import kotlin.math.roundToInt
 
 data class DailyGoals(

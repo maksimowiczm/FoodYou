@@ -1,13 +1,17 @@
 package com.maksimowiczm.foodyou.feature.diary.data
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
+import com.maksimowiczm.foodyou.feature.addfood.data.model.toDomain
+import com.maksimowiczm.foodyou.feature.addfood.data.model.toEntity
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
-import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
+import com.maksimowiczm.foodyou.feature.diary.data.model.Portion
 import com.maksimowiczm.foodyou.feature.diary.data.model.defaultGoals
-import com.maksimowiczm.foodyou.feature.diary.data.model.toDomain
-import com.maksimowiczm.foodyou.feature.diary.database.DiaryDao
+import com.maksimowiczm.foodyou.feature.diary.data.model.toPortion
+import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
 import kotlinx.coroutines.CoroutineScope
@@ -21,10 +25,12 @@ import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 internal class DiaryRepositoryImpl(
-    private val diaryDao: DiaryDao,
+    diaryDatabase: DiaryDatabase,
     private val dataStore: DataStore<Preferences>,
     private val ioScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 ) : DiaryRepository {
+    private val diaryDao = diaryDatabase.diaryDao()
+
     override fun getSelectedDate(): LocalDate = runBlocking(ioScope.coroutineContext) {
         dataStore
             .observe(DiaryPreferences.selectedDateEpoch)
@@ -94,26 +100,53 @@ internal class DiaryRepositoryImpl(
         }
     }
 
+    override fun observePortionsByMealDate(meal: Meal, date: LocalDate): Flow<List<Portion>> {
+        return diaryDao.productsWithMeasurementStream(
+            epochDay = date.toEpochDay(),
+            mealId = meal.toEntity().value
+        ).map { list ->
+            list.mapNotNull { it.toPortion() }
+        }
+    }
+
     override fun observeDiaryDay(date: LocalDate): Flow<DiaryDay> {
         val epochDay = date.toEpochDay()
 
         return combine(
-            diaryDao.observeMealProducts(epochDay),
+            diaryDao.productsWithMeasurementStream(
+                epochDay = epochDay
+            ),
             observeCurrentGoals()
         ) { products, goals ->
 
             val meals = products
-                .groupBy { it.mealProduct.mealId }
+                .groupBy { it.weightMeasurement.mealId }
                 .map { (mealId, products) ->
-                    mealId.toDomain() to products.map { it.toDomain() }
+                    val portions = products
+                        .map { it to it.toPortion() }
+                        .filter { (entity, portion) ->
+                            val isNull = portion != null
+                            Log.w(
+                                TAG,
+                                "ProductWithWeightMeasurement ${entity.weightMeasurement.id} is corrupted"
+                            )
+                            isNull
+                        }
+                        .map { it.second!! }
+
+                    mealId.toDomain() to portions
                 }
                 .toMap()
 
             return@combine DiaryDay(
                 date = date,
-                mealProducts = meals,
+                productPotions = meals,
                 dailyGoals = goals
             )
         }
+    }
+
+    companion object {
+        private const val TAG = "DiaryRepositoryImpl"
     }
 }

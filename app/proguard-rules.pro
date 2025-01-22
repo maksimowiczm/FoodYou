@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep,allowoptimization enum com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
+-keep,allowobfuscation,allowoptimization class com.maksimowiczm.foodyou.feature.product.network.openfoodfacts.model.** { *; }

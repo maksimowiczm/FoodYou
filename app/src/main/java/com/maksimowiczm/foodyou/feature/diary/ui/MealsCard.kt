@@ -38,8 +38,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.R
+import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
-import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
 import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalDiaryPalette
 import com.maksimowiczm.foodyou.ui.component.ProgressIndicator

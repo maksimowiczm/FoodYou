@@ -17,18 +17,31 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // -- OPEN FOOD FACTS --
+        // https://openfoodfacts.github.io/openfoodfacts-server/api/#authentication
+        // I know that this is in apk file, but it is not in git repository
+        buildConfigField("String", "CONTACT_EMAIL", property("CONTACT_EMAIL").toString())
+
+        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org/\"")
+        // Use cached open food facts data for development
+        // buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"<cache-address>\"")
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            // Test minified version with debug signing config
+            // signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -38,16 +51,52 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+
+    flavorDimensions += "version"
+
+    productFlavors {
+        /**
+         * Open source flavour. This flavour is used for the open source version of the app. It
+         * allows only the open source dependencies to be used.
+         */
+        create("opensource") {
+            dimension = "version"
+            applicationIdSuffix = ".opensource"
+
+            buildFeatures {
+                viewBinding = true
+            }
+        }
+    }
+
+    sourceSets {
+        getByName("opensource") {
+            res.srcDirs("src/opensource/res")
+            java.srcDirs("src/opensource/java")
+        }
     }
 }
 
 room {
-    schemaDirectory("$projectDir/src/main/assets/schemas")
+    schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {
+
+    implementation(libs.accompanist.permissions)
+    "opensourceImplementation"(libs.zxing.android.embedded)
+
+    implementation(libs.kotlin.result)
+
+    // Retrofit
+    implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
 
     implementation(libs.kotlinx.serialization.json)
 

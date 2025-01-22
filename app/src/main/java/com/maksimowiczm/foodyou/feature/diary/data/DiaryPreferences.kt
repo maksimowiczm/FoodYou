@@ -5,15 +5,15 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 
 object DiaryPreferences {
-    val selectedDateEpoch = longPreferencesKey("SELECTED_DATE_EPOCH")
+    val selectedDateEpoch = longPreferencesKey("selected_date_epoch")
 
-    val caloriesGoal = intPreferencesKey("CALORIES_GOAL")
-    val proteinsGoal = floatPreferencesKey("PROTEINS_GOAL")
-    val carbohydratesGoal = floatPreferencesKey("CARBOHYDRATES_GOAL")
-    val fatsGoal = floatPreferencesKey("FATS_GOAL")
+    val caloriesGoal = intPreferencesKey("calories_goal")
+    val proteinsGoal = floatPreferencesKey("proteins_goal")
+    val carbohydratesGoal = floatPreferencesKey("carbohydrates_goal")
+    val fatsGoal = floatPreferencesKey("fats_goal")
 
-    val breakfastCalories = floatPreferencesKey("BREAKFAST_CALORIES")
-    val lunchCalories = floatPreferencesKey("LUNCH_CALORIES")
-    val dinnerCalories = floatPreferencesKey("DINNER_CALORIES")
-    val snacksCalories = floatPreferencesKey("SNACKS_CALORIES")
+    val breakfastCalories = floatPreferencesKey("breakfast_calories")
+    val lunchCalories = floatPreferencesKey("lunch_calories")
+    val dinnerCalories = floatPreferencesKey("dinner_calories")
+    val snacksCalories = floatPreferencesKey("snacks_calories")
 }

@@ -8,11 +8,17 @@ import kotlinx.coroutines.flow.Flow
 interface DiaryDao {
     @Query(
         """
-        SELECT * 
-        FROM MealProductEntity
-        INNER JOIN ProductEntity p ON p.id = productId
-        WHERE diaryEpochDay = :date
+        SELECT $ProductWithWeightMeasurementSqlFields
+        FROM WeightMeasurementEntity wm
+        INNER JOIN ProductEntity p ON p.id = wm.productId
+        WHERE isDeleted = 0
+        AND diaryEpochDay = :epochDay 
+        AND (:mealId IS NULL OR mealId = :mealId)
+        ORDER BY wm.createdAt DESC
         """
     )
-    fun observeMealProducts(date: Long): Flow<List<MealProductWithProduct>>
+    fun productsWithMeasurementStream(
+        epochDay: Long,
+        mealId: Long? = null
+    ): Flow<List<ProductWithWeightMeasurement>>
 }

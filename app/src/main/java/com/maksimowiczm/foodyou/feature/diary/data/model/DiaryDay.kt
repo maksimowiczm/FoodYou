@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.data.model
 
+import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import java.time.LocalDate
 
 data class DiaryDay(
@@ -8,7 +9,7 @@ data class DiaryDay(
     /**
      * Map of meals with list of products for each meal.
      */
-    val mealProducts: Map<Meal, List<MealProduct>>,
+    val productPotions: Map<Meal, List<Portion>>,
 
     /**
      * Daily goals for the day.
@@ -18,7 +19,7 @@ data class DiaryDay(
     /**
      * Total calories for the meal in the diary day.
      */
-    fun totalCalories(meal: Meal) = mealProducts[meal]?.sumOf { it.totalCalories.toInt() } ?: 0
+    fun totalCalories(meal: Meal) = productPotions[meal]?.sumOf { it.totalCalories.toInt() } ?: 0
 
     /**
      * List of all meals in the diary day.

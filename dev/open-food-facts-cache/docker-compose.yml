@@ -1,0 +1,10 @@
+services:
+  nginx-cache:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - nginx_cache:/var/www/cache
+
+volumes:
+  nginx_cache:

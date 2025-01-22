@@ -1,12 +1,14 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.previewparameter
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
+import com.maksimowiczm.foodyou.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
-import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
-import com.maksimowiczm.foodyou.feature.diary.data.model.MealProduct
-import com.maksimowiczm.foodyou.feature.diary.data.model.Product
-import com.maksimowiczm.foodyou.feature.diary.data.model.WeightUnit
+import com.maksimowiczm.foodyou.feature.diary.data.model.Portion
 import com.maksimowiczm.foodyou.feature.diary.data.model.defaultGoals
+import com.maksimowiczm.foodyou.feature.product.data.model.Product
+import com.maksimowiczm.foodyou.feature.product.data.model.ProductSource
+import com.maksimowiczm.foodyou.feature.product.data.model.WeightUnit
 import java.time.LocalDate
 import java.util.Calendar
 
@@ -15,9 +17,9 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
         DiaryDay(
             date = LocalDate.of(2024, Calendar.DECEMBER, 8),
             dailyGoals = defaultGoals(),
-            mealProducts = mapOf(
+            productPotions = mapOf(
                 Meal.Breakfast to listOf(
-                    MealProduct(
+                    Portion(
                         product = Product(
                             id = 0,
                             name = "Egg",
@@ -32,13 +34,14 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
                             salt = 0.5f,
                             sodium = 0.2f,
                             fiber = 0f,
-                            packageQuantity = 60f,
-                            servingQuantity = 60f,
-                            weightUnit = WeightUnit.Gram
+                            packageWeight = 60f,
+                            servingWeight = 60f,
+                            weightUnit = WeightUnit.Gram,
+                            productSource = ProductSource.User
                         ),
-                        weight = 180f
+                        weightMeasurement = WeightMeasurement.WeightUnit(60f)
                     ),
-                    MealProduct(
+                    Portion(
                         product = Product(
                             id = 1,
                             name = "Bread",
@@ -51,11 +54,12 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
                             salt = 1.1f,
                             sodium = 0.4f,
                             fiber = 3.5f,
-                            weightUnit = WeightUnit.Gram
+                            weightUnit = WeightUnit.Gram,
+                            productSource = ProductSource.User
                         ),
-                        weight = 130f
+                        weightMeasurement = WeightMeasurement.WeightUnit(130f)
                     ),
-                    MealProduct(
+                    Portion(
                         product = Product(
                             id = 2,
                             name = "Butter",
@@ -68,13 +72,14 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
                             salt = 0.6f,
                             sodium = 0.2f,
                             fiber = 0f,
-                            weightUnit = WeightUnit.Gram
+                            weightUnit = WeightUnit.Gram,
+                            productSource = ProductSource.User
                         ),
-                        weight = 10f
+                        weightMeasurement = WeightMeasurement.WeightUnit(10f)
                     )
                 ),
                 Meal.Lunch to listOf(
-                    MealProduct(
+                    Portion(
                         product = Product(
                             id = 3,
                             name = "Chicken",
@@ -87,14 +92,15 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
                             saturatedFats = 4.1f,
                             salt = 0.1f,
                             sodium = 0.04f,
-                            packageQuantity = 600f,
-                            servingQuantity = 100f,
+                            packageWeight = 600f,
+                            servingWeight = 100f,
                             fiber = null,
-                            weightUnit = WeightUnit.Gram
+                            weightUnit = WeightUnit.Gram,
+                            productSource = ProductSource.User
                         ),
-                        weight = 200f
+                        weightMeasurement = WeightMeasurement.WeightUnit(150f)
                     ),
-                    MealProduct(
+                    Portion(
                         product = Product(
                             id = 4,
                             name = "Rice",
@@ -107,11 +113,12 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
                             salt = 0f,
                             sodium = 0.01f,
                             fiber = 0.3f,
-                            weightUnit = WeightUnit.Gram
+                            weightUnit = WeightUnit.Gram,
+                            productSource = ProductSource.User
                         ),
-                        weight = 125f
+                        weightMeasurement = WeightMeasurement.WeightUnit(125f)
                     ),
-                    MealProduct(
+                    Portion(
                         product = Product(
                             id = 5,
                             name = "Salad",
@@ -124,13 +131,14 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
                             salt = 0.1f,
                             sodium = 0.04f,
                             fiber = 1.2f,
-                            weightUnit = WeightUnit.Gram
+                            weightUnit = WeightUnit.Gram,
+                            productSource = ProductSource.User
                         ),
-                        weight = 50f
+                        weightMeasurement = WeightMeasurement.WeightUnit(50f)
                     )
                 ),
                 Meal.Dinner to listOf(
-                    MealProduct(
+                    Portion(
                         product = Product(
                             id = 6,
                             name = "Pasta",
@@ -143,11 +151,12 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
                             salt = 0f,
                             sodium = 0.01f,
                             fiber = 1.3f,
-                            weightUnit = WeightUnit.Gram
+                            weightUnit = WeightUnit.Gram,
+                            productSource = ProductSource.User
                         ),
-                        weight = 150f
+                        weightMeasurement = WeightMeasurement.WeightUnit(150f)
                     ),
-                    MealProduct(
+                    Portion(
                         product = Product(
                             id = 7,
                             name = "Tomato sauce",
@@ -161,15 +170,16 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
                             salt = 0.1f,
                             sodium = 0.04f,
                             fiber = 1.2f,
-                            packageQuantity = 500f,
-                            servingQuantity = 100f,
-                            weightUnit = WeightUnit.Gram
+                            packageWeight = 500f,
+                            servingWeight = 100f,
+                            weightUnit = WeightUnit.Gram,
+                            productSource = ProductSource.User
                         ),
-                        weight = 200f
+                        weightMeasurement = WeightMeasurement.WeightUnit(200f)
                     )
                 ),
                 Meal.Snacks to listOf(
-                    MealProduct(
+                    Portion(
                         product = Product(
                             id = 8,
                             name = "Cheese",
@@ -183,26 +193,28 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
                             salt = 1.6f,
                             sodium = 0.64f,
                             fiber = null,
-                            packageQuantity = 400f,
-                            servingQuantity = 30f,
-                            weightUnit = WeightUnit.Gram
+                            packageWeight = 400f,
+                            servingWeight = 30f,
+                            weightUnit = WeightUnit.Gram,
+                            productSource = ProductSource.User
                         ),
-                        weight = 130f
+                        weightMeasurement = WeightMeasurement.WeightUnit(30f)
                     ),
-                    MealProduct(
+                    Portion(
                         product = Product(
                             id = 9,
                             name = "Water",
-                            brand = "Rizz wasser",
+                            brand = "Rizz waesser",
                             calories = 0f,
                             proteins = 0f,
                             carbohydrates = 0f,
                             fats = 0f,
-                            packageQuantity = 2000f,
-                            servingQuantity = 300f,
-                            weightUnit = WeightUnit.Millilitre
+                            packageWeight = 2000f,
+                            servingWeight = 300f,
+                            weightUnit = WeightUnit.Millilitre,
+                            productSource = ProductSource.User
                         ),
-                        weight = 500f
+                        weightMeasurement = WeightMeasurement.WeightUnit(500f)
                     )
                 )
             )
