@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8eb45415f0e41e3ea7ba558160e3da35",
+    "identityHash": "6f42a1e3a11e7d66a0d030a1ccf7b463",
     "entities": [
       {
         "tableName": "ProductEntity",
@@ -201,11 +201,35 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "ProductQueryEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`query` TEXT NOT NULL, `date` INTEGER NOT NULL, PRIMARY KEY(`query`))",
+        "fields": [
+          {
+            "fieldPath": "query",
+            "columnName": "query",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "query"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8eb45415f0e41e3ea7ba558160e3da35')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6f42a1e3a11e7d66a0d030a1ccf7b463')"
     ]
   }
 }

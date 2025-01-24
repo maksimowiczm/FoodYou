@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,9 +12,13 @@ import com.maksimowiczm.foodyou.feature.addfood.navigation.addFoodGraph
 import com.maksimowiczm.foodyou.feature.addfood.navigation.navigateToAddFood
 import com.maksimowiczm.foodyou.feature.diary.navigation.DiaryFeature
 import com.maksimowiczm.foodyou.feature.diary.navigation.diaryGraph
+import com.maksimowiczm.foodyou.feature.product.navigation.ProductsRoute
+import com.maksimowiczm.foodyou.feature.product.navigation.navigateToProducts
+import com.maksimowiczm.foodyou.feature.product.navigation.productsGraph
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun FoodYouNavHost(
+fun SharedTransitionScope.FoodYouNavHost(
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
@@ -33,6 +39,7 @@ fun FoodYouNavHost(
             }
         )
         addFoodGraph(
+            sharedTransitionScope = this@FoodYouNavHost,
             searchOnCloseClick = {
                 navController.popBackStack<AddFoodRoute.Search>(inclusive = true)
             },
@@ -45,11 +52,38 @@ fun FoodYouNavHost(
                     )
                 )
             },
+            searchOnCreateProduct = { meal, date ->
+                navController.navigateToProducts(
+                    ProductsRoute.CreateProduct(
+                        epochDay = date.toEpochDay(),
+                        mealType = meal
+                    )
+                )
+            },
             createOnSuccess = {
                 navController.popBackStack<AddFoodRoute.CreatePortion>(inclusive = true)
             },
             createOnNavigateBack = {
                 navController.popBackStack<AddFoodRoute.CreatePortion>(inclusive = true)
+            }
+        )
+        productsGraph(
+            createOnNavigateBack = {
+                navController.popBackStack()
+            },
+            createOnSuccess = { productId, epochDay, mealType ->
+                navController.navigateToAddFood(
+                    route = AddFoodRoute.CreatePortion(
+                        productId = productId,
+                        meal = mealType,
+                        epochDay = epochDay
+                    ),
+                    navOptions = navOptions {
+                        popUpTo<ProductsRoute.CreateProduct> {
+                            inclusive = true
+                        }
+                    }
+                )
             }
         )
     }

@@ -26,7 +26,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.ui.previewparameter.BooleanPreviewParameter
+import com.maksimowiczm.foodyou.ui.preview.BooleanPreviewParameter
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 
 @Composable

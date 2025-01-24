@@ -19,7 +19,7 @@ val diaryModule = module {
 
     factory {
         DiaryRepositoryImpl(
-            diaryDatabase = get(),
+            addFoodDatabase = get(),
             dataStore = get()
         )
     }.bind<DiaryRepository>()

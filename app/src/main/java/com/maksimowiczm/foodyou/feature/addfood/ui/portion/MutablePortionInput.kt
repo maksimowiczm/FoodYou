@@ -96,7 +96,8 @@ fun MutableWeightUnitPortionInput(
         )
 
         FilledIconButton(
-            onClick = { onConfirm(portion.quantity) }
+            onClick = { onConfirm(portion.quantity) },
+            enabled = portion.error == null
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -160,7 +161,8 @@ fun MutableDefinedPortionInput(
         )
 
         FilledIconButton(
-            onClick = { onConfirm(portion.quantity) }
+            onClick = { onConfirm(portion.quantity) },
+            enabled = portion.error == null
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

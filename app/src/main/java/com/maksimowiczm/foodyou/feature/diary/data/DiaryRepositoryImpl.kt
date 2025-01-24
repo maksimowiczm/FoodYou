@@ -1,17 +1,16 @@
 package com.maksimowiczm.foodyou.feature.diary.data
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
+import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.addfood.data.model.toDomain
 import com.maksimowiczm.foodyou.feature.addfood.data.model.toEntity
+import com.maksimowiczm.foodyou.feature.addfood.database.AddFoodDao
+import com.maksimowiczm.foodyou.feature.addfood.database.AddFoodDatabase
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
-import com.maksimowiczm.foodyou.feature.diary.data.model.Portion
 import com.maksimowiczm.foodyou.feature.diary.data.model.defaultGoals
-import com.maksimowiczm.foodyou.feature.diary.data.model.toPortion
-import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
 import kotlinx.coroutines.CoroutineScope
@@ -25,11 +24,11 @@ import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 internal class DiaryRepositoryImpl(
-    diaryDatabase: DiaryDatabase,
+    addFoodDatabase: AddFoodDatabase,
     private val dataStore: DataStore<Preferences>,
     private val ioScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 ) : DiaryRepository {
-    private val diaryDao = diaryDatabase.diaryDao()
+    private val addFoodDao: AddFoodDao = addFoodDatabase.addFoodDao()
 
     override fun getSelectedDate(): LocalDate = runBlocking(ioScope.coroutineContext) {
         dataStore
@@ -100,12 +99,15 @@ internal class DiaryRepositoryImpl(
         }
     }
 
-    override fun observePortionsByMealDate(meal: Meal, date: LocalDate): Flow<List<Portion>> {
-        return diaryDao.productsWithMeasurementStream(
+    override fun observePortionsByMealDate(
+        meal: Meal,
+        date: LocalDate
+    ): Flow<List<ProductWithWeightMeasurement>> {
+        return addFoodDao.observeMeasuredProducts(
             epochDay = date.toEpochDay(),
             mealId = meal.toEntity().value
         ).map { list ->
-            list.mapNotNull { it.toPortion() }
+            list.map { it.toDomain() }
         }
     }
 
@@ -113,40 +115,28 @@ internal class DiaryRepositoryImpl(
         val epochDay = date.toEpochDay()
 
         return combine(
-            diaryDao.productsWithMeasurementStream(
+            addFoodDao.observeMeasuredProducts(
+                mealId = null,
                 epochDay = epochDay
             ),
             observeCurrentGoals()
         ) { products, goals ->
-
             val meals = products
-                .groupBy { it.weightMeasurement.mealId }
-                .map { (mealId, products) ->
-                    val portions = products
-                        .map { it to it.toPortion() }
-                        .filter { (entity, portion) ->
-                            val isNull = portion != null
-                            Log.w(
-                                TAG,
-                                "ProductWithWeightMeasurement ${entity.weightMeasurement.id} is corrupted"
-                            )
-                            isNull
-                        }
-                        .map { it.second!! }
-
-                    mealId.toDomain() to portions
+                .groupBy { it.weightMeasurement?.mealId }
+                .mapKeys { (mealId, _) ->
+                    mealId?.toDomain()
                 }
-                .toMap()
+                .filterKeys { it != null }
+                .mapKeys { it.key!! }
+                .mapValues { (_, products) ->
+                    products.map { it.toDomain() }
+                }
 
             return@combine DiaryDay(
                 date = date,
-                productPotions = meals,
+                mealProductMap = meals,
                 dailyGoals = goals
             )
         }
-    }
-
-    companion object {
-        private const val TAG = "DiaryRepositoryImpl"
     }
 }

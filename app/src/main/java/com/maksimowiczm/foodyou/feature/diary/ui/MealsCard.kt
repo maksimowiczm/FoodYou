@@ -161,7 +161,7 @@ private fun MaterialMealItem(
                 }
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(R.string.x_out_of_y_kcal, value, goalValue),
+                    text = stringResource(R.string.unit_x_out_of_y_kcal, value, goalValue),
                     style = MaterialTheme.typography.labelLarge,
                     maxLines = 1
                 )

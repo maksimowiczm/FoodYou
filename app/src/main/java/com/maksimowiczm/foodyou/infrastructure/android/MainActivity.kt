@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
             // TODO settings
             dataStore.set(
                 ProductPreferences.openFoodFactsEnabled to true,
-                ProductPreferences.openFoodCountryCode to "us"
+                ProductPreferences.openFoodCountryCode to "pl"
             )
         }
 

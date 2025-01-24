@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.previewparameter
+package com.maksimowiczm.foodyou.ui.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 

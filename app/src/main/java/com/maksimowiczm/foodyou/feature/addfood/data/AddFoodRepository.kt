@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.feature.addfood.data
 
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
-import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductSearchModel
+import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductQuery
+import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.addfood.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.addfood.data.model.WeightMeasurementEnum
-import com.maksimowiczm.foodyou.feature.product.data.model.Product
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -42,7 +42,22 @@ interface AddFoodRepository {
         meal: Meal,
         date: LocalDate,
         query: String?
-    ): Flow<QueryResult<List<ProductSearchModel>>>
+    ): Flow<QueryResult<List<ProductWithWeightMeasurement>>>
+
+    /**
+     * Observe the products that have been measured for the given meal and date.
+     *
+     * @param meal The meal of the diary entry.
+     * @param date The date of the diary entry.
+     *
+     * @return A flow of the products that have been measured for the given meal and date.
+     */
+    fun observeMeasuredProducts(
+        meal: Meal,
+        date: LocalDate
+    ): Flow<List<ProductWithWeightMeasurement>>
 
     suspend fun getQuantitySuggestionByProductId(productId: Long): QuantitySuggestion
+
+    fun observeProductQueries(limit: Int): Flow<List<ProductQuery>>
 }

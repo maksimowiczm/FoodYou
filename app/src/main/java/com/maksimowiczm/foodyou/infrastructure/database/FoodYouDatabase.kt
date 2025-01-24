@@ -6,9 +6,9 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.room.withTransaction
 import com.maksimowiczm.foodyou.feature.addfood.database.AddFoodDatabase
+import com.maksimowiczm.foodyou.feature.addfood.database.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.addfood.database.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.addfood.database.WeightMeasurementTypeConverter
-import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.feature.product.database.ProductDatabase
 import com.maksimowiczm.foodyou.feature.product.database.ProductEntity
 import com.maksimowiczm.foodyou.feature.product.database.ProductSourceConverter
@@ -17,7 +17,8 @@ import com.maksimowiczm.foodyou.feature.product.database.WeightUnitConverter
 @Database(
     entities = [
         ProductEntity::class,
-        WeightMeasurementEntity::class
+        WeightMeasurementEntity::class,
+        ProductQueryEntity::class
     ],
     version = FoodYouDatabase.VERSION
 )
@@ -30,7 +31,6 @@ abstract class FoodYouDatabase :
     TransactionProvider,
     ProductDatabase,
     AddFoodDatabase,
-    DiaryDatabase,
     RoomDatabase() {
 
     companion object {

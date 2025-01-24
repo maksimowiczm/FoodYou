@@ -24,11 +24,9 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.maksimowiczm.foodyou.R
-import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductSearchModel
+import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.addfood.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.feature.addfood.data.model.toSearchModel
-import com.maksimowiczm.foodyou.feature.addfood.ui.previewparameter.WeightMeasurementPreviewParameter
-import com.maksimowiczm.foodyou.feature.product.ui.previewparameter.ProductPreviewParameterProvider
+import com.maksimowiczm.foodyou.feature.addfood.ui.previewparameter.ProductWithWeightMeasurementPreviewParameter
 import com.maksimowiczm.foodyou.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.ui.component.ToggleButtonDefaults
@@ -190,7 +188,7 @@ object ProductSearchListItemDefaults {
     )
 }
 
-val ProductSearchModel.measurementString: String
+val ProductWithWeightMeasurement.measurementString: String
     @Composable get() = when (measurement) {
         is WeightMeasurement.Package -> {
             val quantity = measurement.quantity.toInt()
@@ -234,7 +232,7 @@ val ProductSearchModel.measurementString: String
         }
     }
 
-val ProductSearchModel.caloriesString: String
+val ProductWithWeightMeasurement.caloriesString: String
     @Composable get() = "$calories " + stringResource(R.string.unit_kcal)
 
 @Preview
@@ -243,18 +241,12 @@ val ProductSearchModel.caloriesString: String
 )
 @Composable
 private fun ProductSearchListItemPreview(
-    @PreviewParameter(WeightMeasurementPreviewParameter::class) weightMeasurement: WeightMeasurement
+    @PreviewParameter(ProductWithWeightMeasurementPreviewParameter::class) productWithWeightMeasurement: ProductWithWeightMeasurement
 ) {
-    val product = ProductPreviewParameterProvider().values.first()
-
     FoodYouTheme {
         ProductSearchListItem(
             uiModel = ProductSearchUiModel(
-                model = ProductSearchModel(
-                    product = product.toSearchModel(),
-                    measurementId = null,
-                    measurement = weightMeasurement
-                ),
+                model = productWithWeightMeasurement,
                 isLoading = false,
                 isChecked = false
             ),

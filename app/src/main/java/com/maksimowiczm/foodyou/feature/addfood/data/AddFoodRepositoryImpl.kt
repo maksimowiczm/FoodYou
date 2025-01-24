@@ -4,18 +4,19 @@ import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
-import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductSearchModel
+import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductQuery
+import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.addfood.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.feature.addfood.data.model.QuantitySuggestion.Companion.defaultSuggestion
 import com.maksimowiczm.foodyou.feature.addfood.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.feature.addfood.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.addfood.data.model.toDomain
 import com.maksimowiczm.foodyou.feature.addfood.data.model.toEntity
 import com.maksimowiczm.foodyou.feature.addfood.database.AddFoodDao
 import com.maksimowiczm.foodyou.feature.addfood.database.AddFoodDatabase
+import com.maksimowiczm.foodyou.feature.addfood.database.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.addfood.database.WeightMeasurementEntity
-import com.maksimowiczm.foodyou.feature.addfood.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.product.data.ProductPreferences
-import com.maksimowiczm.foodyou.feature.product.data.model.Product
 import com.maksimowiczm.foodyou.feature.product.data.model.toDomain
 import com.maksimowiczm.foodyou.feature.product.data.model.toEntity
 import com.maksimowiczm.foodyou.feature.product.database.ProductDao
@@ -24,7 +25,9 @@ import com.maksimowiczm.foodyou.feature.product.network.openfoodfacts.OpenFoodFa
 import com.maksimowiczm.foodyou.infrastructure.database.TransactionProvider
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -84,7 +87,7 @@ class AddFoodRepositoryImpl(
     }
 
     override suspend fun removeFood(portionId: Long) {
-        val entity = addFoodDao.getWeightMeasurement(portionId)
+        val entity = addFoodDao.observeWeightMeasurement(portionId).first()
 
         if (entity != null) {
             addFoodDao.deleteWeightMeasurement(entity.id)
@@ -95,7 +98,7 @@ class AddFoodRepositoryImpl(
         meal: Meal,
         date: LocalDate,
         query: String?
-    ): Flow<QueryResult<List<ProductSearchModel>>> {
+    ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> {
         return if (query?.all { it.isDigit() } == true) {
             queryProductsByBarcode(meal, date, query)
         } else {
@@ -107,7 +110,7 @@ class AddFoodRepositoryImpl(
         meal: Meal,
         date: LocalDate,
         barcode: String
-    ): Flow<QueryResult<List<ProductSearchModel>>> = flow {
+    ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> = flow {
         emit(QueryResult.loading(emptyList()))
 
         val products = addFoodDao.getProductsWithMeasurementByBarcode(
@@ -120,6 +123,8 @@ class AddFoodRepositoryImpl(
         if (dataStore.get(ProductPreferences.openFoodFactsEnabled) == false) {
             return@flow emit(QueryResult.success(products))
         }
+
+        emit(QueryResult.loading(products))
 
         // Otherwise, query OpenFoodFacts
         val country = dataStore.get(ProductPreferences.openFoodCountryCode)
@@ -180,7 +185,11 @@ class AddFoodRepositoryImpl(
         meal: Meal,
         date: LocalDate,
         query: String?
-    ): Flow<QueryResult<List<ProductSearchModel>>> = flow {
+    ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> = flow {
+        if (query != null) {
+            insertProductQueryWithCurrentTime(query)
+        }
+
         emit(QueryResult.loading(emptyList()))
 
         val products = addFoodDao.getProductsWithMeasurementByQuery(
@@ -193,6 +202,8 @@ class AddFoodRepositoryImpl(
         if (dataStore.get(ProductPreferences.openFoodFactsEnabled) == false || query == null) {
             return@flow emit(QueryResult.success(products))
         }
+
+        emit(QueryResult.loading(products))
 
         // Otherwise, query OpenFoodFacts
         val country = dataStore.get(ProductPreferences.openFoodCountryCode)
@@ -248,10 +259,33 @@ class AddFoodRepositoryImpl(
         }
     }
 
+    private suspend fun insertProductQueryWithCurrentTime(query: String) {
+        val zone = ZoneOffset.UTC
+        val time = LocalDateTime.now().atZone(zone)
+        val epochSeconds = time.toEpochSecond()
+
+        addFoodDao.upsertProductQuery(
+            ProductQueryEntity(
+                query = query,
+                date = epochSeconds
+            )
+        )
+    }
+
+    override fun observeMeasuredProducts(
+        meal: Meal,
+        date: LocalDate
+    ): Flow<List<ProductWithWeightMeasurement>> {
+        return addFoodDao.observeMeasuredProducts(
+            mealId = meal.toEntity().value,
+            epochDay = date.toEpochDay()
+        ).map { it.map { entity -> entity.toDomain() } }
+    }
+
     override suspend fun getQuantitySuggestionByProductId(productId: Long): QuantitySuggestion {
         val product = productDao.getProductById(productId) ?: error("Product not found")
 
-        val suggestionList = addFoodDao.getQuantitySuggestionsByProductId(productId)
+        val suggestionList = addFoodDao.observeQuantitySuggestionsByProductId(productId).first()
 
         val suggestions = suggestionList
             .associate { it.measurement to it.quantity }
@@ -270,27 +304,35 @@ class AddFoodRepositoryImpl(
         )
     }
 
+    override fun observeProductQueries(limit: Int): Flow<List<ProductQuery>> {
+        return addFoodDao.observeLatestQueries(limit).map { list ->
+            list.map { it.toDomain() }
+        }
+    }
+
     private suspend fun AddFoodDao.getProductsWithMeasurementByQuery(
         meal: Meal,
         date: LocalDate,
         query: String?
-    ): List<ProductSearchModel> = getProductsWithMeasurementByQuery(
+    ): List<ProductWithWeightMeasurement> = observeProductsWithMeasurement(
         mealId = meal.toEntity().value,
         epochDay = date.toEpochDay(),
         query = query,
+        barcode = null,
         limit = PAGE_SIZE
-    ).map { it.toDomain() }
+    ).first().map { it.toDomain() }
 
     private suspend fun AddFoodDao.getProductsWithMeasurementByBarcode(
         meal: Meal,
         date: LocalDate,
         barcode: String
-    ): List<ProductSearchModel> = getProductsWithMeasurementByBarcode(
+    ): List<ProductWithWeightMeasurement> = observeProductsWithMeasurement(
         mealId = meal.toEntity().value,
         epochDay = date.toEpochDay(),
+        query = null,
         barcode = barcode,
         limit = PAGE_SIZE
-    ).map { it.toDomain() }
+    ).first().map { it.toDomain() }
 
     companion object {
         private const val TAG = "AddFoodRepositoryImpl"
