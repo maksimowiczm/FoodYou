@@ -11,9 +11,9 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val addFoodModule = module {
-    viewModelOf(::SearchViewModel)
     viewModelOf(::PortionViewModel)
     viewModelOf(::CameraBarcodeScannerViewModel)
+    viewModelOf(::SearchViewModel)
 
     factoryOf(::AddFoodRepositoryImpl).bind<AddFoodRepository>()
 }

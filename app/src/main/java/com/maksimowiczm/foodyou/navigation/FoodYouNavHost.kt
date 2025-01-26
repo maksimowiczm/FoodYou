@@ -1,7 +1,5 @@
 package com.maksimowiczm.foodyou.navigation
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,9 +14,8 @@ import com.maksimowiczm.foodyou.feature.product.navigation.ProductsRoute
 import com.maksimowiczm.foodyou.feature.product.navigation.navigateToProducts
 import com.maksimowiczm.foodyou.feature.product.navigation.productsGraph
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.FoodYouNavHost(
+fun FoodYouNavHost(
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
@@ -39,10 +36,6 @@ fun SharedTransitionScope.FoodYouNavHost(
             }
         )
         addFoodGraph(
-            sharedTransitionScope = this@FoodYouNavHost,
-            searchOnCloseClick = {
-                navController.popBackStack<AddFoodRoute.Search>(inclusive = true)
-            },
             searchOnProductClick = { productId, meal, date ->
                 navController.navigateToAddFood(
                     route = AddFoodRoute.CreatePortion(
@@ -59,6 +52,9 @@ fun SharedTransitionScope.FoodYouNavHost(
                         mealType = meal
                     )
                 )
+            },
+            searchOnCloseClick = {
+                navController.popBackStack()
             },
             createOnSuccess = {
                 navController.popBackStack<AddFoodRoute.CreatePortion>(inclusive = true)

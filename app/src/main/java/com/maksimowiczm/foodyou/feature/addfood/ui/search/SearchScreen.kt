@@ -1,114 +1,136 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContent
+import android.content.res.Configuration
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.maksimowiczm.foodyou.feature.addfood.data.QueryResult
+import com.maksimowiczm.foodyou.feature.addfood.ui.AddFoodSharedTransitionKeys
+import com.maksimowiczm.foodyou.feature.addfood.ui.previewparameter.ProductWithWeightMeasurementPreviewParameter
+import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
+import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
+import com.maksimowiczm.foodyou.ui.preview.asList
+import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.SearchScreen(
-    onCloseClick: () -> Unit,
-    onProductClick: (productId: Long) -> Unit,
+fun SearchScreen(
     onCreateProduct: () -> Unit,
+    onProductClick: (productId: Long) -> Unit,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = koinViewModel()
 ) {
+    val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
+    val queries by viewModel.recentQueries.collectAsStateWithLifecycle()
     val queryResult by viewModel.queryState.collectAsStateWithLifecycle()
-    val measuredProducts by viewModel.measuredProducts.collectAsStateWithLifecycle()
-
     val searchState = rememberSearchState(
-        meal = viewModel.meal,
-        initialIsLoading = queryResult.isLoading,
-        initialIsError = queryResult.error != null,
-        initialData = queryResult.data,
-        onQuickRemove = viewModel::onQuickRemove,
+        initialRecentQueries = queries,
+        initialQueryResult = queryResult,
         onQuickAdd = viewModel::onQuickAdd,
-        getRecentQueries = viewModel::getRecentQueries
+        onQuickRemove = viewModel::onQuickRemove,
+        onSearch = viewModel::onSearch,
+        onRetry = viewModel::onRetry
     )
 
-    LaunchedEffect(searchState.searchQuery) {
-        viewModel.onSearch(searchState.searchQuery)
+    LaunchedEffect(searchState, queries) {
+        searchState.updateRecentQueries(queries)
     }
 
     LaunchedEffect(queryResult) {
-        searchState.onDataChange(queryResult)
-    }
-
-    BackHandler(
-        enabled = searchState.searchQuery.isNotBlank()
-    ) {
-        searchState.onSearch("")
+        searchState.onQueryResultChange(queryResult)
     }
 
     SearchScreen(
-        measuredProducts = measuredProducts,
-        searchState = searchState,
-        onCloseClick = onCloseClick,
-        onProductClick = onProductClick,
+        totalCalories = totalCalories,
         onCreateProduct = onCreateProduct,
-        onRetry = viewModel::onRetry,
-        modifier = modifier
+        onProductClick = onProductClick,
+        onClose = onClose,
+        modifier = modifier,
+        searchState = searchState
     )
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun SharedTransitionScope.SearchScreen(
-    measuredProducts: List<ProductWithWeightMeasurement>,
-    searchState: SearchState,
-    onCloseClick: () -> Unit,
-    onProductClick: (productId: Long) -> Unit,
+private fun SearchScreen(
+    totalCalories: Int,
     onCreateProduct: () -> Unit,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    onProductClick: (productId: Long) -> Unit,
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier,
+    searchState: SearchState = rememberSearchState()
 ) {
-    AnimatedContent(
+    // Use NavHost because I don't have to implement predictive back this way
+
+    NavHost(
         modifier = modifier,
-        targetState = searchState.screen
-    ) { screen ->
-        when (screen) {
-            SearchScreen.MAIN -> SearchScaffold(
-                measuredProducts = measuredProducts,
-                searchState = searchState,
-                onRetry = onRetry,
-                onProductClick = onProductClick,
-                onCloseClick = onCloseClick,
+        navController = searchState.navController,
+        startDestination = SearchScreen.Home.route
+    ) {
+        composable(SearchScreen.Home.route) {
+            SearchHome(
+                animatedVisibilityScope = this,
+                totalCalories = totalCalories,
                 onCreateProduct = onCreateProduct,
-                animatedVisibilityScope = this
+                onProductClick = { model ->
+                    onProductClick(model.model.product.id)
+                },
+                onBack = onClose,
+                searchState = searchState
             )
+        }
+        composable(SearchScreen.BarcodeScanner.route) {
+            val sharedTransitionScope =
+                LocalSharedTransitionScope.current ?: error("No shared transition scope found")
 
-            SearchScreen.SEARCH -> SearchView(
-                searchState = searchState,
-                modifier = Modifier.sharedBounds(
-                    sharedContentState = rememberSharedContentState(SearchSharedContentKeys.SEARCH_SEARCH_VIEW),
-                    animatedVisibilityScope = this
-                )
-            )
-
-            SearchScreen.BARCODE -> {
-                BackHandler {
-                    searchState.onBarcodeScannerClose()
-                }
-
+            with(sharedTransitionScope) {
                 CameraBarcodeScannerScreen(
-                    onBarcodeScan = searchState::onSearch,
+                    onBarcodeScan = {
+                        searchState.navigateToHome()
+                        searchState.onSearch(it)
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .sharedBounds(
-                            sharedContentState = rememberSharedContentState(SearchSharedContentKeys.SEARCH_BARCODE_SCANNER),
-                            animatedVisibilityScope = this
+                            sharedContentState = rememberSharedContentState(
+                                AddFoodSharedTransitionKeys.BARCODE_SCANNER
+                            ),
+                            animatedVisibilityScope = this@composable
                         )
                 )
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview(
+    showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+private fun SearchScreenPreview() {
+    val products = ProductWithWeightMeasurementPreviewParameter().asList()
+
+    FoodYouTheme {
+        SharedTransitionPreview { _, _ ->
+            SearchScreen(
+                totalCalories = 678,
+                onCreateProduct = {},
+                onProductClick = {},
+                onClose = {},
+                searchState = rememberSearchState(
+                    initialQueryResult = QueryResult.success(products)
+                )
+            )
         }
     }
 }

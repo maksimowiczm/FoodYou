@@ -62,6 +62,7 @@
     <string name="action_create_new_product">Create new product</string>
     <string name="action_create">Create</string>
     <string name="action_clear_search_query">Clear search query</string>
+    <string name="action_clear">Clear</string>
     <string name="action_delete">Delete</string>
 
     <string name="permission_camera_request">Allow access to your camera to scan barcodes</string>

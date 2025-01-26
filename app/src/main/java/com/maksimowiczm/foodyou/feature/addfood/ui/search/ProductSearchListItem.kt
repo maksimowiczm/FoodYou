@@ -3,7 +3,12 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.search
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Refresh
@@ -53,21 +58,42 @@ fun ProductSearchListItem(
 
     ListItem(
         headlineContent = {
-            Text(model.product.name)
+            Text(
+                modifier = Modifier.windowInsetsPadding(
+                    WindowInsets.displayCutout.only(
+                        WindowInsetsSides.Horizontal
+                    )
+                ),
+                text = model.product.name
+            )
         },
         modifier = modifier.clickable { onClick() },
         overlineContent = {
-            model.product.brand?.let { Text(it) }
+            model.product.brand?.let {
+                Text(
+                    modifier = Modifier.windowInsetsPadding(
+                        WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
+                    ),
+                    text = it
+                )
+            }
         },
         supportingContent = {
             SupportingTextLayout(
                 measurementString = model.measurementString,
                 caloriesString = model.caloriesString,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(
+                        WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
+                    )
             )
         },
         trailingContent = {
             ToggleButton(
+                modifier = Modifier.windowInsetsPadding(
+                    WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
+                ),
                 checked = isChecked || isLoading,
                 onCheckChange = onCheckChange,
                 colors = ToggleButtonDefaults.colors(

@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 
@@ -13,7 +14,11 @@ fun FoodYouApp() {
     FoodYouTheme {
         Surface {
             SharedTransitionLayout {
-                FoodYouNavHost()
+                CompositionLocalProvider(
+                    LocalSharedTransitionScope provides this
+                ) {
+                    FoodYouNavHost()
+                }
             }
         }
     }

@@ -42,6 +42,7 @@ import org.koin.androidx.compose.koinViewModel
 fun CreateProductScreen(
     onNavigateBack: () -> Unit,
     onSuccess: (productId: Long) -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: CreateProductViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -50,7 +51,8 @@ fun CreateProductScreen(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
         onCreate = viewModel::onCreateProduct,
-        onSuccess = onSuccess
+        onSuccess = onSuccess,
+        modifier = modifier
     )
 }
 
@@ -60,7 +62,8 @@ private fun CreateProductScreen(
     uiState: CreateProductState,
     onNavigateBack: () -> Unit,
     onCreate: (ProductFormState) -> Unit,
-    onSuccess: (productId: Long) -> Unit
+    onSuccess: (productId: Long) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     LaunchedEffect(uiState) {
         when (uiState) {
@@ -72,7 +75,7 @@ private fun CreateProductScreen(
 
     val formState = rememberProductFormState()
 
-    Surface {
+    Surface(modifier) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

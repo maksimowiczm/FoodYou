@@ -10,13 +10,15 @@ import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.addfood.navigation.AddFoodRoute
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -28,7 +30,7 @@ class SearchViewModel(
     private val date: LocalDate
     val meal: Meal
 
-    // Use shared flow to allow emitting equal values
+    // Use shared flow which allows emitting equal values
     private val _searchQuery = MutableSharedFlow<String?>(
         replay = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
@@ -41,34 +43,23 @@ class SearchViewModel(
         _searchQuery.tryEmit(null)
     }
 
-    val measuredProducts = addFoodRepository.observeMeasuredProducts(meal, date).stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = emptyList()
-    )
+    val queryState: MutableStateFlow<QueryResult<List<ProductWithWeightMeasurement>>> =
+        MutableStateFlow(QueryResult.loading(emptyList()))
 
-    // TODO
-    //  idk if thi is the right way to do this but I'm not sure how to do it better
-    fun getRecentQueries(): Flow<List<String>> {
-        val flow = flow {
-            emit(addFoodRepository.observeProductQueries(20).first().map { it.query })
+    init {
+        @OptIn(ExperimentalCoroutinesApi::class)
+        viewModelScope.launch {
+            _searchQuery.flatMapLatest { query ->
+                addFoodRepository.queryProducts(
+                    meal = meal,
+                    date = date,
+                    query = query
+                )
+            }.collectLatest { queryResult ->
+                queryState.value = queryResult
+            }
         }
-
-        return flow
     }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val queryState = _searchQuery.flatMapLatest {
-        addFoodRepository.queryProducts(
-            meal = meal,
-            date = date,
-            query = it
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = QueryResult.loading(emptyList())
-    )
 
     fun onSearch(query: String?) {
         val searchQuery = query?.trim()?.ifBlank { null }
@@ -76,7 +67,27 @@ class SearchViewModel(
     }
 
     fun onRetry() {
-        _searchQuery.tryEmit(_searchQuery.replayCache.first())
+        // Update only twice, when user clicks retry and when query is fully loaded
+
+        queryState.value = queryState.value.copy(
+            isLoading = true,
+            error = null
+        )
+
+        viewModelScope.launch {
+            delay(300L)
+
+            addFoodRepository.queryProducts(
+                meal = meal,
+                date = date,
+                query = _searchQuery.replayCache.first()
+            ).collectLatest { queryResult ->
+                if (!queryResult.isLoading) {
+                    queryState.value = queryResult
+                    cancel()
+                }
+            }
+        }
     }
 
     fun onQuickRemove(model: ProductWithWeightMeasurement) {
@@ -92,5 +103,29 @@ class SearchViewModel(
             productId = model.product.id,
             weightMeasurement = model.measurement
         )
+    }
+
+    val totalCalories = addFoodRepository.observeMeasuredProducts(
+        meal = meal,
+        date = date
+    ).map { list ->
+        list.sumOf { it.calories }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT),
+        initialValue = 0
+    )
+
+    val recentQueries = addFoodRepository.observeProductQueries(
+        limit = 20
+    ).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT),
+        initialValue = emptyList()
+    )
+
+    private companion object {
+        // 30 seconds, because user often navigate up and down
+        private const val STOP_TIMEOUT = 30_000L
     }
 }

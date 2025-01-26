@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,119 +9,129 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.addfood.data.QueryResult
-import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
+import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-
-enum class SearchScreen {
-    MAIN,
-    SEARCH,
-    BARCODE
-}
 
 @Composable
 fun rememberSearchState(
-    meal: Meal,
-    initialIsLoading: Boolean,
-    initialIsError: Boolean,
-    initialData: List<ProductWithWeightMeasurement> = emptyList(),
-    onQuickRemove: (ProductWithWeightMeasurement) -> Unit,
-    onQuickAdd: suspend (ProductWithWeightMeasurement) -> Long,
-    getRecentQueries: () -> Flow<List<String>> = { flow { } }
+    initialQuery: String = "",
+    initialRecentQueries: List<ProductQuery> = emptyList(),
+    initialQueryResult: QueryResult<List<ProductWithWeightMeasurement>> =
+        QueryResult.loading(emptyList()),
+    onQuickAdd: suspend (ProductWithWeightMeasurement) -> Long = { 0 },
+    onQuickRemove: (ProductWithWeightMeasurement) -> Unit = {},
+    onSearch: (String) -> Unit = {},
+    onRetry: () -> Unit = {},
+    lazyListState: LazyListState = rememberLazyListState(),
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    navController: NavHostController = rememberNavController()
 ): SearchState {
-    val coroutineScope = rememberCoroutineScope()
-
     return rememberSaveable(
-        meal,
-        coroutineScope,
-        onQuickRemove,
         onQuickAdd,
-        getRecentQueries,
+        onQuickRemove,
+        lazyListState,
+        coroutineScope,
         saver = Saver(
             save = {
-                arrayOf<Any?>(
-                    it.screen,
-                    it.searchQuery
+                arrayOf<Any>(
+                    it.query
                 )
             },
             restore = {
                 SearchState(
-                    meal = meal,
-                    initialShowSearchScreen = it[0] as SearchScreen,
-                    initialSearchQuery = it[1] as String,
-                    initialIsLoading = initialIsLoading,
-                    initialIsError = initialIsError,
-                    initialData = initialData,
-                    coroutineScope = coroutineScope,
+                    initialQuery = it[0] as String,
+                    initialRecentQueries = initialRecentQueries,
+                    initialQueryResult = initialQueryResult,
                     onQuickRemove = onQuickRemove,
                     onQuickAdd = onQuickAdd,
-                    getRecentQueries = getRecentQueries
+                    onSearch = onSearch,
+                    onRetry = onRetry,
+                    lazyListState = lazyListState,
+                    coroutineScope = coroutineScope,
+                    navController = navController
                 )
             }
         )
     ) {
         SearchState(
-            meal = meal,
-            initialShowSearchScreen = SearchScreen.MAIN,
-            initialSearchQuery = "",
-            initialIsLoading = initialIsLoading,
-            initialIsError = initialIsError,
-            initialData = initialData,
-            coroutineScope = coroutineScope,
-            onQuickRemove = onQuickRemove,
+            initialQuery = initialQuery,
+            initialRecentQueries = initialRecentQueries,
+            initialQueryResult = initialQueryResult,
             onQuickAdd = onQuickAdd,
-            getRecentQueries = getRecentQueries
+            onQuickRemove = onQuickRemove,
+            onSearch = onSearch,
+            onRetry = onRetry,
+            lazyListState = lazyListState,
+            coroutineScope = coroutineScope,
+            navController = navController
         )
     }
 }
 
-class SearchState(
-    val meal: Meal,
-    initialShowSearchScreen: SearchScreen,
-    initialSearchQuery: String,
-    initialIsLoading: Boolean,
-    initialIsError: Boolean,
-    initialData: List<ProductWithWeightMeasurement>,
-    private val coroutineScope: CoroutineScope,
-    private val onQuickRemove: (ProductWithWeightMeasurement) -> Unit,
-    private val onQuickAdd: suspend (ProductWithWeightMeasurement) -> Long,
-    getRecentQueries: () -> Flow<List<String>>
+enum class SearchScreen(
+    val route: String
 ) {
-    private val _getRecentQueries = getRecentQueries
-    fun getRecentQueries(): Flow<List<String>> = _getRecentQueries()
+    Home("home"),
+    BarcodeScanner("barcode-scanner")
+}
 
-    var screen: SearchScreen by mutableStateOf(initialShowSearchScreen)
-        private set
-    var searchQuery: String by mutableStateOf(initialSearchQuery)
-        private set
-
-    fun onSearchClick() {
-        screen = SearchScreen.SEARCH
+class SearchState(
+    initialQuery: String,
+    initialRecentQueries: List<ProductQuery>,
+    initialQueryResult: QueryResult<List<ProductWithWeightMeasurement>>,
+    val lazyListState: LazyListState,
+    private val coroutineScope: CoroutineScope,
+    private val onQuickAdd: suspend (ProductWithWeightMeasurement) -> Long,
+    private val onQuickRemove: (ProductWithWeightMeasurement) -> Unit,
+    onSearch: (String) -> Unit,
+    onRetry: () -> Unit,
+    val navController: NavHostController
+) {
+    fun navigateToHome() {
+        navController.navigate(
+            route = SearchScreen.Home.route,
+            navOptions = navOptions {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
+        )
     }
 
-    fun onSearchClose() {
-        screen = SearchScreen.MAIN
+    fun navigateToBarcodeScanner() {
+        navController.navigate(
+            route = SearchScreen.BarcodeScanner.route
+        )
     }
+
+    var query by mutableStateOf(initialQuery)
+        private set
+
+    private val _onSearch = onSearch
 
     fun onSearch(query: String) {
-        searchQuery = query.trim()
-        screen = SearchScreen.MAIN
+        this.query = query.trim()
+        _onSearch(query)
     }
 
-    fun onBarcodeScannerClick() {
-        screen = SearchScreen.BARCODE
+    private val _onRetry = onRetry
+
+    fun onRetry() {
+        _onRetry()
     }
 
-    fun onBarcodeScannerClose() {
-        screen = SearchScreen.MAIN
-    }
+    var isLoading: Boolean by mutableStateOf(initialQueryResult.isLoading)
+        private set
 
-    var data: List<ProductSearchUiModel> by mutableStateOf(
-        initialData.map {
+    var isError: Boolean by mutableStateOf(initialQueryResult.error != null)
+        private set
+
+    var products by mutableStateOf(
+        initialQueryResult.data.map {
             ProductSearchUiModel(
                 model = it,
                 isLoading = false,
@@ -127,21 +139,14 @@ class SearchState(
             )
         }
     )
-        private set
 
-    var isLoading: Boolean by mutableStateOf(initialIsLoading)
-        private set
-
-    var isError: Boolean by mutableStateOf(initialIsError)
-        private set
-
-    fun onDataChange(queryResult: QueryResult<List<ProductWithWeightMeasurement>>) {
+    fun onQueryResultChange(queryResult: QueryResult<List<ProductWithWeightMeasurement>>) {
         isLoading = queryResult.isLoading
         isError = queryResult.error != null
 
         val data = queryResult.data
 
-        this.data = data.map {
+        products = data.map {
             ProductSearchUiModel(
                 model = it,
                 isLoading = false,
@@ -150,23 +155,23 @@ class SearchState(
         }
     }
 
-    fun onCheckChange(index: Int, checked: Boolean) {
-        val modelState = data[index]
+    fun onProductCheckChange(index: Int, checked: Boolean) {
+        val product = products[index]
 
         if (checked) {
             coroutineScope.launch {
-                data = data.replaceIndexed(
-                    modelState.copy(
+                products = products.replaceIndexed(
+                    product.copy(
                         isLoading = true
                     ),
                     index
                 )
 
-                val id = onQuickAdd(modelState.model)
+                val id = onQuickAdd(product.model)
 
-                data = data.replaceIndexed(
-                    modelState.copy(
-                        model = modelState.model.copy(
+                products = products.replaceIndexed(
+                    product.copy(
+                        model = product.model.copy(
                             measurementId = id
                         ),
                         isLoading = false,
@@ -176,11 +181,11 @@ class SearchState(
                 )
             }
         } else {
-            onQuickRemove(modelState.model)
+            onQuickRemove(product.model)
 
-            data = data.replaceIndexed(
-                modelState.copy(
-                    model = modelState.model.copy(
+            products = products.replaceIndexed(
+                product.copy(
+                    model = product.model.copy(
                         measurementId = null
                     ),
                     isChecked = false
@@ -188,6 +193,13 @@ class SearchState(
                 index
             )
         }
+    }
+
+    var recentQueries by mutableStateOf(initialRecentQueries)
+        private set
+
+    fun updateRecentQueries(queries: List<ProductQuery>) {
+        recentQueries = queries
     }
 }
 

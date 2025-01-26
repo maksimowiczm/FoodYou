@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.ui
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,9 +40,12 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
+import com.maksimowiczm.foodyou.feature.addfood.ui.AddFoodSharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
 import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalDiaryPalette
+import com.maksimowiczm.foodyou.ui.LocalNavAnimatedVisibilityScope
+import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.component.ProgressIndicator
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 
@@ -67,6 +71,7 @@ fun MealsCard(
                 val uiData = meal.asMealUiData()
 
                 MaterialMealItem(
+                    meal = meal,
                     icon = {
                         Icon(
                             painter = painterResource(uiData.icon),
@@ -94,8 +99,10 @@ fun MealsCard(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun MaterialMealItem(
+    meal: Meal,
     icon: @Composable () -> Unit,
     title: @Composable () -> Unit,
     value: Int,
@@ -168,13 +175,33 @@ private fun MaterialMealItem(
             }
         },
         trailingContent = {
-            FilledIconButton(
-                onClick = onAddClick
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.action_add_product)
-                )
+            val sharedTransitionScope =
+                LocalSharedTransitionScope.current ?: error("No SharedTransitionScope found")
+
+            val navAnimatedVisibilityScope =
+                LocalNavAnimatedVisibilityScope.current ?: error("No AnimatedVisibilityScope found")
+
+            with(sharedTransitionScope) {
+                FilledIconButton(
+                    onClick = onAddClick,
+                    modifier = Modifier
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(
+                                AddFoodSharedTransitionKeys.SearchScreen(
+                                    meal = meal
+                                )
+                            ),
+                            animatedVisibilityScope = navAnimatedVisibilityScope,
+                            clipInOverlayDuringTransition = OverlayClip(
+                                MaterialTheme.shapes.extraLarge
+                            )
+                        )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.action_add_product)
+                    )
+                }
             }
         },
         colors = ListItemDefaults.colors(

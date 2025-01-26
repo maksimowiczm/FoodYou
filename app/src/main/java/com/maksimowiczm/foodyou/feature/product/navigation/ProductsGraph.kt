@@ -1,12 +1,16 @@
 package com.maksimowiczm.foodyou.feature.product.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
+import com.maksimowiczm.foodyou.feature.product.ui.ProductShareTransitionKeys
 import com.maksimowiczm.foodyou.feature.product.ui.create.CreateProductScreen
 import com.maksimowiczm.foodyou.navigation.foodYouComposable
+import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,18 +22,32 @@ sealed interface ProductsRoute {
     ) : ProductsRoute
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.productsGraph(
     createOnNavigateBack: () -> Unit,
     createOnSuccess: (productId: Long, epochDay: Long, Meal) -> Unit
 ) {
     foodYouComposable<ProductsRoute.CreateProduct> {
         val (epochDay, mealType) = it.toRoute<ProductsRoute.CreateProduct>()
-        CreateProductScreen(
-            onNavigateBack = createOnNavigateBack,
-            onSuccess = { productId ->
-                createOnSuccess(productId, epochDay, mealType)
-            }
-        )
+        val sharedTransitionScope =
+            LocalSharedTransitionScope.current ?: error("No SharedTransitionScope found")
+
+        with(sharedTransitionScope) {
+            CreateProductScreen(
+                onNavigateBack = createOnNavigateBack,
+                onSuccess = { productId ->
+                    createOnSuccess(productId, epochDay, mealType)
+                },
+                modifier = Modifier
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(
+                            ProductShareTransitionKeys.PRODUCT_CREATE_SCREEN
+                        ),
+                        animatedVisibilityScope = this@foodYouComposable
+                    )
+                    .skipToLookaheadSize()
+            )
+        }
     }
 }
 

@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.addfood.ui
 
 import android.view.View
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +35,7 @@ val zxingCameraBarcodeScannerScreen = BarcodeScannerScreen { onBarcodeScan, modi
     }
 
     Box(
-        modifier = modifier.systemBarsPadding()
+        modifier = modifier.navigationBarsPadding()
     ) {
         AndroidView(
             factory = { context ->
