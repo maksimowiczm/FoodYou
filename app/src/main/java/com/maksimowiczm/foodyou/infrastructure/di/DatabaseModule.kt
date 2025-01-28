@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.feature.addfood.database.AddFoodDatabase
 import com.maksimowiczm.foodyou.feature.product.database.ProductDatabase
 import com.maksimowiczm.foodyou.infrastructure.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.infrastructure.database.FoodYouDatabase.Companion.buildDatabase
-import com.maksimowiczm.foodyou.infrastructure.database.TransactionProvider
 import org.koin.dsl.binds
 import org.koin.dsl.module
 
@@ -21,7 +20,6 @@ val databaseModule = module {
         builder.buildDatabase()
     }.binds(
         classes = arrayOf(
-            TransactionProvider::class,
             ProductDatabase::class,
             AddFoodDatabase::class
         )

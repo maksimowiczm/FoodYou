@@ -1,8 +1,6 @@
 package com.maksimowiczm.foodyou.feature.addfood.data
 
 import android.util.Log
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
@@ -16,28 +14,33 @@ import com.maksimowiczm.foodyou.feature.addfood.database.AddFoodDao
 import com.maksimowiczm.foodyou.feature.addfood.database.AddFoodDatabase
 import com.maksimowiczm.foodyou.feature.addfood.database.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.addfood.database.WeightMeasurementEntity
-import com.maksimowiczm.foodyou.feature.product.data.ProductPreferences
 import com.maksimowiczm.foodyou.feature.product.data.model.toDomain
-import com.maksimowiczm.foodyou.feature.product.data.model.toEntity
 import com.maksimowiczm.foodyou.feature.product.database.ProductDao
 import com.maksimowiczm.foodyou.feature.product.database.ProductDatabase
-import com.maksimowiczm.foodyou.feature.product.network.openfoodfacts.OpenFoodFactsNetworkDataSource
-import com.maksimowiczm.foodyou.infrastructure.database.TransactionProvider
-import com.maksimowiczm.foodyou.infrastructure.datastore.get
+import com.maksimowiczm.foodyou.feature.product.network.RemoteProductDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import kotlin.collections.List
+import kotlin.collections.associate
+import kotlin.collections.forEach
+import kotlin.collections.map
+import kotlin.collections.set
+import kotlin.collections.toMutableMap
 
 class AddFoodRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
     productDatabase: ProductDatabase,
-    private val transactionProvider: TransactionProvider,
-    private val dataStore: DataStore<Preferences>,
-    private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource
+    private val remoteProductDatabase: RemoteProductDatabase,
+    private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 ) : AddFoodRepository {
     private val addFoodDao: AddFoodDao = addFoodDatabase.addFoodDao()
     private val productDao: ProductDao = productDatabase.productDao()
@@ -97,166 +100,93 @@ class AddFoodRepositoryImpl(
     override fun queryProducts(
         meal: Meal,
         date: LocalDate,
-        query: String?
+        query: String?,
+        localOnly: Boolean
     ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> {
         return if (query?.all { it.isDigit() } == true) {
-            queryProductsByBarcode(meal, date, query)
+            queryProductsByBarcode(meal, date, query, localOnly)
         } else {
-            queryProductsByName(meal, date, query)
+            queryProductsByName(meal, date, query, localOnly)
         }
     }
 
     private fun queryProductsByBarcode(
         meal: Meal,
         date: LocalDate,
-        barcode: String
+        barcode: String,
+        localOnly: Boolean
     ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> = flow {
-        emit(QueryResult.loading(emptyList()))
-
-        val products = addFoodDao.getProductsWithMeasurementByBarcode(
-            meal = meal,
-            date = date,
-            barcode = barcode
-        )
-
-        // If OpenFoodFacts is disabled, return local products only
-        if (dataStore.get(ProductPreferences.openFoodFactsEnabled) == false) {
-            return@flow emit(QueryResult.success(products))
-        }
-
-        emit(QueryResult.loading(products))
-
-        // Otherwise, query OpenFoodFacts
-        val country = dataStore.get(ProductPreferences.openFoodCountryCode)
-        if (country == null) {
-            Log.e(TAG, "OpenFoodFacts country code is not set")
-
-            return@flow emit(
-                QueryResult.error(
-                    error = Error("OpenFoodFacts country code is not set"),
-                    data = products
-                )
-            )
-        }
-
-        try {
-            val openFoodProduct = openFoodFactsNetworkDataSource.getProduct(
-                code = barcode,
-                country = country
-            )
-
-            if (openFoodProduct == null) {
-                Log.d(TAG, "OpenFoodFacts product not found for barcode: $barcode")
-                return@flow emit(QueryResult.success(products))
-            }
-
-            val product = openFoodProduct.toEntity() ?: run {
-                Log.w(
-                    TAG,
-                    "Failed to convert product: (name=${openFoodProduct.productName}, code=${openFoodProduct.code})"
-                )
-
-                return@flow emit(QueryResult.success(products))
-            }
-
-            val productsWithMeasurement = transactionProvider.withTransaction {
-                productDao.insertOpenFoodFactsProducts(listOf(product))
-                addFoodDao.getProductsWithMeasurementByBarcode(
-                    meal = meal,
-                    date = date,
-                    barcode = barcode
+        val flow = { isLoading: Boolean, error: Throwable? ->
+            addFoodDao.observeProductsWithMeasurementByBarcode(
+                meal = meal,
+                date = date,
+                barcode = barcode
+            ).map { products ->
+                QueryResult(
+                    data = products,
+                    isLoading = isLoading,
+                    error = error
                 )
             }
-
-            emit(QueryResult.success(productsWithMeasurement))
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to query products", e)
-
-            emit(
-                QueryResult.error(
-                    error = e,
-                    data = products
-                )
-            )
         }
+
+        if (!localOnly) {
+            // First get local products and emit loading state
+            flow(true, null).first().also { emit(it) }
+
+            try {
+                remoteProductDatabase.queryAndInsertByBarcode(barcode)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to query products", e)
+
+                flow(false, e).collect(::emit)
+            }
+        }
+
+        flow(false, null).collect(::emit)
     }
 
     private fun queryProductsByName(
         meal: Meal,
         date: LocalDate,
-        query: String?
+        query: String?,
+        localOnly: Boolean
     ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> = flow {
+        // Insert the query to the history
         if (query != null) {
-            insertProductQueryWithCurrentTime(query)
-        }
-
-        emit(QueryResult.loading(emptyList()))
-
-        val products = addFoodDao.getProductsWithMeasurementByQuery(
-            meal = meal,
-            date = date,
-            query = query
-        )
-
-        // If OpenFoodFacts is disabled or query is null, return local products only
-        if (dataStore.get(ProductPreferences.openFoodFactsEnabled) == false || query == null) {
-            return@flow emit(QueryResult.success(products))
-        }
-
-        emit(QueryResult.loading(products))
-
-        // Otherwise, query OpenFoodFacts
-        val country = dataStore.get(ProductPreferences.openFoodCountryCode)
-        if (country == null) {
-            Log.e(TAG, "OpenFoodFacts country code is not set")
-
-            return@flow emit(
-                QueryResult.error(
-                    error = Error("OpenFoodFacts country code is not set"),
-                    data = products
-                )
-            )
-        }
-
-        try {
-            val openFoodResponse = openFoodFactsNetworkDataSource.queryProducts(
-                query = query,
-                country = country,
-                page = 1,
-                pageSize = PAGE_SIZE
-            )
-
-            val openFoodProducts = openFoodResponse.products.mapNotNull { product ->
-                product.toEntity().also { entity ->
-                    if (entity == null) {
-                        Log.w(
-                            TAG,
-                            "Failed to convert product: (name=${product.productName}, code=${product.code})"
-                        )
-                    }
-                }
+            ioScope.launch {
+                insertProductQueryWithCurrentTime(query)
             }
+        }
 
-            val productsWithMeasurement = transactionProvider.withTransaction {
-                productDao.insertOpenFoodFactsProducts(openFoodProducts)
-                addFoodDao.getProductsWithMeasurementByQuery(
-                    meal = meal,
-                    date = date,
-                    query = query
+        val flow = { isLoading: Boolean, error: Throwable? ->
+            addFoodDao.observeProductsWithMeasurementByQuery(
+                meal = meal,
+                date = date,
+                query = query
+            ).map { products ->
+                QueryResult(
+                    data = products,
+                    isLoading = isLoading,
+                    error = error
                 )
             }
-
-            emit(QueryResult.success(productsWithMeasurement))
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to query products", e)
-
-            emit(
-                QueryResult.error(
-                    error = e,
-                    data = products
-                )
-            )
         }
+
+        if (!localOnly) {
+            // First get local products and emit loading state
+            flow(true, null).first().also { emit(it) }
+
+            try {
+                remoteProductDatabase.queryAndInsertByName(query)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to query products", e)
+
+                flow(false, e).collect(::emit)
+            }
+        }
+
+        flow(false, null).collect(::emit)
     }
 
     private suspend fun insertProductQueryWithCurrentTime(query: String) {
@@ -310,31 +240,31 @@ class AddFoodRepositoryImpl(
         }
     }
 
-    private suspend fun AddFoodDao.getProductsWithMeasurementByQuery(
+    private fun AddFoodDao.observeProductsWithMeasurementByQuery(
         meal: Meal,
         date: LocalDate,
         query: String?
-    ): List<ProductWithWeightMeasurement> = observeProductsWithMeasurement(
+    ): Flow<List<ProductWithWeightMeasurement>> = observeProductsWithMeasurement(
         mealId = meal.toEntity().value,
         epochDay = date.toEpochDay(),
         query = query,
         barcode = null,
         limit = PAGE_SIZE
-    ).first().map { it.toDomain() }
+    ).map { list -> list.map { it.toDomain() } }
 
-    private suspend fun AddFoodDao.getProductsWithMeasurementByBarcode(
+    private fun AddFoodDao.observeProductsWithMeasurementByBarcode(
         meal: Meal,
         date: LocalDate,
         barcode: String
-    ): List<ProductWithWeightMeasurement> = observeProductsWithMeasurement(
+    ): Flow<List<ProductWithWeightMeasurement>> = observeProductsWithMeasurement(
         mealId = meal.toEntity().value,
         epochDay = date.toEpochDay(),
         query = null,
         barcode = barcode,
         limit = PAGE_SIZE
-    ).first().map { it.toDomain() }
+    ).map { list -> list.map { it.toDomain() } }
 
-    companion object {
+    private companion object {
         private const val TAG = "AddFoodRepositoryImpl"
         private const val PAGE_SIZE = 30
     }

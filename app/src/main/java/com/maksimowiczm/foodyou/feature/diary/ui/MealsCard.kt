@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.ui
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -44,15 +45,16 @@ import com.maksimowiczm.foodyou.feature.addfood.ui.AddFoodSharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
 import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalDiaryPalette
-import com.maksimowiczm.foodyou.ui.LocalNavAnimatedVisibilityScope
 import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.component.ProgressIndicator
+import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 
 @Composable
 fun MealsCard(
     diaryDay: DiaryDay,
     onAddClick: (Meal) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -86,6 +88,7 @@ fun MealsCard(
                     value = diaryDay.totalCalories(meal),
                     goalValue = goal,
                     onAddClick = { onAddClick(meal) },
+                    animatedVisibilityScope = animatedVisibilityScope,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
@@ -108,6 +111,7 @@ private fun MaterialMealItem(
     value: Int,
     goalValue: Int,
     onAddClick: () -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
     val animatedValue by animateFloatAsState(targetValue = value.toFloat())
@@ -178,9 +182,6 @@ private fun MaterialMealItem(
             val sharedTransitionScope =
                 LocalSharedTransitionScope.current ?: error("No SharedTransitionScope found")
 
-            val navAnimatedVisibilityScope =
-                LocalNavAnimatedVisibilityScope.current ?: error("No AnimatedVisibilityScope found")
-
             with(sharedTransitionScope) {
                 FilledIconButton(
                     onClick = onAddClick,
@@ -191,7 +192,7 @@ private fun MaterialMealItem(
                                     meal = meal
                                 )
                             ),
-                            animatedVisibilityScope = navAnimatedVisibilityScope,
+                            animatedVisibilityScope = animatedVisibilityScope,
                             clipInOverlayDuringTransition = OverlayClip(
                                 MaterialTheme.shapes.extraLarge
                             )
@@ -242,15 +243,19 @@ private fun Meal.asMealUiData(): MealUiData = when (this) {
     Meal.Snacks -> MealUiData.Snacks
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @PreviewLightDark
 @Composable
 private fun MealsCardPreview() {
     val diaryDay = DiaryDayPreviewParameterProvider().values.first()
 
     FoodYouTheme {
-        MealsCard(
-            diaryDay = diaryDay,
-            onAddClick = {}
-        )
+        SharedTransitionPreview { _, animatedVisibilityScope ->
+            MealsCard(
+                diaryDay = diaryDay,
+                onAddClick = {},
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
     }
 }

@@ -45,7 +45,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.R
-import com.maksimowiczm.foodyou.feature.addfood.ui.search.CameraBarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.addfood.ui.camera.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.product.data.model.WeightUnit
 import com.maksimowiczm.foodyou.feature.product.ui.res.pluralString
 import com.maksimowiczm.foodyou.feature.product.ui.res.stringResourceShort
@@ -87,6 +87,10 @@ private fun ProductForm(
             FormFieldTextField(
                 modifier = Modifier,
                 formField = formState.name,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
                 label = { Text(stringResource(R.string.product_name) + "*") },
                 suffix = null
             )
@@ -95,6 +99,10 @@ private fun ProductForm(
         item {
             FormFieldTextField(
                 formField = formState.brand,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
                 label = { Text(stringResource(R.string.product_brand)) },
                 suffix = null
             )
@@ -136,7 +144,7 @@ private fun ProductForm(
             BarcodeInput(
                 barcodeFormField = formState.barcode,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
+                    keyboardType = KeyboardType.Text,
                     imeAction = if (expanded) ImeAction.Next else ImeAction.Done
                 )
             )

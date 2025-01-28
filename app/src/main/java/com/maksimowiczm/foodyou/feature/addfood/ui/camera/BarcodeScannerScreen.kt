@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfood.ui.search
+package com.maksimowiczm.foodyou.feature.addfood.ui.camera
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

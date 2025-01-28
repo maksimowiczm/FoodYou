@@ -41,7 +41,8 @@ interface AddFoodRepository {
     fun queryProducts(
         meal: Meal,
         date: LocalDate,
-        query: String?
+        query: String?,
+        localOnly: Boolean
     ): Flow<QueryResult<List<ProductWithWeightMeasurement>>>
 
     /**

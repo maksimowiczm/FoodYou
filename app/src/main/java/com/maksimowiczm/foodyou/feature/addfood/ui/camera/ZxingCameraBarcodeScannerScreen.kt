@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfood.ui
+package com.maksimowiczm.foodyou.feature.addfood.ui.camera
 
 import android.view.View
 import androidx.compose.foundation.layout.Box
@@ -14,7 +14,6 @@ import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.databinding.CameraBarcodeLayoutBinding
-import com.maksimowiczm.foodyou.feature.addfood.ui.search.BarcodeScannerScreen
 
 val zxingCameraBarcodeScannerScreen = BarcodeScannerScreen { onBarcodeScan, modifier ->
     var barcodeView by remember { mutableStateOf<CompoundBarcodeView?>(null) }

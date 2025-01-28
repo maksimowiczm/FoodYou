@@ -40,32 +40,26 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.addfood.ui.AddFoodSharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.product.ui.ProductShareTransitionKeys
-import com.maksimowiczm.foodyou.ui.LocalNavAnimatedVisibilityScope
 import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
-import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun SearchBottomBar(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    searchState: SearchState,
-    totalCalories: Int,
+    state: SearchBottomBarState,
     onCreateProduct: () -> Unit,
+    onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: BottomAppBarScrollBehavior? = null
 ) {
-    val calories by animateIntAsState(totalCalories)
+    val calories by animateIntAsState(state.totalCalories)
 
     val sharedTransitionScope = LocalSharedTransitionScope.current
         ?: error("No shared transition scope found")
-    val navAnimatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
-        ?: error("No animated visibility scope found")
 
     Surface(
         modifier = modifier,
@@ -123,7 +117,7 @@ fun SearchBottomBar(
                                         sharedContentState = rememberSharedContentState(
                                             ProductShareTransitionKeys.PRODUCT_CREATE_SCREEN
                                         ),
-                                        animatedVisibilityScope = navAnimatedVisibilityScope
+                                        animatedVisibilityScope = animatedVisibilityScope
                                     )
                                 ) {
                                     Icon(
@@ -147,9 +141,7 @@ fun SearchBottomBar(
                                 ),
                                 animatedVisibilityScope = animatedVisibilityScope
                             ),
-                            onClick = {
-                                searchState.navigateToBarcodeScanner()
-                            }
+                            onClick = onBarcodeScanner
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_qr_code_scanner_24),
@@ -171,22 +163,6 @@ fun SearchBottomBar(
 
                 Spacer(Modifier.height(height))
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
-@PreviewDynamicColors
-@Composable
-private fun SearchBottomBarPreview() {
-    FoodYouTheme {
-        SharedTransitionPreview { _, animatedVisibilityScope ->
-            SearchBottomBar(
-                animatedVisibilityScope = animatedVisibilityScope,
-                searchState = rememberSearchState(),
-                totalCalories = 698,
-                onCreateProduct = {}
-            )
         }
     }
 }

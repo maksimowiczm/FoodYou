@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfood.ui.search
+package com.maksimowiczm.foodyou.feature.addfood.ui.camera
 
 import android.Manifest
 import android.content.Intent

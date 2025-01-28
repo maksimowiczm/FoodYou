@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -30,7 +29,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -52,7 +50,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -67,35 +64,43 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.R
-import com.maksimowiczm.foodyou.feature.addfood.data.QueryResult
-import com.maksimowiczm.foodyou.feature.addfood.ui.previewparameter.ProductWithWeightMeasurementPreviewParameter
+import com.maksimowiczm.foodyou.feature.addfood.ui.AddFoodState
 import com.maksimowiczm.foodyou.ui.component.LoadingIndicator
-import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
-import com.maksimowiczm.foodyou.ui.preview.asList
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchHome(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    totalCalories: Int,
-    onCreateProduct: () -> Unit,
-    onProductClick: (ProductSearchUiModel) -> Unit,
+    addFoodState: AddFoodState,
+    onSearch: (String) -> Unit,
+    onRetry: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier,
-    searchState: SearchState = rememberSearchState()
+    onProductClick: (ProductSearchUiModel) -> Unit,
+    onCreateProduct: () -> Unit,
+    onBarcodeScanner: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val bottomAppBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
 
-    val isEmpty by remember(searchState) { derivedStateOf { searchState.products.isEmpty() && !searchState.isLoading } }
+    val isEmpty by remember(addFoodState.searchListState) {
+        derivedStateOf {
+            addFoodState.searchListState.products.isEmpty() && !addFoodState.searchListState.isLoading
+        }
+    }
+
+    // TODO
+//    BackHandler(
+//        enabled = addFoodState.searchBarState.textFieldState.text.isNotEmpty()
+//    ) {
+//        addFoodState.searchBarState.textFieldState.clearText()
+//        onSearch("")
+//    }
 
     // Make sure that bottom bar is visible when user can't scroll
     LaunchedEffect(isEmpty) {
@@ -115,11 +120,13 @@ fun SearchHome(
     Surface(modifier) {
         SearchHomeLayout(
             animatedVisibilityScope = animatedVisibilityScope,
-            totalCalories = totalCalories,
+            addFoodState = addFoodState,
             onCreateProduct = onCreateProduct,
             onProductClick = onProductClick,
             onBack = onBack,
-            searchState = searchState,
+            onSearch = onSearch,
+            onRetry = onRetry,
+            onBarcodeScanner = onBarcodeScanner,
             scrollBehavior = bottomAppBarScrollBehavior
         )
     }
@@ -135,11 +142,13 @@ enum class ErrorCardState {
 @Composable
 private fun SearchHomeLayout(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    searchState: SearchState,
-    totalCalories: Int,
+    addFoodState: AddFoodState,
     onCreateProduct: () -> Unit,
     onProductClick: (ProductSearchUiModel) -> Unit,
     onBack: () -> Unit,
+    onSearch: (String) -> Unit,
+    onRetry: () -> Unit,
+    onBarcodeScanner: () -> Unit,
     scrollBehavior: BottomAppBarScrollBehavior,
     modifier: Modifier = Modifier
 ) {
@@ -150,7 +159,8 @@ private fun SearchHomeLayout(
 
     val searchBar = @Composable {
         MySearchBar(
-            searchState = searchState,
+            searchBarState = addFoodState.searchBarState,
+            onSearch = onSearch,
             onBack = onBack
         )
     }
@@ -158,17 +168,18 @@ private fun SearchHomeLayout(
     val density = LocalDensity.current
     var errorCardHeightPx by remember { mutableIntStateOf(0) }
     val errorCardHeight by remember(errorCardHeightPx) { derivedStateOf { density.run { errorCardHeightPx.toDp() } } }
+    val isError by remember { derivedStateOf { addFoodState.searchListState.isError } }
     val anchoredDraggableState = rememberSaveable(
-        searchState.isError,
+        isError,
         saver = AnchoredDraggableState.Saver()
     ) {
         AnchoredDraggableState(
-            initialValue = if (searchState.isError) ErrorCardState.VISIBLE else ErrorCardState.HIDDEN_END
+            initialValue = if (isError) ErrorCardState.VISIBLE else ErrorCardState.HIDDEN_END
         )
     }
     val errorCard = @Composable {
         AnimatedVisibility(
-            visible = searchState.isError && anchoredDraggableState.settledValue == ErrorCardState.VISIBLE,
+            visible = isError && anchoredDraggableState.settledValue == ErrorCardState.VISIBLE,
             modifier = Modifier
                 .windowInsetsPadding(
                     WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
@@ -199,7 +210,7 @@ private fun SearchHomeLayout(
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .padding(top = 8.dp),
-                onRetry = searchState::onRetry
+                onRetry = onRetry
             )
         }
     }
@@ -209,7 +220,7 @@ private fun SearchHomeLayout(
     val listWithBar = @Composable {
         Column {
             ProductsLazyColumn(
-                searchState = searchState,
+                searchListState = addFoodState.searchListState,
                 onProductClick = onProductClick,
                 modifier = Modifier
                     .weight(1f)
@@ -235,16 +246,16 @@ private fun SearchHomeLayout(
             )
             SearchBottomBar(
                 animatedVisibilityScope = animatedVisibilityScope,
-                searchState = searchState,
-                totalCalories = totalCalories,
+                state = addFoodState.searchBottomBarState,
                 onCreateProduct = onCreateProduct,
+                onBarcodeScanner = onBarcodeScanner,
                 scrollBehavior = scrollBehavior
             )
         }
     }
 
     val empty = @Composable {
-        if (searchState.products.isEmpty() && !searchState.isLoading) {
+        if (addFoodState.searchListState.products.isEmpty() && !addFoodState.searchListState.isLoading) {
             Text(
                 text = stringResource(R.string.feedback_no_products_found)
             )
@@ -285,110 +296,35 @@ private fun SearchHomeLayout(
     }
 }
 
-@Composable
-private fun ProductsLazyColumn(
-    searchState: SearchState,
-    onProductClick: (ProductSearchUiModel) -> Unit,
-    modifier: Modifier = Modifier,
-    topOffset: LazyListScope.() -> Unit = {},
-    bottomOffset: LazyListScope.() -> Unit = {}
-) {
-    Box(modifier) {
-        if (searchState.isLoading) {
-            LoadingIndicator(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .windowInsetsPadding(
-                        WindowInsets.displayCutout.only(WindowInsetsSides.Top)
-                    )
-                    .windowInsetsPadding(
-                        WindowInsets.systemBars.only(WindowInsetsSides.Top)
-                    )
-                    // Searchbar padding
-                    .padding(top = 8.dp)
-                    // Searchbar height
-                    .padding(top = 56.dp)
-                    // Padding
-                    .padding(top = 16.dp)
-                    .zIndex(1f)
-            )
-        }
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = searchState.lazyListState
-        ) {
-            topOffset()
-
-            itemsIndexed(
-                items = searchState.products,
-                key = { _, product -> "${product.model.measurementId}-${product.model.product.id}" }
-            ) { index, product ->
-                ProductSearchListItem(
-                    uiModel = product,
-                    onClick = {
-                        onProductClick(product)
-                    },
-                    onCheckChange = {
-                        searchState.onProductCheckChange(
-                            index = index,
-                            checked = it
-                        )
-                    },
-                    colors = ProductSearchListItemDefaults.colors(
-                        checkedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        checkedContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        checkedToggleButtonContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        checkedToggleButtonContentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                    )
-                )
-            }
-
-            bottomOffset()
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MySearchBar(
-    searchState: SearchState,
+    searchBarState: SearchBarState,
+    onSearch: (String) -> Unit,
     onBack: () -> Unit
 ) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    val textFieldState = rememberTextFieldState(
-        initialText = searchState.query,
-        initialSelection = TextRange(searchState.query.length)
-    )
+    @Suppress("NAME_SHADOWING")
     val onSearch: (String) -> Unit = {
-        searchState.onSearch(it)
-        textFieldState.setTextAndPlaceCursorAtEnd(it)
-        expanded = false
-    }
-
-    LaunchedEffect(expanded) {
-        if (!expanded) {
-            if (searchState.query != textFieldState.text) {
-                textFieldState.setTextAndPlaceCursorAtEnd(searchState.query)
-            }
-        }
+        onSearch(it)
+        searchBarState.textFieldState.setTextAndPlaceCursorAtEnd(it)
+        searchBarState.expanded = false
     }
 
     SearchBar(
         inputField = {
             SearchBarDefaults.InputField(
-                state = textFieldState,
+                state = searchBarState.textFieldState,
                 onSearch = onSearch,
-                expanded = expanded,
-                onExpandedChange = { expanded = it },
+                expanded = searchBarState.expanded,
+                onExpandedChange = { searchBarState.expanded = it },
                 placeholder = {
                     Text(stringResource(R.string.action_search))
                 },
                 leadingIcon = {
                     IconButton(
                         onClick = {
-                            if (expanded) {
-                                expanded = false
+                            if (searchBarState.expanded) {
+                                searchBarState.expanded = false
                             } else {
                                 onBack()
                             }
@@ -401,11 +337,11 @@ private fun MySearchBar(
                     }
                 },
                 trailingIcon = {
-                    if (textFieldState.text.isNotBlank()) {
+                    if (searchBarState.textFieldState.text.isNotBlank()) {
                         IconButton(
                             onClick = {
-                                if (expanded) {
-                                    textFieldState.clearText()
+                                if (searchBarState.expanded) {
+                                    searchBarState.textFieldState.clearText()
                                 } else {
                                     onSearch("")
                                 }
@@ -420,10 +356,10 @@ private fun MySearchBar(
                 }
             )
         },
-        expanded = expanded,
-        onExpandedChange = { expanded = it }
+        expanded = searchBarState.expanded,
+        onExpandedChange = { searchBarState.expanded = it }
     ) {
-        val recentQueries = searchState.recentQueries
+        val recentQueries = searchBarState.recentQueries
 
         LazyColumn {
             items(recentQueries) { productQuery ->
@@ -449,7 +385,8 @@ private fun MySearchBar(
                         IconButton(
                             modifier = Modifier.displayCutoutPadding(),
                             onClick = {
-                                textFieldState.setTextAndPlaceCursorAtEnd(productQuery.query)
+                                searchBarState.textFieldState
+                                    .setTextAndPlaceCursorAtEnd(productQuery.query)
                             }
                         ) {
                             Icon(
@@ -464,30 +401,61 @@ private fun MySearchBar(
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Preview(
-    showSystemUi = true
-)
 @Composable
-private fun SearchHomePreview() {
-    val products = ProductWithWeightMeasurementPreviewParameter().asList()
+private fun ProductsLazyColumn(
+    searchListState: SearchListState,
+    onProductClick: (ProductSearchUiModel) -> Unit,
+    modifier: Modifier = Modifier,
+    topOffset: LazyListScope.() -> Unit = {},
+    bottomOffset: LazyListScope.() -> Unit = {}
+) {
+    Box(modifier) {
+        if (searchListState.isLoading) {
+            LoadingIndicator(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+                    // Searchbar padding
+                    .padding(top = 8.dp)
+                    // Searchbar height
+                    .padding(top = 56.dp)
+                    // Padding
+                    .padding(top = 16.dp)
+                    .zIndex(1f)
+            )
+        }
 
-    FoodYouTheme {
-        SharedTransitionPreview { _, animatedVisibilityScope ->
-            SearchHome(
-                animatedVisibilityScope = animatedVisibilityScope,
-                totalCalories = 678,
-                onCreateProduct = {},
-                onProductClick = {},
-                onBack = {},
-                searchState = rememberSearchState(
-                    initialQueryResult = QueryResult(
-                        isLoading = true,
-                        error = Error(),
-                        data = products
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            state = searchListState.lazyListState
+        ) {
+            topOffset()
+
+            itemsIndexed(
+                items = searchListState.products
+            ) { index, product ->
+                ProductSearchListItem(
+                    uiModel = product,
+                    onClick = {
+                        onProductClick(product)
+                    },
+                    onCheckChange = {
+                        searchListState.onProductCheckChange(
+                            index = index,
+                            checked = it
+                        )
+                    },
+                    colors = ProductSearchListItemDefaults.colors(
+                        checkedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        checkedContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        checkedToggleButtonContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        checkedToggleButtonContentColor = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 )
-            )
+            }
+
+            bottomOffset()
         }
     }
 }

@@ -5,11 +5,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
+import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.product.ui.ProductShareTransitionKeys
 import com.maksimowiczm.foodyou.feature.product.ui.create.CreateProductScreen
-import com.maksimowiczm.foodyou.navigation.foodYouComposable
 import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import kotlinx.serialization.Serializable
 
@@ -27,7 +27,7 @@ fun NavGraphBuilder.productsGraph(
     createOnNavigateBack: () -> Unit,
     createOnSuccess: (productId: Long, epochDay: Long, Meal) -> Unit
 ) {
-    foodYouComposable<ProductsRoute.CreateProduct> {
+    composable<ProductsRoute.CreateProduct> {
         val (epochDay, mealType) = it.toRoute<ProductsRoute.CreateProduct>()
         val sharedTransitionScope =
             LocalSharedTransitionScope.current ?: error("No SharedTransitionScope found")
@@ -43,7 +43,7 @@ fun NavGraphBuilder.productsGraph(
                         sharedContentState = rememberSharedContentState(
                             ProductShareTransitionKeys.PRODUCT_CREATE_SCREEN
                         ),
-                        animatedVisibilityScope = this@foodYouComposable
+                        animatedVisibilityScope = this@composable
                     )
                     .skipToLookaheadSize()
             )

@@ -20,51 +20,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.R
-import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.addfood.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.feature.addfood.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.product.data.model.Product
 import com.maksimowiczm.foodyou.feature.product.ui.previewparameter.ProductPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
-import org.koin.androidx.compose.koinViewModel
-import java.time.LocalDate
 import kotlin.math.roundToInt
 
 @Composable
 fun PortionScreen(
-    productId: Long,
-    date: LocalDate,
-    meal: Meal,
-    onSuccess: () -> Unit,
-    onNavigateBack: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: PortionViewModel = koinViewModel()
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(viewModel, productId, date, meal) {
-        viewModel.load(productId, date, meal)
-    }
-
-    PortionScreen(
-        uiState = uiState,
-        onSuccess = onSuccess,
-        onNavigateBack = onNavigateBack,
-        onSave = viewModel::onSave,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun PortionScreen(
     uiState: PortionUiState,
     onSuccess: () -> Unit,
     onSave: (WeightMeasurementEnum, quantity: Float) -> Unit,

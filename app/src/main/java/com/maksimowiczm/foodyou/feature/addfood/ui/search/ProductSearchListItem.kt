@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.addfood.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.feature.addfood.ui.previewparameter.ProductWithWeightMeasurementPreviewParameter
+import com.maksimowiczm.foodyou.feature.addfood.ui.previewparameter.ProductSearchUiModelPreviewParameter
 import com.maksimowiczm.foodyou.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.ui.component.ToggleButtonDefaults
@@ -267,15 +267,11 @@ val ProductWithWeightMeasurement.caloriesString: String
 )
 @Composable
 private fun ProductSearchListItemPreview(
-    @PreviewParameter(ProductWithWeightMeasurementPreviewParameter::class) productWithWeightMeasurement: ProductWithWeightMeasurement
+    @PreviewParameter(ProductSearchUiModelPreviewParameter::class) productSearchUiModel: ProductSearchUiModel
 ) {
     FoodYouTheme {
         ProductSearchListItem(
-            uiModel = ProductSearchUiModel(
-                model = productWithWeightMeasurement,
-                isLoading = false,
-                isChecked = false
-            ),
+            uiModel = productSearchUiModel,
             onClick = {},
             onCheckChange = {}
         )

@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.feature.diary.ui
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
+import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -33,6 +36,7 @@ import java.time.LocalDate
 @Composable
 fun DiaryScreen(
     onAddProductToMeal: (Meal, LocalDate) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
     viewModel: DiaryViewModel = koinViewModel()
 ) {
@@ -64,6 +68,7 @@ fun DiaryScreen(
         onAddProductToMeal = {
             onAddProductToMeal(it, diaryState.selectedDate)
         },
+        animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
     )
 }
@@ -77,6 +82,7 @@ private fun DiaryScreen(
     formatFullDate: (LocalDate) -> String,
     observeDiaryDay: (LocalDate) -> Flow<DiaryDay>,
     onAddProductToMeal: (Meal) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = rememberDiaryTopBarScrollBehavior()
@@ -113,6 +119,7 @@ private fun DiaryScreen(
 
                 if (diaryDay != null) {
                     MealsCard(
+                        animatedVisibilityScope = animatedVisibilityScope,
                         diaryDay = diaryDay!!,
                         onAddClick = onAddProductToMeal
                     )
@@ -122,6 +129,7 @@ private fun DiaryScreen(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @PreviewLightDark
 @Composable
 private fun DiaryScreenPreview() {
@@ -134,18 +142,21 @@ private fun DiaryScreenPreview() {
     val diaryDay = DiaryDayPreviewParameterProvider().values.first()
 
     FoodYouTheme {
-        DiaryScreen(
-            diaryState = rememberDiaryState(
-                zeroDay = LocalDate.ofEpochDay(4),
-                initialReferenceDate = referenceDate,
-                initialSelectedDate = selectedDate
-            ),
-            namesOfDayOfWeek = namesOfDayOfWeek,
-            getFirstDayOfWeek = firstDayOfWeek,
-            formatMonthYear = formatMonthYear,
-            formatFullDate = formatFullDate,
-            observeDiaryDay = { flowOf(diaryDay) },
-            onAddProductToMeal = {}
-        )
+        SharedTransitionPreview { _, animatedVisibilityScope ->
+            DiaryScreen(
+                diaryState = rememberDiaryState(
+                    zeroDay = LocalDate.ofEpochDay(4),
+                    initialReferenceDate = referenceDate,
+                    initialSelectedDate = selectedDate
+                ),
+                namesOfDayOfWeek = namesOfDayOfWeek,
+                getFirstDayOfWeek = firstDayOfWeek,
+                formatMonthYear = formatMonthYear,
+                formatFullDate = formatFullDate,
+                observeDiaryDay = { flowOf(diaryDay) },
+                onAddProductToMeal = {},
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
     }
 }

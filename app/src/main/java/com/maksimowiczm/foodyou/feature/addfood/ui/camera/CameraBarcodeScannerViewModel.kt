@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfood.ui.search
+package com.maksimowiczm.foodyou.feature.addfood.ui.camera
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

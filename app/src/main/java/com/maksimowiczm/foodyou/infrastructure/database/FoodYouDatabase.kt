@@ -4,7 +4,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
-import androidx.room.withTransaction
 import com.maksimowiczm.foodyou.feature.addfood.database.AddFoodDatabase
 import com.maksimowiczm.foodyou.feature.addfood.database.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.addfood.database.WeightMeasurementEntity
@@ -28,7 +27,6 @@ import com.maksimowiczm.foodyou.feature.product.database.WeightUnitConverter
     WeightMeasurementTypeConverter::class
 )
 abstract class FoodYouDatabase :
-    TransactionProvider,
     ProductDatabase,
     AddFoodDatabase,
     RoomDatabase() {
@@ -43,10 +41,4 @@ abstract class FoodYouDatabase :
             return build()
         }
     }
-
-    override suspend fun <T> withTransaction(block: suspend () -> T) = withTransactionWrapped(block)
 }
-
-private suspend fun <T> RoomDatabase.withTransactionWrapped(
-    block: suspend () -> T
-): T = this.withTransaction(block)

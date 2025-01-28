@@ -5,14 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.maksimowiczm.foodyou.feature.addfood.navigation.AddFoodRoute
+import com.maksimowiczm.foodyou.feature.addfood.navigation.AddFoodFeature
 import com.maksimowiczm.foodyou.feature.addfood.navigation.addFoodGraph
 import com.maksimowiczm.foodyou.feature.addfood.navigation.navigateToAddFood
 import com.maksimowiczm.foodyou.feature.diary.navigation.DiaryFeature
 import com.maksimowiczm.foodyou.feature.diary.navigation.diaryGraph
-import com.maksimowiczm.foodyou.feature.product.navigation.ProductsRoute
-import com.maksimowiczm.foodyou.feature.product.navigation.navigateToProducts
-import com.maksimowiczm.foodyou.feature.product.navigation.productsGraph
 
 @Composable
 fun FoodYouNavHost(
@@ -25,7 +22,7 @@ fun FoodYouNavHost(
         diaryGraph(
             onAddProductToMeal = { meal, date ->
                 navController.navigateToAddFood(
-                    route = AddFoodRoute.Search(
+                    route = AddFoodFeature(
                         meal = meal,
                         epochDay = date.toEpochDay()
                     ),
@@ -36,50 +33,8 @@ fun FoodYouNavHost(
             }
         )
         addFoodGraph(
-            searchOnProductClick = { productId, meal, date ->
-                navController.navigateToAddFood(
-                    route = AddFoodRoute.CreatePortion(
-                        productId = productId,
-                        meal = meal,
-                        epochDay = date.toEpochDay()
-                    )
-                )
-            },
-            searchOnCreateProduct = { meal, date ->
-                navController.navigateToProducts(
-                    ProductsRoute.CreateProduct(
-                        epochDay = date.toEpochDay(),
-                        mealType = meal
-                    )
-                )
-            },
-            searchOnCloseClick = {
+            onClose = {
                 navController.popBackStack()
-            },
-            createOnSuccess = {
-                navController.popBackStack<AddFoodRoute.CreatePortion>(inclusive = true)
-            },
-            createOnNavigateBack = {
-                navController.popBackStack<AddFoodRoute.CreatePortion>(inclusive = true)
-            }
-        )
-        productsGraph(
-            createOnNavigateBack = {
-                navController.popBackStack()
-            },
-            createOnSuccess = { productId, epochDay, mealType ->
-                navController.navigateToAddFood(
-                    route = AddFoodRoute.CreatePortion(
-                        productId = productId,
-                        meal = mealType,
-                        epochDay = epochDay
-                    ),
-                    navOptions = navOptions {
-                        popUpTo<ProductsRoute.CreateProduct> {
-                            inclusive = true
-                        }
-                    }
-                )
             }
         )
     }
