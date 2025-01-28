@@ -119,7 +119,6 @@ private fun DiaryScreen(
 
                 if (diaryDay != null) {
                     MealsCard(
-                        animatedVisibilityScope = animatedVisibilityScope,
                         diaryDay = diaryDay!!,
                         onAddClick = onAddProductToMeal
                     )

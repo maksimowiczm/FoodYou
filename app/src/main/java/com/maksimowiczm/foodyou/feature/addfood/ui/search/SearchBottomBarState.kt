@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.Saver
@@ -13,8 +14,8 @@ fun rememberSearchBottomBarState(
 ): SearchBottomBarState {
     return rememberSaveable(
         saver = Saver(
-            save = {
-                it.totalCalories
+            save = { state ->
+                state.totalCalories
             },
             restore = {
                 SearchBottomBarState(
@@ -29,7 +30,7 @@ fun rememberSearchBottomBarState(
     }
 }
 
-// @Stable
+@Stable
 class SearchBottomBarState(
     totalCalories: Int
 ) {

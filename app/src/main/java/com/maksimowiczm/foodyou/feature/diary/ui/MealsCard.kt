@@ -1,7 +1,5 @@
 package com.maksimowiczm.foodyou.feature.diary.ui
 
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,20 +39,16 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
-import com.maksimowiczm.foodyou.feature.addfood.ui.AddFoodSharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
 import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalDiaryPalette
-import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.component.ProgressIndicator
-import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 
 @Composable
 fun MealsCard(
     diaryDay: DiaryDay,
     onAddClick: (Meal) -> Unit,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -73,7 +67,6 @@ fun MealsCard(
                 val uiData = meal.asMealUiData()
 
                 MaterialMealItem(
-                    meal = meal,
                     icon = {
                         Icon(
                             painter = painterResource(uiData.icon),
@@ -88,7 +81,6 @@ fun MealsCard(
                     value = diaryDay.totalCalories(meal),
                     goalValue = goal,
                     onAddClick = { onAddClick(meal) },
-                    animatedVisibilityScope = animatedVisibilityScope,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
@@ -102,16 +94,13 @@ fun MealsCard(
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun MaterialMealItem(
-    meal: Meal,
     icon: @Composable () -> Unit,
     title: @Composable () -> Unit,
     value: Int,
     goalValue: Int,
     onAddClick: () -> Unit,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
     val animatedValue by animateFloatAsState(targetValue = value.toFloat())
@@ -179,30 +168,14 @@ private fun MaterialMealItem(
             }
         },
         trailingContent = {
-            val sharedTransitionScope =
-                LocalSharedTransitionScope.current ?: error("No SharedTransitionScope found")
+            FilledIconButton(
+                onClick = onAddClick
 
-            with(sharedTransitionScope) {
-                FilledIconButton(
-                    onClick = onAddClick,
-                    modifier = Modifier
-                        .sharedBounds(
-                            sharedContentState = rememberSharedContentState(
-                                AddFoodSharedTransitionKeys.SearchScreen(
-                                    meal = meal
-                                )
-                            ),
-                            animatedVisibilityScope = animatedVisibilityScope,
-                            clipInOverlayDuringTransition = OverlayClip(
-                                MaterialTheme.shapes.extraLarge
-                            )
-                        )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.action_add_product)
-                    )
-                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(R.string.action_add_product)
+                )
             }
         },
         colors = ListItemDefaults.colors(
@@ -243,19 +216,15 @@ private fun Meal.asMealUiData(): MealUiData = when (this) {
     Meal.Snacks -> MealUiData.Snacks
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @PreviewLightDark
 @Composable
 private fun MealsCardPreview() {
     val diaryDay = DiaryDayPreviewParameterProvider().values.first()
 
     FoodYouTheme {
-        SharedTransitionPreview { _, animatedVisibilityScope ->
-            MealsCard(
-                diaryDay = diaryDay,
-                onAddClick = {},
-                animatedVisibilityScope = animatedVisibilityScope
-            )
-        }
+        MealsCard(
+            diaryDay = diaryDay,
+            onAddClick = {}
+        )
     }
 }

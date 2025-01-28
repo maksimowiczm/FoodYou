@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.search
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
@@ -20,14 +21,12 @@ fun rememberSearchBarState(
     textFieldState,
     recentQueries,
     saver = Saver(
-        save = {
-            arrayOf<Any>(
-                expanded
-            )
+        save = { state ->
+            state.expanded
         },
         restore = {
             SearchBarState(
-                expanded = it[0] as Boolean,
+                expanded = it,
                 textFieldState = textFieldState,
                 recentQueries = recentQueries
             )
@@ -41,7 +40,7 @@ fun rememberSearchBarState(
     )
 }
 
-// @Stable
+@Stable
 class SearchBarState(
     expanded: Boolean,
     val textFieldState: TextFieldState,

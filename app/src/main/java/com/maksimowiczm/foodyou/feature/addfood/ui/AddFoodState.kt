@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -33,7 +34,7 @@ fun rememberAddFoodState(
     }
 }
 
-// @Immutable
+@Immutable
 class AddFoodState(
     val searchBarState: SearchBarState,
     val searchListState: SearchListState,

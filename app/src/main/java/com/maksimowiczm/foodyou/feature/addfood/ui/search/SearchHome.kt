@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
+import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.clickable
@@ -71,6 +72,7 @@ import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.addfood.ui.AddFoodState
 import com.maksimowiczm.foodyou.ui.component.LoadingIndicator
+import kotlinx.coroutines.CancellationException
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,12 +97,17 @@ fun SearchHome(
     }
 
     // TODO
-//    BackHandler(
-//        enabled = addFoodState.searchBarState.textFieldState.text.isNotEmpty()
-//    ) {
-//        addFoodState.searchBarState.textFieldState.clearText()
-//        onSearch("")
-//    }
+    // Do some nice predictive back handler for query
+    PredictiveBackHandler(
+        enabled = addFoodState.searchBarState.textFieldState.text.isNotEmpty()
+    ) { flow ->
+        try {
+            flow.collect {}
+            addFoodState.searchBarState.textFieldState.clearText()
+            onSearch("")
+        } catch (_: CancellationException) {
+        }
+    }
 
     // Make sure that bottom bar is visible when user can't scroll
     LaunchedEffect(isEmpty) {
