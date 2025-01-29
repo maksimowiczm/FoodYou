@@ -45,18 +45,10 @@ interface AddFoodRepository {
         localOnly: Boolean
     ): Flow<QueryResult<List<ProductWithWeightMeasurement>>>
 
-    /**
-     * Observe the products that have been measured for the given meal and date.
-     *
-     * @param meal The meal of the diary entry.
-     * @param date The date of the diary entry.
-     *
-     * @return A flow of the products that have been measured for the given meal and date.
-     */
-    fun observeMeasuredProducts(
+    fun observeTotalCalories(
         meal: Meal,
         date: LocalDate
-    ): Flow<List<ProductWithWeightMeasurement>>
+    ): Flow<Int>
 
     suspend fun getQuantitySuggestionByProductId(productId: Long): QuantitySuggestion
 

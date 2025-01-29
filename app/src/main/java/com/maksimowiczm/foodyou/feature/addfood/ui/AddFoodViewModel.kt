@@ -17,9 +17,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 class AddFoodViewModel(
@@ -207,6 +209,20 @@ class AddFoodViewModel(
             )
         }
     }
+
+    val totalCalories = addFoodRepository.observeTotalCalories(
+        date = date,
+        meal = meal
+    ).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT),
+        initialValue = runBlocking {
+            addFoodRepository.observeTotalCalories(
+                date = date,
+                meal = meal
+            ).first()
+        }
+    )
 
     private companion object {
         // 30 seconds, because user often navigate up and down

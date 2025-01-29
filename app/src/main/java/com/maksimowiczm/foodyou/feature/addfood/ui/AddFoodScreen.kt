@@ -70,6 +70,11 @@ fun AddFoodScreen(
         addFoodState.searchBarState.recentQueries = recentQueries
     }
 
+    val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
+    LaunchedEffect(totalCalories) {
+        addFoodState.searchBottomBarState.totalCalories = totalCalories
+    }
+
     NavHost(
         modifier = modifier,
         navController = addFoodState.navController,

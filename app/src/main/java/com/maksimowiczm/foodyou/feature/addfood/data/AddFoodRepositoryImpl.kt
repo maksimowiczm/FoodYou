@@ -202,15 +202,13 @@ class AddFoodRepositoryImpl(
         )
     }
 
-    override fun observeMeasuredProducts(
-        meal: Meal,
-        date: LocalDate
-    ): Flow<List<ProductWithWeightMeasurement>> {
-        return addFoodDao.observeMeasuredProducts(
+    override fun observeTotalCalories(meal: Meal, date: LocalDate) =
+        addFoodDao.observeMeasuredProducts(
             mealId = meal.toEntity().value,
             epochDay = date.toEpochDay()
-        ).map { it.map { entity -> entity.toDomain() } }
-    }
+        ).map { list ->
+            list.sumOf { it.toDomain().calories }
+        }
 
     override suspend fun getQuantitySuggestionByProductId(productId: Long): QuantitySuggestion {
         val product = productDao.getProductById(productId) ?: error("Product not found")

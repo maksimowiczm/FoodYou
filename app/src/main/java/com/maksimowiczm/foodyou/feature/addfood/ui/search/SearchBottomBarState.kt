@@ -35,5 +35,4 @@ class SearchBottomBarState(
     totalCalories: Int
 ) {
     var totalCalories: Int by mutableIntStateOf(totalCalories)
-        private set
 }
