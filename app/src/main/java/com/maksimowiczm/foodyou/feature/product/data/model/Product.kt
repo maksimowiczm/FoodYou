@@ -125,7 +125,7 @@ internal fun OpenFoodProduct.toEntity(): ProductEntity? {
 private fun String.toWeightUnit(): WeightUnit? {
     return when (this) {
         "g" -> WeightUnit.Gram
-        "ml" -> WeightUnit.Millilitre
+        "ml" -> WeightUnit.Milliliter
         else -> null
     }
 }

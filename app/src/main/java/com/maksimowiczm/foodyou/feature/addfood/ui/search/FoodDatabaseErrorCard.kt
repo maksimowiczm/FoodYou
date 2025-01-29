@@ -35,7 +35,7 @@ fun FoodDatabaseErrorCard(onRetry: () -> Unit, modifier: Modifier = Modifier) {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.feedback_food_database_load_error),
+                text = stringResource(R.string.neutral_food_database_load_error),
                 textAlign = TextAlign.Justify,
                 color = MaterialTheme.colorScheme.onError
             )

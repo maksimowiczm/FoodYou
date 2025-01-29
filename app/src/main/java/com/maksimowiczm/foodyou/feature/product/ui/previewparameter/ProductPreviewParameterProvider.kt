@@ -92,7 +92,7 @@ class ProductPreviewParameterProvider : PreviewParameterProvider<Product> {
             fiber = null,
             packageWeight = 1000f,
             servingWeight = 250f,
-            weightUnit = WeightUnit.Millilitre,
+            weightUnit = WeightUnit.Milliliter,
             productSource = ProductSource.User
         )
     )

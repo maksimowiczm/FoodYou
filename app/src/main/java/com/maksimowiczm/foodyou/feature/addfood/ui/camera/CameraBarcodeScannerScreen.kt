@@ -115,11 +115,11 @@ private fun CameraRequestPermissionScreen(
             Text(
                 modifier = Modifier.padding(8.dp),
                 text = if (willRedirectToSettings) {
-                    stringResource(R.string.permission_camera_request_redirect_to_settings)
+                    stringResource(R.string.neutral_camera_request_redirect_to_settings)
                 } else if (shouldShowRationale) {
-                    stringResource(R.string.permission_camera_request_rationale)
+                    stringResource(R.string.neutral_camera_request_rationale)
                 } else {
-                    stringResource(R.string.permission_camera_request)
+                    stringResource(R.string.neutral_camera_request)
                 },
                 textAlign = TextAlign.Center
             )

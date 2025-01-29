@@ -264,7 +264,7 @@ private fun SearchHomeLayout(
     val empty = @Composable {
         if (addFoodState.searchListState.products.isEmpty() && !addFoodState.searchListState.isLoading) {
             Text(
-                text = stringResource(R.string.feedback_no_products_found)
+                text = stringResource(R.string.neutral_no_products_found)
             )
         }
     }

@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.feature.product.data.model.WeightUnit
 fun WeightUnit.pluralString(count: Int): String {
     return when (this) {
         WeightUnit.Gram -> pluralStringResource(R.plurals.unit_gram, count)
-        WeightUnit.Millilitre -> pluralStringResource(R.plurals.unit_milligram, count)
+        WeightUnit.Milliliter -> pluralStringResource(R.plurals.unit_milliliter, count)
     }
 }
 
@@ -18,6 +18,6 @@ fun WeightUnit.pluralString(count: Int): String {
 fun WeightUnit.stringResourceShort(): String {
     return when (this) {
         WeightUnit.Gram -> stringResource(R.string.unit_gram_short)
-        WeightUnit.Millilitre -> stringResource(R.string.unit_milligram_short)
+        WeightUnit.Milliliter -> stringResource(R.string.unit_milliliter_short)
     }
 }

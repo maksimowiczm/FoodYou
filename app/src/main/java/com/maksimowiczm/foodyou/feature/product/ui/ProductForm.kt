@@ -111,7 +111,7 @@ private fun ProductForm(
         item {
             FormFieldTextField(
                 formField = formState.proteins,
-                label = { Text(stringResource(R.string.product_proteins) + "*") },
+                label = { Text(stringResource(R.string.nutriment_proteins) + "*") },
                 suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
             )
         }
@@ -119,7 +119,7 @@ private fun ProductForm(
         item {
             FormFieldTextField(
                 formField = formState.carbohydrates,
-                label = { Text(stringResource(R.string.product_carbohydrates) + "*") },
+                label = { Text(stringResource(R.string.nutriment_carbohydrates) + "*") },
                 suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
             )
         }
@@ -127,7 +127,7 @@ private fun ProductForm(
         item {
             FormFieldTextField(
                 formField = formState.fats,
-                label = { Text(stringResource(R.string.product_fats) + "*") },
+                label = { Text(stringResource(R.string.nutriment_fats) + "*") },
                 suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
             )
         }
@@ -135,7 +135,7 @@ private fun ProductForm(
         item {
             FormFieldTextField(
                 formField = formState.calories,
-                label = { Text(stringResource(R.string.product_calories) + "*") },
+                label = { Text(stringResource(R.string.unit_calories) + "*") },
                 suffix = { Text(stringResource(R.string.unit_kcal)) }
             )
         }
@@ -171,7 +171,7 @@ private fun ProductForm(
             item {
                 FormFieldTextField(
                     formField = formState.sugars,
-                    label = { Text(stringResource(R.string.product_sugars)) },
+                    label = { Text(stringResource(R.string.nutriment_sugars)) },
                     suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
                 )
             }
@@ -179,7 +179,7 @@ private fun ProductForm(
             item {
                 FormFieldTextField(
                     formField = formState.saturatedFats,
-                    label = { Text(stringResource(R.string.product_saturated_fats)) },
+                    label = { Text(stringResource(R.string.nutriment_saturated_fats)) },
                     suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
                 )
             }
@@ -187,7 +187,7 @@ private fun ProductForm(
             item {
                 FormFieldTextField(
                     formField = formState.salt,
-                    label = { Text(stringResource(R.string.product_salt)) },
+                    label = { Text(stringResource(R.string.nutriment_salt)) },
                     suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
                 )
             }
@@ -195,7 +195,7 @@ private fun ProductForm(
             item {
                 FormFieldTextField(
                     formField = formState.sodium,
-                    label = { Text(stringResource(R.string.product_sodium)) },
+                    label = { Text(stringResource(R.string.nutriment_sodium)) },
                     suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
                 )
             }
@@ -203,7 +203,7 @@ private fun ProductForm(
             item {
                 FormFieldTextField(
                     formField = formState.fiber,
-                    label = { Text(stringResource(R.string.product_fiber)) },
+                    label = { Text(stringResource(R.string.nutriment_fiber)) },
                     suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
                 )
             }
@@ -308,7 +308,7 @@ private fun WeightUnitDropdownMenu(
     ) {
         OutlinedTextField(
             label = { Text(stringResource(R.string.product_weight_unit)) },
-            value = weightUnit.pluralString(100),
+            value = weightUnit.pluralString(1),
             onValueChange = {},
             readOnly = true,
             modifier = Modifier
@@ -322,7 +322,7 @@ private fun WeightUnitDropdownMenu(
         ) {
             WeightUnit.entries.mapIndexed { i, it ->
                 DropdownMenuItem(
-                    text = { Text(it.pluralString(100)) },
+                    text = { Text(it.pluralString(1)) },
                     onClick = {
                         onWeightUnitChange(it)
                         expanded = false

@@ -9,45 +9,46 @@
     <string name="meal_name_dinner">Dinner</string>
     <string name="meal_name_snacks">Snacks</string>
 
+    <string name="unit_calories">Calories</string>
     <string name="unit_kcal">kcal</string>
-    <string name="unit_x_out_of_y_kcal">%1$s / %2$s kcal</string>
-    <string name="unit_gram_short">g</string>
+    <string name="unit_x_out_of_y_kcal" translatable="false">%1$s / %2$s kcal</string>
+    <string name="unit_gram_short" translatable="false">g</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
         <item quantity="other">grams</item>
     </plurals>
-    <string name="unit_milligram_short">ml</string>
-    <plurals name="unit_milligram">
+    <string name="unit_milliliter_short" translatable="false">ml</string>
+    <plurals name="unit_milliliter">
         <item quantity="one">milliliter</item>
         <item quantity="other">milliliters</item>
     </plurals>
 
+    <string name="product_package">Package</string>
     <plurals name="product_package">
         <item quantity="one">package</item>
         <item quantity="other">packages</item>
     </plurals>
+    <string name="product_serving">Serving</string>
     <plurals name="product_serving">
         <item quantity="one">serving</item>
         <item quantity="other">servings</item>
     </plurals>
     <string name="product_name">Name</string>
     <string name="product_brand">Brand</string>
-    <string name="product_proteins">Proteins</string>
-    <string name="product_carbohydrates">Carbohydrates</string>
-    <string name="product_sugars">Sugars</string>
-    <string name="product_fats">Fats</string>
-    <string name="product_calories">Calories</string>
-    <string name="action_show_additional_fields">Show additional fields</string>
-    <string name="product_saturated_fats">Saturated fats</string>
-    <string name="product_salt">Salt</string>
-    <string name="product_sodium">Sodium</string>
-    <string name="product_fiber">Fiber</string>
-    <string name="product_package">Package</string>
-    <string name="product_serving">Serving</string>
     <string name="product_weight_unit">Weight unit</string>
     <string name="product_barcode">Barcode</string>
 
-    <string name="action_go_to_today">Go to today</string>
+    <string name="nutriment_proteins">Proteins</string>
+    <string name="nutriment_carbohydrates">Carbohydrates</string>
+    <string name="nutriment_sugars">Sugars</string>
+    <string name="nutriment_fats">Fats</string>
+    <string name="nutriment_saturated_fats">Saturated fats</string>
+    <string name="nutriment_salt">Salt</string>
+    <string name="nutriment_sodium">Sodium</string>
+    <string name="nutriment_fiber">Fiber</string>
+
+    <string name="action_show_additional_fields">Show additional fields</string>
+    <string name="action_go_to_today">Go to Today</string>
     <string name="action_add_product">Add product</string>
     <string name="action_close">Close</string>
     <string name="action_search">Search</string>
@@ -58,23 +59,22 @@
     <string name="action_open_barcode_scanner">Open barcode scanner</string>
     <string name="action_tap_to_allow_access">Tap to allow access</string>
     <string name="action_tap_to_open_settings">Tap to open settings</string>
-    <string name="action_quick_add">Quick add</string>
     <string name="action_create_new_product">Create new product</string>
     <string name="action_create">Create</string>
     <string name="action_clear_search_query">Clear search query</string>
     <string name="action_clear">Clear</string>
     <string name="action_delete">Delete</string>
 
-    <string name="permission_camera_request">Allow access to your camera to scan barcodes</string>
-    <string name="permission_camera_request_rationale">You have to allow access in order to scan barcodes. Otherwise, how would you scan them?</string>
-    <string name="permission_camera_request_redirect_to_settings">Camera permission is required to scan barcodes. Please allow it in the app settings.</string>
+    <string name="neutral_camera_request">Allow access to your camera to scan barcodes</string>
+    <string name="neutral_camera_request_rationale">You must allow access in order to scan barcodes.</string>
+    <string name="neutral_camera_request_redirect_to_settings">Camera permission is required to scan barcodes. Please allow it in the app settings.</string>
+
+    <string name="neutral_no_products_found">No products found</string>
+    <string name="neutral_food_database_load_error">"Couldn't download products from the remote food database. You can still view your previously downloaded products."</string>
 
     <string name="error_this_field_cannot_be_empty">This field cannot be empty</string>
     <string name="error_invalid">Invalid</string>
     <string name="error_invalid_number">Invalid number</string>
     <string name="error_value_cannot_be_negative">Value cannot be negative</string>
-
-    <string name="feedback_no_products_found">No products found</string>
-    <string name="feedback_food_database_load_error">Couldn\'t load products from the food database. You can still view your previously searched products. </string>
 
 </resources>

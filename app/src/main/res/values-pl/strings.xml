@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="headline_diary">Dziennik</string>
+    <string name="headline_create_product">Stwórz produkt</string>
+
+    <string name="meal_name_breakfast">Śniadanie</string>
+    <string name="meal_name_lunch">Drugie śniadanie</string>
+    <string name="meal_name_dinner">Obiad</string>
+    <string name="meal_name_snacks">Przekąski</string>
+
+    <string name="unit_calories">Kalorie</string>
+    <string name="unit_kcal">kcal</string>
+    <plurals name="unit_gram">
+        <item quantity="one">gram</item>
+        <item quantity="few">gramy</item>
+        <item quantity="many">gramów</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">mililitr</item>
+        <item quantity="few">mililitry</item>
+        <item quantity="many">mililitrów</item>
+    </plurals>
+
+    <string name="product_package">Opakowanie</string>
+    <plurals name="product_package">
+        <item quantity="one">opakowanie</item>
+        <item quantity="few">opakowania</item>
+        <item quantity="many">opakowań</item>
+    </plurals>
+    <string name="product_serving">Porcja</string>
+    <plurals name="product_serving">
+        <item quantity="one">porcja</item>
+        <item quantity="few">porcje</item>
+        <item quantity="many">porcji</item>
+    </plurals>
+
+    <string name="product_name">Nazwa</string>
+    <string name="product_brand">Producent</string>
+    <string name="product_weight_unit">Jednostka pomiaru</string>
+    <string name="product_barcode">Kod kreskowy</string>
+
+    <string name="nutriment_proteins">Białka</string>
+    <string name="nutriment_carbohydrates">Węglowodany</string>
+    <string name="nutriment_sugars">Cukry</string>
+    <string name="nutriment_fats">Tłuszcze</string>
+    <string name="nutriment_saturated_fats">Kwasy tłuszczowe nasycone</string>
+    <string name="nutriment_salt">Sól</string>
+    <string name="nutriment_sodium">Sód</string>
+    <string name="nutriment_fiber">Błonnik</string>
+
+    <string name="action_show_additional_fields">Pokaż dodatkowe pola</string>
+    <string name="action_go_to_today">Przejdź do dzisiaj</string>
+    <string name="action_add_product">Dodaj produkt</string>
+    <string name="action_close">Zamknij</string>
+    <string name="action_search">Szukaj</string>
+    <string name="action_scan_barcode">Skanuj kod kreskowy</string>
+    <string name="action_add">Dodaj</string>
+    <string name="action_go_back">Wróć</string>
+    <string name="action_retry">Spróbuj ponownie</string>
+    <string name="action_open_barcode_scanner">Otwórz skaner kodów kreskowych</string>
+    <string name="action_tap_to_allow_access">Kliknij, aby zezwolić</string>
+    <string name="action_tap_to_open_settings">Kliknij, aby otworzyć ustawienia</string>
+    <string name="action_create_new_product">Stwórz nowy produkt</string>
+    <string name="action_create">Stwórz</string>
+    <string name="action_clear_search_query">Wyczyść wyszukiwanie</string>
+    <string name="action_clear">Wyczyść</string>
+    <string name="action_delete">Usuń</string>
+
+    <string name="neutral_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu</string>
+    <string name="neutral_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu</string>
+    <string name="neutral_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
+
+    <string name="neutral_no_products_found">Nie znaleziono produktów</string>
+    <string name="neutral_food_database_load_error">Nie udało się pobrać produktów ze zdalnej bazy danych. Wciąż możesz przeglądać wcześniej pobrane produkty.</string>
+
+    <string name="error_this_field_cannot_be_empty">To pole nie może być puste</string>
+    <string name="error_invalid">Nieprawidłowy</string>
+    <string name="error_invalid_number">Niepoprawny numer</string>
+    <string name="error_value_cannot_be_negative">Wartość nie może być ujemna</string>
+
+</resources>
