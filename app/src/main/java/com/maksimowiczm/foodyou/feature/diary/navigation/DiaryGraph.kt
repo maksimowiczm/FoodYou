@@ -17,8 +17,7 @@ fun NavGraphBuilder.diaryGraph(
 ) {
     composable<DiaryFeature> {
         DiaryScreen(
-            onAddProductToMeal = onAddProductToMeal,
-            animatedVisibilityScope = this
+            onAddProductToMeal = onAddProductToMeal
         )
     }
 }

@@ -47,9 +47,13 @@ data class Product(
      */
     val productSource: ProductSource
 ) {
-    fun calories(amount: Float): Float {
-        return calories * amount / 100
-    }
+    fun calories(amount: Float) = calories * amount / 100
+
+    fun protein(amount: Float) = proteins * amount / 100
+
+    fun carbohydrates(amount: Float) = carbohydrates * amount / 100
+
+    fun fats(amount: Float) = fats * amount / 100
 }
 
 fun ProductEntity.toDomain(): Product {

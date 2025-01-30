@@ -22,6 +22,18 @@ data class DiaryDay(
      */
     fun totalCalories(meal: Meal) = mealProductMap[meal]?.sumOf { it.calories } ?: 0
 
+    val totalCalories: Int
+        get() = mealProductMap.values.flatten().sumOf { it.calories }
+
+    val totalProteins: Int
+        get() = mealProductMap.values.flatten().sumOf { it.proteins }
+
+    val totalCarbohydrates: Int
+        get() = mealProductMap.values.flatten().sumOf { it.carbohydrates }
+
+    val totalFats: Int
+        get() = mealProductMap.values.flatten().sumOf { it.fats }
+
     /**
      * List of all meals in the diary day.
      */

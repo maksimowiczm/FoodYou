@@ -352,7 +352,7 @@ data class DiaryTopBarColors(
 
 private val defaultDiaryTopBarColors
     @Composable get() = DiaryTopBarColors(
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
         textColor = MaterialTheme.colorScheme.onSurface,
         selectedDateContainerColor = MaterialTheme.colorScheme.primary,
         selectedDateTextColor = MaterialTheme.colorScheme.onPrimary,

@@ -73,9 +73,23 @@
     <string name="neutral_no_products_found">Nie znaleziono produktów</string>
     <string name="neutral_food_database_load_error">Nie udało się pobrać produktów ze zdalnej bazy danych. Wciąż możesz przeglądać wcześniej pobrane produkty.</string>
 
+    <plurals name="neutral_remaining_grams">
+        <item quantity="one">Pozostał %1$d gram</item>
+        <item quantity="few">Pozostały %1$d gramy</item>
+        <item quantity="many">Pozostało %1$d gramów</item>
+    </plurals>
+
     <string name="error_this_field_cannot_be_empty">To pole nie może być puste</string>
     <string name="error_invalid">Nieprawidłowy</string>
     <string name="error_invalid_number">Niepoprawny numer</string>
     <string name="error_value_cannot_be_negative">Wartość nie może być ujemna</string>
+
+    <string name="positive_goal_reached">Cel osiągnięty</string>
+
+    <plurals name="negative_exceeded_by_grams">
+        <item quantity="one">Przekroczono o %1$d gram</item>
+        <item quantity="few">Przekroczono o %1$d gramy</item>
+        <item quantity="many">Przekroczono o %1$d gramów</item>
+    </plurals>
 
 </resources>
