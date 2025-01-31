@@ -20,11 +20,7 @@ class DiaryViewModel(
 
     val initialDate: LocalDate = diaryRepository.getSelectedDate()
 
-    fun getFirstDayOfWeek(date: LocalDate) = systemInfoRepository.getFirstDayOfWeek(date)
-
     fun formatMonthYear(date: LocalDate): String = systemInfoRepository.formatMonthYear(date)
-
-    fun formatFullDate(date: LocalDate): String = systemInfoRepository.formatFullDate(date)
 
     fun observeDiaryDay(date: LocalDate) = diaryRepository.observeDiaryDay(date)
 

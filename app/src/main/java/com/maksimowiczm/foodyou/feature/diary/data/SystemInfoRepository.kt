@@ -23,14 +23,6 @@ interface SystemInfoRepository {
     val weekDayNamesShort: Array<String>
 
     /**
-     * Determines the first day of the week for the specified [date], based on the system's locale.
-     *
-     * @param date The reference date.
-     * @return The [LocalDate] representing the first day of the week that contains the given [date].
-     */
-    fun getFirstDayOfWeek(date: LocalDate): LocalDate
-
-    /**
      * Formats the specified [date] as a string in the "MMMM yyyy" format.
      *
      * The formatting respects the system's locale, using the full month name and the year.
@@ -39,14 +31,4 @@ interface SystemInfoRepository {
      * @return A string representing the formatted month and year.
      */
     fun formatMonthYear(date: LocalDate): String
-
-    /**
-     * Formats the specified [date] as a string in the full date format.
-     *
-     * The formatting respects the system's locale, using the full date format.
-     *
-     * @param date The date to format.
-     * @return A string representing the formatted date.
-     */
-    fun formatFullDate(date: LocalDate): String
 }

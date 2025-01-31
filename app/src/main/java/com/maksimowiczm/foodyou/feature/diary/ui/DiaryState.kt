@@ -1,8 +1,12 @@
 package com.maksimowiczm.foodyou.feature.diary.ui
 
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,20 +19,26 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
+// 2106 seems reasonable for now
+private const val DIARY_DAYS_COUNT = 50_000
+private const val MILLIS_IN_DAY = 86400000
+
 @Composable
 fun rememberDiaryState(
+    namesOfDayOfWeek: Array<String>,
     zeroDay: LocalDate = LocalDate.ofEpochDay(0),
     initialReferenceDate: LocalDate = LocalDate.now(),
     initialSelectedDate: LocalDate = LocalDate.now()
 ): DiaryState {
     val coroutineScope = rememberCoroutineScope()
 
-    val weekPagerState = rememberPagerState(
-        pageCount = { 50_000 },
-        initialPage = ChronoUnit.WEEKS.between(zeroDay, initialSelectedDate).toInt()
+    val lazyListState = rememberLazyListState(
+        initialFirstVisibleItemIndex =
+        ChronoUnit.DAYS.between(zeroDay, initialSelectedDate).toInt() - 2
     )
 
     return rememberSaveable(
+        namesOfDayOfWeek,
         zeroDay,
         initialReferenceDate,
         initialSelectedDate,
@@ -43,7 +53,9 @@ fun rememberDiaryState(
 
                 DiaryState(
                     coroutineScope = coroutineScope,
-                    weekPagerState = weekPagerState,
+                    namesOfDayOfWeek = namesOfDayOfWeek,
+                    lazyListCount = DIARY_DAYS_COUNT,
+                    lazyListState = lazyListState,
                     zeroDate = zeroDay,
                     initialSelectedDate = selectedDate,
                     initialReferenceDate = initialReferenceDate
@@ -53,7 +65,9 @@ fun rememberDiaryState(
     ) {
         DiaryState(
             coroutineScope = coroutineScope,
-            weekPagerState = weekPagerState,
+            namesOfDayOfWeek = namesOfDayOfWeek,
+            lazyListCount = DIARY_DAYS_COUNT,
+            lazyListState = lazyListState,
             zeroDate = zeroDay,
             initialSelectedDate = initialSelectedDate,
             initialReferenceDate = initialReferenceDate
@@ -61,36 +75,77 @@ fun rememberDiaryState(
     }
 }
 
+@Stable
 class DiaryState(
-    val coroutineScope: CoroutineScope,
-    val weekPagerState: PagerState,
+    private val coroutineScope: CoroutineScope,
+    val namesOfDayOfWeek: Array<String>,
+    val lazyListCount: Int,
+    val lazyListState: LazyListState,
     val zeroDate: LocalDate,
     initialSelectedDate: LocalDate = LocalDate.now(),
     initialReferenceDate: LocalDate = LocalDate.now()
 ) {
     val referenceDate: LocalDate = initialReferenceDate
-    val referenceWeekPage: Int = ChronoUnit.WEEKS.between(zeroDate, referenceDate).toInt()
+    private val referenceDateVisible
+        get() = lazyListState.layoutInfo.visibleItemsInfo.any {
+            zeroDate.plusDays(it.index.toLong()) == referenceDate
+        }
 
-    val referenceDateSelected by derivedStateOf {
-        selectedDate != referenceDate
+    val firstVisibleDate by derivedStateOf {
+        lazyListState.layoutInfo.visibleItemsInfo.firstOrNull()?.let {
+            zeroDate.plusDays(it.index.toLong())
+        }
     }
 
     var selectedDate by mutableStateOf(initialSelectedDate)
         private set
+    private val selectedDateVisible
+        get() = lazyListState.layoutInfo.visibleItemsInfo.any {
+            zeroDate.plusDays(it.index.toLong()) == selectedDate
+        }
 
-    val targetWeek: LocalDate by derivedStateOf {
-        zeroDate.plusWeeks(weekPagerState.targetPage.toLong())
-    }
+    fun onDateSelect(date: LocalDate, scroll: Boolean) {
+        selectedDate = date
 
-    private fun synchronizeWeekPager(date: LocalDate) {
-        coroutineScope.launch {
-            val weekPage = ChronoUnit.WEEKS.between(zeroDate, date).toInt()
-            weekPagerState.animateScrollToPage(weekPage)
+        if (scroll) {
+            coroutineScope.launch {
+                lazyListState.scrollToItem(
+                    index = ChronoUnit.DAYS.between(zeroDate, date).toInt(),
+                    scrollOffset = -lazyListState.layoutInfo.viewportEndOffset / 2
+                )
+            }
         }
     }
 
-    fun onDateSelect(date: LocalDate) {
-        selectedDate = date
-        synchronizeWeekPager(date)
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun rememberDatePickerState(): DatePickerState {
+        val lastDate = zeroDate.plusDays(lazyListCount.toLong() - 1)
+        val yearRange = zeroDate.year..lastDate.year
+
+        // If selected date is visible, we want to display it,
+        // otherwise we want to display reference date if it's visible.
+        // If none of them are visible, we want to display the first visible date.
+        val initialDisplayedMonthMillis = if (selectedDateVisible) {
+            selectedDate.toEpochDay() * MILLIS_IN_DAY
+        } else if (referenceDateVisible) {
+            referenceDate.toEpochDay() * MILLIS_IN_DAY
+        } else {
+            firstVisibleDate?.toEpochDay()?.let { it * MILLIS_IN_DAY }
+        }
+
+        return androidx.compose.material3.rememberDatePickerState(
+            initialSelectedDateMillis = selectedDate.toEpochDay() * MILLIS_IN_DAY,
+            initialDisplayedMonthMillis = initialDisplayedMonthMillis,
+            yearRange = yearRange,
+            selectableDates = object : SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    val date = LocalDate.ofEpochDay(utcTimeMillis / MILLIS_IN_DAY)
+                    return date in zeroDate..lastDate
+                }
+
+                override fun isSelectableYear(year: Int) = year in yearRange
+            }
+        )
     }
 }

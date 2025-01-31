@@ -48,7 +48,6 @@
     <string name="nutriment_fiber">Fiber</string>
 
     <string name="action_show_additional_fields">Show additional fields</string>
-    <string name="action_go_to_today">Go to Today</string>
     <string name="action_add_product">Add product</string>
     <string name="action_close">Close</string>
     <string name="action_search">Search</string>
@@ -72,6 +71,8 @@
     <string name="neutral_no_products_found">No products found</string>
     <string name="neutral_food_database_load_error">"Couldn't download products from the remote food database. You can still view your previously downloaded products."</string>
 
+    <string name="neutral_cancel">Cancel</string>
+
     <plurals name="neutral_remaining_grams">
         <item quantity="one">%1$d gram left</item>
         <item quantity="other">%1$d grams left</item>
@@ -83,6 +84,7 @@
     <string name="error_value_cannot_be_negative">Value cannot be negative</string>
 
     <string name="positive_goal_reached">Goal reached</string>
+    <string name="positive_ok">OK</string>
 
     <plurals name="negative_exceeded_by_grams">
         <item quantity="one">Exceeded by %1$d gram</item>

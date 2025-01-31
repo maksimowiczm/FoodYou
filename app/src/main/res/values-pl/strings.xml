@@ -49,7 +49,6 @@
     <string name="nutriment_fiber">Błonnik</string>
 
     <string name="action_show_additional_fields">Pokaż dodatkowe pola</string>
-    <string name="action_go_to_today">Przejdź do dzisiaj</string>
     <string name="action_add_product">Dodaj produkt</string>
     <string name="action_close">Zamknij</string>
     <string name="action_search">Szukaj</string>
@@ -73,6 +72,8 @@
     <string name="neutral_no_products_found">Nie znaleziono produktów</string>
     <string name="neutral_food_database_load_error">Nie udało się pobrać produktów ze zdalnej bazy danych. Wciąż możesz przeglądać wcześniej pobrane produkty.</string>
 
+    <string name="neutral_cancel">Anuluj</string>
+
     <plurals name="neutral_remaining_grams">
         <item quantity="one">Pozostał %1$d gram</item>
         <item quantity="few">Pozostały %1$d gramy</item>
@@ -85,6 +86,7 @@
     <string name="error_value_cannot_be_negative">Wartość nie może być ujemna</string>
 
     <string name="positive_goal_reached">Cel osiągnięty</string>
+    <string name="positive_ok">OK</string>
 
     <plurals name="negative_exceeded_by_grams">
         <item quantity="one">Przekroczono o %1$d gram</item>
