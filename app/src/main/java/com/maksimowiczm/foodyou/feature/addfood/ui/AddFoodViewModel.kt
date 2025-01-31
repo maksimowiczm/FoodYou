@@ -82,6 +82,13 @@ class AddFoodViewModel(
         )
     }
 
+    fun onClearSearch() {
+        onSearch(
+            query = null,
+            localOnly = true
+        )
+    }
+
     /**
      * Search for products.
      *

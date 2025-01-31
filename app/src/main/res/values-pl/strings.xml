@@ -70,7 +70,7 @@
     <string name="neutral_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
 
     <string name="neutral_no_products_found">Nie znaleziono produktów</string>
-    <string name="neutral_food_database_load_error">Nie udało się pobrać produktów ze zdalnej bazy danych. Wciąż możesz przeglądać wcześniej pobrane produkty.</string>
+    <string name="neutral_food_database_load_error">Nie udało się pobrać produktów ze zdalnej bazy danych. Wciąż możesz przeglądać produkty wcześniej pobrane.</string>
 
     <string name="neutral_cancel">Anuluj</string>
 

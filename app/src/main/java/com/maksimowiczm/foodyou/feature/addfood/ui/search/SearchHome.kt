@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +22,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -51,6 +49,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -81,6 +80,7 @@ fun SearchHome(
     animatedVisibilityScope: AnimatedVisibilityScope,
     addFoodState: AddFoodState,
     onSearch: (String) -> Unit,
+    onClearSearch: () -> Unit,
     onRetry: () -> Unit,
     onBack: () -> Unit,
     onProductClick: (ProductSearchUiModel) -> Unit,
@@ -104,7 +104,7 @@ fun SearchHome(
         try {
             flow.collect {}
             addFoodState.searchBarState.textFieldState.clearText()
-            onSearch("")
+            onClearSearch()
         } catch (_: CancellationException) {
         }
     }
@@ -132,6 +132,7 @@ fun SearchHome(
             onProductClick = onProductClick,
             onBack = onBack,
             onSearch = onSearch,
+            onClearSearch = onClearSearch,
             onRetry = onRetry,
             onBarcodeScanner = onBarcodeScanner,
             scrollBehavior = bottomAppBarScrollBehavior
@@ -154,25 +155,27 @@ private fun SearchHomeLayout(
     onProductClick: (ProductSearchUiModel) -> Unit,
     onBack: () -> Unit,
     onSearch: (String) -> Unit,
+    onClearSearch: () -> Unit,
     onRetry: () -> Unit,
     onBarcodeScanner: () -> Unit,
     scrollBehavior: BottomAppBarScrollBehavior,
     modifier: Modifier = Modifier
 ) {
-    val topInsets = WindowInsets.displayCutout.union(WindowInsets.systemBars)
-    val searchBarOffset =
-        topInsets.asPaddingValues()
-            .calculateTopPadding() + SearchBarDefaults.InputFieldHeight + 16.dp
+    val density = LocalDensity.current
+    var searchBarHeightDp by remember { mutableStateOf(0.dp) }
 
     val searchBar = @Composable {
         MySearchBar(
             searchBarState = addFoodState.searchBarState,
             onSearch = onSearch,
-            onBack = onBack
+            onClearSearch = onClearSearch,
+            onBack = onBack,
+            modifier = Modifier.onSizeChanged {
+                searchBarHeightDp = density.run { it.height.toDp() }
+            }
         )
     }
 
-    val density = LocalDensity.current
     var errorCardHeightPx by remember { mutableIntStateOf(0) }
     val errorCardHeight by remember(errorCardHeightPx) { derivedStateOf { density.run { errorCardHeightPx.toDp() } } }
     val isError by remember { derivedStateOf { addFoodState.searchListState.isError } }
@@ -223,7 +226,7 @@ private fun SearchHomeLayout(
     }
 
     // Put them both in column because there is wierd behaviour when they are placed in layout.
-    // - Black bar between list and bottom bar when bottom bar changes height.
+    // - Black bar appears between list and bottom bar when bottom bar height changes.
     val listWithBar = @Composable {
         Column {
             ProductsLazyColumn(
@@ -234,7 +237,11 @@ private fun SearchHomeLayout(
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
                 topOffset = {
                     item {
-                        Spacer(Modifier.height(searchBarOffset + errorCardHeight))
+                        Spacer(
+                            Modifier.height(
+                                searchBarHeightDp + errorCardHeight + 8.dp
+                            )
+                        )
                     }
                 },
                 bottomOffset = {
@@ -308,20 +315,25 @@ private fun SearchHomeLayout(
 private fun MySearchBar(
     searchBarState: SearchBarState,
     onSearch: (String) -> Unit,
-    onBack: () -> Unit
+    onClearSearch: () -> Unit,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    @Suppress("NAME_SHADOWING")
-    val onSearch: (String) -> Unit = {
+    val onSearchInternal: (String) -> Unit = {
         onSearch(it)
         searchBarState.textFieldState.setTextAndPlaceCursorAtEnd(it)
         searchBarState.expanded = false
+    }
+    val onClearInternal: () -> Unit = {
+        onClearSearch()
+        searchBarState.textFieldState.clearText()
     }
 
     SearchBar(
         inputField = {
             SearchBarDefaults.InputField(
                 state = searchBarState.textFieldState,
-                onSearch = onSearch,
+                onSearch = onSearchInternal,
                 expanded = searchBarState.expanded,
                 onExpandedChange = { searchBarState.expanded = it },
                 placeholder = {
@@ -350,7 +362,7 @@ private fun MySearchBar(
                                 if (searchBarState.expanded) {
                                     searchBarState.textFieldState.clearText()
                                 } else {
-                                    onSearch("")
+                                    onClearInternal()
                                 }
                             }
                         ) {
@@ -364,14 +376,15 @@ private fun MySearchBar(
             )
         },
         expanded = searchBarState.expanded,
-        onExpandedChange = { searchBarState.expanded = it }
+        onExpandedChange = { searchBarState.expanded = it },
+        modifier = modifier
     ) {
         val recentQueries = searchBarState.recentQueries
 
         LazyColumn {
             items(recentQueries) { productQuery ->
                 ListItem(
-                    modifier = Modifier.clickable { onSearch(productQuery.query) },
+                    modifier = Modifier.clickable { onSearchInternal(productQuery.query) },
                     headlineContent = {
                         Text(
                             modifier = Modifier.displayCutoutPadding(),

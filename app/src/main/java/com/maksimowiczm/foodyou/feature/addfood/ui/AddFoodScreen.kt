@@ -120,11 +120,14 @@ fun AddFoodScreen(
                 animatedVisibilityScope = this,
                 addFoodState = addFoodState,
                 onSearch = {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                     viewModel.onSearch(
                         query = it,
                         localOnly = false
                     )
+                },
+                onClearSearch = {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                    viewModel.onClearSearch()
                 },
                 onBack = onClose,
                 onProductClick = {
