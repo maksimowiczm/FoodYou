@@ -46,26 +46,6 @@ internal class DiaryRepositoryImpl(
     }
 
     private fun observeCurrentGoals(): Flow<DailyGoals> {
-        val mealCaloriesGoals = combine(
-            dataStore.observe(DiaryPreferences.breakfastCalories),
-            dataStore.observe(DiaryPreferences.lunchCalories),
-            dataStore.observe(DiaryPreferences.dinnerCalories),
-            dataStore.observe(DiaryPreferences.snacksCalories)
-        ) { arr ->
-            if (arr.any { it == null }) {
-                return@combine null
-            }
-
-            val (breakfast, lunch, dinner, snacks) = arr.map { it!! }
-
-            mapOf(
-                Meal.Breakfast to breakfast,
-                Meal.Lunch to lunch,
-                Meal.Dinner to dinner,
-                Meal.Snacks to snacks
-            )
-        }
-
         val nutrimentGoals = combine(
             dataStore.observe(DiaryPreferences.proteinsGoal),
             dataStore.observe(DiaryPreferences.carbohydratesGoal),
@@ -79,11 +59,10 @@ internal class DiaryRepositoryImpl(
         }
 
         return combine(
-            mealCaloriesGoals,
             dataStore.observe(DiaryPreferences.caloriesGoal),
             nutrimentGoals
-        ) { mealCalories, calories, nutriments ->
-            if (mealCalories == null || nutriments == null || calories == null) {
+        ) { calories, nutriments ->
+            if (nutriments == null || calories == null) {
                 return@combine defaultGoals()
             }
 
@@ -93,8 +72,7 @@ internal class DiaryRepositoryImpl(
                 calories = calories,
                 proteins = proteins,
                 carbohydrates = carbohydrates,
-                fats = fats,
-                mealCalorieGoalMap = mealCalories
+                fats = fats
             )
         }
     }
@@ -122,12 +100,10 @@ internal class DiaryRepositoryImpl(
             observeCurrentGoals()
         ) { products, goals ->
             val meals = products
-                .groupBy { it.weightMeasurement?.mealId }
+                .groupBy { it.weightMeasurement.mealId }
                 .mapKeys { (mealId, _) ->
-                    mealId?.toDomain()
+                    mealId.toDomain()
                 }
-                .filterKeys { it != null }
-                .mapKeys { it.key!! }
                 .mapValues { (_, products) ->
                     products.map { it.toDomain() }
                 }

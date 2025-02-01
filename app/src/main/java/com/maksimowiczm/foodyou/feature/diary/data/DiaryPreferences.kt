@@ -11,9 +11,4 @@ object DiaryPreferences {
     val proteinsGoal = floatPreferencesKey("proteins_goal")
     val carbohydratesGoal = floatPreferencesKey("carbohydrates_goal")
     val fatsGoal = floatPreferencesKey("fats_goal")
-
-    val breakfastCalories = floatPreferencesKey("breakfast_calories")
-    val lunchCalories = floatPreferencesKey("lunch_calories")
-    val dinnerCalories = floatPreferencesKey("dinner_calories")
-    val snacksCalories = floatPreferencesKey("snacks_calories")
 }

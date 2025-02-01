@@ -64,8 +64,7 @@ class SettingsRepositoryImpl(
                 calories = calories,
                 proteins = proteins,
                 carbohydrates = carbohydrates,
-                fats = fats,
-                mealCalorieGoalMap = emptyMap()
+                fats = fats
             )
         }
     }

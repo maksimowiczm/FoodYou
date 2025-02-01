@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.diary.data.model
 
-import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import kotlin.math.roundToInt
 
 data class DailyGoals(
@@ -19,18 +18,8 @@ data class DailyGoals(
     /**
      * Fats percentage of total calories.
      */
-    val fats: Float,
-
-    /**
-     * Calorie goal in percentage of total calories for each meal.
-     */
-    private val mealCalorieGoalMap: Map<Meal, Float>
+    val fats: Float
 ) {
-    /**
-     * Calorie goal for a specific meal.
-     */
-    fun calorieGoal(meal: Meal) = (calories * mealCalorieGoalMap[meal]!!).roundToInt()
-
     /**
      * Proteins goal in grams.
      */
@@ -54,11 +43,5 @@ fun defaultGoals() = DailyGoals(
     calories = 2000,
     proteins = .2f,
     carbohydrates = .5f,
-    fats = .3f,
-    mealCalorieGoalMap = mapOf(
-        Meal.Breakfast to .2f,
-        Meal.Lunch to .3f,
-        Meal.Dinner to .3f,
-        Meal.Snacks to .2f
-    )
+    fats = .3f
 )

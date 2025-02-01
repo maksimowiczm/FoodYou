@@ -1,21 +1,12 @@
 package com.maksimowiczm.foodyou.feature.diary.ui
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
@@ -30,7 +21,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,8 +30,6 @@ import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
-import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalDiaryPalette
-import com.maksimowiczm.foodyou.ui.component.ProgressIndicator
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 
 @Composable
@@ -59,7 +47,6 @@ fun MealsCard(
             val items = diaryDay.meals
 
             items.forEachIndexed { index, meal ->
-                val goal = diaryDay.dailyGoals.calorieGoal(meal)
                 val uiData = meal.asMealUiData()
 
                 MaterialMealItem(
@@ -75,7 +62,6 @@ fun MealsCard(
                         )
                     },
                     value = diaryDay.totalCalories(meal),
-                    goalValue = goal,
                     onAddClick = { onAddClick(meal) },
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
@@ -95,12 +81,9 @@ private fun MaterialMealItem(
     icon: @Composable () -> Unit,
     title: @Composable () -> Unit,
     value: Int,
-    goalValue: Int,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val animatedValue by animateFloatAsState(targetValue = value.toFloat())
-
     ListItem(
         headlineContent = {
             Row(
@@ -113,55 +96,16 @@ private fun MaterialMealItem(
                 ) {
                     title()
                 }
-
-                if (value >= goalValue) {
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clip(CircleShape)
-                            .background(LocalDiaryPalette.current.goalsFulfilledColor)
-                            .padding(4.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = null,
-                            tint = Color.Black
-                        )
-                    }
-                }
             }
         },
         modifier = modifier,
         leadingContent = icon,
         supportingContent = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .width(IntrinsicSize.Max),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Box(
-                    modifier = Modifier.width(IntrinsicSize.Min)
-                ) {
-                    ProgressIndicator(
-                        modifier = Modifier.size(width = 50.dp, height = 6.dp),
-                        progress = { animatedValue / goalValue },
-                        progressColor = if (animatedValue >= goalValue) {
-                            LocalDiaryPalette.current.goalsFulfilledColor
-                        } else {
-                            MaterialTheme.colorScheme.primary
-                        }
-                    )
-                }
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(R.string.unit_x_out_of_y_kcal, value, goalValue),
-                    style = MaterialTheme.typography.labelLarge,
-                    maxLines = 1
-                )
-            }
+            Text(
+                text = "$value " + stringResource(R.string.unit_kcal),
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1
+            )
         },
         trailingContent = {
             FilledIconButton(
