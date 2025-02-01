@@ -53,6 +53,7 @@ import java.time.LocalDate
 fun DiaryScreen(
     onAddProductToMeal: (Meal, LocalDate) -> Unit,
     onSettingsClick: () -> Unit,
+    onDailyGoalsSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiaryViewModel = koinViewModel()
 ) {
@@ -83,6 +84,7 @@ fun DiaryScreen(
             onAddProductToMeal(it, diaryState.selectedDate)
         },
         onSettingsClick = onSettingsClick,
+        onDailyGoalsSettingsClick = onDailyGoalsSettingsClick,
         modifier = modifier
     )
 }
@@ -95,6 +97,7 @@ private fun DiaryScreen(
     observeDiaryDay: (LocalDate) -> Flow<DiaryDay>,
     onAddProductToMeal: (Meal) -> Unit,
     onSettingsClick: () -> Unit,
+    onDailyGoalsSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -172,7 +175,8 @@ private fun DiaryScreen(
 
                 if (diaryDay != null) {
                     NutrimentsRowCard(
-                        diaryDay = diaryDay!!
+                        diaryDay = diaryDay!!,
+                        onSettingsClick = onDailyGoalsSettingsClick
                     )
                 }
             }
@@ -204,7 +208,8 @@ private fun DiaryScreenPreview() {
             formatMonthYear = formatMonthYear,
             observeDiaryDay = { flowOf(diaryDay) },
             onAddProductToMeal = {},
-            onSettingsClick = {}
+            onSettingsClick = {},
+            onDailyGoalsSettingsClick = {}
         )
     }
 }

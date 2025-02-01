@@ -35,7 +35,13 @@ fun FoodYouNavHost(
                     }
                 )
             },
-            onSettings = navController::navigateToSettings
+            onSettings = navController::navigateToSettings,
+            onDailyGoalsSettings = {
+                navController.navigateToSettings(
+                    route = SettingsRoute.GoalsSettings,
+                    navOptions = navOptions { launchSingleTop = true }
+                )
+            }
         )
         addFoodGraph(
             onClose = {

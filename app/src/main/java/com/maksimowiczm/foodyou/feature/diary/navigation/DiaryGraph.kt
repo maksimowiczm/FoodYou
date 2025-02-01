@@ -14,12 +14,14 @@ data object DiaryFeature
 
 fun NavGraphBuilder.diaryGraph(
     onAddProductToMeal: (Meal, LocalDate) -> Unit,
-    onSettings: () -> Unit
+    onSettings: () -> Unit,
+    onDailyGoalsSettings: () -> Unit
 ) {
     composable<DiaryFeature> {
         DiaryScreen(
             onAddProductToMeal = onAddProductToMeal,
-            onSettingsClick = onSettings
+            onSettingsClick = onSettings,
+            onDailyGoalsSettingsClick = onDailyGoalsSettings
         )
     }
 }
