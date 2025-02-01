@@ -13,7 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
@@ -48,6 +52,7 @@ import java.time.LocalDate
 @Composable
 fun DiaryScreen(
     onAddProductToMeal: (Meal, LocalDate) -> Unit,
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiaryViewModel = koinViewModel()
 ) {
@@ -77,6 +82,7 @@ fun DiaryScreen(
         onAddProductToMeal = {
             onAddProductToMeal(it, diaryState.selectedDate)
         },
+        onSettingsClick = onSettingsClick,
         modifier = modifier
     )
 }
@@ -88,6 +94,7 @@ private fun DiaryScreen(
     formatMonthYear: (LocalDate) -> String,
     observeDiaryDay: (LocalDate) -> Flow<DiaryDay>,
     onAddProductToMeal: (Meal) -> Unit,
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -100,6 +107,16 @@ private fun DiaryScreen(
                     Text(
                         text = stringResource(R.string.headline_diary)
                     )
+                },
+                actions = {
+                    IconButton(
+                        onClick = onSettingsClick
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(R.string.headline_settings)
+                        )
+                    }
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -186,7 +203,8 @@ private fun DiaryScreenPreview() {
             ),
             formatMonthYear = formatMonthYear,
             observeDiaryDay = { flowOf(diaryDay) },
-            onAddProductToMeal = {}
+            onAddProductToMeal = {},
+            onSettingsClick = {}
         )
     }
 }

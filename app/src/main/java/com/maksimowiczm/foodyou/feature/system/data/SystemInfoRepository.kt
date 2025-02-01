@@ -1,5 +1,6 @@
-package com.maksimowiczm.foodyou.feature.diary.data
+package com.maksimowiczm.foodyou.feature.system.data
 
+import com.maksimowiczm.foodyou.feature.system.data.model.Country
 import java.time.LocalDate
 
 /**
@@ -12,7 +13,12 @@ interface SystemInfoRepository {
      *
      * This value is derived from the system configuration and represents the ISO 3166-1 alpha-2 country code.
      */
-    val defaultCountryCode: String
+    val defaultCountry: Country
+
+    /**
+     * The list of countries available on the system.
+     */
+    val countries: List<Country>
 
     /**
      * The abbreviated names of the days of the week, ordered starting from the first day
@@ -23,7 +29,7 @@ interface SystemInfoRepository {
     val weekDayNamesShort: Array<String>
 
     /**
-     * Formats the specified [date] as a string in the "MMMM yyyy" format.
+     * Formats the specified [date] as a string in the "LLLL yyyy" format.
      *
      * The formatting respects the system's locale, using the full month name and the year.
      *

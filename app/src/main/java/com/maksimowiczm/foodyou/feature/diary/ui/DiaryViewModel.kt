@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.feature.diary.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepository
-import com.maksimowiczm.foodyou.feature.diary.data.SystemInfoRepository
-import com.maksimowiczm.foodyou.feature.diary.data.TodayDateProvider
+import com.maksimowiczm.foodyou.feature.system.data.SystemInfoRepository
+import com.maksimowiczm.foodyou.feature.system.data.TodayDateProvider
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 

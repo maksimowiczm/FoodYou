@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.data
+package com.maksimowiczm.foodyou.feature.system.data
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

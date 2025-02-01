@@ -3,6 +3,8 @@
 
     <string name="headline_diary">Diary</string>
     <string name="headline_create_product">Create product</string>
+    <string name="headline_settings">Settings</string>
+    <string name="headline_food_database">Food database</string>
 
     <string name="meal_name_breakfast">Breakfast</string>
     <string name="meal_name_lunch">Lunch</string>
@@ -63,6 +65,9 @@
     <string name="action_clear_search_query">Clear search query</string>
     <string name="action_clear">Clear</string>
     <string name="action_delete">Delete</string>
+    <string name="action_open_settings">Open settings</string>
+    <string name="action_read_more">Read more</string>
+    <string name="action_select_country">Select country</string>
 
     <string name="neutral_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_camera_request_rationale">You must allow access in order to scan barcodes.</string>
@@ -78,6 +83,8 @@
         <item quantity="other">%1$d grams left</item>
     </plurals>
 
+    <string name="neutral_manage_food_database">Manage your food database</string>
+
     <string name="error_this_field_cannot_be_empty">This field cannot be empty</string>
     <string name="error_invalid">Invalid</string>
     <string name="error_invalid_number">Invalid number</string>
@@ -90,5 +97,22 @@
         <item quantity="one">Exceeded by %1$d gram</item>
         <item quantity="other">Exceeded by %1$d grams</item>
     </plurals>
+
+    <string name="open_food_facts" translatable="false">Open Food Facts</string>
+    <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
+    <string name="neutral_open_food_facts_description">" is a collaborative, free and open database of food products from around the world."</string>
+    <string name="action_use_open_food_facts">Use Open Food Facts</string>
+    <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
+    <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
+    <string name="action_see_terms_of_use">See terms of use</string>
+
+    <string name="headline_daily_goals">Daily goals</string>
+    <string name="neutral_set_your_daily_goals">Set your daily goals</string>
+
+    <string name="headline_calories_goal">Calories goal</string>
+    <string name="description_calories_goal">Set your daily calories intake goal. This will help you to track your progress and stay on track.</string>
+    <string name="action_save">Save</string>
+    <string name="neutral_total_value_must_be_100">Total value must be 100%</string>
+    <string name="neutral_total">Total</string>
 
 </resources>

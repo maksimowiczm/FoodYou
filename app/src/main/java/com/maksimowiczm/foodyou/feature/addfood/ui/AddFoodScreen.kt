@@ -40,6 +40,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AddFoodScreen(
     onClose: () -> Unit,
+    onSearchSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AddFoodViewModel = koinViewModel()
 ) {
@@ -119,6 +120,7 @@ fun AddFoodScreen(
             SearchHome(
                 animatedVisibilityScope = this,
                 addFoodState = addFoodState,
+                onSearchSettings = onSearchSettings,
                 onSearch = {
                     viewModel.onSearch(
                         query = it,
@@ -128,6 +130,10 @@ fun AddFoodScreen(
                 onClearSearch = {
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                     viewModel.onClearSearch()
+                },
+                onRetry = {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                    viewModel.onRetry()
                 },
                 onBack = onClose,
                 onProductClick = {
@@ -140,9 +146,13 @@ fun AddFoodScreen(
                         }
                     )
                 },
-                onRetry = {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                    viewModel.onRetry()
+                onCreateProduct = {
+                    navController.navigateToProducts(
+                        route = ProductsRoute.CreateProduct(
+                            epochDay = viewModel.date.toEpochDay(),
+                            mealType = viewModel.meal
+                        )
+                    )
                 },
                 onBarcodeScanner = {
                     navController.navigate(
@@ -150,14 +160,6 @@ fun AddFoodScreen(
                         navOptions = navOptions {
                             launchSingleTop = true
                         }
-                    )
-                },
-                onCreateProduct = {
-                    navController.navigateToProducts(
-                        route = ProductsRoute.CreateProduct(
-                            epochDay = viewModel.date.toEpochDay(),
-                            mealType = viewModel.meal
-                        )
                     )
                 }
             )

@@ -11,7 +11,7 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
 composeBom = "2024.12.01"
 composeRules = "0.4.22"
-compose-ui = "1.8.0-alpha07"
+compose-ui = "1.8.0-beta01"
 material3 = "1.4.0-alpha02"
 ktlint = "11.6.1" # latest version compatible with compose rules
 koin = "4.0.1"
@@ -24,6 +24,7 @@ converterKotlinxSerialization = "2.11.0"
 kotlinResult = "2.0.1"
 accompanistPermissions = "0.37.0"
 zxingAndroidEmbedded = "4.3.0"
+coil = "3.0.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,6 +58,8 @@ converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-k
 kotlin-result = { module = "com.michael-bull.kotlin-result:kotlin-result", version.ref = "kotlinResult" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

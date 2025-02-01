@@ -23,7 +23,8 @@ data class AddFoodFeature(
 )
 
 fun NavGraphBuilder.addFoodGraph(
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onSearchSettings: () -> Unit
 ) {
     composable<AddFoodFeature>(
         enterTransition = {
@@ -52,7 +53,8 @@ fun NavGraphBuilder.addFoodGraph(
         }
     ) {
         AddFoodScreen(
-            onClose = onClose
+            onClose = onClose,
+            onSearchSettings = onSearchSettings
         )
     }
 }

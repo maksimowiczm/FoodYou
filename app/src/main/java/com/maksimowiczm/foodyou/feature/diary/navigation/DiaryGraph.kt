@@ -13,11 +13,13 @@ import java.time.LocalDate
 data object DiaryFeature
 
 fun NavGraphBuilder.diaryGraph(
-    onAddProductToMeal: (Meal, LocalDate) -> Unit
+    onAddProductToMeal: (Meal, LocalDate) -> Unit,
+    onSettings: () -> Unit
 ) {
     composable<DiaryFeature> {
         DiaryScreen(
-            onAddProductToMeal = onAddProductToMeal
+            onAddProductToMeal = onAddProductToMeal,
+            onSettingsClick = onSettings
         )
     }
 }

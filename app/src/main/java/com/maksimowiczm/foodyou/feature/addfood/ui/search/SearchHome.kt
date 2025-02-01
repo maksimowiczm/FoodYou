@@ -32,6 +32,7 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.BottomAppBarScrollBehavior
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -79,6 +80,7 @@ import kotlin.math.roundToInt
 fun SearchHome(
     animatedVisibilityScope: AnimatedVisibilityScope,
     addFoodState: AddFoodState,
+    onSearchSettings: () -> Unit,
     onSearch: (String) -> Unit,
     onClearSearch: () -> Unit,
     onRetry: () -> Unit,
@@ -131,6 +133,7 @@ fun SearchHome(
             onCreateProduct = onCreateProduct,
             onProductClick = onProductClick,
             onBack = onBack,
+            onSearchSettings = onSearchSettings,
             onSearch = onSearch,
             onClearSearch = onClearSearch,
             onRetry = onRetry,
@@ -154,6 +157,7 @@ private fun SearchHomeLayout(
     onCreateProduct: () -> Unit,
     onProductClick: (ProductSearchUiModel) -> Unit,
     onBack: () -> Unit,
+    onSearchSettings: () -> Unit,
     onSearch: (String) -> Unit,
     onClearSearch: () -> Unit,
     onRetry: () -> Unit,
@@ -167,6 +171,7 @@ private fun SearchHomeLayout(
     val searchBar = @Composable {
         MySearchBar(
             searchBarState = addFoodState.searchBarState,
+            onSearchSettings = onSearchSettings,
             onSearch = onSearch,
             onClearSearch = onClearSearch,
             onBack = onBack,
@@ -314,6 +319,7 @@ private fun SearchHomeLayout(
 @Composable
 private fun MySearchBar(
     searchBarState: SearchBarState,
+    onSearchSettings: () -> Unit,
     onSearch: (String) -> Unit,
     onClearSearch: () -> Unit,
     onBack: () -> Unit,
@@ -369,6 +375,15 @@ private fun MySearchBar(
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = stringResource(R.string.action_clear)
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            onClick = onSearchSettings
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(R.string.action_open_settings)
                             )
                         }
                     }

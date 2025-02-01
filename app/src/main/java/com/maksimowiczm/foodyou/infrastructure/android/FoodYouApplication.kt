@@ -7,6 +7,8 @@ import com.maksimowiczm.foodyou.infrastructure.di.databaseModule
 import com.maksimowiczm.foodyou.infrastructure.di.diaryModule
 import com.maksimowiczm.foodyou.infrastructure.di.flavourModule
 import com.maksimowiczm.foodyou.infrastructure.di.productsModule
+import com.maksimowiczm.foodyou.infrastructure.di.settingsModule
+import com.maksimowiczm.foodyou.infrastructure.di.systemModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -23,7 +25,9 @@ class FoodYouApplication : Application() {
                 diaryModule,
                 addFoodModule,
                 productsModule,
-                flavourModule
+                flavourModule,
+                systemModule,
+                settingsModule
             )
         }
     }
