@@ -39,33 +39,39 @@ fun NutrimentsRowCard(
     ) {
         startItem()
 
-        NutrimentCard(
-            text = stringResource(R.string.nutriment_proteins),
-            value = diaryDay.totalProteins,
-            goalValue = diaryDay.dailyGoals.proteinsAsGrams,
-            color = nutrimentsPalette.proteinsOnSurfaceContainer,
-            modifier = Modifier.fillMaxHeight()
-        )
+        if (diaryDay.dailyGoals.proteinsAsGrams != 0) {
+            NutrimentCard(
+                text = stringResource(R.string.nutriment_proteins),
+                value = diaryDay.totalProteins,
+                goalValue = diaryDay.dailyGoals.proteinsAsGrams,
+                color = nutrimentsPalette.proteinsOnSurfaceContainer,
+                modifier = Modifier.fillMaxHeight()
+            )
 
-        spacer()
+            spacer()
+        }
 
-        NutrimentCard(
-            text = stringResource(R.string.nutriment_carbohydrates),
-            value = diaryDay.totalCarbohydrates,
-            color = nutrimentsPalette.carbohydratesOnSurfaceContainer,
-            goalValue = diaryDay.dailyGoals.carbohydratesAsGrams,
-            modifier = Modifier.fillMaxHeight()
-        )
+        if (diaryDay.dailyGoals.carbohydratesAsGrams != 0) {
+            NutrimentCard(
+                text = stringResource(R.string.nutriment_carbohydrates),
+                value = diaryDay.totalCarbohydrates,
+                color = nutrimentsPalette.carbohydratesOnSurfaceContainer,
+                goalValue = diaryDay.dailyGoals.carbohydratesAsGrams,
+                modifier = Modifier.fillMaxHeight()
+            )
 
-        spacer()
+            spacer()
+        }
 
-        NutrimentCard(
-            text = stringResource(R.string.nutriment_fats),
-            value = diaryDay.totalFats,
-            color = nutrimentsPalette.fatsOnSurfaceContainer,
-            goalValue = diaryDay.dailyGoals.fatsAsGrams,
-            modifier = Modifier.fillMaxHeight()
-        )
+        if (diaryDay.dailyGoals.fatsAsGrams != 0) {
+            NutrimentCard(
+                text = stringResource(R.string.nutriment_fats),
+                value = diaryDay.totalFats,
+                color = nutrimentsPalette.fatsOnSurfaceContainer,
+                goalValue = diaryDay.dailyGoals.fatsAsGrams,
+                modifier = Modifier.fillMaxHeight()
+            )
+        }
 
 //        spacer()
 
