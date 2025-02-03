@@ -1,4 +1,5 @@
 [versions]
+coreVersion = "1.0.0"
 agp = "8.8.0"
 datastorePreferences = "1.1.1"
 kotlin = "2.1.0"
@@ -69,3 +70,4 @@ gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }

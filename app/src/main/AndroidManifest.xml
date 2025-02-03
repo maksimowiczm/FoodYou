@@ -2,10 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
-        android:name=".infrastructure.android.FoodYouApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -17,7 +15,7 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
         <activity
-            android:name=".infrastructure.android.MainActivity"
+            android:name=".core.infrastructure.android.FoodYouMainActivity"
             android:exported="true"
             android:theme="@style/Theme.FoodYou"
             android:windowSoftInputMode="adjustResize">
