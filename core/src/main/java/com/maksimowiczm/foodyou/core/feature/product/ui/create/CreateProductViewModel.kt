@@ -19,6 +19,18 @@ class CreateProductViewModel(
         viewModelScope.launch {
             _uiState.value = CreateProductState.CreatingProduct
 
+            if (
+                formState.name.value == null ||
+                formState.calories.value == null ||
+                formState.proteins.value == null ||
+                formState.carbohydrates.value == null ||
+                formState.fats.value == null
+            ) {
+                Log.w(TAG, "Required fields are missing")
+                _uiState.value = CreateProductState.Error
+                return@launch
+            }
+
             val result = productRepository.createUserProduct(
                 name = formState.name.value,
                 brand = formState.brand.value,
@@ -43,6 +55,7 @@ class CreateProductViewModel(
                 },
                 failure = {
                     Log.e(TAG, "Failed to create product $it")
+                    _uiState.value = CreateProductState.Error
                 }
             )
         }

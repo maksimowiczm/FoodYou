@@ -6,6 +6,9 @@
     <string name="headline_diary">Dziennik</string>
     <string name="headline_calories_goal">Cel kaloryczny</string>
     <string name="headline_daily_goals">Cele dzienne</string>
+    <string name="headline_general">Ogólne</string>
+    <string name="headline_macronutrients">Makroskładniki</string>
+    <string name="headline_nutrients">Składniki odżywcze</string>
 
     <string name="meal_name_breakfast">Śniadanie</string>
     <string name="meal_name_lunch">Drugie śniadanie</string>
@@ -25,12 +28,14 @@
         <item quantity="many">mililitrów</item>
     </plurals>
 
+    <string name="product_package_weight">Waga opakowania</string>
     <string name="product_package">Opakowanie</string>
     <plurals name="product_package">
         <item quantity="one">opakowanie</item>
         <item quantity="few">opakowania</item>
         <item quantity="many">opakowań</item>
     </plurals>
+    <string name="product_serving_weight">Waga porcji</string>
     <string name="product_serving">Porcja</string>
     <plurals name="product_serving">
         <item quantity="one">porcja</item>
@@ -39,9 +44,10 @@
     </plurals>
 
     <string name="product_name">Nazwa</string>
-    <string name="product_brand">Producent</string>
+    <string name="product_brand">Marka</string>
     <string name="product_weight_unit">Jednostka pomiaru</string>
     <string name="product_barcode">Kod kreskowy</string>
+    <string name="headline_product_serving_and_packaging">Porcja i opakowanie</string>
 
     <string name="nutriment_proteins">Białka</string>
     <string name="nutriment_carbohydrates">Węglowodany</string>
@@ -52,7 +58,7 @@
     <string name="nutriment_sodium">Sód</string>
     <string name="nutriment_fiber">Błonnik</string>
 
-    <string name="action_show_additional_fields">Pokaż dodatkowe pola</string>
+    <string name="action_show_remaining_fields">Pokaż pozostałe pola</string>
     <string name="action_add_product">Dodaj produkt</string>
     <string name="action_search">Szukaj</string>
     <string name="action_scan_barcode">Skanuj kod kreskowy</string>
@@ -87,11 +93,16 @@
     <string name="neutral_set_your_daily_goals">Ustaw swoje cele</string>
     <string name="neutral_total_value_must_be_100">Łączna wartość musi wynosić 100%</string>
     <string name="neutral_total">Łącznie</string>
+    <string name="neutral_all_values_per_x">Wszystkie wartości na %1$s</string>
+    <string name="neutral_required_fields">Wymagane pola</string>
 
+    <string name="error_this_field_is_required">To pole jest wymagane</string>
     <string name="error_this_field_cannot_be_empty">To pole nie może być puste</string>
     <string name="error_invalid">Nieprawidłowy</string>
-    <string name="error_invalid_number">Niepoprawny numer</string>
+    <string name="error_invalid_number">Niepoprawna liczba</string>
     <string name="error_value_cannot_be_negative">Wartość nie może być ujemna</string>
+    <string name="error_there_are_errors_in_the_form">W formularzu występują błędy</string>
+    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Suma makroskładników nie może przekraczać 100g</string>
 
     <string name="positive_goal_reached">Cel osiągnięty</string>
     <string name="positive_ok">OK</string>

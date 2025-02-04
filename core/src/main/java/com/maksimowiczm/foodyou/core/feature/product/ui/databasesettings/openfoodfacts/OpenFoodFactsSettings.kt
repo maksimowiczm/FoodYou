@@ -61,7 +61,7 @@ fun OpenFoodFactsSettings(
     ) {
         Column {
             Text(
-                text = stringResource(R.string.open_food_facts),
+                text = stringResource(R.string.headline_open_food_facts),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 16.dp),
@@ -110,7 +110,7 @@ private fun OpenFoodFactsDescription(
 
     val annotatedString = buildAnnotatedString {
         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-            append(stringResource(R.string.open_food_facts))
+            append(stringResource(R.string.headline_open_food_facts))
         }
         append(" " + stringResource(R.string.description_open_food_facts))
         withLink(

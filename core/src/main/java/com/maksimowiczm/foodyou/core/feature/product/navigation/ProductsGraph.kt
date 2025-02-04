@@ -1,7 +1,9 @@
 package com.maksimowiczm.foodyou.core.feature.product.navigation
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -43,8 +45,10 @@ fun NavGraphBuilder.productsGraph(
                         sharedContentState = rememberSharedContentState(
                             ProductSharedTransitionKeys.PRODUCT_CREATE_SCREEN
                         ),
-                        animatedVisibilityScope = this@composable
+                        animatedVisibilityScope = this@composable,
+                        clipInOverlayDuringTransition = OverlayClip(MaterialTheme.shapes.medium)
                     )
+                    .clip(MaterialTheme.shapes.medium)
                     .skipToLookaheadSize()
             )
         }

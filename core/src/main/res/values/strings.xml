@@ -7,6 +7,10 @@
     <string name="headline_diary">Diary</string>
     <string name="headline_calories_goal">Calories goal</string>
     <string name="headline_daily_goals">Daily goals</string>
+    <string name="headline_product_serving_and_packaging">Serving and packaging</string>
+    <string name="headline_general">General</string>
+    <string name="headline_macronutrients">Macronutrients</string>
+    <string name="headline_nutrients">Nutrients</string>
 
     <string name="meal_name_breakfast">Breakfast</string>
     <string name="meal_name_lunch">Lunch</string>
@@ -26,11 +30,13 @@
         <item quantity="other">milliliters</item>
     </plurals>
 
+    <string name="product_package_weight">Package weight</string>
     <string name="product_package">Package</string>
     <plurals name="product_package">
         <item quantity="one">package</item>
         <item quantity="other">packages</item>
     </plurals>
+    <string name="product_serving_weight">Serving weight</string>
     <string name="product_serving">Serving</string>
     <plurals name="product_serving">
         <item quantity="one">serving</item>
@@ -50,7 +56,7 @@
     <string name="nutriment_sodium">Sodium</string>
     <string name="nutriment_fiber">Fiber</string>
 
-    <string name="action_show_additional_fields">Show additional fields</string>
+    <string name="action_show_remaining_fields">Show remaining fields</string>
     <string name="action_add_product">Add product</string>
     <string name="action_search">Search</string>
     <string name="action_scan_barcode">Scan barcode</string>
@@ -84,11 +90,16 @@
     <string name="neutral_set_your_daily_goals">Set your daily goals</string>
     <string name="neutral_total_value_must_be_100">Total value must be 100%</string>
     <string name="neutral_total">Total</string>
+    <string name="neutral_all_values_per_x">All values per %1$s</string>
+    <string name="neutral_required_fields">Required fields</string>
 
+    <string name="error_this_field_is_required">This field is required</string>
     <string name="error_this_field_cannot_be_empty">This field cannot be empty</string>
     <string name="error_invalid">Invalid</string>
     <string name="error_invalid_number">Invalid number</string>
     <string name="error_value_cannot_be_negative">Value cannot be negative</string>
+    <string name="error_there_are_errors_in_the_form">There are errors in the form</string>
+    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Sum of macronutrients cannot exceed 100g</string>
 
     <string name="positive_goal_reached">Goal reached</string>
     <string name="positive_ok">OK</string>
@@ -101,7 +112,7 @@
     <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
     <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
 
-    <string name="open_food_facts" translatable="false">Open Food Facts</string>
+    <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
 
     <string name="description_open_food_facts">is a collaborative, free and open database of food products from around the world.</string>
