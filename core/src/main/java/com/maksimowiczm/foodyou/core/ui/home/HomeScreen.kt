@@ -3,7 +3,9 @@ package com.maksimowiczm.foodyou.core.ui.home
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
@@ -64,6 +66,7 @@ fun HomeScreen(
         },
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+            .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -72,11 +75,9 @@ fun HomeScreen(
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             itemsIndexed(homeFeatures) { i, feature ->
-                feature.Card(
-                    modifier = Modifier.padding(
-                        horizontal = 8.dp
-                    ),
-                    state = state
+                feature.card(
+                    modifier = if (feature.applyPadding) Modifier.padding(horizontal = 8.dp) else Modifier,
+                    homeState = state
                 )
 
                 if (i < homeFeatures.size - 1) {

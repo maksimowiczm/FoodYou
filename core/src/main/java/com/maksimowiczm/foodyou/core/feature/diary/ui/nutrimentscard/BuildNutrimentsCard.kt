@@ -9,7 +9,9 @@ import com.maksimowiczm.foodyou.core.feature.diary.DiaryFeature.navigateToGoalsS
 import com.maksimowiczm.foodyou.core.feature.diary.ui.DiaryViewModel
 import org.koin.androidx.compose.koinViewModel
 
-fun buildNutrimentsCard(navController: NavController) = HomeFeature { modifier, homeState ->
+fun buildNutrimentsCard(navController: NavController) = HomeFeature(
+    applyPadding = false
+) { modifier, homeState ->
     val viewModel = koinViewModel<DiaryViewModel>()
 
     val diaryDay by viewModel
