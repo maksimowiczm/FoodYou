@@ -1,16 +1,13 @@
 package com.maksimowiczm.foodyou.core.feature.diary.ui.goalssettings.calories
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -18,153 +15,154 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.R
+import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrimentsPalette
 import com.maksimowiczm.foodyou.core.feature.product.data.model.WeightUnit
 import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
+import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+
+@Composable
+private fun FormFieldWithTextFieldValue<Int?, GoalsFormInputError>.TextField(
+    suffix: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    label: (@Composable () -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Number,
+        imeAction = ImeAction.Next
+    )
+) {
+    OutlinedTextField(
+        value = textFieldValue,
+        onValueChange = { onValueChange(it) },
+        modifier = modifier,
+        label = label,
+        isError = error != null,
+        supportingText = {
+            error?.let {
+                Text(error.stringResource())
+            }
+        },
+        suffix = suffix,
+        keyboardOptions = keyboardOptions,
+        maxLines = 1,
+        interactionSource = interactionSource
+    )
+}
+
+@Composable
+private fun FormFieldWithTextFieldValue<Float?, GoalsFormInputError>.FloatTextField(
+    suffix: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    label: (@Composable () -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Number,
+        imeAction = ImeAction.Next
+    )
+) {
+    OutlinedTextField(
+        value = textFieldValue,
+        onValueChange = { onValueChange(it) },
+        modifier = modifier,
+        label = label,
+        isError = error != null,
+        supportingText = {
+            error?.let {
+                Text(error.stringResource())
+            }
+        },
+        suffix = suffix,
+        keyboardOptions = keyboardOptions,
+        maxLines = 1,
+        interactionSource = interactionSource
+    )
+}
 
 @Composable
 fun CaloriesGoalForm(
     state: CaloriesGoalFormState,
     modifier: Modifier = Modifier
 ) {
+    val nutrimentsPalette = LocalNutrimentsPalette.current
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        OutlinedTextField(
-            value = state.caloriesTextFieldValue,
-            onValueChange = state::onCaloriesChanged,
+        state.calories.TextField(
             label = { Text(stringResource(R.string.unit_calories)) },
-            suffix = { Text(stringResource(R.string.unit_kcal)) },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
-            maxLines = 1
+            suffix = { Text(stringResource(R.string.unit_kcal)) }
         )
 
         Column {
             Text(
-                text = stringResource(R.string.nutriment_proteins)
+                text = stringResource(R.string.nutriment_proteins),
+                color = nutrimentsPalette.proteinsOnSurfaceContainer,
+                style = MaterialTheme.typography.labelLarge
             )
             Row(
-                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedTextField(
+                state.proteinsGrams.TextField(
                     modifier = Modifier.weight(1f),
-                    value = state.proteinsGramsTextFieldValue,
-                    onValueChange = state::onProteinsGramsChanged,
-                    suffix = { Text(WeightUnit.Gram.stringResourceShort()) },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next
-                    ),
-                    isError = state.isError,
-                    maxLines = 1
+                    suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
                 )
-                OutlinedTextField(
+                state.proteinsPercentage.FloatTextField(
                     modifier = Modifier.weight(1f),
-                    value = state.proteinsPercentageTextFieldValue,
-                    onValueChange = state::onProteinsPercentageChanged,
-                    suffix = { Text("%") },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next
-                    ),
-                    isError = state.isError,
-                    maxLines = 1
+                    suffix = { Text("%") }
                 )
             }
         }
 
         Column {
             Text(
-                text = stringResource(R.string.nutriment_carbohydrates)
+                text = stringResource(R.string.nutriment_carbohydrates),
+                color = nutrimentsPalette.carbohydratesOnSurfaceContainer,
+                style = MaterialTheme.typography.labelLarge
             )
             Row(
-                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedTextField(
+                state.carbohydratesGrams.TextField(
                     modifier = Modifier.weight(1f),
-                    value = state.carbsGramsTextFieldValue,
-                    onValueChange = state::onCarbohydratesGramsChanged,
-                    suffix = { Text(WeightUnit.Gram.stringResourceShort()) },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next
-                    ),
-                    isError = state.isError,
-                    maxLines = 1
+                    suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
                 )
-                OutlinedTextField(
+                state.carbohydratesPercentage.FloatTextField(
                     modifier = Modifier.weight(1f),
-                    value = state.carbsPercentageTextFieldValue,
-                    onValueChange = state::onCarbohydratesPercentageChanged,
-                    suffix = { Text("%") },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next
-                    ),
-                    isError = state.isError,
-                    maxLines = 1
+                    suffix = { Text("%") }
                 )
             }
         }
 
         Column {
             Text(
-                text = stringResource(R.string.nutriment_fats)
+                text = stringResource(R.string.nutriment_fats),
+                color = nutrimentsPalette.fatsOnSurfaceContainer,
+                style = MaterialTheme.typography.labelLarge
             )
             Row(
-                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedTextField(
+                state.fatsGrams.TextField(
                     modifier = Modifier.weight(1f),
-                    value = state.fatsGramsTextFieldValue,
-                    onValueChange = state::onFatsGramsChanged,
-                    suffix = { Text(WeightUnit.Gram.stringResourceShort()) },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next
-                    ),
-                    isError = state.isError,
-                    maxLines = 1
+                    suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
                 )
-                OutlinedTextField(
+                state.fatsPercentage.FloatTextField(
                     modifier = Modifier.weight(1f),
-                    value = state.fatsPercentageTextFieldValue,
-                    onValueChange = state::onFatsPercentageChanged,
                     suffix = { Text("%") },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
-                    ),
-                    isError = state.isError,
-                    maxLines = 1
+                    )
                 )
             }
         }
 
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.End
-        ) {
+        state.error?.let {
             Text(
-                text = stringResource(R.string.neutral_total) + ": ${state.totalPercentage}%",
-                style = MaterialTheme.typography.bodyLarge
+                text = it.stringResource(),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
             )
-            AnimatedVisibility(
-                visible = state.isError
-            ) {
-                Text(
-                    text = stringResource(R.string.neutral_total_value_must_be_100),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
         }
     }
 }

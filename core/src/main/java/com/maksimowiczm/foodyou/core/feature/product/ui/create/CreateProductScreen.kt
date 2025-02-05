@@ -152,7 +152,7 @@ private fun CreateProductScreen(
                 .padding(paddingValues)
                 .consumeWindowInsets(paddingValues)
                 .padding(horizontal = 8.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
             LazyVerticalGrid(
                 modifier = Modifier

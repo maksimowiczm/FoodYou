@@ -41,3 +41,18 @@ fun <E> nullableFloatParser(
         }
     }
 }
+
+fun <E> nullableIntParser(
+    onEmpty: ParserScope.() -> ParserResult<Int?, E> = { success(null) },
+    onNan: () -> E
+) = Parser {
+    if (it.isEmpty()) {
+        onEmpty()
+    } else {
+        try {
+            success(it.toInt())
+        } catch (e: NumberFormatException) {
+            failure(onNan())
+        }
+    }
+}

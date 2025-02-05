@@ -17,61 +17,59 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.R
+import com.maksimowiczm.foodyou.core.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.defaultGoals
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 
 @Composable
 fun CaloriesGoal(
-    goals: com.maksimowiczm.foodyou.core.feature.diary.data.model.DailyGoals,
-    onSave: (com.maksimowiczm.foodyou.core.feature.diary.data.model.DailyGoals) -> Unit,
+    goals: DailyGoals,
+    onSave: (DailyGoals) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state = rememberCaloriesFoalFormState(goals)
 
-    Surface(
-        modifier = modifier
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Text(
+            text = stringResource(R.string.headline_calories_goal),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelLarge
+        )
+
+        Text(
+            text = stringResource(R.string.description_calories_goal),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            textAlign = TextAlign.Justify,
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = stringResource(R.string.headline_calories_goal),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp),
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.labelLarge
+            CaloriesGoalForm(
+                state = state
             )
+        }
 
-            Text(
-                text = stringResource(R.string.description_calories_goal),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                textAlign = TextAlign.Justify,
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CaloriesGoalForm(
-                    state = state
-                )
-            }
-
-            Button(
-                onClick = {
-                    onSave(state.dailyGoals)
-                },
-                enabled = !state.isError
-            ) {
-                Text(stringResource(R.string.action_save))
-            }
+        Button(
+            onClick = {
+                state.intoDailyGoals()?.let { onSave(it) }
+            },
+            enabled = state.isValid
+        ) {
+            Text(stringResource(R.string.action_save))
         }
     }
 }
@@ -80,9 +78,11 @@ fun CaloriesGoal(
 @Composable
 private fun CaloriesGoalPreview() {
     FoodYouTheme {
-        CaloriesGoal(
-            goals = defaultGoals(),
-            onSave = {}
-        )
+        Surface {
+            CaloriesGoal(
+                goals = defaultGoals(),
+                onSave = {}
+            )
+        }
     }
 }

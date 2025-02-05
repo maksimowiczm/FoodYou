@@ -12,4 +12,5 @@ interface FormField<T, E> {
      */
     fun touch()
     fun onValueChange(newValue: String, touch: Boolean = true)
+    fun onRawValueChange(newValue: T, touch: Boolean = true)
 }

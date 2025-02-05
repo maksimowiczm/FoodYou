@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.diary.ui.nutrimentscard
 
 import android.content.res.Configuration
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -82,17 +81,16 @@ fun NutrimentsRowCard(
                 goalValue = diaryDay.dailyGoals.fatsAsGrams,
                 modifier = Modifier.fillMaxHeight()
             )
+
+            spacer()
         }
 
-        spacer()
-
         ElevatedCard(
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier.fillMaxHeight(),
+            onClick = onSettingsClick
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .clickable { onSettingsClick() },
+                modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Center
             ) {
                 Box(
@@ -101,7 +99,7 @@ fun NutrimentsRowCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.action_go_to_settings)
                     )
                 }
             }

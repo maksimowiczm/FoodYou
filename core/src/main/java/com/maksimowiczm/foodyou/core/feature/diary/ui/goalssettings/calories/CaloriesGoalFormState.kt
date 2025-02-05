@@ -1,380 +1,412 @@
 package com.maksimowiczm.foodyou.core.feature.diary.ui.goalssettings.calories
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.maksimowiczm.foodyou.core.R
+import com.maksimowiczm.foodyou.core.feature.diary.data.model.DailyGoals
+import com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentsAsGrams
+import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
+import com.maksimowiczm.foodyou.core.ui.form.between
+import com.maksimowiczm.foodyou.core.ui.form.nonNegative
+import com.maksimowiczm.foodyou.core.ui.form.notNull
+import com.maksimowiczm.foodyou.core.ui.form.nullableFloatParser
+import com.maksimowiczm.foodyou.core.ui.form.nullableIntParser
+import com.maksimowiczm.foodyou.core.ui.form.rememberFormFieldWithTextFieldValue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
 fun rememberCaloriesFoalFormState(
-    dailyGoals: com.maksimowiczm.foodyou.core.feature.diary.data.model.DailyGoals
+    dailyGoals: DailyGoals
 ): CaloriesGoalFormState {
-    val caloriesTextFieldValue = rememberSaveable(
-        dailyGoals.calories,
-        stateSaver = TextFieldValue.Saver
+    val calories = rememberFormFieldWithTextFieldValue(
+        initialTextFieldValue = TextFieldValue(
+            text = dailyGoals.calories.toString(),
+            selection = TextRange(dailyGoals.calories.toString().length)
+        ),
+        initialValue = dailyGoals.calories,
+        requireDirty = false,
+        parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
     ) {
-        val string = dailyGoals.calories.toString()
-
-        mutableStateOf(
-            TextFieldValue(
-                text = string,
-                selection = TextRange(string.length)
-            )
-        )
+        notNull(
+            onError = { GoalsFormInputError.Required }
+        ) {
+            nonNegative(
+                onError = { GoalsFormInputError.NegativeNumber }
+            ) {
+                between(
+                    min = 0,
+                    max = 40_000,
+                    onMinError = { GoalsFormInputError.MustBeLessThan40000 }
+                )
+            }
+        }
     }
 
-    val proteinsPercentage = rememberSaveable(
-        dailyGoals.proteins,
-        stateSaver = TextFieldValue.Saver
+    val proteinsPercentage = rememberFormFieldWithTextFieldValue(
+        initialTextFieldValue = TextFieldValue(
+            text = "%.2f"
+                // Locale.ENGLISH to use dot as decimal separator
+                .format(Locale.ENGLISH, dailyGoals.proteinsAsPercentage)
+                .trimEnd('0')
+                .trimEnd('.'),
+            selection = TextRange(dailyGoals.proteinsAsPercentage.toString().length)
+        ),
+        initialValue = dailyGoals.proteinsAsPercentage,
+        requireDirty = false,
+        parser = nullableFloatParser { GoalsFormInputError.InvalidNumber },
+        formatter = { "%.2f".format(Locale.ENGLISH, it).trimEnd('0').trimEnd('.') }
     ) {
-        val string = (dailyGoals.proteins * 100).toInt().toString()
-
-        mutableStateOf(
-            TextFieldValue(
-                text = string,
-                selection = TextRange(string.length)
+        notNull(
+            onError = { GoalsFormInputError.Required }
+        ) {
+            between(
+                min = 0f,
+                max = 100f,
+                onMinError = { GoalsFormInputError.MustBeLessThan100 }
             )
-        )
+        }
     }
 
-    val proteinsGrams = rememberSaveable(
-        dailyGoals.proteinsAsGrams,
-        stateSaver = TextFieldValue.Saver
+    val proteinsGrams = rememberFormFieldWithTextFieldValue(
+        initialTextFieldValue = TextFieldValue(
+            text = dailyGoals.proteinsAsGrams.toString(),
+            selection = TextRange(dailyGoals.proteinsAsGrams.toString().length)
+        ),
+        initialValue = dailyGoals.proteinsAsGrams,
+        requireDirty = false,
+        parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
     ) {
-        val string = dailyGoals.proteinsAsGrams.toString()
-
-        mutableStateOf(
-            TextFieldValue(
-                text = string,
-                selection = TextRange(string.length)
+        notNull(
+            onError = { GoalsFormInputError.Required }
+        ) {
+            nonNegative(
+                onError = { GoalsFormInputError.NegativeNumber }
             )
-        )
+        }
     }
 
-    val carbsPercentage = rememberSaveable(
-        dailyGoals.carbohydrates,
-        stateSaver = TextFieldValue.Saver
+    val carbsPercentage = rememberFormFieldWithTextFieldValue(
+        initialTextFieldValue = TextFieldValue(
+            text = "%.2f"
+                .format(Locale.ENGLISH, dailyGoals.carbohydratesAsPercentage)
+                .trimEnd('0')
+                .trimEnd('.'),
+            selection = TextRange(dailyGoals.carbohydratesAsPercentage.toString().length)
+        ),
+        initialValue = dailyGoals.carbohydratesAsPercentage,
+        requireDirty = false,
+        parser = nullableFloatParser { GoalsFormInputError.InvalidNumber },
+        formatter = { "%.2f".format(Locale.ENGLISH, it).trimEnd('0').trimEnd('.') }
     ) {
-        val string = (dailyGoals.carbohydrates * 100).toInt().toString()
-
-        mutableStateOf(
-            TextFieldValue(
-                text = string,
-                selection = TextRange(string.length)
+        notNull(
+            onError = { GoalsFormInputError.Required }
+        ) {
+            between(
+                min = 0f,
+                max = 100f,
+                onMinError = { GoalsFormInputError.MustBeLessThan100 }
             )
-        )
+        }
     }
 
-    val carbsGrams = rememberSaveable(
-        dailyGoals.carbohydratesAsGrams,
-        stateSaver = TextFieldValue.Saver
+    val carbsGrams = rememberFormFieldWithTextFieldValue(
+        initialTextFieldValue = TextFieldValue(
+            text = dailyGoals.carbohydratesAsGrams.toString(),
+            selection = TextRange(dailyGoals.carbohydratesAsGrams.toString().length)
+        ),
+        initialValue = dailyGoals.carbohydratesAsGrams,
+        requireDirty = false,
+        parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
     ) {
-        val string = dailyGoals.carbohydratesAsGrams.toString()
-
-        mutableStateOf(
-            TextFieldValue(
-                text = string,
-                selection = TextRange(string.length)
+        notNull(
+            onError = { GoalsFormInputError.Required }
+        ) {
+            nonNegative(
+                onError = { GoalsFormInputError.NegativeNumber }
             )
-        )
+        }
     }
 
-    val fatsPercentage = rememberSaveable(
-        dailyGoals.fats,
-        stateSaver = TextFieldValue.Saver
+    val fatsPercentage = rememberFormFieldWithTextFieldValue(
+        initialTextFieldValue = TextFieldValue(
+            text = "%.2f"
+                .format(Locale.ENGLISH, dailyGoals.fatsAsPercentage)
+                .trimEnd('0')
+                .trimEnd('.'),
+            selection = TextRange(dailyGoals.fatsAsPercentage.toString().length)
+        ),
+        initialValue = dailyGoals.fatsAsPercentage,
+        requireDirty = false,
+        parser = nullableFloatParser { GoalsFormInputError.InvalidNumber },
+        formatter = { "%.2f".format(Locale.ENGLISH, it).trimEnd('0').trimEnd('.') }
     ) {
-        val string = (dailyGoals.fats * 100).toInt().toString()
-
-        mutableStateOf(
-            TextFieldValue(
-                text = string,
-                selection = TextRange(string.length)
+        notNull(
+            onError = { GoalsFormInputError.Required }
+        ) {
+            between(
+                min = 0f,
+                max = 100f,
+                onMinError = { GoalsFormInputError.MustBeLessThan100 }
             )
-        )
+        }
     }
 
-    val fatsGrams = rememberSaveable(
-        dailyGoals.fatsAsGrams,
-        stateSaver = TextFieldValue.Saver
+    val fatsGrams = rememberFormFieldWithTextFieldValue(
+        initialTextFieldValue = TextFieldValue(
+            text = dailyGoals.fatsAsGrams.toString(),
+            selection = TextRange(dailyGoals.fatsAsGrams.toString().length)
+        ),
+        initialValue = dailyGoals.fatsAsGrams,
+        requireDirty = false,
+        parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
     ) {
-        val string = dailyGoals.fatsAsGrams.toString()
-
-        mutableStateOf(
-            TextFieldValue(
-                text = string,
-                selection = TextRange(string.length)
+        notNull(
+            onError = { GoalsFormInputError.Required }
+        ) {
+            nonNegative(
+                onError = { GoalsFormInputError.NegativeNumber }
             )
-        )
+        }
     }
+
+    val coroutineScope = rememberCoroutineScope()
 
     return remember {
         CaloriesGoalFormState(
-            initialDailyGoals = dailyGoals,
-            initialCaloriesTextFieldValue = caloriesTextFieldValue,
-            initialProteinsPercentageTextFieldValue = proteinsPercentage,
-            initialProteinsGramsTextFieldValue = proteinsGrams,
-            initialCarbsPercentageTextFieldValue = carbsPercentage,
-            initialCarbsGramsTextFieldValue = carbsGrams,
-            initialFatsPercentageTextFieldValue = fatsPercentage,
-            initialFatsGramsTextFieldValue = fatsGrams
+            calories = calories,
+            proteinsPercentage = proteinsPercentage,
+            proteinsGrams = proteinsGrams,
+            carbohydratesPercentage = carbsPercentage,
+            carbohydratesGrams = carbsGrams,
+            fatsPercentage = fatsPercentage,
+            fatsGrams = fatsGrams,
+            coroutineScope = coroutineScope
         )
     }
 }
 
+enum class GoalsFormInputError {
+    Required,
+    InvalidNumber,
+    MustBeInteger,
+    NegativeNumber,
+    MustBeLessThan100,
+    MustBeLessThan40000
+    ;
+
+    @Composable
+    fun stringResource() = when (this) {
+        Required -> stringResource(R.string.error_this_field_is_required)
+        InvalidNumber -> stringResource(R.string.error_invalid_number)
+        MustBeInteger -> stringResource(R.string.error_value_must_be_integer)
+        NegativeNumber -> stringResource(R.string.error_value_cannot_be_negative)
+        MustBeLessThan100 -> stringResource(R.string.error_value_must_be_less_than, "100")
+        MustBeLessThan40000 -> stringResource(R.string.error_value_must_be_less_than, "40000")
+    }
+}
+
+enum class GoalsFormError {
+    PercentageMustSumUpTo100
+    ;
+
+    @Composable
+    fun stringResource() = when (this) {
+        PercentageMustSumUpTo100 -> stringResource(R.string.error_sum_of_percentages_must_be_100)
+    }
+}
+
+enum class Editing {
+    None,
+    Calories,
+    Percentage,
+    Grams
+}
+
+@Stable
 class CaloriesGoalFormState(
-    initialDailyGoals: com.maksimowiczm.foodyou.core.feature.diary.data.model.DailyGoals,
-    initialCaloriesTextFieldValue: MutableState<TextFieldValue>,
-    initialProteinsPercentageTextFieldValue: MutableState<TextFieldValue>,
-    initialProteinsGramsTextFieldValue: MutableState<TextFieldValue>,
-    initialCarbsPercentageTextFieldValue: MutableState<TextFieldValue>,
-    initialCarbsGramsTextFieldValue: MutableState<TextFieldValue>,
-    initialFatsPercentageTextFieldValue: MutableState<TextFieldValue>,
-    initialFatsGramsTextFieldValue: MutableState<TextFieldValue>
+    val calories: FormFieldWithTextFieldValue<Int?, GoalsFormInputError>,
+    val proteinsPercentage: FormFieldWithTextFieldValue<Float?, GoalsFormInputError>,
+    val proteinsGrams: FormFieldWithTextFieldValue<Int?, GoalsFormInputError>,
+    val carbohydratesPercentage: FormFieldWithTextFieldValue<Float?, GoalsFormInputError>,
+    val carbohydratesGrams: FormFieldWithTextFieldValue<Int?, GoalsFormInputError>,
+    val fatsPercentage: FormFieldWithTextFieldValue<Float?, GoalsFormInputError>,
+    val fatsGrams: FormFieldWithTextFieldValue<Int?, GoalsFormInputError>,
+    coroutineScope: CoroutineScope
 ) {
-    var dailyGoals by mutableStateOf(initialDailyGoals)
-        private set
+    // No idea if there are race conditions here. Should probably test it xd.
+    init {
+        var editing = Editing.None
 
-    val totalPercentage by derivedStateOf {
-        ((dailyGoals.proteins + dailyGoals.carbohydrates + dailyGoals.fats) * 100).roundToInt()
-    }
-
-    val isError by derivedStateOf { totalPercentage != 100 }
-
-    var caloriesTextFieldValue by initialCaloriesTextFieldValue
-        private set
-
-    fun onCaloriesChanged(newValue: TextFieldValue) {
-        val text = newValue.text
-
-        val int = if (text.isEmpty()) {
-            0
-        } else {
-            text
-                .takeIf { it.length <= 5 }
-                ?.toIntOrNull()
-                ?.takeIf { it in 0..99999 }
-                ?: return
-        }
-
-        caloriesTextFieldValue = newValue
-
-        dailyGoals = dailyGoals.copy(
-            calories = int
-        )
-
-        val proteinsPercentageString = (dailyGoals.proteins * 100).toInt().toString()
-        proteinsPercentageTextFieldValue = TextFieldValue(
-            text = proteinsPercentageString,
-            selection = TextRange(proteinsPercentageString.length)
-        )
-
-        val proteinsGramsString = dailyGoals.proteinsAsGrams.toString()
-        proteinsGramsTextFieldValue = TextFieldValue(
-            text = proteinsGramsString,
-            selection = TextRange(proteinsGramsString.length)
-        )
-
-        val carbsPercentageString = (dailyGoals.carbohydrates * 100).toInt().toString()
-        carbsPercentageTextFieldValue = TextFieldValue(
-            text = carbsPercentageString,
-            selection = TextRange(carbsPercentageString.length)
-        )
-
-        val carbsGramsString = dailyGoals.carbohydratesAsGrams.toString()
-        carbsGramsTextFieldValue = TextFieldValue(
-            text = carbsGramsString,
-            selection = TextRange(carbsGramsString.length)
-        )
-
-        val fatsPercentageString = (dailyGoals.fats * 100).toInt().toString()
-        fatsPercentageTextFieldValue = TextFieldValue(
-            text = fatsPercentageString,
-            selection = TextRange(fatsPercentageString.length)
-        )
-
-        val fatsGramsString = dailyGoals.fatsAsGrams.toString()
-        fatsGramsTextFieldValue = TextFieldValue(
-            text = fatsGramsString,
-            selection = TextRange(fatsGramsString.length)
-        )
-    }
-
-    private fun onPercentageChanged(
-        newValue: TextFieldValue,
-        callback: (TextFieldValue, percentage: Float) -> Unit
-    ) {
-        val text = newValue.text
-
-        val int = if (text.isEmpty()) {
-            0
-        } else {
-            text
-                .takeIf { it.length <= 3 }
-                ?.toIntOrNull()
-                ?: return
-        }
-
-        callback(newValue, int / 100f)
-    }
-
-    private fun onGramsChanged(
-        newValue: TextFieldValue,
-        callback: (TextFieldValue, grams: Int) -> Unit
-    ) {
-        val text = newValue.text
-
-        val int = if (text.isEmpty()) {
-            0
-        } else {
-            text
-                .takeIf { it.length <= 4 }
-                ?.toIntOrNull()
-                ?: return
-        }
-
-        callback(newValue, int)
-    }
-
-    var proteinsPercentageTextFieldValue by initialProteinsPercentageTextFieldValue
-        private set
-
-    var proteinsGramsTextFieldValue by initialProteinsGramsTextFieldValue
-        private set
-
-    fun onProteinsPercentageChanged(newValue: TextFieldValue) {
-        onPercentageChanged(newValue) { value, percentage ->
-            if (percentage > 1 && percentage > dailyGoals.proteins) {
-                return@onPercentageChanged
+        coroutineScope.launch {
+            launch {
+                calories.interactionSource.interactions.collectLatest {
+                    editing = Editing.Calories
+                }
             }
 
-            proteinsPercentageTextFieldValue = value
-
-            dailyGoals = dailyGoals.copy(
-                proteins = percentage
-            )
-
-            val grams = dailyGoals.proteinsAsGrams.toString()
-            proteinsGramsTextFieldValue = TextFieldValue(
-                text = grams,
-                selection = TextRange(grams.length)
-            )
-        }
-    }
-
-    fun onProteinsGramsChanged(newValue: TextFieldValue) {
-        onGramsChanged(newValue) { value, grams ->
-            proteinsGramsTextFieldValue = value
-
-            val percentage = grams.toFloat() * com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentsAsGrams.PROTEINS / dailyGoals.calories
-
-            dailyGoals = dailyGoals.copy(
-                proteins = percentage
-            )
-
-            val percentageString = (percentage * 100).toInt().toString()
-
-            proteinsPercentageTextFieldValue = TextFieldValue(
-                text = percentageString,
-                selection = TextRange(percentageString.length)
-            )
-        }
-    }
-
-    var carbsPercentageTextFieldValue by initialCarbsPercentageTextFieldValue
-        private set
-
-    var carbsGramsTextFieldValue by initialCarbsGramsTextFieldValue
-        private set
-
-    fun onCarbohydratesPercentageChanged(newValue: TextFieldValue) {
-        onPercentageChanged(newValue) { value, percentage ->
-            if (percentage > 1 && percentage > dailyGoals.carbohydrates) {
-                return@onPercentageChanged
+            launch {
+                proteinsPercentage.interactionSource.interactions.collectLatest {
+                    editing = Editing.Percentage
+                }
+            }
+            launch {
+                carbohydratesPercentage.interactionSource.interactions.collectLatest {
+                    editing = Editing.Percentage
+                }
+            }
+            launch {
+                carbohydratesPercentage.interactionSource.interactions.collectLatest {
+                    editing = Editing.Percentage
+                }
             }
 
-            carbsPercentageTextFieldValue = value
-
-            dailyGoals = dailyGoals.copy(
-                carbohydrates = percentage
-            )
-
-            val grams = dailyGoals.carbohydratesAsGrams.toString()
-            carbsGramsTextFieldValue = TextFieldValue(
-                text = grams,
-                selection = TextRange(grams.length)
-            )
-        }
-    }
-
-    fun onCarbohydratesGramsChanged(newValue: TextFieldValue) {
-        onGramsChanged(newValue) { value, grams ->
-            carbsGramsTextFieldValue = value
-
-            val percentage =
-                grams.toFloat() * com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentsAsGrams.CARBOHYDRATES / dailyGoals.calories
-
-            dailyGoals = dailyGoals.copy(
-                carbohydrates = percentage
-            )
-
-            val percentageString = (percentage * 100).toInt().toString()
-
-            carbsPercentageTextFieldValue = TextFieldValue(
-                text = percentageString,
-                selection = TextRange(percentageString.length)
-            )
-        }
-    }
-
-    var fatsPercentageTextFieldValue by initialFatsPercentageTextFieldValue
-        private set
-
-    var fatsGramsTextFieldValue by initialFatsGramsTextFieldValue
-        private set
-
-    fun onFatsPercentageChanged(newValue: TextFieldValue) {
-        onPercentageChanged(newValue) { value, percentage ->
-            if (percentage > 1 && percentage > dailyGoals.fats) {
-                return@onPercentageChanged
+            launch {
+                proteinsGrams.interactionSource.interactions.collectLatest {
+                    editing = Editing.Grams
+                }
             }
+            launch {
+                carbohydratesGrams.interactionSource.interactions.collectLatest {
+                    editing = Editing.Grams
+                }
+            }
+            launch {
+                fatsGrams.interactionSource.interactions.collectLatest {
+                    editing = Editing.Grams
+                }
+            }
+        }
 
-            fatsPercentageTextFieldValue = value
+        // Auto calculate grams when calories change
+        coroutineScope.launch {
+            snapshotFlow { calories.value }.collectLatest {
+                val dailyGoals = intoDailyGoals() ?: return@collectLatest
 
-            dailyGoals = dailyGoals.copy(
-                fats = percentage
-            )
+                if (editing != Editing.Calories) return@collectLatest
 
-            val grams = dailyGoals.fatsAsGrams.toString()
-            fatsGramsTextFieldValue = TextFieldValue(
-                text = grams,
-                selection = TextRange(grams.length)
-            )
+                proteinsGrams.onRawValueChange(dailyGoals.proteinsAsGrams)
+                carbohydratesGrams.onRawValueChange(dailyGoals.carbohydratesAsGrams)
+                fatsGrams.onRawValueChange(dailyGoals.fatsAsGrams)
+            }
+        }
+
+        // Auto calculate grams when percentages change
+        coroutineScope.launch {
+            combine(
+                snapshotFlow { proteinsPercentage.value },
+                snapshotFlow { carbohydratesPercentage.value },
+                snapshotFlow { fatsPercentage.value }
+            ) { proteins, carbohydrates, fats ->
+                arrayListOf(proteins, carbohydrates, fats)
+            }.collectLatest {
+                if (editing != Editing.Percentage) return@collectLatest
+
+                val dailyGoals = intoDailyGoals() ?: return@collectLatest
+
+                if (isValid) {
+                    proteinsGrams.onRawValueChange(dailyGoals.proteinsAsGrams)
+                    carbohydratesGrams.onRawValueChange(dailyGoals.carbohydratesAsGrams)
+                    fatsGrams.onRawValueChange(dailyGoals.fatsAsGrams)
+                }
+            }
+        }
+
+        // Auto calculate percentages when grams change
+        coroutineScope.launch {
+            combine(
+                snapshotFlow { proteinsGrams.value },
+                snapshotFlow { carbohydratesGrams.value },
+                snapshotFlow { fatsGrams.value }
+            ) { proteins, carbohydrates, fats ->
+                arrayListOf(proteins, carbohydrates, fats)
+            }.filter {
+                it.all { it != null }
+            }.map {
+                it.map { it!! }
+            }.collectLatest { (proteinsValue, carbohydratesValue, fatsValue) ->
+                if (editing != Editing.Grams) return@collectLatest
+
+                val caloriesValue = NutrimentsAsGrams.calculateCalories(
+                    proteins = proteinsValue.toFloat(),
+                    carbohydrates = carbohydratesValue.toFloat(),
+                    fats = fatsValue.toFloat()
+                ).roundToInt()
+
+                val dailyGoals = DailyGoals(
+                    calories = caloriesValue,
+                    proteins = NutrimentsAsGrams.proteinsPercentage(caloriesValue, proteinsValue),
+                    carbohydrates = NutrimentsAsGrams.carbohydratesPercentage(
+                        caloriesValue,
+                        carbohydratesValue
+                    ),
+                    fats = NutrimentsAsGrams.fatsPercentage(caloriesValue, fatsValue)
+                )
+
+                calories.onRawValueChange(caloriesValue)
+                proteinsPercentage.onRawValueChange(dailyGoals.proteinsAsPercentage)
+                carbohydratesPercentage.onRawValueChange(dailyGoals.carbohydratesAsPercentage)
+                fatsPercentage.onRawValueChange(dailyGoals.fatsAsPercentage)
+            }
         }
     }
 
-    fun onFatsGramsChanged(newValue: TextFieldValue) {
-        onGramsChanged(newValue) { value, grams ->
-            fatsGramsTextFieldValue = value
+    val isValid by derivedStateOf {
+        calories.error == null && calories.isValid &&
+            proteinsPercentage.error == null && proteinsPercentage.isValid &&
+            proteinsGrams.error == null && proteinsGrams.isValid &&
+            carbohydratesPercentage.error == null && carbohydratesPercentage.isValid &&
+            carbohydratesGrams.error == null && carbohydratesGrams.isValid &&
+            fatsPercentage.error == null && fatsPercentage.isValid &&
+            fatsGrams.error == null && fatsGrams.isValid &&
+            error == null
+    }
 
-            val percentage = grams.toFloat() * com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentsAsGrams.FATS / dailyGoals.calories
-
-            dailyGoals = dailyGoals.copy(
-                fats = percentage
-            )
-
-            val percentageString = (percentage * 100).toInt().toString()
-
-            fatsPercentageTextFieldValue = TextFieldValue(
-                text = percentageString,
-                selection = TextRange(percentageString.length)
-            )
+    val error: GoalsFormError? by derivedStateOf {
+        if (
+            proteinsPercentage.value != null &&
+            carbohydratesPercentage.value != null &&
+            fatsPercentage.value != null &&
+            (proteinsPercentage.value + carbohydratesPercentage.value + fatsPercentage.value - 100f) !in (-0.01f..0.01f)
+        ) {
+            return@derivedStateOf GoalsFormError.PercentageMustSumUpTo100
         }
+
+        null
+    }
+
+    fun intoDailyGoals(): DailyGoals? {
+        if (
+            calories.value == null ||
+            proteinsPercentage.value == null ||
+            proteinsGrams.value == null ||
+            carbohydratesPercentage.value == null ||
+            carbohydratesGrams.value == null ||
+            fatsPercentage.value == null ||
+            fatsGrams.value == null
+        ) {
+            return null
+        }
+
+        return DailyGoals(
+            calories = calories.value,
+            proteins = proteinsPercentage.value / 100f,
+            carbohydrates = carbohydratesPercentage.value / 100f,
+            fats = fatsPercentage.value / 100f
+        )
     }
 }

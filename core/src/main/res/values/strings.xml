@@ -100,6 +100,9 @@
     <string name="error_value_cannot_be_negative">Value cannot be negative</string>
     <string name="error_there_are_errors_in_the_form">There are errors in the form</string>
     <string name="error_sum_of_macronutrients_cannot_exceed_100g">Sum of macronutrients cannot exceed 100g</string>
+    <string name="error_value_must_be_less_than">Value must be less than %1$s</string>
+    <string name="error_value_must_be_integer">Value must be an integer</string>
+    <string name="error_sum_of_percentages_must_be_100">Sum of percentages must be 100</string>
 
     <string name="positive_goal_reached">Goal reached</string>
     <string name="positive_ok">OK</string>

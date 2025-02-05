@@ -21,6 +21,24 @@ data class DailyGoals(
     val fats: Float
 ) {
     /**
+     * 100 = 100%
+     */
+    val proteinsAsPercentage: Float
+        get() = proteins * 100
+
+    /**
+     * 100 = 100%
+     */
+    val carbohydratesAsPercentage: Float
+        get() = carbohydrates * 100
+
+    /**
+     * 100 = 100%
+     */
+    val fatsAsPercentage: Float
+        get() = fats * 100
+
+    /**
      * Proteins goal in grams.
      */
     val proteinsAsGrams: Int

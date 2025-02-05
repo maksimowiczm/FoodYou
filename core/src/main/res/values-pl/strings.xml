@@ -103,6 +103,9 @@
     <string name="error_value_cannot_be_negative">Wartość nie może być ujemna</string>
     <string name="error_there_are_errors_in_the_form">W formularzu występują błędy</string>
     <string name="error_sum_of_macronutrients_cannot_exceed_100g">Suma makroskładników nie może przekraczać 100g</string>
+    <string name="error_value_must_be_less_than">Wartość musi być mniejsza niż %1$s</string>
+    <string name="error_value_must_be_integer">Wartość musi być liczbą całkowitą</string>
+    <string name="error_sum_of_percentages_must_be_100">Suma procentów musi wynosić 100</string>
 
     <string name="positive_goal_reached">Cel osiągnięty</string>
     <string name="positive_ok">OK</string>

@@ -23,6 +23,7 @@ fun <T, E> rememberFormFieldWithTextFieldValue(
     initialDirty: Boolean = false,
     requireDirty: Boolean = true,
     parser: Parser<T, E>,
+    formatter: (T) -> String = { it.toString() },
     validator: (() -> Validator<T, E>)? = null
 ): FormFieldWithTextFieldValue<T, E> {
     val interactionSource = remember { MutableInteractionSource() }
@@ -48,17 +49,31 @@ fun <T, E> rememberFormFieldWithTextFieldValue(
             initialTextFieldValue = textFieldValue,
             formField = formField,
             interactionSource = interactionSource,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
+            formatter = formatter
         )
     }
 }
 
+/**
+ * A [FormField] that also holds a [TextFieldValue] for a text field.
+ *
+ * @param T the type of the value of the form field
+ * @param E the type of the error of the form field
+ * @param initialTextFieldValue the initial [TextFieldValue] of the text field
+ * @param formField the form field
+ * @param interactionSource the [MutableInteractionSource] of the text field
+ * @param coroutineScope the [CoroutineScope] to launch coroutines
+ * @param formatter the formatter to format the raw value to the text field value
+ * @see FormField
+ */
 @Stable
 class FormFieldWithTextFieldValue<T, E>(
     initialTextFieldValue: MutableState<TextFieldValue>,
     private val formField: FormField<T, E>,
     val interactionSource: MutableInteractionSource,
-    coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope,
+    private val formatter: (T) -> String
 ) : FormField<T, E> by formField {
     init {
         coroutineScope.launch {
@@ -85,5 +100,10 @@ class FormFieldWithTextFieldValue<T, E>(
     fun onValueChange(newValue: TextFieldValue, touch: Boolean = true) {
         textFieldValue = newValue
         formField.onValueChange(newValue.text, touch)
+    }
+
+    override fun onRawValueChange(newValue: T, touch: Boolean) {
+        formField.onRawValueChange(newValue, touch)
+        textFieldValue = TextFieldValue(formatter(newValue))
     }
 }

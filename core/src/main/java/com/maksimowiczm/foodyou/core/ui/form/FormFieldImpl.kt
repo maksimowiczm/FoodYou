@@ -95,6 +95,28 @@ class FormFieldImpl<T, E>(
         fieldValue = parseAndValidate(newValue)
     }
 
+    override fun onRawValueChange(newValue: T, touch: Boolean) {
+        if (touch) {
+            touch()
+        }
+
+        fieldValue = when (val validated = validate(newValue)) {
+            is ValidationResult.Failure<*> -> {
+                FormFieldValue(
+                    value = newValue,
+                    error = validated.error as E
+                )
+            }
+
+            is ValidationResult.Success -> {
+                FormFieldValue(
+                    value = newValue,
+                    error = null
+                )
+            }
+        }
+    }
+
     private fun parseAndValidate(value: String): FormFieldValue<T, E> {
         val parsedValue = when (val result = parse(value)) {
             is ParserResult.Failure -> {
