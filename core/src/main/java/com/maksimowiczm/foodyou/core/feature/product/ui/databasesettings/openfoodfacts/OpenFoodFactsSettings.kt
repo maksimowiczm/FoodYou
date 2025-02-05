@@ -42,6 +42,7 @@ import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.OpenFoo
 import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.country.CountryFlag
 import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.country.CountryPickerDialog
 import com.maksimowiczm.foodyou.core.feature.system.data.model.Country
+import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
@@ -64,7 +65,8 @@ fun OpenFoodFactsSettings(
                 text = stringResource(R.string.headline_open_food_facts),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp),
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                    .horizontalDisplayCutoutPadding(),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelLarge
             )
@@ -73,6 +75,7 @@ fun OpenFoodFactsSettings(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
+                    .horizontalDisplayCutoutPadding()
             )
 
             Spacer(Modifier.height(8.dp))
@@ -83,7 +86,9 @@ fun OpenFoodFactsSettings(
                         text = stringResource(R.string.action_use_open_food_facts)
                     )
                 },
-                modifier = Modifier.clickable { onToggle(!enabled) },
+                modifier = Modifier
+                    .clickable { onToggle(!enabled) }
+                    .horizontalDisplayCutoutPadding(),
                 trailingContent = {
                     Switch(
                         checked = enabled,
@@ -206,7 +211,8 @@ private fun OpenFoodFactsContent(
         ListItem(
             modifier = modifier
                 .requiredHeightIn(min = 64.dp)
-                .clickable { showCountryPicker = true },
+                .clickable { showCountryPicker = true }
+                .horizontalDisplayCutoutPadding(),
             headlineContent = {
                 Text(
                     text = stringResource(R.string.action_select_country)

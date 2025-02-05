@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.SettingsFeature
 import com.maksimowiczm.foodyou.core.feature.product.ProductFeature
+import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 
 fun buildFoodDatabaseSettingsListItem(
     navController: NavController
@@ -36,7 +37,9 @@ private fun FoodDatabaseSettingsListItem(
                 text = stringResource(R.string.headline_food_database)
             )
         },
-        modifier = modifier.clickable(onClick = onFoodDatabaseClick),
+        modifier = modifier
+            .clickable(onClick = onFoodDatabaseClick)
+            .horizontalDisplayCutoutPadding(),
         leadingContent = {
             Icon(
                 painter = painterResource(R.drawable.ic_cloud_download_24),

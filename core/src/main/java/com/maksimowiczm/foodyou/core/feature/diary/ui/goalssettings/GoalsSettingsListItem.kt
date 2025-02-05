@@ -14,6 +14,7 @@ import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.SettingsFeature
 import com.maksimowiczm.foodyou.core.feature.diary.DiaryFeature.navigateToGoalsSettings
+import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 
 fun buildGoalsSettingsListItem(navController: NavController) = SettingsFeature { modifier ->
     GoalsSettingsListItem(
@@ -39,7 +40,9 @@ private fun GoalsSettingsListItem(
                 text = stringResource(R.string.headline_daily_goals)
             )
         },
-        modifier = modifier.clickable(onClick = onGoalsClick),
+        modifier = modifier
+            .clickable(onClick = onGoalsClick)
+            .horizontalDisplayCutoutPadding(),
         leadingContent = {
             Icon(
                 painter = painterResource(R.drawable.ic_flag_24),
