@@ -18,9 +18,9 @@ fun buildNutrimentsCard(navController: NavController) = HomeFeature(
         .observeDiaryDay(homeState.selectedDate)
         .collectAsStateWithLifecycle(null)
 
-    if (diaryDay != null) {
+    diaryDay?.let {
         NutrimentsRowCard(
-            diaryDay = diaryDay!!,
+            diaryDay = it,
             onSettingsClick = {
                 navController.navigateToGoalsSettings(
                     navOptions = navOptions {

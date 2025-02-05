@@ -17,14 +17,14 @@ fun buildMealsCard(navController: NavController) = HomeFeature { modifier, homeS
         .observeDiaryDay(homeState.selectedDate)
         .collectAsStateWithLifecycle(null)
 
-    if (diaryDay != null) {
+    diaryDay?.let {
         MealsCard(
-            diaryDay = diaryDay!!,
-            onAddClick = {
+            diaryDay = it,
+            onAddClick = { meal ->
                 navController.navigateToAddFood(
                     route = AddFoodFeature(
                         epochDay = homeState.selectedDate.toEpochDay(),
-                        meal = it
+                        meal = meal
                     ),
                     navOptions = navOptions {
                         launchSingleTop = true

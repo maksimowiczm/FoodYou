@@ -49,7 +49,6 @@ import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import java.time.LocalDate
 
@@ -87,7 +86,9 @@ fun CalendarCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = formatMonthYear(calendarState.firstVisibleDate ?: calendarState.selectedDate)
+                    text = formatMonthYear(
+                        calendarState.firstVisibleDate ?: calendarState.selectedDate
+                    )
                 )
 
                 IconButton(
@@ -169,11 +170,11 @@ private fun CalendarCardDatePicker(
     // Tick when user scrolls
     LaunchedEffect(calendarState) {
         combine(
-            snapshotFlow { calendarState.firstVisibleDate },
-            snapshotFlow { calendarState.lazyListState.layoutInfo.visibleItemsInfo }
-        ) { _, visibleItems ->
-            visibleItems.isNotEmpty()
-        }.drop(1).filter { it }.collectLatest {
+            snapshotFlow { calendarState.lazyListState.isScrollInProgress },
+            snapshotFlow { calendarState.lazyListState.firstVisibleItemIndex }
+        ) { isScrollInProgress, _ ->
+            isScrollInProgress
+        }.filter { it }.collectLatest {
             hapticFeedback.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
         }
     }
