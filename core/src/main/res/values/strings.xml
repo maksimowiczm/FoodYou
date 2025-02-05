@@ -86,6 +86,10 @@
         <item quantity="one">%1$d gram left</item>
         <item quantity="other">%1$d grams left</item>
     </plurals>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">%1$d calorie left</item>
+        <item quantity="other">%1$d calories left</item>
+    </plurals>
     <string name="neutral_manage_food_database">Manage your food database</string>
     <string name="neutral_set_your_daily_goals">Set your daily goals</string>
     <string name="neutral_total_value_must_be_100">Total value must be 100%</string>
@@ -110,6 +114,10 @@
     <plurals name="negative_exceeded_by_grams">
         <item quantity="one">Exceeded by %1$d gram</item>
         <item quantity="other">Exceeded by %1$d grams</item>
+    </plurals>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">Exceeded by %1$d calorie</item>
+        <item quantity="other">Exceeded by %1$d calories</item>
     </plurals>
 
     <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>

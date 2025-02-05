@@ -13,7 +13,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import com.maksimowiczm.foodyou.core.R
-import com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentsAsGrams
+import com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentHelper
 import com.maksimowiczm.foodyou.core.feature.product.data.model.WeightUnit
 import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.form.allowNull
@@ -381,7 +381,7 @@ class ProductFormState(
                 if (!autoCalculateCalories) return@collectLatest
 
                 if (proteins != null && carbohydrates != null && fats != null) {
-                    val caloriesValue = NutrimentsAsGrams.calculateCalories(
+                    val caloriesValue = NutrimentHelper.calculateCalories(
                         proteins,
                         carbohydrates,
                         fats

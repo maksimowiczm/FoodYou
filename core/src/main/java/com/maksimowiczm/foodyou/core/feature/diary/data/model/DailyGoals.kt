@@ -42,19 +42,28 @@ data class DailyGoals(
      * Proteins goal in grams.
      */
     val proteinsAsGrams: Int
-        get() = (calories * proteins / NutrimentsAsGrams.PROTEINS).roundToInt()
+        get() = (calories * proteins / NutrimentHelper.PROTEINS).roundToInt()
 
     /**
      * Carbohydrates goal in grams.
      */
     val carbohydratesAsGrams: Int
-        get() = (calories * carbohydrates / NutrimentsAsGrams.CARBOHYDRATES).roundToInt()
+        get() = (calories * carbohydrates / NutrimentHelper.CARBOHYDRATES).roundToInt()
 
     /**
      * Fats goal in grams.
      */
     val fatsAsGrams: Int
-        get() = (calories * fats / NutrimentsAsGrams.FATS).roundToInt()
+        get() = (calories * fats / NutrimentHelper.FATS).roundToInt()
+
+    val proteinsAsCalories: Int
+        get() = (calories * proteins).roundToInt()
+
+    val carbohydratesAsCalories: Int
+        get() = (calories * carbohydrates).roundToInt()
+
+    val fatsAsCalories: Int
+        get() = (calories * fats).roundToInt()
 }
 
 fun defaultGoals() = DailyGoals(

@@ -12,7 +12,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.DailyGoals
-import com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentsAsGrams
+import com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentHelper
 import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.form.between
 import com.maksimowiczm.foodyou.core.ui.form.nonNegative
@@ -341,7 +341,7 @@ class CaloriesGoalFormState(
             }.collectLatest { (proteinsValue, carbohydratesValue, fatsValue) ->
                 if (editing != Editing.Grams) return@collectLatest
 
-                val caloriesValue = NutrimentsAsGrams.calculateCalories(
+                val caloriesValue = NutrimentHelper.calculateCalories(
                     proteins = proteinsValue.toFloat(),
                     carbohydrates = carbohydratesValue.toFloat(),
                     fats = fatsValue.toFloat()
@@ -349,12 +349,12 @@ class CaloriesGoalFormState(
 
                 val dailyGoals = DailyGoals(
                     calories = caloriesValue,
-                    proteins = NutrimentsAsGrams.proteinsPercentage(caloriesValue, proteinsValue),
-                    carbohydrates = NutrimentsAsGrams.carbohydratesPercentage(
+                    proteins = NutrimentHelper.proteinsPercentage(caloriesValue, proteinsValue),
+                    carbohydrates = NutrimentHelper.carbohydratesPercentage(
                         caloriesValue,
                         carbohydratesValue
                     ),
-                    fats = NutrimentsAsGrams.fatsPercentage(caloriesValue, fatsValue)
+                    fats = NutrimentHelper.fatsPercentage(caloriesValue, fatsValue)
                 )
 
                 calories.onRawValueChange(caloriesValue)

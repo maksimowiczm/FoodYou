@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.diary.data.model
 
-object NutrimentsAsGrams {
+object NutrimentHelper {
     const val PROTEINS = 4
     const val CARBOHYDRATES = 4
     const val FATS = 9
@@ -17,7 +17,11 @@ object NutrimentsAsGrams {
         return carbohydrates.toFloat() * CARBOHYDRATES / calories
     }
 
-    fun fatsPercentage(calories: Int, fats: Number): Float {
-        return fats.toFloat() * FATS / calories
-    }
+    fun fatsPercentage(calories: Int, fats: Number) = fats.toFloat() * FATS / calories
+
+    fun proteinsToCalories(proteins: Number) = proteins.toFloat() * PROTEINS
+
+    fun carbohydratesToCalories(carbohydrates: Number) = carbohydrates.toFloat() * CARBOHYDRATES
+
+    fun fatsToCalories(fats: Number) = fats.toFloat() * FATS
 }

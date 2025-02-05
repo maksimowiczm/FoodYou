@@ -157,7 +157,7 @@ private fun Progress(
                 progress = { animatedValue / goalValue },
                 modifier = Modifier.matchParentSize(),
                 color = color,
-                trackColor = MaterialTheme.colorScheme.outline,
+                trackColor = MaterialTheme.colorScheme.secondaryContainer,
                 strokeCap = StrokeCap.Butt,
                 gapSize = 0.dp
             )

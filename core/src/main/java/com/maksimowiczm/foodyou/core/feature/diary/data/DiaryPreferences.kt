@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.diary.data
 
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 
@@ -10,4 +11,6 @@ object DiaryPreferences {
     val proteinsGoal = floatPreferencesKey("proteins_goal")
     val carbohydratesGoal = floatPreferencesKey("carbohydrates_goal")
     val fatsGoal = floatPreferencesKey("fats_goal")
+
+    val caloriesExpanded = booleanPreferencesKey("calories_expanded")
 }

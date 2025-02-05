@@ -8,6 +8,8 @@ import com.maksimowiczm.foodyou.core.feature.addfood.navigation.addFoodGraph
 import com.maksimowiczm.foodyou.core.feature.diary.data.DiaryRepository
 import com.maksimowiczm.foodyou.core.feature.diary.data.DiaryRepositoryImpl
 import com.maksimowiczm.foodyou.core.feature.diary.ui.DiaryViewModel
+import com.maksimowiczm.foodyou.core.feature.diary.ui.caloriescard.CaloriesCardViewModel
+import com.maksimowiczm.foodyou.core.feature.diary.ui.caloriescard.buildCaloriesCard
 import com.maksimowiczm.foodyou.core.feature.diary.ui.goalssettings.GoalsSettingsScreen
 import com.maksimowiczm.foodyou.core.feature.diary.ui.goalssettings.GoalsSettingsViewModel
 import com.maksimowiczm.foodyou.core.feature.diary.ui.goalssettings.buildGoalsSettingsListItem
@@ -24,6 +26,7 @@ import org.koin.dsl.module
 
 private val diaryModule = module {
     viewModelOf(::DiaryViewModel)
+    viewModelOf(::CaloriesCardViewModel)
     viewModelOf(::GoalsSettingsViewModel)
 
     factoryOf(::DiaryRepositoryImpl).bind(DiaryRepository::class)
@@ -51,6 +54,7 @@ object DiaryFeature : Feature.Koin, Feature.Home, Feature.Settings {
 
     override fun buildHomeFeatures(navController: NavController) = listOf(
         buildMealsCard(navController),
+        buildCaloriesCard(),
         buildNutrimentsCard(navController)
     )
 

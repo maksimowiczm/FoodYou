@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.maksimowiczm.foodyou.core.feature.diary.data.DiaryRepository
 import java.time.LocalDate
 
-class DiaryViewModel(
+open class DiaryViewModel(
     private val diaryRepository: DiaryRepository
 ) : ViewModel() {
     fun observeDiaryDay(date: LocalDate) = diaryRepository.observeDiaryDay(date)

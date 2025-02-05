@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.core.feature.diary.data.model
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import java.time.LocalDate
+import kotlin.math.roundToInt
 
 data class DiaryDay(
     val date: LocalDate,
@@ -24,6 +25,21 @@ data class DiaryDay(
 
     val totalCalories: Int
         get() = mealProductMap.values.flatten().sumOf { it.calories }
+
+    val totalCaloriesProteins: Int
+        get() = mealProductMap.values.flatten().fold(0f) { acc, product ->
+            NutrimentHelper.proteinsToCalories(product.proteins) + acc
+        }.roundToInt()
+
+    val totalCaloriesCarbohydrates: Int
+        get() = mealProductMap.values.flatten().fold(0f) { acc, product ->
+            NutrimentHelper.carbohydratesToCalories(product.carbohydrates) + acc
+        }.roundToInt()
+
+    val totalCaloriesFats: Int
+        get() = mealProductMap.values.flatten().fold(0f) { acc, product ->
+            NutrimentHelper.fatsToCalories(product.fats) + acc
+        }.roundToInt()
 
     val totalProteins: Int
         get() = mealProductMap.values.flatten().sumOf { it.proteins }

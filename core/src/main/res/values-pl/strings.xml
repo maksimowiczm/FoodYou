@@ -89,6 +89,11 @@
         <item quantity="few">Pozostały %1$d gramy</item>
         <item quantity="many">Pozostało %1$d gramów</item>
     </plurals>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">Pozostała %1$d kaloria</item>
+        <item quantity="few">Pozostały %1$d kalorie</item>
+        <item quantity="many">Pozostało %1$d kalorii</item>
+    </plurals>
     <string name="neutral_manage_food_database">Zarządzaj swoją bazą danych żywności</string>
     <string name="neutral_set_your_daily_goals">Ustaw swoje cele</string>
     <string name="neutral_total_value_must_be_100">Łączna wartość musi wynosić 100%</string>
@@ -114,6 +119,11 @@
         <item quantity="one">Przekroczono o %1$d gram</item>
         <item quantity="few">Przekroczono o %1$d gramy</item>
         <item quantity="many">Przekroczono o %1$d gramów</item>
+    </plurals>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">Przekroczono o %1$d kalorię</item>
+        <item quantity="few">Przekroczono o %1$d kalorie</item>
+        <item quantity="many">Przekroczono o %1$d kalorii</item>
     </plurals>
 
     <string name="link_open_food_facts">https://pl.openfoodfacts.org/</string>
