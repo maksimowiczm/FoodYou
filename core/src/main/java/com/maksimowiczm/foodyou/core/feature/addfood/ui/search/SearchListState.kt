@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun rememberSearchListState(
+    initialProducts: List<ProductSearchUiModel> = emptyList(),
     lazyListState: LazyListState = rememberLazyListState(),
     onQuickAdd: suspend (ProductWithWeightMeasurement) -> Long = { 0 },
     onQuickRemove: (ProductWithWeightMeasurement) -> Unit = {},
@@ -28,6 +29,7 @@ fun rememberSearchListState(
     ) {
         SearchListState(
             lazyListState = lazyListState,
+            initialProducts = initialProducts,
             onQuickAdd = onQuickAdd,
             onQuickRemove = onQuickRemove,
             coroutineScope = coroutineScope
@@ -38,6 +40,7 @@ fun rememberSearchListState(
 @Stable
 class SearchListState(
     val lazyListState: LazyListState,
+    initialProducts: List<ProductSearchUiModel>,
     private val onQuickAdd: suspend (ProductWithWeightMeasurement) -> Long,
     private val onQuickRemove: (ProductWithWeightMeasurement) -> Unit,
     private val coroutineScope: CoroutineScope
@@ -48,7 +51,7 @@ class SearchListState(
     var isError: Boolean by mutableStateOf(false)
         private set
 
-    var products: List<ProductSearchUiModel> by mutableStateOf(emptyList())
+    var products: List<ProductSearchUiModel> by mutableStateOf(initialProducts)
         private set
 
     fun onQueryResultChange(queryResult: com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult<List<ProductWithWeightMeasurement>>) {

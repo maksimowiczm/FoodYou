@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -14,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -65,14 +65,21 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.core.R
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.AddFoodState
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.previewparameter.ProductSearchUiModelPreviewParameter
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.rememberAddFoodState
 import com.maksimowiczm.foodyou.core.ui.component.LoadingIndicator
+import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
+import com.maksimowiczm.foodyou.core.ui.preview.SharedTransitionPreview
 import kotlinx.coroutines.CancellationException
+import java.time.LocalDateTime
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -399,26 +406,21 @@ private fun MySearchBar(
         LazyColumn {
             items(recentQueries) { productQuery ->
                 ListItem(
-                    modifier = Modifier.clickable { onSearchInternal(productQuery.query) },
-                    headlineContent = {
-                        Text(
-                            modifier = Modifier.displayCutoutPadding(),
-                            text = productQuery.query
-                        )
-                    },
+                    modifier = Modifier
+                        .clickable { onSearchInternal(productQuery.query) }
+                        .horizontalDisplayCutoutPadding(),
+                    headlineContent = { Text(text = productQuery.query) },
                     colors = ListItemDefaults.colors(
                         containerColor = Color.Transparent
                     ),
                     leadingContent = {
                         Icon(
-                            modifier = Modifier.displayCutoutPadding(),
                             painter = painterResource(R.drawable.ic_schedule_24),
                             contentDescription = stringResource(R.string.action_search)
                         )
                     },
                     trailingContent = {
                         IconButton(
-                            modifier = Modifier.displayCutoutPadding(),
                             onClick = {
                                 searchBarState.textFieldState
                                     .setTextAndPlaceCursorAtEnd(productQuery.query)
@@ -492,5 +494,71 @@ private fun ProductsLazyColumn(
 
             bottomOffset()
         }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview
+@Composable
+private fun SearchHomePreview() {
+    val products = ProductSearchUiModelPreviewParameter().values.toList()
+
+    SharedTransitionPreview { _, animatedVisibilityScope ->
+        SearchHome(
+            animatedVisibilityScope = animatedVisibilityScope,
+            addFoodState = rememberAddFoodState(
+                searchListState = rememberSearchListState(
+                    initialProducts = products
+                ),
+                searchBottomBarState = rememberSearchBottomBarState(
+                    totalCalories = products.filter { it.isChecked }.sumOf { it.model.calories }
+                )
+            ),
+            onSearchSettings = {},
+            onSearch = {},
+            onClearSearch = {},
+            onRetry = {},
+            onBack = {},
+            onProductClick = {},
+            onCreateProduct = {},
+            onBarcodeScanner = {}
+        )
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview
+@Composable
+private fun SearchHomePreview2() {
+    val products = ProductSearchUiModelPreviewParameter().values.toList()
+
+    SharedTransitionPreview { _, animatedVisibilityScope ->
+        SearchHome(
+            animatedVisibilityScope = animatedVisibilityScope,
+            addFoodState = rememberAddFoodState(
+                searchBarState = rememberSearchBarState(
+                    expanded = true,
+                    recentQueries = listOf(
+                        ProductQuery("Banana", LocalDateTime.now()),
+                        ProductQuery("Apple", LocalDateTime.now()),
+                        ProductQuery("Orange", LocalDateTime.now())
+                    )
+                ),
+                searchListState = rememberSearchListState(
+                    initialProducts = products
+                ),
+                searchBottomBarState = rememberSearchBottomBarState(
+                    totalCalories = products.filter { it.isChecked }.sumOf { it.model.calories }
+                )
+            ),
+            onSearchSettings = {},
+            onSearch = {},
+            onClearSearch = {},
+            onRetry = {},
+            onBack = {},
+            onProductClick = {},
+            onCreateProduct = {},
+            onBarcodeScanner = {}
+        )
     }
 }
