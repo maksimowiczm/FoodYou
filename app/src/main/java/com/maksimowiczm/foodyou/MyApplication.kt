@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.core.feature.product.ProductFeature
 import com.maksimowiczm.foodyou.core.feature.system.SystemFeature
 import com.maksimowiczm.foodyou.core.infrastructure.android.FoodYouApplication
 import com.maksimowiczm.foodyou.core.feature.FeatureManager
+import com.maksimowiczm.foodyou.core.feature.about.AboutFeature
 
 class MyApplication : FoodYouApplication() {
     override fun setupFeatures() {
@@ -17,7 +18,8 @@ class MyApplication : FoodYouApplication() {
             ProductFeature,
             DiaryFeature,
             CameraFeature,
-            AddFoodFeature
+            AddFoodFeature,
+            AboutFeature
         )
     }
 }

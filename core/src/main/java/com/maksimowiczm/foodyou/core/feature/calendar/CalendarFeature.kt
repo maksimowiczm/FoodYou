@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.core.feature.Feature
 import com.maksimowiczm.foodyou.core.feature.HomeFeature
 import com.maksimowiczm.foodyou.core.feature.calendar.ui.CalendarCard
@@ -24,8 +23,6 @@ private val calendarModule = module {
  * CalendarFeature is HomeFeature that displays a calendar card.
  */
 object CalendarFeature : Feature.Koin, Feature.Home {
-    override fun NavGraphBuilder.homeGraph(navController: NavController) = Unit
-
     override fun buildHomeFeatures(navController: NavController) = listOf(CalendarCard)
 
     override fun KoinApplication.setup() {

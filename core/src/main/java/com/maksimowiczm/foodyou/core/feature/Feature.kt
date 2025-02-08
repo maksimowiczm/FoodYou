@@ -26,7 +26,7 @@ sealed interface Feature {
          *
          * @param navController The main navigation controller.
          */
-        fun NavGraphBuilder.homeGraph(navController: NavController)
+        fun NavGraphBuilder.homeGraph(navController: NavController) = Unit
 
         /**
          * List of home features that will be added to the home screen.
@@ -46,7 +46,7 @@ sealed interface Feature {
          *
          * @param navController The main navigation controller.
          */
-        fun NavGraphBuilder.settingsGraph(navController: NavController)
+        fun NavGraphBuilder.settingsGraph(navController: NavController) = Unit
 
         /**
          * List of settings features that will be added to the settings screen.

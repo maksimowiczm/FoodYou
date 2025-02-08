@@ -9,6 +9,11 @@
     <string name="headline_general">Ogólne</string>
     <string name="headline_macronutrients">Makroskładniki</string>
     <string name="headline_nutrients">Składniki odżywcze</string>
+    <string name="headline_about">O aplikacji</string>
+    <string name="headline_miscellaneous">Różne</string>
+    <string name="headline_version">Wersja</string>
+    <string name="headline_share_your_thoughts">Podziel się swoimi przemyśleniami</string>
+    <string name="headline_show_some_love">Pokaż swoje wsparcie</string>
 
     <string name="meal_name_breakfast">Śniadanie</string>
     <string name="meal_name_lunch">Drugie śniadanie</string>
@@ -78,6 +83,9 @@
     <string name="action_see_terms_of_use">Zobacz warunki użytkowania</string>
     <string name="action_go_to_settings">Przejdź do ustawień</string>
     <string name="action_save">Zapisz</string>
+    <string name="action_bug_report_on_github">Zgłoś błąd na GitHubie</string>
+    <string name="action_feature_request_on_github">Zgłoś sugestię na GitHubie</string>
+    <string name="action_leave_a_star_on_github">Zostaw gwiazdkę na GitHubie</string>
 
     <string name="neutral_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu</string>
     <string name="neutral_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu</string>
@@ -133,5 +141,9 @@
 
     <string name="description_open_food_facts">jest darmową i otwartą bazą danych produktów spożywczych z całego świata.</string>
     <string name="description_calories_goal">Ustaw swój dzienny cel spożycia kalorii. Pomoże Ci to śledzić postępy i pozostać na właściwej ścieżce.</string>
+    <string name="description_README_setting">Zobacz README na GitHubie</string>
+    <string name="description_about_setting">Dowiedz się więcej o aplikacji</string>
+    <string name="description_show_some_love">Jeśli uważasz, że ten projekt jest pomocny, rozważ dodanie mu gwiazdki na GitHubie! Dzięki temu więcej osób go odkryje, a rozwój projektu będzie mógł trwać dalej.</string>
+    <string name="description_share_your_thoughts">Jeśli masz jakiekolwiek uwagi, propozycje funkcji lub zgłoszenia błędów, daj mi znać! Chętnie wysłucham Twojej opinii.</string>
 
 </resources>
