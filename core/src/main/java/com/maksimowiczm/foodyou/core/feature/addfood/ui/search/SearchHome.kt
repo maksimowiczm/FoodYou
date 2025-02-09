@@ -61,8 +61,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.AddFoodState
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.previewparameter.ProductSearchUiModelPreviewParameter
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.rememberAddFoodState
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.searchbar.AddFoodSearchBar
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.searchbar.rememberSearchBarState
 import com.maksimowiczm.foodyou.core.ui.component.LoadingIndicator
 import com.maksimowiczm.foodyou.core.ui.preview.SharedTransitionPreview
 import kotlinx.coroutines.CancellationException

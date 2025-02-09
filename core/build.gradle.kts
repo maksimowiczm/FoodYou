@@ -10,13 +10,12 @@ plugins {
 
 android {
     namespace = "com.maksimowiczm.foodyou.core"
-    compileSdk = 35
+    compileSdk = libs.versions.coreCompileSdk.get().toInt()
 
     defaultConfig {
-        // Sdk < 28 is bugged af I think that it is not worth to support it
-        minSdk = 26
+        minSdk = libs.versions.coreMinSdk.get().toInt()
 
-        testOptions.targetSdk = 35
+        testOptions.targetSdk = libs.versions.coreTargetSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 

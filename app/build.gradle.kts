@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.maksimowiczm.foodyou"
-    compileSdk = 35
+    compileSdk = libs.versions.coreCompileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.maksimowiczm.foodyou"
-        minSdk = 26
-        targetSdk = 35
+        minSdk = libs.versions.coreMinSdk.get().toInt()
+        targetSdk = libs.versions.coreTargetSdk.get().toInt()
         versionCode = 1
         versionName = libs.versions.coreVersion.get()
 

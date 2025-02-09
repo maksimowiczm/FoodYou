@@ -15,15 +15,10 @@ import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.rememberAddFoodState
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.searchbar.rememberSearchBarState
 import com.maksimowiczm.foodyou.core.ui.preview.SharedTransitionPreview
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDateTime
-
-// Material SearchBar is so wierd ;)
-// Tests will always fail unless targetSdk >= 28
-// Currently it doesn't work with sdk < 28
 
 class SearchHomeTest {
     @get:Rule
