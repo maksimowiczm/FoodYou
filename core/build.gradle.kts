@@ -13,8 +13,10 @@ android {
     compileSdk = 35
 
     defaultConfig {
+        // Sdk < 28 is bugged af I think that it is not worth to support it
         minSdk = 26
 
+        testOptions.targetSdk = 35
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 

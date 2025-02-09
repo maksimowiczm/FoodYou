@@ -15,14 +15,15 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun rememberSearchListState(
-    initialProducts: List<ProductSearchUiModel> = emptyList(),
     lazyListState: LazyListState = rememberLazyListState(),
+    initialProducts: List<ProductSearchUiModel> = emptyList(),
     onQuickAdd: suspend (ProductWithWeightMeasurement) -> Long = { 0 },
     onQuickRemove: (ProductWithWeightMeasurement) -> Unit = {},
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ): SearchListState {
     return remember(
         lazyListState,
+        initialProducts,
         onQuickAdd,
         onQuickRemove,
         coroutineScope

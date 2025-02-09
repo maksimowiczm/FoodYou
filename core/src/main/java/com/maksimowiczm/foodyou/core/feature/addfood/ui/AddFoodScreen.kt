@@ -66,7 +66,7 @@ fun AddFoodScreen(
 
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
     LaunchedEffect(recentQueries) {
-        addFoodState.searchBarState.recentQueries = recentQueries
+        addFoodState.searchBarState.updateRecentQueries(recentQueries)
     }
 
     val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()

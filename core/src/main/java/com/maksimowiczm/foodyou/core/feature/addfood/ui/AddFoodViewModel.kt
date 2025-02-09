@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeigh
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionUiState
+import com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,8 +43,8 @@ class AddFoodViewModel(
 
     private var query: String? = null
     private var queryJob: Job? = null
-    val queryState: MutableStateFlow<com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult<List<ProductWithWeightMeasurement>>> =
-        MutableStateFlow(com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult.loading(emptyList()))
+    val queryState: MutableStateFlow<QueryResult<List<ProductWithWeightMeasurement>>> =
+        MutableStateFlow(QueryResult.loading(emptyList()))
 
     init {
         onSearch(

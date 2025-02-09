@@ -4,7 +4,6 @@ import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -25,24 +24,12 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.BottomAppBarScrollBehavior
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,13 +44,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -75,8 +61,9 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.AddFoodState
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.previewparameter.ProductSearchUiModelPreviewParameter
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.rememberAddFoodState
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.searchbar.AddFoodSearchBar
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.searchbar.rememberSearchBarState
 import com.maksimowiczm.foodyou.core.ui.component.LoadingIndicator
-import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.preview.SharedTransitionPreview
 import kotlinx.coroutines.CancellationException
 import java.time.LocalDateTime
@@ -176,7 +163,7 @@ private fun SearchHomeLayout(
     var searchBarHeightDp by remember { mutableStateOf(0.dp) }
 
     val searchBar = @Composable {
-        MySearchBar(
+        AddFoodSearchBar(
             searchBarState = addFoodState.searchBarState,
             onSearchSettings = onSearchSettings,
             onSearch = onSearch,
@@ -240,7 +227,9 @@ private fun SearchHomeLayout(
     // Put them both in column because there is wierd behaviour when they are placed in layout.
     // - Black bar appears between list and bottom bar when bottom bar height changes.
     val listWithBar = @Composable {
-        Column {
+        Column(
+            modifier = Modifier.testTag("Content")
+        ) {
             ProductsLazyColumn(
                 searchListState = addFoodState.searchListState,
                 onProductClick = onProductClick,
@@ -318,122 +307,6 @@ private fun SearchHomeLayout(
                 (constraints.maxWidth - emptyPlaceable.width) / 2,
                 (constraints.maxHeight - emptyPlaceable.height) / 2
             )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MySearchBar(
-    searchBarState: SearchBarState,
-    onSearchSettings: () -> Unit,
-    onSearch: (String) -> Unit,
-    onClearSearch: () -> Unit,
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val onSearchInternal: (String) -> Unit = {
-        onSearch(it)
-        searchBarState.textFieldState.setTextAndPlaceCursorAtEnd(it)
-        searchBarState.expanded = false
-    }
-    val onClearInternal: () -> Unit = {
-        onClearSearch()
-        searchBarState.textFieldState.clearText()
-    }
-
-    SearchBar(
-        inputField = {
-            SearchBarDefaults.InputField(
-                state = searchBarState.textFieldState,
-                onSearch = onSearchInternal,
-                expanded = searchBarState.expanded,
-                onExpandedChange = { searchBarState.expanded = it },
-                placeholder = {
-                    Text(stringResource(R.string.action_search))
-                },
-                leadingIcon = {
-                    IconButton(
-                        onClick = {
-                            if (searchBarState.expanded) {
-                                searchBarState.expanded = false
-                            } else {
-                                onBack()
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_go_back)
-                        )
-                    }
-                },
-                trailingIcon = {
-                    if (searchBarState.textFieldState.text.isNotBlank()) {
-                        IconButton(
-                            onClick = {
-                                if (searchBarState.expanded) {
-                                    searchBarState.textFieldState.clearText()
-                                } else {
-                                    onClearInternal()
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = stringResource(R.string.action_clear)
-                            )
-                        }
-                    } else {
-                        IconButton(
-                            onClick = onSearchSettings
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(R.string.action_open_settings)
-                            )
-                        }
-                    }
-                }
-            )
-        },
-        expanded = searchBarState.expanded,
-        onExpandedChange = { searchBarState.expanded = it },
-        modifier = modifier
-    ) {
-        val recentQueries = searchBarState.recentQueries
-
-        LazyColumn {
-            items(recentQueries) { productQuery ->
-                ListItem(
-                    modifier = Modifier
-                        .clickable { onSearchInternal(productQuery.query) }
-                        .horizontalDisplayCutoutPadding(),
-                    headlineContent = { Text(text = productQuery.query) },
-                    colors = ListItemDefaults.colors(
-                        containerColor = Color.Transparent
-                    ),
-                    leadingContent = {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_schedule_24),
-                            contentDescription = stringResource(R.string.action_search)
-                        )
-                    },
-                    trailingContent = {
-                        IconButton(
-                            onClick = {
-                                searchBarState.textFieldState
-                                    .setTextAndPlaceCursorAtEnd(productQuery.query)
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_north_west_24),
-                                contentDescription = stringResource(R.string.action_search)
-                            )
-                        }
-                    }
-                )
-            }
         }
     }
 }
@@ -537,8 +410,8 @@ private fun SearchHomePreview2() {
             animatedVisibilityScope = animatedVisibilityScope,
             addFoodState = rememberAddFoodState(
                 searchBarState = rememberSearchBarState(
-                    expanded = true,
-                    recentQueries = listOf(
+                    initialExpanded = true,
+                    initialRecentQueries = listOf(
                         ProductQuery("Banana", LocalDateTime.now()),
                         ProductQuery("Apple", LocalDateTime.now()),
                         ProductQuery("Orange", LocalDateTime.now())
