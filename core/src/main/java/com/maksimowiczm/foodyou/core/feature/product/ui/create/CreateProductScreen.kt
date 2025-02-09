@@ -118,6 +118,13 @@ private fun CreateProductScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var showValid by rememberSaveable { mutableStateOf(false) }
 
+    val topBarWindowInsets = TopAppBarDefaults.windowInsets
+        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+        .add(WindowInsets.ime)
+        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -135,16 +142,11 @@ private fun CreateProductScreen(
                         text = stringResource(R.string.headline_create_product)
                     )
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                windowInsets = topBarWindowInsets
             )
         },
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.add(
-            WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
-        ).add(
-            WindowInsets.ime
-        ).exclude(
-            WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
-        )
+        contentWindowInsets = contentWindowInsets
     ) { paddingValues ->
         Box(
             modifier = Modifier

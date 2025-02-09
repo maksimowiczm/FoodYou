@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -74,6 +77,12 @@ private fun AboutScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
+    val topBarWindowInsets = TopAppBarDefaults.windowInsets
+        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+
+    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -81,12 +90,11 @@ private fun AboutScreen(
                 title = {
                     Text(stringResource(R.string.headline_about))
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                windowInsets = topBarWindowInsets
             )
         },
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(
-            WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
-        )
+        contentWindowInsets = contentWindowInsets
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -152,7 +160,7 @@ private fun ShareYourThoughtsItem(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.displayCutoutPadding()
     ) {
         Text(
             text = stringResource(R.string.headline_share_your_thoughts),
@@ -222,7 +230,7 @@ private fun ShowSomeLoveItem(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.displayCutoutPadding()
     ) {
         Text(
             text = stringResource(R.string.headline_show_some_love),

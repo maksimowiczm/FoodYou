@@ -73,6 +73,13 @@ private fun GoalsSettingsScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
+    val topAppWindowInsets = TopAppBarDefaults.windowInsets
+        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+        .add(WindowInsets.ime)
+        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -90,16 +97,11 @@ private fun GoalsSettingsScreen(
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                windowInsets = topAppWindowInsets
             )
         },
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.add(
-            WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
-        ).add(
-            WindowInsets.ime
-        ).exclude(
-            WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
-        )
+        contentWindowInsets = contentWindowInsets
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier

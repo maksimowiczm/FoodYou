@@ -10,14 +10,15 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -46,13 +47,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -62,10 +61,10 @@ import com.maksimowiczm.foodyou.core.feature.addfood.ui.AddFoodState
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.previewparameter.ProductSearchUiModelPreviewParameter
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.rememberAddFoodState
 import com.maksimowiczm.foodyou.core.ui.component.LoadingIndicator
+import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.preview.SharedTransitionPreview
 import kotlinx.coroutines.CancellationException
 import java.time.LocalDateTime
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -188,11 +187,8 @@ private fun SearchHomeLayout(
         AnimatedVisibility(
             visible = isError && anchoredDraggableState.settledValue == ErrorCardState.VISIBLE,
             modifier = Modifier
-                .windowInsetsPadding(
-                    WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
-                )
+                .horizontalDisplayCutoutPadding()
                 .fillMaxWidth()
-                .zIndex(1f)
                 .onSizeChanged {
                     val draggableAnchors = DraggableAnchors {
                         ErrorCardState.HIDDEN_START at -it.width.toFloat()
@@ -208,10 +204,6 @@ private fun SearchHomeLayout(
                     state = anchoredDraggableState,
                     orientation = Orientation.Horizontal
                 )
-                .offset {
-                    val x = anchoredDraggableState.offset.roundToInt()
-                    IntOffset(x, 0)
-                }
         ) {
             FoodDatabaseErrorCard(
                 modifier = Modifier
@@ -224,47 +216,48 @@ private fun SearchHomeLayout(
 
     // Put them both in column because there is wierd behaviour when they are placed in layout.
     // - Black bar appears between list and bottom bar when bottom bar height changes.
-    val listWithBar = @Composable {
-        Column(
-            modifier = Modifier.testTag("Content")
-        ) {
-            ProductsLazyColumn(
-                searchListState = addFoodState.searchListState,
-                onProductClick = onProductClick,
-                modifier = Modifier
-                    .weight(1f)
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-                topOffset = {
-                    item {
-                        Spacer(
-                            Modifier.height(
-                                searchBarHeightDp + errorCardHeight + 8.dp
-                            )
+    val list: @Composable ColumnScope.() -> Unit = {
+        ProductsLazyColumn(
+            searchListState = addFoodState.searchListState,
+            onProductClick = onProductClick,
+            modifier = Modifier
+                .testTag("Content")
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .weight(1f)
+                .fillMaxSize(),
+            topOffset = {
+                item {
+                    Spacer(
+                        Modifier.height(
+                            searchBarHeightDp + errorCardHeight + 8.dp
                         )
-                    }
-                },
-                bottomOffset = {
-                    // Don't do system bars padding if the bottom app bar is visible
-                    item {
-                        val bottomInset =
-                            WindowInsets.systemBars.getBottom(LocalDensity.current)
-                        val height =
-                            bottomInset * (scrollBehavior.state.collapsedFraction)
-
-                        Spacer(
-                            Modifier.height(LocalDensity.current.run { height.toDp() })
-                        )
-                    }
+                    )
                 }
-            )
-            SearchBottomBar(
-                animatedVisibilityScope = animatedVisibilityScope,
-                state = addFoodState.searchBottomBarState,
-                onCreateProduct = onCreateProduct,
-                onBarcodeScanner = onBarcodeScanner,
-                scrollBehavior = scrollBehavior
-            )
-        }
+            },
+            bottomOffset = {
+                // Don't do system bars padding if the bottom app bar is visible
+                item {
+                    val bottomInset =
+                        WindowInsets.systemBars.getBottom(LocalDensity.current)
+                    val height =
+                        bottomInset * (scrollBehavior.state.collapsedFraction)
+
+                    Spacer(
+                        Modifier.height(LocalDensity.current.run { height.toDp() })
+                    )
+                }
+            }
+        )
+    }
+
+    val bottomBar = @Composable {
+        SearchBottomBar(
+            animatedVisibilityScope = animatedVisibilityScope,
+            state = addFoodState.searchBottomBarState,
+            onCreateProduct = onCreateProduct,
+            onBarcodeScanner = onBarcodeScanner,
+            scrollBehavior = scrollBehavior
+        )
     }
 
     val empty = @Composable {
@@ -275,36 +268,34 @@ private fun SearchHomeLayout(
         }
     }
 
-    Layout(
-        contents = listOf(
-            searchBar,
-            errorCard,
-            listWithBar,
-            empty
-        ),
+    val contentWindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
+
+    Box(
         modifier = modifier
-    ) { (searchBar, errorCard, listWithBar, empty), constraints ->
-        val searchBarPlaceable = searchBar.first().measure(constraints)
-        val errorCardPlaceable = errorCard.firstOrNull()?.measure(constraints)
-        val listWithBarPlaceable = listWithBar.first().measure(constraints)
-        val emptyPlaceable = empty.firstOrNull()?.measure(constraints)
+            .windowInsetsPadding(contentWindowInsets)
+            .consumeWindowInsets(contentWindowInsets),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Column(
+            modifier = Modifier
+                .zIndex(1f)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            searchBar()
+            errorCard()
+        }
 
-        layout(constraints.maxWidth, constraints.maxHeight) {
-            // Search bar - center top
-            val searchBarX = (constraints.maxWidth - searchBarPlaceable.width) / 2
-            searchBarPlaceable.place(searchBarX, 0)
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            empty()
+        }
 
-            // Error card - under search bar
-            errorCardPlaceable?.place(0, searchBarPlaceable.height)
-
-            // List with bottom bar - everywhere
-            listWithBarPlaceable.place(0, 0)
-
-            // Empty - center
-            emptyPlaceable?.place(
-                (constraints.maxWidth - emptyPlaceable.width) / 2,
-                (constraints.maxHeight - emptyPlaceable.height) / 2
-            )
+        Column {
+            list()
+            bottomBar()
         }
     }
 }
@@ -379,6 +370,8 @@ private fun SearchHomePreview() {
             animatedVisibilityScope = animatedVisibilityScope,
             addFoodState = rememberAddFoodState(
                 searchListState = rememberSearchListState(
+                    initialIsLoading = true,
+                    initialIsError = true,
                     initialProducts = products
                 ),
                 searchBottomBarState = rememberSearchBottomBarState(

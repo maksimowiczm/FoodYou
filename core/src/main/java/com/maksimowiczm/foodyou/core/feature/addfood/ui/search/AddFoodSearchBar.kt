@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.displayCutoutPadding
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.clearText
@@ -29,8 +29,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.maksimowiczm.foodyou.core.R
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
+import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
+import com.maksimowiczm.foodyou.core.ui.modifier.horizontalSystemBarsPadding
 import com.maksimowiczm.foodyou.core.ui.preview.BooleanPreviewParameter
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,79 +59,78 @@ fun AddFoodSearchBar(
 
     @Suppress("NAME_SHADOWING")
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
-
-    SearchBar(
-        inputField = {
-            SearchBarDefaults.InputField(
-                state = searchBarState.textFieldState,
-                onSearch = onSearchInternal,
-                expanded = searchBarState.expanded,
-                onExpandedChange = searchBarState::requestExpandedState,
-                modifier = Modifier.testTag("SearchBarInput"),
-                placeholder = {
-                    Text(stringResource(R.string.action_search))
-                },
-                leadingIcon = {
+    val inputField = @Composable {
+        SearchBarDefaults.InputField(
+            state = searchBarState.textFieldState,
+            onSearch = onSearchInternal,
+            expanded = searchBarState.expanded,
+            onExpandedChange = searchBarState::requestExpandedState,
+            modifier = Modifier.testTag("SearchBarInput"),
+            placeholder = {
+                Text(stringResource(R.string.action_search))
+            },
+            leadingIcon = {
+                IconButton(
+                    onClick = {
+                        if (searchBarState.expanded) {
+                            searchBarState.requestExpandedState(false)
+                        } else {
+                            onBack()
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.action_go_back)
+                    )
+                }
+            },
+            trailingIcon = {
+                if (searchBarState.textFieldState.text.isNotBlank()) {
                     IconButton(
                         onClick = {
                             if (searchBarState.expanded) {
-                                searchBarState.requestExpandedState(false)
+                                searchBarState.textFieldState.clearText()
                             } else {
-                                onBack()
+                                onClearInternal()
                             }
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_go_back)
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = stringResource(R.string.action_clear)
                         )
                     }
-                },
-                trailingIcon = {
-                    if (searchBarState.textFieldState.text.isNotBlank()) {
-                        IconButton(
-                            onClick = {
-                                if (searchBarState.expanded) {
-                                    searchBarState.textFieldState.clearText()
-                                } else {
-                                    onClearInternal()
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = stringResource(R.string.action_clear)
-                            )
-                        }
-                    } else {
-                        IconButton(
-                            onClick = onSearchSettings
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = stringResource(R.string.action_open_settings)
-                            )
-                        }
+                } else {
+                    IconButton(
+                        onClick = onSearchSettings
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(R.string.action_open_settings)
+                        )
                     }
-                },
-                interactionSource = interactionSource
-            )
-        },
-        expanded = searchBarState.expanded,
-        onExpandedChange = searchBarState::requestExpandedState,
-        modifier = modifier
-    ) {
+                }
+            },
+            interactionSource = interactionSource
+        )
+    }
+
+    val searchView: @Composable ColumnScope.() -> Unit = {
         val recentQueries = searchBarState.recentQueries
 
         LazyColumn(
-            modifier = Modifier.testTag("SearchViewContent")
+            modifier = Modifier
+                .testTag("SearchViewContent")
+                .horizontalSystemBarsPadding()
         ) {
             items(recentQueries) { productQuery ->
                 ListItem(
-                    modifier = Modifier.clickable { onSearchInternal(productQuery.query) },
+                    modifier = Modifier
+                        .clickable { onSearchInternal(productQuery.query) }
+                        .horizontalDisplayCutoutPadding(),
                     headlineContent = {
                         Text(
-                            modifier = Modifier.displayCutoutPadding(),
                             text = productQuery.query
                         )
                     },
@@ -136,14 +139,12 @@ fun AddFoodSearchBar(
                     ),
                     leadingContent = {
                         Icon(
-                            modifier = Modifier.displayCutoutPadding(),
                             painter = painterResource(R.drawable.ic_schedule_24),
                             contentDescription = stringResource(R.string.action_search)
                         )
                     },
                     trailingContent = {
                         IconButton(
-                            modifier = Modifier.displayCutoutPadding(),
                             onClick = {
                                 searchBarState.textFieldState
                                     .setTextAndPlaceCursorAtEnd(productQuery.query)
@@ -159,6 +160,14 @@ fun AddFoodSearchBar(
             }
         }
     }
+
+    SearchBar(
+        inputField = inputField,
+        expanded = searchBarState.expanded,
+        onExpandedChange = searchBarState::requestExpandedState,
+        modifier = modifier,
+        content = searchView
+    )
 }
 
 @Preview
@@ -170,7 +179,12 @@ private fun AddFoodSearchBarPreview(
         AddFoodSearchBar(
             searchBarState = rememberSearchBarState(
                 // reverse for better preview order
-                initialExpanded = expanded.not()
+                initialExpanded = expanded.not(),
+                initialRecentQueries = listOf(
+                    ProductQuery("Banana", LocalDateTime.now()),
+                    ProductQuery("Apple", LocalDateTime.now()),
+                    ProductQuery("Orange", LocalDateTime.now())
+                )
             ),
             onSearchSettings = {},
             onSearch = {},

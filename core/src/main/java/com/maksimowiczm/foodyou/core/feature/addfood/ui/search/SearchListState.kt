@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 fun rememberSearchListState(
     lazyListState: LazyListState = rememberLazyListState(),
     initialProducts: List<ProductSearchUiModel> = emptyList(),
+    initialIsLoading: Boolean = false,
+    initialIsError: Boolean = false,
     onQuickAdd: suspend (ProductWithWeightMeasurement) -> Long = { 0 },
     onQuickRemove: (ProductWithWeightMeasurement) -> Unit = {},
     coroutineScope: CoroutineScope = rememberCoroutineScope()
@@ -31,6 +33,8 @@ fun rememberSearchListState(
         SearchListState(
             lazyListState = lazyListState,
             initialProducts = initialProducts,
+            initialIsLoading = initialIsLoading,
+            initialIsError = initialIsError,
             onQuickAdd = onQuickAdd,
             onQuickRemove = onQuickRemove,
             coroutineScope = coroutineScope
@@ -41,15 +45,17 @@ fun rememberSearchListState(
 @Stable
 class SearchListState(
     val lazyListState: LazyListState,
+    initialIsLoading: Boolean,
+    initialIsError: Boolean,
     initialProducts: List<ProductSearchUiModel>,
     private val onQuickAdd: suspend (ProductWithWeightMeasurement) -> Long,
     private val onQuickRemove: (ProductWithWeightMeasurement) -> Unit,
     private val coroutineScope: CoroutineScope
 ) {
-    var isLoading: Boolean by mutableStateOf(false)
+    var isLoading: Boolean by mutableStateOf(initialIsLoading)
         private set
 
-    var isError: Boolean by mutableStateOf(false)
+    var isError: Boolean by mutableStateOf(initialIsError)
         private set
 
     var products: List<ProductSearchUiModel> by mutableStateOf(initialProducts)

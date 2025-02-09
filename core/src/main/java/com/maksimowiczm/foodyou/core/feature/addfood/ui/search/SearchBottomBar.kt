@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
@@ -60,6 +61,9 @@ fun SearchBottomBar(
 
     val sharedTransitionScope = LocalSharedTransitionScope.current
         ?: error("No shared transition scope found")
+
+    val windowInsets = WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
+        .add(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
 
     Surface(
         modifier = modifier,
@@ -150,7 +154,7 @@ fun SearchBottomBar(
                         }
                     }
                 },
-                windowInsets = WindowInsets(0),
+                windowInsets = windowInsets,
                 scrollBehavior = scrollBehavior
             )
 

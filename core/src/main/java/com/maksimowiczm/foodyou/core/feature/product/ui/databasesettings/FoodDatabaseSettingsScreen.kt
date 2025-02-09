@@ -3,7 +3,9 @@ package com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -59,6 +61,11 @@ private fun FoodDatabaseSettingsScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
+    val topBarWindowInsets = TopAppBarDefaults.windowInsets
+        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -76,12 +83,11 @@ private fun FoodDatabaseSettingsScreen(
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                windowInsets = topBarWindowInsets
             )
         },
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(
-            WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
-        )
+        contentWindowInsets = contentWindowInsets
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier

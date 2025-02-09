@@ -3,7 +3,9 @@ package com.maksimowiczm.foodyou.core.ui
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -37,6 +39,11 @@ fun SettingsScreen(
 ) {
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
+    val topBarWindowInsets = TopAppBarDefaults.windowInsets
+        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -52,12 +59,11 @@ fun SettingsScreen(
                         )
                     }
                 },
-                scrollBehavior = topAppBarScrollBehavior
+                scrollBehavior = topAppBarScrollBehavior,
+                windowInsets = topBarWindowInsets
             )
         },
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(
-            WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
-        )
+        contentWindowInsets = contentWindowInsets
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier

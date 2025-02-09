@@ -45,6 +45,12 @@ fun HomeScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
+    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+    val topBarWindowInsets = TopAppBarDefaults.windowInsets
+        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -64,12 +70,11 @@ fun HomeScreen(
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                windowInsets = topBarWindowInsets
             )
         },
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-            .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
-            .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+        contentWindowInsets = contentWindowInsets
     ) { innerPadding ->
         // Don't use LazyColumn because size of items must be known in advance. Use scrollable
         // Column instead. For now it is fine since there aren't many items.
