@@ -16,9 +16,9 @@ import androidx.compose.ui.test.performTextInput
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.rememberAddFoodState
 import com.maksimowiczm.foodyou.core.ui.preview.SharedTransitionPreview
+import kotlinx.datetime.LocalDateTime
 import org.junit.Rule
 import org.junit.Test
-import java.time.LocalDateTime
 
 class SearchHomeTest {
     @get:Rule
@@ -30,7 +30,7 @@ class SearchHomeTest {
         val recentQueries = listOf(
             ProductQuery(
                 query = "Test 1",
-                date = LocalDateTime.now()
+                date = LocalDateTime(2024, 2, 10, 12, 0)
             )
         )
 

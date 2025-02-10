@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
 sealed interface ProductsRoute {
     @Serializable
     data class CreateProduct(
-        val epochDay: Long,
+        val epochDay: Int,
         val mealType: Meal
     ) : ProductsRoute
 }
@@ -27,7 +27,7 @@ sealed interface ProductsRoute {
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.productsGraph(
     createOnNavigateBack: () -> Unit,
-    createOnSuccess: (productId: Long, epochDay: Long, Meal) -> Unit
+    createOnSuccess: (productId: Long, epochDay: Int, Meal) -> Unit
 ) {
     composable<ProductsRoute.CreateProduct> {
         val (epochDay, mealType) = it.toRoute<ProductsRoute.CreateProduct>()

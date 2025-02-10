@@ -83,7 +83,7 @@ interface AddFoodDao {
     )
     fun observeProductsWithMeasurement(
         mealId: Long,
-        epochDay: Long,
+        epochDay: Int,
         query: String?,
         barcode: String?,
         limit: Int
@@ -137,7 +137,7 @@ interface AddFoodDao {
     )
     fun observeMeasuredProducts(
         mealId: Long?,
-        epochDay: Long
+        epochDay: Int
     ): Flow<List<ProductWithWeightMeasurementEntity>>
 
     @Query(

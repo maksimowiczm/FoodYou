@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.core.feature.system.data
 
 import android.content.Context
 import com.maksimowiczm.foodyou.core.feature.system.data.model.Country
+import kotlinx.datetime.toJavaLocalDate
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -33,7 +34,10 @@ internal class AndroidSystemInfoRepository(
             it.getDisplayName(TextStyle.SHORT, defaultLocale)
         }.toTypedArray()
 
-    override fun formatMonthYear(date: LocalDate): String {
+    override fun formatMonthYear(date: kotlinx.datetime.LocalDate) =
+        formatMonthYear(date.toJavaLocalDate())
+
+    private fun formatMonthYear(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("LLLL yyyy", defaultLocale)
         return date.format(formatter)
     }

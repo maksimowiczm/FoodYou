@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.system.data
 
 import com.maksimowiczm.foodyou.core.feature.system.data.model.Country
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 /**
  * Provides information about system-specific settings and utilities for date and locale operations.

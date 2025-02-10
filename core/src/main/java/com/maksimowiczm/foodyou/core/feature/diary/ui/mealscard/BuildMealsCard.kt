@@ -23,7 +23,7 @@ fun buildMealsCard(navController: NavController) = HomeFeature { modifier, homeS
             onAddClick = { meal ->
                 navController.navigateToAddFood(
                     route = AddFoodFeature(
-                        epochDay = homeState.selectedDate.toEpochDay(),
+                        epochDay = homeState.selectedDate.toEpochDays(),
                         meal = meal
                     ),
                     navOptions = navOptions {

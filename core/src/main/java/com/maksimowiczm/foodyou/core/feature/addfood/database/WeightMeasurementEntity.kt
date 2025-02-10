@@ -26,7 +26,7 @@ data class WeightMeasurementEntity(
     val id: Long = 0,
 
     val mealId: MealId,
-    val diaryEpochDay: Long,
+    val diaryEpochDay: Int,
     val productId: Long,
 
     val createdAt: Long,

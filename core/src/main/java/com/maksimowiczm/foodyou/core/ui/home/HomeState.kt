@@ -8,20 +8,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import java.time.LocalDate
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun rememberHomeState(
-    initialSelectedDate: LocalDate = LocalDate.now()
+    initialSelectedDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 ): HomeState {
     return rememberSaveable(
         saver = Saver(
             save = {
-                it.selectedDate.toEpochDay()
+                it.selectedDate.toEpochDays()
             },
             restore = {
                 HomeState(
-                    initialSelectedDate = LocalDate.ofEpochDay(it)
+                    initialSelectedDate = LocalDate.fromEpochDays(it)
                 )
             }
         )

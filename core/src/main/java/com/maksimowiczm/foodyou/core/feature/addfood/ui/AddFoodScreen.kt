@@ -147,7 +147,7 @@ fun AddFoodScreen(
                 onCreateProduct = {
                     navController.navigateToProducts(
                         route = ProductsRoute.CreateProduct(
-                            epochDay = viewModel.date.toEpochDay(),
+                            epochDay = viewModel.date.toEpochDays(),
                             mealType = viewModel.meal
                         )
                     )

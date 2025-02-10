@@ -50,7 +50,12 @@ import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
-import java.time.LocalDate
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun CalendarCard(
@@ -129,7 +134,10 @@ private fun CalendarCardDatePickerDialog(
                 onClick = {
                     state.selectedDateMillis?.let {
                         calendarState.onDateSelect(
-                            date = LocalDate.ofEpochDay(it / 86400000),
+                            date = Instant
+                                .fromEpochMilliseconds(it)
+                                .toLocalDateTime(TimeZone.currentSystemDefault())
+                                .date,
                             scroll = true
                         )
                     }
@@ -184,7 +192,7 @@ private fun CalendarCardDatePicker(
         state = calendarState.lazyListState
     ) {
         items(calendarState.lazyListCount) {
-            val date = calendarState.zeroDate.plusDays(it.toLong())
+            val date = calendarState.zeroDate.plus(it.toLong(), DateTimeUnit.DAY)
             DatePickerRowItem(
                 calendarState = calendarState,
                 date = date,
@@ -296,15 +304,15 @@ object CalendarCardDefaults {
 @Composable
 private fun CalendarCardPreview() {
     val namesOfDayOfWeek = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
-    val referenceDate = LocalDate.of(2024, 12, 17)
-    val selectedDate = LocalDate.of(2024, 12, 18)
+    val referenceDate = LocalDate(2024, 12, 17)
+    val selectedDate = LocalDate(2024, 12, 18)
     val formatMonthYear = { _: LocalDate -> "December 2024" }
 
     FoodYouTheme {
         CalendarCard(
             calendarState = rememberCalendarState(
                 namesOfDayOfWeek = namesOfDayOfWeek,
-                zeroDay = LocalDate.ofEpochDay(4),
+                zeroDay = LocalDate.fromEpochDays(4),
                 referenceDate = referenceDate,
                 selectedDate = selectedDate
             ),

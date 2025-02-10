@@ -1,8 +1,10 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data.model
 
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductQueryEntity
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 data class ProductQuery(
     val query: String,
@@ -12,6 +14,6 @@ data class ProductQuery(
 fun ProductQueryEntity.toDomain(): ProductQuery {
     return ProductQuery(
         query = query,
-        date = LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.UTC)
+        date = Instant.fromEpochSeconds(date).toLocalDateTime(TimeZone.UTC)
     )
 }

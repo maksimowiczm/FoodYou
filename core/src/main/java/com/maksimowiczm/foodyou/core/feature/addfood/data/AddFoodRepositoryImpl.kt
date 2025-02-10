@@ -27,9 +27,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
 
 class AddFoodRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
@@ -68,13 +67,11 @@ class AddFoodRepositoryImpl(
         weightMeasurement: WeightMeasurementEnum,
         quantity: Float
     ): Long {
-        val localZoneOffset = ZoneOffset.systemDefault()
-        val currentLocalTime = LocalDateTime.now().atZone(localZoneOffset)
-        val epochSeconds = currentLocalTime.toEpochSecond()
+        val epochSeconds = Clock.System.now().epochSeconds
 
         val entity = WeightMeasurementEntity(
             mealId = meal.toEntity(),
-            diaryEpochDay = date.toEpochDay(),
+            diaryEpochDay = date.toEpochDays(),
             productId = productId,
             measurement = weightMeasurement,
             quantity = quantity,
@@ -185,9 +182,7 @@ class AddFoodRepositoryImpl(
     }
 
     private suspend fun insertProductQueryWithCurrentTime(query: String) {
-        val zone = ZoneOffset.UTC
-        val time = LocalDateTime.now().atZone(zone)
-        val epochSeconds = time.toEpochSecond()
+        val epochSeconds = Clock.System.now().epochSeconds
 
         addFoodDao.upsertProductQuery(
             ProductQueryEntity(
@@ -200,7 +195,7 @@ class AddFoodRepositoryImpl(
     override fun observeTotalCalories(meal: Meal, date: LocalDate) =
         addFoodDao.observeMeasuredProducts(
             mealId = meal.toEntity().value,
-            epochDay = date.toEpochDay()
+            epochDay = date.toEpochDays()
         ).map { list ->
             list.sumOf { it.toDomain().calories }
         }
@@ -239,7 +234,7 @@ class AddFoodRepositoryImpl(
         query: String?
     ): Flow<List<ProductWithWeightMeasurement>> = observeProductsWithMeasurement(
         mealId = meal.toEntity().value,
-        epochDay = date.toEpochDay(),
+        epochDay = date.toEpochDays(),
         query = query,
         barcode = null,
         limit = PAGE_SIZE
@@ -251,7 +246,7 @@ class AddFoodRepositoryImpl(
         barcode: String
     ): Flow<List<ProductWithWeightMeasurement>> = observeProductsWithMeasurement(
         mealId = meal.toEntity().value,
-        epochDay = date.toEpochDay(),
+        epochDay = date.toEpochDays(),
         query = null,
         barcode = barcode,
         limit = PAGE_SIZE

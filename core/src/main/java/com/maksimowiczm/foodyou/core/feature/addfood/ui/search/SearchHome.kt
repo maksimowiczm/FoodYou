@@ -64,7 +64,9 @@ import com.maksimowiczm.foodyou.core.ui.component.LoadingIndicator
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.preview.SharedTransitionPreview
 import kotlinx.coroutines.CancellationException
-import java.time.LocalDateTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -403,9 +405,9 @@ private fun SearchHomePreview2() {
                 searchBarState = rememberSearchBarState(
                     initialExpanded = true,
                     initialRecentQueries = listOf(
-                        ProductQuery("Banana", LocalDateTime.now()),
-                        ProductQuery("Apple", LocalDateTime.now()),
-                        ProductQuery("Orange", LocalDateTime.now())
+                        ProductQuery("Banana", Clock.System.now().toLocalDateTime(TimeZone.UTC)),
+                        ProductQuery("Apple", Clock.System.now().toLocalDateTime(TimeZone.UTC)),
+                        ProductQuery("Orange", Clock.System.now().toLocalDateTime(TimeZone.UTC))
                     )
                 ),
                 searchListState = rememberSearchListState(

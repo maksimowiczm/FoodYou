@@ -12,7 +12,7 @@ import com.maksimowiczm.foodyou.core.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.core.infrastructure.datastore.set
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 class DiaryRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
@@ -53,7 +53,7 @@ class DiaryRepositoryImpl(
     }
 
     override fun observeDiaryDay(date: LocalDate): Flow<DiaryDay> {
-        val epochDay = date.toEpochDay()
+        val epochDay = date.toEpochDays()
 
         return combine(
             addFoodDao.observeMeasuredProducts(

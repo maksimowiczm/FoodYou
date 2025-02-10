@@ -9,20 +9,28 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
 
-internal class AndroidTodayDateProvider(
+internal class DateProviderImpl(
     private val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-) : TodayDateProvider {
+) : DateProvider {
     override fun observe(): StateFlow<LocalDate> = flow {
         var currentDate = getCurrentDate()
 
         while (true) {
-            val now = LocalDateTime.now()
-            val tomorrowStart = now.plusDays(1).toLocalDate().atStartOfDay()
-            val delayMillis = ChronoUnit.MILLIS.between(now, tomorrowStart)
+            val now = Clock.System.now()
+            val midnight = Clock.System
+                .todayIn(TimeZone.currentSystemDefault())
+                .plus(1, DateTimeUnit.DAY)
+                .atStartOfDayIn(TimeZone.currentSystemDefault())
+            val delayMillis = (midnight - now).inWholeMilliseconds
 
             Log.d(TAG, "Current date: $currentDate")
             Log.d(TAG, "Delaying for $delayMillis ms")
@@ -45,9 +53,10 @@ internal class AndroidTodayDateProvider(
         initialValue = getCurrentDate()
     )
 
-    private fun getCurrentDate(): LocalDate = LocalDate.now()
+    private fun getCurrentDate(): LocalDate =
+        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
     private companion object {
-        private const val TAG = "AndroidTodayDateProvider"
+        private const val TAG = "DateProviderImpl"
     }
 }

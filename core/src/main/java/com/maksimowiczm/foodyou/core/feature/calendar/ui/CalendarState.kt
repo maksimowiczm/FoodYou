@@ -15,25 +15,31 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.until
 
 // 2106 seems reasonable for now
 private const val DIARY_DAYS_COUNT = 50_000
-private const val MILLIS_IN_DAY = 86400000
 
 @Composable
 fun rememberCalendarState(
     namesOfDayOfWeek: List<String>,
-    zeroDay: LocalDate = LocalDate.ofEpochDay(0),
-    referenceDate: LocalDate = LocalDate.now(),
-    selectedDate: LocalDate = LocalDate.now()
+    zeroDay: LocalDate = LocalDate.fromEpochDays(0),
+    referenceDate: LocalDate = Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    selectedDate: LocalDate = referenceDate
 ): CalendarState {
     val coroutineScope = rememberCoroutineScope()
 
     val lazyListState = rememberLazyListState(
-        initialFirstVisibleItemIndex =
-        ChronoUnit.DAYS.between(zeroDay, selectedDate).toInt() - 2
+        initialFirstVisibleItemIndex = zeroDay.until(selectedDate, DateTimeUnit.DAY) - 2
     )
 
     return remember(
@@ -61,24 +67,25 @@ class CalendarState(
     val lazyListCount: Int,
     val lazyListState: LazyListState,
     val zeroDate: LocalDate,
-    initialSelectedDate: LocalDate = LocalDate.now(),
-    initialReferenceDate: LocalDate = LocalDate.now()
+    initialSelectedDate: LocalDate = Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    initialReferenceDate: LocalDate = initialSelectedDate
 ) {
     val referenceDate: LocalDate = initialReferenceDate
     private val referenceDateVisible
         get() = lazyListState.layoutInfo.visibleItemsInfo.any {
-            zeroDate.plusDays(it.index.toLong()) == referenceDate
+            zeroDate.plus(it.index.toLong(), DateTimeUnit.DAY) == referenceDate
         }
 
     val firstVisibleDate by derivedStateOf {
         lazyListState.layoutInfo.visibleItemsInfo.firstOrNull()?.let {
-            zeroDate.plusDays(it.index.toLong())
+            zeroDate.plus(it.index.toLong(), DateTimeUnit.DAY)
         }
     }
 
     private val selectedDateVisible
         get() = lazyListState.layoutInfo.visibleItemsInfo.any {
-            zeroDate.plusDays(it.index.toLong()) == selectedDate
+            zeroDate.plus(it.index.toLong(), DateTimeUnit.DAY) == selectedDate
         }
 
     var selectedDate by mutableStateOf(initialSelectedDate)
@@ -90,7 +97,7 @@ class CalendarState(
         if (scroll) {
             coroutineScope.launch {
                 lazyListState.scrollToItem(
-                    index = ChronoUnit.DAYS.between(zeroDate, date).toInt(),
+                    index = zeroDate.until(date, DateTimeUnit.DAY),
                     scrollOffset = -lazyListState.layoutInfo.viewportEndOffset / 2
                 )
             }
@@ -100,27 +107,36 @@ class CalendarState(
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun rememberDatePickerState(): DatePickerState {
-        val lastDate = zeroDate.plusDays(lazyListCount.toLong() - 1)
+        val lastDate = zeroDate.plus(lazyListCount.toLong() - 1, DateTimeUnit.DAY)
         val yearRange = zeroDate.year..lastDate.year
+
+        val initialSelectedDateMillis = selectedDate
+            .atStartOfDayIn(TimeZone.UTC)
+            .toEpochMilliseconds()
+            .takeIf { it >= 0 } ?: 0
 
         // If selected date is visible, we want to display it,
         // otherwise we want to display reference date if it's visible.
         // If none of them are visible, we want to display the first visible date.
         val initialDisplayedMonthMillis = if (selectedDateVisible) {
-            selectedDate.toEpochDay() * MILLIS_IN_DAY
-        } else if (referenceDateVisible) {
-            referenceDate.toEpochDay() * MILLIS_IN_DAY
+            initialSelectedDateMillis
         } else {
-            firstVisibleDate?.toEpochDay()?.let { it * MILLIS_IN_DAY }
+            if (referenceDateVisible) {
+                referenceDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+            } else {
+                firstVisibleDate?.atStartOfDayIn(TimeZone.UTC)?.toEpochMilliseconds()
+            }?.takeIf { it >= 0 } ?: 0
         }
 
         return androidx.compose.material3.rememberDatePickerState(
-            initialSelectedDateMillis = selectedDate.toEpochDay() * MILLIS_IN_DAY,
+            initialSelectedDateMillis = initialSelectedDateMillis,
             initialDisplayedMonthMillis = initialDisplayedMonthMillis,
             yearRange = yearRange,
             selectableDates = object : SelectableDates {
                 override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                    val date = LocalDate.ofEpochDay(utcTimeMillis / MILLIS_IN_DAY)
+                    val date = Instant
+                        .fromEpochMilliseconds(utcTimeMillis)
+                        .toLocalDateTime(TimeZone.UTC).date
                     return date in zeroDate..lastDate
                 }
 

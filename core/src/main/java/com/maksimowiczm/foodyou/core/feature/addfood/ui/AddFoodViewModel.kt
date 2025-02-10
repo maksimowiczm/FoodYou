@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 class AddFoodViewModel(
     private val diaryRepository: AddFoodRepository,
@@ -37,7 +37,7 @@ class AddFoodViewModel(
         val (epochDay, meal, productId) = savedStateHandle.toRoute<AddFoodFeature>()
 
         this.meal = meal
-        this.date = LocalDate.ofEpochDay(epochDay)
+        this.date = LocalDate.fromEpochDays(epochDay)
         this.productId = productId
     }
 

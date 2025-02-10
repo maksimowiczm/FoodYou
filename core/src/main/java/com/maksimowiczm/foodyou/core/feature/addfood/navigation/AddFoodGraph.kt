@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AddFoodFeature(
-    val epochDay: Long,
+    val epochDay: Int,
     val meal: Meal,
     val productId: Long? = null
 )

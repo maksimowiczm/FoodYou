@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 @Stable
 interface HomeState {

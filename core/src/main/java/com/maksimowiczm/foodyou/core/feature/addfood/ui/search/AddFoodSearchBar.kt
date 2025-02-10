@@ -34,7 +34,9 @@ import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalSystemBarsPadding
 import com.maksimowiczm.foodyou.core.ui.preview.BooleanPreviewParameter
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
-import java.time.LocalDateTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -181,9 +183,9 @@ private fun AddFoodSearchBarPreview(
                 // reverse for better preview order
                 initialExpanded = expanded.not(),
                 initialRecentQueries = listOf(
-                    ProductQuery("Banana", LocalDateTime.now()),
-                    ProductQuery("Apple", LocalDateTime.now()),
-                    ProductQuery("Orange", LocalDateTime.now())
+                    ProductQuery("Banana", Clock.System.now().toLocalDateTime(TimeZone.UTC)),
+                    ProductQuery("Apple", Clock.System.now().toLocalDateTime(TimeZone.UTC)),
+                    ProductQuery("Orange", Clock.System.now().toLocalDateTime(TimeZone.UTC))
                 )
             ),
             onSearchSettings = {},

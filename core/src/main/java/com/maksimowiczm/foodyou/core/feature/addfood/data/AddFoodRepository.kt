@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasuremen
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 interface AddFoodRepository {
     /**

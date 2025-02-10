@@ -5,8 +5,7 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.defaultGoals
-import java.time.LocalDate
-import java.util.Calendar
+import kotlinx.datetime.LocalDate
 
 class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
     private val productMap: Map<Meal, List<ProductWithWeightMeasurement>>
@@ -20,7 +19,7 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
 
     override val values: Sequence<DiaryDay> = sequenceOf(
         DiaryDay(
-            date = LocalDate.of(2024, Calendar.DECEMBER, 8),
+            date = LocalDate(2024, 12, 8),
             dailyGoals = defaultGoals(),
             mealProductMap = productMap
         )
