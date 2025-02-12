@@ -10,11 +10,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
-import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.DarkDiaryPalette
 import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.DarkNutrimentsPalette
-import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LightDiaryPalette
 import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LightNutrimentsPalette
-import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalDiaryPalette
 import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrimentsPalette
 
 private val DarkColorScheme = darkColorScheme(
@@ -46,11 +43,9 @@ fun FoodYouTheme(
         else -> LightColorScheme
     }
 
-    val diaryPalette = if (darkTheme) DarkDiaryPalette else LightDiaryPalette
     val nutrimentsPalette = if (darkTheme) DarkNutrimentsPalette else LightNutrimentsPalette
 
     CompositionLocalProvider(
-        LocalDiaryPalette provides diaryPalette,
         LocalNutrimentsPalette provides nutrimentsPalette
     ) {
         MaterialTheme(

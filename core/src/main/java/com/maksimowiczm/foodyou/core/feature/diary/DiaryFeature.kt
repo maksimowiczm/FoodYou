@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.navigation.addFoodGraph
 import com.maksimowiczm.foodyou.core.feature.diary.data.DiaryRepository
 import com.maksimowiczm.foodyou.core.feature.diary.data.DiaryRepositoryImpl
 import com.maksimowiczm.foodyou.core.feature.diary.ui.DiaryViewModel
-import com.maksimowiczm.foodyou.core.feature.diary.ui.caloriescard.CaloriesCardViewModel
 import com.maksimowiczm.foodyou.core.feature.diary.ui.caloriescard.buildCaloriesCard
 import com.maksimowiczm.foodyou.core.feature.diary.ui.goalssettings.GoalsSettingsScreen
 import com.maksimowiczm.foodyou.core.feature.diary.ui.goalssettings.GoalsSettingsViewModel
@@ -18,7 +17,6 @@ import com.maksimowiczm.foodyou.core.feature.diary.ui.mealscard.buildMealsCard
 import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.buildMealsSettingsListItem
-import com.maksimowiczm.foodyou.core.feature.diary.ui.nutrimentscard.buildNutrimentsCard
 import com.maksimowiczm.foodyou.core.feature.product.ProductFeature.navigateToFoodDatabaseSettings
 import com.maksimowiczm.foodyou.core.navigation.settingsComposable
 import kotlinx.serialization.Serializable
@@ -30,7 +28,6 @@ import org.koin.dsl.module
 
 private val diaryModule = module {
     viewModelOf(::DiaryViewModel)
-    viewModelOf(::CaloriesCardViewModel)
     viewModelOf(::MealsCardViewModel)
     viewModelOf(::GoalsSettingsViewModel)
     viewModelOf(::MealsSettingsViewModel)
@@ -60,8 +57,7 @@ object DiaryFeature : Feature.Koin, Feature.Home, Feature.Settings {
 
     override fun buildHomeFeatures(navController: NavController) = listOf(
         buildMealsCard(navController),
-        buildCaloriesCard(),
-        buildNutrimentsCard(navController)
+        buildCaloriesCard(navController)
     )
 
     override fun NavGraphBuilder.settingsGraph(navController: NavController) {

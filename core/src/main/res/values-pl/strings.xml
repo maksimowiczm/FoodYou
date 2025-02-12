@@ -98,11 +98,6 @@
     <string name="neutral_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
     <string name="neutral_no_products_found">Nie znaleziono produktów</string>
     <string name="neutral_food_database_load_error">Nie udało się pobrać produktów ze zdalnej bazy danych. Wciąż możesz przeglądać produkty wcześniej pobrane.</string>
-    <plurals name="neutral_remaining_grams">
-        <item quantity="one">Pozostał %1$d gram</item>
-        <item quantity="few">Pozostały %1$d gramy</item>
-        <item quantity="many">Pozostało %1$d gramów</item>
-    </plurals>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">Pozostała %1$d kaloria</item>
         <item quantity="few">Pozostały %1$d kalorie</item>
@@ -134,11 +129,6 @@
     <string name="positive_goal_reached">Cel osiągnięty</string>
     <string name="positive_ok">OK</string>
 
-    <plurals name="negative_exceeded_by_grams">
-        <item quantity="one">Przekroczono o %1$d gram</item>
-        <item quantity="few">Przekroczono o %1$d gramy</item>
-        <item quantity="many">Przekroczono o %1$d gramów</item>
-    </plurals>
     <plurals name="negative_exceeded_by_calories">
         <item quantity="one">Przekroczono o %1$d kalorię</item>
         <item quantity="few">Przekroczono o %1$d kalorie</item>

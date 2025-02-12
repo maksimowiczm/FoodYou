@@ -2,23 +2,30 @@ package com.maksimowiczm.foodyou.core.feature.diary.ui.caloriescard
 
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.core.feature.HomeFeature
+import com.maksimowiczm.foodyou.core.feature.diary.DiaryFeature.navigateToGoalsSettings
+import com.maksimowiczm.foodyou.core.feature.diary.ui.DiaryViewModel
 import org.koin.androidx.compose.koinViewModel
 
-fun buildCaloriesCard() = HomeFeature { modifier, homeState ->
-    val viewModel = koinViewModel<CaloriesCardViewModel>()
+fun buildCaloriesCard(navController: NavController) = HomeFeature { modifier, homeState ->
+    val viewModel = koinViewModel<DiaryViewModel>()
     val diaryDay by viewModel
         .observeDiaryDay(homeState.selectedDate)
         .collectAsStateWithLifecycle(null)
 
-    val expanded by viewModel.expanded.collectAsStateWithLifecycle()
-
     diaryDay?.let {
         CaloriesCard(
             diaryDay = it,
-            modifier = modifier,
-            expanded = expanded,
-            onExpandedChange = viewModel::onExpandedChange
+            onClick = {
+                navController.navigateToGoalsSettings(
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            },
+            modifier = modifier
         )
     }
 }
