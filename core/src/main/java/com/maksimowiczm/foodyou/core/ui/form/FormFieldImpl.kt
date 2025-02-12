@@ -28,6 +28,7 @@ fun <T, E> rememberFormField(
                 )
             },
             restore = {
+                @Suppress("UNCHECKED_CAST")
                 FormFieldImpl(
                     initialFormFieldValue = FormFieldImpl.FormFieldValue(
                         value = it[0] as T,
@@ -102,6 +103,7 @@ class FormFieldImpl<T, E>(
 
         fieldValue = when (val validated = validate(newValue)) {
             is ValidationResult.Failure<*> -> {
+                @Suppress("UNCHECKED_CAST")
                 FormFieldValue(
                     value = newValue,
                     error = validated.error as E

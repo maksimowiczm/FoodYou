@@ -148,7 +148,7 @@ fun AddFoodScreen(
                     navController.navigateToProducts(
                         route = ProductsRoute.CreateProduct(
                             epochDay = viewModel.date.toEpochDays(),
-                            mealType = viewModel.meal
+                            mealId = viewModel.mealId
                         )
                     )
                 },

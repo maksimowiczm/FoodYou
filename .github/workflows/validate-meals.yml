@@ -1,0 +1,29 @@
+name: Validate Meals XML
+
+on:
+  push:
+    paths:
+      - 'core/src/main/res/xml*/meals.xml'
+      - 'core/src/test/res/xml/meals-schema.xsd'
+      - 'core/src/test/res/xml/test-meals.bash'
+  pull_request:
+    paths:
+      - 'core/src/main/res/xml*/meals.xml'
+      - 'core/src/test/res/xml/meals-schema.xsd'
+      - 'core/src/test/res/xml/test-meals.bash'
+
+jobs:
+  validate-meals:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install xmllint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
+
+      - name: Validate meals.xml
+        run: |
+          ./core/src/test/res/xml/test-meals.bash

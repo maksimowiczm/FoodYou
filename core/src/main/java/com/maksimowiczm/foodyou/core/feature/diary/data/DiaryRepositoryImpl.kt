@@ -1,10 +1,15 @@
 package com.maksimowiczm.foodyou.core.feature.diary.data
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.toDomain
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.toEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDao
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDatabase
+import com.maksimowiczm.foodyou.core.feature.addfood.database.MealEntity
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.defaultGoals
@@ -12,7 +17,9 @@ import com.maksimowiczm.foodyou.core.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.core.infrastructure.datastore.set
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 class DiaryRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
@@ -60,20 +67,29 @@ class DiaryRepositoryImpl(
                 mealId = null,
                 epochDay = epochDay
             ),
+            observeMeals(),
             observeDailyGoals()
-        ) { products, goals ->
-            val meals = products
-                .groupBy { it.weightMeasurement.mealId }
-                .mapKeys { (mealId, _) ->
-                    mealId.toDomain()
+        ) { products, meals, goals ->
+            val mealProductMap = meals
+                .associateWith { emptyList<ProductWithWeightMeasurement>() }
+                .toMutableMap()
+
+            products.forEach {
+                val product = it.toDomain()
+                val mealId = it.weightMeasurement.mealId
+                val key = meals.firstOrNull { meal -> meal.id == mealId }
+
+                if (key == null) {
+                    Log.e(TAG, "Meal with id $mealId not found. Data inconsistency. BYE BYE")
+                    error("Meal with id $mealId not found. Data inconsistency. BYE BYE")
                 }
-                .mapValues { (_, products) ->
-                    products.map { it.toDomain() }
-                }
+
+                mealProductMap[key] = mealProductMap[key]!! + product
+            }
 
             return@combine DiaryDay(
                 date = date,
-                mealProductMap = meals,
+                mealProductMap = mealProductMap,
                 dailyGoals = goals
             )
         }
@@ -86,5 +102,33 @@ class DiaryRepositoryImpl(
             DiaryPreferences.carbohydratesGoal to goals.carbohydrates,
             DiaryPreferences.fatsGoal to goals.fats
         )
+    }
+
+    override fun observeMeals(): Flow<List<Meal>> {
+        return addFoodDao.observeMeals().map { list -> list.map(MealEntity::toDomain) }
+    }
+
+    override suspend fun createMeal(name: String, from: LocalTime, to: LocalTime) {
+        addFoodDao.insertMeal(
+            MealEntity(
+                name = name,
+                fromHour = from.hour,
+                fromMinute = from.minute,
+                toHour = to.hour,
+                toMinute = to.minute
+            )
+        )
+    }
+
+    override suspend fun updateMeal(meal: Meal) {
+        addFoodDao.updateMeal(meal.toEntity())
+    }
+
+    override suspend fun deleteMeal(meal: Meal) {
+        addFoodDao.deleteMeal(meal.toEntity())
+    }
+
+    companion object {
+        private const val TAG = "DiaryRepositoryImpl"
     }
 }

@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDatabase
+import com.maksimowiczm.foodyou.core.feature.addfood.database.MealEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductQueryEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementTypeConverter
@@ -17,7 +18,8 @@ import com.maksimowiczm.foodyou.core.feature.product.database.WeightUnitConverte
     entities = [
         ProductEntity::class,
         WeightMeasurementEntity::class,
-        ProductQueryEntity::class
+        ProductQueryEntity::class,
+        MealEntity::class
     ],
     version = FoodYouDatabase.VERSION
 )
@@ -34,7 +36,7 @@ abstract class FoodYouDatabase :
     companion object {
         const val VERSION = 1
 
-        val migrations: List<Migration> = emptyList()
+        private val migrations: List<Migration> = emptyList()
 
         fun Builder<FoodYouDatabase>.buildDatabase(): FoodYouDatabase {
             migrations.forEach(::addMigrations)

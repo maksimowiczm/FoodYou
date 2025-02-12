@@ -13,7 +13,11 @@ import com.maksimowiczm.foodyou.core.feature.diary.ui.caloriescard.buildCalories
 import com.maksimowiczm.foodyou.core.feature.diary.ui.goalssettings.GoalsSettingsScreen
 import com.maksimowiczm.foodyou.core.feature.diary.ui.goalssettings.GoalsSettingsViewModel
 import com.maksimowiczm.foodyou.core.feature.diary.ui.goalssettings.buildGoalsSettingsListItem
+import com.maksimowiczm.foodyou.core.feature.diary.ui.mealscard.MealsCardViewModel
 import com.maksimowiczm.foodyou.core.feature.diary.ui.mealscard.buildMealsCard
+import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.MealsSettingsScreen
+import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.MealsSettingsViewModel
+import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.buildMealsSettingsListItem
 import com.maksimowiczm.foodyou.core.feature.diary.ui.nutrimentscard.buildNutrimentsCard
 import com.maksimowiczm.foodyou.core.feature.product.ProductFeature.navigateToFoodDatabaseSettings
 import com.maksimowiczm.foodyou.core.navigation.settingsComposable
@@ -27,7 +31,9 @@ import org.koin.dsl.module
 private val diaryModule = module {
     viewModelOf(::DiaryViewModel)
     viewModelOf(::CaloriesCardViewModel)
+    viewModelOf(::MealsCardViewModel)
     viewModelOf(::GoalsSettingsViewModel)
+    viewModelOf(::MealsSettingsViewModel)
 
     factoryOf(::DiaryRepositoryImpl).bind(DiaryRepository::class)
 }
@@ -69,20 +75,43 @@ object DiaryFeature : Feature.Koin, Feature.Home, Feature.Settings {
                 }
             )
         }
+        settingsComposable<MealsSettings> {
+            MealsSettingsScreen(
+                onBack = {
+                    navController.popBackStack(
+                        route = MealsSettings,
+                        inclusive = true
+                    )
+                }
+            )
+        }
     }
 
     override fun buildSettingsFeatures(navController: NavController) = listOf(
+        buildMealsSettingsListItem(navController),
         buildGoalsSettingsListItem(navController)
     )
 
     @Serializable
     data object GoalsSettings
 
+    @Serializable
+    data object MealsSettings
+
     fun NavController.navigateToGoalsSettings(
         navOptions: NavOptions? = null
     ) {
         navigate(
             route = GoalsSettings,
+            navOptions = navOptions
+        )
+    }
+
+    fun NavController.navigateToMealsSettings(
+        navOptions: NavOptions? = null
+    ) {
+        navigate(
+            route = MealsSettings,
             navOptions = navOptions
         )
     }

@@ -98,8 +98,11 @@ class FormFieldWithTextFieldValue<T, E>(
     }
 
     fun onValueChange(newValue: TextFieldValue, touch: Boolean = true) {
+        if (newValue.text != textFieldValue.text) {
+            formField.onValueChange(newValue.text, touch)
+        }
+
         textFieldValue = newValue
-        formField.onValueChange(newValue.text, touch)
     }
 
     override fun onRawValueChange(newValue: T, touch: Boolean) {

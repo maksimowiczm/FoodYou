@@ -11,14 +11,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.AddFoodScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AddFoodFeature(
     val epochDay: Int,
-    val meal: Meal,
+    val mealId: Long,
     val productId: Long? = null
 )
 

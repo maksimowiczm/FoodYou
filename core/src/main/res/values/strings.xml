@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">FoodYou</string>
 
+    <string name="en_dash" translatable="false">–</string>
+
     <string name="headline_create_product">Create product</string>
     <string name="headline_settings">Settings</string>
     <string name="headline_food_database">Food database</string>
@@ -17,6 +19,7 @@
     <string name="headline_version">Version</string>
     <string name="headline_share_your_thoughts">Share your thoughts</string>
     <string name="headline_show_some_love">Show some love</string>
+    <string name="headline_meals">Meals</string>
 
     <string name="meal_name_breakfast">Breakfast</string>
     <string name="meal_name_lunch">Lunch</string>
@@ -85,6 +88,11 @@
     <string name="action_bug_report_on_github">Bug report on GitHub</string>
     <string name="action_feature_request_on_github">Feature request on GitHub</string>
     <string name="action_leave_a_star_on_github">Leave a star on GitHub</string>
+    <string name="action_edit_meals">Edit meals</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_add_meal">Add meal</string>
+    <string name="action_add_your_first_meal">Add your first meal</string>
 
     <string name="neutral_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_camera_request_rationale">You must allow access in order to scan barcodes.</string>
@@ -105,6 +113,11 @@
     <string name="neutral_total">Total</string>
     <string name="neutral_all_values_per_x">All values per %1$s</string>
     <string name="neutral_required_fields">Required fields</string>
+    <string name="neutral_set_your_meal_schedule">Set your meal schedule</string>
+    <string name="neutral_permanently_delete_meal">Permanently delete meal?</string>
+    <string name="neutral_meal_will_be_deleted_permanently_all_data_related_to_this_meal_will_be_lost">Meal will be deleted permanently. All data related to this meal will be lost.</string>
+    <string name="neutral_no_meals_to_show_at_this_time">No meals to show at this time</string>
+    <string name="neutral_seems_like_you_haven_t_added_any_meals_yet">Seems like you haven\'t added any meals yet</string>
 
     <string name="error_this_field_is_required">This field is required</string>
     <string name="error_this_field_cannot_be_empty">This field cannot be empty</string>

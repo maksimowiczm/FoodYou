@@ -9,7 +9,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.product.ui.ProductSharedTransitionKeys
 import com.maksimowiczm.foodyou.core.feature.product.ui.create.CreateProductScreen
 import com.maksimowiczm.foodyou.core.ui.LocalSharedTransitionScope
@@ -20,14 +19,14 @@ sealed interface ProductsRoute {
     @Serializable
     data class CreateProduct(
         val epochDay: Int,
-        val mealType: Meal
+        val mealId: Long
     ) : ProductsRoute
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.productsGraph(
     createOnNavigateBack: () -> Unit,
-    createOnSuccess: (productId: Long, epochDay: Int, Meal) -> Unit
+    createOnSuccess: (productId: Long, epochDay: Int, mealId: Long) -> Unit
 ) {
     composable<ProductsRoute.CreateProduct> {
         val (epochDay, mealType) = it.toRoute<ProductsRoute.CreateProduct>()

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6f42a1e3a11e7d66a0d030a1ccf7b463",
+    "identityHash": "b7c607f782f09836863f94cdead338cc",
     "entities": [
       {
         "tableName": "ProductEntity",
@@ -111,7 +111,7 @@
       },
       {
         "tableName": "WeightMeasurementEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mealId` INTEGER NOT NULL, `diaryEpochDay` INTEGER NOT NULL, `productId` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, `isDeleted` INTEGER NOT NULL, FOREIGN KEY(`productId`) REFERENCES `ProductEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mealId` INTEGER NOT NULL, `diaryEpochDay` INTEGER NOT NULL, `productId` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, `isDeleted` INTEGER NOT NULL, FOREIGN KEY(`productId`) REFERENCES `ProductEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`mealId`) REFERENCES `MealEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -186,6 +186,15 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_WeightMeasurementEntity_isDeleted` ON `${TABLE_NAME}` (`isDeleted`)"
+          },
+          {
+            "name": "index_WeightMeasurementEntity_mealId",
+            "unique": false,
+            "columnNames": [
+              "mealId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_WeightMeasurementEntity_mealId` ON `${TABLE_NAME}` (`mealId`)"
           }
         ],
         "foreignKeys": [
@@ -195,6 +204,17 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "productId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "MealEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "mealId"
             ],
             "referencedColumns": [
               "id"
@@ -225,11 +245,59 @@
             "query"
           ]
         }
+      },
+      {
+        "tableName": "MealEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `fromHour` INTEGER NOT NULL, `fromMinute` INTEGER NOT NULL, `toHour` INTEGER NOT NULL, `toMinute` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromHour",
+            "columnName": "fromHour",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromMinute",
+            "columnName": "fromMinute",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toHour",
+            "columnName": "toHour",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toMinute",
+            "columnName": "toMinute",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6f42a1e3a11e7d66a0d030a1ccf7b463')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b7c607f782f09836863f94cdead338cc')"
     ]
   }
 }

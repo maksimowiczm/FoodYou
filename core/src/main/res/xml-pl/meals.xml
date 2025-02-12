@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<meals>
+    <meal>
+        <name>Śniadanie</name>
+        <from>06:00</from>
+        <to>10:00</to>
+    </meal>
+    <meal>
+        <name>Drugie Śniadanie</name>
+        <from>10:00</from>
+        <to>12:00</to>
+    </meal>
+    <meal>
+        <name>Obiad</name>
+        <from>12:00</from>
+        <to>18:00</to>
+    </meal>
+    <meal>
+        <name>Kolacja</name>
+        <from>18:00</from>
+        <to>23:59</to>
+    </meal>
+    <meal>
+        <name>Przekąski</name>
+        <from>00:00</from>
+        <to>23:59</to>
+    </meal>
+</meals>

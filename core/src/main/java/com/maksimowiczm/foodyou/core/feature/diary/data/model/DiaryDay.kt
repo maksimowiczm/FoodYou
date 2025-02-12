@@ -53,5 +53,5 @@ data class DiaryDay(
     /**
      * List of all meals in the diary day.
      */
-    val meals: List<Meal> get() = Meal.entries
+    val meals: List<Meal> get() = mealProductMap.keys.toList()
 }

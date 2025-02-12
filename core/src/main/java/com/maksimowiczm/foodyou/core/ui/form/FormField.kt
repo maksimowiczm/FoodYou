@@ -11,6 +11,7 @@ interface FormField<T, E> {
      * Touch the field to mark it as dirty.
      */
     fun touch()
+
     fun onValueChange(newValue: String, touch: Boolean = true)
     fun onRawValueChange(newValue: T, touch: Boolean = true)
 }

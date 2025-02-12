@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
@@ -29,14 +28,14 @@ class AddFoodViewModel(
     private val productRepository: ProductRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    val meal: Meal
+    val mealId: Long
     val date: LocalDate
     val productId: Long?
 
     init {
         val (epochDay, meal, productId) = savedStateHandle.toRoute<AddFoodFeature>()
 
-        this.meal = meal
+        this.mealId = meal
         this.date = LocalDate.fromEpochDays(epochDay)
         this.productId = productId
     }
@@ -104,7 +103,7 @@ class AddFoodViewModel(
         queryJob?.cancel()
         queryJob = viewModelScope.launch {
             diaryRepository.queryProducts(
-                meal = meal,
+                mealId = mealId,
                 date = date,
                 query = query?.trim()?.ifBlank { null },
                 localOnly = localOnly
@@ -137,7 +136,7 @@ class AddFoodViewModel(
     suspend fun onQuickAdd(model: ProductWithWeightMeasurement): Long {
         return diaryRepository.addFood(
             date = date,
-            meal = meal,
+            mealId = mealId,
             productId = model.product.id,
             weightMeasurement = model.measurement
         )
@@ -197,7 +196,7 @@ class AddFoodViewModel(
         viewModelScope.launch {
             diaryRepository.addFood(
                 date = date,
-                meal = meal,
+                mealId = mealId,
                 productId = uiState.product.id,
                 weightMeasurement = weightMeasurementEnum,
                 quantity = quantity
@@ -219,14 +218,14 @@ class AddFoodViewModel(
 
     val totalCalories = diaryRepository.observeTotalCalories(
         date = date,
-        meal = meal
+        mealId = mealId
     ).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(STOP_TIMEOUT),
         initialValue = runBlocking {
             diaryRepository.observeTotalCalories(
                 date = date,
-                meal = meal
+                mealId = mealId
             ).first()
         }
     )

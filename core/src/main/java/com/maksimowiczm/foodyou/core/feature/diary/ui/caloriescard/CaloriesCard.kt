@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -44,6 +43,7 @@ import com.maksimowiczm.foodyou.core.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.core.ui.preview.BooleanPreviewParameter
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.core.ui.toggle
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -95,11 +95,7 @@ fun CaloriesCard(
 
     val hapticFeedback = LocalHapticFeedback.current
     val hapticOnExpandedChange: (Boolean) -> Unit = {
-        if (it) {
-            hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
-        } else {
-            hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
-        }
+        hapticFeedback.toggle(it)
         onExpandedChange(it)
     }
 

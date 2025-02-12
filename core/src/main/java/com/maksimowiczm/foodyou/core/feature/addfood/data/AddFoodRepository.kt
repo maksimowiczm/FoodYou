@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
@@ -15,21 +14,21 @@ interface AddFoodRepository {
      * Add a measurement to the diary.
      *
      * @param date The date of the diary entry.
-     * @param meal The meal of the diary entry.
+     * @param mealId The meal ID.
      * @param productId The product ID.
      * @param weightMeasurement The weight measurement of the portion.
      * @return The ID of the added measurement.
      */
     suspend fun addFood(
         date: LocalDate,
-        meal: Meal,
+        mealId: Long,
         productId: Long,
         weightMeasurement: WeightMeasurement
     ): Long
 
     suspend fun addFood(
         date: LocalDate,
-        meal: Meal,
+        mealId: Long,
         productId: Long,
         weightMeasurement: WeightMeasurementEnum,
         quantity: Float
@@ -40,14 +39,14 @@ interface AddFoodRepository {
     )
 
     fun queryProducts(
-        meal: Meal,
+        mealId: Long,
         date: LocalDate,
         query: String?,
         localOnly: Boolean
     ): Flow<QueryResult<List<ProductWithWeightMeasurement>>>
 
     fun observeTotalCalories(
-        meal: Meal,
+        mealId: Long,
         date: LocalDate
     ): Flow<Int>
 

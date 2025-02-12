@@ -14,18 +14,25 @@ import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
             parentColumns = ["id"],
             childColumns = ["productId"],
             onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = MealEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["mealId"],
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [
         Index(value = ["productId"]),
-        Index(value = ["isDeleted"])
+        Index(value = ["isDeleted"]),
+        Index(value = ["mealId"])
     ]
 )
 data class WeightMeasurementEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-    val mealId: MealId,
+    val mealId: Long,
     val diaryEpochDay: Int,
     val productId: Long,
 

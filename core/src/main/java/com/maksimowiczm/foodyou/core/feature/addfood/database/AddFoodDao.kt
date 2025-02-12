@@ -1,9 +1,11 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
@@ -150,4 +152,21 @@ interface AddFoodDao {
         """
     )
     fun observeQuantitySuggestionsByProductId(productId: Long): Flow<List<QuantitySuggestionEntity>>
+
+    @Query(
+        """
+        SELECT *
+        FROM MealEntity
+        """
+    )
+    fun observeMeals(): Flow<List<MealEntity>>
+
+    @Insert
+    suspend fun insertMeal(meal: MealEntity)
+
+    @Update
+    suspend fun updateMeal(meal: MealEntity)
+
+    @Delete
+    suspend fun deleteMeal(meal: MealEntity)
 }

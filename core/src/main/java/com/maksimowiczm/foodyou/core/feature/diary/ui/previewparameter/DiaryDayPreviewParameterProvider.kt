@@ -11,9 +11,10 @@ class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
     private val productMap: Map<Meal, List<ProductWithWeightMeasurement>>
         get() {
             val products = ProductWithWeightMeasurementPreviewParameter().values.toList()
+            val meals = MealsPreviewParameterProvider().values.toList()
 
-            return Meal.entries.mapIndexed { index, meal ->
-                meal to products.filterIndexed { i, _ -> i != index }
+            return meals.mapIndexed { i, m ->
+                m to products.filterIndexed { index, _ -> index % 4 == i }
             }.toMap()
         }
 

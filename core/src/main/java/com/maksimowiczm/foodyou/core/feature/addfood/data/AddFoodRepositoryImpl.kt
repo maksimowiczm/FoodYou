@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
@@ -9,7 +8,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggesti
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.toDomain
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.toEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDao
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDatabase
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductQueryEntity
@@ -41,7 +39,7 @@ class AddFoodRepositoryImpl(
 
     override suspend fun addFood(
         date: LocalDate,
-        meal: Meal,
+        mealId: Long,
         productId: Long,
         weightMeasurement: WeightMeasurement
     ): Long {
@@ -53,7 +51,7 @@ class AddFoodRepositoryImpl(
 
         return addFood(
             date = date,
-            meal = meal,
+            mealId = mealId,
             productId = productId,
             weightMeasurement = weightMeasurement.asEnum(),
             quantity = quantity
@@ -62,7 +60,7 @@ class AddFoodRepositoryImpl(
 
     override suspend fun addFood(
         date: LocalDate,
-        meal: Meal,
+        mealId: Long,
         productId: Long,
         weightMeasurement: WeightMeasurementEnum,
         quantity: Float
@@ -70,7 +68,7 @@ class AddFoodRepositoryImpl(
         val epochSeconds = Clock.System.now().epochSeconds
 
         val entity = WeightMeasurementEntity(
-            mealId = meal.toEntity(),
+            mealId = mealId,
             diaryEpochDay = date.toEpochDays(),
             productId = productId,
             measurement = weightMeasurement,
@@ -90,27 +88,27 @@ class AddFoodRepositoryImpl(
     }
 
     override fun queryProducts(
-        meal: Meal,
+        mealId: Long,
         date: LocalDate,
         query: String?,
         localOnly: Boolean
     ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> {
         return if (query?.all { it.isDigit() } == true) {
-            queryProductsByBarcode(meal, date, query, localOnly)
+            queryProductsByBarcode(mealId, date, query, localOnly)
         } else {
-            queryProductsByName(meal, date, query, localOnly)
+            queryProductsByName(mealId, date, query, localOnly)
         }
     }
 
     private fun queryProductsByBarcode(
-        meal: Meal,
+        mealId: Long,
         date: LocalDate,
         barcode: String,
         localOnly: Boolean
     ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> = flow {
         val flow = { isLoading: Boolean, error: Throwable? ->
             addFoodDao.observeProductsWithMeasurementByBarcode(
-                meal = meal,
+                mealId = mealId,
                 date = date,
                 barcode = barcode
             ).map { products ->
@@ -139,7 +137,7 @@ class AddFoodRepositoryImpl(
     }
 
     private fun queryProductsByName(
-        meal: Meal,
+        mealId: Long,
         date: LocalDate,
         query: String?,
         localOnly: Boolean
@@ -153,7 +151,7 @@ class AddFoodRepositoryImpl(
 
         val flow = { isLoading: Boolean, error: Throwable? ->
             addFoodDao.observeProductsWithMeasurementByQuery(
-                meal = meal,
+                mealId = mealId,
                 date = date,
                 query = query
             ).map { products ->
@@ -192,9 +190,9 @@ class AddFoodRepositoryImpl(
         )
     }
 
-    override fun observeTotalCalories(meal: Meal, date: LocalDate) =
+    override fun observeTotalCalories(mealId: Long, date: LocalDate) =
         addFoodDao.observeMeasuredProducts(
-            mealId = meal.toEntity().value,
+            mealId = mealId,
             epochDay = date.toEpochDays()
         ).map { list ->
             list.sumOf { it.toDomain().calories }
@@ -229,11 +227,11 @@ class AddFoodRepositoryImpl(
     }
 
     private fun AddFoodDao.observeProductsWithMeasurementByQuery(
-        meal: Meal,
+        mealId: Long,
         date: LocalDate,
         query: String?
     ): Flow<List<ProductWithWeightMeasurement>> = observeProductsWithMeasurement(
-        mealId = meal.toEntity().value,
+        mealId = mealId,
         epochDay = date.toEpochDays(),
         query = query,
         barcode = null,
@@ -241,11 +239,11 @@ class AddFoodRepositoryImpl(
     ).map { list -> list.map { it.toDomain() } }
 
     private fun AddFoodDao.observeProductsWithMeasurementByBarcode(
-        meal: Meal,
+        mealId: Long,
         date: LocalDate,
         barcode: String
     ): Flow<List<ProductWithWeightMeasurement>> = observeProductsWithMeasurement(
-        mealId = meal.toEntity().value,
+        mealId = mealId,
         epochDay = date.toEpochDays(),
         query = null,
         barcode = barcode,

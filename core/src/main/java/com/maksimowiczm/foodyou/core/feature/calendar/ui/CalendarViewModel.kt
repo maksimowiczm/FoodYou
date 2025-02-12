@@ -1,18 +1,18 @@
 package com.maksimowiczm.foodyou.core.feature.calendar.ui
 
 import androidx.lifecycle.ViewModel
+import com.maksimowiczm.foodyou.core.feature.system.data.AndroidStringFormatRepository
 import com.maksimowiczm.foodyou.core.feature.system.data.DateProvider
-import com.maksimowiczm.foodyou.core.feature.system.data.SystemInfoRepository
 import kotlinx.datetime.LocalDate
 
 class CalendarViewModel(
-    private val systemInfoRepository: SystemInfoRepository,
+    private val stringFormatRepository: AndroidStringFormatRepository,
     dateProvider: DateProvider
 ) : ViewModel() {
     val today = dateProvider.observe()
 
     val weekDayNamesShort: List<String>
-        get() = systemInfoRepository.weekDayNamesShort.toList()
+        get() = stringFormatRepository.weekDayNamesShort.toList()
 
-    fun formatMonthYear(date: LocalDate): String = systemInfoRepository.formatMonthYear(date)
+    fun formatMonthYear(date: LocalDate): String = stringFormatRepository.formatMonthYear(date)
 }

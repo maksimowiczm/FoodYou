@@ -17,22 +17,29 @@ sealed interface ParserResult<T, E> {
     data class Failure<T, E>(val error: E) : ParserResult<T, E>
 }
 
-fun <E> nullableStringParser(
-    onEmpty: ParserScope.() -> ParserResult<String?, E> = { success(null) }
-): Parser<String?, E> = Parser {
+fun <E> stringParser(
+    onEmpty: () -> E
+) = Parser {
     if (it.isEmpty()) {
-        onEmpty()
+        failure(onEmpty())
+    } else {
+        success(it)
+    }
+}
+
+fun <E> nullableStringParser(): Parser<String?, E> = Parser {
+    if (it.isEmpty()) {
+        success(null)
     } else {
         success(it)
     }
 }
 
 fun <E> nullableFloatParser(
-    onEmpty: ParserScope.() -> ParserResult<Float?, E> = { success(null) },
     onNan: () -> E
 ) = Parser {
     if (it.isEmpty()) {
-        onEmpty()
+        success(null)
     } else {
         try {
             success(it.toFloat())
@@ -43,11 +50,10 @@ fun <E> nullableFloatParser(
 }
 
 fun <E> nullableIntParser(
-    onEmpty: ParserScope.() -> ParserResult<Int?, E> = { success(null) },
     onNan: () -> E
 ) = Parser {
     if (it.isEmpty()) {
-        onEmpty()
+        success(null)
     } else {
         try {
             success(it.toInt())
