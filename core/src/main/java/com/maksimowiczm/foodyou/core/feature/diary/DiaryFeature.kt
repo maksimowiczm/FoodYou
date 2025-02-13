@@ -28,9 +28,9 @@ import org.koin.dsl.module
 
 private val diaryModule = module {
     viewModelOf(::DiaryViewModel)
-    viewModelOf(::MealsCardViewModel)
     viewModelOf(::GoalsSettingsViewModel)
     viewModelOf(::MealsSettingsViewModel)
+    viewModelOf(::MealsCardViewModel)
 
     factoryOf(::DiaryRepositoryImpl).bind(DiaryRepository::class)
 }

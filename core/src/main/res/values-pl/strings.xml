@@ -56,16 +56,18 @@
     <string name="headline_product_serving_and_packaging">Porcja i opakowanie</string>
 
     <string name="nutriment_proteins">Białka</string>
+    <string name="nutriment_proteins_short">B</string>
     <string name="nutriment_carbohydrates">Węglowodany</string>
+    <string name="nutriment_carbohydrates_short">W</string>
     <string name="nutriment_sugars">Cukry</string>
     <string name="nutriment_fats">Tłuszcze</string>
+    <string name="nutriment_fats_short">T</string>
     <string name="nutriment_saturated_fats">Kwasy tłuszczowe nasycone</string>
     <string name="nutriment_salt">Sól</string>
     <string name="nutriment_sodium">Sód</string>
     <string name="nutriment_fiber">Błonnik</string>
 
     <string name="action_show_remaining_fields">Pokaż pozostałe pola</string>
-    <string name="action_add_product">Dodaj produkt</string>
     <string name="action_search">Szukaj</string>
     <string name="action_scan_barcode">Skanuj kod kreskowy</string>
     <string name="action_add">Dodaj</string>
@@ -87,11 +89,10 @@
     <string name="action_bug_report_on_github">Zgłoś błąd na GitHubie</string>
     <string name="action_feature_request_on_github">Zgłoś sugestię na GitHubie</string>
     <string name="action_leave_a_star_on_github">Zostaw gwiazdkę na GitHubie</string>
-    <string name="action_edit_meals">Edytuj posiłki</string>
     <string name="action_delete">Usuń</string>
     <string name="action_confirm">Potwierdź</string>
     <string name="action_add_meal">Dodaj posiłek</string>
-    <string name="action_add_your_first_meal">Dodaj swój pierwszy posiłek</string>
+    <string name="action_log_products">Zanotuj produkty</string>
 
     <string name="neutral_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu</string>
     <string name="neutral_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu</string>
@@ -112,8 +113,6 @@
     <string name="neutral_set_your_meal_schedule">Ustaw swój harmonogram posiłków</string>
     <string name="neutral_permanently_delete_meal">Usunąć posiłek?</string>
     <string name="neutral_meal_will_be_deleted_permanently_all_data_related_to_this_meal_will_be_lost">Posiłek zostanie trwale usunięty. Wszystkie powiązane z nim dane zostaną utracone.</string>
-    <string name="neutral_no_meals_to_show_at_this_time">Obecnie brak posiłków do wyświetlenia</string>
-    <string name="neutral_seems_like_you_haven_t_added_any_meals_yet">Wygląda na to, że jeszcze nie dodałeś żadnych posiłków</string>
 
     <string name="error_this_field_is_required">To pole jest wymagane</string>
     <string name="error_this_field_cannot_be_empty">To pole nie może być puste</string>

@@ -18,6 +18,6 @@
     <meal>
         <name>Snacks</name>
         <from>00:00</from>
-        <to>23:59</to>
+        <to>00:00</to>
     </meal>
 </meals>

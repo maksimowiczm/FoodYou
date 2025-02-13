@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">FoodYou</string>
 
     <string name="en_dash" translatable="false">–</string>
+    <string name="em_dash" translatable="false">—</string>
 
     <string name="headline_create_product">Create product</string>
     <string name="headline_settings">Settings</string>
@@ -57,16 +58,18 @@
     <string name="product_barcode">Barcode</string>
 
     <string name="nutriment_proteins">Proteins</string>
+    <string name="nutriment_proteins_short">P</string>
     <string name="nutriment_carbohydrates">Carbohydrates</string>
+    <string name="nutriment_carbohydrates_short">C</string>
     <string name="nutriment_sugars">Sugars</string>
     <string name="nutriment_fats">Fats</string>
+    <string name="nutriment_fats_short">F</string>
     <string name="nutriment_saturated_fats">Saturated fats</string>
     <string name="nutriment_salt">Salt</string>
     <string name="nutriment_sodium">Sodium</string>
     <string name="nutriment_fiber">Fiber</string>
 
     <string name="action_show_remaining_fields">Show remaining fields</string>
-    <string name="action_add_product">Add product</string>
     <string name="action_search">Search</string>
     <string name="action_scan_barcode">Scan barcode</string>
     <string name="action_add">Add</string>
@@ -88,11 +91,10 @@
     <string name="action_bug_report_on_github">Bug report on GitHub</string>
     <string name="action_feature_request_on_github">Feature request on GitHub</string>
     <string name="action_leave_a_star_on_github">Leave a star on GitHub</string>
-    <string name="action_edit_meals">Edit meals</string>
     <string name="action_delete">Delete</string>
     <string name="action_confirm">Confirm</string>
     <string name="action_add_meal">Add meal</string>
-    <string name="action_add_your_first_meal">Add your first meal</string>
+    <string name="action_log_products">Log products</string>
 
     <string name="neutral_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_camera_request_rationale">You must allow access in order to scan barcodes.</string>
@@ -112,8 +114,6 @@
     <string name="neutral_set_your_meal_schedule">Set your meal schedule</string>
     <string name="neutral_permanently_delete_meal">Permanently delete meal?</string>
     <string name="neutral_meal_will_be_deleted_permanently_all_data_related_to_this_meal_will_be_lost">Meal will be deleted permanently. All data related to this meal will be lost.</string>
-    <string name="neutral_no_meals_to_show_at_this_time">No meals to show at this time</string>
-    <string name="neutral_seems_like_you_haven_t_added_any_meals_yet">Seems like you haven\'t added any meals yet</string>
 
     <string name="error_this_field_is_required">This field is required</string>
     <string name="error_this_field_cannot_be_empty">This field cannot be empty</string>

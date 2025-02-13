@@ -1,331 +1,420 @@
 package com.maksimowiczm.foodyou.core.feature.diary.ui.mealscard
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
-import com.maksimowiczm.foodyou.core.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.core.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
-import com.maksimowiczm.foodyou.core.ui.preview.BooleanPreviewParameter
+import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrimentsPalette
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.core.ui.toggle
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import kotlinx.datetime.LocalTime
+import kotlin.math.absoluteValue
 
 @Composable
 fun MealsCard(
-    diaryDay: DiaryDay,
-    time: LocalTime,
-    onAddClick: (Meal) -> Unit,
-    onEditMeals: () -> Unit,
+    state: MealsCardState,
+    formatTime: (LocalTime) -> String,
+    onAddProduct: (Meal) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (diaryDay.meals.isEmpty()) {
-        EmptyMealsCard(
-            onEditMeals = onEditMeals,
-            modifier = modifier
-        )
-    } else {
-        var expanded by rememberSaveable { mutableStateOf(false) }
+    val pagerState = rememberPagerState(
+        pageCount = { state.diaryDay?.meals?.size ?: 4 }
+    )
 
-        MealsCard(
-            diaryDay = diaryDay,
-            time = time,
-            onAddClick = onAddClick,
-            expanded = expanded,
-            onExpandChange = { expanded = it },
-            onEditMeals = onEditMeals,
-            modifier = modifier
+    // Shimmer must be hoisted
+    val shimmerInstance = rememberShimmer(shimmerBounds = ShimmerBounds.View)
+
+    HorizontalPager(
+        state = pagerState,
+        modifier = modifier.animateContentSize(),
+        contentPadding = PaddingValues(
+            start = 8.dp,
+            end = 24.dp
         )
+    ) { page ->
+        val pageOffset = pagerState.currentPage - page + pagerState.currentPageOffsetFraction
+        val fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
+
+        AnimatedContent(
+            targetState = state.diaryDay != null,
+            transitionSpec = { fadeIn(tween()) togetherWith fadeOut(tween()) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 2.dp)
+                .scale(
+                    scaleX = 1f,
+                    scaleY = lerp(0.9f, 1f, fraction)
+                )
+        ) {
+            val meal = state.meals?.getOrNull(page)
+
+            if (it && meal != null && state.diaryDay != null) {
+                MealCard(
+                    meal = meal,
+                    isEmpty = state.diaryDay.mealProductMap[meal]?.isEmpty() == true,
+                    totalCalories = state.diaryDay.totalCalories(meal),
+                    totalProteins = state.diaryDay.totalProteins(meal),
+                    totalCarbohydrates = state.diaryDay.totalCarbohydrates(meal),
+                    totalFats = state.diaryDay.totalFats(meal),
+                    formatTime = formatTime,
+                    onAddClick = { onAddProduct(meal) }
+                )
+            } else {
+                MealCardSkeleton(
+                    shimmerInstance = shimmerInstance
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun EmptyMealsCard(
-    onEditMeals: () -> Unit,
+fun MealCardSkeleton(
+    shimmerInstance: Shimmer,
+    modifier: Modifier = Modifier
+) {
+    val density = LocalDensity.current
+    val headlineHeight =
+        density.run { MaterialTheme.typography.headlineMedium.lineHeight.toDp() - 4.dp }
+    val timeHeight = density.run { MaterialTheme.typography.labelLarge.lineHeight.toDp() }
+
+    ElevatedCard(
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmerInstance)
+                    .width(140.dp)
+                    .height(headlineHeight)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+
+            Spacer(Modifier.height(4.dp))
+
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmerInstance)
+                    .width(60.dp)
+                    .height(timeHeight)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MacroLayoutSkeleton(
+                    modifier = Modifier.shimmer(shimmerInstance)
+                )
+
+                Spacer(Modifier.weight(1f))
+
+                FilledIconButton(
+                    onClick = {},
+                    modifier = Modifier.shimmer(shimmerInstance),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                    ),
+                    enabled = false,
+                    content = {}
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MealCard(
+    meal: Meal,
+    isEmpty: Boolean,
+    totalCalories: Int,
+    totalProteins: Int,
+    totalCarbohydrates: Int,
+    totalFats: Int,
+    formatTime: (LocalTime) -> String,
+    onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(
         modifier = modifier
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                stringResource(R.string.neutral_seems_like_you_haven_t_added_any_meals_yet)
+                text = meal.name,
+                style = MaterialTheme.typography.headlineMedium
             )
-            OutlinedButton(
-                onClick = onEditMeals
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = stringResource(R.string.action_add_your_first_meal)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun MealsCard(
-    diaryDay: DiaryDay,
-    time: LocalTime,
-    onAddClick: (Meal) -> Unit,
-    expanded: Boolean,
-    onExpandChange: (Boolean) -> Unit,
-    onEditMeals: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val hapticFeedback = LocalHapticFeedback.current
-    val hapticOnExpandChange: (Boolean) -> Unit = {
-        onExpandChange(it)
-        hapticFeedback.toggle(it)
-    }
-
-    val lastVisibleIndex by remember(diaryDay, time, expanded) {
-        derivedStateOf {
-            if (expanded) {
-                diaryDay.meals.size - 1
-            } else {
-                diaryDay.meals.indexOfLast { meal -> shouldShowMeal(meal, time) }
-            }
-        }
-    }
-
-    val empty = lastVisibleIndex == -1
-
-    ElevatedCard(
-        modifier = modifier.animateContentSize(),
-        onClick = { hapticOnExpandChange(!expanded) }
-    ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AnimatedVisibility(
-                visible = empty && !expanded
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
+                CompositionLocalProvider(
+                    LocalContentColor provides MaterialTheme.colorScheme.outline,
+                    LocalTextStyle provides MaterialTheme.typography.labelLarge
                 ) {
                     Text(
-                        text = stringResource(R.string.neutral_no_meals_to_show_at_this_time),
-                        style = MaterialTheme.typography.bodyLarge
+                        text = formatTime(meal.from)
+                    )
+                    Text(
+                        text = stringResource(R.string.en_dash)
+                    )
+                    Text(
+                        text = formatTime(meal.to)
                     )
                 }
             }
 
-            diaryDay.meals.forEachIndexed { index, meal ->
-                AnimatedVisibility(
-                    visible = if (expanded) true else shouldShowMeal(meal, time)
-                ) {
-                    Column {
-                        MaterialMealItem(
-                            icon = {},
-                            title = {
-                                Text(
-                                    text = meal.name
-                                )
-                            },
-                            value = diaryDay.totalCalories(meal),
-                            onAddClick = { onAddClick(meal) },
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
+            Spacer(Modifier.height(8.dp))
 
-                        if (index < lastVisibleIndex) {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(horizontal = 8.dp)
-                            )
-                        }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MacroLayout(
+                    caloriesLabel = {
+                        Text(
+                            text = if (isEmpty) {
+                                stringResource(R.string.em_dash)
+                            } else {
+                                totalCalories.toString()
+                            }
+                        )
+                    },
+                    proteinsLabel = {
+                        Text(
+                            text = if (isEmpty) {
+                                stringResource(R.string.em_dash)
+                            } else {
+                                "$totalProteins " + stringResource(R.string.unit_gram_short)
+                            }
+                        )
+                    },
+                    carbohydratesLabel = {
+                        Text(
+                            text = if (isEmpty) {
+                                stringResource(R.string.em_dash)
+                            } else {
+                                "$totalCarbohydrates " + stringResource(R.string.unit_gram_short)
+                            }
+                        )
+                    },
+                    fatsLabel = {
+                        Text(
+                            text = if (isEmpty) {
+                                stringResource(R.string.em_dash)
+                            } else {
+                                "$totalFats " + stringResource(R.string.unit_gram_short)
+                            }
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+
+                FilledIconButton(
+                    onClick = onAddClick
+                ) {
+                    if (!isEmpty) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.action_log_products)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = stringResource(R.string.action_log_products)
+                        )
                     }
                 }
             }
+        }
+    }
+}
 
-            if (expanded) {
-                TextButton(
-                    onClick = onEditMeals
+@Composable
+private fun MacroLayoutSkeleton(
+    modifier: Modifier = Modifier
+) {
+    val density = LocalDensity.current
+
+    val height = density.run { MaterialTheme.typography.labelMedium.lineHeight.toDp() * 2 }
+
+    Box(
+        modifier = modifier
+            .size(120.dp, height)
+            .clip(MaterialTheme.shapes.medium)
+            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+    )
+}
+
+@Composable
+private fun MacroLayout(
+    caloriesLabel: @Composable () -> Unit,
+    proteinsLabel: @Composable () -> Unit,
+    carbohydratesLabel: @Composable () -> Unit,
+    fatsLabel: @Composable () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val nutrimentsPalette = LocalNutrimentsPalette.current
+
+    CompositionLocalProvider(
+        LocalTextStyle provides MaterialTheme.typography.labelMedium
+    ) {
+        FlowRow(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.unit_kcal)
+                )
+                caloriesLabel()
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CompositionLocalProvider(
+                    LocalContentColor provides nutrimentsPalette.proteinsOnSurfaceContainer
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = null
-                    )
-                    Spacer(Modifier.width(8.dp))
                     Text(
-                        text = stringResource(R.string.action_edit_meals)
+                        text = stringResource(R.string.nutriment_proteins_short)
                     )
+                    proteinsLabel()
+                }
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CompositionLocalProvider(
+                    LocalContentColor provides nutrimentsPalette.carbohydratesOnSurfaceContainer
+                ) {
+                    Text(
+                        text = stringResource(R.string.nutriment_carbohydrates_short)
+                    )
+                    carbohydratesLabel()
+                }
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CompositionLocalProvider(
+                    LocalContentColor provides nutrimentsPalette.fatsOnSurfaceContainer
+                ) {
+                    Text(
+                        text = stringResource(R.string.nutriment_fats_short)
+                    )
+                    fatsLabel()
                 }
             }
         }
     }
 }
 
-/**
- * Determines whether a meal should be shown based on the current time.
- *
- * This function handles two cases:
- * 1. Meals that span across midnight (where end time is less than start time)
- * 2. Regular meals within the same day (where start time is less than end time)
- *
- * For meals spanning midnight (e.g., from 22:00 to 04:00), the function checks if the current time:
- * - Falls between the start time and midnight (23:59), OR
- * - Falls between midnight (00:00) and the end time
- *
- * For regular meals (e.g., from 12:00 to 15:00), it simply checks if the current time
- * falls within the start and end times.
- */
-private fun shouldShowMeal(meal: Meal, time: LocalTime): Boolean {
-    return if (meal.to < meal.from) {
-        val minuteBeforeMidnight = LocalTime(23, 59, 59)
-        val midnight = LocalTime(0, 0, 0)
-        meal.from <= time && time <= minuteBeforeMidnight || midnight <= time && time <= meal.to
-    } else {
-        meal.from <= time && time <= meal.to
+@Preview
+@Composable
+private fun MealsCardSkeletonPreview() {
+    FoodYouTheme {
+        MealCardSkeleton(
+            shimmerInstance = rememberShimmer(shimmerBounds = ShimmerBounds.View)
+        )
     }
 }
 
+@Preview
 @Composable
-private fun MaterialMealItem(
-    icon: @Composable () -> Unit,
-    title: @Composable () -> Unit,
-    value: Int,
-    onAddClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    ListItem(
-        headlineContent = {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleLarge
-            ) {
-                title()
-            }
-        },
-        modifier = modifier,
-        leadingContent = icon,
-        supportingContent = {
-            Text(
-                text = "$value " + stringResource(R.string.unit_kcal),
-                style = MaterialTheme.typography.labelLarge,
-                maxLines = 1
-            )
-        },
-        trailingContent = {
-            FilledIconButton(
-                onClick = onAddClick
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.action_add_product)
-                )
-            }
-        },
-        colors = ListItemDefaults.colors(
-            containerColor = Color.Transparent
+private fun MealsCardPreview() {
+    val diaryDay = DiaryDayPreviewParameterProvider().values.first()
+    val meal = diaryDay.meals.first()
+
+    FoodYouTheme {
+        MealCard(
+            meal = meal,
+            isEmpty = false,
+            totalCalories = diaryDay.totalCalories(meal),
+            totalProteins = diaryDay.totalProteins(meal),
+            totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
+            totalFats = diaryDay.totalFats(meal),
+            onAddClick = {},
+            formatTime = { it.toString() }
         )
-    )
+    }
 }
 
 @Preview
 @Composable
 private fun EmptyMealsCardPreview() {
-    FoodYouTheme {
-        EmptyMealsCard(
-            onEditMeals = {},
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
-// If you run this preview at 3:33 then it won't work, good job bro!
-// (it's a joke) (the second part is a joke) (the part with "good job bro" is a joke) ( :) )
-@Preview
-@Composable
-private fun FilteredMealsCardPreview() {
-    val diaryDay = DiaryDayPreviewParameterProvider().values.first()
-
-    val filtered = diaryDay.copy(
-        mealProductMap = diaryDay.mealProductMap.map { (m, products) ->
-            m.copy(
-                from = LocalTime(3, 33),
-                to = LocalTime(3, 33)
-            ) to products
-        }.toMap()
+    val init = DiaryDayPreviewParameterProvider().values.first()
+    val diaryDay = init.copy(
+        mealProductMap = init.mealProductMap.mapValues { emptyList() }
     )
 
     FoodYouTheme {
-        MealsCard(
-            diaryDay = filtered,
-            time = LocalTime(12, 0),
+        MealCard(
+            meal = diaryDay.meals.first(),
+            isEmpty = true,
+            totalCalories = 0,
+            totalProteins = 0,
+            totalCarbohydrates = 0,
+            totalFats = 0,
             onAddClick = {},
-            expanded = false,
-            onExpandChange = {},
-            onEditMeals = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun MealsCardPreview(
-    @PreviewParameter(BooleanPreviewParameter::class) expanded: Boolean
-) {
-    val diaryDay = DiaryDayPreviewParameterProvider().values.first()
-
-    FoodYouTheme {
-        MealsCard(
-            diaryDay = diaryDay,
-            time = LocalTime(12, 0),
-            onAddClick = {},
-            // Reverse the expanded state for the preview
-            expanded = expanded.not(),
-            onExpandChange = {},
-            onEditMeals = {}
+            formatTime = { it.toString() }
         )
     }
 }

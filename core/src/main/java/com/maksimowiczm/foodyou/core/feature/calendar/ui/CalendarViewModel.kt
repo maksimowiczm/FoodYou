@@ -9,7 +9,7 @@ class CalendarViewModel(
     private val stringFormatRepository: AndroidStringFormatRepository,
     dateProvider: DateProvider
 ) : ViewModel() {
-    val today = dateProvider.observe()
+    val today = dateProvider.observeDate()
 
     val weekDayNamesShort: List<String>
         get() = stringFormatRepository.weekDayNamesShort.toList()

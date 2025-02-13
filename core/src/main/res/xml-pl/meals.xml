@@ -18,11 +18,11 @@
     <meal>
         <name>Kolacja</name>
         <from>18:00</from>
-        <to>23:59</to>
+        <to>00:00</to>
     </meal>
     <meal>
         <name>Przekąski</name>
         <from>00:00</from>
-        <to>23:59</to>
+        <to>00:00</to>
     </meal>
 </meals>
