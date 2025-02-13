@@ -22,7 +22,8 @@ fun buildMealsCard(navController: NavController) = HomeFeature(
     MealsCard(
         state = rememberMealsCardState(
             diaryDay = diaryDay,
-            time = time
+            time = time,
+            shimmer = homeState.shimmer
         ),
         formatTime = viewModel::formatTime,
         onAddProduct = { meal ->

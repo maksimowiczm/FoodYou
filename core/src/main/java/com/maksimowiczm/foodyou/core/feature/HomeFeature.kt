@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.core.feature
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
+import com.valentinilk.shimmer.Shimmer
 import kotlinx.datetime.LocalDate
 
 @Stable
@@ -10,6 +11,11 @@ interface HomeState {
     val selectedDate: LocalDate
 
     fun selectDate(date: LocalDate)
+
+    /**
+     * Shimmer instance that can be used coordinate shimmer animations across different cards.
+     */
+    val shimmer: Shimmer
 }
 
 /**

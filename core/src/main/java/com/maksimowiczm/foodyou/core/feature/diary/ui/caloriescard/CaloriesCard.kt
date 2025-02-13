@@ -1,10 +1,13 @@
 package com.maksimowiczm.foodyou.core.feature.diary.ui.caloriescard
 
+import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +21,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,6 +43,11 @@ import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrimentsPalet
 import com.maksimowiczm.foodyou.core.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.core.ui.toDp
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -50,46 +59,42 @@ fun CaloriesCard(
 ) {
     val calories = diaryDay.totalCalories
     val goal = diaryDay.dailyGoals.calories
-    val valueStatus = calories withGoal goal
-    val left = abs(goal - calories)
+    val valueStatus by remember(calories, goal) {
+        derivedStateOf { calories withGoal goal }
+    }
+    val left by remember(calories, goal) {
+        derivedStateOf { abs(goal - calories) }
+    }
 
     val nutrimentsPalette = LocalNutrimentsPalette.current
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
     val kcalSuffix = stringResource(R.string.unit_kcal)
 
-    val caloriesString = remember(
-        calories,
-        goal,
-        valueStatus,
-        left,
-        nutrimentsPalette,
-        typography,
-        colorScheme,
-        kcalSuffix
-    ) {
-        buildAnnotatedString {
-            withStyle(
-                typography.headlineLarge.copy(
-                    color = when (valueStatus) {
-                        ValueStatus.Exceeded -> colorScheme.error
-                        ValueStatus.Remaining,
-                        ValueStatus.Achieved -> colorScheme.onSurface
-                    }
-                ).toSpanStyle()
-            ) {
-                append(calories.toString())
-            }
+    val caloriesString =
+        remember(valueStatus, left, nutrimentsPalette, typography, colorScheme, kcalSuffix) {
+            buildAnnotatedString {
+                withStyle(
+                    typography.headlineLarge.copy(
+                        color = when (valueStatus) {
+                            ValueStatus.Exceeded -> colorScheme.error
+                            ValueStatus.Remaining,
+                            ValueStatus.Achieved -> colorScheme.onSurface
+                        }
+                    ).toSpanStyle()
+                ) {
+                    append(calories.toString())
+                }
 
-            withStyle(
-                typography.bodyLarge.copy(
-                    color = colorScheme.outline
-                ).toSpanStyle()
-            ) {
-                append(" / $goal $kcalSuffix")
+                withStyle(
+                    typography.bodyLarge.copy(
+                        color = colorScheme.outline
+                    ).toSpanStyle()
+                ) {
+                    append(" / $goal $kcalSuffix")
+                }
             }
         }
-    }
 
     val animatedProteins by animateFloatAsState(diaryDay.totalCaloriesProteins.toFloat())
     val animatedCarbohydrates by animateFloatAsState(diaryDay.totalCaloriesCarbohydrates.toFloat())
@@ -112,7 +117,11 @@ fun CaloriesCard(
 
             Spacer(Modifier.height(8.dp))
 
-            Text(caloriesString)
+            Text(
+                text = caloriesString,
+                // Must manually set because otherwise its not same height
+                style = MaterialTheme.typography.headlineLarge
+            )
 
             Spacer(Modifier.height(8.dp))
 
@@ -174,46 +183,34 @@ fun CaloriesCard(
 
             Spacer(Modifier.height(16.dp))
 
-            CaloriesCardExpansion(
-                diaryDay = diaryDay
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                NutrimentIndicator(
+                    title = stringResource(R.string.nutriment_proteins),
+                    value = diaryDay.totalProteins,
+                    goal = diaryDay.dailyGoals.proteinsAsGrams,
+                    progressColor = nutrimentsPalette.proteinsOnSurfaceContainer,
+                    modifier = modifier
+                )
+
+                NutrimentIndicator(
+                    title = stringResource(R.string.nutriment_carbohydrates),
+                    value = diaryDay.totalCarbohydrates,
+                    goal = diaryDay.dailyGoals.carbohydratesAsGrams,
+                    progressColor = nutrimentsPalette.carbohydratesOnSurfaceContainer,
+                    modifier = modifier
+                )
+
+                NutrimentIndicator(
+                    title = stringResource(R.string.nutriment_fats),
+                    value = diaryDay.totalFats,
+                    goal = diaryDay.dailyGoals.fatsAsGrams,
+                    progressColor = nutrimentsPalette.fatsOnSurfaceContainer,
+                    modifier = modifier
+                )
+            }
         }
-    }
-}
-
-@Composable
-private fun CaloriesCardExpansion(
-    diaryDay: DiaryDay,
-    modifier: Modifier = Modifier
-) {
-    val nutrimentsPalette = LocalNutrimentsPalette.current
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        NutrimentIndicator(
-            title = stringResource(R.string.nutriment_proteins),
-            value = diaryDay.totalProteins,
-            goal = diaryDay.dailyGoals.proteinsAsGrams,
-            progressColor = nutrimentsPalette.proteinsOnSurfaceContainer,
-            modifier = modifier
-        )
-
-        NutrimentIndicator(
-            title = stringResource(R.string.nutriment_carbohydrates),
-            value = diaryDay.totalCarbohydrates,
-            goal = diaryDay.dailyGoals.carbohydratesAsGrams,
-            progressColor = nutrimentsPalette.carbohydratesOnSurfaceContainer,
-            modifier = modifier
-        )
-
-        NutrimentIndicator(
-            title = stringResource(R.string.nutriment_fats),
-            value = diaryDay.totalFats,
-            goal = diaryDay.dailyGoals.fatsAsGrams,
-            progressColor = nutrimentsPalette.fatsOnSurfaceContainer,
-            modifier = modifier
-        )
     }
 }
 
@@ -229,14 +226,7 @@ private fun NutrimentIndicator(
     val colorScheme = MaterialTheme.colorScheme
     val gramShort = stringResource(R.string.unit_gram_short)
 
-    val valueGoalString = remember(
-        typography,
-        colorScheme,
-        gramShort,
-        title,
-        value,
-        goal
-    ) {
+    val valueGoalString = remember(typography, colorScheme, gramShort, title, value, goal) {
         val valueStatus = value withGoal goal
 
         buildAnnotatedString {
@@ -292,7 +282,7 @@ private fun NutrimentIndicator(
 
             Text(
                 text = valueGoalString,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.headlineSmall
             )
         }
 
@@ -332,9 +322,127 @@ private enum class ValueStatus {
     }
 }
 
+@Composable
+fun CaloriesCardSkeleton(
+    modifier: Modifier = Modifier,
+    shimmerInstance: Shimmer = rememberShimmer(ShimmerBounds.View)
+) {
+    ElevatedCard(
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .padding(16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmerInstance)
+                    .size(100.dp, MaterialTheme.typography.titleLarge.toDp())
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmerInstance)
+                    .size(160.dp, MaterialTheme.typography.headlineLarge.toDp())
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmerInstance)
+                    .height(16.dp)
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmerInstance)
+                    .size(100.dp, MaterialTheme.typography.labelLarge.toDp())
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                NutrimentIndicatorSkeleton(shimmerInstance)
+                NutrimentIndicatorSkeleton(shimmerInstance)
+                NutrimentIndicatorSkeleton(shimmerInstance)
+            }
+        }
+    }
+}
+
+@Composable
+private fun NutrimentIndicatorSkeleton(
+    shimmerInstance: Shimmer,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmerInstance)
+                    .size(60.dp, MaterialTheme.typography.titleMedium.toDp())
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+
+            Spacer(Modifier.weight(1f))
+
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmerInstance)
+                    .size(60.dp, MaterialTheme.typography.headlineSmall.toDp())
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .shimmer(shimmerInstance)
+                .height(4.dp)
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.small)
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+        )
+    }
+}
+
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+private fun CaloriesCardSkeletonPreview() {
+    FoodYouTheme {
+        CaloriesCardSkeleton()
+    }
+}
+
 @Preview
 @Composable
-private fun CaloriesCardRemainingPreview() {
+private fun CaloriesCardPreview() {
     FoodYouTheme {
         CaloriesCard(
             diaryDay = DiaryDayPreviewParameterProvider().values.first(),

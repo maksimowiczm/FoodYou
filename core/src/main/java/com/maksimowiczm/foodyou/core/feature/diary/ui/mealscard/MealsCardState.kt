@@ -8,23 +8,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.DiaryDay
+import com.valentinilk.shimmer.Shimmer
 import kotlinx.datetime.LocalTime
 
 @Composable
 fun rememberMealsCardState(
     diaryDay: DiaryDay?,
-    time: LocalTime
-) = remember(diaryDay, time) {
+    time: LocalTime,
+    shimmer: Shimmer
+) = remember(diaryDay, time, shimmer) {
     MealsCardState(
         diaryDay = diaryDay,
-        time = time
+        time = time,
+        shimmer = shimmer
     )
 }
 
 @Immutable
 class MealsCardState(
     val diaryDay: DiaryDay?,
-    val time: LocalTime
+    val time: LocalTime,
+    val shimmer: Shimmer
 ) {
     @Stable
     val meals by derivedStateOf {

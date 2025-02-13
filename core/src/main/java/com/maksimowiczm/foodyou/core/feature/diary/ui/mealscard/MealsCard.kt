@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.diary.ui.mealscard
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -18,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -38,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,6 +47,7 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
 import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrimentsPalette
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.core.ui.toDp
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
@@ -65,9 +65,6 @@ fun MealsCard(
     val pagerState = rememberPagerState(
         pageCount = { state.diaryDay?.meals?.size ?: 4 }
     )
-
-    // Shimmer must be hoisted
-    val shimmerInstance = rememberShimmer(shimmerBounds = ShimmerBounds.View)
 
     HorizontalPager(
         state = pagerState,
@@ -106,7 +103,7 @@ fun MealsCard(
                 )
             } else {
                 MealCardSkeleton(
-                    shimmerInstance = shimmerInstance
+                    shimmerInstance = state.shimmer
                 )
             }
         }
@@ -118,11 +115,6 @@ fun MealCardSkeleton(
     shimmerInstance: Shimmer,
     modifier: Modifier = Modifier
 ) {
-    val density = LocalDensity.current
-    val headlineHeight =
-        density.run { MaterialTheme.typography.headlineMedium.lineHeight.toDp() - 4.dp }
-    val timeHeight = density.run { MaterialTheme.typography.labelLarge.lineHeight.toDp() }
-
     ElevatedCard(
         modifier = modifier
     ) {
@@ -132,8 +124,7 @@ fun MealCardSkeleton(
             Box(
                 modifier = Modifier
                     .shimmer(shimmerInstance)
-                    .width(140.dp)
-                    .height(headlineHeight)
+                    .size(140.dp, MaterialTheme.typography.headlineMedium.toDp() - 4.dp)
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
@@ -143,8 +134,7 @@ fun MealCardSkeleton(
             Box(
                 modifier = Modifier
                     .shimmer(shimmerInstance)
-                    .width(60.dp)
-                    .height(timeHeight)
+                    .size(60.dp, MaterialTheme.typography.labelLarge.toDp())
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
@@ -287,13 +277,9 @@ private fun MealCard(
 private fun MacroLayoutSkeleton(
     modifier: Modifier = Modifier
 ) {
-    val density = LocalDensity.current
-
-    val height = density.run { MaterialTheme.typography.labelMedium.lineHeight.toDp() * 2 }
-
     Box(
         modifier = modifier
-            .size(120.dp, height)
+            .size(120.dp, MaterialTheme.typography.labelMedium.toDp() * 2)
             .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
     )
@@ -367,7 +353,9 @@ private fun MacroLayout(
     }
 }
 
-@Preview
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 private fun MealsCardSkeletonPreview() {
     FoodYouTheme {
