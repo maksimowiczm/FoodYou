@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.displayCutoutPadding
@@ -77,11 +76,9 @@ private fun AboutScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val topBarWindowInsets = TopAppBarDefaults.windowInsets
-        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+        .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
     Scaffold(
         modifier = modifier,
@@ -90,8 +87,7 @@ private fun AboutScreen(
                 title = {
                     Text(stringResource(R.string.headline_about))
                 },
-                scrollBehavior = scrollBehavior,
-                windowInsets = topBarWindowInsets
+                scrollBehavior = scrollBehavior
             )
         },
         contentWindowInsets = contentWindowInsets

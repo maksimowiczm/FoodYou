@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
@@ -61,10 +60,9 @@ private fun FoodDatabaseSettingsScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val topBarWindowInsets = TopAppBarDefaults.windowInsets
-        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+        .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
     Scaffold(
         modifier = modifier,
@@ -83,8 +81,7 @@ private fun FoodDatabaseSettingsScreen(
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior,
-                windowInsets = topBarWindowInsets
+                scrollBehavior = scrollBehavior
             )
         },
         contentWindowInsets = contentWindowInsets

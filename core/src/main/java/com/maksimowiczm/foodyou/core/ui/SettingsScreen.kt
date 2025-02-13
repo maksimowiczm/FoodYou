@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.core.ui
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
@@ -39,10 +38,9 @@ fun SettingsScreen(
 ) {
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-    val topBarWindowInsets = TopAppBarDefaults.windowInsets
-        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+        .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
     Scaffold(
         modifier = modifier,
@@ -59,8 +57,7 @@ fun SettingsScreen(
                         )
                     }
                 },
-                scrollBehavior = topAppBarScrollBehavior,
-                windowInsets = topBarWindowInsets
+                scrollBehavior = topAppBarScrollBehavior
             )
         },
         contentWindowInsets = contentWindowInsets

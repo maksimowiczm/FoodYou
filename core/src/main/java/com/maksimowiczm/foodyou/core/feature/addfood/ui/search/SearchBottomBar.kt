@@ -101,7 +101,7 @@ fun SearchBottomBar(
                         }
 
                         TooltipBox(
-                            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
                             tooltip = {
                                 PlainTooltip {
                                     Text(stringResource(R.string.action_create_new_product))

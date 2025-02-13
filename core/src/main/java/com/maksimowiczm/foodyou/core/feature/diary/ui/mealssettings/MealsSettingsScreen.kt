@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -87,12 +86,9 @@ private fun MealsSettingsScreen(
 ) {
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
-        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
         .add(WindowInsets.ime)
 
     val topBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val topBarWindowInsets = TopAppBarDefaults.windowInsets
-        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
     var creating by rememberSaveable { mutableStateOf(false) }
     val createCardFocusRequester = remember { FocusRequester() }
@@ -123,7 +119,6 @@ private fun MealsSettingsScreen(
                         text = stringResource(R.string.headline_meals)
                     )
                 },
-                windowInsets = topBarWindowInsets,
                 scrollBehavior = topBarScrollBehavior
             )
         },

@@ -40,6 +40,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -291,6 +292,7 @@ fun MealSettingsCard(
                     )
                 }
             },
+            title = {},
             dismissButton = {
                 TextButton(
                     onClick = { showFromTimePicker = false }
@@ -330,6 +332,7 @@ fun MealSettingsCard(
                     )
                 }
             },
+            title = {},
             dismissButton = {
                 TextButton(
                     onClick = { showToTimePicker = false }
@@ -339,6 +342,7 @@ fun MealSettingsCard(
                     )
                 }
             }
+
         ) {
             TimePicker(timePickerState)
         }

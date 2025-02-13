@@ -47,7 +47,7 @@ fun HomeScreen(
 
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
-        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+
     val topBarWindowInsets = TopAppBarDefaults.windowInsets
         .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 

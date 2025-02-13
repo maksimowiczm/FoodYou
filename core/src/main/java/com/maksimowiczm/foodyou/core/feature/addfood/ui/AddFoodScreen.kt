@@ -66,7 +66,7 @@ fun AddFoodScreen(
 
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
     LaunchedEffect(recentQueries) {
-        addFoodState.searchBarState.updateRecentQueries(recentQueries)
+        addFoodState.searchTopBarState.recentQueries = recentQueries
     }
 
     val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
@@ -220,7 +220,7 @@ fun AddFoodScreen(
             onBarcodeScan = {
                 viewModel.onBarcodeScan(it)
 
-                addFoodState.searchBarState.textFieldState.setTextAndPlaceCursorAtEnd(it)
+                addFoodState.searchTopBarState.textFieldState.setTextAndPlaceCursorAtEnd(it)
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
 
                 navController.popBackStack(

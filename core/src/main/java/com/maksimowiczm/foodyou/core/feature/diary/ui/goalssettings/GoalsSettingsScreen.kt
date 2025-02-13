@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
@@ -73,10 +72,7 @@ private fun GoalsSettingsScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val topAppWindowInsets = TopAppBarDefaults.windowInsets
-        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
         .add(WindowInsets.ime)
         .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
 
@@ -97,8 +93,7 @@ private fun GoalsSettingsScreen(
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior,
-                windowInsets = topAppWindowInsets
+                scrollBehavior = scrollBehavior
             )
         },
         contentWindowInsets = contentWindowInsets

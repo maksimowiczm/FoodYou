@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
-import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -10,35 +9,32 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.BottomAppBarScrollBehavior
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -49,11 +45,12 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
@@ -63,7 +60,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.ui.rememberAddFoodState
 import com.maksimowiczm.foodyou.core.ui.component.LoadingIndicator
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.preview.SharedTransitionPreview
-import kotlinx.coroutines.CancellationException
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -91,19 +87,6 @@ fun SearchHome(
         }
     }
 
-    // TODO
-    // Do some nice predictive back handler for query
-    PredictiveBackHandler(
-        enabled = addFoodState.searchBarState.textFieldState.text.isNotEmpty()
-    ) { flow ->
-        try {
-            flow.collect {}
-            addFoodState.searchBarState.textFieldState.clearText()
-            onClearSearch()
-        } catch (_: CancellationException) {
-        }
-    }
-
     // Make sure that bottom bar is visible when user can't scroll
     LaunchedEffect(isEmpty) {
         if (isEmpty) {
@@ -119,63 +102,10 @@ fun SearchHome(
         }
     }
 
-    Surface(modifier) {
-        SearchHomeLayout(
-            animatedVisibilityScope = animatedVisibilityScope,
-            addFoodState = addFoodState,
-            onCreateProduct = onCreateProduct,
-            onProductClick = onProductClick,
-            onBack = onBack,
-            onSearchSettings = onSearchSettings,
-            onSearch = onSearch,
-            onClearSearch = onClearSearch,
-            onRetry = onRetry,
-            onBarcodeScanner = onBarcodeScanner,
-            scrollBehavior = bottomAppBarScrollBehavior
-        )
-    }
-}
-
-enum class ErrorCardState {
-    HIDDEN_START,
-    VISIBLE,
-    HIDDEN_END
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SearchHomeLayout(
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    addFoodState: AddFoodState,
-    onCreateProduct: () -> Unit,
-    onProductClick: (ProductSearchUiModel) -> Unit,
-    onBack: () -> Unit,
-    onSearchSettings: () -> Unit,
-    onSearch: (String) -> Unit,
-    onClearSearch: () -> Unit,
-    onRetry: () -> Unit,
-    onBarcodeScanner: () -> Unit,
-    scrollBehavior: BottomAppBarScrollBehavior,
-    modifier: Modifier = Modifier
-) {
     val density = LocalDensity.current
-    var searchBarHeightDp by remember { mutableStateOf(0.dp) }
+    var searchBarHeight by remember { mutableIntStateOf(0) }
+    var errorCardHeight by remember { mutableIntStateOf(0) }
 
-    val searchBar = @Composable {
-        AddFoodSearchBar(
-            searchBarState = addFoodState.searchBarState,
-            onSearchSettings = onSearchSettings,
-            onSearch = onSearch,
-            onClearSearch = onClearSearch,
-            onBack = onBack,
-            modifier = Modifier.onSizeChanged {
-                searchBarHeightDp = density.run { it.height.toDp() }
-            }
-        )
-    }
-
-    var errorCardHeightPx by remember { mutableIntStateOf(0) }
-    val errorCardHeight by remember(errorCardHeightPx) { derivedStateOf { density.run { errorCardHeightPx.toDp() } } }
     val isError by remember { derivedStateOf { addFoodState.searchListState.isError } }
     val anchoredDraggableState = rememberSaveable(
         isError,
@@ -191,17 +121,7 @@ private fun SearchHomeLayout(
             modifier = Modifier
                 .horizontalDisplayCutoutPadding()
                 .fillMaxWidth()
-                .onSizeChanged {
-                    val draggableAnchors = DraggableAnchors {
-                        ErrorCardState.HIDDEN_START at -it.width.toFloat()
-                        ErrorCardState.VISIBLE at 0f
-                        ErrorCardState.HIDDEN_END at it.width.toFloat()
-                    }
-
-                    anchoredDraggableState.updateAnchors(draggableAnchors)
-
-                    errorCardHeightPx = it.height
-                }
+                .onSizeChanged { errorCardHeight = it.height }
                 .anchoredDraggable(
                     state = anchoredDraggableState,
                     orientation = Orientation.Horizontal
@@ -210,155 +130,124 @@ private fun SearchHomeLayout(
             FoodDatabaseErrorCard(
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
-                    .padding(top = 8.dp),
+                    .padding(top = 8.dp)
+                    .offset {
+                        IntOffset(
+                            x = anchoredDraggableState.requireOffset().fastRoundToInt(),
+                            y = 0
+                        )
+                    },
                 onRetry = onRetry
             )
         }
     }
 
-    // Put them both in column because there is wierd behaviour when they are placed in layout.
-    // - Black bar appears between list and bottom bar when bottom bar height changes.
-    val list: @Composable ColumnScope.() -> Unit = {
-        ProductsLazyColumn(
-            searchListState = addFoodState.searchListState,
-            onProductClick = onProductClick,
-            modifier = Modifier
-                .testTag("Content")
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .weight(1f)
-                .fillMaxSize(),
-            topOffset = {
+    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+        .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+
+    Scaffold(
+        modifier = modifier.onSizeChanged {
+            val draggableAnchors = DraggableAnchors {
+                ErrorCardState.HIDDEN_START at -it.width.toFloat()
+                ErrorCardState.VISIBLE at 0f
+                ErrorCardState.HIDDEN_END at it.width.toFloat()
+            }
+
+            anchoredDraggableState.updateAnchors(draggableAnchors)
+        },
+        topBar = {
+            SearchTopBar(
+                state = addFoodState.searchTopBarState,
+                onSearchSettings = onSearchSettings,
+                onSearch = onSearch,
+                onClearSearch = onClearSearch,
+                onBack = onBack,
+                modifier = Modifier.onSizeChanged { searchBarHeight = it.height }
+            )
+        },
+        bottomBar = {
+            SearchBottomBar(
+                animatedVisibilityScope = animatedVisibilityScope,
+                state = addFoodState.searchBottomBarState,
+                onCreateProduct = onCreateProduct,
+                onBarcodeScanner = onBarcodeScanner,
+                scrollBehavior = bottomAppBarScrollBehavior
+            )
+        },
+        contentWindowInsets = contentWindowInsets
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (isEmpty) {
+                Text(
+                    text = stringResource(R.string.neutral_no_products_found),
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .zIndex(1f)
+                    .align(Alignment.TopCenter),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(Modifier.height(density.run { searchBarHeight.toDp() }))
+
+                errorCard()
+
+                if (addFoodState.searchListState.isLoading) {
+                    Spacer(Modifier.height(8.dp))
+
+                    LoadingIndicator()
+                }
+            }
+
+            LazyColumn(
+                modifier = Modifier.nestedScroll(bottomAppBarScrollBehavior.nestedScrollConnection),
+                userScrollEnabled = addFoodState.searchListState.products.isNotEmpty(),
+                contentPadding = paddingValues
+            ) {
                 item {
-                    Spacer(
-                        Modifier.height(
-                            searchBarHeightDp + errorCardHeight + 8.dp
+                    Spacer(Modifier.height(density.run { errorCardHeight.toDp() }))
+                }
+
+                itemsIndexed(
+                    items = addFoodState.searchListState.products
+                ) { index, product ->
+                    ProductSearchListItem(
+                        uiModel = product,
+                        onClick = {
+                            onProductClick(product)
+                        },
+                        onCheckChange = {
+                            addFoodState.searchListState.onProductCheckChange(
+                                index = index,
+                                checked = it
+                            )
+                        },
+                        colors = ProductSearchListItemDefaults.colors(
+                            checkedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            checkedContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            checkedToggleButtonContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            checkedToggleButtonContentColor = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     )
                 }
-            },
-            bottomOffset = {
-                // Don't do system bars padding if the bottom app bar is visible
                 item {
-                    val bottomInset =
-                        WindowInsets.systemBars.getBottom(LocalDensity.current)
-                    val height =
-                        bottomInset * (scrollBehavior.state.collapsedFraction)
-
-                    Spacer(
-                        Modifier.height(LocalDensity.current.run { height.toDp() })
-                    )
+                    // There will be a small gap if bottom bar is expanded but no one will ever notice it :)
+                    Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
                 }
             }
-        )
-    }
-
-    val bottomBar = @Composable {
-        SearchBottomBar(
-            animatedVisibilityScope = animatedVisibilityScope,
-            state = addFoodState.searchBottomBarState,
-            onCreateProduct = onCreateProduct,
-            onBarcodeScanner = onBarcodeScanner,
-            scrollBehavior = scrollBehavior
-        )
-    }
-
-    val empty = @Composable {
-        if (addFoodState.searchListState.products.isEmpty() && !addFoodState.searchListState.isLoading) {
-            Text(
-                text = stringResource(R.string.neutral_no_products_found)
-            )
-        }
-    }
-
-    val contentWindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
-
-    Box(
-        modifier = modifier
-            .windowInsetsPadding(contentWindowInsets)
-            .consumeWindowInsets(contentWindowInsets),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Column(
-            modifier = Modifier
-                .zIndex(1f)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            searchBar()
-            errorCard()
-        }
-
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            empty()
-        }
-
-        Column {
-            list()
-            bottomBar()
         }
     }
 }
 
-@Composable
-private fun ProductsLazyColumn(
-    searchListState: SearchListState,
-    onProductClick: (ProductSearchUiModel) -> Unit,
-    modifier: Modifier = Modifier,
-    topOffset: LazyListScope.() -> Unit = {},
-    bottomOffset: LazyListScope.() -> Unit = {}
-) {
-    Box(modifier) {
-        if (searchListState.isLoading) {
-            LoadingIndicator(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Top))
-                    .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
-                    // Searchbar padding
-                    .padding(top = 8.dp)
-                    // Searchbar height
-                    .padding(top = 56.dp)
-                    // Padding
-                    .padding(top = 16.dp)
-                    .zIndex(1f)
-            )
-        }
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = searchListState.lazyListState
-        ) {
-            topOffset()
-
-            itemsIndexed(
-                items = searchListState.products
-            ) { index, product ->
-                ProductSearchListItem(
-                    uiModel = product,
-                    onClick = {
-                        onProductClick(product)
-                    },
-                    onCheckChange = {
-                        searchListState.onProductCheckChange(
-                            index = index,
-                            checked = it
-                        )
-                    },
-                    colors = ProductSearchListItemDefaults.colors(
-                        checkedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        checkedContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        checkedToggleButtonContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        checkedToggleButtonContentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                    )
-                )
-            }
-
-            bottomOffset()
-        }
-    }
+enum class ErrorCardState {
+    HIDDEN_START,
+    VISIBLE,
+    HIDDEN_END
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -402,10 +291,13 @@ private fun SearchHomePreview2() {
         SearchHome(
             animatedVisibilityScope = animatedVisibilityScope,
             addFoodState = rememberAddFoodState(
-                searchBarState = rememberSearchBarState(
+                searchBarState = rememberSearchTopBarState(
                     initialExpanded = true,
                     initialRecentQueries = listOf(
-                        ProductQuery("Banana", Clock.System.now().toLocalDateTime(TimeZone.UTC)),
+                        ProductQuery(
+                            "Banana",
+                            Clock.System.now().toLocalDateTime(TimeZone.UTC)
+                        ),
                         ProductQuery("Apple", Clock.System.now().toLocalDateTime(TimeZone.UTC)),
                         ProductQuery("Orange", Clock.System.now().toLocalDateTime(TimeZone.UTC))
                     )
