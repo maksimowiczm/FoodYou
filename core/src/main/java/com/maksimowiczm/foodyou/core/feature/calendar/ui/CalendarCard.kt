@@ -220,7 +220,7 @@ private fun DatePickerRowItem(
     val namesOfDayOfWeek = calendarState.namesOfDayOfWeek
     val referenceDate = calendarState.referenceDate
     val selectedDate = calendarState.selectedDate
-    val dayOfWeek = date.dayOfWeek.value % 7
+    val dayOfWeek = (date.dayOfWeek.value - 1) % 7
 
     val backgroundColor by animateColorAsState(
         targetValue = when (date) {
