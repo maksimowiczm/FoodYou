@@ -3,15 +3,16 @@ package com.maksimowiczm.foodyou.core.feature.product.navigation
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.product.ui.ProductSharedTransitionKeys
 import com.maksimowiczm.foodyou.core.feature.product.ui.create.CreateProductScreen
+import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.ui.LocalSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.core.ui.motion.crossfadeOut
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -28,7 +29,7 @@ fun NavGraphBuilder.productsGraph(
     createOnNavigateBack: () -> Unit,
     createOnSuccess: (productId: Long, epochDay: Int, mealId: Long) -> Unit
 ) {
-    composable<ProductsRoute.CreateProduct> {
+    crossfadeComposable<ProductsRoute.CreateProduct> {
         val (epochDay, mealType) = it.toRoute<ProductsRoute.CreateProduct>()
         val sharedTransitionScope =
             LocalSharedTransitionScope.current ?: error("No SharedTransitionScope found")
@@ -44,10 +45,11 @@ fun NavGraphBuilder.productsGraph(
                         sharedContentState = rememberSharedContentState(
                             ProductSharedTransitionKeys.PRODUCT_CREATE_SCREEN
                         ),
-                        animatedVisibilityScope = this@composable,
-                        clipInOverlayDuringTransition = OverlayClip(MaterialTheme.shapes.medium)
+                        animatedVisibilityScope = this@crossfadeComposable,
+                        enter = crossfadeIn(),
+                        exit = crossfadeOut(),
+                        clipInOverlayDuringTransition = OverlayClip(MaterialTheme.shapes.large)
                     )
-                    .clip(MaterialTheme.shapes.medium)
                     .skipToLookaheadSize()
             )
         }

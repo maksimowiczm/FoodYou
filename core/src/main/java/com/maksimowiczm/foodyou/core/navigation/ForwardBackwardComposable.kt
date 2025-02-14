@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.core.navigation
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
@@ -12,39 +11,44 @@ import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import com.maksimowiczm.foodyou.core.ui.motion.materialSharedAxisXIn
+import com.maksimowiczm.foodyou.core.ui.motion.materialSharedAxisXOut
 import kotlin.reflect.KType
 
 /**
- * A composable that should be used with screens that are part of the settings.
+ * A composable that animates forward and backward navigation with shared axis X transitions.
+ *
+ * @see <a href="https://m3.material.io/styles/motion/transitions/transition-patterns#df9c7d76-1454-47f3-ad1c-268a31f58bad">Forward and backward</a>
  */
-inline fun <reified T : Any> NavGraphBuilder.settingsComposable(
+inline fun <reified T : Any> NavGraphBuilder.forwardBackwardComposable(
     typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap(),
     deepLinks: List<NavDeepLink> = emptyList(),
     noinline enterTransition:
         (
             AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
             EnterTransition?
-        )? = { slideIntoContainer(SlideDirection.Left) },
+        )? = { ForwardBackwardComposableDefaults.enterTransition() },
     noinline exitTransition:
         (
             AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
             ExitTransition?
-        )? = { slideOutOfContainer(SlideDirection.Left) },
+        )? = { ForwardBackwardComposableDefaults.exitTransition() },
     noinline popEnterTransition:
         (
             AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
             EnterTransition?
-        )? = { slideIntoContainer(SlideDirection.Right) },
+        )? = { ForwardBackwardComposableDefaults.popEnterTransition() },
     noinline popExitTransition:
         (
             AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
             ExitTransition?
-        )? = { slideOutOfContainer(SlideDirection.Right) },
+        )? = { ForwardBackwardComposableDefaults.popExitTransition() },
     noinline sizeTransform:
         (
             AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
             SizeTransform?
-        )? = null,
+        )? =
+        null,
     noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
     composable<T>(
@@ -57,4 +61,20 @@ inline fun <reified T : Any> NavGraphBuilder.settingsComposable(
         sizeTransform = sizeTransform,
         content = content
     )
+}
+
+object ForwardBackwardComposableDefaults {
+    const val INITIAL_OFFSET_FACTOR = 0.10f
+
+    fun enterTransition(offset: Float = INITIAL_OFFSET_FACTOR) =
+        materialSharedAxisXIn(initialOffsetX = { (it * offset).toInt() })
+
+    fun exitTransition(offset: Float = INITIAL_OFFSET_FACTOR) =
+        materialSharedAxisXOut(targetOffsetX = { -(it * offset).toInt() })
+
+    fun popEnterTransition(offset: Float = INITIAL_OFFSET_FACTOR) =
+        materialSharedAxisXIn(initialOffsetX = { -(it * offset).toInt() })
+
+    fun popExitTransition(offset: Float = INITIAL_OFFSET_FACTOR) =
+        materialSharedAxisXOut(targetOffsetX = { (it * offset).toInt() })
 }

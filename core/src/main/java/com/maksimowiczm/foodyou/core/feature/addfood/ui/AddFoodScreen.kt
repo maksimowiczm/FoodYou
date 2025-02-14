@@ -1,14 +1,5 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui
 
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,9 +9,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionScreen
@@ -32,6 +21,10 @@ import com.maksimowiczm.foodyou.core.feature.camera.navigation.navigateToBarcode
 import com.maksimowiczm.foodyou.core.feature.product.navigation.ProductsRoute
 import com.maksimowiczm.foodyou.core.feature.product.navigation.navigateToProducts
 import com.maksimowiczm.foodyou.core.feature.product.navigation.productsGraph
+import com.maksimowiczm.foodyou.core.navigation.ForwardBackwardComposableDefaults
+import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.core.ui.motion.crossfadeOut
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
@@ -79,40 +72,20 @@ fun AddFoodScreen(
         navController = addFoodState.navController,
         startDestination = Home
     ) {
-        composable<Home>(
-            popEnterTransition = {
-                var transition = fadeIn(
-                    animationSpec = tween(
-                        durationMillis = 250,
-                        easing = LinearOutSlowInEasing
-                    )
-                )
-
-                val topDestination = initialState.destination.hierarchy.first()
-                val initialIsPortion = topDestination.hierarchy.any { it.hasRoute<Portion>() }
-
-                if (initialIsPortion) {
-                    transition += slideInHorizontally(
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = LinearOutSlowInEasing
-                        )
-                    ) {
-                        it / 2
-                    }
-                }
-
-                transition
-            },
+        forwardBackwardComposable<Home>(
             exitTransition = {
-                scaleOut(
-                    targetScale = .5f
-                ) + fadeOut(
-                    animationSpec = tween(
-                        durationMillis = 100,
-                        easing = FastOutLinearInEasing
-                    )
-                )
+                if (initialState.destination.hasRoute<Portion>()) {
+                    ForwardBackwardComposableDefaults.exitTransition()
+                } else {
+                    crossfadeOut()
+                }
+            },
+            popEnterTransition = {
+                if (initialState.destination.hasRoute<Portion>()) {
+                    ForwardBackwardComposableDefaults.popEnterTransition()
+                } else {
+                    crossfadeIn()
+                }
             }
         ) {
             SearchHome(
@@ -161,42 +134,7 @@ fun AddFoodScreen(
                 }
             )
         }
-        composable<Portion>(
-            enterTransition = {
-                scaleIn(
-                    initialScale = .65f,
-                    animationSpec = tween(
-                        durationMillis = 250,
-                        easing = LinearOutSlowInEasing
-                    )
-                ) + fadeIn(
-                    tween(
-                        durationMillis = 250,
-                        easing = LinearOutSlowInEasing
-                    )
-                )
-            },
-            exitTransition = {
-                scaleOut(
-                    targetScale = .8f,
-                    animationSpec = tween(
-                        durationMillis = 200,
-                        easing = FastOutLinearInEasing
-                    )
-                ) + slideOutHorizontally(
-                    animationSpec = tween(
-                        durationMillis = 200,
-                        easing = FastOutLinearInEasing
-                    ),
-                    targetOffsetX = { -it / 2 }
-                ) + fadeOut(
-                    animationSpec = tween(
-                        durationMillis = 200,
-                        easing = FastOutLinearInEasing
-                    )
-                )
-            }
-        ) {
+        forwardBackwardComposable<Portion> {
             val uiState by viewModel.productState.collectAsStateWithLifecycle()
 
             PortionScreen(

@@ -46,6 +46,8 @@ import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.camera.ui.CameraSharedTransitionKeys
 import com.maksimowiczm.foodyou.core.feature.product.ui.ProductSharedTransitionKeys
 import com.maksimowiczm.foodyou.core.ui.LocalSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.core.ui.motion.crossfadeOut
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -111,17 +113,19 @@ fun SearchBottomBar(
                         ) {
                             with(sharedTransitionScope) {
                                 FilledIconButton(
-                                    shape = MaterialTheme.shapes.medium,
-                                    colors = IconButtonDefaults.filledIconButtonColors(
-                                        contentColor = MaterialTheme.colorScheme.secondary,
-                                        containerColor = MaterialTheme.colorScheme.onSecondary
-                                    ),
                                     onClick = onCreateProduct,
                                     modifier = Modifier.sharedBounds(
                                         sharedContentState = rememberSharedContentState(
                                             ProductSharedTransitionKeys.PRODUCT_CREATE_SCREEN
                                         ),
-                                        animatedVisibilityScope = animatedVisibilityScope
+                                        animatedVisibilityScope = animatedVisibilityScope,
+                                        enter = crossfadeIn(),
+                                        exit = crossfadeOut()
+                                    ),
+                                    shape = MaterialTheme.shapes.medium,
+                                    colors = IconButtonDefaults.filledIconButtonColors(
+                                        contentColor = MaterialTheme.colorScheme.secondary,
+                                        containerColor = MaterialTheme.colorScheme.onSecondary
                                     )
                                 ) {
                                     Icon(
@@ -139,13 +143,15 @@ fun SearchBottomBar(
                 floatingActionButton = {
                     with(sharedTransitionScope) {
                         FloatingActionButton(
+                            onClick = onBarcodeScanner,
                             modifier = Modifier.sharedBounds(
                                 sharedContentState = rememberSharedContentState(
                                     CameraSharedTransitionKeys.BARCODE_SCANNER
                                 ),
-                                animatedVisibilityScope = animatedVisibilityScope
-                            ),
-                            onClick = onBarcodeScanner
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                enter = crossfadeIn(),
+                                exit = crossfadeOut()
+                            )
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_qr_code_scanner_24),

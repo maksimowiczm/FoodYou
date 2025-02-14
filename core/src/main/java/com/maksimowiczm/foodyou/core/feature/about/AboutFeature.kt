@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.core.feature.about.data.LinkHandler
 import com.maksimowiczm.foodyou.core.feature.about.ui.AboutScreen
 import com.maksimowiczm.foodyou.core.feature.about.ui.AboutSettingsViewModel
 import com.maksimowiczm.foodyou.core.feature.about.ui.buildAboutSettingsListItem
-import com.maksimowiczm.foodyou.core.navigation.settingsComposable
+import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
 import org.koin.core.module.dsl.factoryOf
@@ -29,7 +29,7 @@ object AboutFeature : Feature.Koin, Feature.Settings {
     }
 
     override fun NavGraphBuilder.settingsGraph(navController: NavController) {
-        settingsComposable<AboutSettings> {
+        forwardBackwardComposable<AboutSettings> {
             AboutScreen()
         }
     }

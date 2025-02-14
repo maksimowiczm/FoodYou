@@ -18,7 +18,7 @@ import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.MealsSetting
 import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.buildMealsSettingsListItem
 import com.maksimowiczm.foodyou.core.feature.product.ProductFeature.navigateToFoodDatabaseSettings
-import com.maksimowiczm.foodyou.core.navigation.settingsComposable
+import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
 import org.koin.core.module.dsl.factoryOf
@@ -61,7 +61,7 @@ object DiaryFeature : Feature.Koin, Feature.Home, Feature.Settings {
     )
 
     override fun NavGraphBuilder.settingsGraph(navController: NavController) {
-        settingsComposable<GoalsSettings> {
+        forwardBackwardComposable<GoalsSettings> {
             GoalsSettingsScreen(
                 onBack = {
                     navController.popBackStack(
@@ -71,7 +71,7 @@ object DiaryFeature : Feature.Koin, Feature.Home, Feature.Settings {
                 }
             )
         }
-        settingsComposable<MealsSettings> {
+        forwardBackwardComposable<MealsSettings> {
             MealsSettingsScreen(
                 onBack = {
                     navController.popBackStack(

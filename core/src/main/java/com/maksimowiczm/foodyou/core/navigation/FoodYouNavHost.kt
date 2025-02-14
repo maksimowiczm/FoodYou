@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.core.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.core.feature.Feature
@@ -27,7 +26,7 @@ fun FoodYouNavHost(
         navController = navController,
         startDestination = Home
     ) {
-        composable<Home> {
+        forwardBackwardComposable<Home> {
             HomeScreen(
                 homeFeatures = homeFeatures.flatMap { it.buildHomeFeatures(navController) },
                 onSettingsClick = {
@@ -40,7 +39,7 @@ fun FoodYouNavHost(
                 }
             )
         }
-        settingsComposable<Settings> {
+        forwardBackwardComposable<Settings> {
             SettingsScreen(
                 settingsFeatures = settingsFeatures.flatMap { it.buildSettingsFeatures(navController) },
                 onBack = {

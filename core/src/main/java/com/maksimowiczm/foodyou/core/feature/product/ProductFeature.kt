@@ -17,7 +17,7 @@ import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.FoodDat
 import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.buildFoodDatabaseSettingsListItem
 import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.country.CountryFlag
 import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.country.flagCdnCountryFlag
-import com.maksimowiczm.foodyou.core.navigation.settingsComposable
+import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
 import org.koin.core.module.dsl.factoryOf
@@ -54,7 +54,7 @@ object ProductFeature : Feature.Koin, Feature.Settings {
     }
 
     override fun NavGraphBuilder.settingsGraph(navController: NavController) {
-        settingsComposable<FoodDatabaseSettings> {
+        forwardBackwardComposable<FoodDatabaseSettings> {
             FoodDatabaseSettingsScreen(
                 onBack = {
                     navController.popBackStack(
