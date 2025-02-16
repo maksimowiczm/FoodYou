@@ -12,6 +12,8 @@ import androidx.paging.compose.itemKey
 @Composable
 fun SearchHome(
     viewModel: SearchViewModel,
+    onProductClick: (productId: Long) -> Unit,
+    onProductLongClick: (productId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val measurementIds by viewModel.measurements.collectAsStateWithLifecycle(null)
@@ -40,7 +42,9 @@ fun SearchHome(
                         viewModel = viewModel.itemViewModel(
                             productId = measurement.productId,
                             measurementId = measurement.weightMeasurementId
-                        )
+                        ),
+                        onClick = { onProductClick(measurement.productId) },
+                        onLongClick = { onProductLongClick(measurement.productId) }
                     )
                 }
             }
@@ -58,7 +62,9 @@ fun SearchHome(
                 SearchListItem(
                     viewModel = viewModel.itemViewModel(
                         productId = item
-                    )
+                    ),
+                    onClick = { onProductClick(item) },
+                    onLongClick = { onProductLongClick(item) }
                 )
             }
         }

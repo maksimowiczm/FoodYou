@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -45,6 +46,8 @@ import kotlin.math.roundToInt
 @Composable
 fun SearchListItem(
     viewModel: SearchViewModel.SearchListItemViewModel,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
     colors: SearchListItemColors = SearchListItemDefaults.colors()
 ) {
     val product by viewModel.product.collectAsStateWithLifecycle()
@@ -56,6 +59,8 @@ fun SearchListItem(
         measurement = measurement,
         isChecked = isChecked,
         onCheckChange = viewModel::onCheckChange,
+        onClick = onClick,
+        onLongClick = onLongClick,
         colors = colors
     )
 }
@@ -66,6 +71,8 @@ private fun SearchListItem(
     measurement: WeightMeasurement?,
     isChecked: Boolean,
     onCheckChange: (Boolean) -> Unit,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
     colors: SearchListItemColors = SearchListItemDefaults.colors()
 ) {
     val containerColor by animateColorAsState(
@@ -76,6 +83,10 @@ private fun SearchListItem(
     )
 
     ListItem(
+        modifier = Modifier.combinedClickable(
+            onClick = onClick,
+            onLongClick = onLongClick
+        ),
         headlineContent = {
             product?.let {
                 Text(it.name)

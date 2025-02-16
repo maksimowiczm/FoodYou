@@ -93,7 +93,29 @@ fun AddFoodScreen(
             }
         ) {
             SearchHomeRedesign(
-                viewModel = redesignSearchViewModel
+                viewModel = redesignSearchViewModel,
+                onProductClick = { id ->
+                    portionViewModel.loadProduct(id)
+
+                    navController.navigate(
+                        route = Portion,
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                },
+                onProductLongClick = { id ->
+                    portionViewModel.loadProduct(id)
+
+                    navController.navigateToProducts(
+                        route = ProductsRoute.UpdateProduct(
+                            productId = id
+                        ),
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                }
             )
         }
         forwardBackwardComposable<Portion> {
