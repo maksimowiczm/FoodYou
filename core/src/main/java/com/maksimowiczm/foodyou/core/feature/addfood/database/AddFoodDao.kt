@@ -142,6 +142,17 @@ interface AddFoodDao {
         epochDay: Int
     ): Flow<List<ProductWithWeightMeasurementEntity>>
 
+    @Transaction
+    @Query(
+        """
+        SELECT wm.*
+        FROM WeightMeasurementEntity wm
+        INNER JOIN ProductEntity p ON wm.productId = p.id
+        WHERE wm.id = :measurementId
+        """
+    )
+    fun observeMeasuredProductByMeasurementId(measurementId: Long): Flow<ProductWithWeightMeasurementEntity?>
+
     @Query(
         """
         SELECT measurement, quantity

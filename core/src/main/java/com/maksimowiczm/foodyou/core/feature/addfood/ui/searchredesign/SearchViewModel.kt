@@ -1,0 +1,88 @@
+package com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
+import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+
+class SearchViewModel(
+    private val addFoodRepository: AddFoodRepository,
+    private val productRepository: ProductRepository
+) : ViewModel() {
+
+    private val _measurements = MutableStateFlow(
+        listOf(
+            Measurement(11, 1),
+            Measurement(12, 54),
+            Measurement(13, 2),
+            Measurement(14, 6)
+        )
+    )
+    val measurements = _measurements.asStateFlow()
+
+    private val _productIds = MutableStateFlow(
+        PagingData.from(
+            listOf(1L, 2, 6, 54, 3, 4, 5, 7, 8, 9, 10)
+        )
+    )
+    val productIds: Flow<PagingData<Long>> = _productIds
+
+    fun itemViewModel(
+        productId: Long,
+        measurementId: Long? = null
+    ): SearchListItemViewModel {
+        return SearchListItemViewModel(
+            productId = productId,
+            measurementId = measurementId
+        )
+    }
+
+    inner class SearchListItemViewModel(
+        productId: Long,
+        measurementId: Long? = null
+    ) {
+        private val _measurementId = MutableStateFlow(measurementId)
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        val measurement = _measurementId.flatMapLatest {
+            if (it != null) {
+                addFoodRepository.observeWeightMeasurementById(it)
+            } else {
+                addFoodRepository.observeWeightMeasurementSuggestionByProductId(productId)
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = null
+        )
+
+        val isChecked = _measurementId.map { it != null }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = measurementId != null
+        )
+
+        val product = productRepository.observeProductById(productId).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = null
+        )
+
+        fun onCheckChange(isChecked: Boolean) {
+            _measurementId.value = if (isChecked) {
+                1L
+            } else {
+                null
+            }
+        }
+    }
+}

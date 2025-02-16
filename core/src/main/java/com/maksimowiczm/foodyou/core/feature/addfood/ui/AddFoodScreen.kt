@@ -14,12 +14,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionScreen
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionViewModel
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchHome
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchViewModel
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.rememberSearchListState
 import com.maksimowiczm.foodyou.core.feature.camera.navigation.BarcodeScannerRoute
 import com.maksimowiczm.foodyou.core.feature.camera.navigation.cameraGraph
-import com.maksimowiczm.foodyou.core.feature.camera.navigation.navigateToBarcodeScanner
 import com.maksimowiczm.foodyou.core.feature.product.navigation.ProductsRoute
 import com.maksimowiczm.foodyou.core.feature.product.navigation.navigateToProducts
 import com.maksimowiczm.foodyou.core.feature.product.navigation.productsGraph
@@ -29,6 +27,7 @@ import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeOut
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign.SearchHome as SearchHomeRedesign
 
 @Composable
 fun AddFoodScreen(
@@ -91,63 +90,7 @@ fun AddFoodScreen(
                 }
             }
         ) {
-            SearchHome(
-                animatedVisibilityScope = this,
-                addFoodState = addFoodState,
-                onSearchSettings = onSearchSettings,
-                onSearch = {
-                    searchViewModel.onSearch(
-                        query = it,
-                        localOnly = false
-                    )
-                },
-                onClearSearch = {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                    searchViewModel.onClearSearch()
-                },
-                onRetry = {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                    searchViewModel.onRetry()
-                },
-                onBack = onClose,
-                onProductClick = {
-                    portionViewModel.loadProduct(it.model.product.id)
-
-                    navController.navigate(
-                        route = Portion,
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
-                },
-                onProductLongClick = {
-                    portionViewModel.loadProduct(it.model.product.id)
-
-                    navController.navigateToProducts(
-                        route = ProductsRoute.UpdateProduct(
-                            productId = it.model.product.id
-                        ),
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
-                },
-                onCreateProduct = {
-                    navController.navigateToProducts(
-                        route = ProductsRoute.CreateProduct(
-                            epochDay = searchViewModel.date.toEpochDays(),
-                            mealId = searchViewModel.mealId
-                        )
-                    )
-                },
-                onBarcodeScanner = {
-                    navController.navigateToBarcodeScanner(
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
-                }
-            )
+            SearchHomeRedesign()
         }
         forwardBackwardComposable<Portion> {
             PortionScreen(
