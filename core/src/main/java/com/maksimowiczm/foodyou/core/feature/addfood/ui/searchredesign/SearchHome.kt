@@ -8,18 +8,21 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchHome(
-    modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = koinViewModel<SearchViewModel>()
+    viewModel: SearchViewModel,
+    modifier: Modifier = Modifier
 ) {
-    val measurementIds by viewModel.measurements.collectAsStateWithLifecycle()
+    val measurementIds by viewModel.measurements.collectAsStateWithLifecycle(null)
     val productIds = viewModel.productIds
 
+    if (measurementIds == null) {
+        return
+    }
+
     val state = rememberSearchState(
-        measurements = measurementIds,
+        measurements = measurementIds!!,
         productIds = productIds
     )
 
@@ -36,7 +39,7 @@ fun SearchHome(
                     SearchListItem(
                         viewModel = viewModel.itemViewModel(
                             productId = measurement.productId,
-                            measurementId = measurement.id
+                            measurementId = measurement.weightMeasurementId
                         )
                     )
                 }

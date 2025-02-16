@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithWeightMeasurementId
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
@@ -235,6 +236,23 @@ class AddFoodRepositoryImpl(
     override fun observeWeightMeasurementById(id: Long): Flow<WeightMeasurement?> {
         return addFoodDao.observeMeasuredProductByMeasurementId(id).map {
             it?.toDomain()?.measurement
+        }
+    }
+
+    override fun observeWeightMeasurementIds(
+        mealId: Long,
+        date: LocalDate
+    ): Flow<List<ProductIdWithWeightMeasurementId>> {
+        return addFoodDao.observeWeightMeasurements(
+            mealId = mealId,
+            epochDay = date.toEpochDays()
+        ).map { list ->
+            list.map {
+                ProductIdWithWeightMeasurementId(
+                    productId = it.productId,
+                    weightMeasurementId = it.id
+                )
+            }
         }
     }
 

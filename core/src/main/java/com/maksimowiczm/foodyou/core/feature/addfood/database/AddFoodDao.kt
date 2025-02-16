@@ -95,6 +95,20 @@ interface AddFoodDao {
         """
         SELECT *
         FROM WeightMeasurementEntity
+        WHERE mealId = :mealId
+        AND diaryEpochDay = :epochDay
+        AND isDeleted = 0
+        """
+    )
+    fun observeWeightMeasurements(
+        mealId: Long,
+        epochDay: Int
+    ): Flow<List<WeightMeasurementEntity>>
+
+    @Query(
+        """
+        SELECT *
+        FROM WeightMeasurementEntity
         WHERE isDeleted = 0
         AND id = :portionId
         """

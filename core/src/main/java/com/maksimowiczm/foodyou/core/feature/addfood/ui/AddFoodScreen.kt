@@ -28,12 +28,14 @@ import com.maksimowiczm.foodyou.core.ui.motion.crossfadeOut
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign.SearchHome as SearchHomeRedesign
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign.SearchViewModel as SearchViewModelRedesign
 
 @Composable
 fun AddFoodScreen(
     onClose: () -> Unit,
     onSearchSettings: () -> Unit,
     modifier: Modifier = Modifier,
+    redesignSearchViewModel: SearchViewModelRedesign = koinViewModel(),
     searchViewModel: SearchViewModel = koinViewModel(),
     portionViewModel: PortionViewModel = koinViewModel()
 ) {
@@ -90,7 +92,9 @@ fun AddFoodScreen(
                 }
             }
         ) {
-            SearchHomeRedesign()
+            SearchHomeRedesign(
+                viewModel = redesignSearchViewModel
+            )
         }
         forwardBackwardComposable<Portion> {
             PortionScreen(

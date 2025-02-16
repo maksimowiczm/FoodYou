@@ -1,33 +1,41 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
+import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.datetime.LocalDate
 
 class SearchViewModel(
     private val addFoodRepository: AddFoodRepository,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    val mealId: Long
+    val date: LocalDate
 
-    private val _measurements = MutableStateFlow(
-        listOf(
-            Measurement(11, 1),
-            Measurement(12, 54),
-            Measurement(13, 2),
-            Measurement(14, 6)
-        )
+    init {
+        val (epochDay, meal) = savedStateHandle.toRoute<AddFoodFeature>()
+
+        this.mealId = meal
+        this.date = LocalDate.fromEpochDays(epochDay)
+    }
+
+    val measurements = addFoodRepository.observeWeightMeasurementIds(
+        mealId = mealId,
+        date = date
     )
-    val measurements = _measurements.asStateFlow()
 
     private val _productIds = MutableStateFlow(
         PagingData.from(
