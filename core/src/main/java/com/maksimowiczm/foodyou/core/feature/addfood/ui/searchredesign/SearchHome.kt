@@ -53,18 +53,18 @@ fun SearchHome(
                 count = pagingItems.itemCount,
                 key = pagingItems.itemKey()
             ) { index ->
-                val item = pagingItems[index] ?: return@items
+                val id = pagingItems[index] ?: return@items
 
-                if (state.measurements.any { it.productId == item }) {
+                if (state.measurements.any { it.productId == id }) {
                     return@items
                 }
 
                 SearchListItem(
                     viewModel = viewModel.itemViewModel(
-                        productId = item
+                        productId = id
                     ),
-                    onClick = { onProductClick(item) },
-                    onLongClick = { onProductLongClick(item) }
+                    onClick = { onProductClick(id) },
+                    onLongClick = { onProductLongClick(id) }
                 )
             }
         }
