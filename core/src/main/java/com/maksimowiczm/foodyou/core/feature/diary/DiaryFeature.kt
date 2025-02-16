@@ -35,10 +35,6 @@ private val diaryModule = module {
     factoryOf(::DiaryRepositoryImpl).bind(DiaryRepository::class)
 }
 
-/**
- * DiaryFeature is HomeFeature that displays a diary meals card and nutriments card. It also provides
- * food database settings.
- */
 object DiaryFeature : Feature.Koin, Feature.Home, Feature.Settings {
     override fun KoinApplication.setup() {
         modules(diaryModule)

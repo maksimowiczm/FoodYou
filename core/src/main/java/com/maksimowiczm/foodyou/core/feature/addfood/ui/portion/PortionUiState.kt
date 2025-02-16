@@ -5,31 +5,33 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasuremen
 import com.maksimowiczm.foodyou.core.feature.product.data.model.Product
 
 sealed interface PortionUiState {
-    data object WaitingForProduct : PortionUiState
-    data object ProductNotFound : PortionUiState
-    data object LoadingProduct : PortionUiState
+    data object Empty : PortionUiState
+    data object Loading : PortionUiState
+    data object Error : PortionUiState
 
-    sealed interface StateWithProduct : PortionUiState {
+    sealed interface WithProduct : PortionUiState {
         val product: Product
         val suggestion: QuantitySuggestion
-        val highlight: WeightMeasurementEnum?
     }
 
-    data class ProductReady(
+    data class Ready(
         override val product: Product,
-        override val suggestion: QuantitySuggestion,
-        override val highlight: WeightMeasurementEnum?
-    ) : StateWithProduct
+        override val suggestion: QuantitySuggestion
+    ) : WithProduct
+
+    sealed interface WithMeasurement : WithProduct {
+        val measurement: WeightMeasurementEnum
+    }
 
     data class CreatingPortion(
         override val product: Product,
         override val suggestion: QuantitySuggestion,
-        override val highlight: WeightMeasurementEnum?
-    ) : StateWithProduct
+        override val measurement: WeightMeasurementEnum
+    ) : WithMeasurement
 
     data class Success(
         override val product: Product,
         override val suggestion: QuantitySuggestion,
-        override val highlight: WeightMeasurementEnum?
-    ) : StateWithProduct
+        override val measurement: WeightMeasurementEnum
+    ) : WithMeasurement
 }

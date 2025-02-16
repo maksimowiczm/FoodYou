@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts
 
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.v1.OpenFoodPageResponseV1
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.v2.OpenFoodProductResponseV2
+import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.v1.OpenFoodFactsPageResponseV1
+import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.v2.OpenFoodFactsProductResponseV2
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -22,7 +22,7 @@ internal interface OpenFoodFactsNetworkApi {
     suspend fun getProduct(
         @Path("code") code: String,
         @Query("countries") countries: String
-    ): OpenFoodProductResponseV2
+    ): OpenFoodFactsProductResponseV2
 
     @GET(
         "cgi/search.pl?search_simple=1&json=1&fields=$FIELDS"
@@ -32,5 +32,5 @@ internal interface OpenFoodFactsNetworkApi {
         @Query("countries") countries: String,
         @Query("page") page: Int?,
         @Query("page_size") pageSize: Int
-    ): OpenFoodPageResponseV1
+    ): OpenFoodFactsPageResponseV1
 }

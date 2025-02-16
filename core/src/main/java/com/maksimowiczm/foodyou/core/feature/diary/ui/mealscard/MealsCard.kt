@@ -45,7 +45,7 @@ import androidx.compose.ui.util.lerp
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
-import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrimentsPalette
+import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.core.ui.toDp
 import com.valentinilk.shimmer.Shimmer
@@ -293,7 +293,7 @@ private fun MacroLayout(
     fatsLabel: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val nutrimentsPalette = LocalNutrimentsPalette.current
+    val nutrientsPalette = LocalNutrientsPalette.current
 
     CompositionLocalProvider(
         LocalTextStyle provides MaterialTheme.typography.labelMedium
@@ -315,7 +315,7 @@ private fun MacroLayout(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CompositionLocalProvider(
-                    LocalContentColor provides nutrimentsPalette.proteinsOnSurfaceContainer
+                    LocalContentColor provides nutrientsPalette.proteinsOnSurfaceContainer
                 ) {
                     Text(
                         text = stringResource(R.string.nutriment_proteins_short)
@@ -328,7 +328,7 @@ private fun MacroLayout(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CompositionLocalProvider(
-                    LocalContentColor provides nutrimentsPalette.carbohydratesOnSurfaceContainer
+                    LocalContentColor provides nutrientsPalette.carbohydratesOnSurfaceContainer
                 ) {
                     Text(
                         text = stringResource(R.string.nutriment_carbohydrates_short)
@@ -341,7 +341,7 @@ private fun MacroLayout(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CompositionLocalProvider(
-                    LocalContentColor provides nutrimentsPalette.fatsOnSurfaceContainer
+                    LocalContentColor provides nutrientsPalette.fatsOnSurfaceContainer
                 ) {
                     Text(
                         text = stringResource(R.string.nutriment_fats_short)

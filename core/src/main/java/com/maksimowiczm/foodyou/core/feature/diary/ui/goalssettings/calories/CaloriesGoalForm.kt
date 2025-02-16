@@ -15,7 +15,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.R
-import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrimentsPalette
+import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.feature.product.data.model.WeightUnit
 import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
@@ -82,7 +82,7 @@ fun CaloriesGoalForm(
     state: CaloriesGoalFormState,
     modifier: Modifier = Modifier
 ) {
-    val nutrimentsPalette = LocalNutrimentsPalette.current
+    val nutrientsPalette = LocalNutrientsPalette.current
 
     Column(
         modifier = modifier,
@@ -96,7 +96,7 @@ fun CaloriesGoalForm(
         Column {
             Text(
                 text = stringResource(R.string.nutriment_proteins),
-                color = nutrimentsPalette.proteinsOnSurfaceContainer,
+                color = nutrientsPalette.proteinsOnSurfaceContainer,
                 style = MaterialTheme.typography.labelLarge
             )
             Row(
@@ -116,7 +116,7 @@ fun CaloriesGoalForm(
         Column {
             Text(
                 text = stringResource(R.string.nutriment_carbohydrates),
-                color = nutrimentsPalette.carbohydratesOnSurfaceContainer,
+                color = nutrientsPalette.carbohydratesOnSurfaceContainer,
                 style = MaterialTheme.typography.labelLarge
             )
             Row(
@@ -136,7 +136,7 @@ fun CaloriesGoalForm(
         Column {
             Text(
                 text = stringResource(R.string.nutriment_fats),
-                color = nutrimentsPalette.fatsOnSurfaceContainer,
+                color = nutrientsPalette.fatsOnSurfaceContainer,
                 style = MaterialTheme.typography.labelLarge
             )
             Row(

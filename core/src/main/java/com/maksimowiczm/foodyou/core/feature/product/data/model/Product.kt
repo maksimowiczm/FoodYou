@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.product.data.model
 
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodProduct
+import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodFactsProduct
 
 data class Product(
     val id: Long,
@@ -10,22 +10,7 @@ data class Product(
     val brand: String? = null,
     val barcode: String? = null,
 
-    /**
-     * Amount of calories per 100 grams of the product.
-     */
-    val calories: Float,
-
-    /**
-     * Nutritional values of the product per 100 grams.
-     */
-    val proteins: Float,
-    val carbohydrates: Float,
-    val sugars: Float? = null,
-    val fats: Float,
-    val saturatedFats: Float? = null,
-    val salt: Float? = null,
-    val sodium: Float? = null,
-    val fiber: Float? = null,
+    val nutrients: Nutrients,
 
     /**
      * Amount of the product in the package in grams.
@@ -46,15 +31,7 @@ data class Product(
      * Source of the product data.
      */
     val productSource: ProductSource
-) {
-    fun calories(amount: Float) = calories * amount / 100
-
-    fun protein(amount: Float) = proteins * amount / 100
-
-    fun carbohydrates(amount: Float) = carbohydrates * amount / 100
-
-    fun fats(amount: Float) = fats * amount / 100
-}
+)
 
 fun ProductEntity.toDomain(): Product {
     return Product(
@@ -62,15 +39,17 @@ fun ProductEntity.toDomain(): Product {
         name = name,
         brand = brand,
         barcode = barcode,
-        calories = calories,
-        proteins = proteins,
-        carbohydrates = carbohydrates,
-        sugars = sugars,
-        fats = fats,
-        saturatedFats = saturatedFats,
-        salt = salt,
-        sodium = sodium,
-        fiber = fiber,
+        nutrients = Nutrients(
+            calories = calories,
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            sugars = sugars,
+            fats = fats,
+            saturatedFats = saturatedFats,
+            salt = salt,
+            sodium = sodium,
+            fiber = fiber
+        ),
         packageWeight = packageWeight,
         servingWeight = servingWeight,
         weightUnit = weightUnit,
@@ -79,9 +58,9 @@ fun ProductEntity.toDomain(): Product {
 }
 
 /**
- * Converts an [OpenFoodProduct] to a [Product]. Returns null if the conversion is not possible.
+ * Converts an [OpenFoodFactsProduct] to a [Product]. Returns null if the conversion is not possible.
  */
-internal fun OpenFoodProduct.toEntity(): ProductEntity? {
+internal fun OpenFoodFactsProduct.toEntity(): ProductEntity? {
     val packageQuantityUnit = packageQuantityUnit?.toWeightUnit()
     val servingQuantityUnit = servingQuantityUnit?.toWeightUnit()
 
@@ -96,10 +75,10 @@ internal fun OpenFoodProduct.toEntity(): ProductEntity? {
     val weightUnit = packageQuantityUnit ?: WeightUnit.Gram
 
     if (listOf(
-            nutriments.energy100g,
-            nutriments.proteins100g,
-            nutriments.carbohydrates100g,
-            nutriments.fat100g,
+            nutrients.energy100g,
+            nutrients.proteins100g,
+            nutrients.carbohydrates100g,
+            nutrients.fat100g,
             code
         ).any { it == null }
     ) {
@@ -110,15 +89,15 @@ internal fun OpenFoodProduct.toEntity(): ProductEntity? {
         name = productName,
         brand = brands,
         barcode = code,
-        calories = nutriments.energy100g!!,
-        proteins = nutriments.proteins100g!!,
-        carbohydrates = nutriments.carbohydrates100g!!,
-        sugars = nutriments.sugars100g,
-        fats = nutriments.fat100g!!,
-        saturatedFats = nutriments.saturatedFat100g,
-        salt = nutriments.salt100g,
-        sodium = nutriments.sodium100g,
-        fiber = nutriments.fiber100g,
+        calories = nutrients.energy100g!!,
+        proteins = nutrients.proteins100g!!,
+        carbohydrates = nutrients.carbohydrates100g!!,
+        sugars = nutrients.sugars100g,
+        fats = nutrients.fat100g!!,
+        saturatedFats = nutrients.saturatedFat100g,
+        salt = nutrients.salt100g,
+        sodium = nutrients.sodium100g,
+        fiber = nutrients.fiber100g,
         packageWeight = packageQuantity,
         servingWeight = servingQuantity,
         weightUnit = weightUnit,

@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class OpenFoodPageResponseV1(
+internal data class OpenFoodFactsPageResponseV1(
     @SerialName("count")
     override val count: Int,
     @SerialName("page")
@@ -13,5 +13,5 @@ internal data class OpenFoodPageResponseV1(
     @SerialName("page_size")
     override val pageSize: Int,
     @SerialName("products")
-    override val products: List<OpenFoodProductV1>
+    override val products: List<OpenFoodFactsProductV1>
 ) : OpenFoodPageResponse

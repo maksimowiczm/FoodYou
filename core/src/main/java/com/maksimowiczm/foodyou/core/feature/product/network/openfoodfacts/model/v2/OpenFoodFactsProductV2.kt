@@ -1,12 +1,12 @@
 package com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.v2
 
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodNutriments
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodProduct
+import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodFactsNutrients
+import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodFactsProduct
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class OpenFoodProductV2(
+internal data class OpenFoodFactsProductV2(
     @SerialName("product_name")
     override val productName: String,
     @SerialName("brands")
@@ -16,7 +16,7 @@ internal data class OpenFoodProductV2(
     @SerialName("image_url")
     override val imageUrl: String? = null,
     @SerialName("nutriments")
-    override val nutriments: OpenFoodNutriments,
+    override val nutrients: OpenFoodFactsNutrients,
     @SerialName("product_quantity")
     val packageQuantityString: String? = null,
     @SerialName("product_quantity_unit")
@@ -25,7 +25,7 @@ internal data class OpenFoodProductV2(
     val servingQuantityString: String? = null,
     @SerialName("serving_quantity_unit")
     override val servingQuantityUnit: String? = null
-) : OpenFoodProduct {
+) : OpenFoodFactsProduct {
     override val packageQuantity: Float?
         get() = packageQuantityString?.toFloatOrNull()
     override val servingQuantity: Float?

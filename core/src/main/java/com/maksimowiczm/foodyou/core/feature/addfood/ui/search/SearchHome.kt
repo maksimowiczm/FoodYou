@@ -206,8 +206,9 @@ fun SearchHome(
 
             LazyColumn(
                 modifier = Modifier.nestedScroll(bottomAppBarScrollBehavior.nestedScrollConnection),
-                userScrollEnabled = addFoodState.searchListState.products.isNotEmpty(),
-                contentPadding = paddingValues
+                state = addFoodState.searchListState.lazyListState,
+                contentPadding = paddingValues,
+                userScrollEnabled = addFoodState.searchListState.products.isNotEmpty()
             ) {
                 item {
                     Spacer(Modifier.height(density.run { errorCardHeight.toDp() }))

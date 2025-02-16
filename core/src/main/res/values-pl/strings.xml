@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="not_available_short">BD</string>
+
     <string name="headline_create_product">Stwórz produkt</string>
     <string name="headline_settings">Ustawienia</string>
     <string name="headline_food_database">Baza danych żywności</string>
@@ -21,8 +23,11 @@
     <string name="meal_name_dinner">Obiad</string>
     <string name="meal_name_snacks">Przekąski</string>
 
+    <string name="in_x_times_y">W %1$s x %2$s</string>
+    <string name="weight">Waga</string>
     <string name="unit_calories">Kalorie</string>
     <string name="unit_kcal">kcal</string>
+    <string name="in_x_g">W %1$s g</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
         <item quantity="few">gramy</item>

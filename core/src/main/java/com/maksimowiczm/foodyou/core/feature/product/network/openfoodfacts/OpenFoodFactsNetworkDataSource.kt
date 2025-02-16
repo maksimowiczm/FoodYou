@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts
 
 import android.util.Log
 import com.maksimowiczm.foodyou.core.BuildConfig
+import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodPageResponse
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodProduct
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.time.Duration
 
-class OpenFoodFactsNetworkDataSource {
+internal class OpenFoodFactsNetworkDataSource {
     private val json = Json {
         ignoreUnknownKeys = true
     }
@@ -39,7 +39,7 @@ class OpenFoodFactsNetworkDataSource {
         .build()
         .create(OpenFoodFactsNetworkApi::class.java)
 
-    suspend fun getProduct(code: String, country: String): OpenFoodProduct? {
+    suspend fun getProduct(code: String, country: String): OpenFoodFactsProduct? {
         return try {
             networkApi.getProduct(
                 code = code,

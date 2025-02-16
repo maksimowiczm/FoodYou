@@ -8,8 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentHelper
@@ -34,10 +32,6 @@ fun rememberCaloriesFoalFormState(
     dailyGoals: DailyGoals
 ): CaloriesGoalFormState {
     val calories = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(
-            text = dailyGoals.calories.toString(),
-            selection = TextRange(dailyGoals.calories.toString().length)
-        ),
         initialValue = dailyGoals.calories,
         requireDirty = false,
         parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
@@ -51,21 +45,13 @@ fun rememberCaloriesFoalFormState(
                 between(
                     min = 0,
                     max = 40_000,
-                    onMinError = { GoalsFormInputError.MustBeLessThan40000 }
+                    onError = { GoalsFormInputError.MustBeLessThan40000 }
                 )
             }
         }
     }
 
     val proteinsPercentage = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(
-            text = "%.2f"
-                // Locale.ENGLISH to use dot as decimal separator
-                .format(Locale.ENGLISH, dailyGoals.proteinsAsPercentage)
-                .trimEnd('0')
-                .trimEnd('.'),
-            selection = TextRange(dailyGoals.proteinsAsPercentage.toString().length)
-        ),
         initialValue = dailyGoals.proteinsAsPercentage,
         requireDirty = false,
         parser = nullableFloatParser { GoalsFormInputError.InvalidNumber },
@@ -77,16 +63,12 @@ fun rememberCaloriesFoalFormState(
             between(
                 min = 0f,
                 max = 100f,
-                onMinError = { GoalsFormInputError.MustBeLessThan100 }
+                onError = { GoalsFormInputError.MustBeLessThan100 }
             )
         }
     }
 
     val proteinsGrams = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(
-            text = dailyGoals.proteinsAsGrams.toString(),
-            selection = TextRange(dailyGoals.proteinsAsGrams.toString().length)
-        ),
         initialValue = dailyGoals.proteinsAsGrams,
         requireDirty = false,
         parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
@@ -101,13 +83,6 @@ fun rememberCaloriesFoalFormState(
     }
 
     val carbsPercentage = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(
-            text = "%.2f"
-                .format(Locale.ENGLISH, dailyGoals.carbohydratesAsPercentage)
-                .trimEnd('0')
-                .trimEnd('.'),
-            selection = TextRange(dailyGoals.carbohydratesAsPercentage.toString().length)
-        ),
         initialValue = dailyGoals.carbohydratesAsPercentage,
         requireDirty = false,
         parser = nullableFloatParser { GoalsFormInputError.InvalidNumber },
@@ -119,16 +94,12 @@ fun rememberCaloriesFoalFormState(
             between(
                 min = 0f,
                 max = 100f,
-                onMinError = { GoalsFormInputError.MustBeLessThan100 }
+                onError = { GoalsFormInputError.MustBeLessThan100 }
             )
         }
     }
 
     val carbsGrams = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(
-            text = dailyGoals.carbohydratesAsGrams.toString(),
-            selection = TextRange(dailyGoals.carbohydratesAsGrams.toString().length)
-        ),
         initialValue = dailyGoals.carbohydratesAsGrams,
         requireDirty = false,
         parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
@@ -143,13 +114,6 @@ fun rememberCaloriesFoalFormState(
     }
 
     val fatsPercentage = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(
-            text = "%.2f"
-                .format(Locale.ENGLISH, dailyGoals.fatsAsPercentage)
-                .trimEnd('0')
-                .trimEnd('.'),
-            selection = TextRange(dailyGoals.fatsAsPercentage.toString().length)
-        ),
         initialValue = dailyGoals.fatsAsPercentage,
         requireDirty = false,
         parser = nullableFloatParser { GoalsFormInputError.InvalidNumber },
@@ -161,16 +125,12 @@ fun rememberCaloriesFoalFormState(
             between(
                 min = 0f,
                 max = 100f,
-                onMinError = { GoalsFormInputError.MustBeLessThan100 }
+                onError = { GoalsFormInputError.MustBeLessThan100 }
             )
         }
     }
 
     val fatsGrams = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(
-            text = dailyGoals.fatsAsGrams.toString(),
-            selection = TextRange(dailyGoals.fatsAsGrams.toString().length)
-        ),
         initialValue = dailyGoals.fatsAsGrams,
         requireDirty = false,
         parser = nullableIntParser { GoalsFormInputError.MustBeInteger }

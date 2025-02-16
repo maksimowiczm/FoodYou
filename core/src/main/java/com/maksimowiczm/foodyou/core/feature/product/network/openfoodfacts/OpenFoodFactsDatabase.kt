@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
 import com.maksimowiczm.foodyou.core.feature.product.network.RemoteProductDatabase
 import com.maksimowiczm.foodyou.core.infrastructure.datastore.get
 
-class OpenFoodFactsDatabase(
+internal class OpenFoodFactsDatabase(
     private val dataStore: DataStore<Preferences>,
     productDatabase: ProductDatabase,
     private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource

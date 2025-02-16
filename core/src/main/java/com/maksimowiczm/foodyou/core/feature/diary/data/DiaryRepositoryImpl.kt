@@ -43,12 +43,12 @@ class DiaryRepositoryImpl(
         return combine(
             dataStore.observe(DiaryPreferences.caloriesGoal),
             nutrimentGoals
-        ) { calories, nutriments ->
-            if (nutriments == null || calories == null) {
+        ) { calories, nutrients ->
+            if (nutrients == null || calories == null) {
                 return@combine defaultGoals()
             }
 
-            val (proteins, carbohydrates, fats) = nutriments
+            val (proteins, carbohydrates, fats) = nutrients
 
             DailyGoals(
                 calories = calories,

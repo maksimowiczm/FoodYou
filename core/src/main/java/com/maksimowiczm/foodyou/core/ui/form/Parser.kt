@@ -49,6 +49,21 @@ fun <E> nullableFloatParser(
     }
 }
 
+fun <E> floatParser(
+    onEmpty: () -> E,
+    onNan: () -> E
+) = Parser {
+    if (it.isEmpty()) {
+        failure(onEmpty())
+    } else {
+        try {
+            success(it.toFloat())
+        } catch (e: NumberFormatException) {
+            failure(onNan())
+        }
+    }
+}
+
 fun <E> nullableIntParser(
     onNan: () -> E
 ) = Parser {

@@ -58,7 +58,12 @@ fun <T : CharSequence, E> notEmpty(
 inline fun <reified N, E> nonNegative(
     noinline onError: () -> E,
     noinline validator: ((N) -> Validator<N, E>)? = null
-) where N : Number, N : Comparable<N> = min(zero<N>(), onError, validator)
+) where N : Number, N : Comparable<N> = minInclusive(zero<N>(), onError, validator)
+
+inline fun <reified N, E> positive(
+    noinline onError: () -> E,
+    noinline validator: ((N) -> Validator<N, E>)? = null
+) where N : Number, N : Comparable<N> = minExclusive(zero<N>(), onError, validator)
 
 inline fun <reified N : Number> zero() = when (N::class) {
     Byte::class -> 0.toByte() as N
@@ -74,12 +79,30 @@ inline fun <reified N : Number> zero() = when (N::class) {
  * Validates if the value is greater than the [min] value. If the value is not greater than the
  * [min] value, the [onError] is returned.
  */
-fun <E, T : Comparable<T>> min(
+fun <E, T : Comparable<T>> minInclusive(
     min: T,
     onError: () -> E,
     validator: ((T) -> Validator<T, E>)? = null
 ) = Validator<T, E> {
     if (it < min) {
+        failure(onError())
+    } else if (validator != null) {
+        with(validator(it)) { validate(it) }
+    } else {
+        success
+    }
+}
+
+/**
+ * Validates if the value is greater than or equal to the [min] value. If the value is not greater
+ * than or equal to the [min] value, the [onError] is returned.
+ */
+fun <E, T : Comparable<T>> minExclusive(
+    min: T,
+    onError: () -> E,
+    validator: ((T) -> Validator<T, E>)? = null
+) = Validator<T, E> {
+    if (it <= min) {
         failure(onError())
     } else if (validator != null) {
         with(validator(it)) { validate(it) }
@@ -96,13 +119,30 @@ fun <E, T : Comparable<T>> between(
     min: T,
     max: T,
     onMinError: () -> E,
-    onMaxError: () -> E = onMinError,
+    onMaxError: () -> E,
     validator: ((T) -> Validator<T, E>)? = null
 ) = Validator<T, E> {
     if (it < min) {
         failure(onMinError())
     } else if (it > max) {
         failure(onMaxError())
+    } else if (validator != null) {
+        with(validator(it)) { validate(it) }
+    } else {
+        success
+    }
+}
+
+fun <E, T : Comparable<T>> between(
+    min: T,
+    max: T,
+    onError: () -> E,
+    validator: ((T) -> Validator<T, E>)? = null
+) = Validator<T, E> {
+    if (it < min) {
+        failure(onError())
+    } else if (it > max) {
+        failure(onError())
     } else if (validator != null) {
         with(validator(it)) { validate(it) }
     } else {

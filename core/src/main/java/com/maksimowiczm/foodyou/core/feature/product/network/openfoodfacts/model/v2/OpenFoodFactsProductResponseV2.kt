@@ -1,16 +1,16 @@
 package com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.v2
 
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodProduct
+import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.model.OpenFoodFactsProduct
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class OpenFoodProductResponseV2(
+internal data class OpenFoodFactsProductResponseV2(
     @SerialName("code")
     private val code: String,
     @SerialName("product")
-    private val innerProduct: OpenFoodProductV2
+    private val innerProduct: OpenFoodFactsProductV2
 ) {
-    val product: OpenFoodProduct
+    val product: OpenFoodFactsProduct
         get() = innerProduct.copy(code = code)
 }

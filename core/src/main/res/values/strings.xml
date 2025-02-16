@@ -3,6 +3,7 @@
 
     <string name="en_dash" translatable="false">–</string>
     <string name="em_dash" translatable="false">—</string>
+    <string name="not_available_short">N/A</string>
 
     <string name="headline_create_product">Create product</string>
     <string name="headline_settings">Settings</string>
@@ -27,9 +28,12 @@
     <string name="meal_name_dinner">Dinner</string>
     <string name="meal_name_snacks">Snacks</string>
 
+    <string name="in_x_times_y">In %1$s x %2$s</string>
+    <string name="weight">Weight</string>
     <string name="unit_calories">Calories</string>
     <string name="unit_kcal">kcal</string>
     <string name="unit_gram_short" translatable="false">g</string>
+    <string name="in_x_g">In %1$s g</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
         <item quantity="other">grams</item>

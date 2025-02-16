@@ -11,19 +11,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun <T, E> rememberFormFieldWithTextFieldValue(
-    initialTextFieldValue: TextFieldValue,
     initialValue: T,
     initialError: E? = null,
     initialDirty: Boolean = false,
     requireDirty: Boolean = true,
     parser: Parser<T, E>,
     formatter: (T) -> String = { it.toString() },
+    initialTextFieldValue: TextFieldValue = TextFieldValue(
+        text = formatter(initialValue),
+        selection = TextRange(formatter(initialValue).length)
+    ),
     validator: (() -> Validator<T, E>)? = null
 ): FormFieldWithTextFieldValue<T, E> {
     val interactionSource = remember { MutableInteractionSource() }

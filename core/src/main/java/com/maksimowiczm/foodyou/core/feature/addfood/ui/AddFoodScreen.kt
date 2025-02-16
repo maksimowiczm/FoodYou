@@ -13,7 +13,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionScreen
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionViewModel
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchHome
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchViewModel
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.rememberSearchListState
 import com.maksimowiczm.foodyou.core.feature.camera.navigation.BarcodeScannerRoute
 import com.maksimowiczm.foodyou.core.feature.camera.navigation.cameraGraph
@@ -33,7 +35,8 @@ fun AddFoodScreen(
     onClose: () -> Unit,
     onSearchSettings: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: AddFoodViewModel = koinViewModel()
+    searchViewModel: SearchViewModel = koinViewModel(),
+    portionViewModel: PortionViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
     val hapticFeedback = LocalHapticFeedback.current
@@ -42,27 +45,27 @@ fun AddFoodScreen(
         searchListState = rememberSearchListState(
             onQuickAdd = {
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
-                viewModel.onQuickAdd(it)
+                searchViewModel.onQuickAdd(it)
             },
             onQuickRemove = {
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
-                viewModel.onQuickRemove(it)
+                searchViewModel.onQuickRemove(it)
             }
         ),
         navController = navController
     )
 
-    val queryState by viewModel.queryState.collectAsStateWithLifecycle()
+    val queryState by searchViewModel.queryState.collectAsStateWithLifecycle()
     LaunchedEffect(queryState) {
         addFoodState.searchListState.onQueryResultChange(queryState)
     }
 
-    val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
+    val recentQueries by searchViewModel.recentQueries.collectAsStateWithLifecycle()
     LaunchedEffect(recentQueries) {
         addFoodState.searchTopBarState.recentQueries = recentQueries
     }
 
-    val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
+    val totalCalories by searchViewModel.totalCalories.collectAsStateWithLifecycle()
     LaunchedEffect(totalCalories) {
         addFoodState.searchBottomBarState.totalCalories = totalCalories
     }
@@ -93,22 +96,22 @@ fun AddFoodScreen(
                 addFoodState = addFoodState,
                 onSearchSettings = onSearchSettings,
                 onSearch = {
-                    viewModel.onSearch(
+                    searchViewModel.onSearch(
                         query = it,
                         localOnly = false
                     )
                 },
                 onClearSearch = {
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                    viewModel.onClearSearch()
+                    searchViewModel.onClearSearch()
                 },
                 onRetry = {
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                    viewModel.onRetry()
+                    searchViewModel.onRetry()
                 },
                 onBack = onClose,
                 onProductClick = {
-                    viewModel.onLoadProduct(it.model.product.id)
+                    portionViewModel.loadProduct(it.model.product.id)
 
                     navController.navigate(
                         route = Portion,
@@ -120,8 +123,8 @@ fun AddFoodScreen(
                 onCreateProduct = {
                     navController.navigateToProducts(
                         route = ProductsRoute.CreateProduct(
-                            epochDay = viewModel.date.toEpochDays(),
-                            mealId = viewModel.mealId
+                            epochDay = searchViewModel.date.toEpochDays(),
+                            mealId = searchViewModel.mealId
                         )
                     )
                 },
@@ -135,28 +138,31 @@ fun AddFoodScreen(
             )
         }
         forwardBackwardComposable<Portion> {
-            val uiState by viewModel.productState.collectAsStateWithLifecycle()
-
             PortionScreen(
-                uiState = uiState,
-                onSuccess = {
+                onBack = {
                     navController.popBackStack(
                         route = Portion,
                         inclusive = true
                     )
                 },
-                onSave = viewModel::onAddPortion,
-                onNavigateBack = {
-                    navController.popBackStack(
-                        route = Portion,
-                        inclusive = true
+                onSuccess = {
+                    searchViewModel.onSearch(
+                        query = searchViewModel.query,
+                        localOnly = true,
+                        persistError = true
                     )
-                }
+
+                    navController.popBackStack(
+                        route = Home,
+                        inclusive = false
+                    )
+                },
+                viewModel = portionViewModel
             )
         }
         cameraGraph(
             onBarcodeScan = {
-                viewModel.onBarcodeScan(it)
+                searchViewModel.onBarcodeScan(it)
 
                 addFoodState.searchTopBarState.textFieldState.setTextAndPlaceCursorAtEnd(it)
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
@@ -169,7 +175,7 @@ fun AddFoodScreen(
         )
         productsGraph(
             createOnSuccess = { productId, _, _ ->
-                viewModel.onLoadProduct(productId)
+                portionViewModel.loadProduct(productId)
 
                 navController.navigate(
                     route = Portion,

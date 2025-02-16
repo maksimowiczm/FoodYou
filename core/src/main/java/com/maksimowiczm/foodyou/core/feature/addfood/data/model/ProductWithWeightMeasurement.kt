@@ -15,16 +15,16 @@ data class ProductWithWeightMeasurement(
         get() = measurement.weight
 
     val calories: Int
-        get() = product.calories(weight).roundToInt()
+        get() = product.nutrients.calories(weight).roundToInt()
 
     val proteins: Int
-        get() = product.protein(weight).roundToInt()
+        get() = product.nutrients.proteins(weight).roundToInt()
 
     val carbohydrates: Int
-        get() = product.carbohydrates(weight).roundToInt()
+        get() = product.nutrients.carbohydrates(weight).roundToInt()
 
     val fats: Int
-        get() = product.fats(weight).roundToInt()
+        get() = product.nutrients.fats(weight).roundToInt()
 }
 
 fun ProductSearchEntity.toDomain(): ProductWithWeightMeasurement {

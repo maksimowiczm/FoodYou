@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
+import com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -61,7 +62,7 @@ class SearchListState(
     var products: List<ProductSearchUiModel> by mutableStateOf(initialProducts)
         private set
 
-    fun onQueryResultChange(queryResult: com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult<List<ProductWithWeightMeasurement>>) {
+    fun onQueryResultChange(queryResult: QueryResult<List<ProductWithWeightMeasurement>>) {
         isLoading = queryResult.isLoading
         isError = queryResult.error != null
 

@@ -39,7 +39,7 @@ import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.core.feature.diary.ui.caloriescard.ValueStatus.Companion.withGoal
 import com.maksimowiczm.foodyou.core.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
-import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrimentsPalette
+import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
@@ -66,13 +66,13 @@ fun CaloriesCard(
         derivedStateOf { abs(goal - calories) }
     }
 
-    val nutrimentsPalette = LocalNutrimentsPalette.current
+    val nutrientsPalette = LocalNutrientsPalette.current
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
     val kcalSuffix = stringResource(R.string.unit_kcal)
 
     val caloriesString =
-        remember(valueStatus, left, nutrimentsPalette, typography, colorScheme, kcalSuffix) {
+        remember(valueStatus, left, nutrientsPalette, typography, colorScheme, kcalSuffix) {
             buildAnnotatedString {
                 withStyle(
                     typography.headlineLarge.copy(
@@ -131,15 +131,15 @@ fun CaloriesCard(
                 items = listOf(
                     MultiColorProgressIndicatorItem(
                         progress = animatedProteins / animatedMax,
-                        color = nutrimentsPalette.proteinsOnSurfaceContainer
+                        color = nutrientsPalette.proteinsOnSurfaceContainer
                     ),
                     MultiColorProgressIndicatorItem(
                         progress = animatedCarbohydrates / animatedMax,
-                        color = nutrimentsPalette.carbohydratesOnSurfaceContainer
+                        color = nutrientsPalette.carbohydratesOnSurfaceContainer
                     ),
                     MultiColorProgressIndicatorItem(
                         progress = animatedFats / animatedMax,
-                        color = nutrimentsPalette.fatsOnSurfaceContainer
+                        color = nutrientsPalette.fatsOnSurfaceContainer
                     )
                 ),
                 modifier = Modifier
@@ -190,7 +190,7 @@ fun CaloriesCard(
                     title = stringResource(R.string.nutriment_proteins),
                     value = diaryDay.totalProteins,
                     goal = diaryDay.dailyGoals.proteinsAsGrams,
-                    progressColor = nutrimentsPalette.proteinsOnSurfaceContainer,
+                    progressColor = nutrientsPalette.proteinsOnSurfaceContainer,
                     modifier = modifier
                 )
 
@@ -198,7 +198,7 @@ fun CaloriesCard(
                     title = stringResource(R.string.nutriment_carbohydrates),
                     value = diaryDay.totalCarbohydrates,
                     goal = diaryDay.dailyGoals.carbohydratesAsGrams,
-                    progressColor = nutrimentsPalette.carbohydratesOnSurfaceContainer,
+                    progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer,
                     modifier = modifier
                 )
 
@@ -206,7 +206,7 @@ fun CaloriesCard(
                     title = stringResource(R.string.nutriment_fats),
                     value = diaryDay.totalFats,
                     goal = diaryDay.dailyGoals.fatsAsGrams,
-                    progressColor = nutrimentsPalette.fatsOnSurfaceContainer,
+                    progressColor = nutrientsPalette.fatsOnSurfaceContainer,
                     modifier = modifier
                 )
             }

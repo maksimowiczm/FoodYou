@@ -4,5 +4,5 @@ interface OpenFoodPageResponse {
     val count: Int
     val page: Int
     val pageSize: Int
-    val products: List<OpenFoodProduct>
+    val products: List<OpenFoodFactsProduct>
 }
