@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.product.data.model.Nutrients
+import com.maksimowiczm.foodyou.core.feature.product.data.model.Product
 import com.maksimowiczm.foodyou.core.feature.product.data.model.WeightUnit
 import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
@@ -50,6 +51,23 @@ fun SearchListItem(
     val measurement by viewModel.measurement.collectAsStateWithLifecycle()
     val isChecked by viewModel.isChecked.collectAsStateWithLifecycle()
 
+    SearchListItem(
+        product = product,
+        measurement = measurement,
+        isChecked = isChecked,
+        onCheckChange = viewModel::onCheckChange,
+        colors = colors
+    )
+}
+
+@Composable
+private fun SearchListItem(
+    product: Product?,
+    measurement: WeightMeasurement?,
+    isChecked: Boolean,
+    onCheckChange: (Boolean) -> Unit,
+    colors: SearchListItemColors = SearchListItemDefaults.colors()
+) {
     val containerColor by animateColorAsState(
         targetValue = if (isChecked) colors.checkedContainerColor else colors.uncheckedContainerColor
     )
@@ -69,12 +87,6 @@ fun SearchListItem(
             )
         },
         supportingContent = {
-            @Suppress("NAME_SHADOWING")
-            val product = product
-
-            @Suppress("NAME_SHADOWING")
-            val measurement = measurement
-
             if (product != null && measurement != null) {
                 SupportingTextLayout(
                     measurement.measurementStringShort(product.weightUnit),
@@ -108,7 +120,7 @@ fun SearchListItem(
                     WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
                 ),
                 checked = isChecked,
-                onCheckChange = viewModel::onCheckChange,
+                onCheckChange = onCheckChange,
                 indication = LocalIndication.current
             ) {
                 Icon(
