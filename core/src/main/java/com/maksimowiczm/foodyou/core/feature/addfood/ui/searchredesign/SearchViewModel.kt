@@ -4,12 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
@@ -37,12 +35,7 @@ class SearchViewModel(
         date = date
     )
 
-    private val _productIds = MutableStateFlow(
-        PagingData.from(
-            listOf(1L, 2, 6, 54, 3, 4, 5, 7, 8, 9, 10)
-        )
-    )
-    val productIds: Flow<PagingData<Long>> = _productIds
+    val productIds = productRepository.observePagedProductsIds()
 
     fun itemViewModel(
         productId: Long,

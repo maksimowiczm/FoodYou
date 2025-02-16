@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.product.data
 
+import androidx.paging.PagingData
 import com.github.michaelbull.result.Result
 import com.maksimowiczm.foodyou.core.feature.product.data.model.Product
 import com.maksimowiczm.foodyou.core.feature.product.data.model.WeightUnit
@@ -18,6 +19,8 @@ enum class ProductDeletionError {
 }
 
 interface ProductRepository {
+    fun observePagedProductsIds(): Flow<PagingData<Long>>
+
     fun observeProductById(id: Long): Flow<Product?>
 
     suspend fun getProductById(id: Long): Product?

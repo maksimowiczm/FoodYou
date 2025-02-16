@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.product.database
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,6 +12,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
+    @Query("SELECT * FROM productentity")
+    fun observePagedProducts(): PagingSource<Int, ProductEntity>
+
     @Query("SELECT * FROM productentity WHERE id = :id")
     suspend fun getProductById(id: Long): ProductEntity?
 
