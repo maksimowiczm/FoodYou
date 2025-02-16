@@ -12,10 +12,7 @@ fun rememberSearchState(
     measurements: List<ProductIdWithWeightMeasurementId> = emptyList(),
     productIds: Flow<PagingData<Long>>
 ): SearchState {
-    return remember(
-        measurements,
-        productIds
-    ) {
+    return remember {
         SearchState(
             measurements = measurements,
             productIds = productIds
