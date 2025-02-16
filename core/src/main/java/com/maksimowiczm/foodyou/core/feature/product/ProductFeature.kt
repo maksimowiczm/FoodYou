@@ -11,7 +11,8 @@ import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepositoryImpl
 import com.maksimowiczm.foodyou.core.feature.product.network.RemoteProductDatabase
 import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsDatabase
 import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsNetworkDataSource
-import com.maksimowiczm.foodyou.core.feature.product.ui.create.CreateProductViewModel
+import com.maksimowiczm.foodyou.core.feature.product.ui.crud.create.CreateProductViewModel
+import com.maksimowiczm.foodyou.core.feature.product.ui.crud.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.FoodDatabaseSettingsScreen
 import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.FoodDatabaseSettingsViewModel
 import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.buildFoodDatabaseSettingsListItem
@@ -29,6 +30,7 @@ private val productsModule = module {
     factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
 
     viewModelOf(::CreateProductViewModel)
+    viewModelOf(::UpdateProductViewModel)
 
     factoryOf(::DatabaseSettingsRepositoryImpl).bind<DatabaseSettingsRepository>()
 

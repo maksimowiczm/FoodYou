@@ -22,6 +22,8 @@
     <string name="headline_share_your_thoughts">Share your thoughts</string>
     <string name="headline_show_some_love">Show some love</string>
     <string name="headline_meals">Meals</string>
+    <string name="headline_delete_product">Delete product</string>
+    <string name="headline_edit_product">Edit product</string>
 
     <string name="meal_name_breakfast">Breakfast</string>
     <string name="meal_name_lunch">Lunch</string>
@@ -33,7 +35,7 @@
     <string name="unit_calories">Calories</string>
     <string name="unit_kcal">kcal</string>
     <string name="unit_gram_short" translatable="false">g</string>
-    <string name="in_x_g">In %1$s g</string>
+    <string name="in_x_weight_unit">In %1$s %2$s</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
         <item quantity="other">grams</item>
@@ -99,6 +101,7 @@
     <string name="action_confirm">Confirm</string>
     <string name="action_add_meal">Add meal</string>
     <string name="action_log_products">Log products</string>
+    <string name="action_edit">Edit</string>
 
     <string name="neutral_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_camera_request_rationale">You must allow access in order to scan barcodes.</string>
@@ -118,6 +121,8 @@
     <string name="neutral_set_your_meal_schedule">Set your meal schedule</string>
     <string name="neutral_permanently_delete_meal">Permanently delete meal?</string>
     <string name="neutral_meal_will_be_deleted_permanently_all_data_related_to_this_meal_will_be_lost">Meal will be deleted permanently. All data related to this meal will be lost.</string>
+    <string name="neutral_required">Required</string>
+    <string name="neutral_calories_are_calculated_using_macronutrients">Calories are calculated using macronutrients</string>
 
     <string name="error_this_field_is_required">This field is required</string>
     <string name="error_this_field_cannot_be_empty">This field cannot be empty</string>
@@ -152,5 +157,6 @@
     <string name="description_about_setting">Learn more about the app</string>
     <string name="description_show_some_love">If you find this project helpful, please consider giving it a star on GitHub! It helps others discover it and keeps the development going.</string>
     <string name="description_share_your_thoughts">If you have any feedback, feature requests, or bug reports, please let me know! I\'d love to hear from you.</string>
+    <string name="description_delete_product">Product will be deleted permanently. This action can\'t be undone. All diary entries related to this product will be deleted.</string>
 
 </resources>

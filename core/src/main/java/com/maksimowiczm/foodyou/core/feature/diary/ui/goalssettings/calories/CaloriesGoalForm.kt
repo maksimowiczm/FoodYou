@@ -22,7 +22,7 @@ import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 
 @Composable
-private fun FormFieldWithTextFieldValue<Int?, GoalsFormInputError>.TextField(
+private fun FormFieldWithTextFieldValue<Int, GoalsFormInputError>.TextField(
     suffix: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     label: (@Composable () -> Unit)? = null,
@@ -50,7 +50,7 @@ private fun FormFieldWithTextFieldValue<Int?, GoalsFormInputError>.TextField(
 }
 
 @Composable
-private fun FormFieldWithTextFieldValue<Float?, GoalsFormInputError>.FloatTextField(
+private fun FormFieldWithTextFieldValue<Float, GoalsFormInputError>.FloatTextField(
     suffix: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     label: (@Composable () -> Unit)? = null,

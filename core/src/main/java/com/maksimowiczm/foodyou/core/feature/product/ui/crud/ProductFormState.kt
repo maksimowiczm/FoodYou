@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.feature.product.ui.create
+package com.maksimowiczm.foodyou.core.feature.product.ui.crud
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -11,12 +11,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentHelper
+import com.maksimowiczm.foodyou.core.feature.product.data.model.Product
 import com.maksimowiczm.foodyou.core.feature.product.data.model.WeightUnit
 import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.form.allowNull
+import com.maksimowiczm.foodyou.core.ui.form.between
 import com.maksimowiczm.foodyou.core.ui.form.nonNegative
 import com.maksimowiczm.foodyou.core.ui.form.notEmpty
 import com.maksimowiczm.foodyou.core.ui.form.notNull
@@ -29,10 +30,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @Composable
-fun rememberProductFormState(): ProductFormState {
+fun rememberProductFormState(
+    product: Product? = null
+): ProductFormState {
     val name = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.name,
+        requireDirty = product == null,
         parser = nullableStringParser()
     ) {
         notNull(
@@ -45,27 +48,27 @@ fun rememberProductFormState(): ProductFormState {
     }
 
     val brand = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.brand,
+        requireDirty = product == null,
         parser = nullableStringParser<MyError>()
     )
 
     val barcode = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.barcode,
+        requireDirty = product == null,
         parser = nullableStringParser<MyError>()
     )
 
     val calories = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.nutrients?.calories,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
     ) {
-        notNull(
-            onError = { MyError.Required }
-        ) {
+        // Actually, calories are always required, but these are automatically calculated from
+        // proteins, carbohydrates, and fats so don't show an error
+        allowNull {
             nonNegative(
                 onError = { MyError.Negative }
             )
@@ -73,8 +76,8 @@ fun rememberProductFormState(): ProductFormState {
     }
 
     val proteins = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.nutrients?.proteins,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -89,8 +92,8 @@ fun rememberProductFormState(): ProductFormState {
     }
 
     val carbohydrates = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.nutrients?.carbohydrates,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -105,8 +108,8 @@ fun rememberProductFormState(): ProductFormState {
     }
 
     val sugars = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.nutrients?.sugars,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -119,8 +122,8 @@ fun rememberProductFormState(): ProductFormState {
     }
 
     val fats = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.nutrients?.fats,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -135,8 +138,8 @@ fun rememberProductFormState(): ProductFormState {
     }
 
     val saturatedFats = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.nutrients?.saturatedFats,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -149,8 +152,8 @@ fun rememberProductFormState(): ProductFormState {
     }
 
     val salt = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.nutrients?.salt,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -163,8 +166,8 @@ fun rememberProductFormState(): ProductFormState {
     }
 
     val sodium = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.nutrients?.sodium,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -177,8 +180,8 @@ fun rememberProductFormState(): ProductFormState {
     }
 
     val fiber = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.nutrients?.fiber,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -191,29 +194,35 @@ fun rememberProductFormState(): ProductFormState {
     }
 
     val packageWeight = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.packageWeight,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
     ) {
         allowNull {
-            nonNegative(
-                onError = { MyError.Negative }
+            between(
+                min = 0f,
+                max = 100_000f,
+                onMinError = { MyError.Negative },
+                onMaxError = { MyError.NotANumber }
             )
         }
     }
 
     val servingWeight = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(),
-        initialValue = null,
+        initialValue = product?.servingWeight,
+        requireDirty = product == null,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
     ) {
         allowNull {
-            nonNegative(
-                onError = { MyError.Negative }
+            between(
+                min = 0f,
+                max = 100_000f,
+                onMinError = { MyError.Negative },
+                onMaxError = { MyError.NotANumber }
             )
         }
     }
@@ -223,10 +232,7 @@ fun rememberProductFormState(): ProductFormState {
     return rememberSaveable(
         saver = Saver(
             save = { state ->
-                arrayListOf(
-                    state.weightUnit,
-                    state.autoCalculateCalories
-                )
+                state.weightUnit
             },
             restore = {
                 ProductFormState(
@@ -244,8 +250,7 @@ fun rememberProductFormState(): ProductFormState {
                     fiber = fiber,
                     packageWeight = packageWeight,
                     servingWeight = servingWeight,
-                    initialWeightUnit = it[0] as WeightUnit,
-                    initialAutoCalculateCalories = it[1] as Boolean,
+                    initialWeightUnit = it,
                     coroutineScope = coroutineScope
                 )
             }
@@ -266,6 +271,7 @@ fun rememberProductFormState(): ProductFormState {
             fiber = fiber,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
+            initialWeightUnit = product?.weightUnit ?: WeightUnit.Gram,
             coroutineScope = coroutineScope
         )
     }
@@ -312,8 +318,7 @@ class ProductFormState(
     val fiber: FormFieldWithTextFieldValue<Float?, MyError>,
     val packageWeight: FormFieldWithTextFieldValue<Float?, MyError>,
     val servingWeight: FormFieldWithTextFieldValue<Float?, MyError>,
-    initialWeightUnit: WeightUnit = WeightUnit.Gram,
-    initialAutoCalculateCalories: Boolean = true,
+    initialWeightUnit: WeightUnit,
     coroutineScope: CoroutineScope
 ) {
     private val _all = listOf(
@@ -333,62 +338,22 @@ class ProductFormState(
         servingWeight
     )
 
-    var autoCalculateCalories by mutableStateOf(initialAutoCalculateCalories)
-
     init {
         coroutineScope.launch {
-            val proteinsFlow = combine(
-                snapshotFlow { proteins.dirty },
-                snapshotFlow { proteins.value }
-            ) { dirty, value ->
-                if (!dirty) {
-                    null
-                } else {
-                    value
-                }
-            }
-
-            val carbohydratesFlow = combine(
-                snapshotFlow { carbohydrates.dirty },
-                snapshotFlow { carbohydrates.value }
-            ) { dirty, value ->
-                if (!dirty) {
-                    null
-                } else {
-                    value
-                }
-            }
-
-            val fatsFlow = combine(
-                snapshotFlow { fats.dirty },
-                snapshotFlow { fats.value }
-            ) { dirty, value ->
-                if (!dirty) {
-                    null
-                } else {
-                    value
-                }
-            }
-
             combine(
-                snapshotFlow { autoCalculateCalories },
-                proteinsFlow,
-                carbohydratesFlow,
-                fatsFlow
-            ) { _, proteins, carbohydrates, fats ->
+                snapshotFlow { proteins.value },
+                snapshotFlow { carbohydrates.value },
+                snapshotFlow { fats.value }
+            ) { proteins, carbohydrates, fats ->
                 arrayListOf(proteins, carbohydrates, fats)
             }.collectLatest { (proteins, carbohydrates, fats) ->
-                if (!autoCalculateCalories) return@collectLatest
-
-                if (proteins != null && carbohydrates != null && fats != null) {
-                    val caloriesValue = NutrimentHelper.calculateCalories(
-                        proteins,
-                        carbohydrates,
-                        fats
-                    )
-                    val caloriesString = caloriesValue.toString().trimEnd('0').trimEnd('.')
-                    calories.onValueChange(TextFieldValue(caloriesString), touch = false)
+                if (proteins == null || carbohydrates == null || fats == null) {
+                    return@collectLatest
                 }
+
+                val caloriesValue = NutrimentHelper.calculateCalories(proteins, carbohydrates, fats)
+
+                calories.onRawValueChange(caloriesValue)
             }
         }
     }

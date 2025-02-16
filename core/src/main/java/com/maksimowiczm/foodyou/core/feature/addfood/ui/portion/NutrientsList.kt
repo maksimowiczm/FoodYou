@@ -27,7 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.core.feature.product.data.model.WeightUnit
 import com.maksimowiczm.foodyou.core.feature.product.ui.previewparameter.ProductPreviewParameterProvider
+import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.core.ui.component.IndentedList
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
@@ -71,7 +73,7 @@ fun NutrientsList(
                     FilterChip(
                         selected = i == state.selectedFilterIndex,
                         onClick = { state.selectedFilterIndex = i },
-                        label = { Text(filterOption.stringResource()) }
+                        label = { Text(filterOption.stringResource(state.product.weightUnit)) }
                     )
                 }
 
@@ -219,8 +221,10 @@ private fun Float?.stringResource(): String {
 }
 
 @Composable
-private fun WeightMeasurement.stringResource() = when (this) {
-    is WeightMeasurement.WeightUnit -> "${weight.formatClipZeros()} " + stringResource(R.string.unit_gram_short)
+private fun WeightMeasurement.stringResource(
+    weightUnit: WeightUnit
+) = when (this) {
+    is WeightMeasurement.WeightUnit -> "${weight.formatClipZeros()} " + weightUnit.stringResourceShort()
     is WeightMeasurement.Package -> "${quantity.formatClipZeros()} x " + stringResource(R.string.product_package)
     is WeightMeasurement.Serving -> "${quantity.formatClipZeros()} x " + stringResource(R.string.product_serving)
 }

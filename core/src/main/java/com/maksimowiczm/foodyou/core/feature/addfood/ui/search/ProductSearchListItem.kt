@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
@@ -44,6 +44,7 @@ import kotlin.math.max
 fun ProductSearchListItem(
     uiModel: ProductSearchUiModel,
     onClick: () -> Unit,
+    onLongClick: () -> Unit,
     onCheckChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     colors: ProductSearchListItemColors = ProductSearchListItemDefaults.colors()
@@ -68,7 +69,10 @@ fun ProductSearchListItem(
                 text = model.product.name
             )
         },
-        modifier = modifier.clickable { onClick() },
+        modifier = modifier.combinedClickable(
+            onClick = onClick,
+            onLongClick = onLongClick
+        ),
         overlineContent = {
             model.product.brand?.let {
                 Text(
@@ -332,6 +336,7 @@ private fun ProductSearchListItemPreview(
         ProductSearchListItem(
             uiModel = productSearchUiModel,
             onClick = {},
+            onLongClick = {},
             onCheckChange = {}
         )
     }

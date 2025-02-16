@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.feature.product.ui.create
+package com.maksimowiczm.foodyou.core.feature.product.ui.crud.create
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -36,6 +36,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -58,7 +59,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -68,12 +68,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.camera.ui.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.core.feature.product.data.model.WeightUnit
+import com.maksimowiczm.foodyou.core.feature.product.ui.crud.MyError
+import com.maksimowiczm.foodyou.core.feature.product.ui.crud.ProductFormState
+import com.maksimowiczm.foodyou.core.feature.product.ui.crud.rememberProductFormState
 import com.maksimowiczm.foodyou.core.feature.product.ui.res.pluralString
 import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.core.ui.component.FullScreenDialog
 import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.preview.BooleanPreviewParameter
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.core.ui.toDp
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -119,9 +123,7 @@ private fun CreateProductScreen(
     var showValid by rememberSaveable { mutableStateOf(false) }
 
     val topBarWindowInsets = TopAppBarDefaults.windowInsets
-        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-        .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
         .add(WindowInsets.ime)
         .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
 
@@ -160,8 +162,7 @@ private fun CreateProductScreen(
                 modifier = Modifier
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
                 columns = GridCells.Adaptive(minSize = 300.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item(
                     span = { GridItemSpan(maxLineSpan) }
@@ -177,43 +178,60 @@ private fun CreateProductScreen(
                 }
 
                 item {
-                    form.brand.TextField(
-                        label = {
-                            Text(
-                                text = stringResource(R.string.product_brand)
-                            )
-                        },
-                        suffix = null,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
+                    Column {
+                        form.brand.TextField(
+                            label = {
+                                Text(
+                                    text = stringResource(R.string.product_brand)
+                                )
+                            },
+                            suffix = null,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
+                            modifier = Modifier.fillMaxWidth()
                         )
-                    )
+                        Spacer(Modifier.height(16.dp))
+                    }
                 }
 
                 item {
-                    form.name.TextField(
-                        label = {
-                            Text(
-                                text = stringResource(R.string.product_name) + "*"
-                            )
-                        },
-                        suffix = null,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
+                    Column {
+                        form.name.TextField(
+                            label = {
+                                Text(
+                                    text = stringResource(R.string.product_name) + "*"
+                                )
+                            },
+                            suffix = null,
+                            supportingText = {
+                                Text(
+                                    text = "*" + stringResource(R.string.neutral_required)
+                                )
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
+                            modifier = Modifier.fillMaxWidth()
                         )
-                    )
+                        Spacer(Modifier.height(16.dp))
+                    }
                 }
 
                 item {
-                    BarcodeInput(
-                        barcodeFormField = form.barcode,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
+                    Column {
+                        BarcodeInput(
+                            barcodeFormField = form.barcode,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
+                            modifier = Modifier.fillMaxWidth()
                         )
-                    )
+                        Spacer(Modifier.height(16.dp))
+                    }
                 }
 
                 item(
@@ -246,105 +264,112 @@ private fun CreateProductScreen(
                 }
 
                 item {
-                    form.proteins.TextField(
-                        label = {
-                            Text(
-                                text = stringResource(R.string.nutriment_proteins) + "*"
-                            )
-                        },
-                        suffix = {
-                            Text(
-                                text = WeightUnit.Gram.stringResourceShort()
-                            )
-                        }
-                    )
+                    Column {
+                        form.proteins.TextField(
+                            label = {
+                                Text(
+                                    text = stringResource(R.string.nutriment_proteins) + "*"
+                                )
+                            },
+                            suffix = {
+                                Text(
+                                    text = WeightUnit.Gram.stringResourceShort()
+                                )
+                            },
+                            supportingText = {
+                                Text(
+                                    text = "*" + stringResource(R.string.neutral_required)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(16.dp))
+                    }
                 }
 
                 item {
-                    form.carbohydrates.TextField(
-                        label = {
-                            Text(
-                                text = stringResource(R.string.nutriment_carbohydrates) + "*"
-                            )
-                        },
-                        suffix = {
-                            Text(
-                                text = WeightUnit.Gram.stringResourceShort()
-                            )
-                        }
-                    )
+                    Column {
+                        form.carbohydrates.TextField(
+                            label = {
+                                Text(
+                                    text = stringResource(R.string.nutriment_carbohydrates) + "*"
+                                )
+                            },
+                            suffix = {
+                                Text(
+                                    text = WeightUnit.Gram.stringResourceShort()
+                                )
+                            },
+                            supportingText = {
+                                Text(
+                                    text = "*" + stringResource(R.string.neutral_required)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(16.dp))
+                    }
                 }
 
                 item {
-                    form.fats.TextField(
-                        label = {
-                            Text(
-                                text = stringResource(R.string.nutriment_fats) + "*"
-                            )
-                        },
-                        suffix = {
-                            Text(
-                                text = WeightUnit.Gram.stringResourceShort()
-                            )
-                        },
-                        keyboardOptions = if (!form.autoCalculateCalories || expanded) {
-                            KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Next
-                            )
-                        } else {
-                            KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Done
-                            )
-                        }
-                    )
+                    Column {
+                        form.fats.TextField(
+                            label = {
+                                Text(
+                                    text = stringResource(R.string.nutriment_fats) + "*"
+                                )
+                            },
+                            suffix = {
+                                Text(
+                                    text = WeightUnit.Gram.stringResourceShort()
+                                )
+                            },
+                            supportingText = {
+                                Text(
+                                    text = "*" + stringResource(R.string.neutral_required)
+                                )
+                            },
+                            keyboardOptions = if (expanded) {
+                                KeyboardOptions(
+                                    keyboardType = KeyboardType.Number,
+                                    imeAction = ImeAction.Next
+                                )
+                            } else {
+                                KeyboardOptions(
+                                    keyboardType = KeyboardType.Number,
+                                    imeAction = ImeAction.Done
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(16.dp))
+                    }
                 }
 
                 item {
-                    form.calories.TextField(
-                        label = {
-                            Text(
-                                text = stringResource(R.string.unit_calories) + "*"
-                            )
-                        },
-                        suffix = {
-                            Text(
-                                text = stringResource(R.string.unit_kcal)
-                            )
-                        },
-                        trailingIcon = {
-                            IconButton(
-                                onClick = {
-                                    form.autoCalculateCalories = !form.autoCalculateCalories
-                                }
-                            ) {
-                                if (form.autoCalculateCalories) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_lock_24),
-                                        contentDescription = null
-                                    )
-                                } else {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_lock_open_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        },
-                        enabled = !form.autoCalculateCalories,
-                        keyboardOptions = if (expanded) {
-                            KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Next
-                            )
-                        } else {
-                            KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Done
-                            )
-                        }
-                    )
+                    Column {
+                        form.calories.TextField(
+                            label = {
+                                Text(
+                                    text = stringResource(R.string.unit_calories)
+                                )
+                            },
+                            suffix = {
+                                Text(
+                                    text = stringResource(R.string.unit_kcal)
+                                )
+                            },
+                            supportingText = {
+                                Text(
+                                    text = stringResource(R.string.neutral_calories_are_calculated_using_macronutrients),
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            },
+                            enabled = false,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(16.dp))
+                    }
                 }
 
                 if (expanded) {
@@ -362,78 +387,98 @@ private fun CreateProductScreen(
                     }
 
                     item {
-                        form.sugars.TextField(
-                            label = {
-                                Text(
-                                    text = stringResource(R.string.nutriment_sugars)
-                                )
-                            },
-                            suffix = {
-                                Text(
-                                    text = WeightUnit.Gram.stringResourceShort()
-                                )
-                            }
-                        )
+                        Column {
+                            form.sugars.TextField(
+                                label = {
+                                    Text(
+                                        text = stringResource(R.string.nutriment_sugars)
+                                    )
+                                },
+                                suffix = {
+                                    Text(
+                                        text = WeightUnit.Gram.stringResourceShort()
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(Modifier.height(16.dp))
+                        }
                     }
 
                     item {
-                        form.saturatedFats.TextField(
-                            label = {
-                                Text(
-                                    text = stringResource(R.string.nutriment_saturated_fats)
-                                )
-                            },
-                            suffix = {
-                                Text(
-                                    text = WeightUnit.Gram.stringResourceShort()
-                                )
-                            }
-                        )
+                        Column {
+                            form.saturatedFats.TextField(
+                                label = {
+                                    Text(
+                                        text = stringResource(R.string.nutriment_saturated_fats)
+                                    )
+                                },
+                                suffix = {
+                                    Text(
+                                        text = WeightUnit.Gram.stringResourceShort()
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(Modifier.height(16.dp))
+                        }
                     }
 
                     item {
-                        form.salt.TextField(
-                            label = {
-                                Text(
-                                    text = stringResource(R.string.nutriment_salt)
-                                )
-                            },
-                            suffix = {
-                                Text(
-                                    text = WeightUnit.Gram.stringResourceShort()
-                                )
-                            }
-                        )
+                        Column {
+                            form.salt.TextField(
+                                label = {
+                                    Text(
+                                        text = stringResource(R.string.nutriment_salt)
+                                    )
+                                },
+                                suffix = {
+                                    Text(
+                                        text = WeightUnit.Gram.stringResourceShort()
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(Modifier.height(16.dp))
+                        }
                     }
 
                     item {
-                        form.sodium.TextField(
-                            label = {
-                                Text(
-                                    text = stringResource(R.string.nutriment_sodium)
-                                )
-                            },
-                            suffix = {
-                                Text(
-                                    text = WeightUnit.Gram.stringResourceShort()
-                                )
-                            }
-                        )
+                        Column {
+                            form.sodium.TextField(
+                                label = {
+                                    Text(
+                                        text = stringResource(R.string.nutriment_sodium)
+                                    )
+                                },
+                                suffix = {
+                                    Text(
+                                        text = WeightUnit.Gram.stringResourceShort()
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(Modifier.height(16.dp))
+                        }
                     }
 
                     item {
-                        form.fiber.TextField(
-                            label = {
-                                Text(
-                                    text = stringResource(R.string.nutriment_fiber)
-                                )
-                            },
-                            suffix = {
-                                Text(
-                                    text = WeightUnit.Gram.stringResourceShort()
-                                )
-                            }
-                        )
+                        Column {
+                            form.fiber.TextField(
+                                label = {
+                                    Text(
+                                        text = stringResource(R.string.nutriment_fiber)
+                                    )
+                                },
+                                suffix = {
+                                    Text(
+                                        text = WeightUnit.Gram.stringResourceShort()
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(Modifier.height(16.dp))
+                        }
                     }
 
                     item(
@@ -450,58 +495,55 @@ private fun CreateProductScreen(
                     }
 
                     item {
-                        form.packageWeight.TextField(
-                            label = {
-                                Text(
-                                    text = stringResource(R.string.product_package_weight)
-                                )
-                            },
-                            suffix = {
-                                Text(
-                                    text = form.weightUnit.stringResourceShort()
-                                )
-                            }
-                        )
-                    }
-
-                    item {
-                        form.servingWeight.TextField(
-                            label = {
-                                Text(
-                                    text = stringResource(R.string.product_serving_weight)
-                                )
-                            },
-                            suffix = {
-                                Text(
-                                    text = form.weightUnit.stringResourceShort()
-                                )
-                            },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Next
+                        Column {
+                            form.packageWeight.TextField(
+                                label = {
+                                    Text(
+                                        text = stringResource(R.string.product_package_weight)
+                                    )
+                                },
+                                suffix = {
+                                    Text(
+                                        text = form.weightUnit.stringResourceShort()
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth()
                             )
-                        )
+                            Spacer(Modifier.height(16.dp))
+                        }
                     }
 
                     item {
-                        WeightUnitDropdownMenu(
-                            weightUnit = form.weightUnit,
-                            onWeightUnitChange = { form.weightUnit = it }
-                        )
+                        Column {
+                            form.servingWeight.TextField(
+                                label = {
+                                    Text(
+                                        text = stringResource(R.string.product_serving_weight)
+                                    )
+                                },
+                                suffix = {
+                                    Text(
+                                        text = form.weightUnit.stringResourceShort()
+                                    )
+                                },
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Number,
+                                    imeAction = ImeAction.Next
+                                ),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(Modifier.height(16.dp))
+                        }
                     }
-                }
 
-                item(
-                    span = { GridItemSpan(maxLineSpan) }
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "* " + stringResource(R.string.neutral_required_fields),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                    item {
+                        Column {
+                            WeightUnitDropdownMenu(
+                                weightUnit = form.weightUnit,
+                                onWeightUnitChange = { form.weightUnit = it }
+                            )
+                            Spacer(Modifier.height(16.dp))
+                        }
                     }
                 }
 
@@ -570,6 +612,10 @@ private fun CreateProductScreen(
                 }
 
                 item {
+                    Spacer(Modifier.height(8.dp))
+                }
+
+                item {
                     Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
                 }
             }
@@ -578,18 +624,46 @@ private fun CreateProductScreen(
 }
 
 @Composable
-fun <T> FormFieldWithTextFieldValue<T, MyError>.TextField(
+private fun <T> FormFieldWithTextFieldValue<T, MyError>.TextField(
     label: @Composable () -> Unit,
     suffix: (@Composable (() -> Unit))?,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     trailingIcon: (@Composable (() -> Unit))? = null,
+    supportingText: @Composable (() -> Unit) = {
+        Spacer(Modifier.height(LocalTextStyle.current.toDp()))
+    },
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Number,
         imeAction = ImeAction.Next
     ),
     keyboardActions: KeyboardActions = KeyboardActions()
 ) {
+    @Suppress("NAME_SHADOWING")
+    val trailingIcon: @Composable (() -> Unit)? = if (error != null) {
+        {
+            Icon(
+                painter = painterResource(R.drawable.ic_error_24_fill),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error
+            )
+        }
+    } else {
+        trailingIcon
+    }
+
+    @Suppress("NAME_SHADOWING")
+    val supportingText: @Composable () -> Unit = if (error != null) {
+        {
+            Text(
+                text = error.stringResource(),
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+    } else {
+        supportingText
+    }
+
     TextField(
         value = textFieldValue,
         onValueChange = { onValueChange(it) },
@@ -598,13 +672,7 @@ fun <T> FormFieldWithTextFieldValue<T, MyError>.TextField(
         suffix = suffix,
         trailingIcon = trailingIcon,
         isError = error != null,
-        supportingText = {
-            error?.let {
-                Text(
-                    text = it.stringResource()
-                )
-            }
-        },
+        supportingText = supportingText,
         interactionSource = interactionSource,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
@@ -673,7 +741,7 @@ private fun BarcodeInput(
         ) {
             CameraBarcodeScannerScreen(
                 onBarcodeScan = {
-                    barcodeFormField.onValueChange(TextFieldValue(it))
+                    barcodeFormField.onRawValueChange(it)
                     showBarcodeScanner = false
                 }
             )

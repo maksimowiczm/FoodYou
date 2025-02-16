@@ -16,6 +16,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+fun <T : Any?> emptyNullFormatter(value: T) = value?.toString() ?: ""
+
 @Composable
 fun <T, E> rememberFormFieldWithTextFieldValue(
     initialValue: T,
@@ -23,7 +25,7 @@ fun <T, E> rememberFormFieldWithTextFieldValue(
     initialDirty: Boolean = false,
     requireDirty: Boolean = true,
     parser: Parser<T, E>,
-    formatter: (T) -> String = { it.toString() },
+    formatter: (T) -> String = { emptyNullFormatter(it) },
     initialTextFieldValue: TextFieldValue = TextFieldValue(
         text = formatter(initialValue),
         selection = TextRange(formatter(initialValue).length)
@@ -111,6 +113,11 @@ class FormFieldWithTextFieldValue<T, E>(
 
     override fun onRawValueChange(newValue: T, touch: Boolean) {
         formField.onRawValueChange(newValue, touch)
-        textFieldValue = TextFieldValue(formatter(newValue))
+
+        val text = formatter(newValue)
+        textFieldValue = TextFieldValue(
+            text = text,
+            selection = TextRange(text.length)
+        )
     }
 }

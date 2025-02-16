@@ -13,16 +13,14 @@ import com.maksimowiczm.foodyou.core.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.core.feature.diary.data.model.NutrimentHelper
 import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.form.between
+import com.maksimowiczm.foodyou.core.ui.form.floatParser
+import com.maksimowiczm.foodyou.core.ui.form.intParser
 import com.maksimowiczm.foodyou.core.ui.form.nonNegative
-import com.maksimowiczm.foodyou.core.ui.form.notNull
-import com.maksimowiczm.foodyou.core.ui.form.nullableFloatParser
-import com.maksimowiczm.foodyou.core.ui.form.nullableIntParser
 import com.maksimowiczm.foodyou.core.ui.form.rememberFormFieldWithTextFieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -34,114 +32,107 @@ fun rememberCaloriesFoalFormState(
     val calories = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.calories,
         requireDirty = false,
-        parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
+        parser = intParser(
+            onEmpty = { GoalsFormInputError.Required },
+            onNan = { GoalsFormInputError.MustBeInteger }
+        )
     ) {
-        notNull(
-            onError = { GoalsFormInputError.Required }
+        nonNegative(
+            onError = { GoalsFormInputError.NegativeNumber }
         ) {
-            nonNegative(
-                onError = { GoalsFormInputError.NegativeNumber }
-            ) {
-                between(
-                    min = 0,
-                    max = 40_000,
-                    onError = { GoalsFormInputError.MustBeLessThan40000 }
-                )
-            }
+            between(
+                min = 0,
+                max = 40_000,
+                onError = { GoalsFormInputError.MustBeLessThan40000 }
+            )
         }
     }
 
     val proteinsPercentage = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.proteinsAsPercentage,
         requireDirty = false,
-        parser = nullableFloatParser { GoalsFormInputError.InvalidNumber },
+        parser = floatParser(
+            onEmpty = { GoalsFormInputError.Required },
+            onNan = { GoalsFormInputError.InvalidNumber }
+        ),
         formatter = { "%.2f".format(Locale.ENGLISH, it).trimEnd('0').trimEnd('.') }
     ) {
-        notNull(
-            onError = { GoalsFormInputError.Required }
-        ) {
-            between(
-                min = 0f,
-                max = 100f,
-                onError = { GoalsFormInputError.MustBeLessThan100 }
-            )
-        }
+        between(
+            min = 0f,
+            max = 100f,
+            onError = { GoalsFormInputError.MustBeLessThan100 }
+        )
     }
 
     val proteinsGrams = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.proteinsAsGrams,
         requireDirty = false,
-        parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
+        parser = intParser(
+            onEmpty = { GoalsFormInputError.Required },
+            onNan = { GoalsFormInputError.MustBeInteger }
+        )
     ) {
-        notNull(
-            onError = { GoalsFormInputError.Required }
-        ) {
-            nonNegative(
-                onError = { GoalsFormInputError.NegativeNumber }
-            )
-        }
+        nonNegative(
+            onError = { GoalsFormInputError.NegativeNumber }
+        )
     }
 
     val carbsPercentage = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.carbohydratesAsPercentage,
         requireDirty = false,
-        parser = nullableFloatParser { GoalsFormInputError.InvalidNumber },
+        parser = floatParser(
+            onEmpty = { GoalsFormInputError.Required },
+            onNan = { GoalsFormInputError.InvalidNumber }
+        ),
         formatter = { "%.2f".format(Locale.ENGLISH, it).trimEnd('0').trimEnd('.') }
     ) {
-        notNull(
-            onError = { GoalsFormInputError.Required }
-        ) {
-            between(
-                min = 0f,
-                max = 100f,
-                onError = { GoalsFormInputError.MustBeLessThan100 }
-            )
-        }
+        between(
+            min = 0f,
+            max = 100f,
+            onError = { GoalsFormInputError.MustBeLessThan100 }
+        )
     }
 
     val carbsGrams = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.carbohydratesAsGrams,
         requireDirty = false,
-        parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
+        parser = intParser(
+            onEmpty = { GoalsFormInputError.Required },
+            onNan = { GoalsFormInputError.MustBeInteger }
+        )
     ) {
-        notNull(
-            onError = { GoalsFormInputError.Required }
-        ) {
-            nonNegative(
-                onError = { GoalsFormInputError.NegativeNumber }
-            )
-        }
+        nonNegative(
+            onError = { GoalsFormInputError.NegativeNumber }
+        )
     }
 
     val fatsPercentage = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.fatsAsPercentage,
         requireDirty = false,
-        parser = nullableFloatParser { GoalsFormInputError.InvalidNumber },
+        parser = floatParser(
+            onEmpty = { GoalsFormInputError.Required },
+            onNan = { GoalsFormInputError.InvalidNumber }
+        ),
         formatter = { "%.2f".format(Locale.ENGLISH, it).trimEnd('0').trimEnd('.') }
     ) {
-        notNull(
-            onError = { GoalsFormInputError.Required }
-        ) {
-            between(
-                min = 0f,
-                max = 100f,
-                onError = { GoalsFormInputError.MustBeLessThan100 }
-            )
-        }
+        between(
+            min = 0f,
+            max = 100f,
+            onError = { GoalsFormInputError.MustBeLessThan100 }
+        )
     }
 
     val fatsGrams = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.fatsAsGrams,
         requireDirty = false,
-        parser = nullableIntParser { GoalsFormInputError.MustBeInteger }
+        parser = intParser(
+            onEmpty = { GoalsFormInputError.Required },
+            onNan = { GoalsFormInputError.MustBeInteger }
+        )
     ) {
-        notNull(
-            onError = { GoalsFormInputError.Required }
-        ) {
-            nonNegative(
-                onError = { GoalsFormInputError.NegativeNumber }
-            )
-        }
+        nonNegative(
+            onError = { GoalsFormInputError.NegativeNumber }
+        )
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -199,13 +190,13 @@ enum class Editing {
 
 @Stable
 class CaloriesGoalFormState(
-    val calories: FormFieldWithTextFieldValue<Int?, GoalsFormInputError>,
-    val proteinsPercentage: FormFieldWithTextFieldValue<Float?, GoalsFormInputError>,
-    val proteinsGrams: FormFieldWithTextFieldValue<Int?, GoalsFormInputError>,
-    val carbohydratesPercentage: FormFieldWithTextFieldValue<Float?, GoalsFormInputError>,
-    val carbohydratesGrams: FormFieldWithTextFieldValue<Int?, GoalsFormInputError>,
-    val fatsPercentage: FormFieldWithTextFieldValue<Float?, GoalsFormInputError>,
-    val fatsGrams: FormFieldWithTextFieldValue<Int?, GoalsFormInputError>,
+    val calories: FormFieldWithTextFieldValue<Int, GoalsFormInputError>,
+    val proteinsPercentage: FormFieldWithTextFieldValue<Float, GoalsFormInputError>,
+    val proteinsGrams: FormFieldWithTextFieldValue<Int, GoalsFormInputError>,
+    val carbohydratesPercentage: FormFieldWithTextFieldValue<Float, GoalsFormInputError>,
+    val carbohydratesGrams: FormFieldWithTextFieldValue<Int, GoalsFormInputError>,
+    val fatsPercentage: FormFieldWithTextFieldValue<Float, GoalsFormInputError>,
+    val fatsGrams: FormFieldWithTextFieldValue<Int, GoalsFormInputError>,
     coroutineScope: CoroutineScope
 ) {
     // No idea if there are race conditions here. Should probably test it xd.
@@ -220,33 +211,21 @@ class CaloriesGoalFormState(
             }
 
             launch {
-                proteinsPercentage.interactionSource.interactions.collectLatest {
-                    editing = Editing.Percentage
-                }
-            }
-            launch {
-                carbohydratesPercentage.interactionSource.interactions.collectLatest {
-                    editing = Editing.Percentage
-                }
-            }
-            launch {
-                carbohydratesPercentage.interactionSource.interactions.collectLatest {
+                merge(
+                    proteinsPercentage.interactionSource.interactions,
+                    carbohydratesPercentage.interactionSource.interactions,
+                    fatsPercentage.interactionSource.interactions
+                ).collectLatest {
                     editing = Editing.Percentage
                 }
             }
 
             launch {
-                proteinsGrams.interactionSource.interactions.collectLatest {
-                    editing = Editing.Grams
-                }
-            }
-            launch {
-                carbohydratesGrams.interactionSource.interactions.collectLatest {
-                    editing = Editing.Grams
-                }
-            }
-            launch {
-                fatsGrams.interactionSource.interactions.collectLatest {
+                merge(
+                    proteinsGrams.interactionSource.interactions,
+                    carbohydratesGrams.interactionSource.interactions,
+                    fatsGrams.interactionSource.interactions
+                ).collectLatest {
                     editing = Editing.Grams
                 }
             }
@@ -255,7 +234,7 @@ class CaloriesGoalFormState(
         // Auto calculate grams when calories change
         coroutineScope.launch {
             snapshotFlow { calories.value }.collectLatest {
-                val dailyGoals = intoDailyGoals() ?: return@collectLatest
+                val dailyGoals = intoDailyGoals()
 
                 if (editing != Editing.Calories) return@collectLatest
 
@@ -276,7 +255,7 @@ class CaloriesGoalFormState(
             }.collectLatest {
                 if (editing != Editing.Percentage) return@collectLatest
 
-                val dailyGoals = intoDailyGoals() ?: return@collectLatest
+                val dailyGoals = intoDailyGoals()
 
                 if (isValid) {
                     proteinsGrams.onRawValueChange(dailyGoals.proteinsAsGrams)
@@ -294,10 +273,6 @@ class CaloriesGoalFormState(
                 snapshotFlow { fatsGrams.value }
             ) { proteins, carbohydrates, fats ->
                 arrayListOf(proteins, carbohydrates, fats)
-            }.filter {
-                it.all { it != null }
-            }.map {
-                it.map { it!! }
             }.collectLatest { (proteinsValue, carbohydratesValue, fatsValue) ->
                 if (editing != Editing.Grams) return@collectLatest
 
@@ -337,36 +312,19 @@ class CaloriesGoalFormState(
     }
 
     val error: GoalsFormError? by derivedStateOf {
-        if (
-            proteinsPercentage.value != null &&
-            carbohydratesPercentage.value != null &&
-            fatsPercentage.value != null &&
-            (proteinsPercentage.value + carbohydratesPercentage.value + fatsPercentage.value - 100f) !in (-0.01f..0.01f)
-        ) {
+        val sum = proteinsPercentage.value + carbohydratesPercentage.value + fatsPercentage.value
+
+        if ((sum - 100f) !in (-0.01f..0.01f)) {
             return@derivedStateOf GoalsFormError.PercentageMustSumUpTo100
         }
 
         null
     }
 
-    fun intoDailyGoals(): DailyGoals? {
-        if (
-            calories.value == null ||
-            proteinsPercentage.value == null ||
-            proteinsGrams.value == null ||
-            carbohydratesPercentage.value == null ||
-            carbohydratesGrams.value == null ||
-            fatsPercentage.value == null ||
-            fatsGrams.value == null
-        ) {
-            return null
-        }
-
-        return DailyGoals(
-            calories = calories.value,
-            proteins = proteinsPercentage.value / 100f,
-            carbohydrates = carbohydratesPercentage.value / 100f,
-            fats = fatsPercentage.value / 100f
-        )
-    }
+    fun intoDailyGoals() = DailyGoals(
+        calories = calories.value,
+        proteins = proteinsPercentage.value / 100f,
+        carbohydrates = carbohydratesPercentage.value / 100f,
+        fats = fatsPercentage.value / 100f
+    )
 }

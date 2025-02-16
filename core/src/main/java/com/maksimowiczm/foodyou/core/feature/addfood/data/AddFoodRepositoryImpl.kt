@@ -21,6 +21,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -198,10 +200,14 @@ class AddFoodRepositoryImpl(
             list.sumOf { it.toDomain().calories }
         }
 
-    override suspend fun getQuantitySuggestionByProductId(productId: Long): QuantitySuggestion {
-        val product = productDao.getProductById(productId) ?: error("Product not found")
-
-        val suggestionList = addFoodDao.observeQuantitySuggestionsByProductId(productId).first()
+    override fun observeQuantitySuggestionByProductId(productId: Long) = combine(
+        productDao.observeProductById(productId),
+        addFoodDao.observeQuantitySuggestionsByProductId(productId)
+    ) { product, suggestionList ->
+        if (product == null) {
+            Log.w(TAG, "Product not found for ID $productId. Skipping quantity suggestion.")
+            return@combine null
+        }
 
         val suggestions = suggestionList
             .associate { it.measurement to it.quantity }
@@ -214,11 +220,11 @@ class AddFoodRepositoryImpl(
             }
         }
 
-        return QuantitySuggestion(
+        QuantitySuggestion(
             product = product.toDomain(),
             quantitySuggestions = suggestions
         )
-    }
+    }.filterNotNull()
 
     override fun observeProductQueries(limit: Int): Flow<List<ProductQuery>> {
         return addFoodDao.observeLatestQueries(limit).map { list ->

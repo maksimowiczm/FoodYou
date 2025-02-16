@@ -8,7 +8,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.product.ui.ProductSharedTransitionKeys
-import com.maksimowiczm.foodyou.core.feature.product.ui.create.CreateProductScreen
+import com.maksimowiczm.foodyou.core.feature.product.ui.crud.create.CreateProductScreen
+import com.maksimowiczm.foodyou.core.feature.product.ui.crud.update.UpdateProductScreen
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
@@ -22,12 +23,19 @@ sealed interface ProductsRoute {
         val epochDay: Int,
         val mealId: Long
     ) : ProductsRoute
+
+    @Serializable
+    data class UpdateProduct(
+        val productId: Long
+    ) : ProductsRoute
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun NavGraphBuilder.productsGraph(
     createOnNavigateBack: () -> Unit,
-    createOnSuccess: (productId: Long, epochDay: Int, mealId: Long) -> Unit
+    createOnSuccess: (productId: Long, epochDay: Int, mealId: Long) -> Unit,
+    updateOnNavigateBack: () -> Unit,
+    updateOnSuccess: () -> Unit
 ) {
     crossfadeComposable<ProductsRoute.CreateProduct> {
         val (epochDay, mealType) = it.toRoute<ProductsRoute.CreateProduct>()
@@ -53,6 +61,12 @@ fun NavGraphBuilder.productsGraph(
                     .skipToLookaheadSize()
             )
         }
+    }
+    crossfadeComposable<ProductsRoute.UpdateProduct> {
+        UpdateProductScreen(
+            onNavigateBack = updateOnNavigateBack,
+            onSuccess = updateOnSuccess
+        )
     }
 }
 

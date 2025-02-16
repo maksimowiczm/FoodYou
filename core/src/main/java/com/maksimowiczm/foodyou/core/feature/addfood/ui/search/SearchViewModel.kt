@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult
+import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,6 +22,7 @@ import kotlinx.datetime.LocalDate
 
 class SearchViewModel(
     private val diaryRepository: AddFoodRepository,
+    private val productRepository: ProductRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val mealId: Long
@@ -140,6 +142,17 @@ class SearchViewModel(
             ).first()
         }
     )
+
+    fun onProductDelete(productId: Long) {
+        viewModelScope.launch {
+            productRepository.deleteProduct(productId)
+            onSearch(
+                query = query,
+                localOnly = true,
+                persistError = true
+            )
+        }
+    }
 
     private companion object {
         // 30 seconds, because user often navigate up and down

@@ -2,31 +2,41 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.portion
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -34,7 +44,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -57,7 +69,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurementEnum
+import com.maksimowiczm.foodyou.core.feature.product.data.model.WeightUnit
 import com.maksimowiczm.foodyou.core.feature.product.ui.previewparameter.ProductPreviewParameterProvider
+import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -68,6 +82,8 @@ import kotlin.math.roundToInt
 fun PortionScreen(
     onBack: () -> Unit,
     onSuccess: () -> Unit,
+    onEditClick: (productId: Long) -> Unit,
+    onDeleteClick: (productId: Long) -> Unit,
     viewModel: PortionViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -78,6 +94,8 @@ fun PortionScreen(
         onBack = onBack,
         onSuccess = onSuccess,
         onConfirm = viewModel::onAddPortion,
+        onEditClick = onEditClick,
+        onDeleteClick = onDeleteClick,
         modifier = modifier
     )
 }
@@ -88,6 +106,8 @@ private fun PortionScreen(
     onBack: () -> Unit,
     onSuccess: () -> Unit,
     onConfirm: (WeightMeasurementEnum, quantity: Float) -> Unit,
+    onEditClick: (productId: Long) -> Unit,
+    onDeleteClick: (productId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val hapticFeedback = LocalHapticFeedback.current
@@ -107,6 +127,8 @@ private fun PortionScreen(
             onBack = onBack,
             state = uiState,
             onConfirm = { _, _ -> },
+            onEditClick = { onEditClick(uiState.product.id) },
+            onDeleteClick = { onDeleteClick(uiState.product.id) },
             modifier = modifier,
             highlight = uiState.measurement
         )
@@ -119,6 +141,8 @@ private fun PortionScreen(
 
                 onConfirm(weightMeasurementEnum, quantity)
             },
+            onDeleteClick = { onDeleteClick(uiState.product.id) },
+            onEditClick = { onEditClick(uiState.product.id) },
             modifier = modifier
         )
     }
@@ -130,9 +154,20 @@ private fun PortionScreen(
     state: PortionUiState.WithProduct,
     onBack: () -> Unit,
     onConfirm: (WeightMeasurementEnum, quantity: Float) -> Unit,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier,
     highlight: WeightMeasurementEnum? = null
 ) {
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        DeleteDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            onDelete = onDeleteClick
+        )
+    }
+
     val formState = rememberPortionFormState(
         product = state.product,
         suggestion = state.suggestion
@@ -218,6 +253,7 @@ private fun PortionScreen(
                                 )
                             },
                             label = { Text(stringResource(R.string.product_package)) },
+                            weightUnit = state.product.weightUnit,
                             modifier = Modifier
                                 .then(
                                     if (highlight == WeightMeasurementEnum.Package) {
@@ -251,6 +287,7 @@ private fun PortionScreen(
                                 )
                             },
                             label = { Text(stringResource(R.string.product_serving)) },
+                            weightUnit = state.product.weightUnit,
                             modifier = Modifier
                                 .then(
                                     if (highlight == WeightMeasurementEnum.Serving) {
@@ -272,7 +309,7 @@ private fun PortionScreen(
                     onConfirm = {
                         onConfirm(WeightMeasurementEnum.WeightUnit, formState.weightUnitInput.value)
                     },
-                    suffix = { Text(stringResource(R.string.unit_gram_short)) },
+                    suffix = { Text(state.product.weightUnit.stringResourceShort()) },
                     modifier = Modifier
                         .then(
                             if (highlight == WeightMeasurementEnum.WeightUnit) {
@@ -340,6 +377,43 @@ private fun PortionScreen(
                     )
                 }
             }
+
+            item {
+                Spacer(Modifier.height(16.dp))
+            }
+
+            item {
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                ) {
+                    Button(
+                        onClick = onEditClick
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = null
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.action_edit))
+                    }
+
+                    OutlinedButton(
+                        onClick = { showDeleteDialog = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = null
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.action_delete))
+                    }
+                }
+            }
+
+            item {
+                Spacer(Modifier.height(8.dp))
+            }
         }
     }
 }
@@ -350,6 +424,7 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.NoNameInput(
     asGrams: (Float) -> Int,
     onConfirm: () -> Unit,
     label: @Composable () -> Unit,
+    weightUnit: WeightUnit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -373,7 +448,7 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.NoNameInput(
 
         val weight: @Composable () -> Unit = {
             Text(
-                text = "${asGrams(value)} " + stringResource(R.string.unit_gram_short),
+                text = "${asGrams(value)} " + weightUnit.stringResourceShort(),
                 overflow = TextOverflow.Visible,
                 textAlign = TextAlign.Center
             )
@@ -486,6 +561,42 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
     }
 }
 
+@Composable
+private fun DeleteDialog(
+    onDismissRequest: () -> Unit,
+    onDelete: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(
+                onClick = onDelete
+            ) {
+                Text(stringResource(R.string.action_delete))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text(stringResource(R.string.action_cancel))
+            }
+        },
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = null
+            )
+        },
+        title = {
+            Text(stringResource(R.string.headline_delete_product))
+        },
+        text = {
+            Text(stringResource(R.string.description_delete_product))
+        }
+    )
+}
+
 @Preview
 @Composable
 private fun PortionScreenPreview() {
@@ -504,6 +615,8 @@ private fun PortionScreenPreview() {
             ),
             onBack = {},
             onConfirm = { _, _ -> },
+            onEditClick = {},
+            onDeleteClick = {},
             highlight = WeightMeasurementEnum.Serving
         )
     }

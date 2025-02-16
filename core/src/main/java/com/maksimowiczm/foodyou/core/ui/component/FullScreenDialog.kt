@@ -12,7 +12,8 @@ fun FullScreenDialog(onDismissRequest: () -> Unit, content: @Composable () -> Un
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
-            usePlatformDefaultWidth = false
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
         )
     ) {
         Surface(

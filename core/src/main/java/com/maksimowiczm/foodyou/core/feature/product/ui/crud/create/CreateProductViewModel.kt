@@ -1,10 +1,11 @@
-package com.maksimowiczm.foodyou.core.feature.product.ui.create
+package com.maksimowiczm.foodyou.core.feature.product.ui.crud.create
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.michaelbull.result.mapBoth
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
+import com.maksimowiczm.foodyou.core.feature.product.ui.crud.ProductFormState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

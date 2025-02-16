@@ -50,7 +50,7 @@ interface AddFoodRepository {
         date: LocalDate
     ): Flow<Int>
 
-    suspend fun getQuantitySuggestionByProductId(productId: Long): QuantitySuggestion
+    fun observeQuantitySuggestionByProductId(productId: Long): Flow<QuantitySuggestion>
 
     fun observeProductQueries(limit: Int): Flow<List<ProductQuery>>
 }

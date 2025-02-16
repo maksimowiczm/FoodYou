@@ -120,6 +120,18 @@ fun AddFoodScreen(
                         }
                     )
                 },
+                onProductLongClick = {
+                    portionViewModel.loadProduct(it.model.product.id)
+
+                    navController.navigateToProducts(
+                        route = ProductsRoute.UpdateProduct(
+                            productId = it.model.product.id
+                        ),
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                },
                 onCreateProduct = {
                     navController.navigateToProducts(
                         route = ProductsRoute.CreateProduct(
@@ -140,8 +152,7 @@ fun AddFoodScreen(
         forwardBackwardComposable<Portion> {
             PortionScreen(
                 onBack = {
-                    navController.popBackStack(
-                        route = Portion,
+                    navController.popBackStack<Portion>(
                         inclusive = true
                     )
                 },
@@ -152,10 +163,23 @@ fun AddFoodScreen(
                         persistError = true
                     )
 
-                    navController.popBackStack(
-                        route = Home,
+                    navController.popBackStack<Home>(
                         inclusive = false
                     )
+                },
+                onEditClick = {
+                    navController.navigateToProducts(
+                        route = ProductsRoute.UpdateProduct(
+                            productId = it
+                        )
+                    )
+                },
+                onDeleteClick = {
+                    navController.popBackStack<Portion>(
+                        inclusive = true
+                    )
+
+                    searchViewModel.onProductDelete(it)
                 },
                 viewModel = portionViewModel
             )
@@ -167,13 +191,17 @@ fun AddFoodScreen(
                 addFoodState.searchTopBarState.textFieldState.setTextAndPlaceCursorAtEnd(it)
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
 
-                navController.popBackStack(
-                    route = BarcodeScannerRoute,
+                navController.popBackStack<BarcodeScannerRoute>(
                     inclusive = true
                 )
             }
         )
         productsGraph(
+            createOnNavigateBack = {
+                navController.popBackStack<ProductsRoute.CreateProduct>(
+                    inclusive = true
+                )
+            },
             createOnSuccess = { productId, _, _ ->
                 portionViewModel.loadProduct(productId)
 
@@ -187,10 +215,14 @@ fun AddFoodScreen(
                     }
                 )
             },
-            createOnNavigateBack = {
-                navController.popBackStack(
-                    route = Home,
-                    inclusive = false
+            updateOnNavigateBack = {
+                navController.popBackStack<ProductsRoute.UpdateProduct>(
+                    inclusive = true
+                )
+            },
+            updateOnSuccess = {
+                navController.popBackStack<ProductsRoute.UpdateProduct>(
+                    inclusive = true
                 )
             }
         )

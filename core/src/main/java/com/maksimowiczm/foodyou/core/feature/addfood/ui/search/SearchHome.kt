@@ -75,6 +75,7 @@ fun SearchHome(
     onRetry: () -> Unit,
     onBack: () -> Unit,
     onProductClick: (ProductSearchUiModel) -> Unit,
+    onProductLongClick: (ProductSearchUiModel) -> Unit,
     onCreateProduct: () -> Unit,
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
@@ -222,6 +223,9 @@ fun SearchHome(
                         onClick = {
                             onProductClick(product)
                         },
+                        onLongClick = {
+                            onProductLongClick(product)
+                        },
                         onCheckChange = {
                             addFoodState.searchListState.onProductCheckChange(
                                 index = index,
@@ -276,6 +280,7 @@ private fun SearchHomePreview() {
             onRetry = {},
             onBack = {},
             onProductClick = {},
+            onProductLongClick = {},
             onCreateProduct = {},
             onBarcodeScanner = {}
         )
@@ -316,6 +321,7 @@ private fun SearchHomePreview2() {
             onRetry = {},
             onBack = {},
             onProductClick = {},
+            onProductLongClick = {},
             onCreateProduct = {},
             onBarcodeScanner = {}
         )

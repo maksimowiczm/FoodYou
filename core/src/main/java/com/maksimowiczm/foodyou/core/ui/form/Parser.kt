@@ -77,3 +77,18 @@ fun <E> nullableIntParser(
         }
     }
 }
+
+fun <E> intParser(
+    onEmpty: () -> E,
+    onNan: () -> E
+) = Parser {
+    if (it.isEmpty()) {
+        failure(onEmpty())
+    } else {
+        try {
+            success(it.toInt())
+        } catch (e: NumberFormatException) {
+            failure(onNan())
+        }
+    }
+}

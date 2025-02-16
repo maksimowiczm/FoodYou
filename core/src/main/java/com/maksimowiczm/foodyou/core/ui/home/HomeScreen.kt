@@ -91,6 +91,10 @@ fun HomeScreen(
             }
 
             item {
+                Spacer(Modifier.height(8.dp))
+            }
+
+            item {
                 Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
             }
         }

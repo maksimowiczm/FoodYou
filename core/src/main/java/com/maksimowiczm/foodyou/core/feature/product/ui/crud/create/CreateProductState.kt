@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.feature.product.ui.create
+package com.maksimowiczm.foodyou.core.feature.product.ui.crud.create
 
 sealed interface CreateProductState {
     data object Nothing : CreateProductState

@@ -30,6 +30,7 @@ import com.maksimowiczm.foodyou.core.feature.diary.ui.previewparameter.WeightMea
 import com.maksimowiczm.foodyou.core.feature.diary.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.feature.product.data.model.Product
 import com.maksimowiczm.foodyou.core.feature.product.ui.previewparameter.ProductPreviewParameterProvider
+import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.core.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
@@ -73,8 +74,9 @@ fun MacroGraph(
 
                     is WeightMeasurement.WeightUnit -> Text(
                         text = stringResource(
-                            R.string.in_x_g,
-                            measurement.weight.formatClipZeros()
+                            R.string.in_x_weight_unit,
+                            measurement.weight.formatClipZeros(),
+                            product.weightUnit.stringResourceShort()
                         )
                     )
                 }

@@ -45,7 +45,7 @@ fun rememberNutrientsListState(
 
 @Stable
 class NutrientsListState(
-    private val product: Product,
+    val product: Product,
     extraFilters: List<WeightMeasurement>,
     initialSelectedFilterIndex: Int
 ) {
