@@ -7,14 +7,9 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
@@ -27,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.pluralStringResource
@@ -43,6 +39,7 @@ import com.maksimowiczm.foodyou.core.feature.product.data.model.WeightUnit
 import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.core.ui.toDp
+import com.valentinilk.shimmer.shimmer
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -95,9 +92,11 @@ private fun SearchListItem(
                 Text(it.name)
             } ?: Spacer(
                 Modifier
+                    .shimmer()
                     .height(LocalTextStyle.current.toDp())
                     .width(200.dp)
-                    .background(Color.Red)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
         },
         supportingContent = {
@@ -127,9 +126,11 @@ private fun SearchListItem(
             } else {
                 Spacer(
                     Modifier
+                        .shimmer()
                         .height(LocalTextStyle.current.toDp())
                         .width(50.dp)
-                        .background(Color.Red)
+                        .clip(MaterialTheme.shapes.small)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
             }
         },
@@ -140,16 +141,15 @@ private fun SearchListItem(
                 }
             } ?: Spacer(
                 Modifier
+                    .shimmer()
                     .height(LocalTextStyle.current.toDp())
                     .width(100.dp)
-                    .background(Color.Red)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
         },
         trailingContent = {
             ToggleButton(
-                modifier = Modifier.windowInsetsPadding(
-                    WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
-                ),
                 checked = isChecked,
                 onCheckChange = onCheckChange,
                 indication = LocalIndication.current
