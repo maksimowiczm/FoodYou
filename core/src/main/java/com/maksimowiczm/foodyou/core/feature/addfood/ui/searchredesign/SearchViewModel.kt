@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
 class SearchViewModel(
@@ -79,11 +82,34 @@ class SearchViewModel(
         )
 
         fun onCheckChange(isChecked: Boolean) {
-            _measurementId.value = if (isChecked) {
-                1L
-            } else {
-                null
+            viewModelScope.launch {
+                if (isChecked) {
+                    val measurement = measurement.value ?: return@launch
+                    val productId = product.value?.id ?: return@launch
+
+                    val id = onQuickAdd(productId, measurement)
+                    _measurementId.value = id
+                } else {
+                    _measurementId.value?.let { addFoodRepository.removeFood(it) }
+                    _measurementId.value = null
+                }
             }
+        }
+
+        private suspend fun onQuickAdd(
+            productId: Long,
+            measurement: WeightMeasurement
+        ): Long {
+            return addFoodRepository.addFood(
+                date = date,
+                mealId = mealId,
+                productId = productId,
+                weightMeasurement = measurement
+            )
+        }
+
+        private suspend fun onQuickRemove(model: ProductWithWeightMeasurement) {
+            model.measurementId?.let { addFoodRepository.removeFood(it) }
         }
     }
 }
