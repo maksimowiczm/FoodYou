@@ -4,10 +4,13 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.width
@@ -98,12 +101,29 @@ private fun SearchListItem(
             )
         },
         supportingContent = {
+            // TODO
+            //  this temporary is fix for
+            //  java.lang.IllegalStateException: LookaheadDelegate has not been measured yet when measureResult is requested.
             if (product != null && measurement != null) {
-                SupportingTextLayout(
-                    measurement.measurementStringShort(product.weightUnit),
-                    measurement.measurementString(product.weightUnit),
-                    product.nutrients.caloriesString
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = measurement.measurementString(product.weightUnit),
+                        maxLines = 1
+                    )
+                    Text(
+                        text = product.nutrients.caloriesString,
+                        maxLines = 1
+                    )
+                }
+
+//                SupportingTextLayout(
+//                    measurementString = measurement.measurementString(product.weightUnit),
+//                    measurementStringShort = measurement.measurementStringShort(product.weightUnit),
+//                    caloriesString = product.nutrients.caloriesString
+//                )
             } else {
                 Spacer(
                     Modifier
