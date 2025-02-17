@@ -1,12 +1,25 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.zIndex
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -15,9 +28,14 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeigh
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchListItem
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchUiModel
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchBottomBar
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchTopBar
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.rememberSearchBottomBarState
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.rememberSearchTopBarState
 
 @Composable
 fun SearchHome(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: SearchViewModel,
     onProductClick: (productId: Long) -> Unit,
     onProductLongClick: (productId: Long) -> Unit,
@@ -26,6 +44,7 @@ fun SearchHome(
     val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems()
 
     SearchHome(
+        animatedVisibilityScope = animatedVisibilityScope,
         productsWithMeasurements = productsWithMeasurements,
         onProductClick = onProductClick,
         onProductLongClick = onProductLongClick,
@@ -35,8 +54,10 @@ fun SearchHome(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchHome(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     productsWithMeasurements: LazyPagingItems<ProductWithWeightMeasurement>,
     onProductClick: (productId: Long) -> Unit,
     onProductLongClick: (productId: Long) -> Unit,
@@ -44,12 +65,37 @@ private fun SearchHome(
     onQuickRemove: (measurementId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val topBar = @Composable {
+        SearchTopBar(
+            state = rememberSearchTopBarState(),
+            onSearchSettings = {},
+            onSearch = {},
+            onClearSearch = {},
+            onBack = {}
+        )
+    }
+
+    val bottomBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
+    val bottomBar = @Composable {
+        SearchBottomBar(
+            animatedVisibilityScope = animatedVisibilityScope,
+            state = rememberSearchBottomBarState(),
+            onCreateProduct = {},
+            onBarcodeScanner = {},
+            scrollBehavior = bottomBarScrollBehavior
+        )
+    }
+
     Scaffold(
-        modifier = modifier
+        modifier = modifier,
+        topBar = topBar,
+        bottomBar = bottomBar,
+        contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+            .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
     ) { paddingValues ->
         LazyColumn(
             contentPadding = paddingValues,
-            modifier = Modifier
+            modifier = Modifier.nestedScroll(bottomBarScrollBehavior.nestedScrollConnection)
         ) {
             items(
                 count = productsWithMeasurements.itemCount,
@@ -87,6 +133,10 @@ private fun SearchHome(
                             .zIndex(if (isChecked) 1f else 0f)
                     )
                 }
+            }
+
+            item {
+                Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
             }
         }
     }

@@ -93,6 +93,7 @@ fun AddFoodScreen(
             }
         ) {
             SearchHomeRedesign(
+                animatedVisibilityScope = this,
                 viewModel = redesignSearchViewModel,
                 onProductClick = { id ->
                     portionViewModel.loadProduct(id)
