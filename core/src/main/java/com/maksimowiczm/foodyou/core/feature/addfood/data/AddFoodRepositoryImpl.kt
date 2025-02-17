@@ -182,53 +182,6 @@ class AddFoodRepositoryImpl(
         }
     }
 
-    override fun observeWeightMeasurementById(id: Long): Flow<WeightMeasurement?> {
-        return addFoodDao.observeMeasuredProductByMeasurementId(id).map {
-            it?.toDomain()?.measurement
-        }
-    }
-
-    override fun observeProductsWithWeightMeasurement(
-        mealId: Long,
-        date: LocalDate
-    ): Flow<List<ProductWithWeightMeasurement>> {
-        return addFoodDao.observeMeasuredProducts(
-            mealId = mealId,
-            epochDay = date.toEpochDays()
-        ).map { list ->
-            list.map { it.toDomain() }
-        }
-    }
-
-    // TODO fix dummy implementation
-    override fun observeWeightMeasurementSuggestionByProductId(productId: Long): Flow<WeightMeasurement> {
-        return productDao.observeProductById(productId).map { product ->
-            if (product == null) {
-                Log.w(
-                    TAG,
-                    "Product not found for ID $productId. Skipping weight measurement suggestion."
-                )
-                return@map null
-            }
-
-            return@map if (product.servingWeight != null) {
-                WeightMeasurement.Serving(
-                    servingWeight = product.servingWeight,
-                    quantity = 1f
-                )
-            } else if (product.packageWeight != null) {
-                WeightMeasurement.Package(
-                    packageWeight = product.packageWeight,
-                    quantity = 1f
-                )
-            } else {
-                WeightMeasurement.WeightUnit(
-                    weight = 100f
-                )
-            }
-        }.filterNotNull()
-    }
-
     private fun AddFoodDao.observePagedProductsWithMeasurementByQuery(
         mealId: Long,
         date: LocalDate,

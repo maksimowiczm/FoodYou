@@ -53,13 +53,4 @@ interface AddFoodRepository {
     fun observeQuantitySuggestionByProductId(productId: Long): Flow<QuantitySuggestion>
 
     fun observeProductQueries(limit: Int): Flow<List<ProductQuery>>
-
-    fun observeWeightMeasurementById(id: Long): Flow<WeightMeasurement?>
-
-    fun observeProductsWithWeightMeasurement(
-        mealId: Long,
-        date: LocalDate
-    ): Flow<List<ProductWithWeightMeasurement>>
-
-    fun observeWeightMeasurementSuggestionByProductId(productId: Long): Flow<WeightMeasurement>
 }

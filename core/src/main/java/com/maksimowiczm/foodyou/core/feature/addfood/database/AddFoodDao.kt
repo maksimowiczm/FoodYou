@@ -94,20 +94,6 @@ interface AddFoodDao {
         """
         SELECT *
         FROM WeightMeasurementEntity
-        WHERE mealId = :mealId
-        AND diaryEpochDay = :epochDay
-        AND isDeleted = 0
-        """
-    )
-    fun observeWeightMeasurements(
-        mealId: Long,
-        epochDay: Int
-    ): Flow<List<WeightMeasurementEntity>>
-
-    @Query(
-        """
-        SELECT *
-        FROM WeightMeasurementEntity
         WHERE isDeleted = 0
         AND id = :portionId
         """
@@ -154,17 +140,6 @@ interface AddFoodDao {
         mealId: Long?,
         epochDay: Int
     ): Flow<List<ProductWithWeightMeasurementEntity>>
-
-    @Transaction
-    @Query(
-        """
-        SELECT wm.*
-        FROM WeightMeasurementEntity wm
-        INNER JOIN ProductEntity p ON wm.productId = p.id
-        WHERE wm.id = :measurementId
-        """
-    )
-    fun observeMeasuredProductByMeasurementId(measurementId: Long): Flow<ProductWithWeightMeasurementEntity?>
 
     @Query(
         """
