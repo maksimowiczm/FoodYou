@@ -18,7 +18,7 @@ class DatabaseSettingsRepositoryImpl(
     ).map { it ?: false }
 
     override fun observeOpenFoodFactsCountry() = dataStore.observe(
-        ProductPreferences.openFoodCountryCode
+        ProductPreferences.openFoodFactsCountryCode
     ).map {
         systemInfoRepository.countries.find { country ->
             it?.compareTo(
@@ -29,12 +29,12 @@ class DatabaseSettingsRepositoryImpl(
     }
 
     override suspend fun enableOpenFoodFacts() {
-        val country = dataStore.get(ProductPreferences.openFoodCountryCode)
+        val country = dataStore.get(ProductPreferences.openFoodFactsCountryCode)
             ?: systemInfoRepository.defaultCountry.code
 
         dataStore.set(
             ProductPreferences.openFoodFactsEnabled to true,
-            ProductPreferences.openFoodCountryCode to country
+            ProductPreferences.openFoodFactsCountryCode to country
         )
     }
 
@@ -43,6 +43,6 @@ class DatabaseSettingsRepositoryImpl(
     }
 
     override suspend fun setOpenFoodFactsCountry(country: Country) {
-        dataStore.set(ProductPreferences.openFoodCountryCode to country.code)
+        dataStore.set(ProductPreferences.openFoodFactsCountryCode to country.code)
     }
 }

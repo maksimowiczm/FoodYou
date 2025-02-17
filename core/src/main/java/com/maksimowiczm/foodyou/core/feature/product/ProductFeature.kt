@@ -8,9 +8,8 @@ import com.maksimowiczm.foodyou.core.feature.product.data.DatabaseSettingsReposi
 import com.maksimowiczm.foodyou.core.feature.product.data.DatabaseSettingsRepositoryImpl
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepositoryImpl
-import com.maksimowiczm.foodyou.core.feature.product.network.RemoteProductDatabase
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsDatabase
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsNetworkDataSource
+import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
+import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsRemoteMediator
 import com.maksimowiczm.foodyou.core.feature.product.ui.crud.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.core.feature.product.ui.crud.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.FoodDatabaseSettingsScreen
@@ -39,12 +38,11 @@ private val productsModule = module {
     factory { flagCdnCountryFlag }.bind<CountryFlag>()
 
     factory {
-        OpenFoodFactsDatabase(
+        OpenFoodFactsRemoteMediator.FactoryProduct(
             dataStore = get(),
-            productDatabase = get(),
-            openFoodFactsNetworkDataSource = OpenFoodFactsNetworkDataSource()
+            productDao = get()
         )
-    }.bind<RemoteProductDatabase>()
+    }.bind<ProductRemoteMediatorFactory>()
 }
 
 /**
