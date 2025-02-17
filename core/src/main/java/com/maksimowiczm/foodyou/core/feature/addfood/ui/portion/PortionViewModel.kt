@@ -96,7 +96,10 @@ class PortionViewModel(
                     return
                 }
 
-                WeightMeasurement.Package(packageWeight, quantity)
+                WeightMeasurement.Package(
+                    quantity = quantity,
+                    packageWeight = packageWeight
+                )
             }
 
             WeightMeasurementEnum.Serving -> {
@@ -107,7 +110,10 @@ class PortionViewModel(
                     return
                 }
 
-                WeightMeasurement.Serving(servingWeight, quantity)
+                WeightMeasurement.Serving(
+                    quantity = quantity,
+                    servingWeight = servingWeight
+                )
             }
         }
 
