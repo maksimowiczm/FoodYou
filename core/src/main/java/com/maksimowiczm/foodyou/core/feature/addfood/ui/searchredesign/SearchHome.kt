@@ -63,7 +63,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchListItem
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchUiModel
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 
 @Composable
@@ -269,11 +268,8 @@ private fun SearchHome(
                         val isChecked = item.measurementId != null
 
                         ProductSearchListItem(
-                            uiModel = ProductSearchUiModel(
-                                model = item,
-                                isLoading = false,
-                                isChecked = isChecked
-                            ),
+                            model = item,
+                            isChecked = isChecked,
                             onCheckChange = {
                                 if (item.measurementId != null) {
                                     onQuickRemove(item.measurementId)

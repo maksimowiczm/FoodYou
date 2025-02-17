@@ -3,15 +3,9 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -32,40 +26,35 @@ import androidx.compose.ui.unit.Constraints
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.previewparameter.ProductSearchUiModelPreviewParameter
+import com.maksimowiczm.foodyou.core.feature.diary.ui.previewparameter.ProductWithWeightMeasurementPreviewParameter
 import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButtonDefaults
-import com.maksimowiczm.foodyou.core.ui.modifier.animateRotation
+import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import kotlin.math.max
 
 @Composable
 fun ProductSearchListItem(
-    uiModel: ProductSearchUiModel,
+    model: ProductWithWeightMeasurement,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
+    isChecked: Boolean,
     onCheckChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     colors: ProductSearchListItemColors = ProductSearchListItemDefaults.colors()
 ) {
-    val (model, isLoading, isChecked) = uiModel
-
     val containerColor by animateColorAsState(
-        targetValue = if (isChecked || isLoading) colors.checkedContainerColor else colors.uncheckedContainerColor
+        targetValue = if (isChecked) colors.checkedContainerColor else colors.uncheckedContainerColor
     )
     val contentColor by animateColorAsState(
-        targetValue = if (isChecked || isLoading) colors.checkedContentColor else colors.uncheckedContentColor
+        targetValue = if (isChecked) colors.checkedContentColor else colors.uncheckedContentColor
     )
 
     ListItem(
         headlineContent = {
             Text(
-                modifier = Modifier.windowInsetsPadding(
-                    WindowInsets.displayCutout.only(
-                        WindowInsetsSides.Horizontal
-                    )
-                ),
+                modifier = Modifier.horizontalDisplayCutoutPadding(),
                 text = model.product.name
             )
         },
@@ -76,9 +65,7 @@ fun ProductSearchListItem(
         overlineContent = {
             model.product.brand?.let {
                 Text(
-                    modifier = Modifier.windowInsetsPadding(
-                        WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
-                    ),
+                    modifier = Modifier.horizontalDisplayCutoutPadding(),
                     text = it
                 )
             }
@@ -90,17 +77,13 @@ fun ProductSearchListItem(
                 caloriesString = model.caloriesString,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .windowInsetsPadding(
-                        WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
-                    )
+                    .horizontalDisplayCutoutPadding()
             )
         },
         trailingContent = {
             ToggleButton(
-                modifier = Modifier.windowInsetsPadding(
-                    WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
-                ),
-                checked = isChecked || isLoading,
+                modifier = Modifier.horizontalDisplayCutoutPadding(),
+                checked = isChecked,
                 onCheckChange = onCheckChange,
                 colors = ToggleButtonDefaults.colors(
                     checkedColor = colors.checkedToggleButtonContainerColor,
@@ -109,13 +92,7 @@ fun ProductSearchListItem(
                 ),
                 indication = LocalIndication.current
             ) {
-                if (isLoading) {
-                    Icon(
-                        modifier = Modifier.animateRotation(),
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = null
-                    )
-                } else if (isChecked) {
+                if (isChecked) {
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = null
@@ -325,19 +302,34 @@ val ProductWithWeightMeasurement.caloriesString: String
     @Composable get() = "$calories " + stringResource(R.string.unit_kcal)
 
 @Preview
+@Composable
+private fun ProductSearchListItemPreview() {
+    FoodYouTheme {
+        ProductSearchListItem(
+            model = ProductWithWeightMeasurementPreviewParameter().values.first(),
+            onClick = {},
+            onLongClick = {},
+            onCheckChange = {},
+            isChecked = true
+        )
+    }
+}
+
+@Preview
 @Preview(
     fontScale = 2f
 )
 @Composable
 private fun ProductSearchListItemPreview(
-    @PreviewParameter(ProductSearchUiModelPreviewParameter::class) productSearchUiModel: ProductSearchUiModel
+    @PreviewParameter(ProductWithWeightMeasurementPreviewParameter::class) model: ProductWithWeightMeasurement
 ) {
     FoodYouTheme {
         ProductSearchListItem(
-            uiModel = productSearchUiModel,
+            model = model,
             onClick = {},
             onLongClick = {},
-            onCheckChange = {}
+            onCheckChange = {},
+            isChecked = false
         )
     }
 }
