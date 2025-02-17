@@ -6,6 +6,7 @@ import androidx.paging.LoadType
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource.LoadResult.Page
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.paging.map
@@ -24,12 +25,12 @@ import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementE
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
+import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
 import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediator
 import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
@@ -38,20 +39,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-
-// Dummy
-@OptIn(ExperimentalPagingApi::class)
-private class RemoteMediatorWrapper(
-    private val productRemoteMediator: ProductRemoteMediator
-) : RemoteMediator<Int, ProductSearchEntity>() {
-    override suspend fun load(
-        loadType: LoadType,
-        state: PagingState<Int, ProductSearchEntity>
-    ): MediatorResult {
-        delay(5_000L)
-        return MediatorResult.Success(endOfPaginationReached = true)
-    }
-}
 
 class AddFoodRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
@@ -230,5 +217,37 @@ class AddFoodRepositoryImpl(
 
     private companion object {
         private const val TAG = "AddFoodRepositoryImpl"
+    }
+}
+
+// Adapter for RemoteMediator<Int, ProductSearchEntity> to RemoteMediator<Int, ProductEntity>
+// Got to love paging3 library :) (most likely skill issue from my side)
+@OptIn(ExperimentalPagingApi::class)
+private class RemoteMediatorWrapper(
+    private val productRemoteMediator: ProductRemoteMediator
+) : RemoteMediator<Int, ProductSearchEntity>() {
+    override suspend fun load(
+        loadType: LoadType,
+        state: PagingState<Int, ProductSearchEntity>
+    ): MediatorResult {
+        val pages: List<Page<Int, ProductEntity>> = state.pages.map { page ->
+            val data = page.data.map { it.product }
+
+            Page(
+                data = data,
+                nextKey = page.nextKey,
+                prevKey = page.prevKey
+            )
+        }
+
+        return productRemoteMediator.load(
+            loadType = loadType,
+            state = PagingState(
+                pages = pages,
+                config = state.config,
+                anchorPosition = state.anchorPosition,
+                leadingPlaceholderCount = 0
+            )
+        )
     }
 }
