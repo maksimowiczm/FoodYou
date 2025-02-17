@@ -110,7 +110,8 @@ class AddFoodRepositoryImpl(
 
         val pager = Pager(
             config = PagingConfig(
-                pageSize = 30
+                pageSize = 30,
+                enablePlaceholders = true
             ),
             remoteMediator = remoteMediator?.let { RemoteMediatorWrapper(it) }
         ) {
