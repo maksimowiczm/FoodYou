@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import kotlinx.coroutines.launch
@@ -41,9 +40,11 @@ class SearchViewModel(
         }
     }
 
-    fun onQuickRemove(model: ProductWithWeightMeasurement) {
+    fun onQuickRemove(
+        measurementId: Long
+    ) {
         viewModelScope.launch {
-            model.measurementId?.let { addFoodRepository.removeFood(it) }
+            addFoodRepository.removeFood(measurementId)
         }
     }
 }

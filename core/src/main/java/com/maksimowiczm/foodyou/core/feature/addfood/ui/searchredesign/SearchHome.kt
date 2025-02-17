@@ -8,8 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.zIndex
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchListItem
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchUiModel
 
@@ -22,6 +25,25 @@ fun SearchHome(
 ) {
     val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems()
 
+    SearchHome(
+        productsWithMeasurements = productsWithMeasurements,
+        onProductClick = onProductClick,
+        onProductLongClick = onProductLongClick,
+        onQuickAdd = viewModel::onQuickAdd,
+        onQuickRemove = viewModel::onQuickRemove,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun SearchHome(
+    productsWithMeasurements: LazyPagingItems<ProductWithWeightMeasurement>,
+    onProductClick: (productId: Long) -> Unit,
+    onProductLongClick: (productId: Long) -> Unit,
+    onQuickAdd: (productId: Long, measurement: WeightMeasurement) -> Unit,
+    onQuickRemove: (measurementId: Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Scaffold(
         modifier = modifier
     ) { paddingValues ->
@@ -36,6 +58,7 @@ fun SearchHome(
                 val item = productsWithMeasurements[it]
 
                 if (item == null) {
+                    // TODO
                     Text("I am a placeholder")
                 } else {
                     val isChecked = item.measurementId != null
@@ -47,15 +70,10 @@ fun SearchHome(
                             isChecked = isChecked
                         ),
                         onCheckChange = {
-                            if (isChecked) {
-                                viewModel.onQuickRemove(
-                                    model = item
-                                )
+                            if (item.measurementId != null) {
+                                onQuickRemove(item.measurementId)
                             } else {
-                                viewModel.onQuickAdd(
-                                    productId = item.product.id,
-                                    measurement = item.measurement
-                                )
+                                onQuickAdd(item.product.id, item.measurement)
                             }
                         },
                         onClick = { onProductClick(item.product.id) },
