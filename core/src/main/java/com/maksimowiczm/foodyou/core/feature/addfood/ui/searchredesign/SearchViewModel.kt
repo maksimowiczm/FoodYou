@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
@@ -68,7 +69,7 @@ class SearchViewModel(
             query = query,
             localOnly = query == null
         )
-    }
+    }.cachedIn(viewModelScope)
 
     fun onSearch(query: String?) {
         viewModelScope.launch {
