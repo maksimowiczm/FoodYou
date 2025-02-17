@@ -18,16 +18,14 @@ interface AddFoodRepository {
      * @param weightMeasurement The weight measurement of the portion.
      * @return The ID of the added measurement.
      */
-    suspend fun addFood(
+    suspend fun addMeasurement(
         date: LocalDate,
         mealId: Long,
         productId: Long,
         weightMeasurement: WeightMeasurement
     ): Long
 
-    suspend fun removeFood(
-        portionId: Long
-    )
+    suspend fun removeMeasurement(portionId: Long)
 
     fun queryProducts(
         mealId: Long,

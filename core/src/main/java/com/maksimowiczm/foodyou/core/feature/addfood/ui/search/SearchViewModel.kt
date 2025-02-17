@@ -82,7 +82,7 @@ class SearchViewModel(
         measurement: WeightMeasurement
     ) {
         viewModelScope.launch {
-            addFoodRepository.addFood(
+            addFoodRepository.addMeasurement(
                 date = date,
                 mealId = mealId,
                 productId = productId,
@@ -95,7 +95,7 @@ class SearchViewModel(
         measurementId: Long
     ) {
         viewModelScope.launch {
-            addFoodRepository.removeFood(measurementId)
+            addFoodRepository.removeMeasurement(measurementId)
         }
     }
 }

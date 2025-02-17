@@ -49,7 +49,7 @@ class AddFoodRepositoryImpl(
     private val addFoodDao: AddFoodDao = addFoodDatabase.addFoodDao()
     private val productDao: ProductDao = productDatabase.productDao()
 
-    override suspend fun addFood(
+    override suspend fun addMeasurement(
         date: LocalDate,
         mealId: Long,
         productId: Long,
@@ -75,7 +75,7 @@ class AddFoodRepositoryImpl(
         return addFoodDao.insertWeightMeasurement(entity)
     }
 
-    override suspend fun removeFood(portionId: Long) {
+    override suspend fun removeMeasurement(portionId: Long) {
         val entity = addFoodDao.observeWeightMeasurement(portionId).first()
 
         if (entity != null) {

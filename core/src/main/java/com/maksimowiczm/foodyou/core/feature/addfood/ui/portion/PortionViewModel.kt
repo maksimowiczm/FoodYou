@@ -112,7 +112,7 @@ class PortionViewModel(
         }
 
         viewModelScope.launch {
-            addFoodRepository.addFood(
+            addFoodRepository.addMeasurement(
                 date = date,
                 mealId = mealId,
                 productId = uiState.product.id,
