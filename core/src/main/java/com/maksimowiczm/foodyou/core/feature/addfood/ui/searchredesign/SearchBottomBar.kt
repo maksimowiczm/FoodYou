@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
+package com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -34,7 +34,6 @@ import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +49,7 @@ import com.maksimowiczm.foodyou.core.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeOut
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun SearchBottomBar(
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -60,33 +59,7 @@ fun SearchBottomBar(
     modifier: Modifier = Modifier,
     scrollBehavior: BottomAppBarScrollBehavior? = null
 ) {
-    val state = rememberSearchBottomBarState(totalCalories)
-
-    LaunchedEffect(totalCalories) {
-        state.totalCalories = totalCalories
-    }
-
-    SearchBottomBar(
-        animatedVisibilityScope = animatedVisibilityScope,
-        state = state,
-        onCreateProduct = onCreateProduct,
-        onBarcodeScanner = onBarcodeScanner,
-        modifier = modifier,
-        scrollBehavior = scrollBehavior
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
-@Composable
-fun SearchBottomBar(
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    state: SearchBottomBarState,
-    onCreateProduct: () -> Unit,
-    onBarcodeScanner: () -> Unit,
-    modifier: Modifier = Modifier,
-    scrollBehavior: BottomAppBarScrollBehavior? = null
-) {
-    val calories by animateIntAsState(state.totalCalories)
+    val calories by animateIntAsState(totalCalories)
 
     val sharedTransitionScope = LocalSharedTransitionScope.current
         ?: error("No shared transition scope found")

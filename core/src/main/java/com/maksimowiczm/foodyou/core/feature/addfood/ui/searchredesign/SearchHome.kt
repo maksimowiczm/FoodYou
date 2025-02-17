@@ -62,13 +62,8 @@ import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ErrorCardState
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.FoodDatabaseErrorCard
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchListItem
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchUiModel
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchBottomBar
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchTopBar
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.rememberSearchTopBarState
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 
 @Composable
@@ -305,4 +300,10 @@ private fun SearchHome(
             }
         }
     }
+}
+
+enum class ErrorCardState {
+    HIDDEN_START,
+    VISIBLE,
+    HIDDEN_END
 }

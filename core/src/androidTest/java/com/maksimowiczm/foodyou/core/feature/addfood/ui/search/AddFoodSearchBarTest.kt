@@ -9,6 +9,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign.SearchTopBar
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign.rememberSearchTopBarState
 import kotlinx.datetime.LocalDateTime
 import org.junit.Rule
 import org.junit.Test
@@ -28,7 +30,7 @@ class AddFoodSearchBarTest {
         composeTestRule.setContent {
             SearchTopBar(
                 state = rememberSearchTopBarState(
-                    initialRecentQueries = listOf(
+                    recentQueries = listOf(
                         ProductQuery("Apple", LocalDateTime(2025, 2, 13, 12, 50))
                     )
                 ),
