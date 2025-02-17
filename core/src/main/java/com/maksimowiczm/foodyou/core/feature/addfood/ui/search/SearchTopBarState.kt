@@ -2,11 +2,13 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBarState
 import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,9 +39,19 @@ fun rememberSearchTopBarState(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun rememberSearchTopBarState(
+    query: String? = null,
     recentQueries: List<ProductQuery> = emptyList()
 ): SearchTopBarState {
-    val textFieldState = rememberTextFieldState()
+    val textFieldState = rememberTextFieldState(
+        initialText = query ?: ""
+    )
+
+    LaunchedEffect(query) {
+        if (query != null) {
+            textFieldState.setTextAndPlaceCursorAtEnd(query)
+        }
+    }
+
     val searchBarState = rememberSearchBarState(
         initialValue = SearchBarValue.Collapsed
     )

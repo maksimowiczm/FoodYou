@@ -14,7 +14,9 @@ import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.rememberSearchTop
 
 @Composable
 fun rememberAddFoodState(
-    searchBarState: SearchTopBarState = rememberSearchTopBarState(),
+    searchBarState: SearchTopBarState = rememberSearchTopBarState(
+        initialExpanded = false
+    ),
     searchListState: SearchListState = rememberSearchListState(),
     searchBottomBarState: SearchBottomBarState = rememberSearchBottomBarState(),
     navController: NavHostController = rememberNavController()

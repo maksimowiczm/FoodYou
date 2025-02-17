@@ -53,11 +53,12 @@ class SearchViewModel(
         initialValue = emptyList()
     )
 
-    private val searchQuery = MutableSharedFlow<String?>(replay = 1)
-
-    init {
-        searchQuery.tryEmit(null)
-    }
+    private val _searchQuery = MutableSharedFlow<String?>(replay = 1)
+    val searchQuery = _searchQuery.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(30_000L),
+        initialValue = null
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val productsWithMeasurements = searchQuery.flatMapLatest { query ->
@@ -71,7 +72,7 @@ class SearchViewModel(
 
     fun onSearch(query: String?) {
         viewModelScope.launch {
-            searchQuery.emit(query?.takeIf { it.isNotBlank() })
+            _searchQuery.emit(query?.takeIf { it.isNotBlank() })
         }
     }
 

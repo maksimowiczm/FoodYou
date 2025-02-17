@@ -50,12 +50,14 @@ fun SearchHome(
     val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems()
     val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
+    val query by viewModel.searchQuery.collectAsStateWithLifecycle()
 
     SearchHome(
         animatedVisibilityScope = animatedVisibilityScope,
         productsWithMeasurements = productsWithMeasurements,
         totalCalories = totalCalories,
         recentQueries = recentQueries,
+        query = query,
         onProductClick = onProductClick,
         onProductLongClick = onProductLongClick,
         onQuickAdd = viewModel::onQuickAdd,
@@ -77,6 +79,7 @@ private fun SearchHome(
     productsWithMeasurements: LazyPagingItems<ProductWithWeightMeasurement>,
     recentQueries: List<ProductQuery>,
     totalCalories: Int,
+    query: String?,
     onProductClick: (productId: Long) -> Unit,
     onProductLongClick: (productId: Long) -> Unit,
     onQuickAdd: (productId: Long, measurement: WeightMeasurement) -> Unit,
@@ -92,6 +95,7 @@ private fun SearchHome(
     val topBar = @Composable {
         SearchTopBar(
             state = rememberSearchTopBarState(
+                query = query,
                 recentQueries = recentQueries
             ),
             onSearchSettings = onSearchSettings,
