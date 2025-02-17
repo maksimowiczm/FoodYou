@@ -9,6 +9,7 @@ import androidx.paging.PagingState
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductPreferences
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toEntity
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
+import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
 import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediator
 import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
@@ -81,11 +82,9 @@ internal class OpenFoodFactsRemoteMediator(
 
     class FactoryProduct(
         private val dataStore: DataStore<Preferences>,
-        private val productDao: ProductDao
+        productDatabase: ProductDatabase
     ) : ProductRemoteMediatorFactory {
-        private companion object {
-            private const val TAG = "ProductRemoteMediator.Factory"
-        }
+        private val productDao = productDatabase.productDao()
 
         override fun create(query: String?): ProductRemoteMediator? {
             val isEnabled =
@@ -115,6 +114,10 @@ internal class OpenFoodFactsRemoteMediator(
                 productDao = productDao,
                 openFoodFactsNetworkDataSource = OpenFoodFactsNetworkDataSource()
             )
+        }
+
+        private companion object {
+            private const val TAG = "ProductRemoteMediator.Factory"
         }
     }
 }

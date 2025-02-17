@@ -2,9 +2,12 @@ package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadType
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingState
+import androidx.paging.RemoteMediator
 import androidx.paging.map
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
@@ -16,14 +19,17 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDao
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDatabase
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductQueryEntity
+import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductSearchEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
+import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediator
 import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
@@ -32,6 +38,20 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+
+// Dummy
+@OptIn(ExperimentalPagingApi::class)
+private class RemoteMediatorWrapper(
+    private val productRemoteMediator: ProductRemoteMediator
+) : RemoteMediator<Int, ProductSearchEntity>() {
+    override suspend fun load(
+        loadType: LoadType,
+        state: PagingState<Int, ProductSearchEntity>
+    ): MediatorResult {
+        delay(2_000L)
+        return MediatorResult.Success(endOfPaginationReached = true)
+    }
+}
 
 class AddFoodRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
@@ -107,10 +127,13 @@ class AddFoodRepositoryImpl(
             }
         }
 
+        val remoteMediator = if (localOnly) null else productRemoteMediatorFactory.create(query)
+
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 30
-            )
+            ),
+            remoteMediator = remoteMediator?.let { RemoteMediatorWrapper(it) }
         ) {
             if (barcode == null) {
                 addFoodDao.observePagedProductsWithMeasurementByQuery(
