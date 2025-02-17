@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -128,7 +128,6 @@ fun ProductSearchListItemSkeleton(
 fun ProductSearchListItem(
     model: ProductWithWeightMeasurement,
     onClick: () -> Unit,
-    onLongClick: () -> Unit,
     isChecked: Boolean,
     onCheckChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -148,10 +147,7 @@ fun ProductSearchListItem(
                 text = model.product.name
             )
         },
-        modifier = modifier.combinedClickable(
-            onClick = onClick,
-            onLongClick = onLongClick
-        ),
+        modifier = modifier.clickable { onClick() },
         overlineContent = {
             model.product.brand?.let {
                 Text(
@@ -398,7 +394,6 @@ private fun ProductSearchListItemPreview() {
         ProductSearchListItem(
             model = ProductWithWeightMeasurementPreviewParameter().values.first(),
             onClick = {},
-            onLongClick = {},
             onCheckChange = {},
             isChecked = true
         )
@@ -417,7 +412,6 @@ private fun ProductSearchListItemPreview(
         ProductSearchListItem(
             model = model,
             onClick = {},
-            onLongClick = {},
             onCheckChange = {},
             isChecked = false
         )

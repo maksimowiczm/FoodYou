@@ -70,18 +70,6 @@ fun AddFoodScreen(
                         }
                     )
                 },
-                onProductLongClick = { id ->
-                    portionViewModel.loadProduct(id)
-
-                    navController.navigateToProducts(
-                        route = ProductsRoute.UpdateProduct(
-                            productId = id
-                        ),
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
-                },
                 onSearchSettings = onSearchSettings,
                 onBack = onClose,
                 onCreateProduct = {

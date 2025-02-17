@@ -69,7 +69,6 @@ fun SearchHome(
     animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: SearchViewModel,
     onProductClick: (productId: Long) -> Unit,
-    onProductLongClick: (productId: Long) -> Unit,
     onSearchSettings: () -> Unit,
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
@@ -88,7 +87,6 @@ fun SearchHome(
         recentQueries = recentQueries,
         query = query,
         onProductClick = onProductClick,
-        onProductLongClick = onProductLongClick,
         onQuickAdd = viewModel::onQuickAdd,
         onQuickRemove = viewModel::onQuickRemove,
         onSearchSettings = onSearchSettings,
@@ -110,7 +108,6 @@ private fun SearchHome(
     totalCalories: Int,
     query: String?,
     onProductClick: (productId: Long) -> Unit,
-    onProductLongClick: (productId: Long) -> Unit,
     onQuickAdd: (productId: Long, measurement: WeightMeasurement) -> Unit,
     onQuickRemove: (measurementId: Long) -> Unit,
     onSearchSettings: () -> Unit,
@@ -292,7 +289,6 @@ private fun SearchHome(
                                 }
                             },
                             onClick = { onProductClick(item.product.id) },
-                            onLongClick = { onProductLongClick(item.product.id) },
                             modifier = Modifier
                                 .animateItem()
                                 .zIndex(if (isChecked) 1f else 0f)
