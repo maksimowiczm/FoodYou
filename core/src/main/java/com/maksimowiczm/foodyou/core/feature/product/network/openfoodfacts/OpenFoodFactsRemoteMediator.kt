@@ -23,6 +23,8 @@ internal class OpenFoodFactsRemoteMediator(
     private val productDao: ProductDao,
     private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource
 ) : ProductRemoteMediator() {
+    private val isBarcode = query.all { it.isDigit() }
+
     override suspend fun initialize(): InitializeAction {
         return InitializeAction.LAUNCH_INITIAL_REFRESH
     }
@@ -47,14 +49,23 @@ internal class OpenFoodFactsRemoteMediator(
 
             Log.d(TAG, "Loading page $page")
 
-            val page = openFoodFactsNetworkDataSource.queryProducts(
-                query = query,
-                country = country,
-                page = page,
-                pageSize = state.config.pageSize
-            )
+            val page = if (isBarcode) {
+                listOfNotNull(
+                    openFoodFactsNetworkDataSource.getProduct(
+                        code = query,
+                        country = country
+                    )
+                )
+            } else {
+                openFoodFactsNetworkDataSource.queryProducts(
+                    query = query,
+                    country = country,
+                    page = page,
+                    pageSize = state.config.pageSize
+                ).products
+            }
 
-            val products = page.products.mapNotNull { remoteProduct ->
+            val products = page.mapNotNull { remoteProduct ->
                 remoteProduct.toEntity().also {
                     if (it == null) {
                         Log.w(
