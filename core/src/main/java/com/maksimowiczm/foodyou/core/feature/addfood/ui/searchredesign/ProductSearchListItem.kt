@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
+package com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication

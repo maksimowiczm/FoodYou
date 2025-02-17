@@ -62,7 +62,6 @@ import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchListItem
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 
 @Composable
