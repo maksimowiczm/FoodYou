@@ -6,6 +6,7 @@ import androidx.paging.LoadType
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import androidx.paging.PagingSource.LoadResult.Page
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
@@ -115,19 +116,12 @@ class AddFoodRepositoryImpl(
             ),
             remoteMediator = remoteMediator?.let { RemoteMediatorWrapper(it) }
         ) {
-            if (barcode == null) {
-                addFoodDao.observePagedProductsWithMeasurementByQuery(
-                    mealId = mealId,
-                    date = date,
-                    query = query
-                )
-            } else {
-                addFoodDao.observePagedProductsWithMeasurementByBarcode(
-                    mealId = mealId,
-                    date = date,
-                    barcode = barcode
-                )
-            }
+            MyPagingSource(
+                mealId = mealId,
+                date = date,
+                addFoodDao = addFoodDao,
+                productDao = productDao
+            )
         }
 
         return pager.flow.map { pagingData ->
@@ -233,14 +227,93 @@ private class RemoteMediatorWrapper(
             )
         }
 
+        Log.d("RemoteMediatorWrapper", "loadType: $loadType, pages: $pages, state: $state")
+
         return productRemoteMediator.load(
             loadType = loadType,
             state = PagingState(
                 pages = pages,
                 config = state.config,
                 anchorPosition = state.anchorPosition,
-                leadingPlaceholderCount = 0
+                leadingPlaceholderCount = state.leadingPlaceholderCount()
             )
+        )
+    }
+
+    private companion object {
+        fun PagingState<Int, ProductSearchEntity>.leadingPlaceholderCount(): Int {
+            val field = this::class.java.getDeclaredField("leadingPlaceholderCount")
+            field.isAccessible = true
+            val value = field.get(this) as Int
+            return value
+        }
+    }
+}
+
+private class MyPagingSource(
+    private val mealId: Long,
+    private val date: LocalDate,
+    private val addFoodDao: AddFoodDao,
+    private val productDao: ProductDao
+) : PagingSource<Int, ProductSearchEntity>() {
+    override val jumpingSupported: Boolean = true
+    override val keyReuseSupported: Boolean = false
+
+    override fun getRefreshKey(state: PagingState<Int, ProductSearchEntity>): Int? {
+        val anchorPosition = state.anchorPosition ?: 0
+        val initialLoadSize = state.config.initialLoadSize
+        return (anchorPosition - initialLoadSize / 2).coerceAtLeast(0)
+    }
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductSearchEntity> {
+        val key = params.key ?: 0
+
+        val limit = when (params) {
+            is LoadParams.Prepend ->
+                if (key < params.loadSize) {
+                    key
+                } else {
+                    params.loadSize
+                }
+
+            else -> params.loadSize
+        }
+
+        val itemCount = addFoodDao.count(mealId, date.toEpochDays(), null, null)
+
+        val offset = when (params) {
+            is LoadParams.Prepend ->
+                if (key < params.loadSize) {
+                    0
+                } else {
+                    key - params.loadSize
+                }
+
+            is LoadParams.Append -> key
+            is LoadParams.Refresh ->
+                if (key >= itemCount - params.loadSize) {
+                    maxOf(0, itemCount - params.loadSize)
+                } else {
+                    key
+                }
+        }
+
+        val items = addFoodDao.query(mealId, date.toEpochDays(), null, null, limit, offset)
+
+        val nextPosToLoad = offset + items.size
+        val nextKey = if (items.isEmpty() || items.size < limit || nextPosToLoad >= itemCount) {
+            null
+        } else {
+            nextPosToLoad
+        }
+        val prevKey = if (offset <= 0 || items.isEmpty()) null else offset
+
+        return Page(
+            data = items,
+            prevKey = prevKey,
+            nextKey = nextKey,
+            itemsBefore = offset,
+            itemsAfter = maxOf(0, itemCount - nextPosToLoad)
         )
     }
 }

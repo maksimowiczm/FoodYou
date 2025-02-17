@@ -215,7 +215,7 @@ private fun SearchHome(
             anchoredDraggableState.updateAnchors(draggableAnchors)
         },
         topBar = topBar,
-        bottomBar = bottomBar,
+//        bottomBar = bottomBar,
         contentWindowInsets = contentWindowInsets
     ) { paddingValues ->
         Box(
@@ -248,16 +248,6 @@ private fun SearchHome(
             ) {
                 item {
                     Spacer(Modifier.height(density.run { errorCardHeight.toDp() }))
-                }
-
-                if (
-                    productsWithMeasurements.loadState.refresh == LoadState.Loading && productsWithMeasurements.itemCount == 0
-                ) {
-                    items(
-                        count = 30
-                    ) {
-                        ProductSearchListItemSkeleton(shimmer = shimmer)
-                    }
                 }
 
                 items(
