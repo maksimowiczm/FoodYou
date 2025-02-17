@@ -18,9 +18,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -30,7 +32,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchList
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchUiModel
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchBottomBar
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchTopBar
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.rememberSearchBottomBarState
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.rememberSearchTopBarState
 
 @Composable
@@ -39,17 +40,29 @@ fun SearchHome(
     viewModel: SearchViewModel,
     onProductClick: (productId: Long) -> Unit,
     onProductLongClick: (productId: Long) -> Unit,
+    onSearchSettings: () -> Unit,
+    onBack: () -> Unit,
+    onCreateProduct: () -> Unit,
+    onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems()
+    val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
 
     SearchHome(
         animatedVisibilityScope = animatedVisibilityScope,
         productsWithMeasurements = productsWithMeasurements,
+        totalCalories = totalCalories,
         onProductClick = onProductClick,
         onProductLongClick = onProductLongClick,
         onQuickAdd = viewModel::onQuickAdd,
         onQuickRemove = viewModel::onQuickRemove,
+        onSearchSettings = onSearchSettings,
+        onSearch = viewModel::onSearch,
+        onClearSearch = { viewModel.onSearch(null) },
+        onBack = onBack,
+        onCreateProduct = onCreateProduct,
+        onBarcodeScanner = onBarcodeScanner,
         modifier = modifier
     )
 }
@@ -59,19 +72,26 @@ fun SearchHome(
 private fun SearchHome(
     animatedVisibilityScope: AnimatedVisibilityScope,
     productsWithMeasurements: LazyPagingItems<ProductWithWeightMeasurement>,
+    totalCalories: Int,
     onProductClick: (productId: Long) -> Unit,
     onProductLongClick: (productId: Long) -> Unit,
     onQuickAdd: (productId: Long, measurement: WeightMeasurement) -> Unit,
     onQuickRemove: (measurementId: Long) -> Unit,
+    onSearchSettings: () -> Unit,
+    onSearch: (query: String) -> Unit,
+    onClearSearch: () -> Unit,
+    onBack: () -> Unit,
+    onCreateProduct: () -> Unit,
+    onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val topBar = @Composable {
         SearchTopBar(
             state = rememberSearchTopBarState(),
-            onSearchSettings = {},
-            onSearch = {},
-            onClearSearch = {},
-            onBack = {}
+            onSearchSettings = onSearchSettings,
+            onSearch = onSearch,
+            onClearSearch = onClearSearch,
+            onBack = onBack
         )
     }
 
@@ -79,9 +99,9 @@ private fun SearchHome(
     val bottomBar = @Composable {
         SearchBottomBar(
             animatedVisibilityScope = animatedVisibilityScope,
-            state = rememberSearchBottomBarState(),
-            onCreateProduct = {},
-            onBarcodeScanner = {},
+            totalCalories = totalCalories,
+            onCreateProduct = onCreateProduct,
+            onBarcodeScanner = onBarcodeScanner,
             scrollBehavior = bottomBarScrollBehavior
         )
     }

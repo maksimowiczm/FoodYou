@@ -116,6 +116,27 @@ fun AddFoodScreen(
                             launchSingleTop = true
                         }
                     )
+                },
+                onSearchSettings = onSearchSettings,
+                onBack = onClose,
+                onCreateProduct = {
+                    navController.navigateToProducts(
+                        route = ProductsRoute.CreateProduct(
+                            epochDay = searchViewModel.date.toEpochDays(),
+                            mealId = searchViewModel.mealId
+                        ),
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                },
+                onBarcodeScanner = {
+                    navController.navigate(
+                        route = BarcodeScannerRoute,
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
                 }
             )
         }
@@ -157,6 +178,7 @@ fun AddFoodScreen(
         cameraGraph(
             onBarcodeScan = {
                 searchViewModel.onBarcodeScan(it)
+                redesignSearchViewModel.onSearch(it)
 
                 addFoodState.searchTopBarState.textFieldState.setTextAndPlaceCursorAtEnd(it)
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)

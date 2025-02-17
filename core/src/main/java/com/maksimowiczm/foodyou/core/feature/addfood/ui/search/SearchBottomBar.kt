@@ -34,6 +34,7 @@ import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +49,32 @@ import com.maksimowiczm.foodyou.core.feature.product.ui.ProductSharedTransitionK
 import com.maksimowiczm.foodyou.core.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeOut
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBottomBar(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    totalCalories: Int,
+    onCreateProduct: () -> Unit,
+    onBarcodeScanner: () -> Unit,
+    modifier: Modifier = Modifier,
+    scrollBehavior: BottomAppBarScrollBehavior? = null
+) {
+    val state = rememberSearchBottomBarState(totalCalories)
+
+    LaunchedEffect(totalCalories) {
+        state.totalCalories = totalCalories
+    }
+
+    SearchBottomBar(
+        animatedVisibilityScope = animatedVisibilityScope,
+        state = state,
+        onCreateProduct = onCreateProduct,
+        onBarcodeScanner = onBarcodeScanner,
+        modifier = modifier,
+        scrollBehavior = scrollBehavior
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable

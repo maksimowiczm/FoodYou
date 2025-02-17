@@ -7,7 +7,14 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDate
 
 class SearchViewModel(
@@ -24,7 +31,41 @@ class SearchViewModel(
         this.date = LocalDate.fromEpochDays(epochDay)
     }
 
-    val productsWithMeasurements = addFoodRepository.queryProducts(mealId, date)
+    val totalCalories = addFoodRepository.observeTotalCalories(
+        date = date,
+        mealId = mealId
+    ).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(30_000L),
+        initialValue = runBlocking {
+            addFoodRepository.observeTotalCalories(
+                date = date,
+                mealId = mealId
+            ).first()
+        }
+    )
+
+    private val searchQuery = MutableSharedFlow<String?>(replay = 1)
+
+    init {
+        searchQuery.tryEmit(null)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val productsWithMeasurements = searchQuery.flatMapLatest { query ->
+        addFoodRepository.queryProducts1(
+            mealId = mealId,
+            date = date,
+            query = query,
+            localOnly = query == null
+        )
+    }
+
+    fun onSearch(query: String?) {
+        viewModelScope.launch {
+            searchQuery.emit(query?.takeIf { it.isNotBlank() })
+        }
+    }
 
     fun onQuickAdd(
         productId: Long,

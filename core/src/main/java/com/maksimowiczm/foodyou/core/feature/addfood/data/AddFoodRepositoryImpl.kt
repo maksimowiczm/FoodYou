@@ -106,10 +106,14 @@ class AddFoodRepositoryImpl(
         }
     }
 
-    override fun queryProducts(
+    override fun queryProducts1(
         mealId: Long,
-        date: LocalDate
+        date: LocalDate,
+        query: String?,
+        localOnly: Boolean
     ): Flow<PagingData<ProductWithWeightMeasurement>> {
+        val barcode = if (query?.all { it.isDigit() } == true) query else null
+
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 30
@@ -118,8 +122,8 @@ class AddFoodRepositoryImpl(
             addFoodDao.observePagedProductsWithMeasurement(
                 mealId = mealId,
                 epochDay = date.toEpochDays(),
-                query = null,
-                barcode = null
+                query = if (barcode == null) query else null,
+                barcode = barcode
             )
         }
 
