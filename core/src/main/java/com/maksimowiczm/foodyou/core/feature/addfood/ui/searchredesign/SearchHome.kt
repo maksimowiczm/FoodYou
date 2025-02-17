@@ -130,7 +130,7 @@ private fun SearchHome(
 ) {
     val isEmpty by remember(productsWithMeasurements.loadState) {
         derivedStateOf {
-            productsWithMeasurements.loadState.refresh != LoadState.Loading && productsWithMeasurements.itemCount == 0
+            productsWithMeasurements.loadState.isIdle && productsWithMeasurements.itemCount == 0
         }
     }
 
