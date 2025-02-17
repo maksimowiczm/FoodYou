@@ -114,7 +114,15 @@ class AddFoodRepositoryImpl(
             }
         }
 
-        val remoteMediator = if (localOnly) null else productRemoteMediatorFactory.create(query)
+        val remoteMediator = if (localOnly) {
+            null
+        } else {
+            if (barcode == null) {
+                productRemoteMediatorFactory.createWithQuery(query)
+            } else {
+                productRemoteMediatorFactory.createWithBarcode(barcode)
+            }
+        }
 
         val pager = Pager(
             config = PagingConfig(

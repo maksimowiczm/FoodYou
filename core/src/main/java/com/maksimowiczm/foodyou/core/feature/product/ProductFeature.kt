@@ -20,10 +20,11 @@ import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsRemoteMediator.FactoryProduct as OpenFoodFactsRemoteMediatorFactory
+import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsRemoteMediator.Factory as OpenFoodFactsRemoteMediatorFactory
 
 private val productsModule = module {
     factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
@@ -37,7 +38,7 @@ private val productsModule = module {
 
     factory { flagCdnCountryFlag }.bind<CountryFlag>()
 
-    factoryOf(::OpenFoodFactsRemoteMediatorFactory).bind<ProductRemoteMediatorFactory>()
+    singleOf(::OpenFoodFactsRemoteMediatorFactory).bind<ProductRemoteMediatorFactory>()
 }
 
 /**

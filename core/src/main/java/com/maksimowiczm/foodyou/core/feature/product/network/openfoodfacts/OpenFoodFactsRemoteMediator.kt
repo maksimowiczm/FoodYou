@@ -18,13 +18,12 @@ import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediator(
+    private val isBarcode: Boolean,
     private val query: String,
     private val country: String,
     private val productDao: ProductDao,
     private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource
 ) : ProductRemoteMediator() {
-    private val isBarcode = query.all { it.isDigit() }
-
     override suspend fun initialize(): InitializeAction {
         return InitializeAction.LAUNCH_INITIAL_REFRESH
     }
@@ -91,24 +90,38 @@ internal class OpenFoodFactsRemoteMediator(
         private const val TAG = "ProductRemoteMediator"
     }
 
-    class FactoryProduct(
+    // Should be used as singleton to avoid creating multiple instances of
+    // OpenFoodFactsNetworkDataSource because it wraps retrofit client.
+    class Factory(
         private val dataStore: DataStore<Preferences>,
         productDatabase: ProductDatabase
     ) : ProductRemoteMediatorFactory {
         private val productDao = productDatabase.productDao()
 
-        override fun create(query: String?): ProductRemoteMediator? {
-            val isEnabled =
-                runBlocking { dataStore.get(ProductPreferences.openFoodFactsEnabled) }
+        private val _openFoodFactsNetworkDataSource by lazy {
+            OpenFoodFactsNetworkDataSource()
+        }
 
-            if (isEnabled != true) {
-                Log.w(TAG, "Open Food Facts is not enabled")
-                return null
+        private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource?
+            get() {
+                val isEnabled =
+                    runBlocking { dataStore.get(ProductPreferences.openFoodFactsEnabled) }
+
+                return if (isEnabled != true) {
+                    Log.w(TAG, "Open Food Facts is not enabled")
+                    null
+                } else {
+                    _openFoodFactsNetworkDataSource
+                }
             }
 
-            val country =
-                runBlocking { dataStore.get(ProductPreferences.openFoodFactsCountryCode) }
+        private val countryCode
+            get() = runBlocking { dataStore.get(ProductPreferences.openFoodFactsCountryCode) }
 
+        override fun createWithQuery(query: String?): ProductRemoteMediator? {
+            val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
+
+            val country = countryCode
             if (country == null) {
                 Log.e(TAG, "Country code is not set")
                 return null
@@ -120,10 +133,29 @@ internal class OpenFoodFactsRemoteMediator(
             }
 
             return OpenFoodFactsRemoteMediator(
+                isBarcode = false,
                 query = query,
                 country = country,
                 productDao = productDao,
-                openFoodFactsNetworkDataSource = OpenFoodFactsNetworkDataSource()
+                openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource
+            )
+        }
+
+        override fun createWithBarcode(barcode: String): ProductRemoteMediator? {
+            val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
+
+            val country = countryCode
+            if (country == null) {
+                Log.e(TAG, "Country code is not set")
+                return null
+            }
+
+            return OpenFoodFactsRemoteMediator(
+                isBarcode = true,
+                query = barcode,
+                country = country,
+                productDao = productDao,
+                openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource
             )
         }
 
