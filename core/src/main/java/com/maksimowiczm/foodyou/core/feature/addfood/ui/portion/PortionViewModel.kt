@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
@@ -85,13 +86,37 @@ class PortionViewModel(
             measurement = weightMeasurementEnum
         )
 
+        val weightMeasurement = when (weightMeasurementEnum) {
+            WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
+            WeightMeasurementEnum.Package -> {
+                val packageWeight = uiState.product.packageWeight
+
+                if (packageWeight == null) {
+                    _uiState.value = PortionUiState.Error
+                    return
+                }
+
+                WeightMeasurement.Package(packageWeight, quantity)
+            }
+
+            WeightMeasurementEnum.Serving -> {
+                val servingWeight = uiState.product.servingWeight
+
+                if (servingWeight == null) {
+                    _uiState.value = PortionUiState.Error
+                    return
+                }
+
+                WeightMeasurement.Serving(servingWeight, quantity)
+            }
+        }
+
         viewModelScope.launch {
             addFoodRepository.addFood(
                 date = date,
                 mealId = mealId,
                 productId = uiState.product.id,
-                weightMeasurement = weightMeasurementEnum,
-                quantity = quantity
+                weightMeasurement = weightMeasurement
             )
 
             _uiState.value = PortionUiState.Success(

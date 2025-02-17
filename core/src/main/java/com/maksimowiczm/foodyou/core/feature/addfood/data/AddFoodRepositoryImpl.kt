@@ -61,29 +61,13 @@ class AddFoodRepositoryImpl(
             is WeightMeasurement.Serving -> weightMeasurement.quantity
         }
 
-        return addFood(
-            date = date,
-            mealId = mealId,
-            productId = productId,
-            weightMeasurement = weightMeasurement.asEnum(),
-            quantity = quantity
-        )
-    }
-
-    override suspend fun addFood(
-        date: LocalDate,
-        mealId: Long,
-        productId: Long,
-        weightMeasurement: WeightMeasurementEnum,
-        quantity: Float
-    ): Long {
         val epochSeconds = Clock.System.now().epochSeconds
 
         val entity = WeightMeasurementEntity(
             mealId = mealId,
             diaryEpochDay = date.toEpochDays(),
             productId = productId,
-            measurement = weightMeasurement,
+            measurement = weightMeasurement.asEnum(),
             quantity = quantity,
             createdAt = epochSeconds
         )
