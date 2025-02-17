@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -74,28 +73,6 @@ class SearchViewModel(
     fun onSearch(query: String?) {
         viewModelScope.launch {
             _searchQuery.emit(query?.takeIf { it.isNotBlank() })
-        }
-    }
-
-    fun onQuickAdd(
-        productId: Long,
-        measurement: WeightMeasurement
-    ) {
-        viewModelScope.launch {
-            addFoodRepository.addMeasurement(
-                date = date,
-                mealId = mealId,
-                productId = productId,
-                weightMeasurement = measurement
-            )
-        }
-    }
-
-    fun onQuickRemove(
-        measurementId: Long
-    ) {
-        viewModelScope.launch {
-            addFoodRepository.removeMeasurement(measurementId)
         }
     }
 }
