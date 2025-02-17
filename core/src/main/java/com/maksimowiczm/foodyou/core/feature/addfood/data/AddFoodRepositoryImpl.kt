@@ -48,7 +48,7 @@ private class RemoteMediatorWrapper(
         loadType: LoadType,
         state: PagingState<Int, ProductSearchEntity>
     ): MediatorResult {
-        delay(2_000L)
+        delay(5_000L)
         return MediatorResult.Success(endOfPaginationReached = true)
     }
 }
