@@ -35,6 +35,27 @@ fun rememberSearchTopBarState(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun rememberSearchTopBarState(
+    recentQueries: List<ProductQuery> = emptyList()
+): SearchTopBarState {
+    val textFieldState = rememberTextFieldState()
+    val searchBarState = rememberSearchBarState(
+        initialValue = SearchBarValue.Collapsed
+    )
+
+    return remember(
+        recentQueries
+    ) {
+        SearchTopBarState(
+            textFieldState = textFieldState,
+            searchBarState = searchBarState,
+            initialRecentQueries = recentQueries
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Stable
 class SearchTopBarState(
     val textFieldState: TextFieldState,

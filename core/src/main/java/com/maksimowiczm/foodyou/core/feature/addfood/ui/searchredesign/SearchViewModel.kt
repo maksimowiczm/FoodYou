@@ -45,6 +45,14 @@ class SearchViewModel(
         }
     )
 
+    val recentQueries = addFoodRepository.observeProductQueries(
+        limit = 20
+    ).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(30_000L),
+        initialValue = emptyList()
+    )
+
     private val searchQuery = MutableSharedFlow<String?>(replay = 1)
 
     init {

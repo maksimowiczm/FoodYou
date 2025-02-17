@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchListItem
@@ -48,11 +49,13 @@ fun SearchHome(
 ) {
     val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems()
     val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
+    val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
 
     SearchHome(
         animatedVisibilityScope = animatedVisibilityScope,
         productsWithMeasurements = productsWithMeasurements,
         totalCalories = totalCalories,
+        recentQueries = recentQueries,
         onProductClick = onProductClick,
         onProductLongClick = onProductLongClick,
         onQuickAdd = viewModel::onQuickAdd,
@@ -72,6 +75,7 @@ fun SearchHome(
 private fun SearchHome(
     animatedVisibilityScope: AnimatedVisibilityScope,
     productsWithMeasurements: LazyPagingItems<ProductWithWeightMeasurement>,
+    recentQueries: List<ProductQuery>,
     totalCalories: Int,
     onProductClick: (productId: Long) -> Unit,
     onProductLongClick: (productId: Long) -> Unit,
@@ -87,7 +91,9 @@ private fun SearchHome(
 ) {
     val topBar = @Composable {
         SearchTopBar(
-            state = rememberSearchTopBarState(),
+            state = rememberSearchTopBarState(
+                recentQueries = recentQueries
+            ),
             onSearchSettings = onSearchSettings,
             onSearch = onSearch,
             onClearSearch = onClearSearch,
