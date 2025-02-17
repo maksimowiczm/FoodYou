@@ -10,7 +10,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionScreen
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionViewModel
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchViewModel
 import com.maksimowiczm.foodyou.core.feature.camera.navigation.BarcodeScannerRoute
 import com.maksimowiczm.foodyou.core.feature.camera.navigation.cameraGraph
 import com.maksimowiczm.foodyou.core.feature.product.navigation.ProductsRoute
@@ -30,8 +29,8 @@ fun AddFoodScreen(
     onClose: () -> Unit,
     onSearchSettings: () -> Unit,
     modifier: Modifier = Modifier,
+    addFoodViewModel: AddFoodViewModel = koinViewModel(),
     redesignSearchViewModel: SearchViewModelRedesign = koinViewModel(),
-    searchViewModel: SearchViewModel = koinViewModel(),
     portionViewModel: PortionViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
@@ -88,8 +87,8 @@ fun AddFoodScreen(
                 onCreateProduct = {
                     navController.navigateToProducts(
                         route = ProductsRoute.CreateProduct(
-                            epochDay = searchViewModel.date.toEpochDays(),
-                            mealId = searchViewModel.mealId
+                            epochDay = redesignSearchViewModel.date.toEpochDays(),
+                            mealId = redesignSearchViewModel.mealId
                         ),
                         navOptions = navOptions {
                             launchSingleTop = true
@@ -114,12 +113,6 @@ fun AddFoodScreen(
                     )
                 },
                 onSuccess = {
-                    searchViewModel.onSearch(
-                        query = searchViewModel.query,
-                        localOnly = true,
-                        persistError = true
-                    )
-
                     navController.popBackStack<Home>(
                         inclusive = false
                     )
@@ -136,14 +129,13 @@ fun AddFoodScreen(
                         inclusive = true
                     )
 
-                    searchViewModel.onProductDelete(it)
+                    addFoodViewModel.onProductDelete(it)
                 },
                 viewModel = portionViewModel
             )
         }
         cameraGraph(
             onBarcodeScan = {
-                searchViewModel.onBarcodeScan(it)
                 redesignSearchViewModel.onSearch(it)
 
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)

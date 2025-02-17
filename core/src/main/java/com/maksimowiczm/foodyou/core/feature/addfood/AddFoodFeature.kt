@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.core.feature.addfood
 import com.maksimowiczm.foodyou.core.feature.Feature
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepositoryImpl
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.AddFoodViewModel
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionViewModel
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchViewModel
 import org.koin.core.KoinApplication
@@ -16,6 +17,8 @@ private val addFoodModule = module {
     viewModelOf(::PortionViewModel)
 
     viewModelOf(::SearchViewModelRedesign)
+
+    viewModelOf(::AddFoodViewModel)
 
     factory {
         AddFoodRepositoryImpl(
