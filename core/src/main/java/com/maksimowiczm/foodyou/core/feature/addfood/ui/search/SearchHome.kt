@@ -63,6 +63,8 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 
 @Composable
 fun SearchHome(
@@ -208,6 +210,10 @@ private fun SearchHome(
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
+    val shimmer = rememberShimmer(
+        shimmerBounds = ShimmerBounds.Window
+    )
+
     Scaffold(
         modifier = modifier.onSizeChanged {
             val draggableAnchors = DraggableAnchors {
@@ -252,6 +258,16 @@ private fun SearchHome(
             ) {
                 item {
                     Spacer(Modifier.height(density.run { errorCardHeight.toDp() }))
+                }
+
+                if (
+                    productsWithMeasurements.loadState.refresh == LoadState.Loading && productsWithMeasurements.itemCount == 0
+                ) {
+                    items(
+                        count = 30
+                    ) {
+                        ProductSearchListItemSkeleton(shimmer = shimmer)
+                    }
                 }
 
                 items(

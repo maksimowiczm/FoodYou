@@ -5,6 +5,7 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -54,7 +56,7 @@ import kotlin.math.max
 fun ProductSearchListItemSkeleton(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberShimmer(
-        shimmerBounds = ShimmerBounds.View
+        shimmerBounds = ShimmerBounds.Window
     )
 ) {
     ListItem(
@@ -91,7 +93,7 @@ fun ProductSearchListItemSkeleton(
                     Modifier
                         .shimmer(shimmer)
                         .height(LocalTextStyle.current.toDp())
-                        .width(100.dp)
+                        .width(125.dp)
                         .clip(MaterialTheme.shapes.medium)
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
@@ -99,20 +101,25 @@ fun ProductSearchListItemSkeleton(
                     Modifier
                         .shimmer(shimmer)
                         .height(LocalTextStyle.current.toDp())
-                        .width(50.dp)
+                        .width(75.dp)
                         .clip(MaterialTheme.shapes.medium)
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
             }
         },
         trailingContent = {
-            Spacer(
-                Modifier
-                    .shimmer(shimmer)
-                    .size(48.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            )
+            Box(
+                modifier = Modifier.size(48.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .size(24.dp)
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+            }
         }
     )
 }
