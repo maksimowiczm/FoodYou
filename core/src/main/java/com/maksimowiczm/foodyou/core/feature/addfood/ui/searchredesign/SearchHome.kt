@@ -112,12 +112,14 @@ private fun SearchHome(
         )
     }
 
+    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+        .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+
     Scaffold(
         modifier = modifier,
         topBar = topBar,
         bottomBar = bottomBar,
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-            .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+        contentWindowInsets = contentWindowInsets
     ) { paddingValues ->
         LazyColumn(
             contentPadding = paddingValues,
