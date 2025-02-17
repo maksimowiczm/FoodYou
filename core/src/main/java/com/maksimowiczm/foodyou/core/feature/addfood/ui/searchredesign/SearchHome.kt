@@ -1,9 +1,15 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -12,6 +18,8 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -28,14 +36,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
@@ -46,11 +62,14 @@ import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ErrorCardState
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.FoodDatabaseErrorCard
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchListItem
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchUiModel
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchBottomBar
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchTopBar
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.rememberSearchTopBarState
+import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 
 @Composable
 fun SearchHome(
@@ -153,11 +172,59 @@ private fun SearchHome(
         }
     }
 
+    val density = LocalDensity.current
+    var errorCardHeight by remember { mutableIntStateOf(0) }
+    val hasError by remember(productsWithMeasurements.loadState) {
+        derivedStateOf { productsWithMeasurements.loadState.hasError }
+    }
+    val anchoredDraggableState = rememberSaveable(
+        productsWithMeasurements.loadState,
+        saver = AnchoredDraggableState.Saver()
+    ) {
+        AnchoredDraggableState(
+            initialValue = if (hasError) ErrorCardState.VISIBLE else ErrorCardState.HIDDEN_END
+        )
+    }
+    val errorCard = @Composable {
+        AnimatedVisibility(
+            visible = hasError && anchoredDraggableState.settledValue == ErrorCardState.VISIBLE,
+            modifier = Modifier
+                .horizontalDisplayCutoutPadding()
+                .fillMaxWidth()
+                .onSizeChanged { errorCardHeight = it.height }
+                .anchoredDraggable(
+                    state = anchoredDraggableState,
+                    orientation = Orientation.Horizontal
+                )
+        ) {
+            FoodDatabaseErrorCard(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .padding(top = 8.dp)
+                    .offset {
+                        IntOffset(
+                            x = anchoredDraggableState.requireOffset().fastRoundToInt(),
+                            y = 0
+                        )
+                    },
+                onRetry = productsWithMeasurements::retry
+            )
+        }
+    }
+
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.onSizeChanged {
+            val draggableAnchors = DraggableAnchors {
+                ErrorCardState.HIDDEN_START at -it.width.toFloat()
+                ErrorCardState.VISIBLE at 0f
+                ErrorCardState.HIDDEN_END at it.width.toFloat()
+            }
+
+            anchoredDraggableState.updateAnchors(draggableAnchors)
+        },
         topBar = topBar,
         bottomBar = bottomBar,
         contentWindowInsets = contentWindowInsets
@@ -165,15 +232,16 @@ private fun SearchHome(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            if (productsWithMeasurements.loadState.refresh == LoadState.Loading) {
-                Box(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .consumeWindowInsets(paddingValues)
-                        .fillMaxWidth()
-                        .zIndex(1f),
-                    contentAlignment = Alignment.Center
-                ) {
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .consumeWindowInsets(paddingValues)
+                    .fillMaxWidth()
+                    .zIndex(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                errorCard()
+                if (productsWithMeasurements.loadState.refresh == LoadState.Loading) {
                     LoadingIndicator()
                 }
             }
@@ -189,6 +257,10 @@ private fun SearchHome(
                 contentPadding = paddingValues,
                 modifier = Modifier.nestedScroll(bottomBarScrollBehavior.nestedScrollConnection)
             ) {
+                item {
+                    Spacer(Modifier.height(density.run { errorCardHeight.toDp() }))
+                }
+
                 items(
                     count = productsWithMeasurements.itemCount,
                     key = productsWithMeasurements.itemKey { it.product.id }
