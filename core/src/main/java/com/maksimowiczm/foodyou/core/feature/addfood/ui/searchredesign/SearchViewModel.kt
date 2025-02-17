@@ -62,7 +62,7 @@ class SearchViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val productsWithMeasurements = searchQuery.flatMapLatest { query ->
-        addFoodRepository.queryProducts1(
+        addFoodRepository.queryProducts(
             mealId = mealId,
             date = date,
             query = query,

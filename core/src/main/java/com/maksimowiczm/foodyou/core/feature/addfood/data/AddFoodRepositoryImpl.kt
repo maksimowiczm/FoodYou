@@ -16,7 +16,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDao
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDatabase
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductQueryEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
-import com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
@@ -98,117 +97,38 @@ class AddFoodRepositoryImpl(
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> {
-        return if (query?.all { it.isDigit() } == true) {
-            queryProductsByBarcode(mealId, date, query, localOnly)
-        } else {
-            queryProductsByName(mealId, date, query, localOnly)
-        }
-    }
-
-    override fun queryProducts1(
-        mealId: Long,
-        date: LocalDate,
-        query: String?,
-        localOnly: Boolean
     ): Flow<PagingData<ProductWithWeightMeasurement>> {
         val barcode = if (query?.all { it.isDigit() } == true) query else null
+
+        if (barcode == null && query != null) {
+            ioScope.launch {
+                insertProductQueryWithCurrentTime(query)
+            }
+        }
 
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 30
             )
         ) {
-            addFoodDao.observePagedProductsWithMeasurement(
-                mealId = mealId,
-                epochDay = date.toEpochDays(),
-                query = if (barcode == null) query else null,
-                barcode = barcode
-            )
+            if (barcode == null) {
+                addFoodDao.observePagedProductsWithMeasurementByQuery(
+                    mealId = mealId,
+                    date = date,
+                    query = query
+                )
+            } else {
+                addFoodDao.observePagedProductsWithMeasurementByBarcode(
+                    mealId = mealId,
+                    date = date,
+                    barcode = barcode
+                )
+            }
         }
 
         return pager.flow.map { pagingData ->
             pagingData.map { it.toDomain() }
         }
-    }
-
-    private fun queryProductsByBarcode(
-        mealId: Long,
-        date: LocalDate,
-        barcode: String,
-        localOnly: Boolean
-    ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> = flow {
-        val flow = { isLoading: Boolean, error: Throwable? ->
-            addFoodDao.observeProductsWithMeasurementByBarcode(
-                mealId = mealId,
-                date = date,
-                barcode = barcode
-            ).map { products ->
-                QueryResult(
-                    data = products,
-                    isLoading = isLoading,
-                    error = error
-                )
-            }
-        }
-
-        if (!localOnly) {
-            // First get local products and emit loading state
-            flow(true, null).first().also { emit(it) }
-
-            try {
-                remoteProductDatabase.queryAndInsertByBarcode(barcode)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to query products", e)
-
-                flow(false, e).collect(::emit)
-            }
-        }
-
-        flow(false, null).collect(::emit)
-    }
-
-    private fun queryProductsByName(
-        mealId: Long,
-        date: LocalDate,
-        query: String?,
-        localOnly: Boolean
-    ): Flow<QueryResult<List<ProductWithWeightMeasurement>>> = flow {
-        // Insert the query to the history
-        if (query != null) {
-            ioScope.launch {
-                insertProductQueryWithCurrentTime(query)
-            }
-        }
-
-        val flow = { isLoading: Boolean, error: Throwable? ->
-            addFoodDao.observeProductsWithMeasurementByQuery(
-                mealId = mealId,
-                date = date,
-                query = query
-            ).map { products ->
-                QueryResult(
-                    data = products,
-                    isLoading = isLoading,
-                    error = error
-                )
-            }
-        }
-
-        if (!localOnly) {
-            // First get local products and emit loading state
-            flow(true, null).first().also { emit(it) }
-
-            try {
-                remoteProductDatabase.queryAndInsertByName(query)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to query products", e)
-
-                flow(false, e).collect(::emit)
-            }
-        }
-
-        flow(false, null).collect(::emit)
     }
 
     private suspend fun insertProductQueryWithCurrentTime(query: String) {
@@ -309,32 +229,29 @@ class AddFoodRepositoryImpl(
         }.filterNotNull()
     }
 
-    private fun AddFoodDao.observeProductsWithMeasurementByQuery(
+    private fun AddFoodDao.observePagedProductsWithMeasurementByQuery(
         mealId: Long,
         date: LocalDate,
         query: String?
-    ): Flow<List<ProductWithWeightMeasurement>> = observeProductsWithMeasurement(
+    ) = observePagedProductsWithMeasurement(
         mealId = mealId,
         epochDay = date.toEpochDays(),
         query = query,
-        barcode = null,
-        limit = PAGE_SIZE
-    ).map { list -> list.map { it.toDomain() } }
+        barcode = null
+    )
 
-    private fun AddFoodDao.observeProductsWithMeasurementByBarcode(
+    private fun AddFoodDao.observePagedProductsWithMeasurementByBarcode(
         mealId: Long,
         date: LocalDate,
         barcode: String
-    ): Flow<List<ProductWithWeightMeasurement>> = observeProductsWithMeasurement(
+    ) = observePagedProductsWithMeasurement(
         mealId = mealId,
         epochDay = date.toEpochDays(),
         query = null,
-        barcode = barcode,
-        limit = PAGE_SIZE
-    ).map { list -> list.map { it.toDomain() } }
+        barcode = barcode
+    )
 
     private companion object {
         private const val TAG = "AddFoodRepositoryImpl"
-        private const val PAGE_SIZE = 30
     }
 }

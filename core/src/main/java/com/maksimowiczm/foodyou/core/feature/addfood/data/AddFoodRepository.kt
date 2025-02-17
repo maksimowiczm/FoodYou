@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeigh
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurementEnum
-import com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 
@@ -40,13 +39,6 @@ interface AddFoodRepository {
     )
 
     fun queryProducts(
-        mealId: Long,
-        date: LocalDate,
-        query: String?,
-        localOnly: Boolean
-    ): Flow<QueryResult<List<ProductWithWeightMeasurement>>>
-
-    fun queryProducts1(
         mealId: Long,
         date: LocalDate,
         query: String?,
