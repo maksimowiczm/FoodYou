@@ -2,8 +2,16 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
@@ -15,14 +23,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
@@ -32,7 +43,80 @@ import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButtonDefaults
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.core.ui.toDp
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import kotlin.math.max
+
+@PreviewLightDark
+@Composable
+fun ProductSearchListItemSkeleton(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberShimmer(
+        shimmerBounds = ShimmerBounds.View
+    )
+) {
+    ListItem(
+        headlineContent = {
+            Column {
+                Spacer(Modifier.height(2.dp))
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp() - 4.dp)
+                        .width(200.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+                Spacer(Modifier.height(2.dp))
+            }
+        },
+        overlineContent = {
+            Spacer(
+                Modifier
+                    .shimmer(shimmer)
+                    .height(LocalTextStyle.current.toDp())
+                    .width(100.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+        },
+        supportingContent = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp())
+                        .width(100.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp())
+                        .width(50.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+            }
+        },
+        trailingContent = {
+            Spacer(
+                Modifier
+                    .shimmer(shimmer)
+                    .size(48.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+        }
+    )
+}
 
 @Composable
 fun ProductSearchListItem(

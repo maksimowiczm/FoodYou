@@ -261,8 +261,13 @@ private fun SearchHome(
                     val item = productsWithMeasurements[it]
 
                     if (item == null) {
-                        // TODO
-                        Text("I am a placeholder")
+                        ProductSearchListItemSkeleton(
+                            modifier = Modifier.animateItem(
+                                placementSpec = tween(
+                                    easing = FastOutLinearInEasing
+                                )
+                            )
+                        )
                     } else {
                         val isChecked = item.measurementId != null
 
