@@ -2,8 +2,6 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -272,18 +270,14 @@ private fun SearchHome(
 
                 items(
                     count = productsWithMeasurements.itemCount,
-                    key = productsWithMeasurements.itemKey { it.product.id }
+                    key = productsWithMeasurements.itemKey {
+                        "${it.measurementId} ${it.product.id}"
+                    }
                 ) {
                     val item = productsWithMeasurements[it]
 
                     if (item == null) {
-                        ProductSearchListItemSkeleton(
-                            modifier = Modifier.animateItem(
-                                placementSpec = tween(
-                                    easing = FastOutLinearInEasing
-                                )
-                            )
-                        )
+                        ProductSearchListItemSkeleton(Modifier.animateItem())
                     } else {
                         val isChecked = item.measurementId != null
 
@@ -300,11 +294,7 @@ private fun SearchHome(
                             onClick = { onProductClick(item.product.id) },
                             onLongClick = { onProductLongClick(item.product.id) },
                             modifier = Modifier
-                                .animateItem(
-                                    placementSpec = tween(
-                                        easing = FastOutLinearInEasing
-                                    )
-                                )
+                                .animateItem()
                                 .zIndex(if (isChecked) 1f else 0f)
                         )
                     }
