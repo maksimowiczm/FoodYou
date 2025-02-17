@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -20,6 +21,7 @@ import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementE
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
+import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,12 +30,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
 class AddFoodRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
     productDatabase: ProductDatabase,
+    private val productRemoteMediatorFactory: ProductRemoteMediatorFactory,
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 ) : AddFoodRepository {
     private val addFoodDao: AddFoodDao = addFoodDatabase.addFoodDao()
@@ -86,24 +90,50 @@ class AddFoodRepositoryImpl(
             ?: WeightMeasurementEntity.FIRST_RANK
     }
 
+    @OptIn(ExperimentalPagingApi::class)
     override fun queryProducts(
         mealId: Long,
         date: LocalDate,
         query: String?,
         localOnly: Boolean
     ): Flow<PagingData<ProductIdWithMeasurementsId>> {
+        val barcode = if (query?.all { it.isDigit() } == true) query else null
+
+        if (barcode == null && query != null) {
+            ioScope.launch {
+                insertProductQueryWithCurrentTime(query)
+            }
+        }
+
+        val remoteMediator = if (localOnly) {
+            null
+        } else if (barcode == null) {
+            productRemoteMediatorFactory.createWithQuery(query)
+        } else {
+            productRemoteMediatorFactory.createWithBarcode(barcode)
+        }
+
         val pager = Pager(
             config = PagingConfig(
-                pageSize = 30,
-                enablePlaceholders = true
-            )
+                pageSize = 30
+            ),
+            remoteMediator = null
         ) {
-            addFoodDao.observeProductIdsWithMeasurementIds(
-                mealId = mealId,
-                epochDay = date.toEpochDays(),
-                query = query,
-                barcode = null
-            )
+            if (barcode == null) {
+                addFoodDao.observeProductIdsWithMeasurementIds(
+                    mealId = mealId,
+                    epochDay = date.toEpochDays(),
+                    query = query,
+                    barcode = null
+                )
+            } else {
+                addFoodDao.observeProductIdsWithMeasurementIds(
+                    mealId = mealId,
+                    epochDay = date.toEpochDays(),
+                    query = null,
+                    barcode = barcode
+                )
+            }
         }
 
         return pager.flow.map { pagingData ->
