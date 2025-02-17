@@ -19,7 +19,7 @@ enum class ProductDeletionError {
 }
 
 interface ProductRepository {
-    fun observePagedProductsIds(): Flow<PagingData<Long>>
+    fun observePagedProducts(): Flow<PagingData<Product>>
 
     fun observeProductById(id: Long): Flow<Product?>
 

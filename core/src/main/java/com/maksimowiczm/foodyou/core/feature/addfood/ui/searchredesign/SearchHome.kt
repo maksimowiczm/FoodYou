@@ -1,13 +1,17 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.searchredesign
 
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.zIndex
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchListItem
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.ProductSearchUiModel
 
 @Composable
 fun SearchHome(
@@ -16,56 +20,55 @@ fun SearchHome(
     onProductLongClick: (productId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val measurementIds by viewModel.measurements.collectAsStateWithLifecycle(null)
-    val productIds = viewModel.productIds
-
-    if (measurementIds == null) {
-        return
-    }
-
-    val state = rememberSearchState(
-        measurements = measurementIds!!,
-        productIds = productIds
-    )
-
-    val pagingItems = state.productIds.collectAsLazyPagingItems()
+    val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems()
 
     Scaffold(
         modifier = modifier
     ) { paddingValues ->
         LazyColumn(
-            contentPadding = paddingValues
+            contentPadding = paddingValues,
+            modifier = Modifier
         ) {
-            state.measurements.forEach { measurement ->
-                item {
-                    SearchListItem(
-                        viewModel = viewModel.itemViewModel(
-                            productId = measurement.productId,
-                            measurementId = measurement.weightMeasurementId
+            items(
+                count = productsWithMeasurements.itemCount,
+                key = productsWithMeasurements.itemKey { it.product.id }
+            ) {
+                val item = productsWithMeasurements[it]
+
+                if (item == null) {
+                    Text("I am a placeholder")
+                } else {
+                    val isChecked = item.measurementId != null
+
+                    ProductSearchListItem(
+                        uiModel = ProductSearchUiModel(
+                            model = item,
+                            isLoading = false,
+                            isChecked = isChecked
                         ),
-                        onClick = { onProductClick(measurement.productId) },
-                        onLongClick = { onProductLongClick(measurement.productId) }
+                        onCheckChange = {
+                            if (isChecked) {
+                                viewModel.onQuickRemove(
+                                    model = item
+                                )
+                            } else {
+                                viewModel.onQuickAdd(
+                                    productId = item.product.id,
+                                    measurement = item.measurement
+                                )
+                            }
+                        },
+                        onClick = { onProductClick(item.product.id) },
+                        onLongClick = { onProductLongClick(item.product.id) },
+                        modifier = Modifier
+                            .animateItem(
+                                placementSpec = tween(
+                                    easing = FastOutLinearInEasing
+                                )
+                            )
+                            .zIndex(if (isChecked) 1f else 0f)
                     )
                 }
-            }
-
-            items(
-                count = pagingItems.itemCount,
-                key = pagingItems.itemKey()
-            ) { index ->
-                val id = pagingItems[index] ?: return@items
-
-                if (state.measurements.any { it.productId == id }) {
-                    return@items
-                }
-
-                SearchListItem(
-                    viewModel = viewModel.itemViewModel(
-                        productId = id
-                    ),
-                    onClick = { onProductClick(id) },
-                    onLongClick = { onProductLongClick(id) }
-                )
             }
         }
     }

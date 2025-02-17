@@ -1,7 +1,10 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithWeightMeasurementId
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
@@ -100,6 +103,28 @@ class AddFoodRepositoryImpl(
             queryProductsByBarcode(mealId, date, query, localOnly)
         } else {
             queryProductsByName(mealId, date, query, localOnly)
+        }
+    }
+
+    override fun queryProducts(
+        mealId: Long,
+        date: LocalDate
+    ): Flow<PagingData<ProductWithWeightMeasurement>> {
+        val pager = Pager(
+            config = PagingConfig(
+                pageSize = 30
+            )
+        ) {
+            addFoodDao.observePagedProductsWithMeasurement(
+                mealId = mealId,
+                epochDay = date.toEpochDays(),
+                query = null,
+                barcode = null
+            )
+        }
+
+        return pager.flow.map { pagingData ->
+            pagingData.map { it.toDomain() }
         }
     }
 
@@ -239,20 +264,15 @@ class AddFoodRepositoryImpl(
         }
     }
 
-    override fun observeWeightMeasurementIds(
+    override fun observeProductsWithWeightMeasurement(
         mealId: Long,
         date: LocalDate
-    ): Flow<List<ProductIdWithWeightMeasurementId>> {
-        return addFoodDao.observeWeightMeasurements(
+    ): Flow<List<ProductWithWeightMeasurement>> {
+        return addFoodDao.observeMeasuredProducts(
             mealId = mealId,
             epochDay = date.toEpochDays()
         ).map { list ->
-            list.map {
-                ProductIdWithWeightMeasurementId(
-                    productId = it.productId,
-                    weightMeasurementId = it.id
-                )
-            }
+            list.map { it.toDomain() }
         }
     }
 

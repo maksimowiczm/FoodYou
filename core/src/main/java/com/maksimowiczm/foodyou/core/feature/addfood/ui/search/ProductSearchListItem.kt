@@ -235,8 +235,8 @@ object ProductSearchListItemDefaults {
         uncheckedToggleButtonContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
         checkedContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
         checkedContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
-        checkedToggleButtonContainerColor: Color = MaterialTheme.colorScheme.surface,
-        checkedToggleButtonContentColor: Color = MaterialTheme.colorScheme.onSurface
+        checkedToggleButtonContainerColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
+        checkedToggleButtonContentColor: Color = MaterialTheme.colorScheme.onTertiaryContainer
     ) = ProductSearchListItemColors(
         uncheckedContainerColor = uncheckedContainerColor,
         uncheckedContentColor = uncheckedContentColor,

@@ -22,15 +22,15 @@ class ProductRepositoryImpl(
 ) : ProductRepository {
     private val productDao: ProductDao = productDatabase.productDao()
 
-    override fun observePagedProductsIds(): Flow<PagingData<Long>> {
+    override fun observePagedProducts(): Flow<PagingData<Product>> {
         val pager = Pager(
             config = PagingConfig(pageSize = 20)
         ) {
             productDao.observePagedProducts()
         }
 
-        return pager.flow.map { data ->
-            data.map { it.id }
+        return pager.flow.map { pagingData ->
+            pagingData.map { it.toDomain() }
         }
     }
 

@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithWeightMeasurementId
+import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
@@ -46,6 +46,11 @@ interface AddFoodRepository {
         localOnly: Boolean
     ): Flow<QueryResult<List<ProductWithWeightMeasurement>>>
 
+    fun queryProducts(
+        mealId: Long,
+        date: LocalDate
+    ): Flow<PagingData<ProductWithWeightMeasurement>>
+
     fun observeTotalCalories(
         mealId: Long,
         date: LocalDate
@@ -57,10 +62,10 @@ interface AddFoodRepository {
 
     fun observeWeightMeasurementById(id: Long): Flow<WeightMeasurement?>
 
-    fun observeWeightMeasurementIds(
+    fun observeProductsWithWeightMeasurement(
         mealId: Long,
         date: LocalDate
-    ): Flow<List<ProductIdWithWeightMeasurementId>>
+    ): Flow<List<ProductWithWeightMeasurement>>
 
     fun observeWeightMeasurementSuggestionByProductId(productId: Long): Flow<WeightMeasurement>
 }
