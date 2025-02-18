@@ -271,14 +271,12 @@ private fun SearchHome(
 
                 queryResult.data.forEach { model ->
                     if (model.measurements.isEmpty()) {
-                        val key = HolderKey(model.productId, 0)
-
                         item(
-                            key = key.hashCode()
+                            key = model.productId
                         ) {
                             ProductSearchListItem(
                                 productMeasurementHolder = viewModel.holder(
-                                    key = key,
+                                    key = HolderKey(model.productId, 0),
                                     measurementId = null
                                 ),
                                 shimmer = shimmer,
@@ -287,19 +285,18 @@ private fun SearchHome(
                                     hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
                                     onQuickAdd(pId, wm)
                                 },
-                                onQuickRemove = {}
+                                onQuickRemove = {},
+                                modifier = Modifier.animateItem()
                             )
                         }
                     } else {
                         model.measurements.forEachIndexed { i, measurementId ->
-                            val key = HolderKey(model.productId, i)
-
                             item(
-                                key = key.hashCode()
+                                key = "m$measurementId"
                             ) {
                                 ProductSearchListItem(
                                     productMeasurementHolder = viewModel.holder(
-                                        key = key,
+                                        key = HolderKey(model.productId, i),
                                         measurementId = measurementId
                                     ),
                                     shimmer = shimmer,
@@ -308,7 +305,8 @@ private fun SearchHome(
                                     onQuickRemove = {
                                         hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
                                         onQuickRemove(it)
-                                    }
+                                    },
+                                    modifier = Modifier.animateItem()
                                 )
                             }
                         }
