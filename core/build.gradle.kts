@@ -29,6 +29,7 @@ android {
         buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org/\"")
         // Use cached open food facts data for development
         // buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"<cache-address>\"")
+        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"http://192.168.2.43:8080\"")
     }
 
     buildTypes {
@@ -83,10 +84,6 @@ room {
 
 dependencies {
 
-    // Paging
-    implementation(libs.androidx.paging.runtime)
-    implementation(libs.androidx.paging.compose)
-
     // Shimmer
     implementation(libs.compose.shimmer)
 
@@ -116,7 +113,6 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.paging)
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)

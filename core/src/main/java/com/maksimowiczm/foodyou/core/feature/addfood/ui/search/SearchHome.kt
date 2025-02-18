@@ -55,6 +55,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 
 @Composable
@@ -80,6 +81,8 @@ fun SearchHome(
         recentQueries = recentQueries,
         query = query,
         onProductClick = onProductClick,
+        onQuickAdd = viewModel::onQuickAdd,
+        onQuickRemove = viewModel::onQuickRemove,
         onSearchSettings = onSearchSettings,
         onSearch = viewModel::onSearch,
         onClearSearch = { viewModel.onSearch(null) },
@@ -99,6 +102,8 @@ private fun SearchHome(
     totalCalories: Int,
     query: String?,
     onProductClick: (productId: Long) -> Unit,
+    onQuickAdd: (productId: Long, measurement: WeightMeasurement) -> Unit,
+    onQuickRemove: (measurementId: Long) -> Unit,
     onSearchSettings: () -> Unit,
     onSearch: (query: String) -> Unit,
     onClearSearch: () -> Unit,
@@ -239,13 +244,21 @@ private fun SearchHome(
                     key = {
                         "${it.product.id}-${it.measurementId}"
                     }
-                ) {
-                    val isChecked = it.measurementId != null
+                ) { item ->
+                    val isChecked = item.measurementId != null
 
                     ProductSearchListItem(
-                        model = it,
+                        model = item,
                         isChecked = isChecked,
-                        onClick = { onProductClick(it.product.id) }
+                        onCheckChange = {
+                            if (item.measurementId != null) {
+                                onQuickRemove(item.measurementId)
+                            } else {
+                                onQuickAdd(item.product.id, item.measurement)
+                            }
+                        },
+                        onClick = { onProductClick(item.product.id) },
+                        modifier = Modifier.animateItem()
                     )
                 }
 

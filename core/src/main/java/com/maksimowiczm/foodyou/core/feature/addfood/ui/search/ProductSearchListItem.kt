@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +11,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalTextStyle
@@ -33,6 +37,8 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeigh
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.diary.ui.previewparameter.ProductWithWeightMeasurementPreviewParameter
 import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
+import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
+import com.maksimowiczm.foodyou.core.ui.component.ToggleButtonDefaults
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.core.ui.toDp
@@ -106,6 +112,7 @@ fun ProductSearchListItem(
     model: ProductWithWeightMeasurement,
     onClick: () -> Unit,
     isChecked: Boolean,
+    onCheckChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     colors: ProductSearchListItemColors = ProductSearchListItemDefaults.colors()
 ) {
@@ -141,6 +148,26 @@ fun ProductSearchListItem(
                     .fillMaxWidth()
                     .horizontalDisplayCutoutPadding()
             )
+        },
+        trailingContent = {
+            ToggleButton(
+                modifier = Modifier.horizontalDisplayCutoutPadding(),
+                checked = isChecked,
+                onCheckChange = onCheckChange,
+                colors = ToggleButtonDefaults.colors(
+                    checkedColor = colors.checkedToggleButtonContainerColor,
+                    checkedContentColor = colors.checkedToggleButtonContentColor,
+                    uncheckedColor = colors.uncheckedToggleButtonContainerColor
+                ),
+                indication = LocalIndication.current
+            ) {
+                if (isChecked) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null
+                    )
+                }
+            }
         },
         colors = ListItemDefaults.colors(
             containerColor = containerColor,
@@ -239,8 +266,11 @@ private fun SupportingTextLayout(
 data class ProductSearchListItemColors(
     val uncheckedContainerColor: Color,
     val uncheckedContentColor: Color,
+    val uncheckedToggleButtonContainerColor: Color,
     val checkedContainerColor: Color,
-    val checkedContentColor: Color
+    val checkedContentColor: Color,
+    val checkedToggleButtonContainerColor: Color,
+    val checkedToggleButtonContentColor: Color
 )
 
 object ProductSearchListItemDefaults {
@@ -248,13 +278,19 @@ object ProductSearchListItemDefaults {
     fun colors(
         uncheckedContainerColor: Color = MaterialTheme.colorScheme.surface,
         uncheckedContentColor: Color = MaterialTheme.colorScheme.onSurface,
+        uncheckedToggleButtonContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
         checkedContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-        checkedContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer
+        checkedContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
+        checkedToggleButtonContainerColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
+        checkedToggleButtonContentColor: Color = MaterialTheme.colorScheme.onTertiaryContainer
     ) = ProductSearchListItemColors(
         uncheckedContainerColor = uncheckedContainerColor,
         uncheckedContentColor = uncheckedContentColor,
+        uncheckedToggleButtonContainerColor = uncheckedToggleButtonContainerColor,
         checkedContainerColor = checkedContainerColor,
-        checkedContentColor = checkedContentColor
+        checkedContentColor = checkedContentColor,
+        checkedToggleButtonContainerColor = checkedToggleButtonContainerColor,
+        checkedToggleButtonContentColor = checkedToggleButtonContentColor
     )
 }
 
@@ -341,6 +377,7 @@ private fun ProductSearchListItemPreview() {
         ProductSearchListItem(
             model = ProductWithWeightMeasurementPreviewParameter().values.first(),
             onClick = {},
+            onCheckChange = {},
             isChecked = true
         )
     }
@@ -358,6 +395,7 @@ private fun ProductSearchListItemPreview(
         ProductSearchListItem(
             model = model,
             onClick = {},
+            onCheckChange = {},
             isChecked = false
         )
     }

@@ -27,7 +27,7 @@ android {
             )
 
             // Test minified version with debug signing config
-            // signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
