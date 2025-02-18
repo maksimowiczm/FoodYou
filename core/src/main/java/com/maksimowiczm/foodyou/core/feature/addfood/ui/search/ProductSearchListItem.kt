@@ -46,65 +46,6 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import kotlin.math.max
 
-@Preview
-@Composable
-fun ProductSearchListItemSkeleton(
-    modifier: Modifier = Modifier,
-    shimmer: Shimmer = rememberShimmer(
-        shimmerBounds = ShimmerBounds.Window
-    )
-) {
-    ListItem(
-        headlineContent = {
-            Column {
-                Spacer(Modifier.height(2.dp))
-                Spacer(
-                    Modifier
-                        .shimmer(shimmer)
-                        .height(LocalTextStyle.current.toDp() - 4.dp)
-                        .width(200.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                )
-                Spacer(Modifier.height(2.dp))
-            }
-        },
-        overlineContent = {
-            Spacer(
-                Modifier
-                    .shimmer(shimmer)
-                    .height(LocalTextStyle.current.toDp())
-                    .width(100.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            )
-        },
-        supportingContent = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Spacer(
-                    Modifier
-                        .shimmer(shimmer)
-                        .height(LocalTextStyle.current.toDp())
-                        .width(125.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                )
-                Spacer(
-                    Modifier
-                        .shimmer(shimmer)
-                        .height(LocalTextStyle.current.toDp())
-                        .width(75.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                )
-            }
-        }
-    )
-}
-
 @Composable
 fun ProductSearchListItem(
     model: ProductWithWeightMeasurement,
@@ -364,6 +305,65 @@ val ProductWithWeightMeasurement.measurementString: String
 
 val ProductWithWeightMeasurement.caloriesString: String
     @Composable get() = "$calories " + stringResource(R.string.unit_kcal)
+
+@Preview
+@Composable
+fun ProductSearchListItemSkeleton(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberShimmer(
+        shimmerBounds = ShimmerBounds.Window
+    )
+) {
+    ListItem(
+        headlineContent = {
+            Column {
+                Spacer(Modifier.height(2.dp))
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp() - 4.dp)
+                        .width(200.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+                Spacer(Modifier.height(2.dp))
+            }
+        },
+        overlineContent = {
+            Spacer(
+                Modifier
+                    .shimmer(shimmer)
+                    .height(LocalTextStyle.current.toDp())
+                    .width(100.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+        },
+        supportingContent = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp())
+                        .width(125.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp())
+                        .width(75.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+            }
+        }
+    )
+}
 
 @Preview
 @Composable
