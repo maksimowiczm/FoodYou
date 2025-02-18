@@ -30,6 +30,10 @@ data class ProductWithWeightMeasurement(
 }
 
 fun ProductSearchEntity.toDomain(): ProductWithWeightMeasurement {
+    val product = this.product.toDomain()
+    val measurementId = if (todaysMeasurement) this.weightMeasurement?.id else null
+    val rank = this.weightMeasurement?.rank ?: WeightMeasurementEntity.FIRST_RANK
+
     val weightMeasurement = when (this.weightMeasurement?.measurement) {
         WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(
             weight = this.weightMeasurement.quantity
@@ -45,28 +49,14 @@ fun ProductSearchEntity.toDomain(): ProductWithWeightMeasurement {
             quantity = this.weightMeasurement.quantity
         )
 
-        null -> if (product.servingWeight != null) {
-            WeightMeasurement.Serving(
-                servingWeight = this.product.servingWeight,
-                quantity = 1f
-            )
-        } else if (product.packageWeight != null) {
-            WeightMeasurement.Package(
-                packageWeight = this.product.packageWeight,
-                quantity = 1f
-            )
-        } else {
-            WeightMeasurement.WeightUnit(
-                weight = 100f
-            )
-        }
+        null -> WeightMeasurement.defaultForProduct(product)
     }
 
     return ProductWithWeightMeasurement(
-        product = product.toDomain(),
-        measurementId = if (todaysMeasurement) this.weightMeasurement?.id else null,
+        product = product,
         measurement = weightMeasurement,
-        rank = this.weightMeasurement?.rank ?: WeightMeasurementEntity.FIRST_RANK
+        measurementId = measurementId,
+        rank = rank
     )
 }
 
