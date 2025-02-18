@@ -1,12 +1,8 @@
 package com.maksimowiczm.foodyou.core.feature.diary.ui.mealscard
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -77,9 +73,8 @@ fun MealsCard(
         val pageOffset = pagerState.currentPage - page + pagerState.currentPageOffsetFraction
         val fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
 
-        AnimatedContent(
+        Crossfade(
             targetState = state.diaryDay != null,
-            transitionSpec = { fadeIn(tween()) togetherWith fadeOut(tween()) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 2.dp)
