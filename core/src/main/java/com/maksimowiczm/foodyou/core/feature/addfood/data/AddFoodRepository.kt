@@ -1,8 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
-import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import kotlinx.coroutines.flow.Flow
@@ -26,13 +24,6 @@ interface AddFoodRepository {
     ): Long
 
     suspend fun removeMeasurement(portionId: Long)
-
-    fun queryProducts(
-        mealId: Long,
-        date: LocalDate,
-        query: String?,
-        localOnly: Boolean
-    ): Flow<PagingData<ProductWithWeightMeasurement>>
 
     fun observeTotalCalories(
         mealId: Long,

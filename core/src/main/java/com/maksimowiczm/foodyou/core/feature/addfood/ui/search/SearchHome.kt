@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -52,10 +54,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
@@ -74,7 +72,7 @@ fun SearchHome(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems()
+    val productsWithMeasurements by viewModel.productsWithMeasurements.collectAsStateWithLifecycle()
     val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -113,11 +111,7 @@ private fun SearchHome(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isEmpty by remember(productsWithMeasurements.loadState) {
-        derivedStateOf {
-            productsWithMeasurements.loadState.isIdle && productsWithMeasurements.itemCount == 0
-        }
-    }
+    val isEmpty = false
 
     val topBar = @Composable {
         SearchTopBar(
@@ -159,11 +153,9 @@ private fun SearchHome(
 
     val density = LocalDensity.current
     var errorCardHeight by remember { mutableIntStateOf(0) }
-    val hasError by remember(productsWithMeasurements.loadState) {
-        derivedStateOf { productsWithMeasurements.loadState.hasError }
-    }
+    val hasError = false
     val anchoredDraggableState = rememberSaveable(
-        productsWithMeasurements.loadState,
+//        productsWithMeasurements.loadState,
         saver = AnchoredDraggableState.Saver()
     ) {
         AnchoredDraggableState(
@@ -192,7 +184,7 @@ private fun SearchHome(
                             y = 0
                         )
                     },
-                onRetry = productsWithMeasurements::retry
+                onRetry = {}
             )
         }
     }
@@ -230,7 +222,7 @@ private fun SearchHome(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 errorCard()
-                if (productsWithMeasurements.loadState.refresh == LoadState.Loading) {
+                if (false) {
                     LoadingIndicator()
                 }
             }
@@ -252,12 +244,11 @@ private fun SearchHome(
 
                 items(
                     count = productsWithMeasurements.itemCount,
-                    key = productsWithMeasurements.itemKey()
                 ) {
                     val item = productsWithMeasurements[it]
 
                     if (item == null) {
-                        ProductSearchListItemSkeleton()
+                        ProductSearchListItemSkeleton(shimmer = shimmer)
                     } else {
                         val isChecked = item.measurementId != null
 
@@ -281,4 +272,12 @@ enum class ErrorCardState {
     HIDDEN_START,
     VISIBLE,
     HIDDEN_END
+}
+
+class LazyPagingItems<T>(
+    val itemCount: Int
+) {
+    operator fun get(index: Int): T? {
+        return null
+    }
 }

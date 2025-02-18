@@ -1,18 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadType
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import androidx.paging.PagingSource.LoadResult.Page
-import androidx.paging.PagingState
-import androidx.paging.RemoteMediator
-import androidx.paging.map
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion.Companion.defaultSuggestion
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
@@ -21,14 +10,11 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDao
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDatabase
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductQueryEntity
-import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductSearchEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
-import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
-import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediator
-import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
+import com.maksimowiczm.foodyou.core.infrastructure.database.FoodYouDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -37,14 +23,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
 class AddFoodRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
     productDatabase: ProductDatabase,
-    private val productRemoteMediatorFactory: ProductRemoteMediatorFactory,
+    private val foodYouDatabase: FoodYouDatabase,
+//    private val productRemoteMediatorFactory: ProductRemoteMediatorFactory,
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 ) : AddFoodRepository {
     private val addFoodDao: AddFoodDao = addFoodDatabase.addFoodDao()
@@ -81,51 +67,6 @@ class AddFoodRepositoryImpl(
 
         if (entity != null) {
             addFoodDao.deleteWeightMeasurement(entity.id)
-        }
-    }
-
-    @OptIn(ExperimentalPagingApi::class)
-    override fun queryProducts(
-        mealId: Long,
-        date: LocalDate,
-        query: String?,
-        localOnly: Boolean
-    ): Flow<PagingData<ProductWithWeightMeasurement>> {
-        val barcode = if (query?.all { it.isDigit() } == true) query else null
-
-        if (barcode == null && query != null) {
-            ioScope.launch {
-                insertProductQueryWithCurrentTime(query)
-            }
-        }
-
-        val remoteMediator = if (localOnly) {
-            null
-        } else {
-            if (barcode == null) {
-                productRemoteMediatorFactory.createWithQuery(query)
-            } else {
-                productRemoteMediatorFactory.createWithBarcode(barcode)
-            }
-        }
-
-        val pager = Pager(
-            config = PagingConfig(
-                pageSize = 30,
-                enablePlaceholders = true
-            ),
-            remoteMediator = remoteMediator?.let { RemoteMediatorWrapper(it) }
-        ) {
-            MyPagingSource(
-                mealId = mealId,
-                date = date,
-                addFoodDao = addFoodDao,
-                productDao = productDao
-            )
-        }
-
-        return pager.flow.map { pagingData ->
-            pagingData.map { it.toDomain() }
         }
     }
 
@@ -204,116 +145,5 @@ class AddFoodRepositoryImpl(
 
     private companion object {
         private const val TAG = "AddFoodRepositoryImpl"
-    }
-}
-
-// Adapter for RemoteMediator<Int, ProductSearchEntity> to RemoteMediator<Int, ProductEntity>
-// Got to love paging3 library :) (most likely skill issue from my side)
-@OptIn(ExperimentalPagingApi::class)
-private class RemoteMediatorWrapper(
-    private val productRemoteMediator: ProductRemoteMediator
-) : RemoteMediator<Int, ProductSearchEntity>() {
-    override suspend fun load(
-        loadType: LoadType,
-        state: PagingState<Int, ProductSearchEntity>
-    ): MediatorResult {
-        val pages: List<Page<Int, ProductEntity>> = state.pages.map { page ->
-            val data = page.data.map { it.product }
-
-            Page(
-                data = data,
-                nextKey = page.nextKey,
-                prevKey = page.prevKey
-            )
-        }
-
-        Log.d("RemoteMediatorWrapper", "loadType: $loadType, pages: $pages, state: $state")
-
-        return productRemoteMediator.load(
-            loadType = loadType,
-            state = PagingState(
-                pages = pages,
-                config = state.config,
-                anchorPosition = state.anchorPosition,
-                leadingPlaceholderCount = state.leadingPlaceholderCount()
-            )
-        )
-    }
-
-    private companion object {
-        fun PagingState<Int, ProductSearchEntity>.leadingPlaceholderCount(): Int {
-            val field = this::class.java.getDeclaredField("leadingPlaceholderCount")
-            field.isAccessible = true
-            val value = field.get(this) as Int
-            return value
-        }
-    }
-}
-
-private class MyPagingSource(
-    private val mealId: Long,
-    private val date: LocalDate,
-    private val addFoodDao: AddFoodDao,
-    private val productDao: ProductDao
-) : PagingSource<Int, ProductSearchEntity>() {
-    override val jumpingSupported: Boolean = true
-    override val keyReuseSupported: Boolean = false
-
-    override fun getRefreshKey(state: PagingState<Int, ProductSearchEntity>): Int? {
-        val anchorPosition = state.anchorPosition ?: 0
-        val initialLoadSize = state.config.initialLoadSize
-        return (anchorPosition - initialLoadSize / 2).coerceAtLeast(0)
-    }
-
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductSearchEntity> {
-        val key = params.key ?: 0
-
-        val limit = when (params) {
-            is LoadParams.Prepend ->
-                if (key < params.loadSize) {
-                    key
-                } else {
-                    params.loadSize
-                }
-
-            else -> params.loadSize
-        }
-
-        val itemCount = addFoodDao.count(mealId, date.toEpochDays(), null, null)
-
-        val offset = when (params) {
-            is LoadParams.Prepend ->
-                if (key < params.loadSize) {
-                    0
-                } else {
-                    key - params.loadSize
-                }
-
-            is LoadParams.Append -> key
-            is LoadParams.Refresh ->
-                if (key >= itemCount - params.loadSize) {
-                    maxOf(0, itemCount - params.loadSize)
-                } else {
-                    key
-                }
-        }
-
-        val items = addFoodDao.query(mealId, date.toEpochDays(), null, null, limit, offset)
-
-        val nextPosToLoad = offset + items.size
-        val nextKey = if (items.isEmpty() || items.size < limit || nextPosToLoad >= itemCount) {
-            null
-        } else {
-            nextPosToLoad
-        }
-        val prevKey = if (offset <= 0 || items.isEmpty()) null else offset
-
-        return Page(
-            data = items,
-            prevKey = prevKey,
-            nextKey = nextKey,
-            itemsBefore = offset,
-            itemsAfter = maxOf(0, itemCount - nextPosToLoad)
-        )
     }
 }

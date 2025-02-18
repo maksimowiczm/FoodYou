@@ -1,9 +1,5 @@
 package com.maksimowiczm.foodyou.core.feature.product.data
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.map
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
@@ -21,18 +17,6 @@ class ProductRepositoryImpl(
     productDatabase: ProductDatabase
 ) : ProductRepository {
     private val productDao: ProductDao = productDatabase.productDao()
-
-    override fun observePagedProducts(): Flow<PagingData<Product>> {
-        val pager = Pager(
-            config = PagingConfig(pageSize = 20)
-        ) {
-            productDao.observePagedProducts()
-        }
-
-        return pager.flow.map { pagingData ->
-            pagingData.map { it.toDomain() }
-        }
-    }
 
     override fun observeProductById(id: Long): Flow<Product?> {
         return productDao.observeProductById(id).map { it?.toDomain() }
