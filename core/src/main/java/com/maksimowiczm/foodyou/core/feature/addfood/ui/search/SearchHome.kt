@@ -1,7 +1,11 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -318,37 +322,39 @@ private fun ProductSearchListItem(
     onQuickRemove: (measurementId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val model by productMeasurementHolder.measurement.collectAsStateWithLifecycle()
+    val model = productMeasurementHolder.measurement.collectAsStateWithLifecycle().value
 
     fun onCheckChange() {
-        @Suppress("NAME_SHADOWING")
-        val model = model ?: return
-
-        if (model.measurementId != null) {
+        if (model?.measurementId != null) {
             onQuickRemove(model.measurementId)
-        } else {
+        } else if (model != null) {
             onQuickAdd(model.product.id, model.measurement)
         }
     }
 
-    if (model == null) {
-        ProductSearchListItemSkeleton(
-            modifier = modifier,
-            shimmer = shimmer,
-            containerColor = if (productMeasurementHolder.measurementId != null) {
-                ProductSearchListItemDefaults.colors().checkedContainerColor
-            } else {
-                ProductSearchListItemDefaults.colors().uncheckedContainerColor
-            }
-        )
-    } else {
-        ProductSearchListItem(
-            model = model!!,
-            onClick = onClick,
-            isChecked = productMeasurementHolder.measurementId != null,
-            onCheckChange = { onCheckChange() },
-            modifier = modifier
-        )
+    AnimatedContent(
+        targetState = model != null,
+        transitionSpec = { fadeIn() togetherWith fadeOut() }
+    ) {
+        if (!it || model == null) {
+            ProductSearchListItemSkeleton(
+                modifier = modifier,
+                shimmer = shimmer,
+                containerColor = if (productMeasurementHolder.measurementId != null) {
+                    ProductSearchListItemDefaults.colors().checkedContainerColor
+                } else {
+                    ProductSearchListItemDefaults.colors().uncheckedContainerColor
+                }
+            )
+        } else {
+            ProductSearchListItem(
+                model = model,
+                onClick = onClick,
+                isChecked = productMeasurementHolder.measurementId != null,
+                onCheckChange = { onCheckChange() },
+                modifier = modifier
+            )
+        }
     }
 }
 
