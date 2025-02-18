@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
+import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -71,7 +72,7 @@ class SearchViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(30_000L),
-        initialValue = emptyList()
+        initialValue = QueryResult.loading(emptyList())
     )
 
     fun onSearch(query: String?) {

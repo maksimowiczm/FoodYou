@@ -23,7 +23,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
@@ -68,14 +70,40 @@ class AddFoodRepositoryImpl(
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<List<ProductWithWeightMeasurement>> {
-        val isBarcode = query?.all { it.isDigit() } == true
-
-        if (isBarcode) {
-            return addFoodDao.observeProductsWithMeasurementByBarcode(mealId, date, query!!)
-        } else {
-            return addFoodDao.observeProductsWithMeasurementByQuery(mealId, date, query)
+    ): Flow<QueryResult<ProductWithWeightMeasurement>> = flow {
+        if (query != null) {
+            ioScope.launch { }
         }
+
+        val flow = { isLoading: Boolean, error: Throwable? ->
+            addFoodDao.observeProductsWithMeasurementByQuery(
+                mealId = mealId,
+                date = date,
+                query = query
+            ).map { products ->
+                QueryResult(
+                    data = products,
+                    isLoading = isLoading,
+                    error = error,
+                    size = products.size
+                )
+            }
+        }
+
+        if (!localOnly) {
+            // First get local products and emit loading state
+            flow(true, null).first().also { emit(it) }
+
+//            try {
+//                remoteProductDatabase.queryAndInsertByName(query)
+//            } catch (e: Exception) {
+//                Log.e(TAG, "Failed to query products", e)
+//
+//                flow(false, e).collect(::emit)
+//            }
+        }
+
+        flow(false, null).collect(::emit)
     }
 
     override suspend fun removeMeasurement(portionId: Long) {

@@ -1,7 +1,11 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -53,10 +57,13 @@ import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.R
+import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 
 @Composable
 fun SearchHome(
@@ -76,7 +83,7 @@ fun SearchHome(
 
     SearchHome(
         animatedVisibilityScope = animatedVisibilityScope,
-        productsWithMeasurements = productsWithMeasurements,
+        queryResults = productsWithMeasurements,
         totalCalories = totalCalories,
         recentQueries = recentQueries,
         query = query,
@@ -97,7 +104,7 @@ fun SearchHome(
 @Composable
 private fun SearchHome(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    productsWithMeasurements: List<ProductWithWeightMeasurement>,
+    queryResults: QueryResult<ProductWithWeightMeasurement>,
     recentQueries: List<ProductQuery>,
     totalCalories: Int,
     query: String?,
@@ -138,8 +145,8 @@ private fun SearchHome(
         )
     }
     // Make sure that bottom bar is visible when user can't scroll
-    LaunchedEffect(productsWithMeasurements) {
-        if (productsWithMeasurements.isEmpty()) {
+    LaunchedEffect(queryResults) {
+        if (queryResults.isEmpty()) {
             bottomBarScrollBehavior.nestedScrollConnection.onPostScroll(
                 consumed = Offset.Infinite,
                 available = Offset.Infinite,
@@ -231,6 +238,10 @@ private fun SearchHome(
                 )
             }
 
+            val shimmer = rememberShimmer(
+                shimmerBounds = ShimmerBounds.Window
+            )
+
             LazyColumn(
                 contentPadding = paddingValues,
                 modifier = Modifier.nestedScroll(bottomBarScrollBehavior.nestedScrollConnection)
@@ -240,26 +251,36 @@ private fun SearchHome(
                 }
 
                 items(
-                    items = productsWithMeasurements,
-                    key = {
-                        "${it.product.id}-${it.measurementId}"
-                    }
-                ) { item ->
-                    val isChecked = item.measurementId != null
+                    count = queryResults.size
+                ) {
+                    val item = queryResults.get(it)
 
-                    ProductSearchListItem(
-                        model = item,
-                        isChecked = isChecked,
-                        onCheckChange = {
-                            if (item.measurementId != null) {
-                                onQuickRemove(item.measurementId)
-                            } else {
-                                onQuickAdd(item.product.id, item.measurement)
-                            }
-                        },
-                        onClick = { onProductClick(item.product.id) },
-                        modifier = Modifier.animateItem()
-                    )
+                    AnimatedContent(
+                        targetState = item != null,
+                        transitionSpec = { fadeIn() togetherWith fadeOut() }
+                    ) { target ->
+                        if (target && item != null) {
+                            val isChecked = item.measurementId != null
+
+                            ProductSearchListItem(
+                                model = item,
+                                isChecked = isChecked,
+                                onCheckChange = {
+                                    if (item.measurementId != null) {
+                                        onQuickRemove(item.measurementId)
+                                    } else {
+                                        onQuickAdd(item.product.id, item.measurement)
+                                    }
+                                },
+                                onClick = { onProductClick(item.product.id) },
+                                modifier = Modifier.animateItem()
+                            )
+                        } else {
+                            ProductSearchListItemSkeleton(
+                                shimmer = shimmer
+                            )
+                        }
+                    }
                 }
 
                 item {

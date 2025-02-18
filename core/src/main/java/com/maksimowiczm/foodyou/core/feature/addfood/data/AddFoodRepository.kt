@@ -29,7 +29,7 @@ interface AddFoodRepository {
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<List<ProductWithWeightMeasurement>>
+    ): Flow<QueryResult<ProductWithWeightMeasurement>>
 
     suspend fun removeMeasurement(portionId: Long)
 
