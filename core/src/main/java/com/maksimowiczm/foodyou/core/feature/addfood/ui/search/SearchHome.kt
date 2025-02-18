@@ -1,11 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -27,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -62,8 +59,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
 
 @Composable
 fun SearchHome(
@@ -122,7 +117,7 @@ private fun SearchHome(
     modifier: Modifier = Modifier
 ) {
     val isEmpty by remember(queryResults) {
-        derivedStateOf { queryResults.isEmpty() }
+        derivedStateOf { queryResults.data.isEmpty() }
     }
 
     val topBar = @Composable {
@@ -242,10 +237,6 @@ private fun SearchHome(
                 )
             }
 
-            val shimmer = rememberShimmer(
-                shimmerBounds = ShimmerBounds.Window
-            )
-
             LazyColumn(
                 contentPadding = paddingValues,
                 modifier = Modifier.nestedScroll(bottomBarScrollBehavior.nestedScrollConnection)
@@ -255,36 +246,26 @@ private fun SearchHome(
                 }
 
                 items(
-                    count = queryResults.size
-                ) {
-                    val item = queryResults.get(it)
-
-                    AnimatedContent(
-                        targetState = item != null,
-                        transitionSpec = { fadeIn() togetherWith fadeOut() }
-                    ) { target ->
-                        if (target && item != null) {
-                            val isChecked = item.measurementId != null
-
-                            ProductSearchListItem(
-                                model = item,
-                                isChecked = isChecked,
-                                onCheckChange = {
-                                    if (item.measurementId != null) {
-                                        onQuickRemove(item.measurementId)
-                                    } else {
-                                        onQuickAdd(item.product.id, item.measurement)
-                                    }
-                                },
-                                onClick = { onProductClick(item.product.id) },
-                                modifier = Modifier.animateItem()
-                            )
-                        } else {
-                            ProductSearchListItemSkeleton(
-                                shimmer = shimmer
-                            )
-                        }
+                    items = queryResults.data,
+                    key = {
+                        "${it.product.id}-${it.measurementId}"
                     }
+                ) { item ->
+                    val isChecked = item.measurementId != null
+
+                    ProductSearchListItem(
+                        model = item,
+                        isChecked = isChecked,
+                        onCheckChange = {
+                            if (item.measurementId != null) {
+                                onQuickRemove(item.measurementId)
+                            } else {
+                                onQuickAdd(item.product.id, item.measurement)
+                            }
+                        },
+                        onClick = { onProductClick(item.product.id) },
+                        modifier = Modifier.animateItem()
+                    )
                 }
 
                 item {

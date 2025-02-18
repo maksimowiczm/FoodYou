@@ -98,7 +98,6 @@ class AddFoodRepositoryImpl(
         }
 
         if (!localOnly) {
-            // First get local products and emit loading state
             flow(true, null).first().also { emit(it) }
 
             try {
@@ -136,14 +135,12 @@ class AddFoodRepositoryImpl(
                 QueryResult(
                     data = products,
                     isLoading = isLoading,
-                    error = error,
-                    size = products.size
+                    error = error
                 )
             }
         }
 
         if (!localOnly) {
-            // First get local products and emit loading state
             flow(true, null).first().also { emit(it) }
 
             try {

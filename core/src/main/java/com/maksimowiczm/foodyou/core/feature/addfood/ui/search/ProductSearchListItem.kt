@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,7 +19,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -116,12 +114,9 @@ fun ProductSearchListItem(
     modifier: Modifier = Modifier,
     colors: ProductSearchListItemColors = ProductSearchListItemDefaults.colors()
 ) {
-    val containerColor by animateColorAsState(
-        targetValue = if (isChecked) colors.checkedContainerColor else colors.uncheckedContainerColor
-    )
-    val contentColor by animateColorAsState(
-        targetValue = if (isChecked) colors.checkedContentColor else colors.uncheckedContentColor
-    )
+    val containerColor =
+        if (isChecked) colors.checkedContainerColor else colors.uncheckedContainerColor
+    val contentColor = if (isChecked) colors.checkedContentColor else colors.uncheckedContentColor
 
     ListItem(
         headlineContent = {
