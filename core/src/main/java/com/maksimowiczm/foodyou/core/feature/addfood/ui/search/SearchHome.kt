@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -258,41 +257,46 @@ private fun SearchHome(
                     Spacer(Modifier.height(density.run { errorCardHeight.toDp() }))
                 }
 
-                items(
-                    items = queryResult.data,
-                    key = { it.productId }
-                ) { item ->
-                    if (item.measurements.isEmpty()) {
-                        ProductSearchListItem(
-                            productMeasurementHolder = viewModel.holder(
-                                productId = item.productId,
-                                measurementId = null
-                            ),
-                            onClick = { onProductClick(item.productId) },
-                            onQuickAdd = { pId, wm ->
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
-                                onQuickAdd(pId, wm)
-                            },
-                            onQuickRemove = {},
-                            shimmer = shimmer,
-                            modifier = Modifier.animateItem()
-                        )
-                    } else {
-                        item.measurements.forEach { measurementId ->
+                queryResult.data.forEach { model ->
+                    if (model.measurements.isEmpty()) {
+                        item(
+                            key = model.productId
+                        ) {
                             ProductSearchListItem(
                                 productMeasurementHolder = viewModel.holder(
-                                    productId = item.productId,
-                                    measurementId = measurementId
+                                    productId = model.productId,
+                                    measurementId = null
                                 ),
-                                onClick = { onProductClick(item.productId) },
-                                onQuickAdd = { _, _ -> },
-                                onQuickRemove = {
-                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
-                                    onQuickRemove(it)
+                                onClick = { onProductClick(model.productId) },
+                                onQuickAdd = { pId, wm ->
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
+                                    onQuickAdd(pId, wm)
                                 },
+                                onQuickRemove = {},
                                 shimmer = shimmer,
                                 modifier = Modifier.animateItem()
                             )
+                        }
+                    } else {
+                        model.measurements.forEach { measurementId ->
+                            item(
+                                key = "m$measurementId"
+                            ) {
+                                ProductSearchListItem(
+                                    productMeasurementHolder = viewModel.holder(
+                                        productId = model.productId,
+                                        measurementId = measurementId
+                                    ),
+                                    onClick = { onProductClick(model.productId) },
+                                    onQuickAdd = { _, _ -> },
+                                    onQuickRemove = {
+                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
+                                        onQuickRemove(it)
+                                    },
+                                    shimmer = shimmer,
+                                    modifier = Modifier.animateItem()
+                                )
+                            }
                         }
                     }
                 }
@@ -330,7 +334,12 @@ private fun ProductSearchListItem(
     if (model == null) {
         ProductSearchListItemSkeleton(
             modifier = modifier,
-            shimmer = shimmer
+            shimmer = shimmer,
+            containerColor = if (productMeasurementHolder.measurementId != null) {
+                ProductSearchListItemDefaults.colors().checkedContainerColor
+            } else {
+                ProductSearchListItemDefaults.colors().uncheckedContainerColor
+            }
         )
     } else {
         ProductSearchListItem(

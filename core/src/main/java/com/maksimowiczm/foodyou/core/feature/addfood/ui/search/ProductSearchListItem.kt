@@ -73,7 +73,7 @@ fun ProductSearchListItem(
                     modifier = Modifier.horizontalDisplayCutoutPadding(),
                     text = it
                 )
-            }
+            } ?: Spacer(Modifier.height(LocalTextStyle.current.toDp()))
         },
         supportingContent = {
             SupportingTextLayout(
@@ -312,7 +312,8 @@ fun ProductSearchListItemSkeleton(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberShimmer(
         shimmerBounds = ShimmerBounds.Window
-    )
+    ),
+    containerColor: Color = ProductSearchListItemDefaults.colors().uncheckedContainerColor
 ) {
     ListItem(
         headlineContent = {
@@ -361,7 +362,10 @@ fun ProductSearchListItemSkeleton(
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
             }
-        }
+        },
+        colors = ListItemDefaults.colors(
+            containerColor = containerColor
+        )
     )
 }
 
