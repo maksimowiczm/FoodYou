@@ -15,7 +15,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementE
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
-import com.maksimowiczm.foodyou.core.infrastructure.database.FoodYouDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -32,7 +31,6 @@ import kotlinx.datetime.LocalDate
 class AddFoodRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
     productDatabase: ProductDatabase,
-    private val foodYouDatabase: FoodYouDatabase,
 //    private val productRemoteMediatorFactory: ProductRemoteMediatorFactory,
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 ) : AddFoodRepository {
@@ -70,9 +68,60 @@ class AddFoodRepositoryImpl(
         date: LocalDate,
         query: String?,
         localOnly: Boolean
+    ): Flow<QueryResult<ProductWithWeightMeasurement>> {
+        return if (query?.all { it.isDigit() } == true) {
+            queryProductsByBarcode(mealId, date, query, localOnly)
+        } else {
+            queryProductsByQuery(mealId, date, query, localOnly)
+        }
+    }
+
+    private fun queryProductsByBarcode(
+        mealId: Long,
+        date: LocalDate,
+        barcode: String,
+        localOnly: Boolean
+    ): Flow<QueryResult<ProductWithWeightMeasurement>> = flow {
+        val flow = { isLoading: Boolean, error: Throwable? ->
+            addFoodDao.observeProductsWithMeasurementByBarcode(
+                mealId = mealId,
+                date = date,
+                barcode = barcode
+            ).map { products ->
+                QueryResult(
+                    data = products,
+                    isLoading = isLoading,
+                    error = error
+                )
+            }
+        }
+
+        if (!localOnly) {
+            // First get local products and emit loading state
+            flow(true, null).first().also { emit(it) }
+
+//            try {
+//                remoteProductDatabase.queryAndInsertByBarcode(barcode)
+//            } catch (e: Exception) {
+//                Log.e(TAG, "Failed to query products", e)
+//
+//                flow(false, e).collect(::emit)
+//            }
+        }
+
+        flow(false, null).collect(::emit)
+    }
+
+    private fun queryProductsByQuery(
+        mealId: Long,
+        date: LocalDate,
+        query: String?,
+        localOnly: Boolean
     ): Flow<QueryResult<ProductWithWeightMeasurement>> = flow {
         if (query != null) {
-            ioScope.launch { }
+            ioScope.launch {
+                insertProductQueryWithCurrentTime(query)
+            }
         }
 
         val flow = { isLoading: Boolean, error: Throwable? ->

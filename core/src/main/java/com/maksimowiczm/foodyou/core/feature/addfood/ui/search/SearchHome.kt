@@ -211,7 +211,7 @@ private fun SearchHome(
             anchoredDraggableState.updateAnchors(draggableAnchors)
         },
         topBar = topBar,
-//        bottomBar = bottomBar,
+        bottomBar = bottomBar,
         contentWindowInsets = contentWindowInsets
     ) { paddingValues ->
         Box(
