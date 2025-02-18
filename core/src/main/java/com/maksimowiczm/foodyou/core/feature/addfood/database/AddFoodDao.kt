@@ -172,20 +172,21 @@ interface AddFoodDao {
     @Query(
         """
         SELECT 
-            p.id as productId, 
-            wm.id AS measurementId
+            p.id AS productId, 
+            CASE 
+                WHEN wm.isDeleted == 0 THEN wm.id
+                ELSE NULL
+            END AS measurementId
         FROM ProductEntity p
-        LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId
-        WHERE wm.isDeleted IS NULL OR wm.isDeleted = 0
+        LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId;
         """
     )
-    fun observeIHateThis(): Flow<List<IHateThisEntity>>
+    fun observeProductIdsWithMeasurementIds(): Flow<List<ProductIdWithMeasurementIdEntity>>
 
     @Transaction
     @Query(
         """
-        SELECT 
-            *
+        SELECT *
         FROM WeightMeasurementEntity wm
         LEFT JOIN ProductEntity p ON p.id = wm.productId
         WHERE wm.isDeleted IS NULL OR wm.isDeleted = 0
@@ -194,13 +195,3 @@ interface AddFoodDao {
     )
     fun observeMeasurement(measurementId: Long): Flow<ProductWithWeightMeasurementEntity?>
 }
-
-data class IHateThisEntity(
-    val productId: Long,
-    val measurementId: Long?
-)
-
-data class IHateThis(
-    val productId: Long,
-    val measurements: List<Long>
-)

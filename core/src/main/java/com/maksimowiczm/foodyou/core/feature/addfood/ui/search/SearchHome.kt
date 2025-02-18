@@ -55,9 +55,9 @@ import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.R
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsIds
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.core.feature.addfood.database.IHateThis
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
@@ -107,7 +107,7 @@ fun SearchHome(
 private fun SearchHome(
     viewModel: SearchViewModel,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    items: List<IHateThis>,
+    items: List<ProductIdWithMeasurementsIds>,
 //    queryResults: QueryResult<ProductWithWeightMeasurement>,
     recentQueries: List<ProductQuery>,
     totalCalories: Int,
@@ -127,7 +127,7 @@ private fun SearchHome(
     val hapticFeedback = LocalHapticFeedback.current
 
     val isEmpty by remember(items) {
-        derivedStateOf { items.size == 0 }
+        derivedStateOf { items.isEmpty() }
     }
 
     val topBar = @Composable {
@@ -240,7 +240,7 @@ private fun SearchHome(
                 }
             }
 
-            if (isEmpty && false) {
+            if (isEmpty) {
                 Text(
                     text = stringResource(R.string.neutral_no_products_found),
                     modifier = Modifier.align(Alignment.Center)
@@ -264,22 +264,26 @@ private fun SearchHome(
                     key = { it.productId }
                 ) { item ->
                     if (item.measurements.isEmpty()) {
-                        Dumb(
-                            holder = viewModel.getHolder(
+                        ProductSearchListItem(
+                            productMeasurementHolder = viewModel.holder(
                                 productId = item.productId,
                                 measurementId = null
                             ),
                             onClick = { onProductClick(item.productId) },
+                            onQuickAdd = onQuickAdd,
+                            onQuickRemove = {},
                             shimmer = shimmer
                         )
                     } else {
                         item.measurements.forEach { measurementId ->
-                            Dumb(
-                                holder = viewModel.getHolder(
+                            ProductSearchListItem(
+                                productMeasurementHolder = viewModel.holder(
                                     productId = item.productId,
                                     measurementId = measurementId
                                 ),
                                 onClick = { onProductClick(item.productId) },
+                                onQuickAdd = onQuickAdd,
+                                onQuickRemove = onQuickRemove,
                                 shimmer = shimmer
                             )
                         }
@@ -295,25 +299,38 @@ private fun SearchHome(
 }
 
 @Composable
-private fun Dumb(
-    holder: Holder,
+private fun ProductSearchListItem(
+    productMeasurementHolder: ProductMeasurementHolder,
     shimmer: Shimmer,
     onClick: () -> Unit,
+    onQuickAdd: (productId: Long, measurement: WeightMeasurement) -> Unit,
+    onQuickRemove: (measurementId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val measurement by holder.measurement.collectAsStateWithLifecycle()
+    val model by productMeasurementHolder.measurement.collectAsStateWithLifecycle()
 
-    if (measurement == null) {
+    fun onCheckChange() {
+        @Suppress("NAME_SHADOWING")
+        val model = model ?: return
+
+        if (model.measurementId != null) {
+            onQuickRemove(model.measurementId)
+        } else {
+            onQuickAdd(model.product.id, model.measurement)
+        }
+    }
+
+    if (model == null) {
         ProductSearchListItemSkeleton(
             modifier = modifier,
             shimmer = shimmer
         )
     } else {
         ProductSearchListItem(
-            model = measurement!!,
+            model = model!!,
             onClick = onClick,
-            isChecked = holder.measurementId != null,
-            onCheckChange = {},
+            isChecked = productMeasurementHolder.measurementId != null,
+            onCheckChange = { onCheckChange() },
             modifier = modifier
         )
     }

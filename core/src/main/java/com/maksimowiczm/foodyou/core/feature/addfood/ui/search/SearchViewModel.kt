@@ -86,7 +86,7 @@ class SearchViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pages = _searchQuery.flatMapLatest { query ->
-        addFoodRepository.abc(
+        addFoodRepository.queryProducts1(
             mealId = mealId,
             date = date,
             query = query
@@ -131,14 +131,14 @@ class SearchViewModel(
         }
     }
 
-    private var holders: List<InnerHolder> = mutableListOf()
+    private var _holders: List<InnerProductMeasurementHolder> = mutableListOf()
 
-    fun getHolder(
+    fun holder(
         productId: Long,
         measurementId: Long?
-    ): Holder {
+    ): ProductMeasurementHolder {
         // Check cache
-        val cached = holders.firstOrNull {
+        val cached = _holders.firstOrNull {
             it.productId == productId && it.measurementId == measurementId
         }
 
@@ -147,21 +147,21 @@ class SearchViewModel(
         }
 
         // Create new holder
-        val holder = InnerHolder(
+        val holder = InnerProductMeasurementHolder(
             productId = productId,
             measurementId = measurementId
         )
 
         // Update cache
-        holders = holders + holder
+        _holders = _holders + holder
 
         return holder
     }
 
-    private inner class InnerHolder(
+    private inner class InnerProductMeasurementHolder(
         val productId: Long,
         override val measurementId: Long?
-    ) : Holder {
+    ) : ProductMeasurementHolder {
         override val measurement = if (measurementId != null) {
             addFoodRepository.observeMeasurementById(measurementId)
         } else {
@@ -174,7 +174,7 @@ class SearchViewModel(
     }
 }
 
-interface Holder {
+interface ProductMeasurementHolder {
     val measurementId: Long?
     val measurement: StateFlow<ProductWithWeightMeasurement?>
 }

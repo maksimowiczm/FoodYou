@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsIds
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
@@ -10,7 +11,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasuremen
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDao
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDatabase
-import com.maksimowiczm.foodyou.core.feature.addfood.database.IHateThis
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductQueryEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
@@ -65,22 +65,20 @@ class AddFoodRepositoryImpl(
         return addFoodDao.insertWeightMeasurement(entity)
     }
 
-    override fun abc(
+    override fun queryProducts1(
         mealId: Long,
         date: LocalDate,
         query: String?
-    ): Flow<List<IHateThis>> {
-        val flow = addFoodDao.observeIHateThis().map { list ->
+    ): Flow<List<ProductIdWithMeasurementsIds>> {
+        val flow = addFoodDao.observeProductIdsWithMeasurementIds().map { list ->
             val map = list.groupBy { it.productId }
 
-            val list = map.map { (id, list) ->
-                IHateThis(
+            map.map { (id, list) ->
+                ProductIdWithMeasurementsIds(
                     productId = id,
                     measurements = list.mapNotNull { it.measurementId }
                 )
             }
-
-            list
         }
 
         ioScope.launch {
