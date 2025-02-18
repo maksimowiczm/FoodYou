@@ -79,13 +79,15 @@ interface AddFoodDao {
         LEFT JOIN Suggestions s ON s.productId = p.id
         WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
         AND (:barcode IS NULL OR p.barcode = :barcode)
+        LIMIT :limit
         """
     )
     fun observeProductsWithMeasurement(
         mealId: Long,
         epochDay: Int,
         query: String?,
-        barcode: String?
+        barcode: String?,
+        limit: Int
     ): Flow<List<ProductSearchEntity>>
 
     @Query(

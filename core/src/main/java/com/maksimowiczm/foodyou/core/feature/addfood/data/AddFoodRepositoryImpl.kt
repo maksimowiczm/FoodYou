@@ -15,6 +15,7 @@ import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementE
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
+import com.maksimowiczm.foodyou.core.feature.product.network.ProductsRemoteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,7 +32,7 @@ import kotlinx.datetime.LocalDate
 class AddFoodRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
     productDatabase: ProductDatabase,
-//    private val productRemoteMediatorFactory: ProductRemoteMediatorFactory,
+    private val productsRemoteDatabase: ProductsRemoteDatabase,
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 ) : AddFoodRepository {
     private val addFoodDao: AddFoodDao = addFoodDatabase.addFoodDao()
@@ -100,13 +101,15 @@ class AddFoodRepositoryImpl(
             // First get local products and emit loading state
             flow(true, null).first().also { emit(it) }
 
-//            try {
-//                remoteProductDatabase.queryAndInsertByBarcode(barcode)
-//            } catch (e: Exception) {
-//                Log.e(TAG, "Failed to query products", e)
-//
-//                flow(false, e).collect(::emit)
-//            }
+            try {
+                productsRemoteDatabase.queryAndInsertByBarcode(
+                    barcode = barcode
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to query products", e)
+
+                flow(false, e).collect(::emit)
+            }
         }
 
         flow(false, null).collect(::emit)
@@ -143,13 +146,16 @@ class AddFoodRepositoryImpl(
             // First get local products and emit loading state
             flow(true, null).first().also { emit(it) }
 
-//            try {
-//                remoteProductDatabase.queryAndInsertByName(query)
-//            } catch (e: Exception) {
-//                Log.e(TAG, "Failed to query products", e)
-//
-//                flow(false, e).collect(::emit)
-//            }
+            try {
+                productsRemoteDatabase.queryAndInsertByName(
+                    query = query,
+                    limit = NETWORK_PAGE_SIZE
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to query products", e)
+
+                flow(false, e).collect(::emit)
+            }
         }
 
         flow(false, null).collect(::emit)
@@ -222,7 +228,8 @@ class AddFoodRepositoryImpl(
         mealId = mealId,
         epochDay = date.toEpochDays(),
         query = query,
-        barcode = null
+        barcode = null,
+        limit = LOCAL_PAGE_SIZE
     ).map { list -> list.map { it.toDomain() } }
 
     private fun AddFoodDao.observeProductsWithMeasurementByBarcode(
@@ -233,10 +240,13 @@ class AddFoodRepositoryImpl(
         mealId = mealId,
         epochDay = date.toEpochDays(),
         query = null,
-        barcode = barcode
+        barcode = barcode,
+        limit = LOCAL_PAGE_SIZE
     ).map { list -> list.map { it.toDomain() } }
 
     private companion object {
         private const val TAG = "AddFoodRepositoryImpl"
+        private const val LOCAL_PAGE_SIZE = 100
+        private const val NETWORK_PAGE_SIZE = 30
     }
 }
