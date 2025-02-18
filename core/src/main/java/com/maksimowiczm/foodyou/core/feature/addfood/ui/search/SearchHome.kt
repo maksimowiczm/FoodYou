@@ -1,11 +1,8 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -343,9 +340,8 @@ private fun ProductSearchListItem(
         }
     }
 
-    AnimatedContent(
+    Crossfade(
         targetState = model != null,
-        transitionSpec = { fadeIn() togetherWith fadeOut() },
         modifier = modifier
     ) {
         if (!it || model == null) {
