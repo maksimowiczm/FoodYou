@@ -271,13 +271,13 @@ private fun SearchHome(
                                     productId = model.productId,
                                     measurementId = null
                                 ),
+                                shimmer = shimmer,
                                 onClick = { onProductClick(model.productId) },
                                 onQuickAdd = { pId, wm ->
                                     hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
                                     onQuickAdd(pId, wm)
                                 },
                                 onQuickRemove = {},
-                                shimmer = shimmer,
                                 modifier = Modifier.animateItem()
                             )
                         }
@@ -291,13 +291,13 @@ private fun SearchHome(
                                         productId = model.productId,
                                         measurementId = measurementId
                                     ),
+                                    shimmer = shimmer,
                                     onClick = { onProductClick(model.productId) },
                                     onQuickAdd = { _, _ -> },
                                     onQuickRemove = {
                                         hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
                                         onQuickRemove(it)
                                     },
-                                    shimmer = shimmer,
                                     modifier = Modifier.animateItem()
                                 )
                             }
