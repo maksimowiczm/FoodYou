@@ -113,7 +113,7 @@ interface AddFoodDao {
         epochDay: Int,
         query: String?,
         barcode: String?
-    ): Flow<List<ProductIdWithMeasurementIdEntity>>
+    ): Flow<List<ProductWeightMeasurementJunction>>
 
     @Transaction
     @Query(

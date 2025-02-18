@@ -4,6 +4,13 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
 
+/**
+ * Product with measurement junction entity.
+ *
+ * One product can have many measurements.
+ *
+ * @see ProductWeightMeasurementJunction
+ */
 data class ProductWithWeightMeasurementEntity(
     @Embedded
     val weightMeasurement: WeightMeasurementEntity,
