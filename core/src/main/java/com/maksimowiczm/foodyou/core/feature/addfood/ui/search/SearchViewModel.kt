@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasuremen
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -130,26 +131,65 @@ class SearchViewModel(
             return cached
         }
 
-        // Create new holder
-        val holder = InnerProductMeasurementHolder(
-            productId = productId,
-            measurementId = measurementId
-        )
+        // If measurement id is null create new holder
+        if (measurementId == null) {
+            // Create new holder
+            val holder = InnerProductMeasurementHolder(
+                productId = productId,
+                initialMeasurementId = null
+            )
 
-        // Update cache
-        _holders = _holders + holder
+            // Update cache
+            _holders = _holders + holder
+
+            return holder
+        }
+
+        // Check if there is already a holder for the same product without measurement id set. If so,
+        // reuse it.
+        // This is fine because if there is a product with measurement id set it means that holder
+        // without measurement id won't be used anymore.
+
+        val sameProductHolders = _holders.filter {
+            it.productId == productId && it.measurementId == null
+        }
+
+        if (sameProductHolders.count() != 1) {
+            // Create new holder
+            val holder = InnerProductMeasurementHolder(
+                productId = productId,
+                initialMeasurementId = measurementId
+            )
+
+            // Update cache
+            _holders = _holders + holder
+
+            return holder
+        }
+
+        val holder = sameProductHolders.first()
+
+        holder.measurementIdStateFlow.value = measurementId
 
         return holder
     }
 
     private inner class InnerProductMeasurementHolder(
         val productId: Long,
-        override val measurementId: Long?
+        initialMeasurementId: Long?
     ) : ProductMeasurementHolder {
-        override val measurement = if (measurementId != null) {
-            addFoodRepository.observeMeasurementById(measurementId)
-        } else {
-            addFoodRepository.observeMeasurementByProductId(productId)
+        val measurementIdStateFlow = MutableStateFlow(initialMeasurementId)
+
+        override val measurementId
+            get() = measurementIdStateFlow.value
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        override val measurement = measurementIdStateFlow.flatMapLatest {
+            if (it != null) {
+                addFoodRepository.observeMeasurementById(it)
+            } else {
+                addFoodRepository.observeMeasurementByProductId(productId)
+            }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
