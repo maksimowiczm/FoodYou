@@ -174,14 +174,24 @@ interface AddFoodDao {
         SELECT 
             p.id AS productId, 
             CASE 
-                WHEN wm.isDeleted == 0 THEN wm.id
+                WHEN wm.isDeleted == 0 
+                AND (:mealId IS NULL OR wm.mealId = :mealId) 
+                AND wm.diaryEpochDay = :epochDay 
+                THEN wm.id
                 ELSE NULL
             END AS measurementId
         FROM ProductEntity p
-        LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId;
+        LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId
+        WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
+        AND (:barcode IS NULL OR p.barcode = :barcode) 
         """
     )
-    fun observeProductIdsWithMeasurementIds(): Flow<List<ProductIdWithMeasurementIdEntity>>
+    fun observeProductIdsWithMeasurementIds(
+        mealId: Long?,
+        epochDay: Int,
+        query: String?,
+        barcode: String?
+    ): Flow<List<ProductIdWithMeasurementIdEntity>>
 
     @Transaction
     @Query(

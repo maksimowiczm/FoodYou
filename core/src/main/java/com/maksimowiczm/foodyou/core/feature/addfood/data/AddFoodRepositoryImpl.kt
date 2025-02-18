@@ -65,40 +65,12 @@ class AddFoodRepositoryImpl(
         return addFoodDao.insertWeightMeasurement(entity)
     }
 
-    override fun queryProducts1(
-        mealId: Long,
-        date: LocalDate,
-        query: String?
-    ): Flow<List<ProductIdWithMeasurementsIds>> {
-        val flow = addFoodDao.observeProductIdsWithMeasurementIds().map { list ->
-            val map = list.groupBy { it.productId }
-
-            map.map { (id, list) ->
-                ProductIdWithMeasurementsIds(
-                    productId = id,
-                    measurements = list.mapNotNull { it.measurementId }
-                )
-            }
-        }
-
-        ioScope.launch {
-            if (query != null) {
-                productsRemoteDatabase.queryAndInsertByName(
-                    query = query,
-                    limit = NETWORK_PAGE_SIZE
-                )
-            }
-        }
-
-        return flow
-    }
-
     override fun queryProducts(
         mealId: Long,
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<QueryResult<ProductWithWeightMeasurement>> {
+    ): Flow<QueryResult<ProductIdWithMeasurementsIds>> {
         return if (query?.all { it.isDigit() } == true) {
             queryProductsByBarcode(mealId, date, query, localOnly)
         } else {
@@ -111,15 +83,25 @@ class AddFoodRepositoryImpl(
         date: LocalDate,
         barcode: String,
         localOnly: Boolean
-    ): Flow<QueryResult<ProductWithWeightMeasurement>> = flow {
+    ): Flow<QueryResult<ProductIdWithMeasurementsIds>> = flow {
         val flow = { isLoading: Boolean, error: Throwable? ->
-            addFoodDao.observeProductsWithMeasurementByBarcode(
+            addFoodDao.observeProductIdsWithMeasurementIds(
                 mealId = mealId,
-                date = date,
+                epochDay = date.toEpochDays(),
+                query = null,
                 barcode = barcode
-            ).map { products ->
+            ).map {
+                val map = it.groupBy { it.productId }
+
+                map.map { (id, list) ->
+                    ProductIdWithMeasurementsIds(
+                        productId = id,
+                        measurements = list.mapNotNull { it.measurementId }
+                    )
+                }
+            }.map {
                 QueryResult(
-                    data = products,
+                    data = it,
                     isLoading = isLoading,
                     error = error
                 )
@@ -148,7 +130,7 @@ class AddFoodRepositoryImpl(
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<QueryResult<ProductWithWeightMeasurement>> = flow {
+    ): Flow<QueryResult<ProductIdWithMeasurementsIds>> = flow {
         if (query != null) {
             ioScope.launch {
                 insertProductQueryWithCurrentTime(query)
@@ -156,13 +138,23 @@ class AddFoodRepositoryImpl(
         }
 
         val flow = { isLoading: Boolean, error: Throwable? ->
-            addFoodDao.observeProductsWithMeasurementByQuery(
+            addFoodDao.observeProductIdsWithMeasurementIds(
                 mealId = mealId,
-                date = date,
-                query = query
-            ).map { products ->
+                query = query,
+                epochDay = date.toEpochDays(),
+                barcode = null
+            ).map { list ->
+                val map = list.groupBy { it.productId }
+
+                map.map { (id, list) ->
+                    ProductIdWithMeasurementsIds(
+                        productId = id,
+                        measurements = list.mapNotNull { it.measurementId }
+                    )
+                }
+            }.map {
                 QueryResult(
-                    data = products,
+                    data = it,
                     isLoading = isLoading,
                     error = error
                 )
@@ -266,33 +258,8 @@ class AddFoodRepositoryImpl(
         }
     }
 
-    private fun AddFoodDao.observeProductsWithMeasurementByQuery(
-        mealId: Long,
-        date: LocalDate,
-        query: String?
-    ) = observeProductsWithMeasurement(
-        mealId = mealId,
-        epochDay = date.toEpochDays(),
-        query = query,
-        barcode = null,
-        limit = LOCAL_PAGE_SIZE
-    ).map { list -> list.map { it.toDomain() } }
-
-    private fun AddFoodDao.observeProductsWithMeasurementByBarcode(
-        mealId: Long,
-        date: LocalDate,
-        barcode: String
-    ) = observeProductsWithMeasurement(
-        mealId = mealId,
-        epochDay = date.toEpochDays(),
-        query = null,
-        barcode = barcode,
-        limit = LOCAL_PAGE_SIZE
-    ).map { list -> list.map { it.toDomain() } }
-
     private companion object {
         private const val TAG = "AddFoodRepositoryImpl"
-        private const val LOCAL_PAGE_SIZE = 100
         private const val NETWORK_PAGE_SIZE = 30
     }
 }

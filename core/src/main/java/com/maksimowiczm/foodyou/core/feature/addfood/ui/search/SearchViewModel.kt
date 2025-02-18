@@ -9,7 +9,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
-import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,7 +22,6 @@ import kotlinx.datetime.LocalDate
 
 class SearchViewModel(
     private val addFoodRepository: AddFoodRepository,
-    private val productRepository: ProductRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val mealId: Long
@@ -86,15 +84,16 @@ class SearchViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pages = _searchQuery.flatMapLatest { query ->
-        addFoodRepository.queryProducts1(
+        addFoodRepository.queryProducts(
             mealId = mealId,
             date = date,
-            query = query
+            query = query,
+            localOnly = query == null
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
-        initialValue = emptyList()
+        initialValue = QueryResult.loading(emptyList())
     )
 
     fun onSearch(query: String?) {

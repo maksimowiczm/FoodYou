@@ -27,18 +27,12 @@ interface AddFoodRepository {
 
     suspend fun removeMeasurement(id: Long)
 
-    fun queryProducts1(
-        mealId: Long,
-        date: LocalDate,
-        query: String?
-    ): Flow<List<ProductIdWithMeasurementsIds>>
-
     fun queryProducts(
         mealId: Long,
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<QueryResult<ProductWithWeightMeasurement>>
+    ): Flow<QueryResult<ProductIdWithMeasurementsIds>>
 
     fun observeTotalCalories(
         mealId: Long,

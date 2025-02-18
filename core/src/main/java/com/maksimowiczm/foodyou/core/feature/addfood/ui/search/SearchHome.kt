@@ -55,6 +55,7 @@ import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.R
+import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsIds
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
@@ -74,8 +75,7 @@ fun SearchHome(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val pages by viewModel.pages.collectAsStateWithLifecycle()
-//    val productsWithMeasurements by viewModel.productsWithMeasurements.collectAsStateWithLifecycle()
+    val queryResult by viewModel.pages.collectAsStateWithLifecycle()
     val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -83,8 +83,7 @@ fun SearchHome(
     SearchHome(
         viewModel = viewModel,
         animatedVisibilityScope = animatedVisibilityScope,
-        items = pages,
-//        queryResults = productsWithMeasurements,
+        queryResult = queryResult,
         totalCalories = totalCalories,
         recentQueries = recentQueries,
         query = query,
@@ -107,8 +106,7 @@ fun SearchHome(
 private fun SearchHome(
     viewModel: SearchViewModel,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    items: List<ProductIdWithMeasurementsIds>,
-//    queryResults: QueryResult<ProductWithWeightMeasurement>,
+    queryResult: QueryResult<ProductIdWithMeasurementsIds>,
     recentQueries: List<ProductQuery>,
     totalCalories: Int,
     query: String?,
@@ -126,8 +124,8 @@ private fun SearchHome(
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
-    val isEmpty by remember(items) {
-        derivedStateOf { items.isEmpty() }
+    val isEmpty by remember(queryResult) {
+        derivedStateOf { queryResult.data.isEmpty() }
     }
 
     val topBar = @Composable {
@@ -170,7 +168,7 @@ private fun SearchHome(
 
     val density = LocalDensity.current
     var errorCardHeight by remember { mutableIntStateOf(0) }
-    val hasError = false
+    val hasError = queryResult.error != null
     val anchoredDraggableState = rememberSaveable(
         hasError,
         saver = AnchoredDraggableState.Saver()
@@ -235,7 +233,7 @@ private fun SearchHome(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 errorCard()
-                if (false) {
+                if (queryResult.isLoading) {
                     LoadingIndicator()
                 }
             }
@@ -260,7 +258,7 @@ private fun SearchHome(
                 }
 
                 items(
-                    items = items,
+                    items = queryResult.data,
                     key = { it.productId }
                 ) { item ->
                     if (item.measurements.isEmpty()) {
