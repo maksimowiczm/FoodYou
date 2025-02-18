@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data.model
 
+import com.maksimowiczm.foodyou.core.feature.product.data.model.Product
+
 sealed interface WeightMeasurement {
     val weight: Float
 
@@ -28,6 +30,24 @@ sealed interface WeightMeasurement {
             is WeightUnit -> WeightMeasurementEnum.WeightUnit
             is Package -> WeightMeasurementEnum.Package
             is Serving -> WeightMeasurementEnum.Serving
+        }
+    }
+
+    companion object {
+        fun defaultForProduct(product: Product) = when {
+            product.servingWeight != null -> Serving(
+                quantity = 1f,
+                servingWeight = product.servingWeight
+            )
+
+            product.packageWeight != null -> Package(
+                quantity = 1f,
+                packageWeight = product.packageWeight
+            )
+
+            else -> WeightUnit(
+                weight = 100f
+            )
         }
     }
 }

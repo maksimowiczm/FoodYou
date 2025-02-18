@@ -161,7 +161,7 @@ class SearchViewModel(
         @OptIn(ExperimentalCoroutinesApi::class)
         val measurementFlow = measurementIdFlow.flatMapLatest { id ->
             if (id == null) {
-                flowOf<WeightMeasurement?>(WeightMeasurement.WeightUnit(100f))
+                flowOf<WeightMeasurement?>(null)
             } else {
                 addFoodRepository.observeMeasurementById(id).filterNotNull().map { it.measurement }
             }
@@ -169,11 +169,11 @@ class SearchViewModel(
 
         override val model: StateFlow<ProductWithWeightMeasurement?> = combine(
             product.filterNotNull(),
-            measurementFlow.filterNotNull()
+            measurementFlow
         ) { p, wm ->
             ProductWithWeightMeasurement(
                 product = p,
-                measurement = wm,
+                measurement = wm ?: WeightMeasurement.defaultForProduct(p),
                 measurementId = this.measurementId
             )
         }.stateIn(
