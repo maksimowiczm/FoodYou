@@ -248,36 +248,25 @@ class AddFoodRepositoryImpl(
         return combine(
             productDao.observeProductById(productId),
             addFoodDao.observeLatestMeasurementByProductId(productId)
-        ) { product, measurement ->
-            if (product == null) {
+        ) { productEntity, measurement ->
+            if (productEntity == null) {
                 Log.w(TAG, "Product not found for ID $productId. Skipping measurement.")
                 return@combine null
             }
 
             if (measurement != null) {
                 return@combine ProductWithWeightMeasurement(
-                    product = product.toDomain(),
+                    product = productEntity.toDomain(),
                     measurementId = null,
                     measurement = measurement.toDomain().measurement
                 )
             }
 
-            val weightMeasurement = when {
-                product.servingWeight != null -> WeightMeasurement.Serving(
-                    servingWeight = product.servingWeight,
-                    quantity = 1f
-                )
-
-                product.packageWeight != null -> WeightMeasurement.Package(
-                    packageWeight = product.packageWeight,
-                    quantity = 1f
-                )
-
-                else -> WeightMeasurement.WeightUnit(100f)
-            }
+            val product = productEntity.toDomain()
+            val weightMeasurement = WeightMeasurement.defaultForProduct(product)
 
             ProductWithWeightMeasurement(
-                product = product.toDomain(),
+                product = product,
                 measurementId = null,
                 measurement = weightMeasurement
             )

@@ -172,7 +172,7 @@ class SearchViewModel(
         ) { p, wm ->
             ProductWithWeightMeasurement(
                 product = p,
-                measurement = wm ?: WeightMeasurement.defaultForProduct(p),
+                measurement = wm,
                 measurementId = this.measurementId
             )
         }.stateIn(
