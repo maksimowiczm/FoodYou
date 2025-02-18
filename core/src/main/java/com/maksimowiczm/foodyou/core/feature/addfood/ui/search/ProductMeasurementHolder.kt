@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface ProductMeasurementHolder {
     val measurementId: Long?
-    val measurement: StateFlow<ProductWithWeightMeasurement?>
+    val model: StateFlow<ProductWithWeightMeasurement?>
 }

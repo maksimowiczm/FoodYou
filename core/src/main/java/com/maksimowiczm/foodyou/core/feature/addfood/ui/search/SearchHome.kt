@@ -271,12 +271,14 @@ private fun SearchHome(
 
                 queryResult.data.forEach { model ->
                     if (model.measurements.isEmpty()) {
+                        val key = HolderKey(model.productId, 0)
+
                         item(
-                            key = model.productId
+                            key = key.hashCode()
                         ) {
                             ProductSearchListItem(
                                 productMeasurementHolder = viewModel.holder(
-                                    productId = model.productId,
+                                    key = key,
                                     measurementId = null
                                 ),
                                 shimmer = shimmer,
@@ -290,13 +292,15 @@ private fun SearchHome(
                             )
                         }
                     } else {
-                        model.measurements.forEach { measurementId ->
+                        model.measurements.forEachIndexed { i, measurementId ->
+                            val key = HolderKey(model.productId, i)
+
                             item(
-                                key = "m$measurementId"
+                                key = key.hashCode()
                             ) {
                                 ProductSearchListItem(
                                     productMeasurementHolder = viewModel.holder(
-                                        productId = model.productId,
+                                        key = key,
                                         measurementId = measurementId
                                     ),
                                     shimmer = shimmer,
@@ -330,11 +334,11 @@ private fun ProductSearchListItem(
     onQuickRemove: (measurementId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val model = productMeasurementHolder.measurement.collectAsStateWithLifecycle().value
+    val model = productMeasurementHolder.model.collectAsStateWithLifecycle().value
 
     fun onCheckChange() {
-        if (model?.measurementId != null) {
-            onQuickRemove(model.measurementId)
+        if (productMeasurementHolder.measurementId != null) {
+            onQuickRemove(productMeasurementHolder.measurementId!!)
         } else if (model != null) {
             onQuickAdd(model.product.id, model.measurement)
         }

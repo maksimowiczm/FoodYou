@@ -6,15 +6,21 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
+import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -22,6 +28,7 @@ import kotlinx.datetime.LocalDate
 
 class SearchViewModel(
     private val addFoodRepository: AddFoodRepository,
+    private val productRepository: ProductRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val mealId: Long
@@ -116,60 +123,26 @@ class SearchViewModel(
         }
     }
 
-    private var _holders: List<InnerProductMeasurementHolder> = mutableListOf()
+    private var _holders: MutableMap<HolderKey, InnerProductMeasurementHolder> = mutableMapOf()
 
     fun holder(
-        productId: Long,
+        key: HolderKey,
         measurementId: Long?
     ): ProductMeasurementHolder {
-        // Check cache
-        val cached = _holders.firstOrNull {
-            it.productId == productId && it.measurementId == measurementId
-        }
+        val cached = _holders[key]
 
         if (cached != null) {
-            return cached
+            return cached.also {
+                it.measurementIdFlow.value = measurementId
+            }
         }
 
-        // If measurement id is null create new holder
-        if (measurementId == null) {
-            // Create new holder
-            val holder = InnerProductMeasurementHolder(
-                productId = productId,
-                initialMeasurementId = null
-            )
+        val holder = InnerProductMeasurementHolder(
+            productId = key.productId,
+            initialMeasurementId = measurementId
+        )
 
-            // Update cache
-            _holders = _holders + holder
-
-            return holder
-        }
-
-        // Check if there is already a holder for the same product without measurement id set. If so,
-        // reuse it.
-        // This is fine because if there is a product with measurement id set it means that holder
-        // without measurement id won't be used anymore.
-
-        val sameProductHolders = _holders.filter {
-            it.productId == productId && it.measurementId == null
-        }
-
-        if (sameProductHolders.count() != 1) {
-            // Create new holder
-            val holder = InnerProductMeasurementHolder(
-                productId = productId,
-                initialMeasurementId = measurementId
-            )
-
-            // Update cache
-            _holders = _holders + holder
-
-            return holder
-        }
-
-        val holder = sameProductHolders.first()
-
-        holder.measurementIdStateFlow.value = measurementId
+        _holders[key] = holder
 
         return holder
     }
@@ -178,18 +151,31 @@ class SearchViewModel(
         val productId: Long,
         initialMeasurementId: Long?
     ) : ProductMeasurementHolder {
-        val measurementIdStateFlow = MutableStateFlow(initialMeasurementId)
+        val measurementIdFlow = MutableStateFlow(initialMeasurementId)
 
-        override val measurementId
-            get() = measurementIdStateFlow.value
+        override val measurementId: Long?
+            get() = measurementIdFlow.value
+
+        val product = productRepository.observeProductById(productId)
 
         @OptIn(ExperimentalCoroutinesApi::class)
-        override val measurement = measurementIdStateFlow.flatMapLatest {
-            if (it != null) {
-                addFoodRepository.observeMeasurementById(it)
+        val measurementFlow = measurementIdFlow.flatMapLatest { id ->
+            if (id == null) {
+                flowOf<WeightMeasurement?>(WeightMeasurement.WeightUnit(100f))
             } else {
-                addFoodRepository.observeMeasurementByProductId(productId)
+                addFoodRepository.observeMeasurementById(id).filterNotNull().map { it.measurement }
             }
+        }
+
+        override val model: StateFlow<ProductWithWeightMeasurement?> = combine(
+            product.filterNotNull(),
+            measurementFlow.filterNotNull()
+        ) { p, wm ->
+            ProductWithWeightMeasurement(
+                product = p,
+                measurement = wm,
+                measurementId = this.measurementId
+            )
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
@@ -197,3 +183,8 @@ class SearchViewModel(
         )
     }
 }
+
+data class HolderKey(
+    val productId: Long,
+    val extraId: Int
+)
