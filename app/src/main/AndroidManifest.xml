@@ -13,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodYou"
         android:enableOnBackInvokedCallback="true"
-        android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
             android:name=".core.infrastructure.android.FoodYouMainActivity"
