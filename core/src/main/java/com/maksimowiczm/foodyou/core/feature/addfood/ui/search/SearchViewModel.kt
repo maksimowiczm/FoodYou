@@ -68,20 +68,6 @@ class SearchViewModel(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val productsWithMeasurements = _searchQuery.flatMapLatest { query ->
-        addFoodRepository.queryProducts(
-            mealId = mealId,
-            date = date,
-            query = query,
-            localOnly = query == null
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Lazily, // Cache while view model is active
-        initialValue = QueryResult.loading(emptyList())
-    )
-
-    @OptIn(ExperimentalCoroutinesApi::class)
     val pages = _searchQuery.flatMapLatest { query ->
         addFoodRepository.queryProducts(
             mealId = mealId,
