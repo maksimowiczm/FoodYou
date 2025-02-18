@@ -26,7 +26,6 @@ import java.util.Locale
 
 @Composable
 fun rememberPortionFormState(
-    product: Product,
     suggestion: QuantitySuggestion,
     initialMeasurement: WeightMeasurement = WeightMeasurement.WeightUnit(100f)
 ): PortionFormState {
@@ -110,19 +109,19 @@ fun rememberPortionFormState(
                 val measurement = when (enum) {
                     WeightMeasurementEnum.Package -> WeightMeasurement.Package(
                         it[1] as Float,
-                        product.packageWeight!!
+                        suggestion.product.packageWeight!!
                     )
 
                     WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(
                         it[1] as Float,
-                        product.servingWeight!!
+                        suggestion.product.servingWeight!!
                     )
 
                     WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(it[1] as Float)
                 }
 
                 PortionFormState(
-                    product = product,
+                    product = suggestion.product,
                     servingInput = servingInput,
                     packageInput = packageInput,
                     weightUnitInput = weightUnitInput,
@@ -133,7 +132,7 @@ fun rememberPortionFormState(
         )
     ) {
         PortionFormState(
-            product = product,
+            product = suggestion.product,
             servingInput = servingInput,
             packageInput = packageInput,
             weightUnitInput = weightUnitInput,

@@ -36,17 +36,17 @@ class PortionViewModel(
         }
     }
 
-    private val _uiState = MutableStateFlow<PortionUiState>(PortionUiState.Empty)
-    val uiState = _uiState.asStateFlow()
+    private val _uiEvent = MutableStateFlow<PortionEvent>(PortionEvent.Empty)
+    val uiEvent = _uiEvent.asStateFlow()
 
     private var observeProductJob: Job? = null
 
     /**
-     * Load the product with the given ID and its quantity suggestion. The UI state will be updated
-     * accordingly in the [uiState] flow.
+     * Load the product with the given ID and its quantity suggestion. The UI will be notified
+     * with the [PortionEvent]s.
      */
     fun loadProduct(id: Long) {
-        _uiState.value = PortionUiState.Loading
+        _uiEvent.value = PortionEvent.Loading
 
         observeProductJob?.cancel()
         observeProductJob = combine(
@@ -54,16 +54,16 @@ class PortionViewModel(
             addFoodRepository.observeQuantitySuggestionByProductId(id)
         ) { product, suggestion ->
             if (product == null) {
-                _uiState.value = PortionUiState.Error
+                _uiEvent.value = PortionEvent.Error
                 return@combine
             }
 
-            _uiState.value = PortionUiState.Ready(
+            _uiEvent.value = PortionEvent.Ready(
                 product = product,
                 suggestion = suggestion
             )
         }.catch {
-            _uiState.value = PortionUiState.Error
+            _uiEvent.value = PortionEvent.Error
         }.launchIn(viewModelScope)
     }
 
@@ -71,19 +71,15 @@ class PortionViewModel(
         weightMeasurementEnum: WeightMeasurementEnum,
         quantity: Float
     ) {
-        val uiState = _uiState.value
+        val uiState = _uiEvent.value
 
-        if (uiState !is PortionUiState.Ready) {
+        if (uiState !is PortionEvent.Ready) {
             return
         }
 
         observeProductJob?.cancel()
 
-        _uiState.value = PortionUiState.CreatingPortion(
-            product = uiState.product,
-            suggestion = uiState.suggestion,
-            measurement = weightMeasurementEnum
-        )
+        _uiEvent.value = PortionEvent.CreatingPortion
 
         viewModelScope.launch {
             addFoodRepository.addFood(
@@ -94,11 +90,7 @@ class PortionViewModel(
                 quantity = quantity
             )
 
-            _uiState.value = PortionUiState.Success(
-                product = uiState.product,
-                suggestion = uiState.suggestion,
-                measurement = weightMeasurementEnum
-            )
+            _uiEvent.value = PortionEvent.Success
         }
     }
 }
