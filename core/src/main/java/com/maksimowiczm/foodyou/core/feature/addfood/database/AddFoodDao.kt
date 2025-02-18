@@ -168,4 +168,39 @@ interface AddFoodDao {
 
     @Delete
     suspend fun deleteMeal(meal: MealEntity)
+
+    @Query(
+        """
+        SELECT 
+            p.id as productId, 
+            wm.id AS measurementId
+        FROM ProductEntity p
+        LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId
+        WHERE wm.isDeleted IS NULL OR wm.isDeleted = 0
+        """
+    )
+    fun observeIHateThis(): Flow<List<IHateThisEntity>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT 
+            *
+        FROM WeightMeasurementEntity wm
+        LEFT JOIN ProductEntity p ON p.id = wm.productId
+        WHERE wm.isDeleted IS NULL OR wm.isDeleted = 0
+        AND wm.id = :measurementId
+        """
+    )
+    fun observeMeasurement(measurementId: Long): Flow<ProductWithWeightMeasurementEntity?>
 }
+
+data class IHateThisEntity(
+    val productId: Long,
+    val measurementId: Long?
+)
+
+data class IHateThis(
+    val productId: Long,
+    val measurements: List<Long>
+)

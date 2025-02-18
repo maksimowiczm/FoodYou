@@ -16,7 +16,7 @@ private val addFoodModule = module {
     viewModelOf(::PortionViewModel)
     viewModelOf(::SearchViewModel)
 
-    factory {
+    single {
         AddFoodRepositoryImpl(
             addFoodDatabase = get(),
             productDatabase = get(),

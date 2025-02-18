@@ -42,7 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
@@ -56,11 +55,13 @@ import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.R
-import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.core.feature.addfood.database.IHateThis
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 
 @Composable
 fun SearchHome(
@@ -73,14 +74,17 @@ fun SearchHome(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val productsWithMeasurements by viewModel.productsWithMeasurements.collectAsStateWithLifecycle()
+    val pages by viewModel.pages.collectAsStateWithLifecycle()
+//    val productsWithMeasurements by viewModel.productsWithMeasurements.collectAsStateWithLifecycle()
     val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
 
     SearchHome(
+        viewModel = viewModel,
         animatedVisibilityScope = animatedVisibilityScope,
-        queryResults = productsWithMeasurements,
+        items = pages,
+//        queryResults = productsWithMeasurements,
         totalCalories = totalCalories,
         recentQueries = recentQueries,
         query = query,
@@ -101,8 +105,10 @@ fun SearchHome(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SearchHome(
+    viewModel: SearchViewModel,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    queryResults: QueryResult<ProductWithWeightMeasurement>,
+    items: List<IHateThis>,
+//    queryResults: QueryResult<ProductWithWeightMeasurement>,
     recentQueries: List<ProductQuery>,
     totalCalories: Int,
     query: String?,
@@ -120,8 +126,8 @@ private fun SearchHome(
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
-    val isEmpty by remember(queryResults) {
-        derivedStateOf { queryResults.data.isEmpty() }
+    val isEmpty by remember(items) {
+        derivedStateOf { items.size == 0 }
     }
 
     val topBar = @Composable {
@@ -164,9 +170,9 @@ private fun SearchHome(
 
     val density = LocalDensity.current
     var errorCardHeight by remember { mutableIntStateOf(0) }
-    val hasError = queryResults.error != null
+    val hasError = false
     val anchoredDraggableState = rememberSaveable(
-        queryResults,
+        hasError,
         saver = AnchoredDraggableState.Saver()
     ) {
         AnchoredDraggableState(
@@ -229,17 +235,21 @@ private fun SearchHome(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 errorCard()
-                if (queryResults.isLoading) {
+                if (false) {
                     LoadingIndicator()
                 }
             }
 
-            if (isEmpty && !queryResults.isLoading) {
+            if (isEmpty && false) {
                 Text(
                     text = stringResource(R.string.neutral_no_products_found),
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
+
+            val shimmer = rememberShimmer(
+                shimmerBounds = ShimmerBounds.Window
+            )
 
             LazyColumn(
                 contentPadding = paddingValues,
@@ -250,28 +260,30 @@ private fun SearchHome(
                 }
 
                 items(
-                    items = queryResults.data,
-                    key = {
-                        "${it.product.id}-${it.measurementId}"
-                    }
+                    items = items,
+                    key = { it.productId }
                 ) { item ->
-                    val isChecked = item.measurementId != null
-
-                    ProductSearchListItem(
-                        model = item,
-                        isChecked = isChecked,
-                        onCheckChange = {
-                            if (item.measurementId != null) {
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
-                                onQuickRemove(item.measurementId)
-                            } else {
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
-                                onQuickAdd(item.product.id, item.measurement)
-                            }
-                        },
-                        onClick = { onProductClick(item.product.id) },
-                        modifier = Modifier.animateItem()
-                    )
+                    if (item.measurements.isEmpty()) {
+                        Dumb(
+                            holder = viewModel.getHolder(
+                                productId = item.productId,
+                                measurementId = null
+                            ),
+                            onClick = { onProductClick(item.productId) },
+                            shimmer = shimmer
+                        )
+                    } else {
+                        item.measurements.forEach { measurementId ->
+                            Dumb(
+                                holder = viewModel.getHolder(
+                                    productId = item.productId,
+                                    measurementId = measurementId
+                                ),
+                                onClick = { onProductClick(item.productId) },
+                                shimmer = shimmer
+                            )
+                        }
+                    }
                 }
 
                 item {
@@ -279,6 +291,31 @@ private fun SearchHome(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Dumb(
+    holder: Holder,
+    shimmer: Shimmer,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val measurement by holder.measurement.collectAsStateWithLifecycle()
+
+    if (measurement == null) {
+        ProductSearchListItemSkeleton(
+            modifier = modifier,
+            shimmer = shimmer
+        )
+    } else {
+        ProductSearchListItem(
+            model = measurement!!,
+            onClick = onClick,
+            isChecked = holder.measurementId != null,
+            onCheckChange = {},
+            modifier = modifier
+        )
     }
 }
 

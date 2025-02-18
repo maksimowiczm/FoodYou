@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
+import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,6 +23,7 @@ import kotlinx.datetime.LocalDate
 
 class SearchViewModel(
     private val addFoodRepository: AddFoodRepository,
+    private val productRepository: ProductRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val mealId: Long
@@ -81,6 +84,19 @@ class SearchViewModel(
         initialValue = QueryResult.loading(emptyList())
     )
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pages = _searchQuery.flatMapLatest { query ->
+        addFoodRepository.abc(
+            mealId = mealId,
+            date = date,
+            query = query
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = emptyList()
+    )
+
     fun onSearch(query: String?) {
         viewModelScope.launch {
             _searchQuery.emit(query?.takeIf { it.isNotBlank() })
@@ -114,4 +130,51 @@ class SearchViewModel(
             addFoodRepository.removeMeasurement(measurementId)
         }
     }
+
+    private var holders: List<InnerHolder> = mutableListOf()
+
+    fun getHolder(
+        productId: Long,
+        measurementId: Long?
+    ): Holder {
+        // Check cache
+        val cached = holders.firstOrNull {
+            it.productId == productId && it.measurementId == measurementId
+        }
+
+        if (cached != null) {
+            return cached
+        }
+
+        // Create new holder
+        val holder = InnerHolder(
+            productId = productId,
+            measurementId = measurementId
+        )
+
+        // Update cache
+        holders = holders + holder
+
+        return holder
+    }
+
+    private inner class InnerHolder(
+        val productId: Long,
+        override val measurementId: Long?
+    ) : Holder {
+        override val measurement = if (measurementId != null) {
+            addFoodRepository.observeMeasurementById(measurementId)
+        } else {
+            addFoodRepository.observeMeasurementByProductId(productId)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = null
+        )
+    }
+}
+
+interface Holder {
+    val measurementId: Long?
+    val measurement: StateFlow<ProductWithWeightMeasurement?>
 }

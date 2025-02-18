@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
+    @Query("SELECT * FROM productentity")
+    fun observeProducts(): Flow<List<ProductEntity>>
+
     @Query("SELECT * FROM productentity WHERE id = :id")
     suspend fun getProductById(id: Long): ProductEntity?
 

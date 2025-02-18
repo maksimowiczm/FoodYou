@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasuremen
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDao
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDatabase
+import com.maksimowiczm.foodyou.core.feature.addfood.database.IHateThis
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductQueryEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
@@ -62,6 +63,36 @@ class AddFoodRepositoryImpl(
         )
 
         return addFoodDao.insertWeightMeasurement(entity)
+    }
+
+    override fun abc(
+        mealId: Long,
+        date: LocalDate,
+        query: String?
+    ): Flow<List<IHateThis>> {
+        val flow = addFoodDao.observeIHateThis().map { list ->
+            val map = list.groupBy { it.productId }
+
+            val list = map.map { (id, list) ->
+                IHateThis(
+                    productId = id,
+                    measurements = list.mapNotNull { it.measurementId }
+                )
+            }
+
+            list
+        }
+
+        ioScope.launch {
+            if (query != null) {
+                productsRemoteDatabase.queryAndInsertByName(
+                    query = query,
+                    limit = NETWORK_PAGE_SIZE
+                )
+            }
+        }
+
+        return flow
     }
 
     override fun queryProducts(
@@ -214,6 +245,26 @@ class AddFoodRepositoryImpl(
     override fun observeProductQueries(limit: Int): Flow<List<ProductQuery>> {
         return addFoodDao.observeLatestQueries(limit).map { list ->
             list.map { it.toDomain() }
+        }
+    }
+
+    override fun observeMeasurementById(id: Long): Flow<ProductWithWeightMeasurement?> {
+        return addFoodDao.observeMeasurement(id).map {
+            it?.toDomain()
+        }
+    }
+
+    override fun observeMeasurementByProductId(productId: Long): Flow<ProductWithWeightMeasurement?> {
+        return productDao.observeProductById(productId).map {
+            if (it == null) {
+                return@map null
+            }
+
+            ProductWithWeightMeasurement(
+                product = it.toDomain(),
+                measurementId = null,
+                measurement = WeightMeasurement.WeightUnit(100f)
+            )
         }
     }
 
