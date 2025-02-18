@@ -242,7 +242,7 @@ private fun SearchHome(
                 }
             }
 
-            if (isEmpty) {
+            if (isEmpty && !queryResult.isLoading) {
                 Text(
                     text = stringResource(R.string.neutral_no_products_found),
                     modifier = Modifier.align(Alignment.Center)
@@ -259,6 +259,17 @@ private fun SearchHome(
             ) {
                 item {
                     Spacer(Modifier.height(density.run { errorCardHeight.toDp() }))
+                }
+
+                if (queryResult.data.isEmpty() && queryResult.isLoading) {
+                    items(
+                        count = 30
+                    ) {
+                        ProductSearchListItemSkeleton(
+                            shimmer = shimmer,
+                            containerColor = ProductSearchListItemDefaults.colors().uncheckedContainerColor
+                        )
+                    }
                 }
 
                 queryResult.data.forEach { model ->
