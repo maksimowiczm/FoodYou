@@ -158,8 +158,8 @@ class AddFoodRepositoryImpl(
         flow(false, null).collect(::emit)
     }
 
-    override suspend fun removeMeasurement(portionId: Long) {
-        val entity = addFoodDao.observeWeightMeasurement(portionId).first()
+    override suspend fun removeMeasurement(id: Long) {
+        val entity = addFoodDao.observeWeightMeasurement(id).first()
 
         if (entity != null) {
             addFoodDao.deleteWeightMeasurement(entity.id)

@@ -24,7 +24,7 @@ interface AddFoodRepository {
         weightMeasurement: WeightMeasurement
     ): Long
 
-    suspend fun removeMeasurement(portionId: Long)
+    suspend fun removeMeasurement(id: Long)
 
     fun queryProducts(
         mealId: Long,
