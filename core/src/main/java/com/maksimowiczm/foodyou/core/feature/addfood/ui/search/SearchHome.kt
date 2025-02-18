@@ -88,8 +88,8 @@ fun SearchHome(
         viewModel = viewModel,
         animatedVisibilityScope = animatedVisibilityScope,
         queryResult = queryResult,
-        totalCalories = totalCalories,
         recentQueries = recentQueries,
+        totalCalories = totalCalories,
         query = query,
         onProductClick = onProductClick,
         onQuickAdd = viewModel::onQuickAdd,
@@ -254,8 +254,8 @@ private fun SearchHome(
             )
 
             LazyColumn(
-                contentPadding = paddingValues,
-                modifier = Modifier.nestedScroll(bottomBarScrollBehavior.nestedScrollConnection)
+                modifier = Modifier.nestedScroll(bottomBarScrollBehavior.nestedScrollConnection),
+                contentPadding = paddingValues
             ) {
                 item {
                     Spacer(Modifier.height(density.run { errorCardHeight.toDp() }))
