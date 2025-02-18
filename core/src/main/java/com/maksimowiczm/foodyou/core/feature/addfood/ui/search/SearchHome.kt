@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -37,6 +36,7 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -119,7 +119,9 @@ private fun SearchHome(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isEmpty = false
+    val isEmpty by remember(queryResults) {
+        derivedStateOf { queryResults.isEmpty() }
+    }
 
     val topBar = @Composable {
         SearchTopBar(
@@ -145,8 +147,8 @@ private fun SearchHome(
         )
     }
     // Make sure that bottom bar is visible when user can't scroll
-    LaunchedEffect(queryResults) {
-        if (queryResults.isEmpty()) {
+    LaunchedEffect(isEmpty) {
+        if (isEmpty) {
             bottomBarScrollBehavior.nestedScrollConnection.onPostScroll(
                 consumed = Offset.Infinite,
                 available = Offset.Infinite,
@@ -161,9 +163,9 @@ private fun SearchHome(
 
     val density = LocalDensity.current
     var errorCardHeight by remember { mutableIntStateOf(0) }
-    val hasError = false
+    val hasError = queryResults.error != null
     val anchoredDraggableState = rememberSaveable(
-//        productsWithMeasurements.loadState,
+        queryResults,
         saver = AnchoredDraggableState.Saver()
     ) {
         AnchoredDraggableState(
@@ -226,12 +228,12 @@ private fun SearchHome(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 errorCard()
-                if (false) {
+                if (queryResults.isLoading) {
                     LoadingIndicator()
                 }
             }
 
-            if (isEmpty) {
+            if (isEmpty && !queryResults.isLoading) {
                 Text(
                     text = stringResource(R.string.neutral_no_products_found),
                     modifier = Modifier.align(Alignment.Center)
