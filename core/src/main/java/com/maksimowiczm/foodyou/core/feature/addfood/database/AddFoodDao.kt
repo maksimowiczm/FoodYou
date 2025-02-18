@@ -204,4 +204,15 @@ interface AddFoodDao {
         """
     )
     fun observeMeasurement(measurementId: Long): Flow<ProductWithWeightMeasurementEntity?>
+
+    @Query(
+        """
+        SELECT *
+        FROM WeightMeasurementEntity wm
+        WHERE wm.productId = :productId
+        ORDER BY wm.createdAt DESC
+        LIMIT 1
+        """
+    )
+    fun observeLatestMeasurementByProductId(productId: Long): Flow<ProductWithWeightMeasurementEntity?>
 }

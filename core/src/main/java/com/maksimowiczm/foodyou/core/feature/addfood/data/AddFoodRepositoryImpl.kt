@@ -245,15 +245,41 @@ class AddFoodRepositoryImpl(
     }
 
     override fun observeMeasurementByProductId(productId: Long): Flow<ProductWithWeightMeasurement?> {
-        return productDao.observeProductById(productId).map {
-            if (it == null) {
-                return@map null
+        return combine(
+            productDao.observeProductById(productId),
+            addFoodDao.observeLatestMeasurementByProductId(productId)
+        ) { product, measurement ->
+            if (product == null) {
+                Log.w(TAG, "Product not found for ID $productId. Skipping measurement.")
+                return@combine null
+            }
+
+            if (measurement != null) {
+                return@combine ProductWithWeightMeasurement(
+                    product = product.toDomain(),
+                    measurementId = null,
+                    measurement = measurement.toDomain().measurement
+                )
+            }
+
+            val weightMeasurement = when {
+                product.servingWeight != null -> WeightMeasurement.Serving(
+                    servingWeight = product.servingWeight,
+                    quantity = 1f
+                )
+
+                product.packageWeight != null -> WeightMeasurement.Package(
+                    packageWeight = product.packageWeight,
+                    quantity = 1f
+                )
+
+                else -> WeightMeasurement.WeightUnit(100f)
             }
 
             ProductWithWeightMeasurement(
-                product = it.toDomain(),
+                product = product.toDomain(),
                 measurementId = null,
-                measurement = WeightMeasurement.WeightUnit(100f)
+                measurement = weightMeasurement
             )
         }
     }

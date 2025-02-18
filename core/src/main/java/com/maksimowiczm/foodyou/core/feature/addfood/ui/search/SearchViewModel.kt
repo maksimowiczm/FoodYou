@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -171,9 +170,4 @@ class SearchViewModel(
             initialValue = null
         )
     }
-}
-
-interface ProductMeasurementHolder {
-    val measurementId: Long?
-    val measurement: StateFlow<ProductWithWeightMeasurement?>
 }
