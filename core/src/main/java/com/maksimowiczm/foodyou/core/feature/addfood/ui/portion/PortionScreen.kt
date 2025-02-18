@@ -87,12 +87,29 @@ fun PortionScreen(
     viewModel: PortionViewModel,
     modifier: Modifier = Modifier
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val event by viewModel.uiEvent.collectAsStateWithLifecycle()
+
+    val state = rememberPortionState()
+
+    LaunchedEffect(event) {
+        @Suppress("NAME_SHADOWING")
+        when (val event = event) {
+            PortionEvent.CreatingPortion,
+            PortionEvent.Empty,
+            PortionEvent.Error,
+            PortionEvent.Loading -> Unit
+
+            is PortionEvent.Ready -> {
+                state.suggestion = event.suggestion
+            }
+
+            PortionEvent.Success -> onSuccess()
+        }
+    }
 
     PortionScreen(
-        uiState = uiState,
+        state = state,
         onBack = onBack,
-        onSuccess = onSuccess,
         onConfirm = viewModel::onAddPortion,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
@@ -102,9 +119,8 @@ fun PortionScreen(
 
 @Composable
 private fun PortionScreen(
-    uiState: PortionUiState,
+    state: PortionState,
     onBack: () -> Unit,
-    onSuccess: () -> Unit,
     onConfirm: (WeightMeasurementEnum, quantity: Float) -> Unit,
     onEditClick: (productId: Long) -> Unit,
     onDeleteClick: (productId: Long) -> Unit,
@@ -112,38 +128,34 @@ private fun PortionScreen(
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
-    LaunchedEffect(uiState) {
-        if (uiState is PortionUiState.Success) {
-            onSuccess()
+    fun internalOnConfirm(weightMeasurementEnum: WeightMeasurementEnum, quantity: Float) {
+        // Ignore if user has already selected a weight measurement
+        if (state.weightMeasurementEnum != null) {
+            return
         }
+
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+        state.weightMeasurementEnum = weightMeasurementEnum
+
+        onConfirm(weightMeasurementEnum, quantity)
     }
 
-    when (uiState) {
-        PortionUiState.Empty,
-        PortionUiState.Error,
-        PortionUiState.Loading -> Unit
-
-        is PortionUiState.WithMeasurement -> PortionScreen(
-            onBack = onBack,
-            state = uiState,
-            onConfirm = { _, _ -> },
-            onEditClick = { onEditClick(uiState.product.id) },
-            onDeleteClick = { onDeleteClick(uiState.product.id) },
-            modifier = modifier,
-            highlight = uiState.measurement
-        )
-
-        is PortionUiState.WithProduct -> PortionScreen(
-            state = uiState,
+    val suggestion = state.suggestion
+    if (suggestion == null) {
+        // TODO
+        //  Might consider doing skeleton. It loads fast but what if it isn't fast enough?
+        return
+    } else {
+        PortionScreen(
+            suggestion = suggestion,
             onBack = onBack,
             onConfirm = { weightMeasurementEnum, quantity ->
-                hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-
-                onConfirm(weightMeasurementEnum, quantity)
+                internalOnConfirm(weightMeasurementEnum, quantity)
             },
-            onDeleteClick = { onDeleteClick(uiState.product.id) },
-            onEditClick = { onEditClick(uiState.product.id) },
-            modifier = modifier
+            onEditClick = { onEditClick(state.suggestion!!.product.id) },
+            onDeleteClick = { onDeleteClick(state.suggestion!!.product.id) },
+            modifier = modifier,
+            highlight = state.weightMeasurementEnum
         )
     }
 }
@@ -151,13 +163,13 @@ private fun PortionScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PortionScreen(
-    state: PortionUiState.WithProduct,
+    suggestion: QuantitySuggestion,
     onBack: () -> Unit,
     onConfirm: (WeightMeasurementEnum, quantity: Float) -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier,
-    highlight: WeightMeasurementEnum? = null
+    highlight: WeightMeasurementEnum?
 ) {
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -169,8 +181,7 @@ private fun PortionScreen(
     }
 
     val formState = rememberPortionFormState(
-        product = state.product,
-        suggestion = state.suggestion
+        suggestion = suggestion
     )
 
     // Fade in top app bar title when scrolling down
@@ -194,7 +205,7 @@ private fun PortionScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = state.product.name,
+                        text = formState.product.name,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.graphicsLayer { alpha = headlineAlpha }
@@ -222,7 +233,7 @@ private fun PortionScreen(
         ) {
             item {
                 Text(
-                    text = state.product.name,
+                    text = formState.product.name,
                     style = MaterialTheme.typography.headlineLarge,
                     modifier = Modifier
                         .padding(16.dp)
@@ -236,14 +247,14 @@ private fun PortionScreen(
             }
 
             item {
-                val packageWeight = state.product.packageWeight
+                val packageWeight = formState.product.packageWeight
 
                 if (packageWeight != null) {
                     Column {
-                        formState.packageInput.NoNameInput(
+                        formState.packageInput.WeightUnitInput(
                             asCalories = {
                                 val weight = it * packageWeight
-                                state.product.nutrients.calories(weight).roundToInt()
+                                formState.product.nutrients.calories(weight).roundToInt()
                             },
                             asGrams = { (it * packageWeight).roundToInt() },
                             onConfirm = {
@@ -253,7 +264,7 @@ private fun PortionScreen(
                                 )
                             },
                             label = { Text(stringResource(R.string.product_package)) },
-                            weightUnit = state.product.weightUnit,
+                            weightUnit = formState.product.weightUnit,
                             modifier = Modifier
                                 .then(
                                     if (highlight == WeightMeasurementEnum.Package) {
@@ -270,14 +281,14 @@ private fun PortionScreen(
             }
 
             item {
-                val servingWeight = state.product.servingWeight
+                val servingWeight = formState.product.servingWeight
 
                 if (servingWeight != null) {
                     Column {
-                        formState.servingInput.NoNameInput(
+                        formState.servingInput.WeightUnitInput(
                             asCalories = {
                                 val weight = it * servingWeight
-                                state.product.nutrients.calories(weight).roundToInt()
+                                formState.product.nutrients.calories(weight).roundToInt()
                             },
                             asGrams = { (it * servingWeight).roundToInt() },
                             onConfirm = {
@@ -287,7 +298,7 @@ private fun PortionScreen(
                                 )
                             },
                             label = { Text(stringResource(R.string.product_serving)) },
-                            weightUnit = state.product.weightUnit,
+                            weightUnit = formState.product.weightUnit,
                             modifier = Modifier
                                 .then(
                                     if (highlight == WeightMeasurementEnum.Serving) {
@@ -305,11 +316,14 @@ private fun PortionScreen(
 
             item {
                 formState.weightUnitInput.WeightUnitInput(
-                    asCalories = { state.product.nutrients.calories(it).roundToInt() },
+                    asCalories = { formState.product.nutrients.calories(it).roundToInt() },
                     onConfirm = {
-                        onConfirm(WeightMeasurementEnum.WeightUnit, formState.weightUnitInput.value)
+                        onConfirm(
+                            WeightMeasurementEnum.WeightUnit,
+                            formState.weightUnitInput.value
+                        )
                     },
-                    suffix = { Text(state.product.weightUnit.stringResourceShort()) },
+                    suffix = { Text(formState.product.weightUnit.stringResourceShort()) },
                     modifier = Modifier
                         .then(
                             if (highlight == WeightMeasurementEnum.WeightUnit) {
@@ -341,7 +355,7 @@ private fun PortionScreen(
                     )
 
                     MacroGraph(
-                        product = state.product,
+                        product = formState.product,
                         measurement = formState.latestMeasurement
                     )
                 }
@@ -370,7 +384,7 @@ private fun PortionScreen(
 
                     NutrientsList(
                         state = rememberNutrientsListState(
-                            product = state.product,
+                            product = formState.product,
                             extraFilters = listOf(formState.latestMeasurement)
                         ),
                         paddingValues = PaddingValues(horizontal = 16.dp)
@@ -385,7 +399,10 @@ private fun PortionScreen(
             item {
                 FlowRow(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                    horizontalArrangement = Arrangement.spacedBy(
+                        8.dp,
+                        Alignment.CenterHorizontally
+                    )
                 ) {
                     Button(
                         onClick = onEditClick
@@ -419,7 +436,7 @@ private fun PortionScreen(
 }
 
 @Composable
-private fun FormFieldWithTextFieldValue<Float, MyError>.NoNameInput(
+private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
     asCalories: (Float) -> Int,
     asGrams: (Float) -> Int,
     onConfirm: () -> Unit,
@@ -429,7 +446,10 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.NoNameInput(
 ) {
     Row(
         modifier = Modifier
-            .clickable { onConfirm() }
+            .clickable(
+                onClick = onConfirm,
+                enabled = error == null
+            )
             .then(modifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -525,7 +545,10 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
 ) {
     Row(
         modifier = Modifier
-            .clickable { onConfirm() }
+            .clickable(
+                onClick = onConfirm,
+                enabled = error == null
+            )
             .then(modifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -606,12 +629,9 @@ private fun PortionScreenPreview() {
 
     FoodYouTheme {
         PortionScreen(
-            state = PortionUiState.Ready(
+            suggestion = QuantitySuggestion(
                 product = product,
-                suggestion = QuantitySuggestion(
-                    product = product,
-                    quantitySuggestions = QuantitySuggestion.defaultSuggestion()
-                )
+                quantitySuggestions = QuantitySuggestion.defaultSuggestion()
             ),
             onBack = {},
             onConfirm = { _, _ -> },
