@@ -30,7 +30,7 @@ fun AddFoodScreen(
     onSearchSettings: () -> Unit,
     modifier: Modifier = Modifier,
     addFoodViewModel: AddFoodViewModel = koinViewModel(),
-    redesignSearchViewModel: SearchViewModel = koinViewModel(),
+    searchViewModel: SearchViewModel = koinViewModel(),
     portionViewModel: PortionViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
@@ -59,7 +59,7 @@ fun AddFoodScreen(
         ) {
             SearchHome(
                 animatedVisibilityScope = this,
-                viewModel = redesignSearchViewModel,
+                viewModel = searchViewModel,
                 onProductClick = { id ->
                     portionViewModel.loadProduct(id)
 
@@ -75,8 +75,8 @@ fun AddFoodScreen(
                 onCreateProduct = {
                     navController.navigateToProducts(
                         route = ProductsRoute.CreateProduct(
-                            epochDay = redesignSearchViewModel.date.toEpochDays(),
-                            mealId = redesignSearchViewModel.mealId
+                            epochDay = searchViewModel.date.toEpochDays(),
+                            mealId = searchViewModel.mealId
                         ),
                         navOptions = navOptions {
                             launchSingleTop = true
@@ -124,7 +124,7 @@ fun AddFoodScreen(
         }
         cameraGraph(
             onBarcodeScan = {
-                redesignSearchViewModel.onSearch(it)
+                searchViewModel.onSearch(it)
 
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
 
