@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
@@ -268,9 +269,13 @@ private fun SearchHome(
                                 measurementId = null
                             ),
                             onClick = { onProductClick(item.productId) },
-                            onQuickAdd = onQuickAdd,
+                            onQuickAdd = { pId, wm ->
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
+                                onQuickAdd(pId, wm)
+                            },
                             onQuickRemove = {},
-                            shimmer = shimmer
+                            shimmer = shimmer,
+                            modifier = Modifier.animateItem()
                         )
                     } else {
                         item.measurements.forEach { measurementId ->
@@ -280,9 +285,13 @@ private fun SearchHome(
                                     measurementId = measurementId
                                 ),
                                 onClick = { onProductClick(item.productId) },
-                                onQuickAdd = onQuickAdd,
-                                onQuickRemove = onQuickRemove,
-                                shimmer = shimmer
+                                onQuickAdd = { _, _ -> },
+                                onQuickRemove = {
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
+                                    onQuickRemove(it)
+                                },
+                                shimmer = shimmer,
+                                modifier = Modifier.animateItem()
                             )
                         }
                     }
