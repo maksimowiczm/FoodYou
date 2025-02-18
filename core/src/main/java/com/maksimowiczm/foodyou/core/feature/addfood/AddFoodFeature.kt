@@ -20,7 +20,7 @@ private val addFoodModule = module {
         AddFoodRepositoryImpl(
             addFoodDatabase = get(),
             productDatabase = get(),
-            foodYouDatabase = get(),
+            foodYouDatabase = get()
 //            productRemoteMediatorFactory = get()
         )
     }.bind<AddFoodRepository>()

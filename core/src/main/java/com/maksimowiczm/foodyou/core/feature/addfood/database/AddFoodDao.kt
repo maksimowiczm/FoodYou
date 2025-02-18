@@ -81,7 +81,7 @@ interface AddFoodDao {
         AND (:barcode IS NULL OR p.barcode = :barcode)
         """
     )
-    fun observePagedProductsWithMeasurement(
+    fun observeProductsWithMeasurement(
         mealId: Long,
         epochDay: Int,
         query: String?,

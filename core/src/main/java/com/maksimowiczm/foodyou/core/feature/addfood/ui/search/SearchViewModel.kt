@@ -5,13 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -60,8 +59,19 @@ class SearchViewModel(
         initialValue = null
     )
 
-    val productsWithMeasurements: StateFlow<LazyPagingItems<ProductWithWeightMeasurement>> =
-        MutableStateFlow(LazyPagingItems(100))
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val productsWithMeasurements = searchQuery.flatMapLatest { query ->
+        addFoodRepository.queryProducts(
+            mealId = mealId,
+            date = date,
+            query = query,
+            localOnly = false
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(30_000L),
+        initialValue = emptyList()
+    )
 
     fun onSearch(query: String?) {
         viewModelScope.launch {

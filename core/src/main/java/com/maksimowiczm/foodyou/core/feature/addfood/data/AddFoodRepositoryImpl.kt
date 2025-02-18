@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion.Companion.defaultSuggestion
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
@@ -60,6 +61,21 @@ class AddFoodRepositoryImpl(
         )
 
         return addFoodDao.insertWeightMeasurement(entity)
+    }
+
+    override fun queryProducts(
+        mealId: Long,
+        date: LocalDate,
+        query: String?,
+        localOnly: Boolean
+    ): Flow<List<ProductWithWeightMeasurement>> {
+        val isBarcode = query?.all { it.isDigit() } == true
+
+        if (isBarcode) {
+            return addFoodDao.observeProductsWithMeasurementByBarcode(mealId, date, query!!)
+        } else {
+            return addFoodDao.observeProductsWithMeasurementByQuery(mealId, date, query)
+        }
     }
 
     override suspend fun removeMeasurement(portionId: Long) {
@@ -121,27 +137,27 @@ class AddFoodRepositoryImpl(
         }
     }
 
-    private fun AddFoodDao.observePagedProductsWithMeasurementByQuery(
+    private fun AddFoodDao.observeProductsWithMeasurementByQuery(
         mealId: Long,
         date: LocalDate,
         query: String?
-    ) = observePagedProductsWithMeasurement(
+    ) = observeProductsWithMeasurement(
         mealId = mealId,
         epochDay = date.toEpochDays(),
         query = query,
         barcode = null
-    )
+    ).map { list -> list.map { it.toDomain() } }
 
-    private fun AddFoodDao.observePagedProductsWithMeasurementByBarcode(
+    private fun AddFoodDao.observeProductsWithMeasurementByBarcode(
         mealId: Long,
         date: LocalDate,
         barcode: String
-    ) = observePagedProductsWithMeasurement(
+    ) = observeProductsWithMeasurement(
         mealId = mealId,
         epochDay = date.toEpochDays(),
         query = null,
         barcode = barcode
-    )
+    ).map { list -> list.map { it.toDomain() } }
 
     private companion object {
         private const val TAG = "AddFoodRepositoryImpl"

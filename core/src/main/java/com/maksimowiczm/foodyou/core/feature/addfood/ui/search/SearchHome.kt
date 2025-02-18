@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -34,7 +33,6 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -58,8 +56,6 @@ import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
 
 @Composable
 fun SearchHome(
@@ -98,7 +94,7 @@ fun SearchHome(
 @Composable
 private fun SearchHome(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    productsWithMeasurements: LazyPagingItems<ProductWithWeightMeasurement>,
+    productsWithMeasurements: List<ProductWithWeightMeasurement>,
     recentQueries: List<ProductQuery>,
     totalCalories: Int,
     query: String?,
@@ -137,8 +133,8 @@ private fun SearchHome(
         )
     }
     // Make sure that bottom bar is visible when user can't scroll
-    LaunchedEffect(productsWithMeasurements.itemCount) {
-        if (productsWithMeasurements.itemCount == 0) {
+    LaunchedEffect(productsWithMeasurements) {
+        if (productsWithMeasurements.isEmpty()) {
             bottomBarScrollBehavior.nestedScrollConnection.onPostScroll(
                 consumed = Offset.Infinite,
                 available = Offset.Infinite,
@@ -192,10 +188,6 @@ private fun SearchHome(
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
-    val shimmer = rememberShimmer(
-        shimmerBounds = ShimmerBounds.Window
-    )
-
     Scaffold(
         modifier = modifier.onSizeChanged {
             val draggableAnchors = DraggableAnchors {
@@ -243,21 +235,18 @@ private fun SearchHome(
                 }
 
                 items(
-                    count = productsWithMeasurements.itemCount,
-                ) {
-                    val item = productsWithMeasurements[it]
-
-                    if (item == null) {
-                        ProductSearchListItemSkeleton(shimmer = shimmer)
-                    } else {
-                        val isChecked = item.measurementId != null
-
-                        ProductSearchListItem(
-                            model = item,
-                            isChecked = isChecked,
-                            onClick = { onProductClick(item.product.id) }
-                        )
+                    items = productsWithMeasurements,
+                    key = {
+                        "${it.product.id}-${it.measurementId}"
                     }
+                ) {
+                    val isChecked = it.measurementId != null
+
+                    ProductSearchListItem(
+                        model = it,
+                        isChecked = isChecked,
+                        onClick = { onProductClick(it.product.id) }
+                    )
                 }
 
                 item {
@@ -272,12 +261,4 @@ enum class ErrorCardState {
     HIDDEN_START,
     VISIBLE,
     HIDDEN_END
-}
-
-class LazyPagingItems<T>(
-    val itemCount: Int
-) {
-    operator fun get(index: Int): T? {
-        return null
-    }
 }

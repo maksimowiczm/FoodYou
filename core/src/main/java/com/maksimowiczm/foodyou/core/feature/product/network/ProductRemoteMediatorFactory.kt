@@ -1,9 +1,9 @@
-//package com.maksimowiczm.foodyou.core.feature.product.network
+// package com.maksimowiczm.foodyou.core.feature.product.network
 //
-//import androidx.paging.ExperimentalPagingApi
+// import androidx.paging.ExperimentalPagingApi
 //
-//@OptIn(ExperimentalPagingApi::class)
-//interface ProductRemoteMediatorFactory {
+// @OptIn(ExperimentalPagingApi::class)
+// interface ProductRemoteMediatorFactory {
 //    /**
 //     * Create a new instance of [ProductRemoteMediator]. If factory can't create a new instance, it
 //     * should return null.
@@ -23,4 +23,4 @@
 //     * @return A new instance of [ProductRemoteMediator].
 //     */
 //    fun createWithBarcode(barcode: String): ProductRemoteMediator?
-//}
+// }

@@ -1,29 +1,29 @@
-//package com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts
+// package com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts
 //
-//import android.util.Log
-//import androidx.datastore.core.DataStore
-//import androidx.datastore.preferences.core.Preferences
-//import androidx.paging.ExperimentalPagingApi
-//import androidx.paging.LoadType
-//import androidx.paging.PagingState
-//import com.maksimowiczm.foodyou.core.feature.product.data.ProductPreferences
-//import com.maksimowiczm.foodyou.core.feature.product.data.model.toEntity
-//import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
-//import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
-//import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
-//import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediator
-//import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
-//import com.maksimowiczm.foodyou.core.infrastructure.datastore.get
-//import kotlinx.coroutines.runBlocking
+// import android.util.Log
+// import androidx.datastore.core.DataStore
+// import androidx.datastore.preferences.core.Preferences
+// import androidx.paging.ExperimentalPagingApi
+// import androidx.paging.LoadType
+// import androidx.paging.PagingState
+// import com.maksimowiczm.foodyou.core.feature.product.data.ProductPreferences
+// import com.maksimowiczm.foodyou.core.feature.product.data.model.toEntity
+// import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
+// import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
+// import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
+// import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediator
+// import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
+// import com.maksimowiczm.foodyou.core.infrastructure.datastore.get
+// import kotlinx.coroutines.runBlocking
 //
-//@OptIn(ExperimentalPagingApi::class)
-//internal class OpenFoodFactsRemoteMediator(
+// @OptIn(ExperimentalPagingApi::class)
+// internal class OpenFoodFactsRemoteMediator(
 //    private val isBarcode: Boolean,
 //    private val query: String,
 //    private val country: String,
 //    private val productDao: ProductDao,
 //    private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource
-//) : ProductRemoteMediator() {
+// ) : ProductRemoteMediator() {
 //    override suspend fun initialize(): InitializeAction {
 //        return InitializeAction.LAUNCH_INITIAL_REFRESH
 //    }
@@ -163,4 +163,4 @@
 //            private const val TAG = "ProductRemoteMediator.Factory"
 //        }
 //    }
-//}
+// }
