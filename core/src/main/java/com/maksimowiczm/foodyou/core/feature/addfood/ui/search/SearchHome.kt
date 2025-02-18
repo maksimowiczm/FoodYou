@@ -42,10 +42,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
@@ -116,6 +118,8 @@ private fun SearchHome(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     val isEmpty by remember(queryResults) {
         derivedStateOf { queryResults.data.isEmpty() }
     }
@@ -258,8 +262,10 @@ private fun SearchHome(
                         isChecked = isChecked,
                         onCheckChange = {
                             if (item.measurementId != null) {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
                                 onQuickRemove(item.measurementId)
                             } else {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
                                 onQuickAdd(item.product.id, item.measurement)
                             }
                         },
