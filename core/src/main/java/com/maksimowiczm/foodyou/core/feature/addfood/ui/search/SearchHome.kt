@@ -287,8 +287,7 @@ private fun SearchHome(
                                     hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
                                     onQuickAdd(pId, wm)
                                 },
-                                onQuickRemove = {},
-                                modifier = Modifier.animateItem()
+                                onQuickRemove = {}
                             )
                         }
                     } else {
@@ -309,8 +308,7 @@ private fun SearchHome(
                                     onQuickRemove = {
                                         hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
                                         onQuickRemove(it)
-                                    },
-                                    modifier = Modifier.animateItem()
+                                    }
                                 )
                             }
                         }
