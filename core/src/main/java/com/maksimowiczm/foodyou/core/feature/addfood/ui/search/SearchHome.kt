@@ -334,11 +334,11 @@ private fun ProductSearchListItem(
 
     AnimatedContent(
         targetState = model != null,
-        transitionSpec = { fadeIn() togetherWith fadeOut() }
+        transitionSpec = { fadeIn() togetherWith fadeOut() },
+        modifier = modifier
     ) {
         if (!it || model == null) {
             ProductSearchListItemSkeleton(
-                modifier = modifier,
                 shimmer = shimmer,
                 containerColor = if (productMeasurementHolder.measurementId != null) {
                     ProductSearchListItemDefaults.colors().checkedContainerColor
@@ -351,8 +351,7 @@ private fun ProductSearchListItem(
                 model = model,
                 onClick = onClick,
                 isChecked = productMeasurementHolder.measurementId != null,
-                onCheckChange = { onCheckChange() },
-                modifier = modifier
+                onCheckChange = { onCheckChange() }
             )
         }
     }
