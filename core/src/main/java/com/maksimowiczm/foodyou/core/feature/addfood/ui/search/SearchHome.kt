@@ -93,6 +93,7 @@ fun SearchHome(
         onSearchSettings = onSearchSettings,
         onSearch = viewModel::onSearch,
         onClearSearch = { viewModel.onSearch(null) },
+        onRetry = viewModel::onRetry,
         onBack = onBack,
         onCreateProduct = onCreateProduct,
         onBarcodeScanner = onBarcodeScanner,
@@ -114,6 +115,7 @@ private fun SearchHome(
     onSearchSettings: () -> Unit,
     onSearch: (query: String) -> Unit,
     onClearSearch: () -> Unit,
+    onRetry: () -> Unit,
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
     onBarcodeScanner: () -> Unit,
@@ -194,7 +196,7 @@ private fun SearchHome(
                             y = 0
                         )
                     },
-                onRetry = {}
+                onRetry = onRetry
             )
         }
     }

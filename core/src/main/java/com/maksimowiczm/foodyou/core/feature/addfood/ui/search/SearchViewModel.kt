@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -54,30 +55,41 @@ class SearchViewModel(
         initialValue = emptyList()
     )
 
+    // Use shared flow to allow emitting equal values multiple times
     private val _searchQuery = MutableSharedFlow<String?>(replay = 1)
-    val searchQuery = _searchQuery.stateIn(
+    val searchQuery: StateFlow<String?> = _searchQuery.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(30_000L),
+        started = SharingStarted.Lazily,
         initialValue = null
     )
 
+    init {
+        _searchQuery.tryEmit(null)
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    val productsWithMeasurements = searchQuery.flatMapLatest { query ->
+    val productsWithMeasurements = _searchQuery.flatMapLatest { query ->
         addFoodRepository.queryProducts(
             mealId = mealId,
             date = date,
             query = query,
-            localOnly = false
+            localOnly = query == null
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(30_000L),
+        started = SharingStarted.Lazily, // Cache while view model is active
         initialValue = QueryResult.loading(emptyList())
     )
 
     fun onSearch(query: String?) {
         viewModelScope.launch {
             _searchQuery.emit(query?.takeIf { it.isNotBlank() })
+        }
+    }
+
+    fun onRetry() {
+        viewModelScope.launch {
+            _searchQuery.emit(searchQuery.value)
         }
     }
 
