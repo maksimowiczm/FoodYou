@@ -257,7 +257,6 @@ class AddFoodRepositoryImpl(
             if (measurement != null) {
                 return@combine ProductWithWeightMeasurement(
                     product = productEntity.toDomain(),
-                    measurementId = null,
                     measurement = measurement.toDomain().measurement
                 )
             }
@@ -267,7 +266,6 @@ class AddFoodRepositoryImpl(
 
             ProductWithWeightMeasurement(
                 product = product,
-                measurementId = null,
                 measurement = weightMeasurement
             )
         }

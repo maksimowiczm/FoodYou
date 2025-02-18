@@ -7,7 +7,6 @@ import kotlin.math.roundToInt
 
 data class ProductWithWeightMeasurement(
     val product: Product,
-    val measurementId: Long?,
     val measurement: WeightMeasurement
 ) {
     val weight: Float
@@ -45,7 +44,6 @@ fun ProductWithWeightMeasurementEntity.toDomain(): ProductWithWeightMeasurement 
 
     return ProductWithWeightMeasurement(
         product = this.product.toDomain(),
-        measurementId = this.weightMeasurement.id,
         measurement = weightMeasurement
     )
 }

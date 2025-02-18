@@ -172,8 +172,7 @@ class SearchViewModel(
         ) { p, wm ->
             ProductWithWeightMeasurement(
                 product = p,
-                measurement = wm,
-                measurementId = this.measurementId
+                measurement = wm
             )
         }.stateIn(
             scope = viewModelScope,
