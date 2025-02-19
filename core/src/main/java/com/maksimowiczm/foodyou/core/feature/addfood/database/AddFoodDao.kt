@@ -75,6 +75,7 @@ interface AddFoodDao {
             s.measurement AS m_measurement,
             s.quantity AS m_quantity,
             s.isDeleted AS m_isDeleted,
+            s.rank AS m_rank,
             s.todaysMeasurement
         FROM ProductEntity p
         LEFT JOIN Suggestions s ON s.productId = p.id
@@ -168,4 +169,21 @@ interface AddFoodDao {
 
     @Delete
     suspend fun deleteMeal(meal: MealEntity)
+
+    @Query(
+        """
+        SELECT *
+        FROM WeightMeasurementEntity
+        WHERE productId = :productId
+        AND mealId = :mealId
+        AND diaryEpochDay = :epochDay
+        AND (:isDeleted IS NULL OR isDeleted = :isDeleted)
+        """
+    )
+    suspend fun getWeightMeasurements(
+        productId: Long,
+        mealId: Long?,
+        epochDay: Int,
+        isDeleted: Boolean?
+    ): List<WeightMeasurementEntity>
 }

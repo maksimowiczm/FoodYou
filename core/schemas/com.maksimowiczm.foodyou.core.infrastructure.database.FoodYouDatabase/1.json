@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b7c607f782f09836863f94cdead338cc",
+    "identityHash": "ccb9819751688f69f36ddb1fafc6dd26",
     "entities": [
       {
         "tableName": "ProductEntity",
@@ -111,7 +111,7 @@
       },
       {
         "tableName": "WeightMeasurementEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mealId` INTEGER NOT NULL, `diaryEpochDay` INTEGER NOT NULL, `productId` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, `isDeleted` INTEGER NOT NULL, FOREIGN KEY(`productId`) REFERENCES `ProductEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`mealId`) REFERENCES `MealEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mealId` INTEGER NOT NULL, `diaryEpochDay` INTEGER NOT NULL, `productId` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, `isDeleted` INTEGER NOT NULL, `rank` REAL NOT NULL, FOREIGN KEY(`productId`) REFERENCES `ProductEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`mealId`) REFERENCES `MealEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -159,6 +159,12 @@
             "fieldPath": "isDeleted",
             "columnName": "isDeleted",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rank",
+            "columnName": "rank",
+            "affinity": "REAL",
             "notNull": true
           }
         ],
@@ -297,7 +303,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b7c607f782f09836863f94cdead338cc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ccb9819751688f69f36ddb1fafc6dd26')"
     ]
   }
 }

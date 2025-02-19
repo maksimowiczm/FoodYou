@@ -13,7 +13,8 @@ class ProductWithWeightMeasurementPreviewParameter :
         ProductWithWeightMeasurement(
             product = product,
             measurementId = null,
-            measurement = measurement
+            measurement = measurement,
+            rank = 1f
         )
     }.mapIndexed { index, productWithWeightMeasurement ->
         productWithWeightMeasurement.copy(

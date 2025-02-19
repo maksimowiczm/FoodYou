@@ -2,14 +2,16 @@ package com.maksimowiczm.foodyou.core.feature.addfood.data.model
 
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductSearchEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductWithWeightMeasurementEntity
+import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.core.feature.product.data.model.Product
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import kotlin.math.roundToInt
 
 data class ProductWithWeightMeasurement(
     val product: Product,
+    val measurement: WeightMeasurement,
     val measurementId: Long?,
-    val measurement: WeightMeasurement
+    val rank: Float
 ) {
     val weight: Float
         get() = measurement.weight
@@ -63,7 +65,8 @@ fun ProductSearchEntity.toDomain(): ProductWithWeightMeasurement {
     return ProductWithWeightMeasurement(
         product = product.toDomain(),
         measurementId = if (todaysMeasurement) this.weightMeasurement?.id else null,
-        measurement = weightMeasurement
+        measurement = weightMeasurement,
+        rank = this.weightMeasurement?.rank ?: WeightMeasurementEntity.FIRST_RANK
     )
 }
 

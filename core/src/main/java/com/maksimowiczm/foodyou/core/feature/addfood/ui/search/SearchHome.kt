@@ -271,7 +271,7 @@ private fun SearchHome(
                 items(
                     count = productsWithMeasurements.itemCount,
                     key = productsWithMeasurements.itemKey {
-                        "${it.measurementId} ${it.product.id}"
+                        "${it.product.id} ${it.rank}"
                     }
                 ) {
                     val item = productsWithMeasurements[it]

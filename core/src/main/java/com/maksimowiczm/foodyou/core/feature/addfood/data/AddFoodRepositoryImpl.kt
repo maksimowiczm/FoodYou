@@ -69,10 +69,31 @@ class AddFoodRepositoryImpl(
             productId = productId,
             measurement = weightMeasurement.asEnum(),
             quantity = quantity,
-            createdAt = epochSeconds
+            createdAt = epochSeconds,
+            rank = rankMeasurement(
+                date = date,
+                mealId = mealId,
+                productId = productId
+            )
         )
 
         return addFoodDao.insertWeightMeasurement(entity)
+    }
+
+    private suspend fun rankMeasurement(
+        date: LocalDate,
+        mealId: Long,
+        productId: Long
+    ): Float {
+        val measurements = addFoodDao.getWeightMeasurements(
+            mealId = mealId,
+            epochDay = date.toEpochDays(),
+            productId = productId,
+            isDeleted = false
+        )
+
+        return measurements.maxOfOrNull { it.rank }?.plus(1)
+            ?: WeightMeasurementEntity.FIRST_RANK
     }
 
     override suspend fun removeMeasurement(portionId: Long) {
