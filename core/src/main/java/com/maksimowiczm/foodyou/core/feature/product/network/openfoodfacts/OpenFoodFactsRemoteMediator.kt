@@ -64,7 +64,7 @@ internal class OpenFoodFactsRemoteMediator(
                 ).products
             }
 
-            val products = page.mapNotNull { remoteProduct ->
+            val products = page.map { remoteProduct ->
                 remoteProduct.toEntity().also {
                     if (it == null) {
                         Log.w(
@@ -75,9 +75,11 @@ internal class OpenFoodFactsRemoteMediator(
                 }
             }
 
-            productDao.insertOpenFoodFactsProducts(products)
+            productDao.insertOpenFoodFactsProducts(products.filterNotNull())
 
-            val endOfPaginationReached = products.size < state.config.pageSize
+            val skipped = products.count { it == null }
+
+            val endOfPaginationReached = (products.size + skipped) < state.config.pageSize
 
             return MediatorResult.Success(endOfPaginationReached)
         } catch (e: Exception) {
@@ -87,7 +89,7 @@ internal class OpenFoodFactsRemoteMediator(
     }
 
     private companion object {
-        private const val TAG = "ProductRemoteMediator"
+        private const val TAG = "OpenFoodFactsRemoteMediator"
     }
 
     // Should be used as singleton to avoid creating multiple instances of
