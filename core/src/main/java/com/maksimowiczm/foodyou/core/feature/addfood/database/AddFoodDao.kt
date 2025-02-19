@@ -118,7 +118,7 @@ interface AddFoodDao {
     @Transaction
     @Query(
         """
-        SELECT *
+        SELECT wm.*
         FROM WeightMeasurementEntity wm
         LEFT JOIN ProductEntity p ON p.id = wm.productId
         WHERE wm.isDeleted IS NULL OR wm.isDeleted = 0
@@ -127,9 +127,10 @@ interface AddFoodDao {
     )
     fun observeMeasurement(measurementId: Long): Flow<ProductWithWeightMeasurementEntity?>
 
+    @Transaction
     @Query(
         """
-        SELECT *
+        SELECT wm.*
         FROM WeightMeasurementEntity wm
         WHERE wm.productId = :productId
         ORDER BY wm.createdAt DESC
