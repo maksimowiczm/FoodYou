@@ -88,7 +88,7 @@ class PortionViewModel(
                 val packageWeight = uiState.product.packageWeight
 
                 if (packageWeight == null) {
-                    _uiState.value = PortionUiState.Error
+                    _uiEvent.value = PortionEvent.Error
                     return
                 }
 
@@ -102,7 +102,7 @@ class PortionViewModel(
                 val servingWeight = uiState.product.servingWeight
 
                 if (servingWeight == null) {
-                    _uiState.value = PortionUiState.Error
+                    _uiEvent.value = PortionEvent.Error
                     return
                 }
 
