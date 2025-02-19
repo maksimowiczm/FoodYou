@@ -125,6 +125,11 @@ private fun SearchHome(
     val isEmpty by remember(pages.loadState) {
         derivedStateOf { pages.itemCount == 0 }
     }
+    val isLoading by remember(pages.loadState) {
+        derivedStateOf {
+            pages.loadState.refresh == LoadState.Loading || pages.loadState.append == LoadState.Loading
+        }
+    }
 
     val topBar = @Composable {
         SearchTopBar(
@@ -237,10 +242,8 @@ private fun SearchHome(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 errorCard()
-                if (
-                    pages.loadState.refresh == LoadState.Loading ||
-                    pages.loadState.append == LoadState.Loading ||
-                    !pages.loadState.isIdle
+                AnimatedVisibility(
+                    visible = isLoading
                 ) {
                     LoadingIndicator()
                 }
@@ -263,7 +266,8 @@ private fun SearchHome(
 
                 if (pages.loadState.refresh == LoadState.Loading && isEmpty) {
                     items(
-                        count = 100
+                        count = 100,
+                        key = { "skeleton-refresh-$it" }
                     ) {
                         ProductSearchListItemSkeleton(shimmer = shimmer)
                     }
@@ -304,7 +308,8 @@ private fun SearchHome(
 
                 if (pages.loadState.append == LoadState.Loading) {
                     items(
-                        count = 3
+                        count = 3,
+                        key = { "skeleton-append-$it" }
                     ) {
                         ProductSearchListItemSkeleton(shimmer = shimmer)
                     }
