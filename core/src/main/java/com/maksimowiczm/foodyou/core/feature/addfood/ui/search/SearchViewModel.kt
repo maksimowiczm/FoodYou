@@ -76,7 +76,7 @@ class SearchViewModel(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pages = _searchQuery.flatMapLatest { query ->
+    val queryResult = _searchQuery.flatMapLatest { query ->
         addFoodRepository.queryProducts(
             mealId = mealId,
             date = date,

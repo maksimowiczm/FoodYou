@@ -77,7 +77,7 @@ fun SearchHome(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val queryResult by viewModel.pages.collectAsStateWithLifecycle()
+    val queryResult by viewModel.queryResult.collectAsStateWithLifecycle()
     val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
