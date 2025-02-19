@@ -80,7 +80,7 @@ interface AddFoodDao {
         LEFT JOIN Suggestions s ON s.productId = p.id
         WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
         AND (:barcode IS NULL OR p.barcode = :barcode)
-        ORDER BY s.todaysMeasurement DESC, s.createdAt DESC
+        ORDER BY p.name, s.id
         """
     )
     fun observePagedProductsWithMeasurement(
