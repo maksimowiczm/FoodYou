@@ -20,7 +20,6 @@ import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementE
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
-import com.maksimowiczm.foodyou.core.feature.product.network.ProductsRemoteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,7 +27,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -36,7 +34,6 @@ import kotlinx.datetime.LocalDate
 class AddFoodRepositoryImpl(
     addFoodDatabase: AddFoodDatabase,
     productDatabase: ProductDatabase,
-    private val productsRemoteDatabase: ProductsRemoteDatabase,
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 ) : AddFoodRepository {
     private val addFoodDao: AddFoodDao = addFoodDatabase.addFoodDao()
