@@ -195,7 +195,8 @@ class SearchViewModel(
             )
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Lazily,
+            // Don't do it lazily because it will be a waste if user deletes measurement
+            started = SharingStarted.WhileSubscribed(30_000L),
             initialValue = null
         )
     }
