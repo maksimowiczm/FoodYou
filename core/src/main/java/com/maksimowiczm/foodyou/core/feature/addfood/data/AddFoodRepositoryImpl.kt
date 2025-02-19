@@ -79,7 +79,8 @@ class AddFoodRepositoryImpl(
         val measurements = addFoodDao.getWeightMeasurements(
             mealId = mealId,
             epochDay = date.toEpochDays(),
-            productId = productId
+            productId = productId,
+            isDeleted = false
         )
 
         return measurements.maxOfOrNull { it.rank }?.plus(1)

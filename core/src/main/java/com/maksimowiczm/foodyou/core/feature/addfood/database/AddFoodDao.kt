@@ -151,11 +151,13 @@ interface AddFoodDao {
         WHERE productId = :productId
         AND mealId = :mealId
         AND diaryEpochDay = :epochDay
+        AND (:isDeleted IS NULL OR isDeleted = :isDeleted)
         """
     )
     suspend fun getWeightMeasurements(
         productId: Long,
         mealId: Long?,
-        epochDay: Int
+        epochDay: Int,
+        isDeleted: Boolean?
     ): List<WeightMeasurementEntity>
 }
