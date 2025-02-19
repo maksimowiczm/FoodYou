@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -138,6 +139,8 @@ class SearchViewModel(
             }
         }
 
+        Log.d(TAG, "Creating new holder for $key")
+
         val holder = InnerProductMeasurementHolder(
             productId = key.productId,
             initialMeasurementId = measurementId
@@ -196,9 +199,13 @@ class SearchViewModel(
             initialValue = null
         )
     }
+
+    private companion object {
+        const val TAG = "SearchViewModel"
+    }
 }
 
 data class HolderKey(
     val productId: Long,
-    val extraId: Float
+    val rank: Float
 )
