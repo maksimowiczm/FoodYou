@@ -16,12 +16,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -157,30 +155,18 @@ class SearchViewModel(
         initialMeasurementId: Long?
     ) : ProductMeasurementHolder {
         val measurementIdFlow = MutableStateFlow(initialMeasurementId)
-        val measurementFlow = MutableStateFlow<WeightMeasurement?>(null)
 
         override val measurementId: Long?
             get() = measurementIdFlow.value
 
-        // Update measurement only when measurementId changes but not when it's null. This
-        // helps UI to not do unexpected changes with the measurement.
-        init {
-            viewModelScope.launch {
-                measurementIdFlow
-                    .flatMapLatest { id ->
-                        when {
-                            id == null && measurementFlow.value == null ->
-                                addFoodRepository.observeMeasurementByProductId(productId)
-
-                            id != null -> addFoodRepository.observeMeasurementById(id)
-
-                            else -> flowOf(null)
-                        }
-                    }
-                    .filterNotNull()
-                    .map { it.measurement }
-                    .collectLatest { measurementFlow.value = it }
+        val measurementFlow = measurementIdFlow.flatMapLatest { id ->
+            if (id == null) {
+                addFoodRepository.observeMeasurementByProductId(productId)
+            } else {
+                addFoodRepository.observeMeasurementById(id)
             }
+        }.map {
+            it?.measurement
         }
 
         val product = productRepository.observeProductById(productId)
