@@ -133,7 +133,11 @@ class SearchViewModel(
 
         if (cached != null) {
             return cached.also {
-                it.measurementIdFlow.value = measurementId
+                // Update measurementId if it changed (e.g. after adding new measurement)
+                if (it.measurementId != measurementId) {
+                    Log.d(TAG, "Updating holder measurement for $key")
+                    it.measurementIdFlow.value = measurementId
+                }
             }
         }
 
