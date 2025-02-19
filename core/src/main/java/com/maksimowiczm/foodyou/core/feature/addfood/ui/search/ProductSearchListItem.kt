@@ -65,15 +65,15 @@ fun ProductSearchListItem(
     ListItem(
         headlineContent = {
             Text(
-                modifier = Modifier.horizontalDisplayCutoutPadding(),
                 text = model.product.name
             )
         },
-        modifier = modifier.clickable { onClick() },
+        modifier = modifier
+            .clickable { onClick() }
+            .horizontalDisplayCutoutPadding(),
         overlineContent = {
             model.product.brand?.let {
                 Text(
-                    modifier = Modifier.horizontalDisplayCutoutPadding(),
                     text = it
                 )
             }
@@ -83,14 +83,11 @@ fun ProductSearchListItem(
                 measurementString = model.measurementString,
                 measurementStringShort = model.measurementStringShort,
                 caloriesString = model.caloriesString,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalDisplayCutoutPadding()
+                modifier = Modifier.fillMaxWidth()
             )
         },
         trailingContent = {
             ToggleButton(
-                modifier = Modifier.horizontalDisplayCutoutPadding(),
                 checked = isChecked,
                 onCheckChange = onCheckChange,
                 colors = ToggleButtonDefaults.colors(
@@ -378,7 +375,8 @@ fun ProductSearchListItemSkeleton(
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
             }
-        }
+        },
+        modifier = Modifier.horizontalDisplayCutoutPadding()
     )
 }
 
