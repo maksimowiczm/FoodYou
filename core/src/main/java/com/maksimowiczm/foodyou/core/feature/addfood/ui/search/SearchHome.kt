@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -276,26 +277,30 @@ private fun SearchHome(
                 ) {
                     val item = productsWithMeasurements[it]
 
-                    if (item == null) {
-                        ProductSearchListItemSkeleton(Modifier.animateItem())
-                    } else {
-                        val isChecked = item.measurementId != null
+                    Crossfade(
+                        targetState = item,
+                        modifier = Modifier.animateItem()
+                    ) { target ->
+                        if (target == null) {
+                            ProductSearchListItemSkeleton(
+                                shimmer = shimmer
+                            )
+                        } else {
+                            val isChecked = target.measurementId != null
 
-                        ProductSearchListItem(
-                            model = item,
-                            isChecked = isChecked,
-                            onCheckChange = {
-                                if (item.measurementId != null) {
-                                    onQuickRemove(item.measurementId)
-                                } else {
-                                    onQuickAdd(item.product.id, item.measurement)
-                                }
-                            },
-                            onClick = { onProductClick(item.product.id) },
-                            modifier = Modifier
-                                .animateItem()
-                                .zIndex(if (isChecked) 1f else 0f)
-                        )
+                            ProductSearchListItem(
+                                model = target,
+                                isChecked = isChecked,
+                                onCheckChange = {
+                                    if (target.measurementId != null) {
+                                        onQuickRemove(target.measurementId)
+                                    } else {
+                                        onQuickAdd(target.product.id, target.measurement)
+                                    }
+                                },
+                                onClick = { onProductClick(target.product.id) }
+                            )
+                        }
                     }
                 }
 
