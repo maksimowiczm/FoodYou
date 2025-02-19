@@ -159,7 +159,7 @@ class SearchViewModel(
         override val measurementId: Long?
             get() = measurementIdFlow.value
 
-        val measurementFlow = measurementIdFlow.flatMapLatest { id ->
+        private val measurementFlow = measurementIdFlow.flatMapLatest { id ->
             if (id == null) {
                 addFoodRepository.observeMeasurementByProductId(productId)
             } else {
@@ -169,7 +169,7 @@ class SearchViewModel(
             it?.measurement
         }
 
-        val product = productRepository.observeProductById(productId)
+        private val product = productRepository.observeProductById(productId)
 
         override val model: StateFlow<ProductWithWeightMeasurement?> = combine(
             product.filterNotNull(),
