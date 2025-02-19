@@ -21,7 +21,8 @@ import com.maksimowiczm.foodyou.core.feature.product.database.WeightUnitConverte
         ProductQueryEntity::class,
         MealEntity::class
     ],
-    version = FoodYouDatabase.VERSION
+    version = FoodYouDatabase.VERSION,
+    exportSchema = true
 )
 @TypeConverters(
     WeightUnitConverter::class,
