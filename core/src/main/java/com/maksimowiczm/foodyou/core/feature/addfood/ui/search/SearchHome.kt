@@ -237,7 +237,11 @@ private fun SearchHome(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 errorCard()
-                if (pages.loadState.refresh == LoadState.Loading) {
+                if (
+                    pages.loadState.refresh == LoadState.Loading ||
+                    pages.loadState.append == LoadState.Loading ||
+                    !pages.loadState.isIdle
+                ) {
                     LoadingIndicator()
                 }
             }
@@ -295,6 +299,14 @@ private fun SearchHome(
                                 onClick = { onProductClick(target.product.id) }
                             )
                         }
+                    }
+                }
+
+                if (pages.loadState.append == LoadState.Loading) {
+                    items(
+                        count = 3
+                    ) {
+                        ProductSearchListItemSkeleton(shimmer = shimmer)
                     }
                 }
 

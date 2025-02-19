@@ -131,7 +131,7 @@ class AddFoodRepositoryImpl(
 
         val pager = Pager(
             config = PagingConfig(
-                pageSize = 30
+                pageSize = PAGE_SIZE
             ),
             remoteMediator = remoteMediator?.let { RemoteMediatorWrapper(it) }
         ) {
@@ -230,6 +230,7 @@ class AddFoodRepositoryImpl(
 
     private companion object {
         private const val TAG = "AddFoodRepositoryImpl"
+        private const val PAGE_SIZE = 30
     }
 }
 
@@ -244,10 +245,8 @@ private class RemoteMediatorWrapper(
         state: PagingState<Int, ProductSearchEntity>
     ): MediatorResult {
         val pages: List<Page<Int, ProductEntity>> = state.pages.map { page ->
-            val data = page.data.map { it.product }
-
             Page(
-                data = data,
+                data = page.data.map { it.product },
                 nextKey = page.nextKey,
                 prevKey = page.prevKey
             )
@@ -259,8 +258,15 @@ private class RemoteMediatorWrapper(
                 pages = pages,
                 config = state.config,
                 anchorPosition = state.anchorPosition,
-                leadingPlaceholderCount = 0
+                leadingPlaceholderCount = state.leadingPlaceholderCount
             )
         )
     }
 }
+
+private val PagingState<Int, ProductSearchEntity>.leadingPlaceholderCount: Int
+    get() {
+        val field = PagingState::class.java.getDeclaredField("leadingPlaceholderCount")
+        field.isAccessible = true
+        return field.get(this) as Int
+    }
