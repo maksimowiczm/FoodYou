@@ -57,8 +57,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.MeasurementWithRank
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsIds
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsId
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
@@ -108,7 +107,7 @@ fun SearchHome(
 private fun SearchHome(
     viewModel: SearchViewModel,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    queryResult: QueryResult<ProductIdWithMeasurementsIds>,
+    queryResult: QueryResult<ProductIdWithMeasurementsId>,
     recentQueries: List<ProductQuery>,
     totalCalories: Int,
     query: String?,
@@ -270,51 +269,74 @@ private fun SearchHome(
                     }
                 }
 
-                queryResult.data.forEach { model ->
-                    if (model.measurements.isEmpty()) {
-                        val rank = MeasurementWithRank.FIRST_RANK
+                queryResult.data.forEach { pm ->
+                    val key = "${pm.productId}-${pm.rank}"
 
-                        item(
-                            key = "${model.productId}-$rank"
-                        ) {
-                            ProductSearchListItem(
-                                productMeasurementHolder = viewModel.holder(
-                                    key = HolderKey(model.productId, rank),
-                                    measurementId = null
-                                ),
-                                shimmer = shimmer,
-                                onClick = { onProductClick(model.productId) },
-                                onQuickAdd = { pId, wm ->
-                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
-                                    onQuickAdd(pId, wm)
-                                },
-                                onQuickRemove = {},
-                                modifier = Modifier.animateItem()
-                            )
-                        }
-                    } else {
-                        model.measurements.forEach { measurement ->
-                            item(
-                                key = "${model.productId}-${measurement.rank}"
-                            ) {
-                                ProductSearchListItem(
-                                    productMeasurementHolder = viewModel.holder(
-                                        key = HolderKey(model.productId, measurement.rank),
-                                        measurementId = measurement.measurementId
-                                    ),
-                                    shimmer = shimmer,
-                                    onClick = { onProductClick(model.productId) },
-                                    onQuickAdd = { _, _ -> },
-                                    onQuickRemove = {
-                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
-                                        onQuickRemove(it)
-                                    },
-                                    modifier = Modifier.animateItem()
-                                )
-                            }
-                        }
+                    item(
+                        key = key
+                    ) {
+                        ProductSearchListItem(
+                            productMeasurementHolder = viewModel.holder(
+                                key = HolderKey(pm.productId, pm.rank),
+                                measurementId = pm.measurementId
+                            ),
+                            shimmer = shimmer,
+                            onClick = { onProductClick(pm.productId) },
+                            onQuickAdd = { pId, wm ->
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
+                                onQuickAdd(pId, wm)
+                            },
+                            onQuickRemove = { onQuickRemove(it) },
+                            modifier = Modifier.animateItem()
+                        )
                     }
                 }
+
+//                queryResult.data.forEach { model ->
+//                    if (model.measurements.isEmpty()) {
+//                        val rank = MeasurementWithRank.FIRST_RANK
+//
+//                        item(
+//                            key = "${model.productId}-$rank"
+//                        ) {
+//                            ProductSearchListItem(
+//                                productMeasurementHolder = viewModel.holder(
+//                                    key = HolderKey(model.productId, rank),
+//                                    measurementId = null
+//                                ),
+//                                shimmer = shimmer,
+//                                onClick = { onProductClick(model.productId) },
+//                                onQuickAdd = { pId, wm ->
+//                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
+//                                    onQuickAdd(pId, wm)
+//                                },
+//                                onQuickRemove = {},
+//                                modifier = Modifier.animateItem()
+//                            )
+//                        }
+//                    } else {
+//                        model.measurements.forEach { measurement ->
+//                            item(
+//                                key = "${model.productId}-${measurement.rank}"
+//                            ) {
+//                                ProductSearchListItem(
+//                                    productMeasurementHolder = viewModel.holder(
+//                                        key = HolderKey(model.productId, measurement.rank),
+//                                        measurementId = measurement.measurementId
+//                                    ),
+//                                    shimmer = shimmer,
+//                                    onClick = { onProductClick(model.productId) },
+//                                    onQuickAdd = { _, _ -> },
+//                                    onQuickRemove = {
+//                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
+//                                        onQuickRemove(it)
+//                                    },
+//                                    modifier = Modifier.animateItem()
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
 
                 item {
                     Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))

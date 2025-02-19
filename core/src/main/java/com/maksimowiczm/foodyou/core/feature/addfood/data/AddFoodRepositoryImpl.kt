@@ -1,8 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.MeasurementWithRank
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsIds
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsId
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
@@ -92,7 +91,7 @@ class AddFoodRepositoryImpl(
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<QueryResult<ProductIdWithMeasurementsIds>> {
+    ): Flow<QueryResult<ProductIdWithMeasurementsId>> {
         return if (query?.all { it.isDigit() } == true) {
             queryProductsByBarcode(mealId, date, query, localOnly)
         } else {
@@ -105,29 +104,15 @@ class AddFoodRepositoryImpl(
         date: LocalDate,
         barcode: String,
         localOnly: Boolean
-    ): Flow<QueryResult<ProductIdWithMeasurementsIds>> = flow {
+    ): Flow<QueryResult<ProductIdWithMeasurementsId>> = flow {
         val flow = { isLoading: Boolean, error: Throwable? ->
             addFoodDao.observeProductIdsWithMeasurementIds(
                 mealId = mealId,
                 epochDay = date.toEpochDays(),
                 query = null,
                 barcode = barcode
-            ).map {
-                val map = it.groupBy { it.productId }
-
-                map.map { (id, list) ->
-                    ProductIdWithMeasurementsIds(
-                        productId = id,
-                        measurements = list.mapNotNull { junction ->
-                            if (junction.measurementId == null) return@mapNotNull null
-
-                            MeasurementWithRank(
-                                measurementId = junction.measurementId,
-                                rank = junction.rank
-                            )
-                        }
-                    )
-                }
+            ).map { list ->
+                list.map { it.toDomain() }
             }.map {
                 QueryResult(
                     data = it,
@@ -159,7 +144,7 @@ class AddFoodRepositoryImpl(
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<QueryResult<ProductIdWithMeasurementsIds>> = flow {
+    ): Flow<QueryResult<ProductIdWithMeasurementsId>> = flow {
         if (query != null) {
             ioScope.launch {
                 insertProductQueryWithCurrentTime(query)
@@ -173,21 +158,22 @@ class AddFoodRepositoryImpl(
                 epochDay = date.toEpochDays(),
                 barcode = null
             ).map { list ->
-                val map = list.groupBy { it.productId }
-
-                map.map { (id, list) ->
-                    ProductIdWithMeasurementsIds(
-                        productId = id,
-                        measurements = list.mapNotNull {
-                            if (it.measurementId == null) return@mapNotNull null
-
-                            MeasurementWithRank(
-                                measurementId = it.measurementId,
-                                rank = it.rank
-                            )
-                        }
-                    )
-                }
+                list.map { it.toDomain() }
+//                val map = list.groupBy { it.productId }
+//
+//                map.map { (id, list) ->
+//                    ProductIdWithMeasurementsIds(
+//                        productId = id,
+//                        measurements = list.mapNotNull {
+//                            if (it.measurementId == null) return@mapNotNull null
+//
+//                            MeasurementWithRank(
+//                                measurementId = it.measurementId,
+//                                rank = it.rank
+//                            )
+//                        }
+//                    )
+//                }
             }.map {
                 QueryResult(
                     data = it,

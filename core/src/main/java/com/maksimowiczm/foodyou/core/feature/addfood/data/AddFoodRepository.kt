@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsIds
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsId
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
@@ -32,7 +32,7 @@ interface AddFoodRepository {
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<QueryResult<ProductIdWithMeasurementsIds>>
+    ): Flow<QueryResult<ProductIdWithMeasurementsId>>
 
     fun observeTotalCalories(
         mealId: Long,

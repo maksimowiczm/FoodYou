@@ -93,24 +93,40 @@ interface AddFoodDao {
 
     @Query(
         """
+        WITH
+        Distincted AS (
+            SELECT DISTINCT 
+                p.id as productId,
+                CASE
+                    WHEN wm.isDeleted = 0
+                    AND (:mealId IS NULL OR wm.mealId = :mealId)
+                    AND wm.diaryEpochDay = :epochDay
+                    THEN wm.id
+                    ELSE NULL
+                END AS measurementId
+            FROM ProductEntity p
+            LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId
+            WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
+            AND (:barcode IS NULL OR p.barcode = :barcode)
+        )
         SELECT 
-            p.id AS productId, 
+            d.productId,
+            d.measurementId,
             CASE 
-                WHEN wm.isDeleted == 0 
-                AND (:mealId IS NULL OR wm.mealId = :mealId) 
-                AND wm.diaryEpochDay = :epochDay 
-                THEN wm.id
-                ELSE NULL
-            END AS measurementId,
-            CASE 
-                WHEN wm.rank IS NULL THEN ${WeightMeasurementEntity.FIRST_RANK}
+                WHEN d.measurementId IS NULL THEN ${WeightMeasurementEntity.FIRST_RANK}
                 ELSE wm.rank
             END AS realRank
-        FROM ProductEntity p
-        LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId
-        WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
-        AND (:barcode IS NULL OR p.barcode = :barcode) 
-        ORDER BY productId, realRank
+        FROM Distincted d
+        LEFT JOIN weightmeasuremententity wm ON d.productId = wm.productId AND d.measurementId = wm.id
+        WHERE d.measurementId IS NOT NULL 
+        OR (
+            d.measurementId IS NULL AND d.productId NOT IN (
+                SELECT d2.productId
+                FROM Distincted d2
+                WHERE d2.measurementId IS NOT NULL
+            )
+        )
+        ORDER BY d.productId, realRank
         """
     )
     fun observeProductIdsWithMeasurementIds(
