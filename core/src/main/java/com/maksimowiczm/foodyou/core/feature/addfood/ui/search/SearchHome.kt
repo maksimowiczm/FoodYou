@@ -292,52 +292,6 @@ private fun SearchHome(
                     }
                 }
 
-//                queryResult.data.forEach { model ->
-//                    if (model.measurements.isEmpty()) {
-//                        val rank = MeasurementWithRank.FIRST_RANK
-//
-//                        item(
-//                            key = "${model.productId}-$rank"
-//                        ) {
-//                            ProductSearchListItem(
-//                                productMeasurementHolder = viewModel.holder(
-//                                    key = HolderKey(model.productId, rank),
-//                                    measurementId = null
-//                                ),
-//                                shimmer = shimmer,
-//                                onClick = { onProductClick(model.productId) },
-//                                onQuickAdd = { pId, wm ->
-//                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOn)
-//                                    onQuickAdd(pId, wm)
-//                                },
-//                                onQuickRemove = {},
-//                                modifier = Modifier.animateItem()
-//                            )
-//                        }
-//                    } else {
-//                        model.measurements.forEach { measurement ->
-//                            item(
-//                                key = "${model.productId}-${measurement.rank}"
-//                            ) {
-//                                ProductSearchListItem(
-//                                    productMeasurementHolder = viewModel.holder(
-//                                        key = HolderKey(model.productId, measurement.rank),
-//                                        measurementId = measurement.measurementId
-//                                    ),
-//                                    shimmer = shimmer,
-//                                    onClick = { onProductClick(model.productId) },
-//                                    onQuickAdd = { _, _ -> },
-//                                    onQuickRemove = {
-//                                        hapticFeedback.performHapticFeedback(HapticFeedbackType.ToggleOff)
-//                                        onQuickRemove(it)
-//                                    },
-//                                    modifier = Modifier.animateItem()
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-
                 item {
                     Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
                 }
