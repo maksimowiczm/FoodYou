@@ -200,5 +200,5 @@ class SearchViewModel(
 
 data class HolderKey(
     val productId: Long,
-    val extraId: Int
+    val extraId: Float
 )

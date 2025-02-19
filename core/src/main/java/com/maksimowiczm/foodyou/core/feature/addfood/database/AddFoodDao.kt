@@ -101,11 +101,16 @@ interface AddFoodDao {
                 AND wm.diaryEpochDay = :epochDay 
                 THEN wm.id
                 ELSE NULL
-            END AS measurementId
+            END AS measurementId,
+            CASE 
+                WHEN wm.rank IS NULL THEN ${ProductWeightMeasurementJunction.DEFAULT_RANK}
+                ELSE wm.rank
+            END AS realRank
         FROM ProductEntity p
         LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId
         WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
         AND (:barcode IS NULL OR p.barcode = :barcode) 
+        ORDER BY realRank
         """
     )
     fun observeProductIdsWithMeasurementIds(

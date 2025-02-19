@@ -39,5 +39,11 @@ data class WeightMeasurementEntity(
     val createdAt: Long,
     val measurement: WeightMeasurementEnum,
     val quantity: Float,
-    val isDeleted: Boolean = false
+    val isDeleted: Boolean = false,
+
+    /**
+     * Every product and meal has its own ranking. Which means that different measurements can have
+     * the same rank if they belong to the other product and meal.
+     */
+    val rank: Float
 )

@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.MeasurementWithRank
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsIds
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
@@ -59,7 +60,8 @@ class AddFoodRepositoryImpl(
             productId = productId,
             measurement = weightMeasurement.asEnum(),
             quantity = quantity,
-            createdAt = epochSeconds
+            createdAt = epochSeconds,
+            rank = TODO()
         )
 
         return addFoodDao.insertWeightMeasurement(entity)
@@ -96,7 +98,14 @@ class AddFoodRepositoryImpl(
                 map.map { (id, list) ->
                     ProductIdWithMeasurementsIds(
                         productId = id,
-                        measurements = list.mapNotNull { it.measurementId }
+                        measurements = list.mapNotNull { junction ->
+                            if (junction.measurementId == null) return@mapNotNull null
+
+                            MeasurementWithRank(
+                                measurementId = junction.measurementId,
+                                rank = junction.rank
+                            )
+                        }
                     )
                 }
             }.map {
@@ -149,7 +158,14 @@ class AddFoodRepositoryImpl(
                 map.map { (id, list) ->
                     ProductIdWithMeasurementsIds(
                         productId = id,
-                        measurements = list.mapNotNull { it.measurementId }
+                        measurements = list.mapNotNull {
+                            if (it.measurementId == null) return@mapNotNull null
+
+                            MeasurementWithRank(
+                                measurementId = it.measurementId,
+                                rank = it.rank
+                            )
+                        }
                     )
                 }
             }.map {

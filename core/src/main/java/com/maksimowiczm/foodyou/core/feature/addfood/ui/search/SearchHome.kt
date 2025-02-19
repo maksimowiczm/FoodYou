@@ -57,6 +57,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.MeasurementWithRank
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsIds
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
@@ -271,12 +272,14 @@ private fun SearchHome(
 
                 queryResult.data.forEach { model ->
                     if (model.measurements.isEmpty()) {
+                        val rank = MeasurementWithRank.DEFAULT_RANK
+
                         item(
-                            key = model.productId
+                            key = "${model.productId}-$rank"
                         ) {
                             ProductSearchListItem(
                                 productMeasurementHolder = viewModel.holder(
-                                    key = HolderKey(model.productId, 0),
+                                    key = HolderKey(model.productId, rank),
                                     measurementId = null
                                 ),
                                 shimmer = shimmer,
@@ -290,14 +293,14 @@ private fun SearchHome(
                             )
                         }
                     } else {
-                        model.measurements.forEachIndexed { i, measurementId ->
+                        model.measurements.forEach { measurement ->
                             item(
-                                key = "m$measurementId"
+                                key = "${model.productId}-${measurement.rank}"
                             ) {
                                 ProductSearchListItem(
                                     productMeasurementHolder = viewModel.holder(
-                                        key = HolderKey(model.productId, i),
-                                        measurementId = measurementId
+                                        key = HolderKey(model.productId, measurement.rank),
+                                        measurementId = measurement.measurementId
                                     ),
                                     shimmer = shimmer,
                                     onClick = { onProductClick(model.productId) },
