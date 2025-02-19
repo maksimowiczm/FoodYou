@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.core.feature.product.data
 
-import androidx.paging.map
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
