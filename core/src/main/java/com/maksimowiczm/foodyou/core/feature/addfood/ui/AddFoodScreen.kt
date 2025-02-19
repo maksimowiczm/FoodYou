@@ -10,6 +10,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionScreen
 import com.maksimowiczm.foodyou.core.feature.addfood.ui.portion.PortionViewModel
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchHome
+import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchViewModel
 import com.maksimowiczm.foodyou.core.feature.camera.navigation.BarcodeScannerRoute
 import com.maksimowiczm.foodyou.core.feature.camera.navigation.cameraGraph
 import com.maksimowiczm.foodyou.core.feature.product.navigation.ProductsRoute
@@ -21,8 +23,6 @@ import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeOut
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchHome as SearchHomeRedesign
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.search.SearchViewModel as SearchViewModelRedesign
 
 @Composable
 fun AddFoodScreen(
@@ -30,7 +30,7 @@ fun AddFoodScreen(
     onSearchSettings: () -> Unit,
     modifier: Modifier = Modifier,
     addFoodViewModel: AddFoodViewModel = koinViewModel(),
-    redesignSearchViewModel: SearchViewModelRedesign = koinViewModel(),
+    searchViewModel: SearchViewModel = koinViewModel(),
     portionViewModel: PortionViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
@@ -57,9 +57,9 @@ fun AddFoodScreen(
                 }
             }
         ) {
-            SearchHomeRedesign(
+            SearchHome(
                 animatedVisibilityScope = this,
-                viewModel = redesignSearchViewModel,
+                viewModel = searchViewModel,
                 onProductClick = { id ->
                     portionViewModel.loadProduct(id)
 
@@ -75,8 +75,8 @@ fun AddFoodScreen(
                 onCreateProduct = {
                     navController.navigateToProducts(
                         route = ProductsRoute.CreateProduct(
-                            epochDay = redesignSearchViewModel.date.toEpochDays(),
-                            mealId = redesignSearchViewModel.mealId
+                            epochDay = searchViewModel.date.toEpochDays(),
+                            mealId = searchViewModel.mealId
                         ),
                         navOptions = navOptions {
                             launchSingleTop = true
@@ -124,7 +124,7 @@ fun AddFoodScreen(
         }
         cameraGraph(
             onBarcodeScan = {
-                redesignSearchViewModel.onSearch(it)
+                searchViewModel.onSearch(it)
 
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
 
