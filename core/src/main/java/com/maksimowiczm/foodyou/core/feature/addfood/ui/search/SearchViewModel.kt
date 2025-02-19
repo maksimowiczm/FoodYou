@@ -5,8 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.core.feature.addfood.data.AddFoodRepository
-import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.navigation.AddFoodFeature
@@ -76,18 +76,14 @@ class SearchViewModel(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val queryResult = _searchQuery.flatMapLatest { query ->
+    val pages = _searchQuery.flatMapLatest { query ->
         addFoodRepository.queryProducts(
             mealId = mealId,
             date = date,
             query = query,
             localOnly = query == null
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Lazily,
-        initialValue = QueryResult.loading(emptyList())
-    )
+    }.cachedIn(viewModelScope)
 
     fun onSearch(query: String?) {
         viewModelScope.launch {

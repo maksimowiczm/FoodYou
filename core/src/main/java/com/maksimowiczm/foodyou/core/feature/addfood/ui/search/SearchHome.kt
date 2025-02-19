@@ -55,8 +55,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.R
-import com.maksimowiczm.foodyou.core.feature.addfood.data.QueryResult
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsId
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
@@ -76,7 +79,7 @@ fun SearchHome(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val queryResult by viewModel.queryResult.collectAsStateWithLifecycle()
+    val queryResult = viewModel.pages.collectAsLazyPagingItems()
     val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -84,7 +87,7 @@ fun SearchHome(
     SearchHome(
         viewModel = viewModel,
         animatedVisibilityScope = animatedVisibilityScope,
-        queryResult = queryResult,
+        pages = queryResult,
         recentQueries = recentQueries,
         totalCalories = totalCalories,
         query = query,
@@ -107,7 +110,7 @@ fun SearchHome(
 private fun SearchHome(
     viewModel: SearchViewModel,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    queryResult: QueryResult<ProductIdWithMeasurementsId>,
+    pages: LazyPagingItems<ProductIdWithMeasurementsId>,
     recentQueries: List<ProductQuery>,
     totalCalories: Int,
     query: String?,
@@ -125,8 +128,8 @@ private fun SearchHome(
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
-    val isEmpty by remember(queryResult) {
-        derivedStateOf { queryResult.data.isEmpty() }
+    val isEmpty by remember(pages.itemCount) {
+        derivedStateOf { pages.itemCount == 0 }
     }
 
     val topBar = @Composable {
@@ -169,7 +172,9 @@ private fun SearchHome(
 
     val density = LocalDensity.current
     var errorCardHeight by remember { mutableIntStateOf(0) }
-    val hasError = queryResult.error != null
+    val hasError by remember(pages.loadState) {
+        derivedStateOf { pages.loadState.hasError }
+    }
     val anchoredDraggableState = rememberSaveable(
         hasError,
         saver = AnchoredDraggableState.Saver()
@@ -234,12 +239,12 @@ private fun SearchHome(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 errorCard()
-                if (queryResult.isLoading) {
+                if (pages.loadState.refresh is LoadState.Loading) {
                     LoadingIndicator()
                 }
             }
 
-            if (isEmpty && !queryResult.isLoading) {
+            if (isEmpty && pages.loadState.refresh !is LoadState.Loading) {
                 Text(
                     text = stringResource(R.string.neutral_no_products_found),
                     modifier = Modifier.align(Alignment.Center)
@@ -258,23 +263,18 @@ private fun SearchHome(
                     Spacer(Modifier.height(density.run { errorCardHeight.toDp() }))
                 }
 
-                if (queryResult.data.isEmpty() && queryResult.isLoading) {
-                    items(
-                        count = 30
-                    ) {
+                items(
+                    count = pages.itemCount,
+                    key = pages.itemKey { "${it.productId}-${it.rank}" }
+                ) {
+                    val pm = pages[it]
+
+                    if (pm == null) {
                         ProductSearchListItemSkeleton(
                             shimmer = shimmer,
                             containerColor = ProductSearchListItemDefaults.colors().uncheckedContainerColor
                         )
-                    }
-                }
-
-                queryResult.data.forEach { pm ->
-                    val key = "${pm.productId}-${pm.rank}"
-
-                    item(
-                        key = key
-                    ) {
+                    } else {
                         ProductSearchListItem(
                             productMeasurementHolder = viewModel.holder(
                                 key = HolderKey(pm.productId, pm.rank),

@@ -1,6 +1,10 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsId
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
@@ -26,7 +30,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
@@ -91,114 +94,24 @@ class AddFoodRepositoryImpl(
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<QueryResult<ProductIdWithMeasurementsId>> {
-        return if (query?.all { it.isDigit() } == true) {
-            queryProductsByBarcode(mealId, date, query, localOnly)
-        } else {
-            queryProductsByQuery(mealId, date, query, localOnly)
-        }
-    }
-
-    private fun queryProductsByBarcode(
-        mealId: Long,
-        date: LocalDate,
-        barcode: String,
-        localOnly: Boolean
-    ): Flow<QueryResult<ProductIdWithMeasurementsId>> = flow {
-        val flow = { isLoading: Boolean, error: Throwable? ->
+    ): Flow<PagingData<ProductIdWithMeasurementsId>> {
+        val pager = Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true
+            )
+        ) {
             addFoodDao.observeProductIdsWithMeasurementIds(
                 mealId = mealId,
                 epochDay = date.toEpochDays(),
-                query = null,
-                barcode = barcode
-            ).map { list ->
-                list.map { it.toDomain() }
-            }.map {
-                QueryResult(
-                    data = it,
-                    isLoading = isLoading,
-                    error = error
-                )
-            }
-        }
-
-        if (!localOnly) {
-            flow(true, null).first().also { emit(it) }
-
-            try {
-                productsRemoteDatabase.queryAndInsertByBarcode(
-                    barcode = barcode
-                )
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to query products", e)
-
-                flow(false, e).collect(::emit)
-            }
-        }
-
-        flow(false, null).collect(::emit)
-    }
-
-    private fun queryProductsByQuery(
-        mealId: Long,
-        date: LocalDate,
-        query: String?,
-        localOnly: Boolean
-    ): Flow<QueryResult<ProductIdWithMeasurementsId>> = flow {
-        if (query != null) {
-            ioScope.launch {
-                insertProductQueryWithCurrentTime(query)
-            }
-        }
-
-        val flow = { isLoading: Boolean, error: Throwable? ->
-            addFoodDao.observeProductIdsWithMeasurementIds(
-                mealId = mealId,
                 query = query,
-                epochDay = date.toEpochDays(),
                 barcode = null
-            ).map { list ->
-                list.map { it.toDomain() }
-//                val map = list.groupBy { it.productId }
-//
-//                map.map { (id, list) ->
-//                    ProductIdWithMeasurementsIds(
-//                        productId = id,
-//                        measurements = list.mapNotNull {
-//                            if (it.measurementId == null) return@mapNotNull null
-//
-//                            MeasurementWithRank(
-//                                measurementId = it.measurementId,
-//                                rank = it.rank
-//                            )
-//                        }
-//                    )
-//                }
-            }.map {
-                QueryResult(
-                    data = it,
-                    isLoading = isLoading,
-                    error = error
-                )
-            }
+            )
         }
 
-        if (!localOnly) {
-            flow(true, null).first().also { emit(it) }
-
-            try {
-                productsRemoteDatabase.queryAndInsertByName(
-                    query = query,
-                    limit = NETWORK_PAGE_SIZE
-                )
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to query products", e)
-
-                flow(false, e).collect(::emit)
-            }
+        return pager.flow.map { pagingData ->
+            pagingData.map { it.toDomain() }
         }
-
-        flow(false, null).collect(::emit)
     }
 
     override suspend fun removeMeasurement(id: Long) {

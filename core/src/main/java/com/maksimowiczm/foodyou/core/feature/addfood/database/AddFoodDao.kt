@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.database
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -134,7 +135,7 @@ interface AddFoodDao {
         epochDay: Int,
         query: String?,
         barcode: String?
-    ): Flow<List<ProductWeightMeasurementJunction>>
+    ): PagingSource<Int, ProductWeightMeasurementJunction>
 
     @Transaction
     @Query(

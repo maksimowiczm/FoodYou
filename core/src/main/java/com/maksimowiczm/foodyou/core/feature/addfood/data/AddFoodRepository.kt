@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
+import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsId
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
@@ -32,7 +33,7 @@ interface AddFoodRepository {
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<QueryResult<ProductIdWithMeasurementsId>>
+    ): Flow<PagingData<ProductIdWithMeasurementsId>>
 
     fun observeTotalCalories(
         mealId: Long,
