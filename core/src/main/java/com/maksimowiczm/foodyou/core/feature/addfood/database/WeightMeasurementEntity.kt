@@ -42,8 +42,13 @@ data class WeightMeasurementEntity(
     val isDeleted: Boolean = false,
 
     /**
-     * Every product and meal has its own ranking. Which means that different measurements can have
-     * the same rank if they belong to the other product and meal.
+     * Rank is used to sort measurements in the UI. It is calculated upon insertion. * Every product
+     * and meal has its own ranking. Which means that different measurements can have the same rank
+     * if they belong to the other product and meal.
      */
     val rank: Float
-)
+) {
+    companion object {
+        const val FIRST_RANK = 1f
+    }
+}

@@ -18,8 +18,4 @@ data class ProductWeightMeasurementJunction(
      */
     @ColumnInfo(name = "realRank")
     val rank: Float
-) {
-    companion object {
-        const val DEFAULT_RANK = 1f
-    }
-}
+)

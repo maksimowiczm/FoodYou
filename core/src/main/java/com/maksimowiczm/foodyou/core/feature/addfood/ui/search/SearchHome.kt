@@ -272,7 +272,7 @@ private fun SearchHome(
 
                 queryResult.data.forEach { model ->
                     if (model.measurements.isEmpty()) {
-                        val rank = MeasurementWithRank.DEFAULT_RANK
+                        val rank = MeasurementWithRank.FIRST_RANK
 
                         item(
                             key = "${model.productId}-$rank"

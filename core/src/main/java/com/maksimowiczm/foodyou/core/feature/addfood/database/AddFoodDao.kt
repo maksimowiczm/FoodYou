@@ -103,7 +103,7 @@ interface AddFoodDao {
                 ELSE NULL
             END AS measurementId,
             CASE 
-                WHEN wm.rank IS NULL THEN ${ProductWeightMeasurementJunction.DEFAULT_RANK}
+                WHEN wm.rank IS NULL THEN ${WeightMeasurementEntity.FIRST_RANK}
                 ELSE wm.rank
             END AS realRank
         FROM ProductEntity p
@@ -143,4 +143,19 @@ interface AddFoodDao {
         """
     )
     fun observeLatestMeasurementByProductId(productId: Long): Flow<ProductWithWeightMeasurementEntity?>
+
+    @Query(
+        """
+        SELECT *
+        FROM WeightMeasurementEntity
+        WHERE productId = :productId
+        AND mealId = :mealId
+        AND diaryEpochDay = :epochDay
+        """
+    )
+    suspend fun getWeightMeasurements(
+        productId: Long,
+        mealId: Long?,
+        epochDay: Int
+    ): List<WeightMeasurementEntity>
 }

@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data.model
 
-import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductWeightMeasurementJunction
+import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
 
 data class ProductIdWithMeasurementsIds(
     val productId: Long,
@@ -12,6 +12,6 @@ data class MeasurementWithRank(
     val rank: Float
 ) {
     companion object {
-        const val DEFAULT_RANK = ProductWeightMeasurementJunction.DEFAULT_RANK
+        const val FIRST_RANK = WeightMeasurementEntity.FIRST_RANK
     }
 }
