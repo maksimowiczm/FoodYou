@@ -86,7 +86,7 @@ fun SearchHome(
 
     SearchHome(
         animatedVisibilityScope = animatedVisibilityScope,
-        productsWithMeasurements = productsWithMeasurements,
+        pages = productsWithMeasurements,
         totalCalories = totalCalories,
         recentQueries = recentQueries,
         query = query,
@@ -107,7 +107,7 @@ fun SearchHome(
 @Composable
 private fun SearchHome(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    productsWithMeasurements: LazyPagingItems<ProductWithWeightMeasurement>,
+    pages: LazyPagingItems<ProductWithWeightMeasurement>,
     recentQueries: List<ProductQuery>,
     totalCalories: Int,
     query: String?,
@@ -122,10 +122,8 @@ private fun SearchHome(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isEmpty by remember(productsWithMeasurements.loadState) {
-        derivedStateOf {
-            productsWithMeasurements.loadState.isIdle && productsWithMeasurements.itemCount == 0
-        }
+    val isEmpty by remember(pages.loadState) {
+        derivedStateOf { pages.itemCount == 0 }
     }
 
     val topBar = @Composable {
@@ -152,8 +150,8 @@ private fun SearchHome(
         )
     }
     // Make sure that bottom bar is visible when user can't scroll
-    LaunchedEffect(productsWithMeasurements.itemCount) {
-        if (productsWithMeasurements.itemCount == 0) {
+    LaunchedEffect(isEmpty) {
+        if (isEmpty) {
             bottomBarScrollBehavior.nestedScrollConnection.onPostScroll(
                 consumed = Offset.Infinite,
                 available = Offset.Infinite,
@@ -168,11 +166,11 @@ private fun SearchHome(
 
     val density = LocalDensity.current
     var errorCardHeight by remember { mutableIntStateOf(0) }
-    val hasError by remember(productsWithMeasurements.loadState) {
-        derivedStateOf { productsWithMeasurements.loadState.hasError }
+    val hasError by remember(pages.loadState) {
+        derivedStateOf { pages.loadState.hasError }
     }
     val anchoredDraggableState = rememberSaveable(
-        productsWithMeasurements.loadState,
+        hasError,
         saver = AnchoredDraggableState.Saver()
     ) {
         AnchoredDraggableState(
@@ -201,7 +199,7 @@ private fun SearchHome(
                             y = 0
                         )
                     },
-                onRetry = productsWithMeasurements::retry
+                onRetry = pages::retry
             )
         }
     }
@@ -239,7 +237,7 @@ private fun SearchHome(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 errorCard()
-                if (productsWithMeasurements.loadState.refresh == LoadState.Loading) {
+                if (pages.loadState.refresh == LoadState.Loading) {
                     LoadingIndicator()
                 }
             }
@@ -259,26 +257,22 @@ private fun SearchHome(
                     Spacer(Modifier.height(density.run { errorCardHeight.toDp() }))
                 }
 
-                if (
-                    productsWithMeasurements.loadState.refresh == LoadState.Loading && productsWithMeasurements.itemCount == 0
-                ) {
+                if (pages.loadState.refresh == LoadState.Loading && isEmpty) {
                     items(
-                        count = 30
+                        count = 100
                     ) {
                         ProductSearchListItemSkeleton(shimmer = shimmer)
                     }
                 }
 
                 items(
-                    count = productsWithMeasurements.itemCount,
-                    key = productsWithMeasurements.itemKey {
+                    count = pages.itemCount,
+                    key = pages.itemKey {
                         "${it.product.id} ${it.rank}"
                     }
                 ) {
-                    val item = productsWithMeasurements[it]
-
                     Crossfade(
-                        targetState = item,
+                        targetState = pages[it],
                         modifier = Modifier.animateItem()
                     ) { target ->
                         if (target == null) {
