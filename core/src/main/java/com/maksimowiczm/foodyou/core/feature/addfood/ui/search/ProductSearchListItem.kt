@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,79 +50,6 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import kotlin.math.max
 
-@Preview
-@Composable
-fun ProductSearchListItemSkeleton(
-    modifier: Modifier = Modifier,
-    shimmer: Shimmer = rememberShimmer(
-        shimmerBounds = ShimmerBounds.Window
-    )
-) {
-    ListItem(
-        headlineContent = {
-            Column {
-                Spacer(Modifier.height(2.dp))
-                Spacer(
-                    Modifier
-                        .shimmer(shimmer)
-                        .height(LocalTextStyle.current.toDp() - 4.dp)
-                        .width(200.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                )
-                Spacer(Modifier.height(2.dp))
-            }
-        },
-        overlineContent = {
-            Spacer(
-                Modifier
-                    .shimmer(shimmer)
-                    .height(LocalTextStyle.current.toDp())
-                    .width(100.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            )
-        },
-        supportingContent = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Spacer(
-                    Modifier
-                        .shimmer(shimmer)
-                        .height(LocalTextStyle.current.toDp())
-                        .width(125.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                )
-                Spacer(
-                    Modifier
-                        .shimmer(shimmer)
-                        .height(LocalTextStyle.current.toDp())
-                        .width(75.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                )
-            }
-        },
-        trailingContent = {
-            Box(
-                modifier = Modifier.size(48.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Spacer(
-                    Modifier
-                        .shimmer(shimmer)
-                        .size(24.dp)
-                        .clip(MaterialTheme.shapes.extraSmall)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                )
-            }
-        }
-    )
-}
-
 @Composable
 fun ProductSearchListItem(
     model: ProductWithWeightMeasurement,
@@ -133,12 +59,9 @@ fun ProductSearchListItem(
     modifier: Modifier = Modifier,
     colors: ProductSearchListItemColors = ProductSearchListItemDefaults.colors()
 ) {
-    val containerColor by animateColorAsState(
-        targetValue = if (isChecked) colors.checkedContainerColor else colors.uncheckedContainerColor
-    )
-    val contentColor by animateColorAsState(
-        targetValue = if (isChecked) colors.checkedContentColor else colors.uncheckedContentColor
-    )
+    val containerColor =
+        if (isChecked) colors.checkedContainerColor else colors.uncheckedContainerColor
+    val contentColor = if (isChecked) colors.checkedContentColor else colors.uncheckedContentColor
 
     ListItem(
         headlineContent = {
@@ -386,6 +309,79 @@ val ProductWithWeightMeasurement.measurementString: String
 
 val ProductWithWeightMeasurement.caloriesString: String
     @Composable get() = "$calories " + stringResource(R.string.unit_kcal)
+
+@Preview
+@Composable
+fun ProductSearchListItemSkeleton(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberShimmer(
+        shimmerBounds = ShimmerBounds.Window
+    )
+) {
+    ListItem(
+        headlineContent = {
+            Column {
+                Spacer(Modifier.height(2.dp))
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp() - 4.dp)
+                        .width(200.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+                Spacer(Modifier.height(2.dp))
+            }
+        },
+        overlineContent = {
+            Spacer(
+                Modifier
+                    .shimmer(shimmer)
+                    .height(LocalTextStyle.current.toDp())
+                    .width(100.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+        },
+        supportingContent = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp())
+                        .width(125.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp())
+                        .width(75.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+            }
+        },
+        trailingContent = {
+            Box(
+                modifier = Modifier.size(48.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .size(24.dp)
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+            }
+        }
+    )
+}
 
 @Preview
 @Composable
