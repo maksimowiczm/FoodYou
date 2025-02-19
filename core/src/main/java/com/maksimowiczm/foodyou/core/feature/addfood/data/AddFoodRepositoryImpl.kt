@@ -2,9 +2,13 @@ package com.maksimowiczm.foodyou.core.feature.addfood.data
 
 import android.util.Log
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadType
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource.LoadResult.Page
+import androidx.paging.PagingState
+import androidx.paging.RemoteMediator
 import androidx.paging.map
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductIdWithMeasurementsId
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
@@ -17,10 +21,13 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDao
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDatabase
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductQueryEntity
+import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductWeightMeasurementJunction
 import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDao
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
+import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
+import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediator
 import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -115,9 +122,9 @@ class AddFoodRepositoryImpl(
 
         val pager = Pager(
             config = PagingConfig(
-                pageSize = 30
+                pageSize = PAGE_SIZE
             ),
-            remoteMediator = null
+            remoteMediator = remoteMediator?.let { RemoteMediatorAdapter(it) }
         ) {
             if (barcode == null) {
                 addFoodDao.observeProductIdsWithMeasurementIds(
@@ -235,6 +242,41 @@ class AddFoodRepositoryImpl(
 
     private companion object {
         private const val TAG = "AddFoodRepositoryImpl"
-        private const val NETWORK_PAGE_SIZE = 30
+        private const val PAGE_SIZE = 10
     }
 }
+
+@OptIn(ExperimentalPagingApi::class)
+private class RemoteMediatorAdapter(
+    private val productRemoteMediator: ProductRemoteMediator
+) : RemoteMediator<Int, ProductWeightMeasurementJunction>() {
+    override suspend fun load(
+        loadType: LoadType,
+        state: PagingState<Int, ProductWeightMeasurementJunction>
+    ): MediatorResult {
+        val pages: List<Page<Int, ProductEntity>> = state.pages.map { page ->
+            Page(
+                data = emptyList(),
+                nextKey = page.nextKey,
+                prevKey = page.prevKey
+            )
+        }
+
+        return productRemoteMediator.load(
+            loadType = loadType,
+            state = PagingState(
+                pages = pages,
+                config = state.config,
+                anchorPosition = state.anchorPosition,
+                leadingPlaceholderCount = state.leadingPlaceholderCount
+            )
+        )
+    }
+}
+
+private val PagingState<Int, ProductWeightMeasurementJunction>.leadingPlaceholderCount: Int
+    get() {
+        val field = PagingState::class.java.getDeclaredField("leadingPlaceholderCount")
+        field.isAccessible = true
+        return field.get(this) as Int
+    }
