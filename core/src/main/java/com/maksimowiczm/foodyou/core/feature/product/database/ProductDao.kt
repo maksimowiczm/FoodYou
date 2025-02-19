@@ -11,6 +11,16 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM productentity p
+        WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
+        ORDER BY p.id
+        """
+    )
+    suspend fun getProductsCountByQuery(query: String): Int
+
     @Query("SELECT * FROM productentity WHERE id = :id")
     suspend fun getProductById(id: Long): ProductEntity?
 

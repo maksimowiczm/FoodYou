@@ -35,14 +35,31 @@ internal class OpenFoodFactsRemoteMediator(
         state: PagingState<Int, ProductEntity>
     ): MediatorResult {
         try {
-            when (loadType) {
-                LoadType.REFRESH -> {
-                    page = 1
+            page = when (loadType) {
+                LoadType.REFRESH -> 1
+                LoadType.PREPEND -> {
+                    return MediatorResult.Success(endOfPaginationReached = true)
                 }
 
-                LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
-                    page++
+                    val lastItem = state.lastItemOrNull()
+
+                    if (lastItem == null) {
+                        Log.d(TAG, "Last item is null")
+                        return MediatorResult.Success(endOfPaginationReached = true)
+                    }
+
+                    if (isBarcode) {
+                        return MediatorResult.Success(endOfPaginationReached = true)
+                    }
+
+                    // TODO
+                    //  Make it work because it won't return valid page because invalid open food
+                    //  facts products are skipped
+
+                    val count = productDao.getProductsCountByQuery(query)
+                    val nextPage = count / state.config.pageSize + 2
+                    nextPage
                 }
             }
 
