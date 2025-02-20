@@ -29,5 +29,5 @@ class PortionState(
     /**
      * Indicated which weight measurement user has selected.
      */
-    var weightMeasurementEnum: WeightMeasurementEnum? = null
+    var weightMeasurementEnum: WeightMeasurementEnum? by mutableStateOf(null)
 }
