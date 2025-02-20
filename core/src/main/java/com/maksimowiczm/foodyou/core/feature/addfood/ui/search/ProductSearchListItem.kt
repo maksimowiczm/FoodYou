@@ -1,17 +1,19 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -19,8 +21,9 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.pluralStringResource
@@ -29,56 +32,48 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.core.feature.addfood.ui.previewparameter.ProductSearchUiModelPreviewParameter
+import com.maksimowiczm.foodyou.core.feature.diary.ui.previewparameter.ProductWithWeightMeasurementPreviewParameter
 import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButtonDefaults
-import com.maksimowiczm.foodyou.core.ui.modifier.animateRotation
+import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.core.ui.toDp
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import kotlin.math.max
 
 @Composable
 fun ProductSearchListItem(
-    uiModel: ProductSearchUiModel,
+    model: ProductWithWeightMeasurement,
     onClick: () -> Unit,
-    onLongClick: () -> Unit,
+    isChecked: Boolean,
     onCheckChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     colors: ProductSearchListItemColors = ProductSearchListItemDefaults.colors()
 ) {
-    val (model, isLoading, isChecked) = uiModel
-
-    val containerColor by animateColorAsState(
-        targetValue = if (isChecked || isLoading) colors.checkedContainerColor else colors.uncheckedContainerColor
-    )
-    val contentColor by animateColorAsState(
-        targetValue = if (isChecked || isLoading) colors.checkedContentColor else colors.uncheckedContentColor
-    )
+    val containerColor =
+        if (isChecked) colors.checkedContainerColor else colors.uncheckedContainerColor
+    val contentColor = if (isChecked) colors.checkedContentColor else colors.uncheckedContentColor
 
     ListItem(
         headlineContent = {
             Text(
-                modifier = Modifier.windowInsetsPadding(
-                    WindowInsets.displayCutout.only(
-                        WindowInsetsSides.Horizontal
-                    )
-                ),
                 text = model.product.name
             )
         },
-        modifier = modifier.combinedClickable(
-            onClick = onClick,
-            onLongClick = onLongClick
-        ),
+        modifier = modifier
+            .clickable { onClick() }
+            .horizontalDisplayCutoutPadding(),
         overlineContent = {
             model.product.brand?.let {
                 Text(
-                    modifier = Modifier.windowInsetsPadding(
-                        WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
-                    ),
                     text = it
                 )
             }
@@ -88,19 +83,12 @@ fun ProductSearchListItem(
                 measurementString = model.measurementString,
                 measurementStringShort = model.measurementStringShort,
                 caloriesString = model.caloriesString,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .windowInsetsPadding(
-                        WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
-                    )
+                modifier = Modifier.fillMaxWidth()
             )
         },
         trailingContent = {
             ToggleButton(
-                modifier = Modifier.windowInsetsPadding(
-                    WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
-                ),
-                checked = isChecked || isLoading,
+                checked = isChecked,
                 onCheckChange = onCheckChange,
                 colors = ToggleButtonDefaults.colors(
                     checkedColor = colors.checkedToggleButtonContainerColor,
@@ -109,13 +97,7 @@ fun ProductSearchListItem(
                 ),
                 indication = LocalIndication.current
             ) {
-                if (isLoading) {
-                    Icon(
-                        modifier = Modifier.animateRotation(),
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = null
-                    )
-                } else if (isChecked) {
+                if (isChecked) {
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = null
@@ -235,8 +217,8 @@ object ProductSearchListItemDefaults {
         uncheckedToggleButtonContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
         checkedContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
         checkedContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
-        checkedToggleButtonContainerColor: Color = MaterialTheme.colorScheme.surface,
-        checkedToggleButtonContentColor: Color = MaterialTheme.colorScheme.onSurface
+        checkedToggleButtonContainerColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
+        checkedToggleButtonContentColor: Color = MaterialTheme.colorScheme.onTertiaryContainer
     ) = ProductSearchListItemColors(
         uncheckedContainerColor = uncheckedContainerColor,
         uncheckedContentColor = uncheckedContentColor,
@@ -325,19 +307,106 @@ val ProductWithWeightMeasurement.caloriesString: String
     @Composable get() = "$calories " + stringResource(R.string.unit_kcal)
 
 @Preview
+@Composable
+fun ProductSearchListItemSkeleton(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberShimmer(
+        shimmerBounds = ShimmerBounds.Window
+    )
+) {
+    ListItem(
+        headlineContent = {
+            Column {
+                Spacer(Modifier.height(2.dp))
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp() - 4.dp)
+                        .width(200.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+                Spacer(Modifier.height(2.dp))
+            }
+        },
+        overlineContent = {
+            Spacer(
+                Modifier
+                    .shimmer(shimmer)
+                    .height(LocalTextStyle.current.toDp())
+                    .width(100.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            )
+        },
+        supportingContent = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp())
+                        .width(125.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .height(LocalTextStyle.current.toDp())
+                        .width(75.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+            }
+        },
+        trailingContent = {
+            Box(
+                modifier = Modifier.size(48.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Spacer(
+                    Modifier
+                        .shimmer(shimmer)
+                        .size(24.dp)
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+            }
+        },
+        modifier = Modifier.horizontalDisplayCutoutPadding()
+    )
+}
+
+@Preview
+@Composable
+private fun ProductSearchListItemPreview() {
+    FoodYouTheme {
+        ProductSearchListItem(
+            model = ProductWithWeightMeasurementPreviewParameter().values.first(),
+            onClick = {},
+            onCheckChange = {},
+            isChecked = true
+        )
+    }
+}
+
+@Preview
 @Preview(
     fontScale = 2f
 )
 @Composable
 private fun ProductSearchListItemPreview(
-    @PreviewParameter(ProductSearchUiModelPreviewParameter::class) productSearchUiModel: ProductSearchUiModel
+    @PreviewParameter(ProductWithWeightMeasurementPreviewParameter::class) model: ProductWithWeightMeasurement
 ) {
     FoodYouTheme {
         ProductSearchListItem(
-            uiModel = productSearchUiModel,
+            model = model,
             onClick = {},
-            onLongClick = {},
-            onCheckChange = {}
+            onCheckChange = {},
+            isChecked = false
         )
     }
 }

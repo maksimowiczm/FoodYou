@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.database
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -79,17 +80,15 @@ interface AddFoodDao {
         LEFT JOIN Suggestions s ON s.productId = p.id
         WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
         AND (:barcode IS NULL OR p.barcode = :barcode)
-        ORDER BY s.todaysMeasurement DESC, s.createdAt DESC
-        LIMIT :limit    
+        ORDER BY p.id, s.id
         """
     )
-    fun observeProductsWithMeasurement(
+    fun observePagedProductsWithMeasurement(
         mealId: Long,
         epochDay: Int,
         query: String?,
-        barcode: String?,
-        limit: Int
-    ): Flow<List<ProductSearchEntity>>
+        barcode: String?
+    ): PagingSource<Int, ProductSearchEntity>
 
     @Query(
         """
@@ -169,4 +168,21 @@ interface AddFoodDao {
 
     @Delete
     suspend fun deleteMeal(meal: MealEntity)
+
+    @Query(
+        """
+        SELECT *
+        FROM WeightMeasurementEntity
+        WHERE productId = :productId
+        AND mealId = :mealId
+        AND diaryEpochDay = :epochDay
+        AND (:isDeleted IS NULL OR isDeleted = :isDeleted)
+        """
+    )
+    suspend fun getWeightMeasurements(
+        productId: Long,
+        mealId: Long?,
+        epochDay: Int,
+        isDeleted: Boolean?
+    ): List<WeightMeasurementEntity>
 }

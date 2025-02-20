@@ -20,8 +20,6 @@ enum class ProductDeletionError {
 interface ProductRepository {
     fun observeProductById(id: Long): Flow<Product?>
 
-    suspend fun getProductById(id: Long): Product?
-
     suspend fun createUserProduct(
         name: String,
         brand: String?,

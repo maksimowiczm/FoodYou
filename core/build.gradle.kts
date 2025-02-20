@@ -83,6 +83,10 @@ room {
 
 dependencies {
 
+    // Paging
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+
     // Shimmer
     implementation(libs.compose.shimmer)
 
@@ -112,6 +116,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
 
     // Koin
     implementation(libs.koin.android)

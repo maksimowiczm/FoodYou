@@ -631,7 +631,7 @@ private fun PortionScreenPreview() {
         PortionScreen(
             suggestion = QuantitySuggestion(
                 product = product,
-                quantitySuggestions = QuantitySuggestion.defaultSuggestion()
+                quantitySuggestions = QuantitySuggestion.defaultSuggestion
             ),
             onBack = {},
             onConfirm = { _, _ -> },

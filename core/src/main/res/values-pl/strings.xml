@@ -101,6 +101,7 @@
     <string name="action_add_meal">Dodaj posiłek</string>
     <string name="action_log_products">Zanotuj produkty</string>
     <string name="action_edit">Edytuj</string>
+    <string name="action_insert_suggested_search">Wstaw sugerowane wyszukiwanie</string>
 
     <string name="neutral_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu</string>
     <string name="neutral_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu</string>

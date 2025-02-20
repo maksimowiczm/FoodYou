@@ -5,5 +5,5 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 
 object ProductPreferences {
     val openFoodFactsEnabled = booleanPreferencesKey("open_food_facts_enabled")
-    val openFoodCountryCode = stringPreferencesKey("open_food_country_code")
+    val openFoodFactsCountryCode = stringPreferencesKey("open_food_facts_country_code")
 }

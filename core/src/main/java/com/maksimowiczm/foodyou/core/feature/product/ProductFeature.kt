@@ -8,9 +8,7 @@ import com.maksimowiczm.foodyou.core.feature.product.data.DatabaseSettingsReposi
 import com.maksimowiczm.foodyou.core.feature.product.data.DatabaseSettingsRepositoryImpl
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepositoryImpl
-import com.maksimowiczm.foodyou.core.feature.product.network.RemoteProductDatabase
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsDatabase
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsNetworkDataSource
+import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.core.feature.product.ui.crud.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.core.feature.product.ui.crud.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.FoodDatabaseSettingsScreen
@@ -22,9 +20,11 @@ import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsRemoteMediator.Factory as OpenFoodFactsRemoteMediatorFactory
 
 private val productsModule = module {
     factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
@@ -38,13 +38,7 @@ private val productsModule = module {
 
     factory { flagCdnCountryFlag }.bind<CountryFlag>()
 
-    factory {
-        OpenFoodFactsDatabase(
-            dataStore = get(),
-            productDatabase = get(),
-            openFoodFactsNetworkDataSource = OpenFoodFactsNetworkDataSource()
-        )
-    }.bind<RemoteProductDatabase>()
+    singleOf(::OpenFoodFactsRemoteMediatorFactory).bind<ProductRemoteMediatorFactory>()
 }
 
 /**

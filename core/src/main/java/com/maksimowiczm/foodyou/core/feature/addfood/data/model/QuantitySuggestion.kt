@@ -7,10 +7,16 @@ data class QuantitySuggestion(
     val quantitySuggestions: Map<WeightMeasurementEnum, Float>
 ) {
     companion object {
-        fun defaultSuggestion(): Map<WeightMeasurementEnum, Float> = mapOf(
-            WeightMeasurementEnum.WeightUnit to 100f,
-            WeightMeasurementEnum.Package to 1f,
-            WeightMeasurementEnum.Serving to 1f
-        )
+        val defaultSuggestion: Map<WeightMeasurementEnum, Float> by lazy {
+            // Use when to ensure type safety when adding new enum values
+
+            WeightMeasurementEnum.entries.associateWith {
+                when (it) {
+                    WeightMeasurementEnum.WeightUnit -> 100f
+                    WeightMeasurementEnum.Package -> 1f
+                    WeightMeasurementEnum.Serving -> 1f
+                }
+            }
+        }
     }
 }

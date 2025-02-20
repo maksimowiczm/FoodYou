@@ -1,11 +1,10 @@
 package com.maksimowiczm.foodyou.core.feature.addfood.data
 
+import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurementEnum
-import com.maksimowiczm.foodyou.core.feature.diary.data.QueryResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 
@@ -19,31 +18,21 @@ interface AddFoodRepository {
      * @param weightMeasurement The weight measurement of the portion.
      * @return The ID of the added measurement.
      */
-    suspend fun addFood(
+    suspend fun addMeasurement(
         date: LocalDate,
         mealId: Long,
         productId: Long,
         weightMeasurement: WeightMeasurement
     ): Long
 
-    suspend fun addFood(
-        date: LocalDate,
-        mealId: Long,
-        productId: Long,
-        weightMeasurement: WeightMeasurementEnum,
-        quantity: Float
-    ): Long
-
-    suspend fun removeFood(
-        portionId: Long
-    )
+    suspend fun removeMeasurement(measurementId: Long)
 
     fun queryProducts(
         mealId: Long,
         date: LocalDate,
         query: String?,
         localOnly: Boolean
-    ): Flow<QueryResult<List<ProductWithWeightMeasurement>>>
+    ): Flow<PagingData<ProductWithWeightMeasurement>>
 
     fun observeTotalCalories(
         mealId: Long,

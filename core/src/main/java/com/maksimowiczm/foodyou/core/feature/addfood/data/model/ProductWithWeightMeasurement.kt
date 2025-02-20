@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.core.feature.addfood.data.model
 
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductSearchEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductWithWeightMeasurementEntity
+import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.core.feature.product.data.model.Product
 import com.maksimowiczm.foodyou.core.feature.product.data.model.toDomain
 import kotlin.math.roundToInt
@@ -27,51 +28,44 @@ data class ProductWithWeightMeasurement(
         get() = product.nutrients.fats(weight).roundToInt()
 }
 
-fun ProductSearchEntity.toDomain(): ProductWithWeightMeasurement {
-    val weightMeasurement = when (this.weightMeasurement?.measurement) {
-        WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(
-            weight = this.weightMeasurement.quantity
-        )
-
-        WeightMeasurementEnum.Package -> WeightMeasurement.Package(
-            packageWeight = this.product.packageWeight!!,
-            quantity = this.weightMeasurement.quantity
-        )
-
-        WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(
-            servingWeight = this.product.servingWeight!!,
-            quantity = this.weightMeasurement.quantity
-        )
-
-        null -> if (product.servingWeight != null) {
-            WeightMeasurement.Serving(
-                servingWeight = this.product.servingWeight,
-                quantity = 1f
-            )
-        } else if (product.packageWeight != null) {
-            WeightMeasurement.Package(
-                packageWeight = this.product.packageWeight,
-                quantity = 1f
-            )
-        } else {
-            WeightMeasurement.WeightUnit(
-                weight = 100f
-            )
-        }
-    }
+fun ProductWithWeightMeasurementEntity.toDomain(): ProductWithWeightMeasurement {
+    val product = this.product.toDomain()
+    val measurementId = this.weightMeasurement.id
+    val weightMeasurement = this.weightMeasurement.toDomain(product)
 
     return ProductWithWeightMeasurement(
-        product = product.toDomain(),
-        measurementId = if (todaysMeasurement) this.weightMeasurement?.id else null,
+        product = product,
+        measurementId = measurementId,
         measurement = weightMeasurement
     )
 }
 
-// TODO might want to improve mapping logic
-fun ProductWithWeightMeasurementEntity.toDomain(): ProductWithWeightMeasurement {
-    return ProductSearchEntity(
-        product = this.product,
-        weightMeasurement = this.weightMeasurement,
-        todaysMeasurement = true
-    ).toDomain()
+fun ProductSearchEntity.toDomain(): ProductWithWeightMeasurement {
+    val product = this.product.toDomain()
+    val measurementId = this.weightMeasurement?.id
+
+    val weightMeasurement = this.weightMeasurement?.toDomain(product)
+        ?: WeightMeasurement.defaultForProduct(product)
+
+    return ProductWithWeightMeasurement(
+        product = product,
+        measurementId = if (todaysMeasurement) measurementId else null,
+        measurement = weightMeasurement
+    )
+}
+
+private fun WeightMeasurementEntity.toDomain(product: Product) = when (this.measurement) {
+    WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(
+        weight = quantity
+    )
+
+    WeightMeasurementEnum.Package -> WeightMeasurement.Package(
+        quantity = quantity,
+        packageWeight = product.packageWeight!!
+    )
+
+    WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(
+        quantity = quantity,
+        servingWeight = product.servingWeight!!
+    )
 }

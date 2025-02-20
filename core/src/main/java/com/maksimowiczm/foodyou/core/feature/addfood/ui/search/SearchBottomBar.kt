@@ -53,13 +53,13 @@ import com.maksimowiczm.foodyou.core.ui.motion.crossfadeOut
 @Composable
 fun SearchBottomBar(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    state: SearchBottomBarState,
+    totalCalories: Int,
     onCreateProduct: () -> Unit,
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: BottomAppBarScrollBehavior? = null
 ) {
-    val calories by animateIntAsState(state.totalCalories)
+    val calories by animateIntAsState(totalCalories)
 
     val sharedTransitionScope = LocalSharedTransitionScope.current
         ?: error("No shared transition scope found")

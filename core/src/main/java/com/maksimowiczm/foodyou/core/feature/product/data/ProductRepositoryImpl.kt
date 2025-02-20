@@ -17,12 +17,9 @@ class ProductRepositoryImpl(
     productDatabase: ProductDatabase
 ) : ProductRepository {
     private val productDao: ProductDao = productDatabase.productDao()
+
     override fun observeProductById(id: Long): Flow<Product?> {
         return productDao.observeProductById(id).map { it?.toDomain() }
-    }
-
-    override suspend fun getProductById(id: Long): Product? {
-        return productDao.getProductById(id)?.toDomain()
     }
 
     override suspend fun createUserProduct(

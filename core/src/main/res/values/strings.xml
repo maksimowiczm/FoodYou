@@ -102,6 +102,7 @@
     <string name="action_add_meal">Add meal</string>
     <string name="action_log_products">Log products</string>
     <string name="action_edit">Edit</string>
+    <string name="action_insert_suggested_search">Insert suggested search</string>
 
     <string name="neutral_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_camera_request_rationale">You must allow access in order to scan barcodes.</string>

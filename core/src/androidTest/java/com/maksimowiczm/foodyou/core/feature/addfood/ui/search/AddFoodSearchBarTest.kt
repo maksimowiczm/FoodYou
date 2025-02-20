@@ -28,7 +28,7 @@ class AddFoodSearchBarTest {
         composeTestRule.setContent {
             SearchTopBar(
                 state = rememberSearchTopBarState(
-                    initialRecentQueries = listOf(
+                    recentQueries = listOf(
                         ProductQuery("Apple", LocalDateTime(2025, 2, 13, 12, 50))
                     )
                 ),

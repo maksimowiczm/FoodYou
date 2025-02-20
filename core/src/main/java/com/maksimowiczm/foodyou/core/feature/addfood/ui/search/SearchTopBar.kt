@@ -3,7 +3,9 @@ package com.maksimowiczm.foodyou.core.feature.addfood.ui.search
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -20,13 +22,16 @@ import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopSearchBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import com.maksimowiczm.foodyou.core.R
+import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductQuery
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -44,22 +49,19 @@ fun SearchTopBar(
 
     val onSearchInternal: (String) -> Unit = {
         onSearch(it)
-        state.textFieldState.setTextAndPlaceCursorAtEnd(it)
         scope.launch { state.searchBarState.animateToCollapsed() }
     }
 
-    val onClearInternal: () -> Unit = {
-        onClearSearch()
-        state.textFieldState.clearText()
-    }
+    val textFieldState = mirroredTextFieldState(state.query)
 
     TopSearchBar(
         state = state.searchBarState,
         inputField = {
             InputField(
                 state = state,
-                onSearchInternal = onSearchInternal,
-                onClearInternal = onClearInternal,
+                textFieldState = textFieldState,
+                onSearch = onSearchInternal,
+                onClear = onClearSearch,
                 onSearchSettings = onSearchSettings,
                 onBack = onBack,
                 scope = scope,
@@ -74,8 +76,9 @@ fun SearchTopBar(
         inputField = {
             InputField(
                 state = state,
-                onSearchInternal = onSearchInternal,
-                onClearInternal = onClearInternal,
+                textFieldState = textFieldState,
+                onSearch = onSearchInternal,
+                onClear = onClearSearch,
                 onSearchSettings = onSearchSettings,
                 onBack = onBack,
                 scope = scope,
@@ -86,6 +89,7 @@ fun SearchTopBar(
         SearchResults(
             state = state,
             onSearch = onSearchInternal,
+            onQueryClick = { textFieldState.setTextAndPlaceCursorAtEnd(it.query) },
             modifier = Modifier.testTag("SearchResults")
         )
     }
@@ -94,9 +98,10 @@ fun SearchTopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InputField(
+    textFieldState: TextFieldState,
     state: SearchTopBarState,
-    onSearchInternal: (String) -> Unit,
-    onClearInternal: () -> Unit,
+    onSearch: (String) -> Unit,
+    onClear: () -> Unit,
     onSearchSettings: () -> Unit,
     onBack: () -> Unit,
     scope: CoroutineScope,
@@ -104,8 +109,8 @@ private fun InputField(
 ) {
     SearchBarDefaults.InputField(
         searchBarState = state.searchBarState,
-        textFieldState = state.textFieldState,
-        onSearch = onSearchInternal,
+        textFieldState = textFieldState,
+        onSearch = onSearch,
         modifier = modifier,
         placeholder = { Text(stringResource(R.string.action_search)) },
         leadingIcon = {
@@ -125,13 +130,13 @@ private fun InputField(
             }
         },
         trailingIcon = {
-            if (state.textFieldState.text.isNotBlank()) {
+            if (textFieldState.text.isNotBlank()) {
                 IconButton(
                     onClick = {
                         if (state.searchBarState.currentValue == SearchBarValue.Expanded) {
-                            state.textFieldState.clearText()
+                            textFieldState.clearText()
                         } else {
-                            onClearInternal()
+                            onClear()
                         }
                     }
                 ) {
@@ -158,6 +163,7 @@ private fun InputField(
 private fun SearchResults(
     state: SearchTopBarState,
     onSearch: (String) -> Unit,
+    onQueryClick: (ProductQuery) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier) {
@@ -180,17 +186,34 @@ private fun SearchResults(
                 },
                 trailingContent = {
                     IconButton(
-                        onClick = {
-                            state.textFieldState.setTextAndPlaceCursorAtEnd(productQuery.query)
-                        }
+                        onClick = { onQueryClick(productQuery) }
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_north_west_24),
-                            contentDescription = stringResource(R.string.action_search)
+                            contentDescription = stringResource(R.string.action_insert_suggested_search)
                         )
                     }
                 }
             )
         }
     }
+}
+
+// This might be a bit confusing because SearchViewModel contains real query and refreshes
+// the SearchTopBarState but SearchBarDefaults.InputField requires TextFieldState to be passed
+// so we need to keep TextFieldState in sync using this thing.
+@Composable
+private fun mirroredTextFieldState(
+    query: String
+): TextFieldState {
+    val textFieldState = rememberTextFieldState(
+        initialText = query,
+        initialSelection = TextRange(query.length)
+    )
+
+    LaunchedEffect(query) {
+        textFieldState.setTextAndPlaceCursorAtEnd(query)
+    }
+
+    return textFieldState
 }
