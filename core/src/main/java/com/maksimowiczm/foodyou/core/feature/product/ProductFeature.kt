@@ -1,80 +1,28 @@
 package com.maksimowiczm.foodyou.core.feature.product
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import com.maksimowiczm.foodyou.core.feature.Feature
-import com.maksimowiczm.foodyou.core.feature.product.data.DatabaseSettingsRepository
-import com.maksimowiczm.foodyou.core.feature.product.data.DatabaseSettingsRepositoryImpl
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepository
 import com.maksimowiczm.foodyou.core.feature.product.data.ProductRepositoryImpl
-import com.maksimowiczm.foodyou.core.feature.product.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.core.feature.product.ui.crud.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.core.feature.product.ui.crud.update.UpdateProductViewModel
-import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.FoodDatabaseSettingsScreen
-import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.FoodDatabaseSettingsViewModel
-import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.buildFoodDatabaseSettingsListItem
-import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.country.CountryFlag
-import com.maksimowiczm.foodyou.core.feature.product.ui.databasesettings.country.flagCdnCountryFlag
-import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
-import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import com.maksimowiczm.foodyou.core.feature.product.network.openfoodfacts.OpenFoodFactsRemoteMediator.Factory as OpenFoodFactsRemoteMediatorFactory
 
 private val productsModule = module {
     factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
 
     viewModelOf(::CreateProductViewModel)
     viewModelOf(::UpdateProductViewModel)
-
-    factoryOf(::DatabaseSettingsRepositoryImpl).bind<DatabaseSettingsRepository>()
-
-    viewModelOf(::FoodDatabaseSettingsViewModel)
-
-    factory { flagCdnCountryFlag }.bind<CountryFlag>()
-
-    singleOf(::OpenFoodFactsRemoteMediatorFactory).bind<ProductRemoteMediatorFactory>()
 }
 
 /**
  * ProductFeature is a feature that provides functionality for managing products.
  */
-object ProductFeature : Feature.Koin, Feature.Settings {
+object ProductFeature : Feature.Koin {
     override fun KoinApplication.setup() {
         modules(productsModule)
-    }
-
-    override fun NavGraphBuilder.settingsGraph(navController: NavController) {
-        forwardBackwardComposable<FoodDatabaseSettings> {
-            FoodDatabaseSettingsScreen(
-                onBack = {
-                    navController.popBackStack(
-                        route = FoodDatabaseSettings,
-                        inclusive = true
-                    )
-                }
-            )
-        }
-    }
-
-    override fun buildSettingsFeatures(navController: NavController) = listOf(
-        buildFoodDatabaseSettingsListItem(navController)
-    )
-
-    @Serializable
-    data object FoodDatabaseSettings
-
-    fun NavController.navigateToFoodDatabaseSettings(
-        navOptions: NavOptions? = null
-    ) {
-        navigate(
-            route = FoodDatabaseSettings,
-            navOptions = navOptions
-        )
     }
 }

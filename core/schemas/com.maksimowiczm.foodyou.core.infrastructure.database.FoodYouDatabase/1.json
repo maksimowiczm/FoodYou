@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b7c607f782f09836863f94cdead338cc",
+    "identityHash": "8a14a812cd229dfce9f546f87b2fc3d9",
     "entities": [
       {
         "tableName": "ProductEntity",
@@ -293,11 +293,48 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "OpenFoodFactsPagingKey",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`queryString` TEXT NOT NULL, `country` TEXT NOT NULL, `fetchedCount` INTEGER NOT NULL, `totalCount` INTEGER NOT NULL, PRIMARY KEY(`queryString`, `country`))",
+        "fields": [
+          {
+            "fieldPath": "queryString",
+            "columnName": "queryString",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fetchedCount",
+            "columnName": "fetchedCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalCount",
+            "columnName": "totalCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "queryString",
+            "country"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b7c607f782f09836863f94cdead338cc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8a14a812cd229dfce9f546f87b2fc3d9')"
     ]
   }
 }

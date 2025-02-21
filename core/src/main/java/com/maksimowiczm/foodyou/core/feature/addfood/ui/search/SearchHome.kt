@@ -234,7 +234,7 @@ private fun SearchHome(
                 }
             }
 
-            if (isEmpty) {
+            if (isEmpty && pages.loadState.append != LoadState.Loading) {
                 Text(
                     text = stringResource(R.string.neutral_no_products_found),
                     modifier = Modifier.align(Alignment.Center)

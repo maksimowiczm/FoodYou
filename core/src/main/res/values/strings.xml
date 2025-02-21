@@ -7,7 +7,7 @@
 
     <string name="headline_create_product">Create product</string>
     <string name="headline_settings">Settings</string>
-    <string name="headline_food_database">Food database</string>
+    <string name="headline_remote_food_database">Remote food database</string>
     <string name="headline_diary">Diary</string>
     <string name="headline_calories_goal">Calories goal</string>
     <string name="headline_daily_goals">Daily goals</string>
@@ -24,6 +24,7 @@
     <string name="headline_meals">Meals</string>
     <string name="headline_delete_product">Delete product</string>
     <string name="headline_edit_product">Edit product</string>
+    <string name="headline_clear_cache">Clear cache</string>
 
     <string name="meal_name_breakfast">Breakfast</string>
     <string name="meal_name_lunch">Lunch</string>
@@ -159,5 +160,7 @@
     <string name="description_show_some_love">If you find this project helpful, please consider giving it a star on GitHub! It helps others discover it and keeps the development going.</string>
     <string name="description_share_your_thoughts">If you have any feedback, feature requests, or bug reports, please let me know! I\'d love to hear from you.</string>
     <string name="description_delete_product">Product will be deleted permanently. This action can\'t be undone. All diary entries related to this product will be deleted.</string>
+    <string name="description_open_food_facts_clear_query_cache">Clear Open Food Facts query cache</string>
+    <string name="description_open_food_facts_clear_cache_warning">Wyczyszczenie pamięci podręcznej spowoduje ponowne pobranie całej bazy danych Open Food Facts. Nie zaleca się czyszczenia pamięci podręcznej, chyba że wiesz, co robisz.</string>
 
 </resources>

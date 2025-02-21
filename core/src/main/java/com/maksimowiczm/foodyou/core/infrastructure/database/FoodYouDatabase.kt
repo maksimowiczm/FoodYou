@@ -9,6 +9,8 @@ import com.maksimowiczm.foodyou.core.feature.addfood.database.MealEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.ProductQueryEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.core.feature.addfood.database.WeightMeasurementTypeConverter
+import com.maksimowiczm.foodyou.core.feature.openfoodfacts.database.OpenFoodFactsDatabase
+import com.maksimowiczm.foodyou.core.feature.openfoodfacts.database.OpenFoodFactsPagingKey
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductSourceConverter
@@ -19,7 +21,8 @@ import com.maksimowiczm.foodyou.core.feature.product.database.WeightUnitConverte
         ProductEntity::class,
         WeightMeasurementEntity::class,
         ProductQueryEntity::class,
-        MealEntity::class
+        MealEntity::class,
+        OpenFoodFactsPagingKey::class
     ],
     version = FoodYouDatabase.VERSION,
     exportSchema = true
@@ -32,6 +35,7 @@ import com.maksimowiczm.foodyou.core.feature.product.database.WeightUnitConverte
 abstract class FoodYouDatabase :
     ProductDatabase,
     AddFoodDatabase,
+    OpenFoodFactsDatabase,
     RoomDatabase() {
 
     companion object {

@@ -26,7 +26,7 @@ android {
         // I know that this is in apk file, but it is not in git repository
         buildConfigField("String", "CONTACT_EMAIL", property("CONTACT_EMAIL").toString())
 
-        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org/\"")
+        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.net/\"")
         // Use cached open food facts data for development
         // buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"<cache-address>\"")
     }
@@ -38,6 +38,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org/\"")
         }
     }
     compileOptions {
@@ -46,6 +48,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs += "-Xwhen-guards"
     }
 
     buildFeatures {
@@ -54,6 +57,7 @@ android {
     }
 
     flavorDimensions += "version"
+    flavorDimensions += "fooddatabase"
 
     productFlavors {
         /**
@@ -67,12 +71,19 @@ android {
                 viewBinding = true
             }
         }
+        create("openfoodfacts") {
+            dimension = "fooddatabase"
+        }
     }
 
     sourceSets {
         getByName("opensource") {
             res.srcDirs("src/opensource/res")
             java.srcDirs("src/opensource/java")
+        }
+
+        getByName("openfoodfacts") {
+            java.srcDirs("src/openfoodfacts/java")
         }
     }
 }
@@ -91,8 +102,8 @@ dependencies {
     implementation(libs.compose.shimmer)
 
     // Coil
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
+    "openfoodfactsImplementation"(libs.coil.compose)
+    "openfoodfactsImplementation"(libs.coil.network.okhttp)
 
     implementation(libs.accompanist.permissions)
 
@@ -105,9 +116,9 @@ dependencies {
     implementation(libs.kotlinx.datetime)
 
     // Retrofit
-    implementation(libs.converter.kotlinx.serialization)
-    implementation(libs.retrofit)
-    implementation(libs.okhttp)
+    "openfoodfactsImplementation"(libs.converter.kotlinx.serialization)
+    "openfoodfactsImplementation"(libs.retrofit)
+    "openfoodfactsImplementation"(libs.okhttp)
 
     // Datastore
     implementation(libs.androidx.datastore.preferences)

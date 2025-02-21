@@ -4,7 +4,7 @@
 
     <string name="headline_create_product">Stwórz produkt</string>
     <string name="headline_settings">Ustawienia</string>
-    <string name="headline_food_database">Baza danych żywności</string>
+    <string name="headline_remote_food_database">Zdalna baza danych żywności</string>
     <string name="headline_diary">Dziennik</string>
     <string name="headline_calories_goal">Cel kaloryczny</string>
     <string name="headline_daily_goals">Cele dzienne</string>
@@ -19,6 +19,7 @@
     <string name="headline_meals">Posiłki</string>
     <string name="headline_delete_product">Usuń produkt</string>
     <string name="headline_edit_product">Edytuj produkt</string>
+    <string name="headline_clear_cache">Wyczyść pamięć podręczną</string>
 
     <string name="meal_name_breakfast">Śniadanie</string>
     <string name="meal_name_lunch">Drugie śniadanie</string>
@@ -157,6 +158,7 @@
     <string name="description_show_some_love">Jeśli uważasz, że ten projekt jest pomocny, rozważ dodanie mu gwiazdki na GitHubie! Dzięki temu więcej osób go odkryje, a rozwój projektu będzie mógł trwać dalej.</string>
     <string name="description_share_your_thoughts">Jeśli masz jakiekolwiek uwagi, propozycje funkcji lub zgłoszenia błędów, daj mi znać! Chętnie wysłucham Twojej opinii.</string>
     <string name="description_delete_product">Produkt zostanie trwale usunięty. Ta czynność nie może być cofnięta. Wszystkie wpisy w dzienniku związane z tym produktem zostaną utracone.</string>
-
+    <string name="description_open_food_facts_clear_query_cache">Wyczyść pamięć podręczną zapytań Open Food Facts</string>
+    <string name="description_open_food_facts_clear_cache_warning">Wyczyszczenie pamięci podręcznej spowoduje pełne ponowne pobranie bazy danych Open Food Facts. Nie zaleca się czyszczenia pamięci podręcznej, chyba że wiesz, co robisz.</string>
 
 </resources>

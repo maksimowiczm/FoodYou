@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.core.feature.system.SystemFeature
 import com.maksimowiczm.foodyou.core.infrastructure.android.FoodYouApplication
 import com.maksimowiczm.foodyou.core.feature.FeatureManager
 import com.maksimowiczm.foodyou.core.feature.about.AboutFeature
+import com.maksimowiczm.foodyou.core.feature.fooddatabase.FoodDatabaseFeature
 
 class MyApplication : FoodYouApplication() {
     override fun setupFeatures() {
@@ -16,6 +17,7 @@ class MyApplication : FoodYouApplication() {
             SystemFeature,
             CalendarFeature,
             ProductFeature,
+            FoodDatabaseFeature,
             DiaryFeature,
             CameraFeature,
             AddFoodFeature,

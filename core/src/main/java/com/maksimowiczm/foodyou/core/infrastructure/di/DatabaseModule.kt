@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.core.infrastructure.di
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.maksimowiczm.foodyou.core.feature.addfood.database.AddFoodDatabase
+import com.maksimowiczm.foodyou.core.feature.openfoodfacts.database.OpenFoodFactsDatabase
 import com.maksimowiczm.foodyou.core.feature.product.database.ProductDatabase
 import com.maksimowiczm.foodyou.core.infrastructure.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.core.infrastructure.database.buildDatabase
@@ -22,7 +23,8 @@ val databaseModule = module {
     }.binds(
         classes = arrayOf(
             ProductDatabase::class,
-            AddFoodDatabase::class
+            AddFoodDatabase::class,
+            OpenFoodFactsDatabase::class
         )
     )
 }

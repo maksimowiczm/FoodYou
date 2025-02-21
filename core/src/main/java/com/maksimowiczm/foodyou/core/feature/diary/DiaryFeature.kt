@@ -17,7 +17,7 @@ import com.maksimowiczm.foodyou.core.feature.diary.ui.mealscard.buildMealsCard
 import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.core.feature.diary.ui.mealssettings.buildMealsSettingsListItem
-import com.maksimowiczm.foodyou.core.feature.product.ProductFeature.navigateToFoodDatabaseSettings
+import com.maksimowiczm.foodyou.core.feature.fooddatabase.navigateToFoodDatabaseSettings
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
