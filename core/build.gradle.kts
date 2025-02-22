@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.gradle.ktlint)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.kotlin.serialization)
@@ -39,7 +38,11 @@ android {
                 "proguard-rules.pro"
             )
 
-            buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.org/\"")
+            buildConfigField(
+                "String",
+                "OPEN_FOOD_FACTS_URL",
+                "\"https://world.openfoodfacts.org/\""
+            )
         }
     }
     compileOptions {
@@ -133,9 +136,6 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.androidx.compose.navigation)
-
-    // Ktlint
-    ktlintRuleset(libs.ktlint.compose)
 
     // Androidx compose
     implementation(platform(libs.androidx.compose.bom))

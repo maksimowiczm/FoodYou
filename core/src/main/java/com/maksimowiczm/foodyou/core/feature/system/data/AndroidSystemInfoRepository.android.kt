@@ -4,9 +4,7 @@ import android.content.Context
 import com.maksimowiczm.foodyou.core.feature.system.data.model.Country
 import java.util.Locale
 
-internal class AndroidSystemInfoRepository(
-    private val context: Context
-) : SystemInfoRepository {
+internal class AndroidSystemInfoRepository(private val context: Context) : SystemInfoRepository {
     private val defaultLocale: Locale
         get() = context.resources.configuration.locales[0]
 

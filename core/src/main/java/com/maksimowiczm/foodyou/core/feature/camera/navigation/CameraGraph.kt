@@ -19,10 +19,8 @@ import kotlinx.serialization.Serializable
 data object BarcodeScannerRoute
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-fun NavGraphBuilder.cameraGraph(
-    onBarcodeScan: (String) -> Unit
-) {
-    crossfadeComposable<BarcodeScannerRoute>() {
+fun NavGraphBuilder.cameraGraph(onBarcodeScan: (String) -> Unit) {
+    crossfadeComposable<BarcodeScannerRoute> {
         val sharedTransitionScope =
             LocalSharedTransitionScope.current ?: error("No shared transition scope found")
 
@@ -46,9 +44,7 @@ fun NavGraphBuilder.cameraGraph(
     }
 }
 
-fun NavController.navigateToBarcodeScanner(
-    navOptions: NavOptions? = null
-) {
+fun NavController.navigateToBarcodeScanner(navOptions: NavOptions? = null) {
     navigate(
         route = BarcodeScannerRoute,
         navOptions = navOptions

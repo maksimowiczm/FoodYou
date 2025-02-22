@@ -31,7 +31,8 @@ class UpdateProductViewModel(
             }
 
             if (
-                _uiState.value is UpdateProductState.ProductReady || _uiState.value is UpdateProductState.Loading
+                _uiState.value is UpdateProductState.ProductReady ||
+                _uiState.value is UpdateProductState.Loading
             ) {
                 _uiState.value = UpdateProductState.ProductReady(it)
             }

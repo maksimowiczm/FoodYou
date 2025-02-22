@@ -5,17 +5,14 @@ object NutrimentHelper {
     const val CARBOHYDRATES = 4
     const val FATS = 9
 
-    fun calculateCalories(proteins: Float, carbohydrates: Float, fats: Float): Float {
-        return proteins * PROTEINS + carbohydrates * CARBOHYDRATES + fats * FATS
-    }
+    fun calculateCalories(proteins: Float, carbohydrates: Float, fats: Float): Float =
+        proteins * PROTEINS + carbohydrates * CARBOHYDRATES + fats * FATS
 
-    fun proteinsPercentage(calories: Int, proteins: Number): Float {
-        return proteins.toFloat() * PROTEINS / calories
-    }
+    fun proteinsPercentage(calories: Int, proteins: Number): Float =
+        proteins.toFloat() * PROTEINS / calories
 
-    fun carbohydratesPercentage(calories: Int, carbohydrates: Number): Float {
-        return carbohydrates.toFloat() * CARBOHYDRATES / calories
-    }
+    fun carbohydratesPercentage(calories: Int, carbohydrates: Number): Float =
+        carbohydrates.toFloat() * CARBOHYDRATES / calories
 
     fun fatsPercentage(calories: Int, fats: Number) = fats.toFloat() * FATS / calories
 

@@ -16,31 +16,29 @@ import com.maksimowiczm.foodyou.core.feature.product.data.model.Product
 fun rememberNutrientsListState(
     product: Product,
     extraFilters: List<WeightMeasurement> = emptyList()
-): NutrientsListState {
-    return rememberSaveable(
-        product,
-        extraFilters,
-        saver = Saver(
-            save = {
-                arrayListOf<Any>(
-                    it.selectedFilterIndex
-                )
-            },
-            restore = {
-                NutrientsListState(
-                    product = product,
-                    extraFilters = extraFilters,
-                    initialSelectedFilterIndex = it[0] as Int
-                )
-            }
-        )
-    ) {
-        NutrientsListState(
-            product = product,
-            extraFilters = extraFilters,
-            initialSelectedFilterIndex = 0
-        )
-    }
+): NutrientsListState = rememberSaveable(
+    product,
+    extraFilters,
+    saver = Saver(
+        save = {
+            arrayListOf<Any>(
+                it.selectedFilterIndex
+            )
+        },
+        restore = {
+            NutrientsListState(
+                product = product,
+                extraFilters = extraFilters,
+                initialSelectedFilterIndex = it[0] as Int
+            )
+        }
+    )
+) {
+    NutrientsListState(
+        product = product,
+        extraFilters = extraFilters,
+        initialSelectedFilterIndex = 0
+    )
 }
 
 @Stable

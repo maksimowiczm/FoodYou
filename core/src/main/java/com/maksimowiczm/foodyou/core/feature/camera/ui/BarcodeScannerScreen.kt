@@ -8,8 +8,5 @@ import androidx.compose.ui.Modifier
  */
 fun interface BarcodeScannerScreen {
     @Composable
-    operator fun invoke(
-        onBarcodeScan: (String) -> Unit,
-        modifier: Modifier
-    )
+    operator fun invoke(onBarcodeScan: (String) -> Unit, modifier: Modifier)
 }

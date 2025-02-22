@@ -34,10 +34,7 @@ interface AddFoodRepository {
         localOnly: Boolean
     ): Flow<PagingData<ProductWithWeightMeasurement>>
 
-    fun observeTotalCalories(
-        mealId: Long,
-        date: LocalDate
-    ): Flow<Int>
+    fun observeTotalCalories(mealId: Long, date: LocalDate): Flow<Int>
 
     fun observeQuantitySuggestionByProductId(productId: Long): Flow<QuantitySuggestion>
 

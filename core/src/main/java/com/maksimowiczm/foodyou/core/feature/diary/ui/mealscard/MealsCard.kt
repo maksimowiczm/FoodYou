@@ -48,8 +48,8 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
-import kotlinx.datetime.LocalTime
 import kotlin.math.absoluteValue
+import kotlinx.datetime.LocalTime
 
 @Composable
 fun MealsCard(
@@ -106,10 +106,7 @@ fun MealsCard(
 }
 
 @Composable
-fun MealCardSkeleton(
-    shimmerInstance: Shimmer,
-    modifier: Modifier = Modifier
-) {
+fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
     ElevatedCard(
         modifier = modifier
     ) {
@@ -269,9 +266,7 @@ private fun MealCard(
 }
 
 @Composable
-private fun MacroLayoutSkeleton(
-    modifier: Modifier = Modifier
-) {
+private fun MacroLayoutSkeleton(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .size(120.dp, MaterialTheme.typography.labelMedium.toDp() * 2)

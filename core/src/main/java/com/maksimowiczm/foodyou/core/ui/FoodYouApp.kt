@@ -9,12 +9,10 @@ import com.maksimowiczm.foodyou.core.feature.Feature
 import com.maksimowiczm.foodyou.core.navigation.FoodYouNavHost
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 
+@Suppress("ktlint:compose:modifier-missing-check")
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun FoodYouApp(
-    homeFeatures: List<Feature.Home>,
-    settingsFeatures: List<Feature.Settings>
-) {
+fun FoodYouApp(homeFeatures: List<Feature.Home>, settingsFeatures: List<Feature.Settings>) {
     FoodYouTheme {
         Surface {
             SharedTransitionLayout {

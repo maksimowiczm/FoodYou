@@ -6,9 +6,7 @@ import com.maksimowiczm.foodyou.core.feature.openfoodfacts.OpenFoodFactsFeature
 
 val FoodDatabaseFeature = OpenFoodFactsFeature
 
-fun NavController.navigateToFoodDatabaseSettings(
-    navOptions: NavOptions? = null
-) {
+fun NavController.navigateToFoodDatabaseSettings(navOptions: NavOptions? = null) {
     with(OpenFoodFactsFeature) {
         navigateToOpenFoodFactsSettings(navOptions)
     }

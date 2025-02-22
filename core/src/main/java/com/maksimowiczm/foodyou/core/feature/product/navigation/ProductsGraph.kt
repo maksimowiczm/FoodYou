@@ -19,15 +19,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface ProductsRoute {
     @Serializable
-    data class CreateProduct(
-        val epochDay: Int,
-        val mealId: Long
-    ) : ProductsRoute
+    data class CreateProduct(val epochDay: Int, val mealId: Long) : ProductsRoute
 
     @Serializable
-    data class UpdateProduct(
-        val productId: Long
-    ) : ProductsRoute
+    data class UpdateProduct(val productId: Long) : ProductsRoute
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -70,9 +65,6 @@ fun NavGraphBuilder.productsGraph(
     }
 }
 
-fun <R : ProductsRoute> NavController.navigateToProducts(
-    route: R,
-    navOptions: NavOptions? = null
-) {
+fun <R : ProductsRoute> NavController.navigateToProducts(route: R, navOptions: NavOptions? = null) {
     navigate(route, navOptions)
 }

@@ -214,8 +214,8 @@ private fun DatePickerRowItem(
     calendarState: CalendarState,
     date: LocalDate,
     colors: CalendarCardColors,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val namesOfDayOfWeek = calendarState.namesOfDayOfWeek
     val referenceDate = calendarState.referenceDate

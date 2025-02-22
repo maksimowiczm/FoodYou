@@ -8,10 +8,7 @@ sealed interface PortionEvent {
     data object Loading : PortionEvent
     data object Error : PortionEvent
 
-    data class Ready(
-        val product: Product,
-        val suggestion: QuantitySuggestion
-    ) : PortionEvent
+    data class Ready(val product: Product, val suggestion: QuantitySuggestion) : PortionEvent
 
     data object CreatingPortion : PortionEvent
     data object Success : PortionEvent

@@ -32,10 +32,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 
-internal const val ProgressThreshold = 0.35f
+internal const val PROGRESS_THRESHOLD = 0.35f
 
 internal val Int.ForOutgoing: Int
-    get() = (this * ProgressThreshold).toInt()
+    get() = (this * PROGRESS_THRESHOLD).toInt()
 
 internal val Int.ForIncoming: Int
     get() = this - this.ForOutgoing

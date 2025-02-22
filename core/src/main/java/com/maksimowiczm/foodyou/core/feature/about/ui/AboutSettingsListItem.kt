@@ -14,9 +14,7 @@ import com.maksimowiczm.foodyou.core.feature.SettingsFeature
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 
-fun buildAboutSettingsListItem(
-    onClick: () -> Unit
-) = SettingsFeature { modifier ->
+fun buildAboutSettingsListItem(onClick: () -> Unit) = SettingsFeature { modifier ->
     AboutSettingsListItem(
         modifier = modifier,
         onClick = onClick
@@ -24,10 +22,7 @@ fun buildAboutSettingsListItem(
 }
 
 @Composable
-private fun AboutSettingsListItem(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun AboutSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         modifier = modifier
             .clickable { onClick() }

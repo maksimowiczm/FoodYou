@@ -10,9 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CreateProductViewModel(
-    private val productRepository: ProductRepository
-) : ViewModel() {
+class CreateProductViewModel(private val productRepository: ProductRepository) : ViewModel() {
     private val _uiState = MutableStateFlow<CreateProductState>(CreateProductState.Nothing)
     val uiState = _uiState.asStateFlow()
 

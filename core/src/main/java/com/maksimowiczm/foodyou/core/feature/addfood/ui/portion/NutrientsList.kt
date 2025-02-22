@@ -78,7 +78,11 @@ fun NutrientsList(
                 }
 
                 item {
-                    Spacer(Modifier.width(paddingValues.calculateEndPadding(LocalLayoutDirection.current)))
+                    Spacer(
+                        Modifier.width(
+                            paddingValues.calculateEndPadding(LocalLayoutDirection.current)
+                        )
+                    )
                 }
             }
         }
@@ -93,7 +97,9 @@ fun NutrientsList(
                 item {
                     NutrientsListItem(
                         label = stringResource(R.string.unit_calories),
-                        value = "${state.nutrients.calories.formatClipZeros()} " + stringResource(R.string.unit_kcal)
+                        value =
+                        "${state.nutrients.calories.formatClipZeros()} " +
+                            stringResource(R.string.unit_kcal)
                     )
                 }
 
@@ -184,16 +190,12 @@ fun NutrientsList(
 }
 
 @Composable
-private fun NutrientsListItem(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
+private fun NutrientsListItem(label: String, value: String, modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier
     ) {
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -221,12 +223,13 @@ private fun Float?.stringResource(): String {
 }
 
 @Composable
-private fun WeightMeasurement.stringResource(
-    weightUnit: WeightUnit
-) = when (this) {
-    is WeightMeasurement.WeightUnit -> "${weight.formatClipZeros()} " + weightUnit.stringResourceShort()
-    is WeightMeasurement.Package -> "${quantity.formatClipZeros()} x " + stringResource(R.string.product_package)
-    is WeightMeasurement.Serving -> "${quantity.formatClipZeros()} x " + stringResource(R.string.product_serving)
+private fun WeightMeasurement.stringResource(weightUnit: WeightUnit) = when (this) {
+    is WeightMeasurement.WeightUnit -> "${weight.formatClipZeros()} " +
+        weightUnit.stringResourceShort()
+    is WeightMeasurement.Package -> "${quantity.formatClipZeros()} x " +
+        stringResource(R.string.product_package)
+    is WeightMeasurement.Serving -> "${quantity.formatClipZeros()} x " +
+        stringResource(R.string.product_serving)
 }
 
 @Preview(

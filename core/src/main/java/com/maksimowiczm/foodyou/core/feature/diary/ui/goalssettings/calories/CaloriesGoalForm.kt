@@ -78,10 +78,7 @@ private fun FormFieldWithTextFieldValue<Float, GoalsFormInputError>.FloatTextFie
 }
 
 @Composable
-fun CaloriesGoalForm(
-    state: CaloriesGoalFormState,
-    modifier: Modifier = Modifier
-) {
+fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
     Column(

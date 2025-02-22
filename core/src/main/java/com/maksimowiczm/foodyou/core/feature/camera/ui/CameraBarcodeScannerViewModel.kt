@@ -11,9 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class CameraBarcodeScannerViewModel(
-    private val dataStore: DataStore<Preferences>
-) : ViewModel() {
+class CameraBarcodeScannerViewModel(private val dataStore: DataStore<Preferences>) : ViewModel() {
     val cameraPermissionRequests = dataStore
         .observe(key)
         .stateIn(

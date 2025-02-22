@@ -50,6 +50,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -89,9 +90,10 @@ fun CreateProductScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val latestOnSuccess by rememberUpdatedState(onSuccess)
     LaunchedEffect(uiState) {
         when (val state = uiState) {
-            is CreateProductState.ProductCreated -> onSuccess(state.productId)
+            is CreateProductState.ProductCreated -> latestOnSuccess(state.productId)
             CreateProductState.CreatingProduct,
             CreateProductState.Nothing,
             CreateProductState.Error -> Unit
@@ -361,7 +363,7 @@ private fun CreateProductScreen(
                             },
                             supportingText = {
                                 Text(
-                                    text = stringResource(R.string.neutral_calories_are_calculated_using_macronutrients),
+                                    text = stringResource(R.string.neutral_calories_are_calculated),
                                     color = MaterialTheme.colorScheme.secondary
                                 )
                             },

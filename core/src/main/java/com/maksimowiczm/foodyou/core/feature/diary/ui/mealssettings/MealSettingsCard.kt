@@ -447,7 +447,7 @@ private fun DeleteDialog(
         },
         text = {
             Text(
-                text = stringResource(R.string.neutral_meal_will_be_deleted_permanently_all_data_related_to_this_meal_will_be_lost)
+                text = stringResource(R.string.neutral_meal_will_be_deleted_permanently)
             )
         }
     )
@@ -486,17 +486,14 @@ object MealSettingsCardDefaults {
         contentColor: Color = MaterialTheme.colorScheme.onSurface,
         timeContainerColor: Color = MaterialTheme.colorScheme.surfaceContainerHighest,
         timeContentColor: Color = MaterialTheme.colorScheme.onSurface,
-
         disabledContainerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
         disabledContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
         disabledTimeContainerColor: Color = MaterialTheme.colorScheme.surfaceContainerHighest,
         disabledTimeContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-
         dirtyContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
         dirtyContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
         dirtyTimeContainerColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
         dirtyTimeContentColor: Color = MaterialTheme.colorScheme.onTertiaryContainer,
-
         confirmButtonContainerColor: Color = MaterialTheme.colorScheme.primary,
         confirmButtonContentColor: Color = MaterialTheme.colorScheme.onPrimary,
         deleteButtonContainerColor: Color = Color.Transparent,

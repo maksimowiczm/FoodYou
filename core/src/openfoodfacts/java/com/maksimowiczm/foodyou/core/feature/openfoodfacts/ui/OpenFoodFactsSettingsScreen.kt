@@ -81,7 +81,7 @@ fun OpenFoodFactsSettingsScreen(
     OpenFoodFactsSettingsScreen(
         settings = settings,
         onToggle = viewModel::onOpenFoodFactsToggle,
-        onCountrySelected = viewModel::onOpenFoodFactsCountrySelected,
+        onCountrySelect = viewModel::onOpenFoodFactsCountrySelected,
         onCacheClear = viewModel::onCacheClear,
         onBack = onBack,
         modifier = modifier
@@ -93,7 +93,7 @@ fun OpenFoodFactsSettingsScreen(
 private fun OpenFoodFactsSettingsScreen(
     settings: OpenFoodFactsSettings,
     onToggle: (Boolean) -> Unit,
-    onCountrySelected: (Country) -> Unit,
+    onCountrySelect: (Country) -> Unit,
     onCacheClear: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
@@ -178,7 +178,7 @@ private fun OpenFoodFactsSettingsScreen(
             item {
                 if (settings is OpenFoodFactsSettings.Enabled) {
                     OpenFoodFactsContent(
-                        onCountrySelected = onCountrySelected,
+                        onCountrySelect = onCountrySelect,
                         settings = settings,
                         onCacheClear = onCacheClear
                     )
@@ -271,7 +271,7 @@ private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
 
 @Composable
 private fun OpenFoodFactsContent(
-    onCountrySelected: (Country) -> Unit,
+    onCountrySelect: (Country) -> Unit,
     settings: OpenFoodFactsSettings.Enabled,
     onCacheClear: () -> Unit,
     modifier: Modifier = Modifier,
@@ -284,16 +284,18 @@ private fun OpenFoodFactsContent(
             onDismissRequest = { showCountryPicker = false },
             availableCountries = settings.availableCountries,
             countryFlag = countryFlag,
-            onCountrySelected = { country ->
-                onCountrySelected(country)
+            onCountrySelect = { country ->
+                onCountrySelect(country)
                 showCountryPicker = false
             }
         )
     }
 
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         ListItem(
-            modifier = modifier
+            modifier = Modifier
                 .requiredHeightIn(min = 64.dp)
                 .clickable { showCountryPicker = true }
                 .horizontalDisplayCutoutPadding(),
@@ -323,10 +325,7 @@ private fun OpenFoodFactsContent(
 }
 
 @Composable
-private fun ClearCacheItem(
-    onCacheClear: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun ClearCacheItem(onCacheClear: () -> Unit, modifier: Modifier = Modifier) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showDialog) {
@@ -357,10 +356,7 @@ private fun ClearCacheItem(
 }
 
 @Composable
-private fun ClearCacheDialog(
-    onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit
-) {
+private fun ClearCacheDialog(onDismissRequest: () -> Unit, onConfirm: () -> Unit) {
     var count by rememberSaveable { mutableIntStateOf(5) }
 
     LaunchedEffect(Unit) {
@@ -385,7 +381,7 @@ private fun ClearCacheDialog(
         },
         text = {
             Text(
-                text = stringResource(R.string.description_open_food_facts_clear_cache_warning)
+                text = stringResource(R.string.description_open_food_facts_clear_cache)
             )
         },
         confirmButton = {
@@ -422,7 +418,7 @@ private fun OpenFoodFactsSettingsDisabledPreview() {
         OpenFoodFactsSettingsScreen(
             settings = OpenFoodFactsSettings.Disabled,
             onToggle = {},
-            onCountrySelected = {},
+            onCountrySelect = {},
             onCacheClear = {},
             onBack = {}
         )
@@ -451,7 +447,7 @@ private fun OpenFoodFactsSettingsPreview() {
                     availableCountries = listOf(Country.Poland, Country.UnitedStates)
                 ),
                 onToggle = {},
-                onCountrySelected = {},
+                onCountrySelect = {},
                 onCacheClear = {},
                 onBack = {}
             )

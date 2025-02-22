@@ -174,11 +174,10 @@ class AddFoodRepositoryImpl(
         )
     }.filterNotNull()
 
-    override fun observeProductQueries(limit: Int): Flow<List<ProductQuery>> {
-        return addFoodDao.observeLatestQueries(limit).map { list ->
+    override fun observeProductQueries(limit: Int): Flow<List<ProductQuery>> =
+        addFoodDao.observeLatestQueries(limit).map { list ->
             list.map { it.toDomain() }
         }
-    }
 
     private companion object {
         private const val TAG = "AddFoodRepositoryImpl"

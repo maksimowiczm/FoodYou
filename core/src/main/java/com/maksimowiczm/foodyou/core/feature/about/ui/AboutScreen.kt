@@ -279,10 +279,7 @@ private fun ShowSomeLoveItem(
 }
 
 @Composable
-private fun ReadmeListItem(
-    onReadme: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun ReadmeListItem(onReadme: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         modifier = modifier
             .clickable { onReadme() }
@@ -303,9 +300,7 @@ private fun ReadmeListItem(
 }
 
 @Composable
-private fun VersionListItem(
-    modifier: Modifier = Modifier
-) {
+private fun VersionListItem(modifier: Modifier = Modifier) {
     ListItem(
         modifier = modifier.horizontalDisplayCutoutPadding(),
         headlineContent = {

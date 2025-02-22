@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.core.feature.openfoodfacts.network.model.OpenFoo
 import com.maksimowiczm.foodyou.core.feature.openfoodfacts.network.model.OpenFoodPageResponse
 import com.maksimowiczm.foodyou.core.feature.openfoodfacts.network.model.v1.OpenFoodFactsPageResponseV1
 import com.maksimowiczm.foodyou.core.feature.openfoodfacts.network.model.v2.OpenFoodFactsProductResponseV2
+import java.time.Duration
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -15,7 +16,6 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.time.Duration
 
 internal class OpenFoodFactsNetworkDataSource {
     private val json = Json {

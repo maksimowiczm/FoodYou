@@ -12,47 +12,45 @@ import androidx.compose.runtime.setValue
 @Composable
 fun <T, E> rememberFormField(
     initialValue: T,
+    parser: Parser<T, E>,
     initialError: E? = null,
     initialDirty: Boolean = false,
     requireDirty: Boolean = true,
-    parser: Parser<T, E>,
     validator: (() -> Validator<T, E>)? = null
-): FormFieldImpl<T, E> {
-    return rememberSaveable(
-        saver = Saver(
-            save = { field ->
-                arrayListOf(
-                    field.value,
-                    field.error,
-                    field.dirty
-                )
-            },
-            restore = {
-                @Suppress("UNCHECKED_CAST")
-                FormFieldImpl(
-                    initialFormFieldValue = FormFieldImpl.FormFieldValue(
-                        value = it[0] as T,
-                        error = it[1] as E
-                    ),
-                    initialDirty = it[2] as Boolean,
-                    requireDirty = requireDirty,
-                    parser = parser,
-                    validator = validator
-                )
-            }
-        )
-    ) {
-        FormFieldImpl(
-            initialFormFieldValue = FormFieldImpl.FormFieldValue(
-                value = initialValue,
-                error = initialError
-            ),
-            initialDirty = initialDirty,
-            requireDirty = requireDirty,
-            parser = parser,
-            validator = validator
-        )
-    }
+): FormFieldImpl<T, E> = rememberSaveable(
+    saver = Saver(
+        save = { field ->
+            arrayListOf(
+                field.value,
+                field.error,
+                field.dirty
+            )
+        },
+        restore = {
+            @Suppress("UNCHECKED_CAST")
+            FormFieldImpl(
+                initialFormFieldValue = FormFieldImpl.FormFieldValue(
+                    value = it[0] as T,
+                    error = it[1] as E
+                ),
+                initialDirty = it[2] as Boolean,
+                requireDirty = requireDirty,
+                parser = parser,
+                validator = validator
+            )
+        }
+    )
+) {
+    FormFieldImpl(
+        initialFormFieldValue = FormFieldImpl.FormFieldValue(
+            value = initialValue,
+            error = initialError
+        ),
+        initialDirty = initialDirty,
+        requireDirty = requireDirty,
+        parser = parser,
+        validator = validator
+    )
 }
 
 @Stable
@@ -63,10 +61,7 @@ class FormFieldImpl<T, E>(
     private val parser: Parser<T, E>,
     private val validator: (() -> Validator<T, E>)? = null
 ) : FormField<T, E> {
-    data class FormFieldValue<T, E>(
-        val value: T,
-        val error: E?
-    )
+    data class FormFieldValue<T, E>(val value: T, val error: E?)
 
     private var fieldValue by mutableStateOf(initialFormFieldValue)
 

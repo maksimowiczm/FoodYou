@@ -190,7 +190,9 @@ private fun SearchResults(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_north_west_24),
-                            contentDescription = stringResource(R.string.action_insert_suggested_search)
+                            contentDescription = stringResource(
+                                R.string.action_insert_suggested_search
+                            )
                         )
                     }
                 }
@@ -203,9 +205,7 @@ private fun SearchResults(
 // the SearchTopBarState but SearchBarDefaults.InputField requires TextFieldState to be passed
 // so we need to keep TextFieldState in sync using this thing.
 @Composable
-private fun mirroredTextFieldState(
-    query: String
-): TextFieldState {
+private fun mirroredTextFieldState(query: String): TextFieldState {
     val textFieldState = rememberTextFieldState(
         initialText = query,
         initialSelection = TextRange(query.length)

@@ -74,7 +74,8 @@ fun ToggleButton(
                     )
             ) {
                 CompositionLocalProvider(
-                    LocalContentColor provides if (checked) colors.checkedContentColor else colors.uncheckedColor
+                    LocalContentColor provides
+                        if (checked) colors.checkedContentColor else colors.uncheckedColor
                 ) {
                     content()
                 }

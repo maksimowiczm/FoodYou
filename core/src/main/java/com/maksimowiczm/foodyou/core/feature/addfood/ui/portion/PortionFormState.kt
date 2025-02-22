@@ -18,11 +18,11 @@ import com.maksimowiczm.foodyou.core.ui.form.between
 import com.maksimowiczm.foodyou.core.ui.form.floatParser
 import com.maksimowiczm.foodyou.core.ui.form.positive
 import com.maksimowiczm.foodyou.core.ui.form.rememberFormFieldWithTextFieldValue
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 @Composable
 fun rememberPortionFormState(

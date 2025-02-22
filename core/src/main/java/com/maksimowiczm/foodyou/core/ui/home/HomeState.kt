@@ -17,7 +17,9 @@ import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun rememberHomeState(
-    initialSelectedDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    initialSelectedDate: LocalDate = Clock.System.now().toLocalDateTime(
+        TimeZone.currentSystemDefault()
+    ).date
 ): HomeState {
     val shimmer = rememberShimmer(
         shimmerBounds = ShimmerBounds.Window
@@ -44,10 +46,8 @@ fun rememberHomeState(
 }
 
 @Stable
-class HomeState(
-    initialSelectedDate: LocalDate,
-    override val shimmer: Shimmer
-) : com.maksimowiczm.foodyou.core.feature.HomeState {
+class HomeState(initialSelectedDate: LocalDate, override val shimmer: Shimmer) :
+    com.maksimowiczm.foodyou.core.feature.HomeState {
     override var selectedDate by mutableStateOf(initialSelectedDate)
         private set
 

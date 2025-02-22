@@ -130,7 +130,9 @@ fun SearchBottomBar(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Add,
-                                        contentDescription = stringResource(R.string.action_create_new_product)
+                                        contentDescription = stringResource(
+                                            R.string.action_create_new_product
+                                        )
                                     )
                                 }
                             }

@@ -22,11 +22,7 @@ import com.maksimowiczm.foodyou.core.feature.diary.data.model.defaultGoals
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 
 @Composable
-fun CaloriesGoal(
-    goals: DailyGoals,
-    onSave: (DailyGoals) -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun CaloriesGoal(goals: DailyGoals, onSave: (DailyGoals) -> Unit, modifier: Modifier = Modifier) {
     val state = rememberCaloriesFoalFormState(goals)
 
     Column(

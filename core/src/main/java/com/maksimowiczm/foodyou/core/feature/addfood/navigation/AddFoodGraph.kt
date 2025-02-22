@@ -8,16 +8,9 @@ import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AddFoodFeature(
-    val epochDay: Int,
-    val mealId: Long,
-    val productId: Long? = null
-)
+data class AddFoodFeature(val epochDay: Int, val mealId: Long, val productId: Long? = null)
 
-fun NavGraphBuilder.addFoodGraph(
-    onClose: () -> Unit,
-    onSearchSettings: () -> Unit
-) {
+fun NavGraphBuilder.addFoodGraph(onClose: () -> Unit, onSearchSettings: () -> Unit) {
     forwardBackwardComposable<AddFoodFeature> {
         AddFoodScreen(
             onClose = onClose,
@@ -26,9 +19,6 @@ fun NavGraphBuilder.addFoodGraph(
     }
 }
 
-fun NavController.navigateToAddFood(
-    route: AddFoodFeature,
-    navOptions: NavOptions? = null
-) {
+fun NavController.navigateToAddFood(route: AddFoodFeature, navOptions: NavOptions? = null) {
     navigate(route, navOptions)
 }

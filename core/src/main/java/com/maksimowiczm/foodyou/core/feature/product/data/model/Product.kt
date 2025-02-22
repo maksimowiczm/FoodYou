@@ -32,26 +32,24 @@ data class Product(
     val productSource: ProductSource
 )
 
-fun ProductEntity.toDomain(): Product {
-    return Product(
-        id = id,
-        name = name,
-        brand = brand,
-        barcode = barcode,
-        nutrients = Nutrients(
-            calories = calories,
-            proteins = proteins,
-            carbohydrates = carbohydrates,
-            sugars = sugars,
-            fats = fats,
-            saturatedFats = saturatedFats,
-            salt = salt,
-            sodium = sodium,
-            fiber = fiber
-        ),
-        packageWeight = packageWeight,
-        servingWeight = servingWeight,
-        weightUnit = weightUnit,
-        productSource = productSource
-    )
-}
+fun ProductEntity.toDomain(): Product = Product(
+    id = id,
+    name = name,
+    brand = brand,
+    barcode = barcode,
+    nutrients = Nutrients(
+        calories = calories,
+        proteins = proteins,
+        carbohydrates = carbohydrates,
+        sugars = sugars,
+        fats = fats,
+        saturatedFats = saturatedFats,
+        salt = salt,
+        sodium = sodium,
+        fiber = fiber
+    ),
+    packageWeight = packageWeight,
+    servingWeight = servingWeight,
+    weightUnit = weightUnit,
+    productSource = productSource
+)

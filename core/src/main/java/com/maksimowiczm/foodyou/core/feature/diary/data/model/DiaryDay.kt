@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.core.feature.diary.data.model
 
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.ProductWithWeightMeasurement
-import kotlinx.datetime.LocalDate
 import kotlin.math.roundToInt
+import kotlinx.datetime.LocalDate
 
 data class DiaryDay(
     val date: LocalDate,

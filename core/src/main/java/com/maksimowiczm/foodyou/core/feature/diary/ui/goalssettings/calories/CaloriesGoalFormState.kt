@@ -17,18 +17,16 @@ import com.maksimowiczm.foodyou.core.ui.form.floatParser
 import com.maksimowiczm.foodyou.core.ui.form.intParser
 import com.maksimowiczm.foodyou.core.ui.form.nonNegative
 import com.maksimowiczm.foodyou.core.ui.form.rememberFormFieldWithTextFieldValue
+import java.util.Locale
+import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-import java.util.Locale
-import kotlin.math.roundToInt
 
 @Composable
-fun rememberCaloriesFoalFormState(
-    dailyGoals: DailyGoals
-): CaloriesGoalFormState {
+fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState {
     val calories = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.calories,
         requireDirty = false,
@@ -301,13 +299,20 @@ class CaloriesGoalFormState(
     }
 
     val isValid by derivedStateOf {
-        calories.error == null && calories.isValid &&
-            proteinsPercentage.error == null && proteinsPercentage.isValid &&
-            proteinsGrams.error == null && proteinsGrams.isValid &&
-            carbohydratesPercentage.error == null && carbohydratesPercentage.isValid &&
-            carbohydratesGrams.error == null && carbohydratesGrams.isValid &&
-            fatsPercentage.error == null && fatsPercentage.isValid &&
-            fatsGrams.error == null && fatsGrams.isValid &&
+        calories.error == null &&
+            calories.isValid &&
+            proteinsPercentage.error == null &&
+            proteinsPercentage.isValid &&
+            proteinsGrams.error == null &&
+            proteinsGrams.isValid &&
+            carbohydratesPercentage.error == null &&
+            carbohydratesPercentage.isValid &&
+            carbohydratesGrams.error == null &&
+            carbohydratesGrams.isValid &&
+            fatsPercentage.error == null &&
+            fatsPercentage.isValid &&
+            fatsGrams.error == null &&
+            fatsGrams.isValid &&
             error == null
     }
 

@@ -68,10 +68,7 @@ class PortionViewModel(
         }.launchIn(viewModelScope)
     }
 
-    fun onAddPortion(
-        weightMeasurementEnum: WeightMeasurementEnum,
-        quantity: Float
-    ) {
+    fun onAddPortion(weightMeasurementEnum: WeightMeasurementEnum, quantity: Float) {
         val uiState = _uiEvent.value
 
         if (uiState !is PortionEvent.Ready) {

@@ -34,11 +34,12 @@ import com.maksimowiczm.foodyou.core.R
 import com.maksimowiczm.foodyou.core.feature.system.data.model.Country
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 
+@Suppress("ktlint:compose:modifier-missing-check")
 @Composable
 fun CountryPickerDialog(
     availableCountries: List<Country>,
     countryFlag: CountryFlag,
-    onCountrySelected: (Country) -> Unit,
+    onCountrySelect: (Country) -> Unit,
     onDismissRequest: () -> Unit,
     headline: @Composable () -> Unit = {
         Text(
@@ -88,17 +89,18 @@ fun CountryPickerDialog(
                     items(
                         items = availableCountries
                             .filter {
-                                it.name.contains(search, true) || it.code.contains(
-                                    search,
-                                    true
-                                )
+                                it.name.contains(search, true) ||
+                                    it.code.contains(
+                                        search,
+                                        true
+                                    )
                             },
                         key = { it.code }
                     ) { country ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { onCountrySelected(country) }
+                                .clickable { onCountrySelect(country) }
                                 .padding(16.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
@@ -134,7 +136,7 @@ private fun CountryPickerDialogPreview() {
                     Text(text = code)
                 }
             },
-            onCountrySelected = {},
+            onCountrySelect = {},
             onDismissRequest = {}
         )
     }

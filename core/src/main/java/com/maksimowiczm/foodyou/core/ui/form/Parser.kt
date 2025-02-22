@@ -17,9 +17,7 @@ sealed interface ParserResult<T, E> {
     data class Failure<T, E>(val error: E) : ParserResult<T, E>
 }
 
-fun <E> stringParser(
-    onEmpty: () -> E
-) = Parser {
+fun <E> stringParser(onEmpty: () -> E) = Parser {
     if (it.isEmpty()) {
         failure(onEmpty())
     } else {
@@ -35,9 +33,7 @@ fun <E> nullableStringParser(): Parser<String?, E> = Parser {
     }
 }
 
-fun <E> nullableFloatParser(
-    onNan: () -> E
-) = Parser {
+fun <E> nullableFloatParser(onNan: () -> E) = Parser {
     if (it.isEmpty()) {
         success(null)
     } else {
@@ -49,10 +45,7 @@ fun <E> nullableFloatParser(
     }
 }
 
-fun <E> floatParser(
-    onEmpty: () -> E,
-    onNan: () -> E
-) = Parser {
+fun <E> floatParser(onEmpty: () -> E, onNan: () -> E) = Parser {
     if (it.isEmpty()) {
         failure(onEmpty())
     } else {
@@ -64,9 +57,7 @@ fun <E> floatParser(
     }
 }
 
-fun <E> nullableIntParser(
-    onNan: () -> E
-) = Parser {
+fun <E> nullableIntParser(onNan: () -> E) = Parser {
     if (it.isEmpty()) {
         success(null)
     } else {
@@ -78,10 +69,7 @@ fun <E> nullableIntParser(
     }
 }
 
-fun <E> intParser(
-    onEmpty: () -> E,
-    onNan: () -> E
-) = Parser {
+fun <E> intParser(onEmpty: () -> E, onNan: () -> E) = Parser {
     if (it.isEmpty()) {
         failure(onEmpty())
     } else {

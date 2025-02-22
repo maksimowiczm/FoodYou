@@ -19,10 +19,7 @@ interface NestedListScope {
      * @param level The level of indentation. Default is 0.
      * @param content The content of the item.
      */
-    fun item(
-        level: Int = 0,
-        content: @Composable ColumnScope.() -> Unit
-    )
+    fun item(level: Int = 0, content: @Composable ColumnScope.() -> Unit)
 }
 
 /**

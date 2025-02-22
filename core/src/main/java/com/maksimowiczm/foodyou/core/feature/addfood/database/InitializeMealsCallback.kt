@@ -8,9 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.maksimowiczm.foodyou.core.R
 import org.xmlpull.v1.XmlPullParser
 
-class InitializeMealsCallback(
-    private val context: Context
-) : RoomDatabase.Callback() {
+class InitializeMealsCallback(private val context: Context) : RoomDatabase.Callback() {
     override fun onCreate(db: SupportSQLiteDatabase) {
         val meals = mutableListOf<Meal>()
         val parser: XmlResourceParser = context.resources.getXml(R.xml.meals)
@@ -70,11 +68,7 @@ class InitializeMealsCallback(
         }
     }
 
-    private data class Meal(
-        val name: String,
-        val from: String,
-        val to: String
-    )
+    private data class Meal(val name: String, val from: String, val to: String)
 
     private companion object {
         private const val TAG = "InitializeMealsCallback"

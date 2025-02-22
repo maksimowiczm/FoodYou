@@ -12,24 +12,17 @@ import com.valentinilk.shimmer.Shimmer
 import kotlinx.datetime.LocalTime
 
 @Composable
-fun rememberMealsCardState(
-    diaryDay: DiaryDay?,
-    time: LocalTime,
-    shimmer: Shimmer
-) = remember(diaryDay, time, shimmer) {
-    MealsCardState(
-        diaryDay = diaryDay,
-        time = time,
-        shimmer = shimmer
-    )
-}
+fun rememberMealsCardState(diaryDay: DiaryDay?, time: LocalTime, shimmer: Shimmer) =
+    remember(diaryDay, time, shimmer) {
+        MealsCardState(
+            diaryDay = diaryDay,
+            time = time,
+            shimmer = shimmer
+        )
+    }
 
 @Immutable
-class MealsCardState(
-    val diaryDay: DiaryDay?,
-    val time: LocalTime,
-    val shimmer: Shimmer
-) {
+class MealsCardState(val diaryDay: DiaryDay?, val time: LocalTime, val shimmer: Shimmer) {
     @Stable
     val meals by derivedStateOf {
         diaryDay?.meals?.sortedBy {
@@ -52,15 +45,13 @@ class MealsCardState(
      * For regular meals (e.g., from 12:00 to 15:00), it simply checks if the current time
      * falls within the start and end times.
      */
-    private fun shouldShowMeal(meal: Meal, time: LocalTime): Boolean {
-        return if (meal.from == meal.to) {
-            true
-        } else if (meal.to < meal.from) {
-            val minuteBeforeMidnight = LocalTime(23, 59, 59)
-            val midnight = LocalTime(0, 0, 0)
-            meal.from <= time && time <= minuteBeforeMidnight || midnight <= time && time <= meal.to
-        } else {
-            meal.from <= time && time <= meal.to
-        }
+    private fun shouldShowMeal(meal: Meal, time: LocalTime): Boolean = if (meal.from == meal.to) {
+        true
+    } else if (meal.to < meal.from) {
+        val minuteBeforeMidnight = LocalTime(23, 59, 59)
+        val midnight = LocalTime(0, 0, 0)
+        meal.from <= time && time <= minuteBeforeMidnight || midnight <= time && time <= meal.to
+    } else {
+        meal.from <= time && time <= meal.to
     }
 }

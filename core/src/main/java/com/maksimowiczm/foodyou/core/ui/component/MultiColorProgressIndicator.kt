@@ -15,10 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Immutable
-data class MultiColorProgressIndicatorItem(
-    val progress: Float,
-    val color: Color
-)
+data class MultiColorProgressIndicatorItem(val progress: Float, val color: Color)
 
 @Composable
 fun MultiColorProgressIndicator(

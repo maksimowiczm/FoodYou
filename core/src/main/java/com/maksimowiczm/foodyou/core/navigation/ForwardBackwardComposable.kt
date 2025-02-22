@@ -23,31 +23,26 @@ import kotlin.reflect.KType
 inline fun <reified T : Any> NavGraphBuilder.forwardBackwardComposable(
     typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    noinline enterTransition:
-        (
-            AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-            EnterTransition?
-        )? = { ForwardBackwardComposableDefaults.enterTransition() },
-    noinline exitTransition:
-        (
-            AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-            ExitTransition?
-        )? = { ForwardBackwardComposableDefaults.exitTransition() },
-    noinline popEnterTransition:
-        (
-            AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-            EnterTransition?
-        )? = { ForwardBackwardComposableDefaults.popEnterTransition() },
-    noinline popExitTransition:
-        (
-            AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-            ExitTransition?
-        )? = { ForwardBackwardComposableDefaults.popExitTransition() },
-    noinline sizeTransform:
-        (
-            AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-            SizeTransform?
-        )? =
+    noinline enterTransition: (
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+        EnterTransition?
+    )? = { ForwardBackwardComposableDefaults.enterTransition() },
+    noinline exitTransition: (
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+        ExitTransition?
+    )? = { ForwardBackwardComposableDefaults.exitTransition() },
+    noinline popEnterTransition: (
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+        EnterTransition?
+    )? = { ForwardBackwardComposableDefaults.popEnterTransition() },
+    noinline popExitTransition: (
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+        ExitTransition?
+    )? = { ForwardBackwardComposableDefaults.popExitTransition() },
+    noinline sizeTransform: (
+        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+        SizeTransform?
+    )? =
         null,
     noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {

@@ -38,11 +38,7 @@ import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import kotlin.math.roundToInt
 
 @Composable
-fun MacroGraph(
-    product: Product,
-    measurement: WeightMeasurement,
-    modifier: Modifier = Modifier
-) {
+fun MacroGraph(product: Product, measurement: WeightMeasurement, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -103,11 +99,7 @@ fun MacroGraph(
 }
 
 @Composable
-private fun NutrimentPieChart(
-    product: Product,
-    weight: Float,
-    modifier: Modifier = Modifier
-) {
+private fun NutrimentPieChart(product: Product, weight: Float, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
     val sum = product.nutrients.proteins + product.nutrients.carbohydrates + product.nutrients.fats

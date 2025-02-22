@@ -31,10 +31,7 @@ fun buildMealsSettingsListItem(navController: NavController) = SettingsFeature {
 }
 
 @Composable
-private fun MealsSettingsListItem(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun MealsSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = {
             Text(stringResource(R.string.headline_meals))

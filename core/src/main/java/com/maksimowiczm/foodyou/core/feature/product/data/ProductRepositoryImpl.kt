@@ -13,14 +13,13 @@ import com.maksimowiczm.foodyou.core.feature.product.database.ProductEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class ProductRepositoryImpl(
-    productDatabase: ProductDatabase
-) : ProductRepository {
+class ProductRepositoryImpl(productDatabase: ProductDatabase) : ProductRepository {
     private val productDao: ProductDao = productDatabase.productDao()
 
-    override fun observeProductById(id: Long): Flow<Product?> {
-        return productDao.observeProductById(id).map { it?.toDomain() }
-    }
+    override fun observeProductById(id: Long): Flow<Product?> =
+        productDao.observeProductById(id).map {
+            it?.toDomain()
+        }
 
     override suspend fun createUserProduct(
         name: String,

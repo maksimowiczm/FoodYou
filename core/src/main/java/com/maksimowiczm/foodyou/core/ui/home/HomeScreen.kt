@@ -81,7 +81,13 @@ fun HomeScreen(
                 items = homeFeatures
             ) { i, feature ->
                 feature.card(
-                    modifier = if (feature.applyPadding) Modifier.padding(horizontal = 8.dp) else Modifier,
+                    modifier = if (feature.applyPadding) {
+                        Modifier.padding(
+                            horizontal = 8.dp
+                        )
+                    } else {
+                        Modifier
+                    },
                     homeState = state
                 )
 

@@ -104,8 +104,8 @@ class DiaryRepositoryImpl(
         )
     }
 
-    override fun observeMeals(): Flow<List<Meal>> {
-        return addFoodDao.observeMeals().map { list -> list.map(MealEntity::toDomain) }
+    override fun observeMeals(): Flow<List<Meal>> = addFoodDao.observeMeals().map { list ->
+        list.map(MealEntity::toDomain)
     }
 
     override suspend fun createMeal(name: String, from: LocalTime, to: LocalTime) {

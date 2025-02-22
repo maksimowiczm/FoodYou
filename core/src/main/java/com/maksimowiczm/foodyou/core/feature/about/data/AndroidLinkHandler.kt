@@ -5,9 +5,7 @@ import android.content.Intent
 import androidx.core.net.toUri
 import com.maksimowiczm.foodyou.core.R
 
-class AndroidLinkHandler(
-    private val context: Context
-) : LinkHandler {
+class AndroidLinkHandler(private val context: Context) : LinkHandler {
     override fun openGithubIssue() =
         openLink(context.resources.getString(R.string.link_github_issue))
 

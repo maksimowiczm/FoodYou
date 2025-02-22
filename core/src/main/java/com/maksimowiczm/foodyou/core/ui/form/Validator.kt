@@ -17,9 +17,7 @@ sealed interface ValidationResult {
     data class Failure<E>(val error: E) : ValidationResult
 }
 
-fun <T : Any, E> allowNull(
-    validator: (() -> Validator<T, E>)? = null
-) = Validator<T?, E> {
+fun <T : Any, E> allowNull(validator: (() -> Validator<T, E>)? = null) = Validator<T?, E> {
     if (it == null) {
         success
     } else if (validator != null) {
@@ -29,31 +27,27 @@ fun <T : Any, E> allowNull(
     }
 }
 
-fun <T : Any, E> notNull(
-    onError: () -> E,
-    validator: (() -> Validator<T, E>)? = null
-) = Validator<T?, E> {
-    if (it == null) {
-        failure(onError())
-    } else if (validator != null) {
-        with(validator()) { validate(it) }
-    } else {
-        success
+fun <T : Any, E> notNull(onError: () -> E, validator: (() -> Validator<T, E>)? = null) =
+    Validator<T?, E> {
+        if (it == null) {
+            failure(onError())
+        } else if (validator != null) {
+            with(validator()) { validate(it) }
+        } else {
+            success
+        }
     }
-}
 
-fun <T : CharSequence, E> notEmpty(
-    onError: () -> E,
-    validator: (() -> Validator<T, E>)? = null
-) = Validator<T, E> {
-    if (it.isEmpty()) {
-        failure(onError())
-    } else if (validator != null) {
-        with(validator()) { validate(it) }
-    } else {
-        success
+fun <T : CharSequence, E> notEmpty(onError: () -> E, validator: (() -> Validator<T, E>)? = null) =
+    Validator<T, E> {
+        if (it.isEmpty()) {
+            failure(onError())
+        } else if (validator != null) {
+            with(validator()) { validate(it) }
+        } else {
+            success
+        }
     }
-}
 
 inline fun <reified N, E> nonNegative(
     noinline onError: () -> E,

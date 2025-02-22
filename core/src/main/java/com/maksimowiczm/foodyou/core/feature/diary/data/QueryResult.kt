@@ -1,10 +1,6 @@
 package com.maksimowiczm.foodyou.core.feature.diary.data
 
-data class QueryResult<T>(
-    val isLoading: Boolean,
-    val error: Throwable?,
-    val data: T
-) {
+data class QueryResult<T>(val isLoading: Boolean, val error: Throwable?, val data: T) {
     companion object {
         fun <T> loading(data: T) = QueryResult(
             isLoading = true,

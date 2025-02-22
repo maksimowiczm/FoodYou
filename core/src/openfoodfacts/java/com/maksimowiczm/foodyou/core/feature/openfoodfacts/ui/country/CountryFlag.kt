@@ -6,8 +6,5 @@ import com.maksimowiczm.foodyou.core.feature.system.data.model.Country
 
 fun interface CountryFlag {
     @Composable
-    operator fun invoke(
-        country: Country,
-        modifier: Modifier
-    )
+    operator fun invoke(country: Country, modifier: Modifier)
 }

@@ -77,10 +77,7 @@ class SearchViewModel(
         }
     }
 
-    fun onQuickAdd(
-        productId: Long,
-        measurement: WeightMeasurement
-    ) {
+    fun onQuickAdd(productId: Long, measurement: WeightMeasurement) {
         viewModelScope.launch {
             addFoodRepository.addMeasurement(
                 date = date,
@@ -91,9 +88,7 @@ class SearchViewModel(
         }
     }
 
-    fun onQuickRemove(
-        measurementId: Long
-    ) {
+    fun onQuickRemove(measurementId: Long) {
         viewModelScope.launch {
             addFoodRepository.removeMeasurement(measurementId)
         }

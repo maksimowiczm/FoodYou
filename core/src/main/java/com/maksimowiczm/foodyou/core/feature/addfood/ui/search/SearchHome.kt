@@ -132,7 +132,8 @@ private fun SearchHome(
     }
     val isLoading by remember(pages.loadState) {
         derivedStateOf {
-            pages.loadState.refresh == LoadState.Loading || pages.loadState.append == LoadState.Loading
+            pages.loadState.refresh == LoadState.Loading ||
+                pages.loadState.append == LoadState.Loading
         }
     }
     val hasError by remember(pages.loadState) {

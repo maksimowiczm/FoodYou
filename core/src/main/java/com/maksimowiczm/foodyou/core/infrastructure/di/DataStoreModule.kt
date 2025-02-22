@@ -8,7 +8,9 @@ import org.koin.dsl.module
 val dataStoreModule = module {
     single {
         createDataStore {
-            androidContext().filesDir.resolve("user_preferences.preferences_pb").absolutePath.toPath()
+            androidContext().filesDir.resolve(
+                "user_preferences.preferences_pb"
+            ).absolutePath.toPath()
         }
     }
 }

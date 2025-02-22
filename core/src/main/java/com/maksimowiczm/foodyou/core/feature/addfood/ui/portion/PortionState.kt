@@ -10,20 +10,14 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.QuantitySuggesti
 import com.maksimowiczm.foodyou.core.feature.addfood.data.model.WeightMeasurementEnum
 
 @Composable
-fun rememberPortionState(
-    initialSuggestion: QuantitySuggestion? = null
-): PortionState {
-    return remember {
-        PortionState(
-            initialSuggestion = initialSuggestion
-        )
-    }
+fun rememberPortionState(initialSuggestion: QuantitySuggestion? = null): PortionState = remember {
+    PortionState(
+        initialSuggestion = initialSuggestion
+    )
 }
 
 @Stable
-class PortionState(
-    initialSuggestion: QuantitySuggestion? = null
-) {
+class PortionState(initialSuggestion: QuantitySuggestion? = null) {
     var suggestion by mutableStateOf(initialSuggestion)
 
     /**

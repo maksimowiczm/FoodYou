@@ -30,9 +30,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @Composable
-fun rememberProductFormState(
-    product: Product? = null
-): ProductFormState {
+fun rememberProductFormState(product: Product? = null): ProductFormState {
     val name = rememberFormFieldWithTextFieldValue(
         initialValue = product?.name,
         requireDirty = product == null,
@@ -298,7 +296,9 @@ enum class GlobalError {
 
     @Composable
     fun stringResource() = when (this) {
-        MacronutrientsSumExceeds100 -> stringResource(R.string.error_sum_of_macronutrients_cannot_exceed_100g)
+        MacronutrientsSumExceeds100 -> stringResource(
+            R.string.error_sum_of_macronutrients_cannot_exceed_100g
+        )
     }
 }
 
@@ -321,7 +321,7 @@ class ProductFormState(
     initialWeightUnit: WeightUnit,
     coroutineScope: CoroutineScope
 ) {
-    private val _all = listOf(
+    private val all = listOf(
         name,
         brand,
         barcode,
@@ -359,13 +359,13 @@ class ProductFormState(
     }
 
     fun validate() {
-        _all.forEach { it.touch() }
+        all.forEach { it.touch() }
     }
 
     var weightUnit by mutableStateOf(initialWeightUnit)
 
     val isValid: Boolean by derivedStateOf {
-        _all.all { it.isValid } && globalError == null
+        all.all { it.isValid } && globalError == null
     }
 
     val globalError by derivedStateOf {

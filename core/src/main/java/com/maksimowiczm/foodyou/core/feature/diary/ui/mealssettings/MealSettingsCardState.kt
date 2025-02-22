@@ -16,11 +16,11 @@ import com.maksimowiczm.foodyou.core.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.form.rememberFormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.form.stringParser
+import kotlin.time.Duration.Companion.hours
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Duration.Companion.hours
 
 enum class MealNameError {
     Empty;
@@ -90,16 +90,17 @@ fun rememberMealsSettingsCardState(
     initialName: String? = null,
     initialFrom: LocalTime? = null,
     initialTo: LocalTime? = null,
-    nameInput: FormFieldWithTextFieldValue<String, MealNameError> = rememberFormFieldWithTextFieldValue(
-        initialTextFieldValue = TextFieldValue(
-            text = initialName ?: "",
-            selection = TextRange(initialName?.length ?: 0)
+    nameInput: FormFieldWithTextFieldValue<String, MealNameError> =
+        rememberFormFieldWithTextFieldValue(
+            initialTextFieldValue = TextFieldValue(
+                text = initialName ?: "",
+                selection = TextRange(initialName?.length ?: 0)
+            ),
+            initialValue = initialName ?: "",
+            parser = stringParser(
+                onEmpty = { MealNameError.Empty }
+            )
         ),
-        initialValue = initialName ?: "",
-        parser = stringParser(
-            onEmpty = { MealNameError.Empty }
-        )
-    ),
     fromInput: LocalTimeInput = rememberLocalTimeInput(
         initialFrom ?: Clock.System.now()
             .toLocalDateTime(TimeZone.currentSystemDefault())
@@ -156,7 +157,9 @@ class MealSettingsCardState(
     val toInput: LocalTimeInput
 ) {
     val dirty by derivedStateOf {
-        nameInput.textFieldValue.text != initialName || fromInput.value != initialFrom || toInput.value != initialTo
+        nameInput.textFieldValue.text != initialName ||
+            fromInput.value != initialFrom ||
+            toInput.value != initialTo
     }
 
     val isValid by derivedStateOf {

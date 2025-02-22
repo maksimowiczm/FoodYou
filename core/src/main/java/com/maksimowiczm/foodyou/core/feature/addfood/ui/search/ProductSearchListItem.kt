@@ -306,7 +306,6 @@ val ProductWithWeightMeasurement.measurementString: String
 val ProductWithWeightMeasurement.caloriesString: String
     @Composable get() = "$calories " + stringResource(R.string.unit_kcal)
 
-@Preview
 @Composable
 fun ProductSearchListItemSkeleton(
     modifier: Modifier = Modifier,
@@ -376,8 +375,16 @@ fun ProductSearchListItemSkeleton(
                 )
             }
         },
-        modifier = Modifier.horizontalDisplayCutoutPadding()
+        modifier = modifier.horizontalDisplayCutoutPadding()
     )
+}
+
+@Preview
+@Composable
+private fun ProductSearchListItemSkeletonPreview() {
+    FoodYouTheme {
+        ProductSearchListItemSkeleton()
+    }
 }
 
 @Preview
@@ -399,7 +406,8 @@ private fun ProductSearchListItemPreview() {
 )
 @Composable
 private fun ProductSearchListItemPreview(
-    @PreviewParameter(ProductWithWeightMeasurementPreviewParameter::class) model: ProductWithWeightMeasurement
+    @PreviewParameter(ProductWithWeightMeasurementPreviewParameter::class) model:
+    ProductWithWeightMeasurement
 ) {
     FoodYouTheme {
         ProductSearchListItem(

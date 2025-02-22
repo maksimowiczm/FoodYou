@@ -15,9 +15,7 @@ import com.maksimowiczm.foodyou.core.feature.SettingsFeature
 import com.maksimowiczm.foodyou.core.feature.openfoodfacts.OpenFoodFactsFeature
 import com.maksimowiczm.foodyou.core.ui.modifier.horizontalDisplayCutoutPadding
 
-fun buildOpenFoodFactsSettingsListItem(
-    navController: NavController
-) = SettingsFeature { modifier ->
+fun buildOpenFoodFactsSettingsListItem(navController: NavController) = SettingsFeature { modifier ->
     OpenFoodFactsSettingsListItem(
         onClick = {
             navController.navigate(OpenFoodFactsFeature.FoodDatabaseSettings)
@@ -27,10 +25,7 @@ fun buildOpenFoodFactsSettingsListItem(
 }
 
 @Composable
-private fun OpenFoodFactsSettingsListItem(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun OpenFoodFactsSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = {
             Text(

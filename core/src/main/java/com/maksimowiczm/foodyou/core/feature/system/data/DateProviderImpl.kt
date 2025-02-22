@@ -21,7 +21,9 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 
 internal class DateProviderImpl(
-    private val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val coroutineScope: CoroutineScope = CoroutineScope(
+        SupervisorJob() + Dispatchers.Default
+    )
 ) : DateProvider {
     override fun observeDate(): StateFlow<LocalDate> = flow {
         var currentDate = getCurrentDateTime().date

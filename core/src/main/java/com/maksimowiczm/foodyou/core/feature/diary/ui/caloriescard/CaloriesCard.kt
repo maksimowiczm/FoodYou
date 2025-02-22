@@ -52,11 +52,7 @@ import kotlin.math.abs
 import kotlin.math.max
 
 @Composable
-fun CaloriesCard(
-    diaryDay: DiaryDay,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun CaloriesCard(diaryDay: DiaryDay, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val calories = diaryDay.totalCalories
     val goal = diaryDay.dailyGoals.calories
     val valueStatus by remember(calories, goal) {
@@ -190,24 +186,21 @@ fun CaloriesCard(
                     title = stringResource(R.string.nutriment_proteins),
                     value = diaryDay.totalProteins,
                     goal = diaryDay.dailyGoals.proteinsAsGrams,
-                    progressColor = nutrientsPalette.proteinsOnSurfaceContainer,
-                    modifier = modifier
+                    progressColor = nutrientsPalette.proteinsOnSurfaceContainer
                 )
 
                 NutrimentIndicator(
                     title = stringResource(R.string.nutriment_carbohydrates),
                     value = diaryDay.totalCarbohydrates,
                     goal = diaryDay.dailyGoals.carbohydratesAsGrams,
-                    progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer,
-                    modifier = modifier
+                    progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
                 )
 
                 NutrimentIndicator(
                     title = stringResource(R.string.nutriment_fats),
                     value = diaryDay.totalFats,
                     goal = diaryDay.dailyGoals.fatsAsGrams,
-                    progressColor = nutrientsPalette.fatsOnSurfaceContainer,
-                    modifier = modifier
+                    progressColor = nutrientsPalette.fatsOnSurfaceContainer
                 )
             }
         }
@@ -292,7 +285,11 @@ private fun NutrimentIndicator(
                 trackColor = progressColor,
                 color = colorScheme.error,
                 progress = {
-                    if (animatedGoal == 0) 1f else (animatedValue - animatedGoal) / animatedGoal.toFloat()
+                    if (animatedGoal == 0) {
+                        1f
+                    } else {
+                        (animatedValue - animatedGoal) / animatedGoal.toFloat()
+                    }
                 },
                 drawStopIndicator = {}
             )
@@ -389,10 +386,7 @@ fun CaloriesCardSkeleton(
 }
 
 @Composable
-private fun NutrimentIndicatorSkeleton(
-    shimmerInstance: Shimmer,
-    modifier: Modifier = Modifier
-) {
+private fun NutrimentIndicatorSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)

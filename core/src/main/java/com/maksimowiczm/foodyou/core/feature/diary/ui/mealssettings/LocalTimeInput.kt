@@ -10,11 +10,8 @@ import androidx.compose.runtime.setValue
 import kotlinx.datetime.LocalTime
 
 @Composable
-fun rememberLocalTimeInput(
-    initialValue: LocalTime,
-    initialDirty: Boolean = false
-): LocalTimeInput {
-    return rememberSaveable(
+fun rememberLocalTimeInput(initialValue: LocalTime, initialDirty: Boolean = false): LocalTimeInput =
+    rememberSaveable(
         initialValue,
         initialDirty,
         saver = Saver(
@@ -34,13 +31,9 @@ fun rememberLocalTimeInput(
             initialDirty = initialDirty
         )
     }
-}
 
 @Stable
-class LocalTimeInput(
-    initialValue: LocalTime,
-    initialDirty: Boolean
-) {
+class LocalTimeInput(initialValue: LocalTime, initialDirty: Boolean) {
     var value: LocalTime by mutableStateOf(initialValue)
         private set
 

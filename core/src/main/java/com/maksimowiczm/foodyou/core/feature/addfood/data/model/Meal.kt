@@ -3,12 +3,7 @@ package com.maksimowiczm.foodyou.core.feature.addfood.data.model
 import com.maksimowiczm.foodyou.core.feature.addfood.database.MealEntity
 import kotlinx.datetime.LocalTime
 
-data class Meal(
-    val id: Long,
-    val name: String,
-    val from: LocalTime,
-    val to: LocalTime
-)
+data class Meal(val id: Long, val name: String, val from: LocalTime, val to: LocalTime)
 
 fun MealEntity.toDomain(): Meal {
     val from = LocalTime.fromSecondOfDay(fromHour * 60 * 60 + fromMinute * 60)

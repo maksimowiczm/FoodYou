@@ -14,39 +14,21 @@ data class Nutrients(
     val sodium: Float? = null,
     val fiber: Float? = null
 ) {
-    fun calories(weight: Float): Float {
-        return calories * weight / 100
-    }
+    fun calories(weight: Float): Float = calories * weight / 100
 
-    fun proteins(weight: Float): Float {
-        return proteins * weight / 100
-    }
+    fun proteins(weight: Float): Float = proteins * weight / 100
 
-    fun carbohydrates(weight: Float): Float {
-        return carbohydrates * weight / 100
-    }
+    fun carbohydrates(weight: Float): Float = carbohydrates * weight / 100
 
-    fun sugars(weight: Float): Float? {
-        return sugars?.times(weight / 100)
-    }
+    fun sugars(weight: Float): Float? = sugars?.times(weight / 100)
 
-    fun fats(weight: Float): Float {
-        return fats * weight / 100
-    }
+    fun fats(weight: Float): Float = fats * weight / 100
 
-    fun saturatedFats(weight: Float): Float? {
-        return saturatedFats?.times(weight / 100)
-    }
+    fun saturatedFats(weight: Float): Float? = saturatedFats?.times(weight / 100)
 
-    fun salt(weight: Float): Float? {
-        return salt?.times(weight / 100)
-    }
+    fun salt(weight: Float): Float? = salt?.times(weight / 100)
 
-    fun sodium(weight: Float): Float? {
-        return sodium?.times(weight / 100)
-    }
+    fun sodium(weight: Float): Float? = sodium?.times(weight / 100)
 
-    fun fiber(weight: Float): Float? {
-        return fiber?.times(weight / 100)
-    }
+    fun fiber(weight: Float): Float? = fiber?.times(weight / 100)
 }

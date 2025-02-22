@@ -8,27 +8,18 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import okio.Path
 
-fun createDataStore(productFile: () -> Path): DataStore<Preferences> {
-    return PreferenceDataStoreFactory.createWithPath(
+fun createDataStore(productFile: () -> Path): DataStore<Preferences> =
+    PreferenceDataStoreFactory.createWithPath(
         produceFile = productFile
     )
-}
 
-fun <T> DataStore<Preferences>.observe(
-    key: Preferences.Key<T>
-) = data.map { preferences ->
+fun <T> DataStore<Preferences>.observe(key: Preferences.Key<T>) = data.map { preferences ->
     preferences[key]
 }
 
-suspend fun <T> DataStore<Preferences>.get(
-    key: Preferences.Key<T>
-): T? {
-    return observe(key).first()
-}
+suspend fun <T> DataStore<Preferences>.get(key: Preferences.Key<T>): T? = observe(key).first()
 
-suspend fun DataStore<Preferences>.set(
-    vararg pairs: Preferences.Pair<*>
-) {
+suspend fun DataStore<Preferences>.set(vararg pairs: Preferences.Pair<*>) {
     edit { preferences ->
         preferences.putAll(*pairs)
     }

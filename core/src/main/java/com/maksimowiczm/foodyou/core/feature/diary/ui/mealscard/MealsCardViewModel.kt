@@ -15,7 +15,5 @@ class MealsCardViewModel(
 ) {
     val time = dateProvider.observeMinutes()
 
-    fun formatTime(time: LocalTime): String {
-        return stringFormatRepository.formatTime(time)
-    }
+    fun formatTime(time: LocalTime): String = stringFormatRepository.formatTime(time)
 }

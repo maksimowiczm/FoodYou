@@ -90,18 +90,14 @@ object DiaryFeature : Feature.Koin, Feature.Home, Feature.Settings {
     @Serializable
     data object MealsSettings
 
-    fun NavController.navigateToGoalsSettings(
-        navOptions: NavOptions? = null
-    ) {
+    fun NavController.navigateToGoalsSettings(navOptions: NavOptions? = null) {
         navigate(
             route = GoalsSettings,
             navOptions = navOptions
         )
     }
 
-    fun NavController.navigateToMealsSettings(
-        navOptions: NavOptions? = null
-    ) {
+    fun NavController.navigateToMealsSettings(navOptions: NavOptions? = null) {
         navigate(
             route = MealsSettings,
             navOptions = navOptions

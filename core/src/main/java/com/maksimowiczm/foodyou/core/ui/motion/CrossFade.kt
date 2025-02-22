@@ -9,9 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 
-fun crossfadeIn(
-    durationMillis: Int = DefaultDurationMillis
-): EnterTransition = fadeIn(
+fun crossfadeIn(durationMillis: Int = DefaultDurationMillis): EnterTransition = fadeIn(
     animationSpec = tween(
         durationMillis = durationMillis.ForIncoming,
         delayMillis = durationMillis.ForOutgoing,
@@ -19,9 +17,7 @@ fun crossfadeIn(
     )
 )
 
-fun crossfadeOut(
-    durationMillis: Int = DefaultDurationMillis
-): ExitTransition = fadeOut(
+fun crossfadeOut(durationMillis: Int = DefaultDurationMillis): ExitTransition = fadeOut(
     animationSpec = tween(
         durationMillis = durationMillis.ForOutgoing,
         delayMillis = 0,

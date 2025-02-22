@@ -30,10 +30,7 @@ fun buildGoalsSettingsListItem(navController: NavController) = SettingsFeature {
 }
 
 @Composable
-private fun GoalsSettingsListItem(
-    onGoalsClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun GoalsSettingsListItem(onGoalsClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = {
             Text(

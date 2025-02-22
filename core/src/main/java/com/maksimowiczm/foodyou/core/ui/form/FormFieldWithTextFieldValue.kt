@@ -21,10 +21,10 @@ fun <T : Any?> emptyNullFormatter(value: T) = value?.toString() ?: ""
 @Composable
 fun <T, E> rememberFormFieldWithTextFieldValue(
     initialValue: T,
+    parser: Parser<T, E>,
     initialError: E? = null,
     initialDirty: Boolean = false,
     requireDirty: Boolean = true,
-    parser: Parser<T, E>,
     formatter: (T) -> String = { emptyNullFormatter(it) },
     initialTextFieldValue: TextFieldValue = TextFieldValue(
         text = formatter(initialValue),

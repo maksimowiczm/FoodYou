@@ -41,7 +41,9 @@ fun FoodYouNavHost(
         }
         forwardBackwardComposable<Settings> {
             SettingsScreen(
-                settingsFeatures = settingsFeatures.flatMap { it.buildSettingsFeatures(navController) },
+                settingsFeatures = settingsFeatures.flatMap {
+                    it.buildSettingsFeatures(navController)
+                },
                 onBack = {
                     navController.popBackStack(
                         route = Settings,

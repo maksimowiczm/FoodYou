@@ -50,6 +50,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -109,13 +110,14 @@ private fun UpdateProductScreen(
 ) {
     var showAdditionalFields by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(state) {
+    val latestOnSuccess by rememberUpdatedState(onSuccess)
+    LaunchedEffect(state, onSuccess) {
         when (state) {
             UpdateProductState.Loading,
             is UpdateProductState.ProductReady,
             is UpdateProductState.UpdatingProduct -> Unit
 
-            is UpdateProductState.ProductUpdated -> onSuccess()
+            is UpdateProductState.ProductUpdated -> latestOnSuccess()
         }
     }
 
@@ -385,7 +387,7 @@ private fun UpdateProductScreen(
                             },
                             supportingText = {
                                 Text(
-                                    text = stringResource(R.string.neutral_calories_are_calculated_using_macronutrients),
+                                    text = stringResource(R.string.neutral_calories_are_calculated),
                                     color = MaterialTheme.colorScheme.secondary
                                 )
                             },

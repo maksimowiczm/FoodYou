@@ -33,10 +33,10 @@ import com.maksimowiczm.foodyou.core.feature.product.database.WeightUnitConverte
     WeightMeasurementTypeConverter::class
 )
 abstract class FoodYouDatabase :
+    RoomDatabase(),
     ProductDatabase,
     AddFoodDatabase,
-    OpenFoodFactsDatabase,
-    RoomDatabase() {
+    OpenFoodFactsDatabase {
 
     companion object {
         const val VERSION = 1

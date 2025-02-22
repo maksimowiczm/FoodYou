@@ -46,6 +46,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -74,9 +75,9 @@ import com.maksimowiczm.foodyou.core.feature.product.ui.previewparameter.Product
 import com.maksimowiczm.foodyou.core.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
-import kotlinx.coroutines.flow.collectLatest
 import kotlin.math.max
 import kotlin.math.roundToInt
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun PortionScreen(
@@ -90,6 +91,7 @@ fun PortionScreen(
     val event by viewModel.uiEvent.collectAsStateWithLifecycle()
 
     val state = rememberPortionState()
+    val latestOnSuccess by rememberUpdatedState(onSuccess)
 
     LaunchedEffect(event) {
         @Suppress("NAME_SHADOWING")
@@ -103,7 +105,7 @@ fun PortionScreen(
                 state.suggestion = event.suggestion
             }
 
-            PortionEvent.Success -> onSuccess()
+            PortionEvent.Success -> latestOnSuccess()
         }
     }
 
@@ -168,8 +170,8 @@ private fun PortionScreen(
     onConfirm: (WeightMeasurementEnum, quantity: Float) -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    highlight: WeightMeasurementEnum?
+    highlight: WeightMeasurementEnum?,
+    modifier: Modifier = Modifier
 ) {
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -268,7 +270,9 @@ private fun PortionScreen(
                             modifier = Modifier
                                 .then(
                                     if (highlight == WeightMeasurementEnum.Package) {
-                                        Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+                                        Modifier.background(
+                                            MaterialTheme.colorScheme.surfaceVariant
+                                        )
                                     } else {
                                         Modifier
                                     }
@@ -302,7 +306,9 @@ private fun PortionScreen(
                             modifier = Modifier
                                 .then(
                                     if (highlight == WeightMeasurementEnum.Serving) {
-                                        Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+                                        Modifier.background(
+                                            MaterialTheme.colorScheme.surfaceVariant
+                                        )
                                     } else {
                                         Modifier
                                     }
@@ -585,10 +591,7 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
 }
 
 @Composable
-private fun DeleteDialog(
-    onDismissRequest: () -> Unit,
-    onDelete: () -> Unit
-) {
+private fun DeleteDialog(onDismissRequest: () -> Unit, onDelete: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {

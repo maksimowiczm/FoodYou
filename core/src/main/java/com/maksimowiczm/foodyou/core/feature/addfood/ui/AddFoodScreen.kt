@@ -24,6 +24,7 @@ import com.maksimowiczm.foodyou.core.ui.motion.crossfadeOut
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
+@Suppress("ktlint:compose:vm-forwarding-check")
 @Composable
 fun AddFoodScreen(
     onClose: () -> Unit,
