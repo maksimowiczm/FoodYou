@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="headline_remote_food_database">Remote food database</string>
+    <string name="headline_about">About</string>
+    <string name="headline_miscellaneous">Miscellaneous</string>
+    <string name="headline_readme" translatable="false">README</string>
+    <string name="headline_version">Version</string>
+    <string name="headline_share_your_thoughts">Share your thoughts</string>
+    <string name="headline_show_some_love">Show some love</string>
+    <string name="headline_clear_cache">Clear cache</string>
+
+    <string name="action_read_more">Read more</string>
+    <string name="action_select_country">Select country</string>
+    <string name="action_use_open_food_facts">Use Open Food Facts</string>
+    <string name="action_see_terms_of_use">See terms of use</string>
+    <string name="action_bug_report_on_github">Bug report on GitHub</string>
+    <string name="action_feature_request_on_github">Feature request on GitHub</string>
+    <string name="action_leave_a_star_on_github">Leave a star on GitHub</string>
+
+    <string name="neutral_manage_food_database">Manage your food database</string>
+
+    <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
+    <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
+    <string name="link_github_issue" translatable="false">https://github.com/maksimowiczm/FoodYou/issues</string>
+    <string name="link_github_repository" translatable="false">https://github.com/maksimowiczm/FoodYou</string>
+
+    <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
+    <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
+
+    <string name="description_open_food_facts">is a collaborative, free and open database of food products from around the world.</string>
+    <string name="description_README_setting">View the project\'s README on GitHub</string>
+    <string name="description_about_setting">Learn more about the app</string>
+    <string name="description_show_some_love">If you find this project helpful, please consider giving it a star on GitHub! It helps others discover it and keeps the development going.</string>
+    <string name="description_share_your_thoughts">If you have any feedback, feature requests, or bug reports, please let me know! I\'d love to hear from you.</string>
+    <string name="description_open_food_facts_clear_query_cache">Clear Open Food Facts query cache</string>
+    <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">Clearing the cache will cause the entire Open Food Facts database to be re-downloaded. It is not recommended to clear the cache unless you know what you are doing.</string>
+
+</resources>

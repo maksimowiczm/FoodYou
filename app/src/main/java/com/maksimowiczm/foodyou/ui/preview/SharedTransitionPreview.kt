@@ -1,0 +1,31 @@
+package com.maksimowiczm.foodyou.ui.preview
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
+
+/**
+ * A preview composable that wraps the content in a [SharedTransitionLayout] and [AnimatedVisibility].
+ *
+ * @param block The content to preview.
+ */
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun SharedTransitionPreview(
+    block: @Composable (SharedTransitionScope, AnimatedVisibilityScope) -> Unit
+) {
+    SharedTransitionLayout {
+        CompositionLocalProvider(
+            LocalSharedTransitionScope provides this
+        ) {
+            AnimatedVisibility(true) {
+                block(this@SharedTransitionLayout, this@AnimatedVisibility)
+            }
+        }
+    }
+}

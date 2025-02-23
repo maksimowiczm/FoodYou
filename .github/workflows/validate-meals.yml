@@ -3,14 +3,14 @@ name: Validate Meals XML
 on:
   push:
     paths:
-      - 'core/src/main/res/xml*/meals.xml'
-      - 'core/src/test/res/xml/meals-schema.xsd'
-      - 'core/src/test/res/xml/test-meals.bash'
+      - 'app/src/main/res/xml*/meals.xml'
+      - 'app/src/test/res/xml/meals-schema.xsd'
+      - 'app/src/test/res/xml/test-meals.bash'
   pull_request:
     paths:
-      - 'core/src/main/res/xml*/meals.xml'
-      - 'core/src/test/res/xml/meals-schema.xsd'
-      - 'core/src/test/res/xml/test-meals.bash'
+      - 'app/src/main/res/xml*/meals.xml'
+      - 'app/src/test/res/xml/meals-schema.xsd'
+      - 'app/src/test/res/xml/test-meals.bash'
 
 jobs:
   validate-meals:
@@ -26,4 +26,4 @@ jobs:
 
       - name: Validate meals.xml
         run: |
-          ./core/src/test/res/xml/test-meals.bash
+          ./app/src/testOpensource/res/xml/test-meals.bash

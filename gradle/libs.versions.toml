@@ -1,8 +1,4 @@
 [versions]
-coreCompileSdk = "35"
-coreMinSdk = "28"
-coreTargetSdk = "35"
-coreVersion = "1.0.0"
 agp = "8.8.0"
 datastorePreferences = "1.1.2"
 kotlin = "2.1.0"
