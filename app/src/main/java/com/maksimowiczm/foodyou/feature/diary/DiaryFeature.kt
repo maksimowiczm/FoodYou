@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.feature.diary
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
+import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature.Companion.navigateToAddFood
@@ -54,7 +54,6 @@ abstract class DiaryFeature(
         setup(addFoodFeature)
     }
 
-    @OptIn(ExperimentalSharedTransitionApi::class)
     final override fun NavGraphBuilder.homeGraph(navController: NavController) {
         val onSearchSettings = addFoodFeature.productFeature.settingsRoute?.let {
             {
@@ -78,7 +77,24 @@ abstract class DiaryFeature(
         }
 
         forwardBackwardComposable<Meal> {
-            DiaryDayMealScreen()
+            val route = it.toRoute<Meal>()
+
+            DiaryDayMealScreen(
+                animatedVisibilityScope = this,
+                onProductAdd = {
+                    navController.navigateToAddFood(
+                        route = AddFoodFeature.Route(
+                            mealId = route.mealId,
+                            epochDay = route.epochDay
+                        )
+                    )
+                },
+                onBack = {
+                    navController.popBackStack<Meal>(
+                        inclusive = true
+                    )
+                }
+            )
         }
     }
 
