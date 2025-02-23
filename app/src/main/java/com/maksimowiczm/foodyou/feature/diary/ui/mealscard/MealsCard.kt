@@ -418,23 +418,21 @@ private fun MealsCardPreview() {
     val diaryDay = DiaryDayPreviewParameterProvider().values.first()
     val meal = diaryDay.meals.first()
 
-    SharedTransitionPreview { stc, animatedVisibilityScope ->
+    SharedTransitionPreview { animatedVisibilityScope ->
         FoodYouTheme {
-            with(stc) {
-                MealCard(
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    epochDay = 0,
-                    meal = meal,
-                    isEmpty = false,
-                    totalCalories = diaryDay.totalCalories(meal),
-                    totalProteins = diaryDay.totalProteins(meal),
-                    totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
-                    totalFats = diaryDay.totalFats(meal),
-                    onAddClick = {},
-                    onEditClick = {},
-                    formatTime = { it.toString() }
-                )
-            }
+            MealCard(
+                animatedVisibilityScope = animatedVisibilityScope,
+                epochDay = 0,
+                meal = meal,
+                isEmpty = false,
+                totalCalories = diaryDay.totalCalories(meal),
+                totalProteins = diaryDay.totalProteins(meal),
+                totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
+                totalFats = diaryDay.totalFats(meal),
+                onAddClick = {},
+                onEditClick = {},
+                formatTime = { it.toString() }
+            )
         }
     }
 }
@@ -448,23 +446,21 @@ private fun EmptyMealsCardPreview() {
         mealProductMap = init.mealProductMap.mapValues { emptyList() }
     )
 
-    SharedTransitionPreview { stc, animatedVisibilityScope ->
+    SharedTransitionPreview { animatedVisibilityScope ->
         FoodYouTheme {
-            with(stc) {
-                MealCard(
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    meal = diaryDay.meals.first(),
-                    epochDay = 0,
-                    isEmpty = true,
-                    totalCalories = 0,
-                    totalProteins = 0,
-                    totalCarbohydrates = 0,
-                    totalFats = 0,
-                    onAddClick = {},
-                    onEditClick = {},
-                    formatTime = { it.toString() }
-                )
-            }
+            MealCard(
+                animatedVisibilityScope = animatedVisibilityScope,
+                meal = diaryDay.meals.first(),
+                epochDay = 0,
+                isEmpty = true,
+                totalCalories = 0,
+                totalProteins = 0,
+                totalCarbohydrates = 0,
+                totalFats = 0,
+                onAddClick = {},
+                onEditClick = {},
+                formatTime = { it.toString() }
+            )
         }
     }
 }
