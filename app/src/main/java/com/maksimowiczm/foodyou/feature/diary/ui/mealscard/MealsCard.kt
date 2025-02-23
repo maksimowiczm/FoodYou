@@ -44,10 +44,12 @@ import androidx.compose.ui.util.lerp
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.ui.SharedTransitionKeys
+import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
 import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
+import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.toDp
 import com.valentinilk.shimmer.Shimmer
@@ -409,46 +411,60 @@ private fun MealsCardSkeletonPreview() {
     }
 }
 
-// @Preview
-// @Composable
-// private fun MealsCardPreview() {
-//    val diaryDay = DiaryDayPreviewParameterProvider().values.first()
-//    val meal = diaryDay.meals.first()
-//
-//    FoodYouTheme {
-//        MealCard(
-//            meal = meal,
-//            isEmpty = false,
-//            totalCalories = diaryDay.totalCalories(meal),
-//            totalProteins = diaryDay.totalProteins(meal),
-//            totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
-//            totalFats = diaryDay.totalFats(meal),
-//            onAddClick = {},
-//            onEditClick = {},
-//            formatTime = { it.toString() }
-//        )
-//    }
-// }
-//
-// @Preview
-// @Composable
-// private fun EmptyMealsCardPreview() {
-//    val init = DiaryDayPreviewParameterProvider().values.first()
-//    val diaryDay = init.copy(
-//        mealProductMap = init.mealProductMap.mapValues { emptyList() }
-//    )
-//
-//    FoodYouTheme {
-//        MealCard(
-//            meal = diaryDay.meals.first(),
-//            isEmpty = true,
-//            totalCalories = 0,
-//            totalProteins = 0,
-//            totalCarbohydrates = 0,
-//            totalFats = 0,
-//            onAddClick = {},
-//            onEditClick = {},
-//            formatTime = { it.toString() }
-//        )
-//    }
-// }
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview
+@Composable
+private fun MealsCardPreview() {
+    val diaryDay = DiaryDayPreviewParameterProvider().values.first()
+    val meal = diaryDay.meals.first()
+
+    SharedTransitionPreview { stc, animatedVisibilityScope ->
+        FoodYouTheme {
+            with(stc) {
+                MealCard(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    epochDay = 0,
+                    meal = meal,
+                    isEmpty = false,
+                    totalCalories = diaryDay.totalCalories(meal),
+                    totalProteins = diaryDay.totalProteins(meal),
+                    totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
+                    totalFats = diaryDay.totalFats(meal),
+                    onAddClick = {},
+                    onEditClick = {},
+                    formatTime = { it.toString() }
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview
+@Composable
+private fun EmptyMealsCardPreview() {
+    val init = DiaryDayPreviewParameterProvider().values.first()
+    val diaryDay = init.copy(
+        mealProductMap = init.mealProductMap.mapValues { emptyList() }
+    )
+
+    SharedTransitionPreview { stc, animatedVisibilityScope ->
+        FoodYouTheme {
+            with(stc) {
+                MealCard(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    meal = diaryDay.meals.first(),
+                    epochDay = 0,
+                    isEmpty = true,
+                    totalCalories = 0,
+                    totalProteins = 0,
+                    totalCarbohydrates = 0,
+                    totalFats = 0,
+                    onAddClick = {},
+                    onEditClick = {},
+                    formatTime = { it.toString() }
+                )
+            }
+        }
+    }
+}
