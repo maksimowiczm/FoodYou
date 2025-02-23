@@ -55,7 +55,8 @@ import kotlinx.datetime.LocalTime
 fun MealsCard(
     state: MealsCardState,
     formatTime: (LocalTime) -> String,
-    onAddProduct: (Meal) -> Unit,
+    onAdd: (Meal) -> Unit,
+    onEdit: (Meal) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(
@@ -94,7 +95,8 @@ fun MealsCard(
                     totalCarbohydrates = state.diaryDay.totalCarbohydrates(meal),
                     totalFats = state.diaryDay.totalFats(meal),
                     formatTime = formatTime,
-                    onAddClick = { onAddProduct(meal) }
+                    onAddClick = { onAdd(meal) },
+                    onEditClick = { onEdit(meal) }
                 )
             } else {
                 MealCardSkeleton(
@@ -167,6 +169,7 @@ private fun MealCard(
     totalFats: Int,
     formatTime: (LocalTime) -> String,
     onAddClick: () -> Unit,
+    onEditClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(
@@ -246,7 +249,13 @@ private fun MealCard(
                 )
 
                 FilledIconButton(
-                    onClick = onAddClick
+                    onClick = {
+                        if (!isEmpty) {
+                            onEditClick()
+                        } else {
+                            onAddClick()
+                        }
+                    }
                 ) {
                     if (!isEmpty) {
                         Icon(
@@ -370,6 +379,7 @@ private fun MealsCardPreview() {
             totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
             totalFats = diaryDay.totalFats(meal),
             onAddClick = {},
+            onEditClick = {},
             formatTime = { it.toString() }
         )
     }
@@ -392,6 +402,7 @@ private fun EmptyMealsCardPreview() {
             totalCarbohydrates = 0,
             totalFats = 0,
             onAddClick = {},
+            onEditClick = {},
             formatTime = { it.toString() }
         )
     }

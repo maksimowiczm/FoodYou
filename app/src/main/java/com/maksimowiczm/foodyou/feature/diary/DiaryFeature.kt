@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.diary
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
+import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature
@@ -16,6 +17,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsView
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.buildGoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.buildMealsCard
+import com.maksimowiczm.foodyou.feature.diary.ui.mealscreen.DiaryDayMealScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.buildMealsSettingsListItem
@@ -71,15 +73,30 @@ abstract class DiaryFeature(
                 )
             )
         }
+
+        composable<Meal> {
+            DiaryDayMealScreen()
+        }
     }
 
     final override fun buildHomeFeatures(navController: NavController) = listOf(
         buildMealsCard(
-            onAddProduct = { epochDay, meal ->
+            onAdd = { epochDay, meal ->
                 navController.navigateToAddFood(
                     route = AddFoodFeature.Route(
                         epochDay = epochDay,
                         mealId = meal.id
+                    ),
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            },
+            onEdit = { epochDay, meal ->
+                navController.navigate(
+                    route = Meal(
+                        epochDay = epochDay,
+                        id = meal.id
                     ),
                     navOptions = navOptions {
                         launchSingleTop = true
@@ -126,14 +143,16 @@ abstract class DiaryFeature(
         buildGoalsSettingsListItem(navController)
     )
 
+    @Serializable
+    data class Meal(val epochDay: Int, val id: Long)
+
+    @Serializable
+    data object GoalsSettings
+
+    @Serializable
+    data object MealsSettings
+
     companion object {
-
-        @Serializable
-        data object GoalsSettings
-
-        @Serializable
-        data object MealsSettings
-
         fun NavController.navigateToGoalsSettings(navOptions: NavOptions? = null) {
             navigate(
                 route = GoalsSettings,
