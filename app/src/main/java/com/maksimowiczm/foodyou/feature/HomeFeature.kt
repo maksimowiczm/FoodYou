@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
@@ -34,5 +35,9 @@ data class HomeFeature(
  */
 fun interface HomeCard {
     @Composable
-    operator fun invoke(modifier: Modifier, homeState: HomeState)
+    operator fun invoke(
+        animatedVisibilityScope: AnimatedVisibilityScope,
+        modifier: Modifier,
+        homeState: HomeState
+    )
 }

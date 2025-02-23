@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.ui.home
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -35,6 +36,7 @@ import com.maksimowiczm.foodyou.feature.HomeFeature
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     homeFeatures: List<HomeFeature>,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -81,6 +83,7 @@ fun HomeScreen(
                 items = homeFeatures
             ) { i, feature ->
                 feature.card(
+                    animatedVisibilityScope = animatedVisibilityScope,
                     modifier = if (feature.applyPadding) {
                         Modifier.padding(
                             horizontal = 8.dp
