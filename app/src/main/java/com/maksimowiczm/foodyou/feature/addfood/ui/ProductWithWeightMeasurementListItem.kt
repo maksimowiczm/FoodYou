@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Constraints
@@ -145,75 +144,33 @@ private fun SupportingTextLayout(
 
 val ProductWithWeightMeasurement.measurementStringShort: String
     @Composable get() = when (measurement) {
-        is WeightMeasurement.Package -> {
-            val quantity = measurement.quantity.toInt()
-            val packageString = pluralStringResource(R.plurals.product_package, 1)
-            "%d %s".format(quantity, packageString)
-        }
+        is WeightMeasurement.Package -> stringResource(
+            R.string.x_times_y,
+            measurement.quantity.formatClipZeros(),
+            stringResource(R.string.product_package)
+        )
 
-        is WeightMeasurement.Serving -> {
-            val quantity = measurement.quantity.toInt()
-            val servingString = pluralStringResource(R.plurals.product_serving, quantity)
-            "%d %s".format(quantity, servingString)
-        }
+        is WeightMeasurement.Serving -> stringResource(
+            R.string.x_times_y,
+            measurement.quantity.formatClipZeros(),
+            stringResource(R.string.product_serving)
+        )
 
-        is WeightMeasurement.WeightUnit -> {
-            val quantity = measurement.weight
-            val quantityString = if (quantity % 1 == 0f) {
-                quantity.toInt().toString()
-            } else {
-                "%.2f".format(quantity).trimEnd { it == '0' || it == '.' }
-            }
-
-            "%s %s".format(
-                quantityString,
-                product.weightUnit.stringResourceShort()
-            )
-        }
+        is WeightMeasurement.WeightUnit -> measurement.weight.formatClipZeros(".2f") + " " +
+            product.weightUnit.stringResourceShort()
     }
 
 val ProductWithWeightMeasurement.measurementString: String
-    @Composable get() = when (measurement) {
-        is WeightMeasurement.Package -> {
-            val quantity = measurement.quantity
-            val packageString = pluralStringResource(R.plurals.product_package, 1)
+    @Composable get() {
+        val short = measurementStringShort
 
-            "%s %s (%.0f %s)".format(
-                quantity.formatClipZeros("%.1f"),
-                packageString,
-                measurement.weight,
-                product.weightUnit.stringResourceShort()
-            )
+        if (measurement is WeightMeasurement.WeightUnit) {
+            return short
         }
 
-        is WeightMeasurement.Serving -> {
-            val quantity = measurement.quantity
-            val servingString = pluralStringResource(
-                R.plurals.product_serving,
-                quantity.toInt()
-            )
+        val grams = measurement.weight
 
-            "%s %s (%.0f %s)".format(
-                quantity.formatClipZeros("%.1f"),
-                servingString,
-                measurement.weight,
-                product.weightUnit.stringResourceShort()
-            )
-        }
-
-        is WeightMeasurement.WeightUnit -> {
-            val quantity = measurement.weight
-            val quantityString = if (quantity % 1 == 0f) {
-                quantity.toInt().toString()
-            } else {
-                "%.2f".format(quantity).trimEnd { it == '0' || it == '.' }
-            }
-
-            "%s %s".format(
-                quantityString,
-                product.weightUnit.stringResourceShort()
-            )
-        }
+        return "$short (${grams.formatClipZeros()} ${product.weightUnit.stringResourceShort()})"
     }
 
 val ProductWithWeightMeasurement.caloriesString: String
