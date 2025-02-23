@@ -46,6 +46,8 @@ import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.ui.SharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
+import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.toDp
 import com.valentinilk.shimmer.Shimmer
@@ -103,7 +105,9 @@ fun MealsCard(
                                         epochDay = state.diaryDay.date.toEpochDays()
                                     )
                                 ),
-                                animatedVisibilityScope = animatedVisibilityScope
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                enter = crossfadeIn(),
+                                exit = crossfadeOut()
                             )
                         } else {
                             Modifier
