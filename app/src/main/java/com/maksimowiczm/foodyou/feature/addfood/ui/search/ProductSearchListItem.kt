@@ -41,6 +41,7 @@ import com.maksimowiczm.foodyou.feature.product.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.ui.component.ToggleButtonDefaults
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
+import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.toDp
 import com.valentinilk.shimmer.Shimmer
@@ -262,11 +263,11 @@ val ProductWithWeightMeasurement.measurementStringShort: String
 val ProductWithWeightMeasurement.measurementString: String
     @Composable get() = when (measurement) {
         is WeightMeasurement.Package -> {
-            val quantity = measurement.quantity.toInt()
+            val quantity = measurement.quantity
             val packageString = pluralStringResource(R.plurals.product_package, 1)
 
-            "%d %s (%.0f %s)".format(
-                quantity,
+            "%s %s (%.0f %s)".format(
+                quantity.formatClipZeros("%.1f"),
                 packageString,
                 measurement.weight,
                 product.weightUnit.stringResourceShort()
@@ -274,14 +275,14 @@ val ProductWithWeightMeasurement.measurementString: String
         }
 
         is WeightMeasurement.Serving -> {
-            val quantity = measurement.quantity.toInt()
+            val quantity = measurement.quantity
             val servingString = pluralStringResource(
                 R.plurals.product_serving,
-                quantity
+                quantity.toInt()
             )
 
-            "%d %s (%.0f %s)".format(
-                quantity,
+            "%s %s (%.0f %s)".format(
+                quantity.formatClipZeros("%.1f"),
                 servingString,
                 measurement.weight,
                 product.weightUnit.stringResourceShort()
