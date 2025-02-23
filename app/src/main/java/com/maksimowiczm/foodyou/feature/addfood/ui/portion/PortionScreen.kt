@@ -78,6 +78,7 @@ import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PortionScreen(
@@ -85,8 +86,8 @@ fun PortionScreen(
     onSuccess: () -> Unit,
     onEditClick: (productId: Long) -> Unit,
     onDeleteClick: (productId: Long) -> Unit,
-    viewModel: PortionViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: PortionViewModel = koinViewModel()
 ) {
     val event by viewModel.uiEvent.collectAsStateWithLifecycle()
 

@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.github.michaelbull.result.mapBoth
+import com.maksimowiczm.foodyou.feature.product.ProductFeature
 import com.maksimowiczm.foodyou.feature.product.data.ProductRepository
-import com.maksimowiczm.foodyou.feature.product.navigation.ProductsRoute
 import com.maksimowiczm.foodyou.feature.product.ui.crud.ProductFormState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +19,7 @@ class UpdateProductViewModel(
     private val productRepository: ProductRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val productId = savedStateHandle.toRoute<ProductsRoute.UpdateProduct>().productId
+    private val productId = savedStateHandle.toRoute<ProductFeature.UpdateProduct>().productId
     private val _uiState = MutableStateFlow<UpdateProductState>(UpdateProductState.Loading)
     val uiState = _uiState.asStateFlow()
 

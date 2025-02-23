@@ -5,9 +5,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.Feature
-import com.maksimowiczm.foodyou.feature.addfood.navigation.AddFoodFeature
-import com.maksimowiczm.foodyou.feature.addfood.navigation.addFoodGraph
-import com.maksimowiczm.foodyou.feature.addfood.navigation.navigateToAddFood
+import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature
+import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature.Companion.navigateToAddFood
+import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature.Companion.popAddFood
 import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepository
 import com.maksimowiczm.foodyou.feature.diary.ui.DiaryViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.buildCaloriesCard
@@ -19,7 +19,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.buildMealsCard
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.buildMealsSettingsListItem
-import com.maksimowiczm.foodyou.feature.product.ProductFeature
+import com.maksimowiczm.foodyou.feature.setup
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
@@ -31,7 +31,7 @@ import org.koin.dsl.module
 
 abstract class DiaryFeature(
     diaryRepository: Module.() -> KoinDefinition<DiaryRepository>,
-    private val productFeature: ProductFeature
+    private val addFoodFeature: AddFoodFeature
 ) : Feature.Koin,
     Feature.Home,
     Feature.Settings {
@@ -46,10 +46,12 @@ abstract class DiaryFeature(
 
     final override fun KoinApplication.setup() {
         modules(diaryModule)
+
+        setup(addFoodFeature)
     }
 
     final override fun NavGraphBuilder.homeGraph(navController: NavController) {
-        val onSearchSettings = productFeature.settingsRoute?.let {
+        val onSearchSettings = addFoodFeature.productFeature.settingsRoute?.let {
             {
                 navController.navigate(
                     route = it,
@@ -60,19 +62,22 @@ abstract class DiaryFeature(
             }
         }
 
-        addFoodGraph(
-            onClose = {
-                navController.popBackStack()
-            },
-            onSearchSettings = onSearchSettings
-        )
+        with(addFoodFeature) {
+            graph(
+                navController = navController,
+                props = AddFoodFeature.GraphProps(
+                    onClose = { navController.popAddFood() },
+                    onSearchSettings = onSearchSettings
+                )
+            )
+        }
     }
 
     final override fun buildHomeFeatures(navController: NavController) = listOf(
         buildMealsCard(
             onAddProduct = { epochDay, meal ->
                 navController.navigateToAddFood(
-                    route = AddFoodFeature(
+                    route = AddFoodFeature.Route(
                         epochDay = epochDay,
                         mealId = meal.id
                     ),

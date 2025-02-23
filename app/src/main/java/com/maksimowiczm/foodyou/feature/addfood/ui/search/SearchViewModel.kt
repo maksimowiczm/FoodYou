@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature
 import com.maksimowiczm.foodyou.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.feature.addfood.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.feature.addfood.navigation.AddFoodFeature
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,7 +26,7 @@ class SearchViewModel(
     val date: LocalDate
 
     init {
-        val (epochDay, meal) = savedStateHandle.toRoute<AddFoodFeature>()
+        val (epochDay, meal) = savedStateHandle.toRoute<AddFoodFeature.Route>()
 
         this.mealId = meal
         this.date = LocalDate.fromEpochDays(epochDay)

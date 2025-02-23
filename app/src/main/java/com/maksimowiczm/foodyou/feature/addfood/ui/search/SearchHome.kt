@@ -68,17 +68,18 @@ import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.ui.performToggle
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchHome(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    viewModel: SearchViewModel,
-    onProductClick: (productId: Long) -> Unit,
+    onProductClick: (epochDay: Int, mealId: Long, productId: Long) -> Unit,
     onSearchSettings: (() -> Unit)?,
     onBack: () -> Unit,
-    onCreateProduct: () -> Unit,
+    onCreateProduct: (epochDay: Int, mealId: Long) -> Unit,
     onBarcodeScanner: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: SearchViewModel = koinViewModel()
 ) {
     val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems(
         viewModel.viewModelScope.coroutineContext
@@ -93,14 +94,18 @@ fun SearchHome(
         totalCalories = totalCalories,
         recentQueries = recentQueries,
         query = query,
-        onProductClick = onProductClick,
+        onProductClick = {
+            onProductClick(viewModel.date.toEpochDays(), viewModel.mealId, it)
+        },
         onQuickAdd = viewModel::onQuickAdd,
         onQuickRemove = viewModel::onQuickRemove,
         onSearchSettings = onSearchSettings,
         onSearch = viewModel::onSearch,
         onClearSearch = { viewModel.onSearch(null) },
         onBack = onBack,
-        onCreateProduct = onCreateProduct,
+        onCreateProduct = {
+            onCreateProduct(viewModel.date.toEpochDays(), viewModel.mealId)
+        },
         onBarcodeScanner = onBarcodeScanner,
         modifier = modifier
     )

@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.feature.FeatureManager
 import com.maksimowiczm.foodyou.feature.about.AboutFeature
 import com.maksimowiczm.foodyou.feature.addfood.OpenSourceAddFoodFeature
 import com.maksimowiczm.foodyou.feature.calendar.CalendarFeature
-import com.maksimowiczm.foodyou.feature.camera.OpenSourceCameraFeature
 import com.maksimowiczm.foodyou.feature.diary.OpenSourceDiaryFeature
 import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsFeature
 import com.maksimowiczm.foodyou.feature.system.SystemFeature
@@ -22,7 +21,6 @@ class FoodYouApplication : Application() {
             CalendarFeature,
             OpenFoodFactsFeature,
             OpenSourceDiaryFeature,
-            OpenSourceCameraFeature,
             OpenSourceAddFoodFeature,
             AboutFeature
         )

@@ -5,6 +5,15 @@ import androidx.navigation.NavGraphBuilder
 import org.koin.core.KoinApplication
 
 /**
+ * Helper function to setup multiple features.
+ */
+fun KoinApplication.setup(vararg features: Feature.Koin) {
+    features.forEach { feature ->
+        feature.run { setup() }
+    }
+}
+
+/**
  * A feature is a collection of related functionality that can be added to the application.
  */
 sealed interface Feature {
