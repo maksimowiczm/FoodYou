@@ -18,6 +18,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.buildGoalsSetting
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.buildMealsCard
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscreen.DiaryDayMealScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.mealscreen.DiaryDayMealViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.buildMealsSettingsListItem
@@ -42,6 +43,7 @@ abstract class DiaryFeature(
         viewModelOf(::GoalsSettingsViewModel)
         viewModelOf(::MealsSettingsViewModel)
         viewModelOf(::MealsCardViewModel)
+        viewModelOf(::DiaryDayMealViewModel)
 
         diaryRepository().bind()
     }
