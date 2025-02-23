@@ -1,16 +1,20 @@
 package com.maksimowiczm.foodyou.feature.diary
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
+import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature.Companion.navigateToAddFood
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature.Companion.popAddFood
 import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepository
 import com.maksimowiczm.foodyou.feature.diary.ui.DiaryViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.SharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.buildCaloriesCard
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsViewModel
@@ -23,7 +27,9 @@ import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScre
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.buildMealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.setup
+import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
 import org.koin.core.definition.KoinDefinition
@@ -54,6 +60,7 @@ abstract class DiaryFeature(
         setup(addFoodFeature)
     }
 
+    @OptIn(ExperimentalSharedTransitionApi::class)
     final override fun NavGraphBuilder.homeGraph(navController: NavController) {
         val onSearchSettings = addFoodFeature.productFeature.settingsRoute?.let {
             {
@@ -76,8 +83,26 @@ abstract class DiaryFeature(
             )
         }
 
-        composable<Meal> {
-            DiaryDayMealScreen()
+        crossfadeComposable<Meal> {
+            val route = it.toRoute<Meal>()
+
+            val sharedTransitionScope =
+                LocalSharedTransitionScope.current ?: error("No shared transition scope found")
+            with(sharedTransitionScope) {
+                DiaryDayMealScreen(
+                    animatedVisibilityScope = this@crossfadeComposable,
+                    modifier = Modifier.sharedBounds(
+                        sharedContentState = rememberSharedContentState(
+                            key = SharedTransitionKeys.Meal(
+                                id = route.mealId,
+                                epochDay = route.epochDay
+                            )
+                        ),
+                        clipInOverlayDuringTransition = OverlayClip(CardDefaults.shape),
+                        animatedVisibilityScope = this@crossfadeComposable
+                    )
+                )
+            }
         }
     }
 
@@ -98,7 +123,7 @@ abstract class DiaryFeature(
                 navController.navigate(
                     route = Meal(
                         epochDay = epochDay,
-                        id = meal.id
+                        mealId = meal.id
                     ),
                     navOptions = navOptions {
                         launchSingleTop = true
@@ -146,7 +171,7 @@ abstract class DiaryFeature(
     )
 
     @Serializable
-    data class Meal(val epochDay: Int, val id: Long)
+    data class Meal(val epochDay: Int, val mealId: Long)
 
     @Serializable
     data object GoalsSettings

@@ -1,7 +1,10 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.mealscard
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,8 +43,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
-import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
+import com.maksimowiczm.foodyou.feature.diary.ui.SharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.toDp
 import com.valentinilk.shimmer.Shimmer
@@ -51,14 +55,19 @@ import com.valentinilk.shimmer.shimmer
 import kotlin.math.absoluteValue
 import kotlinx.datetime.LocalTime
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MealsCard(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     state: MealsCardState,
     formatTime: (LocalTime) -> String,
     onAdd: (Meal) -> Unit,
     onEdit: (Meal) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("No shared transition scope found")
+
     val pagerState = rememberPagerState(
         pageCount = { state.diaryDay?.meals?.size ?: 4 }
     )
@@ -73,35 +82,55 @@ fun MealsCard(
     ) { page ->
         val pageOffset = pagerState.currentPage - page + pagerState.currentPageOffsetFraction
         val fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
+        val meal = state.meals?.getOrNull(page)
 
-        Crossfade(
-            targetState = state.diaryDay != null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 2.dp)
-                .scale(
-                    scaleX = 1f,
-                    scaleY = lerp(0.9f, 1f, fraction)
-                )
-        ) {
-            val meal = state.meals?.getOrNull(page)
+        with(sharedTransitionScope) {
+            Crossfade(
+                targetState = state.diaryDay != null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 2.dp)
+                    .scale(
+                        scaleX = 1f,
+                        scaleY = lerp(0.9f, 1f, fraction)
+                    )
+                    .then(
+                        if (state.diaryDay != null && meal != null) {
+                            Modifier.sharedBounds(
+                                sharedContentState = rememberSharedContentState(
+                                    key = SharedTransitionKeys.Meal(
+                                        id = meal.id,
+                                        epochDay = state.diaryDay.date.toEpochDays()
+                                    )
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                        } else {
+                            Modifier
+                        }
+                    )
 
-            if (it && meal != null && state.diaryDay != null) {
-                MealCard(
-                    meal = meal,
-                    isEmpty = state.diaryDay.mealProductMap[meal]?.isEmpty() == true,
-                    totalCalories = state.diaryDay.totalCalories(meal),
-                    totalProteins = state.diaryDay.totalProteins(meal),
-                    totalCarbohydrates = state.diaryDay.totalCarbohydrates(meal),
-                    totalFats = state.diaryDay.totalFats(meal),
-                    formatTime = formatTime,
-                    onAddClick = { onAdd(meal) },
-                    onEditClick = { onEdit(meal) }
-                )
-            } else {
-                MealCardSkeleton(
-                    shimmerInstance = state.shimmer
-                )
+            ) {
+                if (it && meal != null && state.diaryDay != null) {
+                    MealCard(
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        meal = meal,
+                        epochDay = state.diaryDay.date.toEpochDays(),
+                        isEmpty = state.diaryDay.mealProductMap[meal]?.isEmpty() == true,
+                        totalCalories = state.diaryDay.totalCalories(meal),
+                        totalProteins = state.diaryDay.totalProteins(meal),
+                        totalCarbohydrates = state.diaryDay.totalCarbohydrates(meal),
+                        totalFats = state.diaryDay.totalFats(meal),
+                        formatTime = formatTime,
+                        onAddClick = { onAdd(meal) },
+                        onEditClick = { onEdit(meal) },
+                        modifier = Modifier
+                    )
+                } else {
+                    MealCardSkeleton(
+                        shimmerInstance = state.shimmer
+                    )
+                }
             }
         }
     }
@@ -159,8 +188,11 @@ fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun MealCard(
+private fun SharedTransitionScope.MealCard(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    epochDay: Int,
     meal: Meal,
     isEmpty: Boolean,
     totalCalories: Int,
@@ -180,7 +212,16 @@ private fun MealCard(
         ) {
             Text(
                 text = meal.name,
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = SharedTransitionKeys.Meal.Title(
+                            id = meal.id,
+                            epochDay = epochDay
+                        )
+                    ),
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
             )
 
             Row(
@@ -364,46 +405,46 @@ private fun MealsCardSkeletonPreview() {
     }
 }
 
-@Preview
-@Composable
-private fun MealsCardPreview() {
-    val diaryDay = DiaryDayPreviewParameterProvider().values.first()
-    val meal = diaryDay.meals.first()
-
-    FoodYouTheme {
-        MealCard(
-            meal = meal,
-            isEmpty = false,
-            totalCalories = diaryDay.totalCalories(meal),
-            totalProteins = diaryDay.totalProteins(meal),
-            totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
-            totalFats = diaryDay.totalFats(meal),
-            onAddClick = {},
-            onEditClick = {},
-            formatTime = { it.toString() }
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun EmptyMealsCardPreview() {
-    val init = DiaryDayPreviewParameterProvider().values.first()
-    val diaryDay = init.copy(
-        mealProductMap = init.mealProductMap.mapValues { emptyList() }
-    )
-
-    FoodYouTheme {
-        MealCard(
-            meal = diaryDay.meals.first(),
-            isEmpty = true,
-            totalCalories = 0,
-            totalProteins = 0,
-            totalCarbohydrates = 0,
-            totalFats = 0,
-            onAddClick = {},
-            onEditClick = {},
-            formatTime = { it.toString() }
-        )
-    }
-}
+// @Preview
+// @Composable
+// private fun MealsCardPreview() {
+//    val diaryDay = DiaryDayPreviewParameterProvider().values.first()
+//    val meal = diaryDay.meals.first()
+//
+//    FoodYouTheme {
+//        MealCard(
+//            meal = meal,
+//            isEmpty = false,
+//            totalCalories = diaryDay.totalCalories(meal),
+//            totalProteins = diaryDay.totalProteins(meal),
+//            totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
+//            totalFats = diaryDay.totalFats(meal),
+//            onAddClick = {},
+//            onEditClick = {},
+//            formatTime = { it.toString() }
+//        )
+//    }
+// }
+//
+// @Preview
+// @Composable
+// private fun EmptyMealsCardPreview() {
+//    val init = DiaryDayPreviewParameterProvider().values.first()
+//    val diaryDay = init.copy(
+//        mealProductMap = init.mealProductMap.mapValues { emptyList() }
+//    )
+//
+//    FoodYouTheme {
+//        MealCard(
+//            meal = diaryDay.meals.first(),
+//            isEmpty = true,
+//            totalCalories = 0,
+//            totalProteins = 0,
+//            totalCarbohydrates = 0,
+//            totalFats = 0,
+//            onAddClick = {},
+//            onEditClick = {},
+//            formatTime = { it.toString() }
+//        )
+//    }
+// }

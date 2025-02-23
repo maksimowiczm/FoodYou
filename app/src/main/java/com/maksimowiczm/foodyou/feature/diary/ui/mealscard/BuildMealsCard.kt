@@ -11,7 +11,7 @@ fun buildMealsCard(
     onEdit: (epochDay: Int, meal: Meal) -> Unit
 ) = HomeFeature(
     applyPadding = false
-) { modifier, homeState ->
+) { animatedVisibilityScope, modifier, homeState ->
     val viewModel = koinViewModel<MealsCardViewModel>()
     val diaryDay by viewModel
         .observeDiaryDay(homeState.selectedDate)
@@ -20,6 +20,7 @@ fun buildMealsCard(
     val time by viewModel.time.collectAsStateWithLifecycle()
 
     MealsCard(
+        animatedVisibilityScope = animatedVisibilityScope,
         state = rememberMealsCardState(
             diaryDay = diaryDay,
             time = time,
