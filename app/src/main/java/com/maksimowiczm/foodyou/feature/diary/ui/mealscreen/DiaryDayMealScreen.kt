@@ -56,13 +56,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.R
+import com.maksimowiczm.foodyou.feature.addfood.SharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.caloriesString
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.measurementString
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.measurementStringShort
 import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
+import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
+import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
 import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import kotlin.math.max
@@ -102,7 +106,7 @@ fun DiaryDayMealScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 private fun DiaryDayMealScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -113,6 +117,8 @@ private fun DiaryDayMealScreen(
     formatTime: (LocalTime) -> String,
     modifier: Modifier = Modifier
 ) {
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("No shared transition scope")
     val density = LocalDensity.current
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
 
@@ -127,7 +133,8 @@ private fun DiaryDayMealScreen(
                 1f
             } else {
                 val startOffset = density.run { topOffsetHeight.toPx() }
-                val fraction = (it - startOffset).coerceAtLeast(0f) / (headlineHeight - startOffset)
+                val limit = headlineHeight - startOffset
+                val fraction = (it - startOffset).coerceAtLeast(0f) / limit
                 lerp(0f, 1f, fraction)
             }
         }
@@ -160,15 +167,23 @@ private fun DiaryDayMealScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    onProductAdd()
+            with(sharedTransitionScope) {
+                FloatingActionButton(
+                    onClick = onProductAdd,
+                    modifier = Modifier.sharedBounds(
+                        sharedContentState = rememberSharedContentState(
+                            key = SharedTransitionKeys.SearchHome
+                        ),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        enter = crossfadeIn(),
+                        exit = crossfadeOut()
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.action_add)
+                    )
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null
-                )
             }
         },
         contentWindowInsets = contentWindowInsets

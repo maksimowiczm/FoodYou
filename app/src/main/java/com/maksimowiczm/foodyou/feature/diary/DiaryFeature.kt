@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.diary
 
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
@@ -23,7 +24,10 @@ import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScre
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.buildMealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.setup
+import com.maksimowiczm.foodyou.navigation.ForwardBackwardComposableDefaults
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
 import org.koin.core.definition.KoinDefinition
@@ -76,7 +80,23 @@ abstract class DiaryFeature(
             )
         }
 
-        forwardBackwardComposable<Meal> {
+        // Don't animate vertically when navigating to AddFoodFeature
+        forwardBackwardComposable<Meal>(
+            exitTransition = {
+                if (initialState.destination.hasRoute<AddFoodFeature.Route>()) {
+                    ForwardBackwardComposableDefaults.exitTransition()
+                } else {
+                    crossfadeOut()
+                }
+            },
+            popEnterTransition = {
+                if (initialState.destination.hasRoute<AddFoodFeature.Route>()) {
+                    ForwardBackwardComposableDefaults.popEnterTransition()
+                } else {
+                    crossfadeIn()
+                }
+            }
+        ) {
             val route = it.toRoute<Meal>()
 
             DiaryDayMealScreen(

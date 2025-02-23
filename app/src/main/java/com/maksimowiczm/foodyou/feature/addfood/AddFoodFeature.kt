@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.feature.addfood
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.navigation.NavController
@@ -25,6 +27,7 @@ import com.maksimowiczm.foodyou.feature.product.ProductFeature.Companion.popProd
 import com.maksimowiczm.foodyou.feature.setup
 import com.maksimowiczm.foodyou.navigation.ForwardBackwardComposableDefaults
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
 import kotlinx.serialization.Serializable
@@ -67,10 +70,12 @@ abstract class AddFoodFeature(
     @Serializable
     data object Search
 
+    @OptIn(ExperimentalSharedTransitionApi::class)
     final override fun NavGraphBuilder.graph(navController: NavController, props: GraphProps) {
         navigation<Route>(
             startDestination = Search
         ) {
+            // Don't animate vertically when navigating to PortionFeature
             forwardBackwardComposable<Search>(
                 exitTransition = {
                     if (initialState.destination.hasRoute<PortionFeature.Route>()) {
@@ -89,42 +94,55 @@ abstract class AddFoodFeature(
             ) {
                 val viewModel = it.sharedViewModel<SearchViewModel>(navController)
 
-                SearchHome(
-                    animatedVisibilityScope = this,
-                    onProductClick = { epochDay, mealId, id ->
-                        navController.navigateToPortion(
-                            route = PortionFeature.Route(
-                                epochDay = epochDay,
-                                meal = mealId,
-                                productId = id
+                val sharedTransitionScope =
+                    LocalSharedTransitionScope.current ?: error("No SharedTransitionScope found")
+
+                with(sharedTransitionScope) {
+                    SearchHome(
+                        animatedVisibilityScope = this@forwardBackwardComposable,
+                        onProductClick = { epochDay, mealId, id ->
+                            navController.navigateToPortion(
+                                route = PortionFeature.Route(
+                                    epochDay = epochDay,
+                                    meal = mealId,
+                                    productId = id
+                                ),
+                                navOptions = navOptions {
+                                    launchSingleTop = true
+                                }
+                            )
+                        },
+                        onSearchSettings = props.onSearchSettings,
+                        onBack = props.onClose,
+                        onCreateProduct = { epochDay, mealId ->
+                            navController.navigateToProducts(
+                                route = ProductFeature.CreateProduct(
+                                    epochDay = epochDay,
+                                    mealId = mealId
+                                ),
+                                navOptions = navOptions {
+                                    launchSingleTop = true
+                                }
+                            )
+                        },
+                        onBarcodeScanner = {
+                            navController.navigateToBarcodeScanner(
+                                navOptions = navOptions {
+                                    launchSingleTop = true
+                                }
+                            )
+                        },
+                        viewModel = viewModel,
+                        modifier = Modifier.sharedBounds(
+                            sharedContentState = rememberSharedContentState(
+                                key = SharedTransitionKeys.SearchHome
                             ),
-                            navOptions = navOptions {
-                                launchSingleTop = true
-                            }
+                            animatedVisibilityScope = this@forwardBackwardComposable,
+                            enter = crossfadeIn(),
+                            exit = crossfadeOut()
                         )
-                    },
-                    onSearchSettings = props.onSearchSettings,
-                    onBack = props.onClose,
-                    onCreateProduct = { epochDay, mealId ->
-                        navController.navigateToProducts(
-                            route = ProductFeature.CreateProduct(
-                                epochDay = epochDay,
-                                mealId = mealId
-                            ),
-                            navOptions = navOptions {
-                                launchSingleTop = true
-                            }
-                        )
-                    },
-                    onBarcodeScanner = {
-                        navController.navigateToBarcodeScanner(
-                            navOptions = navOptions {
-                                launchSingleTop = true
-                            }
-                        )
-                    },
-                    viewModel = viewModel
-                )
+                    )
+                }
             }
             with(portionFeature) {
                 graph(
