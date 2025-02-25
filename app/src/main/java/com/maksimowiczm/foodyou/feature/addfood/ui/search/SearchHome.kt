@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -11,19 +10,18 @@ import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,15 +35,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
@@ -67,9 +61,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchHome(
-    animatedVisibilityScope: AnimatedVisibilityScope,
     onProductClick: (epochDay: Int, mealId: Long, productId: Long) -> Unit,
-    onSearchSettings: (() -> Unit)?,
     onBack: () -> Unit,
     onCreateProduct: (epochDay: Int, mealId: Long) -> Unit,
     onBarcodeScanner: () -> Unit,
@@ -79,14 +71,11 @@ fun SearchHome(
     val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems(
         viewModel.viewModelScope.coroutineContext
     )
-    val totalCalories by viewModel.totalCalories.collectAsStateWithLifecycle()
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
 
     SearchHome(
-        animatedVisibilityScope = animatedVisibilityScope,
         pages = productsWithMeasurements,
-        totalCalories = totalCalories,
         recentQueries = recentQueries,
         query = query,
         onProductClick = {
@@ -94,7 +83,6 @@ fun SearchHome(
         },
         onQuickAdd = viewModel::onQuickAdd,
         onQuickRemove = viewModel::onQuickRemove,
-        onSearchSettings = onSearchSettings,
         onSearch = viewModel::onSearch,
         onClearSearch = { viewModel.onSearch(null) },
         onBack = onBack,
@@ -106,18 +94,15 @@ fun SearchHome(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SearchHome(
-    animatedVisibilityScope: AnimatedVisibilityScope,
     pages: LazyPagingItems<ProductWithWeightMeasurement>,
     recentQueries: List<ProductQuery>,
-    totalCalories: Int,
     query: String?,
     onProductClick: (productId: Long) -> Unit,
     onQuickAdd: (productId: Long, measurement: WeightMeasurement) -> Unit,
     onQuickRemove: (measurementId: Long) -> Unit,
-    onSearchSettings: (() -> Unit)?,
     onSearch: (query: String) -> Unit,
     onClearSearch: () -> Unit,
     onBack: () -> Unit,
@@ -146,36 +131,11 @@ private fun SearchHome(
                 query = query,
                 recentQueries = recentQueries
             ),
-            onSearchSettings = onSearchSettings,
+            onBarcodeScanner = onBarcodeScanner,
             onSearch = onSearch,
             onClearSearch = onClearSearch,
             onBack = onBack
         )
-    }
-
-    val bottomBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
-    val bottomBar = @Composable {
-        SearchBottomBar(
-            animatedVisibilityScope = animatedVisibilityScope,
-            totalCalories = totalCalories,
-            onCreateProduct = onCreateProduct,
-            onBarcodeScanner = onBarcodeScanner,
-            scrollBehavior = bottomBarScrollBehavior
-        )
-    }
-    // Make sure that bottom bar is visible when user can't scroll
-    LaunchedEffect(isEmpty) {
-        if (isEmpty) {
-            bottomBarScrollBehavior.nestedScrollConnection.onPostScroll(
-                consumed = Offset.Infinite,
-                available = Offset.Infinite,
-                source = NestedScrollSource.UserInput
-            )
-            bottomBarScrollBehavior.nestedScrollConnection.onPostFling(
-                consumed = Velocity.Zero,
-                available = Velocity.Zero
-            )
-        }
     }
 
     var errorCardHeight by remember { mutableIntStateOf(0) }
@@ -195,6 +155,17 @@ private fun SearchHome(
         )
     }
 
+    val fab = @Composable {
+        FloatingActionButton(
+            onClick = onCreateProduct
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = stringResource(R.string.action_create_new_product)
+            )
+        }
+    }
+
     val shimmer = rememberShimmer(
         shimmerBounds = ShimmerBounds.Window
     )
@@ -210,7 +181,7 @@ private fun SearchHome(
             anchoredDraggableState.updateAnchors(draggableAnchors)
         },
         topBar = topBar,
-        bottomBar = bottomBar
+        floatingActionButton = fab
     ) { paddingValues ->
         Box(
             modifier = Modifier.fillMaxSize()
@@ -239,8 +210,7 @@ private fun SearchHome(
             }
 
             LazyColumn(
-                contentPadding = paddingValues,
-                modifier = Modifier.nestedScroll(bottomBarScrollBehavior.nestedScrollConnection)
+                contentPadding = paddingValues
             ) {
                 item {
                     Spacer(Modifier.height(LocalDensity.current.run { errorCardHeight.toDp() }))
@@ -301,8 +271,11 @@ private fun SearchHome(
                     }
                 }
 
+                // FAB spacer
                 item {
-                    Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
+                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(56.dp))
+                    Spacer(Modifier.height(16.dp))
                 }
             }
         }

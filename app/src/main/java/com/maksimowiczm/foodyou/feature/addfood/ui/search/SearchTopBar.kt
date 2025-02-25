@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,7 +38,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchTopBar(
     state: SearchTopBarState,
-    onSearchSettings: (() -> Unit)?,
+    onBarcodeScanner: () -> Unit,
     onSearch: (String) -> Unit,
     onClearSearch: () -> Unit,
     onBack: () -> Unit,
@@ -58,11 +57,11 @@ fun SearchTopBar(
         state = state.searchBarState,
         inputField = {
             InputField(
-                state = state,
                 textFieldState = textFieldState,
+                state = state,
                 onSearch = onSearchInternal,
                 onClear = onClearSearch,
-                onSearchSettings = onSearchSettings,
+                onBarcodeScanner = onBarcodeScanner,
                 onBack = onBack,
                 scope = scope,
                 modifier = Modifier.testTag("CollapsedSearchBarInput")
@@ -75,11 +74,11 @@ fun SearchTopBar(
         state = state.searchBarState,
         inputField = {
             InputField(
-                state = state,
                 textFieldState = textFieldState,
+                state = state,
                 onSearch = onSearchInternal,
                 onClear = onClearSearch,
-                onSearchSettings = onSearchSettings,
+                onBarcodeScanner = onBarcodeScanner,
                 onBack = onBack,
                 scope = scope,
                 modifier = Modifier.testTag("ExpandedSearchBarInput")
@@ -102,7 +101,7 @@ private fun InputField(
     state: SearchTopBarState,
     onSearch: (String) -> Unit,
     onClear: () -> Unit,
-    onSearchSettings: (() -> Unit)?,
+    onBarcodeScanner: () -> Unit,
     onBack: () -> Unit,
     scope: CoroutineScope,
     modifier: Modifier = Modifier
@@ -145,15 +144,13 @@ private fun InputField(
                         contentDescription = stringResource(R.string.action_clear)
                     )
                 }
-            } else if (state.searchBarState.currentValue == SearchBarValue.Collapsed &&
-                onSearchSettings != null
-            ) {
+            } else if (state.searchBarState.currentValue == SearchBarValue.Collapsed) {
                 IconButton(
-                    onClick = onSearchSettings
+                    onClick = onBarcodeScanner
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(R.string.action_open_settings)
+                        painter = painterResource(R.drawable.ic_qr_code_scanner_24),
+                        contentDescription = stringResource(R.string.action_scan_barcode)
                     )
                 }
             }

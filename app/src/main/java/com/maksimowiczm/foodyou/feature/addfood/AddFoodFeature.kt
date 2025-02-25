@@ -1,13 +1,8 @@
 package com.maksimowiczm.foodyou.feature.addfood
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.navigation
@@ -27,11 +22,7 @@ import com.maksimowiczm.foodyou.feature.product.ProductFeature
 import com.maksimowiczm.foodyou.feature.product.ProductFeature.Companion.navigateToProducts
 import com.maksimowiczm.foodyou.feature.product.ProductFeature.Companion.popProducts
 import com.maksimowiczm.foodyou.feature.setup
-import com.maksimowiczm.foodyou.navigation.ForwardBackwardComposableDefaults
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
-import com.maksimowiczm.foodyou.ui.motion.AnimationConstantsExt.EmphasizedDurationMillis
-import com.maksimowiczm.foodyou.ui.motion.EmphasisedEasing
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
 import kotlinx.serialization.Serializable
@@ -69,105 +60,55 @@ abstract class AddFoodFeature(
         )
     }
 
-    data class GraphProps(val onClose: () -> Unit, val onSearchSettings: (() -> Unit)?)
+    data class GraphProps(val onClose: () -> Unit)
 
     @Serializable
     data object Search
 
-    @OptIn(ExperimentalSharedTransitionApi::class)
     final override fun NavGraphBuilder.graph(navController: NavController, props: GraphProps) {
         navigation<Route>(
             startDestination = Search
         ) {
-            // Don't animate vertically when navigating to PortionFeature
             forwardBackwardComposable<Search>(
-                exitTransition = {
-                    if (initialState.destination.hasRoute<PortionFeature.Route>()) {
-                        ForwardBackwardComposableDefaults.exitTransition()
-                    } else {
-                        crossfadeOut()
-                    }
-                },
-                popEnterTransition = {
-                    if (initialState.destination.hasRoute<PortionFeature.Route>()) {
-                        ForwardBackwardComposableDefaults.popEnterTransition()
-                    } else {
-                        crossfadeIn()
-                    }
-                }
+                exitTransition = { crossfadeOut() },
+                popEnterTransition = { crossfadeIn() }
             ) {
                 val viewModel = it.sharedViewModel<SearchViewModel>(navController)
 
-                val sharedTransitionScope =
-                    LocalSharedTransitionScope.current ?: error("No SharedTransitionScope found")
-
-                with(sharedTransitionScope) {
-                    SearchHome(
-                        animatedVisibilityScope = this@forwardBackwardComposable,
-                        onProductClick = { epochDay, mealId, id ->
-                            navController.navigateToPortion(
-                                route = PortionFeature.Create(
-                                    epochDay = epochDay,
-                                    mealId = mealId,
-                                    productId = id
-                                ),
-                                navOptions = navOptions {
-                                    launchSingleTop = true
-                                }
-                            )
-                        },
-                        onSearchSettings = props.onSearchSettings,
-                        onBack = props.onClose,
-                        onCreateProduct = { epochDay, mealId ->
-                            navController.navigateToProducts(
-                                route = ProductFeature.CreateProduct(
-                                    epochDay = epochDay,
-                                    mealId = mealId
-                                ),
-                                navOptions = navOptions {
-                                    launchSingleTop = true
-                                }
-                            )
-                        },
-                        onBarcodeScanner = {
-                            navController.navigateToBarcodeScanner(
-                                navOptions = navOptions {
-                                    launchSingleTop = true
-                                }
-                            )
-                        },
-                        viewModel = viewModel,
-                        modifier = Modifier
-                            .sharedBounds(
-                                sharedContentState = rememberSharedContentState(
-                                    key = SharedTransitionKeys.SearchHome
-                                ),
-                                enter = fadeIn(
-                                    tween(
-                                        delayMillis = 300,
-                                        durationMillis = EmphasizedDurationMillis - 300,
-                                        easing = EmphasisedEasing
-                                    )
-                                ),
-                                exit = crossfadeOut(),
-                                animatedVisibilityScope = this@forwardBackwardComposable
-                            )
-                            .sharedBounds(
-                                sharedContentState = rememberSharedContentState(
-                                    key = SharedTransitionKeys.SearchContent
-                                ),
-                                enter = fadeIn(
-                                    tween(
-                                        delayMillis = 200,
-                                        durationMillis = EmphasizedDurationMillis - 200,
-                                        easing = EmphasisedEasing
-                                    )
-                                ),
-                                exit = crossfadeOut(),
-                                animatedVisibilityScope = this@forwardBackwardComposable
-                            )
-                    )
-                }
+                SearchHome(
+                    onProductClick = { epochDay, mealId, id ->
+                        navController.navigateToPortion(
+                            route = PortionFeature.Create(
+                                epochDay = epochDay,
+                                mealId = mealId,
+                                productId = id
+                            ),
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            }
+                        )
+                    },
+                    onBack = props.onClose,
+                    onCreateProduct = { epochDay, mealId ->
+                        navController.navigateToProducts(
+                            route = ProductFeature.CreateProduct(
+                                epochDay = epochDay,
+                                mealId = mealId
+                            ),
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            }
+                        )
+                    },
+                    onBarcodeScanner = {
+                        navController.navigateToBarcodeScanner(
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            }
+                        )
+                    },
+                    viewModel = viewModel
+                )
             }
             with(portionFeature) {
                 graph(

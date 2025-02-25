@@ -1,22 +1,22 @@
 package com.maksimowiczm.foodyou.feature.product
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.Modifier
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
+import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.NavigationFeature
 import com.maksimowiczm.foodyou.feature.product.data.ProductRepository
-import com.maksimowiczm.foodyou.feature.product.ui.ProductSharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.product.ui.crud.create.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.product.ui.crud.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.feature.product.ui.crud.update.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.product.ui.crud.update.UpdateProductViewModel
-import com.maksimowiczm.foodyou.navigation.crossfadeComposable
-import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
 import kotlinx.serialization.Serializable
@@ -57,37 +57,53 @@ abstract class ProductFeature(
         val updateOnSuccess: () -> Unit
     )
 
-    @OptIn(ExperimentalSharedTransitionApi::class)
     final override fun NavGraphBuilder.graph(navController: NavController, props: GraphProps) {
         val (createOnNavigateBack, createOnSuccess, updateOnNavigateBack, updateOnSuccess) = props
-        crossfadeComposable<CreateProduct> {
-            val (epochDay, mealType) = it.toRoute<CreateProduct>()
-            val sharedTransitionScope =
-                LocalSharedTransitionScope.current ?: error("No SharedTransitionScope found")
-
-            with(sharedTransitionScope) {
-                CreateProductScreen(
-                    onNavigateBack = createOnNavigateBack,
-                    onSuccess = { productId ->
-                        createOnSuccess(productId, epochDay, mealType)
-                    },
-                    modifier = Modifier
-                        .sharedBounds(
-                            sharedContentState = rememberSharedContentState(
-                                ProductSharedTransitionKeys.PRODUCT_CREATE_SCREEN
-                            ),
-                            animatedVisibilityScope = this@crossfadeComposable,
-                            enter = crossfadeIn(),
-                            exit = crossfadeOut(),
-                            clipInOverlayDuringTransition = OverlayClip(
-                                MaterialTheme.shapes.large
-                            )
-                        )
-                        .skipToLookaheadSize()
+        composable<CreateProduct>(
+            enterTransition = {
+                crossfadeIn() + slideInVertically(
+                    animationSpec = tween(
+                        easing = LinearOutSlowInEasing
+                    ),
+                    initialOffsetY = { it }
+                )
+            },
+            exitTransition = {
+                crossfadeOut() + slideOutVertically(
+                    animationSpec = tween(
+                        easing = FastOutLinearInEasing
+                    ),
+                    targetOffsetY = { it }
                 )
             }
+        ) {
+            val (epochDay, mealType) = it.toRoute<CreateProduct>()
+
+            CreateProductScreen(
+                onNavigateBack = createOnNavigateBack,
+                onSuccess = { productId ->
+                    createOnSuccess(productId, epochDay, mealType)
+                }
+            )
         }
-        crossfadeComposable<UpdateProduct> {
+        composable<UpdateProduct>(
+            enterTransition = {
+                crossfadeIn() + slideInVertically(
+                    animationSpec = tween(
+                        easing = LinearOutSlowInEasing
+                    ),
+                    initialOffsetY = { it }
+                )
+            },
+            exitTransition = {
+                crossfadeOut() + slideOutVertically(
+                    animationSpec = tween(
+                        easing = FastOutLinearInEasing
+                    ),
+                    targetOffsetY = { it }
+                )
+            }
+        ) {
             UpdateProductScreen(
                 onNavigateBack = updateOnNavigateBack,
                 onSuccess = updateOnSuccess

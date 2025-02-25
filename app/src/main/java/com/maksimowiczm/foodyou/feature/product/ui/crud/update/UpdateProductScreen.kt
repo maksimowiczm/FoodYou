@@ -41,6 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
@@ -122,7 +123,7 @@ private fun UpdateProductScreen(
     }
 
     when (state) {
-        UpdateProductState.Loading -> Unit
+        UpdateProductState.Loading -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
         is UpdateProductState.WithProduct -> UpdateProductScreen(
             form = rememberProductFormState(
                 product = state.product

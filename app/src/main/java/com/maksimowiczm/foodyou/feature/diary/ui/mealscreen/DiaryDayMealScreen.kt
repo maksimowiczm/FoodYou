@@ -74,14 +74,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.R
-import com.maksimowiczm.foodyou.feature.addfood.SharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.addfood.ui.ListItem
-import com.maksimowiczm.foodyou.feature.diary.SearchSharedTransitionSpecs.fabContentEnterTransition
-import com.maksimowiczm.foodyou.feature.diary.SearchSharedTransitionSpecs.fabContentExitTransition
-import com.maksimowiczm.foodyou.feature.diary.SearchSharedTransitionSpecs.fabEnterTransition
-import com.maksimowiczm.foodyou.feature.diary.SearchSharedTransitionSpecs.fabExitTransition
 import com.maksimowiczm.foodyou.feature.diary.ui.MealHeader
 import com.maksimowiczm.foodyou.feature.diary.ui.MealSharedTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.MealSharedTransitionSpecs
@@ -397,28 +392,10 @@ private fun SharedTransitionScope.DiaryDayMealScreen(
 
     val floatingActionButton = @Composable {
         FloatingActionButton(
-            onClick = onProductAdd,
-            modifier = Modifier.sharedBounds(
-                sharedContentState = rememberSharedContentState(
-                    key = SharedTransitionKeys.SearchHome
-                ),
-                animatedVisibilityScope = animatedVisibilityScope,
-                enter = fabEnterTransition,
-                exit = fabExitTransition,
-                resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
-            )
+            onClick = onProductAdd
         ) {
             Row(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .sharedBounds(
-                        sharedContentState = rememberSharedContentState(
-                            key = SharedTransitionKeys.SearchContent
-                        ),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        enter = fabContentEnterTransition,
-                        exit = fabContentExitTransition
-                    ),
+                modifier = Modifier.padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(

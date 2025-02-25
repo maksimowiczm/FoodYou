@@ -58,23 +58,11 @@ abstract class DiaryFeature(
     }
 
     final override fun NavGraphBuilder.homeGraph(navController: NavController) {
-        val onSearchSettings = addFoodFeature.productFeature.settingsRoute?.let {
-            {
-                navController.navigate(
-                    route = it,
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    }
-                )
-            }
-        }
-
         with(addFoodFeature) {
             graph(
                 navController = navController,
                 props = AddFoodFeature.GraphProps(
-                    onClose = { navController.popAddFood() },
-                    onSearchSettings = onSearchSettings
+                    onClose = { navController.popAddFood() }
                 )
             )
         }

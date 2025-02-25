@@ -11,7 +11,7 @@ import com.maksimowiczm.foodyou.feature.addfood.ui.portion.PortionScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.portion.UpdatePortionViewModel
 import com.maksimowiczm.foodyou.feature.product.ProductFeature
 import com.maksimowiczm.foodyou.feature.setup
-import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.KoinApplication
@@ -51,7 +51,7 @@ class PortionFeature(
     override fun NavGraphBuilder.graph(navController: NavController, props: GraphProps) {
         val (create, edit) = props
 
-        forwardBackwardComposable<Create> {
+        crossfadeComposable<Create> {
             val (onBack, onSuccess, onProductEdit, onCreateProductDelete) = create
 
             PortionScreen(
@@ -63,7 +63,7 @@ class PortionFeature(
             )
         }
 
-        forwardBackwardComposable<Edit> {
+        crossfadeComposable<Edit> {
             val (onBack, onSuccess, onProductEdit, onEditProductDelete) = edit
 
             PortionScreen(
