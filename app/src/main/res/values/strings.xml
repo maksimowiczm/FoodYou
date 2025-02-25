@@ -19,6 +19,7 @@
     <string name="headline_edit_product">Edit product</string>
 
     <string name="in_x_times_y">In %1$s x %2$s</string>
+    <string name="x_times_y" translatable="false">%1$s x %2$s</string>
     <string name="weight">Weight</string>
     <string name="unit_calories">Calories</string>
     <string name="unit_kcal">kcal</string>
@@ -84,6 +85,10 @@
     <string name="action_log_products">Log products</string>
     <string name="action_edit">Edit</string>
     <string name="action_insert_suggested_search">Insert suggested search</string>
+    <string name="action_edit_entry">Edit entry</string>
+    <string name="action_delete_entry">Delete entry</string>
+    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Add food</string>
+    <string name="action_undo">Undo</string>
 
     <string name="neutral_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_camera_request_rationale">You must allow access in order to scan barcodes.</string>
@@ -101,6 +106,8 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Meal will be deleted permanently. All data related to this meal will be lost.</string>
     <string name="neutral_required">Required</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calories are calculated using macronutrients</string>
+    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Looks like this meal is empty. Add some food to track your calories.</string>
+    <string name="neutral_entry_deleted">Entry deleted</string>
 
     <string name="error_this_field_is_required">This field is required</string>
     <string name="error_this_field_cannot_be_empty">This field cannot be empty</string>
@@ -122,5 +129,6 @@
 
     <string name="description_calories_goal">Set your daily calories intake goal. This will help you to track your progress and stay on track.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Product will be deleted permanently. This action can\'t be undone. All diary entries related to this product will be deleted.</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database."> This entry will be deleted from your diary. You can add it again anytime.</string>
 
 </resources>

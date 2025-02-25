@@ -1,13 +1,17 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.mealscard
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +23,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -39,9 +42,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
+import com.maksimowiczm.foodyou.feature.diary.ui.MealHeader
+import com.maksimowiczm.foodyou.feature.diary.ui.MealSharedTransitionKeys
+import com.maksimowiczm.foodyou.feature.diary.ui.MealSharedTransitionSpecs
+import com.maksimowiczm.foodyou.feature.diary.ui.MealSharedTransitionSpecs.overlayClipFromCardToScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.NutrientsLayout
 import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
-import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
+import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.toDp
 import com.valentinilk.shimmer.Shimmer
@@ -51,55 +61,69 @@ import com.valentinilk.shimmer.shimmer
 import kotlin.math.absoluteValue
 import kotlinx.datetime.LocalTime
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MealsCard(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     state: MealsCardState,
     formatTime: (LocalTime) -> String,
-    onAddProduct: (Meal) -> Unit,
+    onMealClick: (Meal) -> Unit,
+    onAddClick: (Meal) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Must be same as meals count or more but since we don't have meals count yet set it to some
+    // extreme value. If it is less than actual meals count pager will scroll back to the
+    // last item which is annoying for the user.
+    // Let's assume that user won't use more than 20 meals
     val pagerState = rememberPagerState(
-        pageCount = { state.diaryDay?.meals?.size ?: 4 }
+        pageCount = { state.diaryDay?.meals?.size ?: 20 }
     )
 
-    HorizontalPager(
-        state = pagerState,
-        modifier = modifier.animateContentSize(),
-        contentPadding = PaddingValues(
-            start = 8.dp,
-            end = 24.dp
-        )
-    ) { page ->
-        val pageOffset = pagerState.currentPage - page + pagerState.currentPageOffsetFraction
-        val fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not found")
 
-        Crossfade(
-            targetState = state.diaryDay != null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 2.dp)
-                .scale(
-                    scaleX = 1f,
-                    scaleY = lerp(0.9f, 1f, fraction)
-                )
-        ) {
+    with(sharedTransitionScope) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = modifier.animateContentSize(),
+            contentPadding = PaddingValues(
+                start = 8.dp,
+                end = 24.dp
+            )
+        ) { page ->
+            val pageOffset = pagerState.currentPage - page + pagerState.currentPageOffsetFraction
+            val fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
             val meal = state.meals?.getOrNull(page)
 
-            if (it && meal != null && state.diaryDay != null) {
-                MealCard(
-                    meal = meal,
-                    isEmpty = state.diaryDay.mealProductMap[meal]?.isEmpty() == true,
-                    totalCalories = state.diaryDay.totalCalories(meal),
-                    totalProteins = state.diaryDay.totalProteins(meal),
-                    totalCarbohydrates = state.diaryDay.totalCarbohydrates(meal),
-                    totalFats = state.diaryDay.totalFats(meal),
-                    formatTime = formatTime,
-                    onAddClick = { onAddProduct(meal) }
-                )
-            } else {
-                MealCardSkeleton(
-                    shimmerInstance = state.shimmer
-                )
+            Crossfade(
+                targetState = state.diaryDay != null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 2.dp)
+                    .scale(
+                        scaleX = 1f,
+                        scaleY = lerp(0.9f, 1f, fraction)
+                    )
+            ) {
+                if (it && meal != null && state.diaryDay != null) {
+                    MealCard(
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        epochDay = state.diaryDay.date.toEpochDays(),
+                        meal = meal,
+                        isEmpty = state.diaryDay.mealProductMap[meal]?.isEmpty() == true,
+                        totalCalories = state.diaryDay.totalCalories(meal),
+                        totalProteins = state.diaryDay.totalProteins(meal),
+                        totalCarbohydrates = state.diaryDay.totalCarbohydrates(meal),
+                        totalFats = state.diaryDay.totalFats(meal),
+                        formatTime = formatTime,
+                        onMealClick = { onMealClick(meal) },
+                        onAddClick = { onAddClick(meal) }
+                    )
+                } else {
+                    MealCardSkeleton(
+                        shimmerInstance = state.shimmer
+                    )
+                }
             }
         }
     }
@@ -107,12 +131,8 @@ fun MealsCard(
 
 @Composable
 fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
-    FoodYouHomeCard(
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+    val headline = @Composable {
+        Column {
             Box(
                 modifier = Modifier
                     .shimmer(shimmerInstance)
@@ -120,45 +140,62 @@ fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
-
             Spacer(Modifier.height(4.dp))
-
+        }
+    }
+    val time = @Composable {
+        Box(
+            modifier = Modifier
+                .shimmer(shimmerInstance)
+                .size(60.dp, MaterialTheme.typography.labelLarge.toDp())
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+        )
+    }
+    val nutrientsLayout = @Composable {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Box(
                 modifier = Modifier
                     .shimmer(shimmerInstance)
-                    .size(60.dp, MaterialTheme.typography.labelLarge.toDp())
+                    .size(120.dp, MaterialTheme.typography.labelMedium.toDp() * 2)
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.weight(1f))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MacroLayoutSkeleton(
-                    modifier = Modifier.shimmer(shimmerInstance)
-                )
-
-                Spacer(Modifier.weight(1f))
-
-                FilledIconButton(
-                    onClick = {},
-                    modifier = Modifier.shimmer(shimmerInstance),
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                    ),
-                    enabled = false,
-                    content = {}
-                )
-            }
+            FilledIconButton(
+                onClick = {},
+                modifier = Modifier.shimmer(shimmerInstance),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                ),
+                enabled = false,
+                content = {}
+            )
         }
+    }
+
+    FoodYouHomeCard(
+        modifier = modifier
+    ) {
+        MealHeader(
+            modifier = Modifier.padding(16.dp),
+            headline = headline,
+            time = time,
+            nutrientsLayout = nutrientsLayout
+        )
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun MealCard(
+fun SharedTransitionScope.MealCard(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    epochDay: Int,
     meal: Meal,
     isEmpty: Boolean,
     totalCalories: Int,
@@ -166,22 +203,55 @@ private fun MealCard(
     totalCarbohydrates: Int,
     totalFats: Int,
     formatTime: (LocalTime) -> String,
+    onMealClick: () -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     FoodYouHomeCard(
-        modifier = modifier
+        onClick = onMealClick,
+        modifier = modifier.sharedBounds(
+            sharedContentState = rememberSharedContentState(
+                key = MealSharedTransitionKeys.MealContainer(
+                    mealId = meal.id,
+                    epochDay = epochDay
+                )
+            ),
+            animatedVisibilityScope = animatedVisibilityScope,
+            enter = MealSharedTransitionSpecs.containerEnterTransition,
+            exit = MealSharedTransitionSpecs.containerExitTransition,
+            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+            clipInOverlayDuringTransition = OverlayClip(
+                animatedVisibilityScope.overlayClipFromCardToScreen()
+            )
+        )
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+        val headline = @Composable {
             Text(
                 text = meal.name,
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = MealSharedTransitionKeys.MealTitle(
+                            mealId = meal.id,
+                            epochDay = epochDay
+                        )
+                    ),
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
             )
-
+        }
+        val time = @Composable {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = MealSharedTransitionKeys.MealTime(
+                            mealId = meal.id,
+                            epochDay = epochDay
+                        )
+                    ),
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
             ) {
                 CompositionLocalProvider(
                     LocalContentColor provides MaterialTheme.colorScheme.outline,
@@ -198,147 +268,99 @@ private fun MealCard(
                     )
                 }
             }
+        }
 
-            Spacer(Modifier.height(8.dp))
+        val caloriesLabel = @Composable {
+            Text(
+                text = if (isEmpty) {
+                    stringResource(R.string.em_dash)
+                } else {
+                    totalCalories.toString()
+                }
+            )
+        }
+        val proteinsLabel = @Composable {
+            Text(
+                text = if (isEmpty) {
+                    stringResource(R.string.em_dash)
+                } else {
+                    "$totalProteins " + stringResource(R.string.unit_gram_short)
+                }
+            )
+        }
+        val carbohydratesLabel = @Composable {
+            Text(
+                text = if (isEmpty) {
+                    stringResource(R.string.em_dash)
+                } else {
+                    "$totalCarbohydrates " + stringResource(R.string.unit_gram_short)
+                }
+            )
+        }
+        val fatsLabel = @Composable {
+            Text(
+                text = if (isEmpty) {
+                    stringResource(R.string.em_dash)
+                } else {
+                    "$totalFats " + stringResource(R.string.unit_gram_short)
+                }
+            )
+        }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MacroLayout(
-                    caloriesLabel = {
-                        Text(
-                            text = if (isEmpty) {
-                                stringResource(R.string.em_dash)
-                            } else {
-                                totalCalories.toString()
-                            }
-                        )
-                    },
-                    proteinsLabel = {
-                        Text(
-                            text = if (isEmpty) {
-                                stringResource(R.string.em_dash)
-                            } else {
-                                "$totalProteins " + stringResource(R.string.unit_gram_short)
-                            }
-                        )
-                    },
-                    carbohydratesLabel = {
-                        Text(
-                            text = if (isEmpty) {
-                                stringResource(R.string.em_dash)
-                            } else {
-                                "$totalCarbohydrates " + stringResource(R.string.unit_gram_short)
-                            }
-                        )
-                    },
-                    fatsLabel = {
-                        Text(
-                            text = if (isEmpty) {
-                                stringResource(R.string.em_dash)
-                            } else {
-                                "$totalFats " + stringResource(R.string.unit_gram_short)
-                            }
-                        )
-                    },
-                    modifier = Modifier.weight(1f)
-                )
-
+        val actionButton = @Composable {
+            with(animatedVisibilityScope) {
                 FilledIconButton(
-                    onClick = onAddClick
+                    onClick = onAddClick,
+                    modifier = Modifier
+                        .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
+                        .animateEnterExit(
+                            enter = crossfadeIn(),
+                            exit = fadeOut(tween(50))
+                        )
                 ) {
-                    if (!isEmpty) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.action_log_products)
-                        )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(R.string.action_log_products)
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null
+                    )
                 }
             }
         }
-    }
-}
 
-@Composable
-private fun MacroLayoutSkeleton(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(120.dp, MaterialTheme.typography.labelMedium.toDp() * 2)
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-    )
-}
+        val sharedTransitionScope =
+            LocalSharedTransitionScope.current ?: error("SharedTransitionScope not found")
 
-@Composable
-private fun MacroLayout(
-    caloriesLabel: @Composable () -> Unit,
-    proteinsLabel: @Composable () -> Unit,
-    carbohydratesLabel: @Composable () -> Unit,
-    fatsLabel: @Composable () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val nutrientsPalette = LocalNutrientsPalette.current
+        with(sharedTransitionScope) {
+            MealHeader(
+                headline = headline,
+                time = time,
+                modifier = Modifier.padding(16.dp),
+                nutrientsLayout = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        NutrientsLayout(
+                            caloriesLabel = caloriesLabel,
+                            proteinsLabel = proteinsLabel,
+                            carbohydratesLabel = carbohydratesLabel,
+                            fatsLabel = fatsLabel,
+                            modifier = Modifier.sharedBounds(
+                                sharedContentState = rememberSharedContentState(
+                                    key = MealSharedTransitionKeys.MealNutrients(
+                                        mealId = meal.id,
+                                        epochDay = epochDay
+                                    )
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                        )
 
-    CompositionLocalProvider(
-        LocalTextStyle provides MaterialTheme.typography.labelMedium
-    ) {
-        FlowRow(
-            modifier = modifier,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.unit_kcal)
-                )
-                caloriesLabel()
-            }
+                        Spacer(Modifier.weight(1f))
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CompositionLocalProvider(
-                    LocalContentColor provides nutrientsPalette.proteinsOnSurfaceContainer
-                ) {
-                    Text(
-                        text = stringResource(R.string.nutriment_proteins_short)
-                    )
-                    proteinsLabel()
+                        actionButton()
+                    }
                 }
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CompositionLocalProvider(
-                    LocalContentColor provides nutrientsPalette.carbohydratesOnSurfaceContainer
-                ) {
-                    Text(
-                        text = stringResource(R.string.nutriment_carbohydrates_short)
-                    )
-                    carbohydratesLabel()
-                }
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CompositionLocalProvider(
-                    LocalContentColor provides nutrientsPalette.fatsOnSurfaceContainer
-                ) {
-                    Text(
-                        text = stringResource(R.string.nutriment_fats_short)
-                    )
-                    fatsLabel()
-                }
-            }
+            )
         }
     }
 }
@@ -355,6 +377,7 @@ private fun MealsCardSkeletonPreview() {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview
 @Composable
 private fun MealsCardPreview() {
@@ -362,19 +385,25 @@ private fun MealsCardPreview() {
     val meal = diaryDay.meals.first()
 
     FoodYouTheme {
-        MealCard(
-            meal = meal,
-            isEmpty = false,
-            totalCalories = diaryDay.totalCalories(meal),
-            totalProteins = diaryDay.totalProteins(meal),
-            totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
-            totalFats = diaryDay.totalFats(meal),
-            onAddClick = {},
-            formatTime = { it.toString() }
-        )
+        SharedTransitionPreview {
+            MealCard(
+                animatedVisibilityScope = it,
+                epochDay = 0,
+                meal = meal,
+                isEmpty = false,
+                totalCalories = diaryDay.totalCalories(meal),
+                totalProteins = diaryDay.totalProteins(meal),
+                totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
+                totalFats = diaryDay.totalFats(meal),
+                formatTime = { it.toString() },
+                onMealClick = {},
+                onAddClick = {}
+            )
+        }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview
 @Composable
 private fun EmptyMealsCardPreview() {
@@ -384,15 +413,20 @@ private fun EmptyMealsCardPreview() {
     )
 
     FoodYouTheme {
-        MealCard(
-            meal = diaryDay.meals.first(),
-            isEmpty = true,
-            totalCalories = 0,
-            totalProteins = 0,
-            totalCarbohydrates = 0,
-            totalFats = 0,
-            onAddClick = {},
-            formatTime = { it.toString() }
-        )
+        SharedTransitionPreview {
+            MealCard(
+                animatedVisibilityScope = it,
+                epochDay = 0,
+                meal = diaryDay.meals.first(),
+                isEmpty = true,
+                totalCalories = 0,
+                totalProteins = 0,
+                totalCarbohydrates = 0,
+                totalFats = 0,
+                formatTime = { it.toString() },
+                onMealClick = {},
+                onAddClick = {}
+            )
+        }
     }
 }

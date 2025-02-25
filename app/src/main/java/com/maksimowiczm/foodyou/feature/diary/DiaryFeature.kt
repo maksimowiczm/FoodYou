@@ -4,10 +4,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
+import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature.Companion.navigateToAddFood
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodFeature.Companion.popAddFood
+import com.maksimowiczm.foodyou.feature.addfood.PortionFeature
+import com.maksimowiczm.foodyou.feature.addfood.PortionFeature.Companion.navigateToPortion
 import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepository
 import com.maksimowiczm.foodyou.feature.diary.ui.DiaryViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.buildCaloriesCard
@@ -16,10 +19,13 @@ import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsView
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.buildGoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.buildMealsCard
+import com.maksimowiczm.foodyou.feature.diary.ui.mealscreen.DiaryDayMealScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.mealscreen.DiaryDayMealViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.buildMealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.setup
+import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
@@ -40,6 +46,7 @@ abstract class DiaryFeature(
         viewModelOf(::GoalsSettingsViewModel)
         viewModelOf(::MealsSettingsViewModel)
         viewModelOf(::MealsCardViewModel)
+        viewModelOf(::DiaryDayMealViewModel)
 
         diaryRepository().bind()
     }
@@ -71,11 +78,50 @@ abstract class DiaryFeature(
                 )
             )
         }
+
+        crossfadeComposable<Meal> {
+            val route = it.toRoute<Meal>()
+
+            DiaryDayMealScreen(
+                animatedVisibilityScope = this@crossfadeComposable,
+                onProductAdd = {
+                    navController.navigateToAddFood(
+                        route = AddFoodFeature.Route(
+                            mealId = route.mealId,
+                            epochDay = route.epochDay
+                        )
+                    )
+                },
+                onEditEntry = { model ->
+                    val id = model.measurementId
+                        ?: error("Measurement ID is required to edit entry")
+
+                    navController.navigateToPortion(
+                        route = PortionFeature.Edit(
+                            epochDay = route.epochDay,
+                            mealId = route.mealId,
+                            measurementId = id
+                        )
+                    )
+                }
+            )
+        }
     }
 
     final override fun buildHomeFeatures(navController: NavController) = listOf(
         buildMealsCard(
-            onAddProduct = { epochDay, meal ->
+            onMealClick = { epochDay, meal ->
+                navController.navigateToMeal(
+                    route = Meal(
+                        epochDay = epochDay,
+                        mealId = meal.id
+                    ),
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            },
+            onAddClick = { epochDay, meal ->
                 navController.navigateToAddFood(
                     route = AddFoodFeature.Route(
                         epochDay = epochDay,
@@ -126,14 +172,16 @@ abstract class DiaryFeature(
         buildGoalsSettingsListItem(navController)
     )
 
+    @Serializable
+    data class Meal(val epochDay: Int, val mealId: Long)
+
+    @Serializable
+    data object GoalsSettings
+
+    @Serializable
+    data object MealsSettings
+
     companion object {
-
-        @Serializable
-        data object GoalsSettings
-
-        @Serializable
-        data object MealsSettings
-
         fun NavController.navigateToGoalsSettings(navOptions: NavOptions? = null) {
             navigate(
                 route = GoalsSettings,
@@ -144,6 +192,13 @@ abstract class DiaryFeature(
         fun NavController.navigateToMealsSettings(navOptions: NavOptions? = null) {
             navigate(
                 route = MealsSettings,
+                navOptions = navOptions
+            )
+        }
+
+        fun NavController.navigateToMeal(route: Meal, navOptions: NavOptions? = null) {
+            navigate(
+                route = route,
                 navOptions = navOptions
             )
         }

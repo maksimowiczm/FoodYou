@@ -17,7 +17,7 @@ import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionPreview(
-    block: @Composable (SharedTransitionScope, AnimatedVisibilityScope) -> Unit
+    block: @Composable SharedTransitionScope.(AnimatedVisibilityScope) -> Unit
 ) {
     SharedTransitionLayout {
         CompositionLocalProvider(

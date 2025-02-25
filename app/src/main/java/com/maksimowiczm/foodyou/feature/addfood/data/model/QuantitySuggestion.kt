@@ -19,4 +19,24 @@ data class QuantitySuggestion(
             }
         }
     }
+
+    /**
+     * Replace the quantity suggestion for the given enum.
+     *
+     * @param weightMeasurement The new weight measurement to replace the quantity suggestion with.
+     *
+     * @return A new [QuantitySuggestion] with the updated quantity suggestion.
+     */
+    fun replace(weightMeasurement: WeightMeasurement): QuantitySuggestion {
+        val mutable = quantitySuggestions.toMutableMap()
+
+        val enum = weightMeasurement.asEnum()
+        mutable[enum] = when (weightMeasurement) {
+            is WeightMeasurement.WeightUnit -> weightMeasurement.weight
+            is WeightMeasurement.Package -> weightMeasurement.quantity
+            is WeightMeasurement.Serving -> weightMeasurement.quantity
+        }
+
+        return QuantitySuggestion(product, mutable)
+    }
 }

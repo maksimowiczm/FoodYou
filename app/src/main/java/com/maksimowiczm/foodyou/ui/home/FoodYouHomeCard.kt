@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun FoodYouHomeCard(
     modifier: Modifier = Modifier,
-    colors: CardColors = HomeCardDefaults.colors(),
+    colors: CardColors = FoodYouHomeCardDefaults.colors(),
     content: @Composable ColumnScope.() -> Unit
 ) {
     Card(
@@ -25,7 +25,7 @@ fun FoodYouHomeCard(
 fun FoodYouHomeCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    colors: CardColors = HomeCardDefaults.colors(),
+    colors: CardColors = FoodYouHomeCardDefaults.colors(),
     content: @Composable ColumnScope.() -> Unit
 ) {
     Card(
@@ -37,7 +37,7 @@ fun FoodYouHomeCard(
     }
 }
 
-object HomeCardDefaults {
+object FoodYouHomeCardDefaults {
     @Composable
     fun colors(): CardColors = CardDefaults.elevatedCardColors()
 }

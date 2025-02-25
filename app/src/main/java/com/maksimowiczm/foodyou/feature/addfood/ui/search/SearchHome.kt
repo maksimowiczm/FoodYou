@@ -12,15 +12,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
@@ -30,7 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -200,9 +195,6 @@ private fun SearchHome(
         )
     }
 
-    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-        .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-
     val shimmer = rememberShimmer(
         shimmerBounds = ShimmerBounds.Window
     )
@@ -218,8 +210,7 @@ private fun SearchHome(
             anchoredDraggableState.updateAnchors(draggableAnchors)
         },
         topBar = topBar,
-        bottomBar = bottomBar,
-        contentWindowInsets = contentWindowInsets
+        bottomBar = bottomBar
     ) { paddingValues ->
         Box(
             modifier = Modifier.fillMaxSize()

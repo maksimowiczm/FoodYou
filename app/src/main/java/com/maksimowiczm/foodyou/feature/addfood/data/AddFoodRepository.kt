@@ -23,9 +23,13 @@ interface AddFoodRepository {
         mealId: Long,
         productId: Long,
         weightMeasurement: WeightMeasurement
-    ): Long
+    )
 
     suspend fun removeMeasurement(measurementId: Long)
+
+    suspend fun restoreMeasurement(measurementId: Long)
+
+    suspend fun updateMeasurement(measurementId: Long, weightMeasurement: WeightMeasurement)
 
     fun queryProducts(
         mealId: Long,
@@ -38,4 +42,6 @@ interface AddFoodRepository {
     fun observeQuantitySuggestionByProductId(productId: Long): Flow<QuantitySuggestion>
 
     fun observeProductQueries(limit: Int): Flow<List<ProductQuery>>
+
+    fun observeProductByMeasurementId(measurementId: Long): Flow<ProductWithWeightMeasurement?>
 }

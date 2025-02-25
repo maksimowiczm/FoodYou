@@ -6,9 +6,12 @@ import com.maksimowiczm.foodyou.feature.HomeFeature
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import org.koin.androidx.compose.koinViewModel
 
-fun buildMealsCard(onAddProduct: (epochDay: Int, meal: Meal) -> Unit) = HomeFeature(
+fun buildMealsCard(
+    onMealClick: (epochDay: Int, meal: Meal) -> Unit,
+    onAddClick: (epochDay: Int, meal: Meal) -> Unit
+) = HomeFeature(
     applyPadding = false
-) { modifier, homeState ->
+) { animatedVisibilityScope, modifier, homeState ->
     val viewModel = koinViewModel<MealsCardViewModel>()
     val diaryDay by viewModel
         .observeDiaryDay(homeState.selectedDate)
@@ -17,15 +20,15 @@ fun buildMealsCard(onAddProduct: (epochDay: Int, meal: Meal) -> Unit) = HomeFeat
     val time by viewModel.time.collectAsStateWithLifecycle()
 
     MealsCard(
+        animatedVisibilityScope = animatedVisibilityScope,
         state = rememberMealsCardState(
             diaryDay = diaryDay,
             time = time,
             shimmer = homeState.shimmer
         ),
         formatTime = viewModel::formatTime,
-        onAddProduct = {
-            onAddProduct(homeState.selectedDate.toEpochDays(), it)
-        },
+        onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
+        onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
         modifier = modifier
     )
 }

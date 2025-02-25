@@ -84,6 +84,10 @@
     <string name="action_log_products">Zanotuj produkty</string>
     <string name="action_edit">Edytuj</string>
     <string name="action_insert_suggested_search">Wstaw sugerowane wyszukiwanie</string>
+    <string name="action_edit_entry">Edytuj wpis</string>
+    <string name="action_delete_entry">Usuń wpis</string>
+    <string name="action_add_food">Dodaj</string>
+    <string name="action_undo">Cofnij</string>
 
     <string name="neutral_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu</string>
     <string name="neutral_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu</string>
@@ -102,6 +106,8 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Posiłek zostanie trwale usunięty. Wszystkie powiązane z nim dane zostaną utracone.</string>
     <string name="neutral_required">Wymagane</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kalorie są obliczane na podstawie makroskładników</string>
+    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Wygląda na to, że ten posiłek jest pusty. Dodaj jedzenie, aby śledzić kalorie</string>
+    <string name="neutral_entry_deleted">Wpis usunięty</string>
 
     <string name="error_this_field_is_required">To pole jest wymagane</string>
     <string name="error_this_field_cannot_be_empty">To pole nie może być puste</string>
@@ -121,5 +127,9 @@
         <item quantity="few">Przekroczono o %1$d kalorie</item>
         <item quantity="many">Przekroczono o %1$d kalorii</item>
     </plurals>
+
+    <string name="description_calories_goal">Ustaw swój dzienny cel spożycia kalorii. Pomoże Ci to śledzić postępy i pozostać na właściwej ścieżce.</string>
+    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Produkt zostanie trwale usunięty. Ta czynność nie może być cofnięta. Wszystkie wpisy w dzienniku związane z tym produktem zostaną utracone.</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Ten wpis zostanie usunięty z Twojego dziennika. Możesz dodać go ponownie w każdej chwili.</string>
 
 </resources>

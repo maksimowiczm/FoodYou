@@ -94,14 +94,20 @@ interface AddFoodDao {
         """
         SELECT *
         FROM WeightMeasurementEntity
-        WHERE isDeleted = 0
-        AND id = :portionId
+        WHERE isDeleted = :isDeleted
+        AND id = :measurementId
         """
     )
-    fun observeWeightMeasurement(portionId: Long): Flow<WeightMeasurementEntity?>
+    fun observeWeightMeasurement(
+        measurementId: Long,
+        isDeleted: Boolean
+    ): Flow<WeightMeasurementEntity?>
 
     @Insert
-    suspend fun insertWeightMeasurement(weightMeasurement: WeightMeasurementEntity): Long
+    suspend fun insertWeightMeasurement(weightMeasurement: WeightMeasurementEntity)
+
+    @Update
+    suspend fun updateWeightMeasurement(weightMeasurement: WeightMeasurementEntity)
 
     @Query(
         """
@@ -111,6 +117,15 @@ interface AddFoodDao {
         """
     )
     suspend fun deleteWeightMeasurement(id: Long)
+
+    @Query(
+        """
+        UPDATE WeightMeasurementEntity
+        SET isDeleted = 0
+        WHERE id = :id
+        """
+    )
+    suspend fun restoreWeightMeasurement(id: Long)
 
     @Upsert
     suspend fun upsertProductQuery(productQueryEntity: ProductQueryEntity)
@@ -168,4 +183,17 @@ interface AddFoodDao {
 
     @Delete
     suspend fun deleteMeal(meal: MealEntity)
+
+    @Transaction
+    @Query(
+        """
+        SELECT *
+        FROM ProductEntity p 
+        LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId
+        WHERE wm.id = :measurementId
+        """
+    )
+    fun observeProductByMeasurementId(
+        measurementId: Long
+    ): Flow<ProductWithWeightMeasurementEntity?>
 }

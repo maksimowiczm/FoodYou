@@ -17,10 +17,19 @@ interface StringFormatRepository {
      *
      * The formatting respects the system's locale, using the full month name and the year.
      *
+     * For example, in English (US), this could return "February 2025".
+     *
      * @param date The date to format.
      * @return A string representing the formatted month and year.
      */
     fun formatMonthYear(date: LocalDate): String
+
+    /**
+     * Formats the specified [date] as a string in the "d MMMM yyyy, EEEE" format.
+     *
+     * For example, in English (US), this could return "23 February 2025, Sunday".
+     */
+    fun formatDate(date: LocalDate): String
 
     /**
      * Formats the specified [time] as a string in the "hh:mm" format.

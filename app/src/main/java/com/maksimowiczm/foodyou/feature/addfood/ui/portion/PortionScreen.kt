@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -78,16 +79,15 @@ import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PortionScreen(
     onBack: () -> Unit,
     onSuccess: () -> Unit,
     onEditClick: (productId: Long) -> Unit,
-    onDeleteClick: (productId: Long) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: PortionViewModel = koinViewModel()
+    onDelete: (productId: Long) -> Unit,
+    viewModel: PortionViewModel,
+    modifier: Modifier = Modifier
 ) {
     val event by viewModel.uiEvent.collectAsStateWithLifecycle()
 
@@ -97,13 +97,14 @@ fun PortionScreen(
     LaunchedEffect(event) {
         @Suppress("NAME_SHADOWING")
         when (val event = event) {
-            PortionEvent.CreatingPortion,
+            PortionEvent.Processing,
             PortionEvent.Empty,
             PortionEvent.Error,
             PortionEvent.Loading -> Unit
 
             is PortionEvent.Ready -> {
                 state.suggestion = event.suggestion
+                state.weightMeasurementEnum = event.highlight
             }
 
             PortionEvent.Success -> latestOnSuccess()
@@ -115,7 +116,10 @@ fun PortionScreen(
         onBack = onBack,
         onConfirm = viewModel::onAddPortion,
         onEditClick = onEditClick,
-        onDeleteClick = onDeleteClick,
+        onDeleteClick = {
+            viewModel.onProductDelete(it)
+            onDelete(it)
+        },
         modifier = modifier
     )
 }
@@ -132,11 +136,6 @@ private fun PortionScreen(
     val hapticFeedback = LocalHapticFeedback.current
 
     fun internalOnConfirm(weightMeasurementEnum: WeightMeasurementEnum, quantity: Float) {
-        // Ignore if user has already selected a weight measurement
-        if (state.weightMeasurementEnum != null) {
-            return
-        }
-
         hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
         state.weightMeasurementEnum = weightMeasurementEnum
 
@@ -470,7 +469,12 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Number
-            )
+            ),
+            keyboardActions = KeyboardActions {
+                if (error == null) {
+                    onConfirm()
+                }
+            }
         )
 
         val weight: @Composable () -> Unit = {
@@ -570,7 +574,12 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Number
-            )
+            ),
+            keyboardActions = KeyboardActions {
+                if (error == null) {
+                    onConfirm()
+                }
+            }
         )
 
         Text(

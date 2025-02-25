@@ -6,6 +6,7 @@ import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalTime
@@ -19,12 +20,14 @@ class AndroidStringFormatRepository(private val context: Context) : StringFormat
             it.getDisplayName(TextStyle.SHORT, defaultLocale)
         }
 
-    override fun formatMonthYear(date: kotlinx.datetime.LocalDate) =
-        formatMonthYear(date.toJavaLocalDate())
-
-    private fun formatMonthYear(date: java.time.LocalDate): String {
+    override fun formatMonthYear(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("LLLL yyyy", defaultLocale)
-        return date.format(formatter)
+        return date.toJavaLocalDate().format(formatter)
+    }
+
+    override fun formatDate(date: LocalDate): String {
+        val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy, EEEE", defaultLocale)
+        return date.toJavaLocalDate().format(formatter)
     }
 
     override fun formatTime(time: LocalTime): String = if (DateFormat.is24HourFormat(context)) {

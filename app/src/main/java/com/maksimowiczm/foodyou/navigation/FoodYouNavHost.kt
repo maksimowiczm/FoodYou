@@ -26,8 +26,9 @@ fun FoodYouNavHost(
         navController = navController,
         startDestination = Home
     ) {
-        forwardBackwardComposable<Home> {
+        crossfadeComposable<Home> {
             HomeScreen(
+                animatedVisibilityScope = this,
                 homeFeatures = homeFeatures.flatMap { it.buildHomeFeatures(navController) },
                 onSettingsClick = {
                     navController.navigate(

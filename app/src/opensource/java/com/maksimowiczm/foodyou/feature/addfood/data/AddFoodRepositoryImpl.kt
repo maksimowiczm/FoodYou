@@ -54,7 +54,7 @@ class AddFoodRepositoryImpl(
         mealId: Long,
         productId: Long,
         weightMeasurement: WeightMeasurement
-    ): Long {
+    ) {
         val quantity = when (weightMeasurement) {
             is WeightMeasurement.WeightUnit -> weightMeasurement.weight
             is WeightMeasurement.Package -> weightMeasurement.quantity
@@ -76,11 +76,53 @@ class AddFoodRepositoryImpl(
     }
 
     override suspend fun removeMeasurement(measurementId: Long) {
-        val entity = addFoodDao.observeWeightMeasurement(measurementId).first()
+        val entity = addFoodDao.observeWeightMeasurement(
+            measurementId = measurementId,
+            isDeleted = false
+        ).first()
 
         if (entity != null) {
             addFoodDao.deleteWeightMeasurement(entity.id)
         }
+    }
+
+    override suspend fun restoreMeasurement(measurementId: Long) {
+        val entity = addFoodDao.observeWeightMeasurement(
+            measurementId = measurementId,
+            isDeleted = true
+        ).first()
+
+        if (entity != null) {
+            addFoodDao.restoreWeightMeasurement(entity.id)
+        }
+    }
+
+    override suspend fun updateMeasurement(
+        measurementId: Long,
+        weightMeasurement: WeightMeasurement
+    ) {
+        val entity = addFoodDao.observeWeightMeasurement(
+            measurementId = measurementId,
+            isDeleted = false
+        ).first()
+
+        if (entity == null) {
+            Log.w(TAG, "Measurement not found for ID $measurementId.")
+            return
+        }
+
+        val quantity = when (weightMeasurement) {
+            is WeightMeasurement.WeightUnit -> weightMeasurement.weight
+            is WeightMeasurement.Package -> weightMeasurement.quantity
+            is WeightMeasurement.Serving -> weightMeasurement.quantity
+        }
+
+        val updatedEntity = entity.copy(
+            measurement = weightMeasurement.asEnum(),
+            quantity = quantity
+        )
+
+        addFoodDao.updateWeightMeasurement(updatedEntity)
     }
 
     @OptIn(ExperimentalPagingApi::class)
@@ -177,6 +219,11 @@ class AddFoodRepositoryImpl(
     override fun observeProductQueries(limit: Int): Flow<List<ProductQuery>> =
         addFoodDao.observeLatestQueries(limit).map { list ->
             list.map { it.toDomain() }
+        }
+
+    override fun observeProductByMeasurementId(measurementId: Long) =
+        addFoodDao.observeProductByMeasurementId(measurementId).map { entity ->
+            entity?.toDomain()
         }
 
     private companion object {

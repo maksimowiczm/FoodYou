@@ -30,7 +30,7 @@ object CalendarFeature : Feature.Koin, Feature.Home {
     }
 }
 
-private val CalendarCard = HomeFeature { modifier, homeState ->
+private val CalendarCard = HomeFeature { _, modifier, homeState ->
     val viewModel = koinViewModel<CalendarViewModel>()
 
     val today by viewModel.today.collectAsStateWithLifecycle()
