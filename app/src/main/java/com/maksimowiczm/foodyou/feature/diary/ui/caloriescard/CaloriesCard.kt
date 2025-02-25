@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -42,6 +41,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPrevie
 import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
+import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.toDp
 import com.valentinilk.shimmer.Shimmer
@@ -96,7 +96,7 @@ fun CaloriesCard(diaryDay: DiaryDay, onClick: () -> Unit, modifier: Modifier = M
     val animatedCarbohydrates by animateFloatAsState(diaryDay.totalCaloriesCarbohydrates.toFloat())
     val animatedFats by animateFloatAsState(diaryDay.totalCaloriesFats.toFloat())
 
-    ElevatedCard(
+    FoodYouHomeCard(
         onClick = onClick,
         modifier = modifier
     ) {
@@ -324,7 +324,7 @@ fun CaloriesCardSkeleton(
     modifier: Modifier = Modifier,
     shimmerInstance: Shimmer = rememberShimmer(ShimmerBounds.View)
 ) {
-    ElevatedCard(
+    FoodYouHomeCard(
         modifier = modifier
     ) {
         Column(

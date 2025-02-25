@@ -20,7 +20,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -42,6 +41,7 @@ import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.addfood.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.ui.previewparameter.DiaryDayPreviewParameterProvider
 import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.toDp
 import com.valentinilk.shimmer.Shimmer
@@ -107,7 +107,7 @@ fun MealsCard(
 
 @Composable
 fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
-    ElevatedCard(
+    FoodYouHomeCard(
         modifier = modifier
     ) {
         Column(
@@ -169,7 +169,7 @@ private fun MealCard(
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ElevatedCard(
+    FoodYouHomeCard(
         modifier = modifier
     ) {
         Column(
