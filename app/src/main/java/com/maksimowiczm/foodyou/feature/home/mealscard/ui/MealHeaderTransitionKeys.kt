@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui
 
-object MealSharedTransitionKeys {
+object MealHeaderTransitionKeys {
     data class MealContainer(val mealId: Long, val epochDay: Int)
 
     data class MealTitle(val mealId: Long, val epochDay: Int)

@@ -36,6 +36,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -52,6 +53,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -77,16 +79,19 @@ import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealHeader
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealSharedTransitionKeys
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealSharedTransitionSpecs
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealSharedTransitionSpecs.overlayClipFromScreenToCard
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealHeaderTransitionKeys
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealHeaderTransitionSpecs
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealHeaderTransitionSpecs.overlayClipFromScreenToCard
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.NutrientsLayout
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.ListItem
-import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.LocalMealSharedTransitionScope
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.SearchSharedTransition
+import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.preview.DiaryDayPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.preview.ProductWithWeightMeasurementPreviewParameter
 import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -96,11 +101,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun DiaryDayMealScreen(
     date: LocalDate,
     mealId: Long,
+    navigationScope: AnimatedVisibilityScope,
     mealHeaderScope: AnimatedVisibilityScope,
     onProductAdd: () -> Unit,
     onEditEntry: (measurementId: Long) -> Unit,
@@ -108,9 +113,6 @@ fun DiaryDayMealScreen(
     viewModel: DiaryDayMealViewModel = koinViewModel()
 ) {
     val diaryDay by viewModel.observeDiaryDay(date).collectAsStateWithLifecycle(null)
-
-    val sharedTransitionScope =
-        LocalSharedTransitionScope.current ?: error("No shared transition scope")
 
     @Suppress("NAME_SHADOWING")
     when (val diaryDay = diaryDay) {
@@ -124,35 +126,39 @@ fun DiaryDayMealScreen(
                 diaryDay.mealProductMap[meal] ?: error("No products for meal ${meal.name}")
             }
 
-            with(sharedTransitionScope) {
-                DiaryDayMealScreen(
-                    mealHeaderScope = mealHeaderScope,
-                    date = date,
-                    meal = meal,
-                    products = products,
-                    deletedEntryChannel = viewModel.deleteEvent,
-                    onProductAdd = onProductAdd,
-                    onEditEntry = {
-                        onEditEntry(it.measurementId ?: error("No measurement ID to edit"))
-                    },
-                    onDeleteEntry = {
-                        viewModel.onDeleteEntry(
-                            it.measurementId ?: error("No measurement ID to delete")
-                        )
-                    },
-                    onDeleteEntryUndo = viewModel::onDeleteEntryUndo,
-                    formatTime = viewModel::formatTime,
-                    formatDate = viewModel::formatDate,
-                    modifier = modifier
-                )
-            }
+            DiaryDayMealScreen(
+                navigationScope = navigationScope,
+                mealHeaderScope = mealHeaderScope,
+                date = date,
+                meal = meal,
+                products = products,
+                deletedEntryChannel = viewModel.deleteEvent,
+                onProductAdd = onProductAdd,
+                onEditEntry = {
+                    onEditEntry(it.measurementId ?: error("No measurement ID to edit"))
+                },
+                onDeleteEntry = {
+                    viewModel.onDeleteEntry(
+                        it.measurementId ?: error("No measurement ID to delete")
+                    )
+                },
+                onDeleteEntryUndo = viewModel::onDeleteEntryUndo,
+                formatTime = viewModel::formatTime,
+                formatDate = viewModel::formatDate,
+                modifier = modifier
+            )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalSharedTransitionApi::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 @Composable
-private fun SharedTransitionScope.DiaryDayMealScreen(
+private fun DiaryDayMealScreen(
+    navigationScope: AnimatedVisibilityScope,
     mealHeaderScope: AnimatedVisibilityScope,
     date: LocalDate,
     meal: Meal,
@@ -166,7 +172,12 @@ private fun SharedTransitionScope.DiaryDayMealScreen(
     onDeleteEntryUndo: (id: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val headerColor = MealSharedTransitionSpecs.containerColor
+    val homeSTS =
+        LocalHomeSharedTransitionScope.current ?: error("No shared transition scope")
+    val mealSTS =
+        LocalMealSharedTransitionScope.current ?: error("No shared transition scope")
+
+    val headerColor = MealHeaderTransitionSpecs.containerColor
     val containerColor = MaterialTheme.colorScheme.surface
 
     val coroutineScope = rememberCoroutineScope()
@@ -237,39 +248,36 @@ private fun SharedTransitionScope.DiaryDayMealScreen(
             .exclude(bottomInset)
             .asPaddingValues()
 
-        Surface(
-            modifier = Modifier.sharedBounds(
-                sharedContentState = rememberSharedContentState(
-                    key = MealSharedTransitionKeys.MealContainer(
-                        mealId = meal.id,
-                        epochDay = date.toEpochDays()
+        with(homeSTS) {
+            Surface(
+                modifier = Modifier.sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = MealHeaderTransitionKeys.MealContainer(
+                            mealId = meal.id,
+                            epochDay = date.toEpochDays()
+                        )
+                    ),
+                    animatedVisibilityScope = mealHeaderScope,
+                    enter = MealHeaderTransitionSpecs.containerEnterTransition,
+                    exit = MealHeaderTransitionSpecs.containerExitTransition,
+                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                    clipInOverlayDuringTransition = OverlayClip(
+                        mealHeaderScope.overlayClipFromScreenToCard()
                     )
                 ),
-                animatedVisibilityScope = mealHeaderScope,
-                enter = MealSharedTransitionSpecs.containerEnterTransition,
-                exit = MealSharedTransitionSpecs.containerExitTransition,
-                resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
-                clipInOverlayDuringTransition = OverlayClip(
-                    mealHeaderScope.overlayClipFromScreenToCard()
-                )
-            ),
-            color = headerColor
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .padding(insets)
-                    .consumeWindowInsets(insets)
+                color = headerColor
             ) {
-                with(mealHeaderScope) {
-                    Text(
-                        text = formatDate(date),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier
-                            .renderInSharedTransitionScopeOverlay(
-                                zIndexInOverlay = 1f
-                            )
-                            .animateEnterExit(
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .padding(insets)
+                        .consumeWindowInsets(insets)
+                ) {
+                    with(mealHeaderScope) {
+                        Text(
+                            text = formatDate(date),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.animateEnterExit(
                                 enter = fadeIn(
                                     tween(
                                         delayMillis = DefaultDurationMillis
@@ -277,110 +285,18 @@ private fun SharedTransitionScope.DiaryDayMealScreen(
                                 ),
                                 exit = fadeOut(tween(50))
                             )
-                    )
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                val headline = @Composable {
-                    Text(
-                        text = meal.name,
-                        style = MaterialTheme.typography.headlineLarge,
-                        modifier = Modifier.sharedBounds(
-                            sharedContentState = rememberSharedContentState(
-                                key = MealSharedTransitionKeys.MealTitle(
-                                    mealId = meal.id,
-                                    epochDay = date.toEpochDays()
-                                )
-                            ),
-                            animatedVisibilityScope = mealHeaderScope
                         )
-                    )
-                }
-                val time = @Composable {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier.sharedBounds(
-                            sharedContentState = rememberSharedContentState(
-                                key = MealSharedTransitionKeys.MealTime(
-                                    mealId = meal.id,
-                                    epochDay = date.toEpochDays()
-                                )
-                            ),
-                            animatedVisibilityScope = mealHeaderScope
-                        )
-                    ) {
-                        CompositionLocalProvider(
-                            LocalContentColor provides MaterialTheme.colorScheme.outline,
-                            LocalTextStyle provides MaterialTheme.typography.bodyLarge
-                        ) {
-                            Text(
-                                text = formatTime(meal.from)
-                            )
-                            Text(
-                                text = stringResource(R.string.en_dash)
-                            )
-                            Text(
-                                text = formatTime(meal.to)
-                            )
-                        }
                     }
-                }
 
-                val isEmpty = products.isEmpty()
-                val caloriesLabel = @Composable {
-                    Text(
-                        text = if (isEmpty) {
-                            stringResource(R.string.em_dash)
-                        } else {
-                            products.sumOf { it.calories }.toString()
-                        }
-                    )
-                }
-                val proteinsLabel = @Composable {
-                    Text(
-                        text = if (isEmpty) {
-                            stringResource(R.string.em_dash)
-                        } else {
-                            products.sumOf { it.proteins }
-                                .toString() + " " + stringResource(R.string.unit_gram_short)
-                        }
-                    )
-                }
-                val carbohydratesLabel = @Composable {
-                    Text(
-                        text = if (isEmpty) {
-                            stringResource(R.string.em_dash)
-                        } else {
-                            products.sumOf { it.carbohydrates }
-                                .toString() + " " + stringResource(R.string.unit_gram_short)
-                        }
-                    )
-                }
-                val fatsLabel = @Composable {
-                    Text(
-                        text = if (isEmpty) {
-                            stringResource(R.string.em_dash)
-                        } else {
-                            products.sumOf { it.fats }
-                                .toString() + " " + stringResource(R.string.unit_gram_short)
-                        }
-                    )
-                }
+                    Spacer(Modifier.height(16.dp))
 
-                MealHeader(
-                    headline = headline,
-                    time = time,
-                    spacer = { Spacer(Modifier.height(16.dp)) },
-                    nutrientsLayout = {
-                        NutrientsLayout(
-                            caloriesLabel = caloriesLabel,
-                            proteinsLabel = proteinsLabel,
-                            carbohydratesLabel = carbohydratesLabel,
-                            fatsLabel = fatsLabel,
+                    val headline = @Composable {
+                        Text(
+                            text = meal.name,
+                            style = MaterialTheme.typography.headlineLarge,
                             modifier = Modifier.sharedBounds(
                                 sharedContentState = rememberSharedContentState(
-                                    key = MealSharedTransitionKeys.MealNutrients(
+                                    key = MealHeaderTransitionKeys.MealTitle(
                                         mealId = meal.id,
                                         epochDay = date.toEpochDays()
                                     )
@@ -389,32 +305,162 @@ private fun SharedTransitionScope.DiaryDayMealScreen(
                             )
                         )
                     }
-                )
+                    val time = @Composable {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.sharedBounds(
+                                sharedContentState = rememberSharedContentState(
+                                    key = MealHeaderTransitionKeys.MealTime(
+                                        mealId = meal.id,
+                                        epochDay = date.toEpochDays()
+                                    )
+                                ),
+                                animatedVisibilityScope = mealHeaderScope
+                            )
+                        ) {
+                            CompositionLocalProvider(
+                                LocalContentColor provides MaterialTheme.colorScheme.outline,
+                                LocalTextStyle provides MaterialTheme.typography.bodyLarge
+                            ) {
+                                Text(
+                                    text = formatTime(meal.from)
+                                )
+                                Text(
+                                    text = stringResource(R.string.en_dash)
+                                )
+                                Text(
+                                    text = formatTime(meal.to)
+                                )
+                            }
+                        }
+                    }
+
+                    val isEmpty = products.isEmpty()
+                    val caloriesLabel = @Composable {
+                        Text(
+                            text = if (isEmpty) {
+                                stringResource(R.string.em_dash)
+                            } else {
+                                products.sumOf { it.calories }.toString()
+                            }
+                        )
+                    }
+                    val proteinsLabel = @Composable {
+                        Text(
+                            text = if (isEmpty) {
+                                stringResource(R.string.em_dash)
+                            } else {
+                                products.sumOf { it.proteins }
+                                    .toString() + " " + stringResource(R.string.unit_gram_short)
+                            }
+                        )
+                    }
+                    val carbohydratesLabel = @Composable {
+                        Text(
+                            text = if (isEmpty) {
+                                stringResource(R.string.em_dash)
+                            } else {
+                                products.sumOf { it.carbohydrates }
+                                    .toString() + " " + stringResource(R.string.unit_gram_short)
+                            }
+                        )
+                    }
+                    val fatsLabel = @Composable {
+                        Text(
+                            text = if (isEmpty) {
+                                stringResource(R.string.em_dash)
+                            } else {
+                                products.sumOf { it.fats }
+                                    .toString() + " " + stringResource(R.string.unit_gram_short)
+                            }
+                        )
+                    }
+
+                    MealHeader(
+                        headline = headline,
+                        time = time,
+                        spacer = { Spacer(Modifier.height(16.dp)) },
+                        nutrientsLayout = {
+                            NutrientsLayout(
+                                caloriesLabel = caloriesLabel,
+                                proteinsLabel = proteinsLabel,
+                                carbohydratesLabel = carbohydratesLabel,
+                                fatsLabel = fatsLabel,
+                                modifier = Modifier.sharedBounds(
+                                    sharedContentState = rememberSharedContentState(
+                                        key = MealHeaderTransitionKeys.MealNutrients(
+                                            mealId = meal.id,
+                                            epochDay = date.toEpochDays()
+                                        )
+                                    ),
+                                    animatedVisibilityScope = mealHeaderScope
+                                )
+                            )
+                        }
+                    )
+                }
             }
         }
     }
 
-    val floatingActionButton = @Composable {
-        FloatingActionButton(
-            onClick = onProductAdd
-        ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null
-                )
+    // Can't use animatedVisibilityScope.transition.isRunning because it is set to false after
+    // predictive back cancel 💀
+    var fabVisible by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        delay(200)
+        fabVisible = true
+    }
 
-                AnimatedVisibility(
-                    visible = !scrolled || !lazyListState.canScrollForward
+    val floatingActionButton = @Composable {
+        with(mealSTS) {
+            FloatingActionButton(
+                onClick = onProductAdd,
+                modifier = Modifier
+                    .animateFloatingActionButton(
+                        visible = fabVisible,
+                        alignment = Alignment.BottomEnd
+                    )
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(
+                            key = SearchSharedTransition.CONTAINER
+                        ),
+                        animatedVisibilityScope = navigationScope,
+                        enter = SearchSharedTransition.fabContainerEnterTransition,
+                        exit = SearchSharedTransition.fabContainerExitTransition,
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                    )
+            ) {
+                Box(
+                    modifier = Modifier.sharedBounds(
+                        sharedContentState = rememberSharedContentState(
+                            key = SearchSharedTransition.CONTENT
+                        ),
+                        animatedVisibilityScope = navigationScope,
+                        enter = SearchSharedTransition.fabContentEnterTransition,
+                        exit = SearchSharedTransition.fabContentExitTransition,
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                    ),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Row {
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(R.string.action_add_food)
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null
                         )
+
+                        AnimatedVisibility(
+                            visible = !scrolled || !lazyListState.canScrollForward
+                        ) {
+                            Row {
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(R.string.action_add_food)
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -586,6 +632,7 @@ private fun EmptyDiaryDayMealScreenPreview() {
     FoodYouTheme {
         SharedTransitionPreview { animatedVisibilityScope ->
             DiaryDayMealScreen(
+                navigationScope = animatedVisibilityScope,
                 mealHeaderScope = animatedVisibilityScope,
                 date = diaryDay.date,
                 meal = meal,
@@ -620,6 +667,7 @@ private fun DiaryDayMealScreenPreview() {
     FoodYouTheme {
         SharedTransitionPreview { animatedVisibilityScope ->
             DiaryDayMealScreen(
+                navigationScope = animatedVisibilityScope,
                 mealHeaderScope = animatedVisibilityScope,
                 date = diaryDay.date,
                 meal = meal,

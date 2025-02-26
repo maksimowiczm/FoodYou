@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCardDefaults
 
-object MealSharedTransitionSpecs {
+object MealHeaderTransitionSpecs {
     val containerColor: Color
         @Composable get() = FoodYouHomeCardDefaults.colors().containerColor
 

@@ -17,7 +17,7 @@ fun FoodYouApp(homeFeatures: List<Feature.Home>, settingsFeatures: List<Feature.
         Surface {
             SharedTransitionLayout {
                 CompositionLocalProvider(
-                    LocalSharedTransitionScope provides this
+                    LocalHomeSharedTransitionScope provides this
                 ) {
                     FoodYouNavHost(
                         homeFeatures = homeFeatures,

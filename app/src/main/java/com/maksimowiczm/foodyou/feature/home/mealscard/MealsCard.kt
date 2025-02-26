@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.MealNavHost
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.MealApp
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.buildMealsCard
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import kotlinx.serialization.Serializable
@@ -46,7 +46,7 @@ object MealsCard : Feature.Home {
         crossfadeComposable<Meal> {
             val (epochDay, mealId) = it.toRoute<Meal>()
 
-            MealNavHost(
+            MealApp(
                 outerScope = this@crossfadeComposable,
                 mealId = mealId,
                 epochDay = epochDay
@@ -55,7 +55,7 @@ object MealsCard : Feature.Home {
         crossfadeComposable<MealAdd> {
             val (epochDay, mealId) = it.toRoute<MealAdd>()
 
-            MealNavHost(
+            MealApp(
                 outerScope = this@crossfadeComposable,
                 mealId = mealId,
                 epochDay = epochDay,

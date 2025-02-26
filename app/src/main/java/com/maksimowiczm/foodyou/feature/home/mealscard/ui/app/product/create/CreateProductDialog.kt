@@ -1,14 +1,14 @@
-package com.maksimowiczm.foodyou.feature.legacy.product.ui.update
+package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
@@ -35,7 +35,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -63,84 +62,59 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.WeightUnit
-import com.maksimowiczm.foodyou.feature.legacy.camera.ui.CameraBarcodeScannerScreen
-import com.maksimowiczm.foodyou.feature.legacy.product.ui.GlobalError
-import com.maksimowiczm.foodyou.feature.legacy.product.ui.MyError
-import com.maksimowiczm.foodyou.feature.legacy.product.ui.ProductFormState
-import com.maksimowiczm.foodyou.feature.legacy.product.ui.rememberProductFormState
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.CameraBarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.GlobalError
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.MyError
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductFormState
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.rememberProductFormState
 import com.maksimowiczm.foodyou.ui.component.FullScreenDialog
+import com.maksimowiczm.foodyou.ui.ext.plus
 import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.preview.BooleanPreviewParameter
-import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.res.pluralString
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun UpdateProductDialog(
+fun CreateProductDialog(
     onClose: () -> Unit,
-    onSuccess: () -> Unit,
+    onSuccess: (productId: Long) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: UpdateProductViewModel = koinViewModel()
+    viewModel: CreateProductViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var showAdditionalFields by rememberSaveable { mutableStateOf(false) }
 
-    UpdateProductDialog(
-        state = uiState,
-        onNavigateBack = onClose,
-        onSuccess = onSuccess,
-        onUpdateProduct = viewModel::updateProduct,
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val latestOnSuccess by rememberUpdatedState(onSuccess)
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is CreateProductState.ProductCreated -> latestOnSuccess(state.productId)
+            CreateProductState.CreatingProduct,
+            CreateProductState.Nothing,
+            CreateProductState.Error -> Unit
+        }
+    }
+
+    CreateProductDialog(
+        onClose = onClose,
+        onCreate = viewModel::onCreateProduct,
+        expanded = showAdditionalFields,
+        onExpandedChange = { showAdditionalFields = it },
         modifier = modifier
     )
 }
 
-@Composable
-private fun UpdateProductDialog(
-    state: UpdateProductState,
-    onNavigateBack: () -> Unit,
-    onSuccess: () -> Unit,
-    onUpdateProduct: (ProductFormState) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var showAdditionalFields by rememberSaveable { mutableStateOf(false) }
-
-    val latestOnSuccess by rememberUpdatedState(onSuccess)
-    LaunchedEffect(state, onSuccess) {
-        when (state) {
-            UpdateProductState.Loading,
-            is UpdateProductState.ProductReady,
-            is UpdateProductState.UpdatingProduct -> Unit
-
-            is UpdateProductState.ProductUpdated -> latestOnSuccess()
-        }
-    }
-
-    when (state) {
-        UpdateProductState.Loading -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
-        is UpdateProductState.WithProduct -> UpdateProductDialog(
-            form = rememberProductFormState(
-                product = state.product
-            ),
-            onClose = onNavigateBack,
-            onUpdate = onUpdateProduct,
-            expanded = showAdditionalFields,
-            onExpandedChange = { showAdditionalFields = it },
-            modifier = modifier
-        )
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun UpdateProductDialog(
-    form: ProductFormState,
+private fun CreateProductDialog(
     onClose: () -> Unit,
-    onUpdate: (ProductFormState) -> Unit,
+    onCreate: (ProductFormState) -> Unit,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    form: ProductFormState = rememberProductFormState()
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val contentWindowInsets = ScaffoldDefaults.contentWindowInsets.add(WindowInsets.ime)
@@ -183,16 +157,16 @@ private fun UpdateProductDialog(
                 },
                 title = {
                     Text(
-                        text = stringResource(R.string.headline_edit_product)
+                        text = stringResource(R.string.headline_create_product)
                     )
                 },
                 actions = {
                     TextButton(
-                        onClick = { onUpdate(form) },
+                        onClick = { onCreate(form) },
                         enabled = form.isValid
                     ) {
                         Text(
-                            text = stringResource(R.string.action_save)
+                            text = stringResource(R.string.action_create)
                         )
                     }
                 },
@@ -204,8 +178,8 @@ private fun UpdateProductDialog(
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 300.dp),
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = paddingValues
+            contentPadding = paddingValues + PaddingValues(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item(
                 span = { GridItemSpan(maxLineSpan) }
@@ -415,7 +389,9 @@ private fun UpdateProductDialog(
                             )
                         },
                         enabled = false,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        errorOverride =
+                        form.globalError == GlobalError.MacronutrientsSumExceeds100
                     )
                     Spacer(Modifier.height(16.dp))
                 }
@@ -737,6 +713,35 @@ private fun WeightUnitDropdownMenu(
 }
 
 @Composable
+private fun DiscardDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm
+            ) {
+                Text(stringResource(R.string.action_discard))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text(stringResource(R.string.action_cancel))
+            }
+        },
+        text = {
+            Text(stringResource(R.string.question_discard_product))
+        }
+    )
+}
+
+@Composable
 private fun BarcodeInput(
     barcodeFormField: FormFieldWithTextFieldValue<String?, MyError>,
     modifier: Modifier = Modifier,
@@ -780,35 +785,6 @@ private fun BarcodeInput(
     )
 }
 
-@Composable
-private fun DiscardDialog(
-    onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        modifier = modifier,
-        confirmButton = {
-            TextButton(
-                onClick = onConfirm
-            ) {
-                Text(stringResource(R.string.action_discard))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = onDismissRequest
-            ) {
-                Text(stringResource(R.string.action_cancel))
-            }
-        },
-        text = {
-            Text(stringResource(R.string.question_discard_changes))
-        }
-    )
-}
-
 @Preview(
     device = "spec:width=400dp,height=1400dp"
 )
@@ -820,12 +796,9 @@ private fun CreateProductScreenPreview(
     @PreviewParameter(BooleanPreviewParameter::class) expanded: Boolean
 ) {
     FoodYouTheme {
-        UpdateProductDialog(
-            form = rememberProductFormState(
-                product = ProductPreviewParameterProvider().values.first()
-            ),
+        CreateProductDialog(
             onClose = {},
-            onUpdate = {},
+            onCreate = {},
             expanded = expanded,
             onExpandedChange = {}
         )

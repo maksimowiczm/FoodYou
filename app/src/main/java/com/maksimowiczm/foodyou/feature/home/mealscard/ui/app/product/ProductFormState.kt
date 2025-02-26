@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.legacy.product.ui
+package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable

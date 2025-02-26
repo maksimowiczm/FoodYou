@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.feature.legacy.product.ui.update
+package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.michaelbull.result.mapBoth
 import com.maksimowiczm.foodyou.data.ProductRepository
-import com.maksimowiczm.foodyou.feature.legacy.product.ui.ProductFormState
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductFormState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn

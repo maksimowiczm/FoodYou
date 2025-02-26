@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.data.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.data.OpenFoodFactsSettingsRepositoryImpl
 import com.maksimowiczm.foodyou.data.ProductRepository
 import com.maksimowiczm.foodyou.data.ProductRepositoryImpl
-import com.maksimowiczm.foodyou.feature.legacy.camera.ui.zxingCameraBarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.zxingCameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.settings.aboutsettings.ui.AboutSettingsViewModel
 import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.CountryFlag
 import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.OpenFoodFactsSettingsViewModel
@@ -32,9 +32,8 @@ val flavourModule = module {
     singleOf(::OpenFoodFactsRemoteMediatorFactory).bind<ProductRemoteMediatorFactory>()
     factory { flagCdnCountryFlag }.bind<CountryFlag>()
 
-    // -- Legacy part --
+    factory { zxingCameraBarcodeScannerScreen }
 
-    // Legacy Add Food Feature
     factory {
         AddFoodRepositoryImpl(
             addFoodDao = get(),
@@ -44,9 +43,5 @@ val flavourModule = module {
     }.bind<AddFoodRepository>()
     factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
 
-    // Legacy Open Source Camera Feature
-    factory { zxingCameraBarcodeScannerScreen }
-
-    // Legacy Open Source Diary Feature
     factoryOf(::DiaryRepositoryImpl).bind<DiaryRepository>()
 }

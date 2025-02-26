@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.legacy.camera.ui
+package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

@@ -47,11 +47,11 @@ import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.feature.home.HomeFeature
 import com.maksimowiczm.foodyou.feature.home.HomeState
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealHeader
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealSharedTransitionKeys
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealSharedTransitionSpecs
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealSharedTransitionSpecs.overlayClipFromCardToScreen
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealHeaderTransitionKeys
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealHeaderTransitionSpecs
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealHeaderTransitionSpecs.overlayClipFromCardToScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.NutrientsLayout
-import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
+import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
@@ -129,7 +129,7 @@ private fun MealsCard(
     )
 
     val sharedTransitionScope =
-        LocalSharedTransitionScope.current ?: error("SharedTransitionScope not found")
+        LocalHomeSharedTransitionScope.current ?: error("SharedTransitionScope not found")
 
     with(sharedTransitionScope) {
         HorizontalPager(
@@ -260,14 +260,14 @@ fun SharedTransitionScope.MealCard(
         onClick = onMealClick,
         modifier = modifier.sharedBounds(
             sharedContentState = rememberSharedContentState(
-                key = MealSharedTransitionKeys.MealContainer(
+                key = MealHeaderTransitionKeys.MealContainer(
                     mealId = meal.id,
                     epochDay = epochDay
                 )
             ),
             animatedVisibilityScope = animatedVisibilityScope,
-            enter = MealSharedTransitionSpecs.containerEnterTransition,
-            exit = MealSharedTransitionSpecs.containerExitTransition,
+            enter = MealHeaderTransitionSpecs.containerEnterTransition,
+            exit = MealHeaderTransitionSpecs.containerExitTransition,
             resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
             clipInOverlayDuringTransition = OverlayClip(
                 animatedVisibilityScope.overlayClipFromCardToScreen()
@@ -280,7 +280,7 @@ fun SharedTransitionScope.MealCard(
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.sharedBounds(
                     sharedContentState = rememberSharedContentState(
-                        key = MealSharedTransitionKeys.MealTitle(
+                        key = MealHeaderTransitionKeys.MealTitle(
                             mealId = meal.id,
                             epochDay = epochDay
                         )
@@ -294,7 +294,7 @@ fun SharedTransitionScope.MealCard(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.sharedBounds(
                     sharedContentState = rememberSharedContentState(
-                        key = MealSharedTransitionKeys.MealTime(
+                        key = MealHeaderTransitionKeys.MealTime(
                             mealId = meal.id,
                             epochDay = epochDay
                         )
@@ -376,7 +376,7 @@ fun SharedTransitionScope.MealCard(
         }
 
         val sharedTransitionScope =
-            LocalSharedTransitionScope.current ?: error("SharedTransitionScope not found")
+            LocalHomeSharedTransitionScope.current ?: error("SharedTransitionScope not found")
 
         with(sharedTransitionScope) {
             MealHeader(
@@ -395,7 +395,7 @@ fun SharedTransitionScope.MealCard(
                             fatsLabel = fatsLabel,
                             modifier = Modifier.sharedBounds(
                                 sharedContentState = rememberSharedContentState(
-                                    key = MealSharedTransitionKeys.MealNutrients(
+                                    key = MealHeaderTransitionKeys.MealNutrients(
                                         mealId = meal.id,
                                         epochDay = epochDay
                                     )

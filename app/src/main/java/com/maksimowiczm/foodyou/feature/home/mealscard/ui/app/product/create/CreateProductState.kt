@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.legacy.product.ui.create
+package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create
 
 sealed interface CreateProductState {
     data object Nothing : CreateProductState

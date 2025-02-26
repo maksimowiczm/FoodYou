@@ -1,14 +1,14 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.feature.home.calendarcard.ui.CalendarViewModel
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.CameraBarcodeScannerViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.meal.DiaryDayMealViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.CreateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.UpdateMeasurementViewModel
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create.CreateProductViewModel
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.MealsCardViewModel
-import com.maksimowiczm.foodyou.feature.legacy.camera.ui.CameraBarcodeScannerViewModel
-import com.maksimowiczm.foodyou.feature.legacy.product.ui.create.CreateProductViewModel
-import com.maksimowiczm.foodyou.feature.legacy.product.ui.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.feature.settings.goalssettings.ui.GoalsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.ui.DiaryViewModel

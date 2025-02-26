@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.legacy.camera.ui
+package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner
 
 import android.Manifest
 import android.content.Intent

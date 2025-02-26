@@ -7,7 +7,8 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.LocalMealSharedTransitionScope
+import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
 
 /**
  * A preview composable that wraps the content in a [SharedTransitionLayout] and [AnimatedVisibility].
@@ -21,7 +22,8 @@ fun SharedTransitionPreview(
 ) {
     SharedTransitionLayout {
         CompositionLocalProvider(
-            LocalSharedTransitionScope provides this
+            LocalHomeSharedTransitionScope provides this,
+            LocalMealSharedTransitionScope provides this
         ) {
             AnimatedVisibility(true) {
                 block(this@SharedTransitionLayout, this@AnimatedVisibility)

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.legacy.product.ui.update
+package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update
 
 import com.maksimowiczm.foodyou.data.model.Product
 

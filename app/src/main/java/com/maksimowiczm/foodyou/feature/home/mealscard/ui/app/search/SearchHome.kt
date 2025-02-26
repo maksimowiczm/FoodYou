@@ -25,11 +25,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -57,6 +59,7 @@ import com.maksimowiczm.foodyou.ui.ext.performToggle
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -151,9 +154,22 @@ private fun SearchHome(
         )
     }
 
+    // TODO
+    //  Replace with animatedVisibilityScope.transition.isRunning is working as intended (by me)
+    //  with predictive back
+    var showFab by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        delay(200)
+        showFab = true
+    }
+
     val fab = @Composable {
         FloatingActionButton(
-            onClick = onCreateProduct
+            onClick = onCreateProduct,
+            modifier = Modifier.animateFloatingActionButton(
+                visible = showFab,
+                alignment = Alignment.BottomEnd
+            )
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
