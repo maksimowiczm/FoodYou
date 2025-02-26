@@ -22,7 +22,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.R
-import com.maksimowiczm.foodyou.feature.HomeFeature
+import com.maksimowiczm.foodyou.feature.home.HomeFeature
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

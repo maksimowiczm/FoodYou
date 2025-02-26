@@ -10,9 +10,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
-import com.maksimowiczm.foodyou.feature.diary.ui.theme.DarkNutrientsPalette
-import com.maksimowiczm.foodyou.feature.diary.ui.theme.LightNutrientsPalette
-import com.maksimowiczm.foodyou.feature.diary.ui.theme.LocalNutrientsPalette
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

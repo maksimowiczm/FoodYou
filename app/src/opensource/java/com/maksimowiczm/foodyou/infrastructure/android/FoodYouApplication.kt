@@ -1,28 +1,37 @@
 package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.app.Application
-import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.FeatureManager
-import com.maksimowiczm.foodyou.feature.about.AboutFeature
-import com.maksimowiczm.foodyou.feature.addfood.OpenSourceAddFoodFeature
-import com.maksimowiczm.foodyou.feature.calendar.CalendarFeature
-import com.maksimowiczm.foodyou.feature.diary.OpenSourceDiaryFeature
-import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsFeature
-import com.maksimowiczm.foodyou.feature.system.SystemFeature
+import com.maksimowiczm.foodyou.feature.home.calendarcard.CalendarCard
+import com.maksimowiczm.foodyou.feature.home.caloriescard.CaloriesCard
+import com.maksimowiczm.foodyou.feature.home.mealscard.MealsCard
+import com.maksimowiczm.foodyou.feature.settings.aboutsettings.AboutSettings
+import com.maksimowiczm.foodyou.feature.settings.goalssettings.GoalsSettings
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.MealsSettings
+import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.OpenFoodFactsSettings
+import com.maksimowiczm.foodyou.infrastructure.di.dataModule
 import com.maksimowiczm.foodyou.infrastructure.di.dataStoreModule
+import com.maksimowiczm.foodyou.infrastructure.di.databaseModule
+import com.maksimowiczm.foodyou.infrastructure.di.featureModule
 import com.maksimowiczm.foodyou.infrastructure.di.flavourModule
+import com.maksimowiczm.foodyou.infrastructure.di.legacyModule
+import com.maksimowiczm.foodyou.infrastructure.di.platformModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 class FoodYouApplication : Application() {
     private fun setupFeatures() {
-        FeatureManager.add(
-            SystemFeature,
-            CalendarFeature,
-            OpenFoodFactsFeature,
-            OpenSourceDiaryFeature,
-            OpenSourceAddFoodFeature,
-            AboutFeature
+        FeatureManager.addHomeFeature(
+            CalendarCard,
+            MealsCard,
+            CaloriesCard
+        )
+
+        FeatureManager.addSettingsFeature(
+            OpenFoodFactsSettings,
+            MealsSettings,
+            GoalsSettings,
+            AboutSettings
         )
     }
 
@@ -35,17 +44,14 @@ class FoodYouApplication : Application() {
             androidContext(this@FoodYouApplication.applicationContext)
 
             modules(
+                platformModule,
                 flavourModule,
-                dataStoreModule
+                databaseModule,
+                dataStoreModule,
+                dataModule,
+                featureModule,
+                legacyModule
             )
-
-            FeatureManager.features
-                .filterIsInstance<Feature.Koin>()
-                .forEach {
-                    with(it) {
-                        setup()
-                    }
-                }
         }
     }
 }

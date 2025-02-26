@@ -4,18 +4,18 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
-import com.maksimowiczm.foodyou.feature.addfood.database.AddFoodDatabase
-import com.maksimowiczm.foodyou.feature.addfood.database.InitializeMealsCallback
-import com.maksimowiczm.foodyou.feature.addfood.database.MealEntity
-import com.maksimowiczm.foodyou.feature.addfood.database.ProductQueryEntity
-import com.maksimowiczm.foodyou.feature.addfood.database.WeightMeasurementEntity
-import com.maksimowiczm.foodyou.feature.addfood.database.WeightMeasurementTypeConverter
-import com.maksimowiczm.foodyou.feature.openfoodfacts.database.OpenFoodFactsDatabase
-import com.maksimowiczm.foodyou.feature.openfoodfacts.database.OpenFoodFactsPagingKey
-import com.maksimowiczm.foodyou.feature.openfoodfacts.database.ProductDatabase
-import com.maksimowiczm.foodyou.feature.openfoodfacts.database.ProductEntity
-import com.maksimowiczm.foodyou.feature.openfoodfacts.database.ProductSourceConverter
-import com.maksimowiczm.foodyou.feature.openfoodfacts.database.WeightUnitConverter
+import com.maksimowiczm.foodyou.database.callback.InitializeMealsCallback
+import com.maksimowiczm.foodyou.database.converter.ProductSourceConverter
+import com.maksimowiczm.foodyou.database.converter.WeightMeasurementTypeConverter
+import com.maksimowiczm.foodyou.database.converter.WeightUnitConverter
+import com.maksimowiczm.foodyou.database.dao.AddFoodDao
+import com.maksimowiczm.foodyou.database.dao.OpenFoodFactsDao
+import com.maksimowiczm.foodyou.database.dao.ProductDao
+import com.maksimowiczm.foodyou.database.entity.MealEntity
+import com.maksimowiczm.foodyou.database.entity.OpenFoodFactsPagingKey
+import com.maksimowiczm.foodyou.database.entity.ProductEntity
+import com.maksimowiczm.foodyou.database.entity.ProductQueryEntity
+import com.maksimowiczm.foodyou.database.entity.WeightMeasurementEntity
 
 @Database(
     entities = [
@@ -33,11 +33,11 @@ import com.maksimowiczm.foodyou.feature.openfoodfacts.database.WeightUnitConvert
     ProductSourceConverter::class,
     WeightMeasurementTypeConverter::class
 )
-abstract class OpenSourceDatabase :
-    RoomDatabase(),
-    ProductDatabase,
-    AddFoodDatabase,
-    OpenFoodFactsDatabase {
+abstract class OpenSourceDatabase : RoomDatabase() {
+    abstract fun addFoodDao(): AddFoodDao
+    abstract fun productDao(): ProductDao
+    abstract fun openFoodFactsDao(): OpenFoodFactsDao
+
     companion object {
         const val VERSION = 1
 

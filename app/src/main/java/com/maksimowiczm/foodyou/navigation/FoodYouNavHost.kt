@@ -6,8 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.Feature
-import com.maksimowiczm.foodyou.ui.SettingsScreen
 import com.maksimowiczm.foodyou.ui.home.HomeScreen
+import com.maksimowiczm.foodyou.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -29,7 +29,7 @@ fun FoodYouNavHost(
         crossfadeComposable<Home> {
             HomeScreen(
                 animatedVisibilityScope = this,
-                homeFeatures = homeFeatures.flatMap { it.buildHomeFeatures(navController) },
+                homeFeatures = homeFeatures.map { it.build(navController) },
                 onSettingsClick = {
                     navController.navigate(
                         route = Settings,
@@ -42,7 +42,7 @@ fun FoodYouNavHost(
         }
         forwardBackwardComposable<Settings> {
             SettingsScreen(
-                settingsFeatures = settingsFeatures.flatMap {
+                settingsFeatures = settingsFeatures.map {
                     it.buildSettingsFeatures(navController)
                 },
                 onBack = {
@@ -55,12 +55,12 @@ fun FoodYouNavHost(
         }
         homeFeatures.forEach { feature ->
             feature.run {
-                homeGraph(navController)
+                graph(navController)
             }
         }
         settingsFeatures.forEach { feature ->
             feature.run {
-                settingsGraph(navController)
+                graph(navController)
             }
         }
     }

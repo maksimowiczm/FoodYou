@@ -1,0 +1,88 @@
+package com.maksimowiczm.foodyou.feature.legacy.camera
+
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
+import com.maksimowiczm.foodyou.feature.legacy.camera.ui.BarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.legacy.camera.ui.CameraBarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.legacy.camera.ui.CameraSharedTransitionKeys
+import com.maksimowiczm.foodyou.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.ui.LocalSharedTransitionScope
+import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
+import kotlinx.serialization.Serializable
+import org.koin.core.definition.KoinDefinition
+import org.koin.core.module.Module
+
+abstract class CameraFeature(
+    barcodeScannerScreen: Module.() -> KoinDefinition<BarcodeScannerScreen>
+) {
+
+    fun interface BarcodeHandlerFactory {
+        @Composable
+        operator fun NavBackStackEntry.invoke(): BarcodeHandler
+    }
+
+    fun interface BarcodeHandler {
+        fun onBarcodeScan(barcode: String)
+    }
+
+    data class GraphProps(val handlerFactory: BarcodeHandlerFactory)
+
+    @OptIn(ExperimentalSharedTransitionApi::class)
+    final fun NavGraphBuilder.graph(navController: NavController, props: GraphProps) {
+        crossfadeComposable<BarcodeScannerRoute> {
+            val sharedTransitionScope =
+                LocalSharedTransitionScope.current ?: error("No shared transition scope found")
+
+            val handler = with(props.handlerFactory) {
+                it.invoke()
+            }
+
+            with(sharedTransitionScope) {
+                CameraBarcodeScannerScreen(
+                    onBarcodeScan = handler::onBarcodeScan,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(
+                                CameraSharedTransitionKeys.BARCODE_SCANNER
+                            ),
+                            animatedVisibilityScope = this@crossfadeComposable,
+                            enter = crossfadeIn(),
+                            exit = crossfadeOut(),
+                            clipInOverlayDuringTransition = OverlayClip(
+                                MaterialTheme.shapes.large
+                            )
+                        )
+                        .skipToLookaheadSize()
+                )
+            }
+        }
+    }
+
+    @Serializable
+    data object BarcodeScannerRoute
+
+    companion object {
+        fun NavController.navigateToBarcodeScanner(navOptions: NavOptions? = null) {
+            navigate(
+                route = BarcodeScannerRoute,
+                navOptions = navOptions
+            )
+        }
+
+        fun NavController.popBarcodeScanner(inclusive: Boolean = true, saveState: Boolean = false) {
+            popBackStack<BarcodeScannerRoute>(
+                inclusive = inclusive,
+                saveState = saveState
+            )
+        }
+    }
+}

@@ -8,7 +8,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
-import com.maksimowiczm.foodyou.feature.addfood.data.model.ProductQuery
+import com.maksimowiczm.foodyou.data.model.ProductQuery
+import com.maksimowiczm.foodyou.ui.feature.addfood.search.SearchTopBar
+import com.maksimowiczm.foodyou.ui.feature.addfood.search.rememberSearchTopBarState
 import kotlinx.datetime.LocalDateTime
 import org.junit.Rule
 import org.junit.Test
