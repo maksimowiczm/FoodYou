@@ -187,7 +187,7 @@ interface AddFoodDao {
     @Transaction
     @Query(
         """
-        SELECT *
+        SELECT wm.*
         FROM ProductEntity p 
         LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId
         WHERE wm.id = :measurementId

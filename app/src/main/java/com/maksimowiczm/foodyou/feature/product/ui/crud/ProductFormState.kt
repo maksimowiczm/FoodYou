@@ -47,19 +47,19 @@ fun rememberProductFormState(product: Product? = null): ProductFormState {
 
     val brand = rememberFormFieldWithTextFieldValue(
         initialValue = product?.brand,
-        requireDirty = product == null,
+        requireDirty = false,
         parser = nullableStringParser<MyError>()
     )
 
     val barcode = rememberFormFieldWithTextFieldValue(
         initialValue = product?.barcode,
-        requireDirty = product == null,
+        requireDirty = false,
         parser = nullableStringParser<MyError>()
     )
 
     val calories = rememberFormFieldWithTextFieldValue(
         initialValue = product?.nutrients?.calories,
-        requireDirty = product == null,
+        requireDirty = false,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -107,7 +107,7 @@ fun rememberProductFormState(product: Product? = null): ProductFormState {
 
     val sugars = rememberFormFieldWithTextFieldValue(
         initialValue = product?.nutrients?.sugars,
-        requireDirty = product == null,
+        requireDirty = false,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -137,7 +137,7 @@ fun rememberProductFormState(product: Product? = null): ProductFormState {
 
     val saturatedFats = rememberFormFieldWithTextFieldValue(
         initialValue = product?.nutrients?.saturatedFats,
-        requireDirty = product == null,
+        requireDirty = false,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -151,7 +151,7 @@ fun rememberProductFormState(product: Product? = null): ProductFormState {
 
     val salt = rememberFormFieldWithTextFieldValue(
         initialValue = product?.nutrients?.salt,
-        requireDirty = product == null,
+        requireDirty = false,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -165,7 +165,7 @@ fun rememberProductFormState(product: Product? = null): ProductFormState {
 
     val sodium = rememberFormFieldWithTextFieldValue(
         initialValue = product?.nutrients?.sodium,
-        requireDirty = product == null,
+        requireDirty = false,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -179,7 +179,7 @@ fun rememberProductFormState(product: Product? = null): ProductFormState {
 
     val fiber = rememberFormFieldWithTextFieldValue(
         initialValue = product?.nutrients?.fiber,
-        requireDirty = product == null,
+        requireDirty = false,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -193,7 +193,7 @@ fun rememberProductFormState(product: Product? = null): ProductFormState {
 
     val packageWeight = rememberFormFieldWithTextFieldValue(
         initialValue = product?.packageWeight,
-        requireDirty = product == null,
+        requireDirty = false,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -210,7 +210,7 @@ fun rememberProductFormState(product: Product? = null): ProductFormState {
 
     val servingWeight = rememberFormFieldWithTextFieldValue(
         initialValue = product?.servingWeight,
-        requireDirty = product == null,
+        requireDirty = false,
         parser = nullableFloatParser(
             onNan = { MyError.NotANumber }
         )
@@ -353,19 +353,19 @@ class ProductFormState(
 
                 val caloriesValue = NutrimentHelper.calculateCalories(proteins, carbohydrates, fats)
 
-                calories.onRawValueChange(caloriesValue)
+                calories.onRawValueChange(caloriesValue, touch = false)
             }
         }
-    }
-
-    fun validate() {
-        all.forEach { it.touch() }
     }
 
     var weightUnit by mutableStateOf(initialWeightUnit)
 
     val isValid: Boolean by derivedStateOf {
         all.all { it.isValid } && globalError == null
+    }
+
+    val isDirty: Boolean by derivedStateOf {
+        all.any { it.dirty }
     }
 
     val globalError by derivedStateOf {

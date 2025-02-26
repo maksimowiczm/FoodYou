@@ -32,18 +32,8 @@
 
     <string name="product_package_weight">Waga opakowania</string>
     <string name="product_package">Opakowanie</string>
-    <plurals name="product_package">
-        <item quantity="one">opakowanie</item>
-        <item quantity="few">opakowania</item>
-        <item quantity="many">opakowań</item>
-    </plurals>
     <string name="product_serving_weight">Waga porcji</string>
     <string name="product_serving">Porcja</string>
-    <plurals name="product_serving">
-        <item quantity="one">porcja</item>
-        <item quantity="few">porcje</item>
-        <item quantity="many">porcji</item>
-    </plurals>
 
     <string name="product_name">Nazwa</string>
     <string name="product_brand">Marka</string>
@@ -74,20 +64,20 @@
     <string name="action_create_new_product">Stwórz nowy produkt</string>
     <string name="action_create">Stwórz</string>
     <string name="action_clear">Wyczyść</string>
-    <string name="action_open_settings">Otwórz ustawienia</string>
     <string name="action_cancel">Anuluj</string>
     <string name="action_go_to_settings">Przejdź do ustawień</string>
     <string name="action_save">Zapisz</string>
     <string name="action_delete">Usuń</string>
     <string name="action_confirm">Potwierdź</string>
     <string name="action_add_meal">Dodaj posiłek</string>
-    <string name="action_log_products">Zanotuj produkty</string>
     <string name="action_edit">Edytuj</string>
     <string name="action_insert_suggested_search">Wstaw sugerowane wyszukiwanie</string>
     <string name="action_edit_entry">Edytuj wpis</string>
     <string name="action_delete_entry">Usuń wpis</string>
     <string name="action_add_food">Dodaj</string>
     <string name="action_undo">Cofnij</string>
+    <string name="action_close">Zamknij</string>
+    <string name="action_discard">Odrzuć</string>
 
     <string name="neutral_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu</string>
     <string name="neutral_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu</string>
@@ -109,11 +99,13 @@
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Wygląda na to, że ten posiłek jest pusty. Dodaj jedzenie, aby śledzić kalorie</string>
     <string name="neutral_entry_deleted">Wpis usunięty</string>
 
+    <string name="question_discard_product">Odrzucić produkt?</string>
+    <string name="question_discard_changes">Odrzucić zmiany?</string>
+
     <string name="error_this_field_is_required">To pole jest wymagane</string>
     <string name="error_this_field_cannot_be_empty">To pole nie może być puste</string>
     <string name="error_invalid_number">Niepoprawna liczba</string>
     <string name="error_value_cannot_be_negative">Wartość nie może być ujemna</string>
-    <string name="error_there_are_errors_in_the_form">W formularzu występują błędy</string>
     <string name="error_sum_of_macronutrients_cannot_exceed_100g">Suma makroskładników nie może przekraczać 100g</string>
     <string name="error_value_must_be_less_than">Wartość musi być mniejsza niż %1$s</string>
     <string name="error_value_must_be_integer">Wartość musi być liczbą całkowitą</string>

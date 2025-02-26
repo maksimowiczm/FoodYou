@@ -19,7 +19,7 @@ class UpdateProductViewModel(
     private val productRepository: ProductRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val productId = savedStateHandle.toRoute<ProductFeature.UpdateProduct>().productId
+    private val productId = savedStateHandle.toRoute<ProductFeature.UpdateProductDialog>().productId
     private val _uiState = MutableStateFlow<UpdateProductState>(UpdateProductState.Loading)
     val uiState = _uiState.asStateFlow()
 

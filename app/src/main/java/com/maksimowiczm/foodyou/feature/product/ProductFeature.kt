@@ -13,9 +13,9 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.NavigationFeature
 import com.maksimowiczm.foodyou.feature.product.data.ProductRepository
-import com.maksimowiczm.foodyou.feature.product.ui.crud.create.CreateProductScreen
+import com.maksimowiczm.foodyou.feature.product.ui.crud.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.product.ui.crud.create.CreateProductViewModel
-import com.maksimowiczm.foodyou.feature.product.ui.crud.update.UpdateProductScreen
+import com.maksimowiczm.foodyou.feature.product.ui.crud.update.UpdateProductDialog
 import com.maksimowiczm.foodyou.feature.product.ui.crud.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
@@ -59,7 +59,7 @@ abstract class ProductFeature(
 
     final override fun NavGraphBuilder.graph(navController: NavController, props: GraphProps) {
         val (createOnNavigateBack, createOnSuccess, updateOnNavigateBack, updateOnSuccess) = props
-        composable<CreateProduct>(
+        composable<CreateProductDialog>(
             enterTransition = {
                 crossfadeIn() + slideInVertically(
                     animationSpec = tween(
@@ -77,16 +77,16 @@ abstract class ProductFeature(
                 )
             }
         ) {
-            val (epochDay, mealType) = it.toRoute<CreateProduct>()
+            val (epochDay, mealType) = it.toRoute<CreateProductDialog>()
 
-            CreateProductScreen(
-                onNavigateBack = createOnNavigateBack,
+            CreateProductDialog(
+                onClose = createOnNavigateBack,
                 onSuccess = { productId ->
                     createOnSuccess(productId, epochDay, mealType)
                 }
             )
         }
-        composable<UpdateProduct>(
+        composable<UpdateProductDialog>(
             enterTransition = {
                 crossfadeIn() + slideInVertically(
                     animationSpec = tween(
@@ -104,8 +104,8 @@ abstract class ProductFeature(
                 )
             }
         ) {
-            UpdateProductScreen(
-                onNavigateBack = updateOnNavigateBack,
+            UpdateProductDialog(
+                onClose = updateOnNavigateBack,
                 onSuccess = updateOnSuccess
             )
         }
@@ -114,10 +114,10 @@ abstract class ProductFeature(
     sealed interface ProductsRoute
 
     @Serializable
-    data class CreateProduct(val epochDay: Int, val mealId: Long) : ProductsRoute
+    data class CreateProductDialog(val epochDay: Int, val mealId: Long) : ProductsRoute
 
     @Serializable
-    data class UpdateProduct(val productId: Long) : ProductsRoute
+    data class UpdateProductDialog(val productId: Long) : ProductsRoute
 
     companion object {
         fun <R : ProductsRoute> NavController.navigateToProducts(

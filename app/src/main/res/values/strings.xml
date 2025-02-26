@@ -37,16 +37,8 @@
 
     <string name="product_package_weight">Package weight</string>
     <string name="product_package">Package</string>
-    <plurals name="product_package">
-        <item quantity="one">package</item>
-        <item quantity="other">packages</item>
-    </plurals>
     <string name="product_serving_weight">Serving weight</string>
     <string name="product_serving">Serving</string>
-    <plurals name="product_serving">
-        <item quantity="one">serving</item>
-        <item quantity="other">servings</item>
-    </plurals>
     <string name="product_name">Name</string>
     <string name="product_brand">Brand</string>
     <string name="product_weight_unit">Weight unit</string>
@@ -75,20 +67,20 @@
     <string name="action_create_new_product">Create new product</string>
     <string name="action_create">Create</string>
     <string name="action_clear">Clear</string>
-    <string name="action_open_settings">Open settings</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_go_to_settings">Go to settings</string>
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
     <string name="action_confirm">Confirm</string>
     <string name="action_add_meal">Add meal</string>
-    <string name="action_log_products">Log products</string>
     <string name="action_edit">Edit</string>
     <string name="action_insert_suggested_search">Insert suggested search</string>
     <string name="action_edit_entry">Edit entry</string>
     <string name="action_delete_entry">Delete entry</string>
     <string name="action_add_food" description="Should be short. Can be single 'Add'.">Add food</string>
     <string name="action_undo">Undo</string>
+    <string name="action_close">Close</string>
+    <string name="action_discard">Discard</string>
 
     <string name="neutral_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_camera_request_rationale">You must allow access in order to scan barcodes.</string>
@@ -109,11 +101,13 @@
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Looks like this meal is empty. Add some food to track your calories.</string>
     <string name="neutral_entry_deleted">Entry deleted</string>
 
+    <string name="question_discard_product">Discard product?</string>
+    <string name="question_discard_changes">Discard changes?</string>
+
     <string name="error_this_field_is_required">This field is required</string>
     <string name="error_this_field_cannot_be_empty">This field cannot be empty</string>
     <string name="error_invalid_number">Invalid number</string>
     <string name="error_value_cannot_be_negative">Value cannot be negative</string>
-    <string name="error_there_are_errors_in_the_form">There are errors in the form</string>
     <string name="error_sum_of_macronutrients_cannot_exceed_100g">Sum of macronutrients cannot exceed 100g</string>
     <string name="error_value_must_be_less_than">Value must be less than %1$s</string>
     <string name="error_value_must_be_integer">Value must be an integer</string>

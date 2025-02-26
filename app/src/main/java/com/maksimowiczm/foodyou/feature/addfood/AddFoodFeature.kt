@@ -91,7 +91,7 @@ abstract class AddFoodFeature(
                     onBack = props.onClose,
                     onCreateProduct = { epochDay, mealId ->
                         navController.navigateToProducts(
-                            route = ProductFeature.CreateProduct(
+                            route = ProductFeature.CreateProductDialog(
                                 epochDay = epochDay,
                                 mealId = mealId
                             ),
@@ -119,7 +119,7 @@ abstract class AddFoodFeature(
                             onSuccess = { navController.popPortion<PortionFeature.Create>() },
                             onProductEdit = { id ->
                                 navController.navigateToProducts(
-                                    route = ProductFeature.UpdateProduct(
+                                    route = ProductFeature.UpdateProductDialog(
                                         productId = id
                                     )
                                 )
@@ -131,7 +131,7 @@ abstract class AddFoodFeature(
                             onSuccess = { navController.popPortion<PortionFeature.Edit>() },
                             onProductEdit = { id ->
                                 navController.navigateToProducts(
-                                    route = ProductFeature.UpdateProduct(
+                                    route = ProductFeature.UpdateProductDialog(
                                         productId = id
                                     )
                                 )
@@ -164,7 +164,7 @@ abstract class AddFoodFeature(
                     navController = navController,
                     props = ProductFeature.GraphProps(
                         createOnNavigateBack = {
-                            navController.popProducts<ProductFeature.CreateProduct>()
+                            navController.popProducts<ProductFeature.CreateProductDialog>()
                         },
                         createOnSuccess = { productId, epochDay, mealId ->
                             navController.navigateToPortion(
@@ -174,7 +174,7 @@ abstract class AddFoodFeature(
                                     productId = productId
                                 ),
                                 navOptions = navOptions {
-                                    popUpTo(Route) {
+                                    popUpTo<Route> {
                                         inclusive = false
                                     }
                                     launchSingleTop = true
@@ -182,10 +182,10 @@ abstract class AddFoodFeature(
                             )
                         },
                         updateOnNavigateBack = {
-                            navController.popProducts<ProductFeature.UpdateProduct>()
+                            navController.popProducts<ProductFeature.UpdateProductDialog>()
                         },
                         updateOnSuccess = {
-                            navController.popProducts<ProductFeature.UpdateProduct>()
+                            navController.popProducts<ProductFeature.UpdateProductDialog>()
                         }
                     )
                 )
