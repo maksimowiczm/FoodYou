@@ -177,14 +177,6 @@ class AddFoodRepositoryImpl(
         )
     }
 
-    override fun observeTotalCalories(mealId: Long, date: LocalDate) =
-        addFoodDao.observeMeasuredProducts(
-            mealId = mealId,
-            epochDay = date.toEpochDays()
-        ).map { list ->
-            list.sumOf { it.toDomain().calories }
-        }
-
     override fun observeQuantitySuggestionByProductId(productId: Long) = combine(
         productDao.observeProductById(productId),
         addFoodDao.observeQuantitySuggestionsByProductId(productId)

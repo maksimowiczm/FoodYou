@@ -16,7 +16,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -63,12 +65,17 @@ fun CameraBarcodeScannerScreen(
         }
     }
 
+    val hapticFeedback = LocalHapticFeedback.current
+
     CameraBarcodeScannerScreen(
         isGranted = isGranted,
         shouldShowRationale = cameraPermissionState.status.shouldShowRationale,
         cameraPermissionRequests = cameraPermissionRequests,
         onRequestPermission = onRequestPermission,
-        onBarcodeScan = onBarcodeScan,
+        onBarcodeScan = {
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+            onBarcodeScan(it)
+        },
         modifier = modifier
     )
 }

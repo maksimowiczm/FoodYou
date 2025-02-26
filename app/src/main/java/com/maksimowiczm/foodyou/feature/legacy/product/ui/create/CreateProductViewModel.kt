@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.legacy.product.ui.update
+package com.maksimowiczm.foodyou.feature.legacy.product.ui.create
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,43 +8,16 @@ import com.maksimowiczm.foodyou.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.legacy.product.ui.ProductFormState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class UpdateProductViewModel(
-    private val productRepository: ProductRepository,
-    private val productId: Long
-) : ViewModel() {
-    private val _uiState = MutableStateFlow<UpdateProductState>(UpdateProductState.Loading)
+class CreateProductViewModel(private val productRepository: ProductRepository) : ViewModel() {
+    private val _uiState = MutableStateFlow<CreateProductState>(CreateProductState.Nothing)
     val uiState = _uiState.asStateFlow()
 
-    init {
-        productRepository.observeProductById(productId).onEach {
-            if (it == null) {
-                Log.e(TAG, "Product not found")
-                return@onEach
-            }
-
-            if (
-                _uiState.value is UpdateProductState.ProductReady ||
-                _uiState.value is UpdateProductState.Loading
-            ) {
-                _uiState.value = UpdateProductState.ProductReady(it)
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    fun updateProduct(formState: ProductFormState) {
-        val state = _uiState.value
-        if (state !is UpdateProductState.ProductReady) {
-            Log.e(TAG, "Product not ready")
-            return
-        }
-
-        _uiState.value = UpdateProductState.UpdatingProduct(state.product)
-
+    fun onCreateProduct(formState: ProductFormState) {
         viewModelScope.launch {
+            _uiState.value = CreateProductState.CreatingProduct
+
             if (
                 formState.name.value == null ||
                 formState.calories.value == null ||
@@ -53,11 +26,11 @@ class UpdateProductViewModel(
                 formState.fats.value == null
             ) {
                 Log.w(TAG, "Required fields are missing")
+                _uiState.value = CreateProductState.Error
                 return@launch
             }
 
-            val result = productRepository.updateProduct(
-                id = productId,
+            val result = productRepository.createUserProduct(
                 name = formState.name.value,
                 brand = formState.brand.value,
                 barcode = formState.barcode.value,
@@ -76,24 +49,18 @@ class UpdateProductViewModel(
             )
 
             result.mapBoth(
-                success = {
-                    val product = _uiState.value as? UpdateProductState.UpdatingProduct
-
-                    if (product == null) {
-                        Log.e(TAG, "Product not updating. Invalid state")
-                        return@mapBoth
-                    }
-
-                    _uiState.value = UpdateProductState.ProductUpdated(product.product)
+                success = { productId ->
+                    _uiState.value = CreateProductState.ProductCreated(productId)
                 },
                 failure = {
                     Log.e(TAG, "Failed to create product $it")
+                    _uiState.value = CreateProductState.Error
                 }
             )
         }
     }
 
-    companion object {
-        private const val TAG = "UpdateProductViewModel"
+    private companion object {
+        private const val TAG = "CreateProductViewModel"
     }
 }

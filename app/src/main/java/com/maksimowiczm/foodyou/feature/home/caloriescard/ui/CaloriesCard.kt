@@ -39,9 +39,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.home.HomeState
-import com.maksimowiczm.foodyou.feature.home.caloriescard.ui.ValueStatus.Achieved
-import com.maksimowiczm.foodyou.feature.home.caloriescard.ui.ValueStatus.Exceeded
-import com.maksimowiczm.foodyou.feature.home.caloriescard.ui.ValueStatus.Remaining
 import com.maksimowiczm.foodyou.ui.DiaryViewModel
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
@@ -346,9 +343,9 @@ private enum class ValueStatus {
 }
 
 private infix fun <N : Comparable<N>> N.withGoal(goal: N) = when {
-    this < goal -> Remaining
-    this > goal -> Exceeded
-    else -> Achieved
+    this < goal -> ValueStatus.Remaining
+    this > goal -> ValueStatus.Exceeded
+    else -> ValueStatus.Achieved
 }
 
 @Composable

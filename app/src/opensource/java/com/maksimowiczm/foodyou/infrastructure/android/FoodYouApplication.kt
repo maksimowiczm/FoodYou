@@ -14,7 +14,6 @@ import com.maksimowiczm.foodyou.infrastructure.di.dataStoreModule
 import com.maksimowiczm.foodyou.infrastructure.di.databaseModule
 import com.maksimowiczm.foodyou.infrastructure.di.featureModule
 import com.maksimowiczm.foodyou.infrastructure.di.flavourModule
-import com.maksimowiczm.foodyou.infrastructure.di.legacyModule
 import com.maksimowiczm.foodyou.infrastructure.di.platformModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -49,8 +48,7 @@ class FoodYouApplication : Application() {
                 databaseModule,
                 dataStoreModule,
                 dataModule,
-                featureModule,
-                legacyModule
+                featureModule
             )
         }
     }

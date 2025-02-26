@@ -9,15 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 
 interface AddFoodRepository {
-    /**
-     * Add a measurement to the diary.
-     *
-     * @param date The date of the diary entry.
-     * @param mealId The meal ID.
-     * @param productId The product ID.
-     * @param weightMeasurement The weight measurement of the portion.
-     * @return The ID of the added measurement.
-     */
     suspend fun addMeasurement(
         date: LocalDate,
         mealId: Long,
@@ -36,8 +27,6 @@ interface AddFoodRepository {
         date: LocalDate,
         query: String?
     ): Flow<PagingData<ProductWithWeightMeasurement>>
-
-    fun observeTotalCalories(mealId: Long, date: LocalDate): Flow<Int>
 
     fun observeQuantitySuggestionByProductId(productId: Long): Flow<QuantitySuggestion>
 
