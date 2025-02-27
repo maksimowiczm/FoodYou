@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -69,7 +71,8 @@ fun SearchHome(
     onCreateProduct: () -> Unit,
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = koinViewModel()
+    viewModel: SearchViewModel = koinViewModel(),
+    lazyListState: LazyListState = rememberLazyListState()
 ) {
     val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems(
         viewModel.viewModelScope.coroutineContext
@@ -89,7 +92,8 @@ fun SearchHome(
         onBack = onBack,
         onCreateProduct = onCreateProduct,
         onBarcodeScanner = onBarcodeScanner,
-        modifier = modifier
+        modifier = modifier,
+        lazyListState = lazyListState
     )
 }
 
@@ -107,7 +111,8 @@ private fun SearchHome(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
     onBarcodeScanner: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    lazyListState: LazyListState = rememberLazyListState()
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
@@ -222,7 +227,8 @@ private fun SearchHome(
             }
 
             LazyColumn(
-                contentPadding = paddingValues
+                contentPadding = paddingValues,
+                state = lazyListState
             ) {
                 item {
                     Spacer(Modifier.height(LocalDensity.current.run { errorCardHeight.toDp() }))

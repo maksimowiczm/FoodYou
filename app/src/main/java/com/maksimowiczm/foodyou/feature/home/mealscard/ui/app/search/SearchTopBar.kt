@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
@@ -129,22 +129,17 @@ private fun InputField(
             }
         },
         trailingIcon = {
-            if (textFieldState.text.isNotBlank()) {
-                IconButton(
-                    onClick = {
-                        if (state.searchBarState.currentValue == SearchBarValue.Expanded) {
-                            textFieldState.clearText()
-                        } else {
-                            onClear()
-                        }
+            Row {
+                if (textFieldState.text.isNotBlank()) {
+                    IconButton(
+                        onClick = onClear
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = stringResource(R.string.action_clear)
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = stringResource(R.string.action_clear)
-                    )
                 }
-            } else if (state.searchBarState.currentValue == SearchBarValue.Collapsed) {
                 IconButton(
                     onClick = onBarcodeScanner
                 ) {

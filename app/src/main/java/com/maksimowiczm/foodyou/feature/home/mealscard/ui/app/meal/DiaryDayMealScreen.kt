@@ -47,6 +47,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -69,6 +70,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -108,6 +110,7 @@ fun DiaryDayMealScreen(
     navigationScope: AnimatedVisibilityScope,
     mealHeaderScope: AnimatedVisibilityScope,
     onProductAdd: () -> Unit,
+    onBarcodeScan: () -> Unit,
     onEditEntry: (measurementId: Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiaryDayMealViewModel = koinViewModel()
@@ -134,6 +137,7 @@ fun DiaryDayMealScreen(
                 products = products,
                 deletedEntryChannel = viewModel.deleteEvent,
                 onProductAdd = onProductAdd,
+                onBarcodeScan = onBarcodeScan,
                 onEditEntry = {
                     onEditEntry(it.measurementId ?: error("No measurement ID to edit"))
                 },
@@ -165,6 +169,7 @@ private fun DiaryDayMealScreen(
     products: List<ProductWithWeightMeasurement>,
     deletedEntryChannel: Flow<Long>,
     onProductAdd: () -> Unit,
+    onBarcodeScan: () -> Unit,
     formatTime: (LocalTime) -> String,
     formatDate: (LocalDate) -> String,
     onEditEntry: (ProductWithWeightMeasurement) -> Unit,
@@ -413,52 +418,73 @@ private fun DiaryDayMealScreen(
 
     val floatingActionButton = @Composable {
         with(mealSTS) {
-            FloatingActionButton(
-                onClick = onProductAdd,
-                modifier = Modifier
-                    .animateFloatingActionButton(
-                        visible = fabVisible,
-                        alignment = Alignment.BottomEnd
-                    )
-                    .sharedBounds(
-                        sharedContentState = rememberSharedContentState(
-                            key = SearchSharedTransition.CONTAINER
-                        ),
-                        animatedVisibilityScope = navigationScope,
-                        enter = SearchSharedTransition.fabContainerEnterTransition,
-                        exit = SearchSharedTransition.fabContainerExitTransition,
-                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
-                    )
+            Column(
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = fabVisible,
+                    alignment = Alignment.BottomEnd
+                ),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Box(
-                    modifier = Modifier.sharedBounds(
-                        sharedContentState = rememberSharedContentState(
-                            key = SearchSharedTransition.CONTENT
-                        ),
-                        animatedVisibilityScope = navigationScope,
-                        enter = SearchSharedTransition.fabContentEnterTransition,
-                        exit = SearchSharedTransition.fabContentExitTransition,
-                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
-                    ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                with(navigationScope) {
+                    SmallFloatingActionButton(
+                        onClick = onBarcodeScan,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        modifier = Modifier.animateEnterExit(
+                            enter = SearchSharedTransition.smallFabEnterTransition
+                        )
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = null
+                            painter = painterResource(R.drawable.ic_qr_code_scanner_24),
+                            contentDescription = stringResource(R.string.action_scan_barcode)
                         )
+                    }
+                }
 
-                        AnimatedVisibility(
-                            visible = !scrolled || !lazyListState.canScrollForward
+                FloatingActionButton(
+                    onClick = onProductAdd,
+                    modifier = Modifier
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(
+                                key = SearchSharedTransition.CONTAINER
+                            ),
+                            animatedVisibilityScope = navigationScope,
+                            enter = SearchSharedTransition.fabContainerEnterTransition,
+                            exit = SearchSharedTransition.fabContainerExitTransition,
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                        )
+                ) {
+                    Box(
+                        modifier = Modifier.sharedBounds(
+                            sharedContentState = rememberSharedContentState(
+                                key = SearchSharedTransition.CONTENT
+                            ),
+                            animatedVisibilityScope = navigationScope,
+                            enter = SearchSharedTransition.fabContentEnterTransition,
+                            exit = SearchSharedTransition.fabContentExitTransition,
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                        ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row {
-                                Spacer(Modifier.width(8.dp))
-                                Text(
-                                    text = stringResource(R.string.action_add_food)
-                                )
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null
+                            )
+
+                            AnimatedVisibility(
+                                visible = !scrolled || !lazyListState.canScrollForward
+                            ) {
+                                Row {
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(
+                                        text = stringResource(R.string.action_add_food)
+                                    )
+                                }
                             }
                         }
                     }
@@ -524,7 +550,13 @@ private fun DiaryDayMealScreen(
 
                 // FAB spacer
                 item {
-                    Spacer(Modifier.height(56.dp + 16.dp + 8.dp))
+                    Column {
+                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(40.dp))
+                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(56.dp))
+                        Spacer(Modifier.height(16.dp))
+                    }
                 }
             }
         }
@@ -639,6 +671,7 @@ private fun EmptyDiaryDayMealScreenPreview() {
                 products = emptyList(),
                 deletedEntryChannel = flowOf(),
                 onProductAdd = {},
+                onBarcodeScan = {},
                 onEditEntry = {},
                 onDeleteEntry = {},
                 onDeleteEntryUndo = {},
@@ -674,6 +707,7 @@ private fun DiaryDayMealScreenPreview() {
                 products = products,
                 deletedEntryChannel = flowOf(),
                 onProductAdd = {},
+                onBarcodeScan = {},
                 onEditEntry = {},
                 onDeleteEntry = {},
                 onDeleteEntryUndo = {},

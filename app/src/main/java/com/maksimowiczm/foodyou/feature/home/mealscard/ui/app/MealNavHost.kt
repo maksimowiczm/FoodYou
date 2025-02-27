@@ -11,6 +11,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -74,6 +75,7 @@ fun MealNavHost(
     val searchViewModel = koinViewModel<SearchViewModel>(
         parameters = { parametersOf(date, mealId) }
     )
+    val lazyListState = rememberLazyListState()
 
     val startDestination: Any = if (skipToSearchScreen) Search else MealHome
 
@@ -101,6 +103,20 @@ fun MealNavHost(
                 onProductAdd = {
                     navController.navigate(
                         route = Search,
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                },
+                onBarcodeScan = {
+                    navController.navigate(
+                        route = Search,
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                    navController.navigate(
+                        route = BarcodeScanner,
                         navOptions = navOptions {
                             launchSingleTop = true
                         }
@@ -160,7 +176,6 @@ fun MealNavHost(
                             }
                         )
                     },
-                    viewModel = searchViewModel,
                     modifier = Modifier
                         .sharedBounds(
                             sharedContentState = rememberSharedContentState(
@@ -177,7 +192,9 @@ fun MealNavHost(
                             animatedVisibilityScope = this@crossfadeComposable,
                             enter = SearchSharedTransition.screenContentEnterTransition,
                             exit = SearchSharedTransition.screenContentExitTransition
-                        )
+                        ),
+                    viewModel = searchViewModel,
+                    lazyListState = lazyListState
                 )
             }
         }
@@ -186,7 +203,16 @@ fun MealNavHost(
                 onBarcodeScan = {
                     searchViewModel.onSearch(it)
 
-                    navController.popBackStack<BarcodeScanner>(inclusive = true)
+                    navController.navigate(
+                        route = Search,
+                        navOptions {
+                            launchSingleTop = true
+
+                            popUpTo<BarcodeScanner> {
+                                inclusive = true
+                            }
+                        }
+                    )
                 },
                 modifier = Modifier.fillMaxSize()
             )

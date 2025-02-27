@@ -22,6 +22,12 @@ object SearchSharedTransition {
     val fabContentEnterTransition: EnterTransition = fadeIn(tween())
     val fabContentExitTransition: ExitTransition = fadeOut(tween(150))
 
+    val smallFabEnterTransition: EnterTransition = fadeIn(
+        tween(
+            delayMillis = 300
+        )
+    )
+
     val screenContainerEnterTransition: EnterTransition = fadeIn(
         tween(
             delayMillis = 200
