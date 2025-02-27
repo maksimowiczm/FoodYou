@@ -757,7 +757,8 @@ private fun BarcodeInput(
                 onBarcodeScan = {
                     barcodeFormField.onRawValueChange(it)
                     showBarcodeScanner = false
-                }
+                },
+                onClose = { showBarcodeScanner = false }
             )
         }
     }

@@ -13,6 +13,7 @@
     <string name="headline_meals">Posiłki</string>
     <string name="headline_delete_product">Usuń produkt</string>
     <string name="headline_edit_product">Edytuj produkt</string>
+    <string name="headline_permission_required">Wymagane uprawnienia</string>
 
     <string name="in_x_times_y">W %1$s x %2$s</string>
     <string name="weight">Waga</string>
@@ -79,9 +80,9 @@
     <string name="action_close">Zamknij</string>
     <string name="action_discard">Odrzuć</string>
 
-    <string name="neutral_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu</string>
-    <string name="neutral_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu</string>
-    <string name="neutral_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
+    <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
     <string name="neutral_no_products_found">Nie znaleziono produktów</string>
     <string name="neutral_food_database_load_error">Nie udało się pobrać produktów ze zdalnej bazy danych. Wciąż możesz przeglądać produkty wcześniej pobrane.</string>
     <plurals name="neutral_remaining_calories">

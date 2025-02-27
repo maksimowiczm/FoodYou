@@ -214,6 +214,7 @@ fun MealNavHost(
                         }
                     )
                 },
+                onClose = { navController.popBackStack<BarcodeScanner>(inclusive = true) },
                 modifier = Modifier.fillMaxSize()
             )
         }

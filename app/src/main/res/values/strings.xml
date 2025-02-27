@@ -17,6 +17,7 @@
     <string name="headline_meals">Meals</string>
     <string name="headline_delete_product">Delete product</string>
     <string name="headline_edit_product">Edit product</string>
+    <string name="headline_permission_required">Permission required</string>
 
     <string name="in_x_times_y">In %1$s x %2$s</string>
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
@@ -82,9 +83,9 @@
     <string name="action_close">Close</string>
     <string name="action_discard">Discard</string>
 
-    <string name="neutral_camera_request">Allow access to your camera to scan barcodes</string>
-    <string name="neutral_camera_request_rationale">You must allow access in order to scan barcodes.</string>
-    <string name="neutral_camera_request_redirect_to_settings">Camera permission is required to scan barcodes. Please allow it in the app settings.</string>
+    <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera permission is required to scan barcodes. Please allow it in the app settings.</string>
     <string name="neutral_no_products_found">No products found</string>
     <string name="neutral_food_database_load_error">"Couldn't download products from the remote food database. You can still view your previously downloaded products."</string>
     <plurals name="neutral_remaining_calories">
