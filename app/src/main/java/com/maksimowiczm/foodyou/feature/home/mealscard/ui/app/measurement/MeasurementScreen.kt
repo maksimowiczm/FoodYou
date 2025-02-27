@@ -32,9 +32,11 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
@@ -43,6 +45,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -55,6 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -203,6 +207,17 @@ private fun MeasurementScreen(
     }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
+    val containerColor = MaterialTheme.colorScheme.surfaceContainer
+    val contentColor = MaterialTheme.colorScheme.onSurface
+    val highlightContainerColor = MaterialTheme.colorScheme.primaryContainer
+    val highlightContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+
+    fun containerColor(weightMeasurementEnum: WeightMeasurementEnum) =
+        if (highlight == weightMeasurementEnum) highlightContainerColor else containerColor
+
+    fun contentColor(weightMeasurementEnum: WeightMeasurementEnum) =
+        if (highlight == weightMeasurementEnum) highlightContentColor else contentColor
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -269,17 +284,9 @@ private fun MeasurementScreen(
                             },
                             label = { Text(stringResource(R.string.product_package)) },
                             weightUnit = formState.product.weightUnit,
-                            modifier = Modifier
-                                .then(
-                                    if (highlight == WeightMeasurementEnum.Package) {
-                                        Modifier.background(
-                                            MaterialTheme.colorScheme.surfaceVariant
-                                        )
-                                    } else {
-                                        Modifier
-                                    }
-                                )
-                                .padding(8.dp)
+                            modifier = Modifier.padding(8.dp),
+                            containerColor = containerColor(WeightMeasurementEnum.Package),
+                            contentColor = contentColor(WeightMeasurementEnum.Package)
                         )
                         HorizontalDivider()
                     }
@@ -305,17 +312,9 @@ private fun MeasurementScreen(
                             },
                             label = { Text(stringResource(R.string.product_serving)) },
                             weightUnit = formState.product.weightUnit,
-                            modifier = Modifier
-                                .then(
-                                    if (highlight == WeightMeasurementEnum.Serving) {
-                                        Modifier.background(
-                                            MaterialTheme.colorScheme.surfaceVariant
-                                        )
-                                    } else {
-                                        Modifier
-                                    }
-                                )
-                                .padding(8.dp)
+                            modifier = Modifier.padding(8.dp),
+                            containerColor = containerColor(WeightMeasurementEnum.Serving),
+                            contentColor = contentColor(WeightMeasurementEnum.Serving)
                         )
                         HorizontalDivider()
                     }
@@ -332,15 +331,9 @@ private fun MeasurementScreen(
                         )
                     },
                     suffix = { Text(formState.product.weightUnit.stringResourceShort()) },
-                    modifier = Modifier
-                        .then(
-                            if (highlight == WeightMeasurementEnum.WeightUnit) {
-                                Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
-                            } else {
-                                Modifier
-                            }
-                        )
-                        .padding(8.dp)
+                    modifier = Modifier.padding(8.dp),
+                    containerColor = containerColor(WeightMeasurementEnum.WeightUnit),
+                    contentColor = contentColor(WeightMeasurementEnum.WeightUnit)
                 )
             }
 
@@ -450,101 +443,120 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
     onConfirm: () -> Unit,
     label: @Composable () -> Unit,
     weightUnit: WeightUnit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer
 ) {
-    Row(
-        modifier = Modifier
-            .clickable(
+    CompositionLocalProvider(
+        LocalContentColor provides contentColor
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable(
+                    onClick = onConfirm,
+                    enabled = error == null
+                )
+                .background(containerColor)
+                .then(modifier),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedTextField(
+                value = textFieldValue,
+                onValueChange = { onValueChange(it) },
+                modifier = Modifier.weight(2f),
+                shape = MaterialTheme.shapes.medium,
+                isError = error != null,
+                label = label,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Number
+                ),
+                keyboardActions = KeyboardActions {
+                    if (error == null) {
+                        onConfirm()
+                    }
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = contentColor,
+                    unfocusedTextColor = contentColor,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedLabelColor = contentColor,
+                    unfocusedLabelColor = contentColor,
+                    focusedSuffixColor = contentColor,
+                    unfocusedSuffixColor = contentColor,
+                    unfocusedBorderColor = contentColor,
+                    focusedBorderColor = contentColor
+                )
+            )
+
+            val weight: @Composable () -> Unit = {
+                Text(
+                    text = "${asGrams(value)} " + weightUnit.stringResourceShort(),
+                    overflow = TextOverflow.Visible,
+                    textAlign = TextAlign.Center
+                )
+            }
+            val calories: @Composable () -> Unit = {
+                Text(
+                    text = "${asCalories(value)} " + stringResource(R.string.unit_kcal),
+                    overflow = TextOverflow.Visible,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Layout(
+                content = {
+                    weight()
+                    calories()
+                },
+                modifier = Modifier.weight(2f)
+            ) { (weightMeasurable, caloriesMeasurable), constraints ->
+                val weightWidth = weightMeasurable.minIntrinsicWidth(constraints.maxHeight)
+                val caloriesWidth = caloriesMeasurable.minIntrinsicWidth(constraints.maxHeight)
+
+                val halfWidth = constraints.maxWidth / 2
+
+                if (weightWidth < halfWidth && caloriesWidth < halfWidth) {
+                    val weightPlaceable = weightMeasurable.measure(
+                        constraints.copy(
+                            minWidth = halfWidth,
+                            maxWidth = halfWidth
+                        )
+                    )
+                    val caloriesPlaceable = caloriesMeasurable.measure(
+                        constraints.copy(
+                            minWidth = halfWidth,
+                            maxWidth = halfWidth
+                        )
+                    )
+                    val height = max(weightPlaceable.height, caloriesPlaceable.height)
+
+                    layout(constraints.maxWidth, height) {
+                        weightPlaceable.placeRelative(0, (height - weightPlaceable.height) / 2)
+                        caloriesPlaceable.placeRelative(
+                            halfWidth,
+                            (height - caloriesPlaceable.height) / 2
+                        )
+                    }
+                } else {
+                    val caloriesPlaceable = caloriesMeasurable.measure(constraints)
+
+                    layout(constraints.maxWidth, caloriesPlaceable.height) {
+                        caloriesPlaceable.placeRelative(0, 0)
+                    }
+                }
+            }
+
+            FilledIconButton(
                 onClick = onConfirm,
                 enabled = error == null
-            )
-            .then(modifier),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        OutlinedTextField(
-            value = textFieldValue,
-            onValueChange = { onValueChange(it) },
-            modifier = Modifier.weight(2f),
-            shape = MaterialTheme.shapes.medium,
-            isError = error != null,
-            label = label,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Number
-            ),
-            keyboardActions = KeyboardActions {
-                if (error == null) {
-                    onConfirm()
-                }
-            }
-        )
-
-        val weight: @Composable () -> Unit = {
-            Text(
-                text = "${asGrams(value)} " + weightUnit.stringResourceShort(),
-                overflow = TextOverflow.Visible,
-                textAlign = TextAlign.Center
-            )
-        }
-        val calories: @Composable () -> Unit = {
-            Text(
-                text = "${asCalories(value)} " + stringResource(R.string.unit_kcal),
-                overflow = TextOverflow.Visible,
-                textAlign = TextAlign.Center
-            )
-        }
-
-        Layout(
-            content = {
-                weight()
-                calories()
-            },
-            modifier = Modifier.weight(2f)
-        ) { (weightMeasurable, caloriesMeasurable), constraints ->
-            val weightWidth = weightMeasurable.minIntrinsicWidth(constraints.maxHeight)
-            val caloriesWidth = caloriesMeasurable.minIntrinsicWidth(constraints.maxHeight)
-
-            val halfWidth = constraints.maxWidth / 2
-
-            if (weightWidth < halfWidth && caloriesWidth < halfWidth) {
-                val weightPlaceable = weightMeasurable.measure(
-                    constraints.copy(
-                        minWidth = halfWidth,
-                        maxWidth = halfWidth
-                    )
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = stringResource(R.string.action_add)
                 )
-                val caloriesPlaceable = caloriesMeasurable.measure(
-                    constraints.copy(
-                        minWidth = halfWidth,
-                        maxWidth = halfWidth
-                    )
-                )
-                val height = max(weightPlaceable.height, caloriesPlaceable.height)
-
-                layout(constraints.maxWidth, height) {
-                    weightPlaceable.placeRelative(0, (height - weightPlaceable.height) / 2)
-                    caloriesPlaceable.placeRelative(
-                        halfWidth,
-                        (height - caloriesPlaceable.height) / 2
-                    )
-                }
-            } else {
-                val caloriesPlaceable = caloriesMeasurable.measure(constraints)
-
-                layout(constraints.maxWidth, caloriesPlaceable.height) {
-                    caloriesPlaceable.placeRelative(0, 0)
-                }
             }
-        }
-
-        FilledIconButton(
-            onClick = onConfirm,
-            enabled = error == null
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = stringResource(R.string.action_add)
-            )
         }
     }
 }
@@ -554,50 +566,69 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
     asCalories: (Float) -> Int,
     onConfirm: () -> Unit,
     suffix: @Composable () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer
 ) {
-    Row(
-        modifier = Modifier
-            .clickable(
+    CompositionLocalProvider(
+        LocalContentColor provides contentColor
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable(
+                    onClick = onConfirm,
+                    enabled = error == null
+                )
+                .background(containerColor)
+                .then(modifier),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedTextField(
+                value = textFieldValue,
+                onValueChange = { onValueChange(it) },
+                modifier = Modifier.weight(2f),
+                shape = MaterialTheme.shapes.medium,
+                isError = error != null,
+                label = { Text(stringResource(R.string.weight)) },
+                suffix = suffix,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Number
+                ),
+                keyboardActions = KeyboardActions {
+                    if (error == null) {
+                        onConfirm()
+                    }
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = contentColor,
+                    unfocusedTextColor = contentColor,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedLabelColor = contentColor,
+                    unfocusedLabelColor = contentColor,
+                    focusedSuffixColor = contentColor,
+                    unfocusedSuffixColor = contentColor,
+                    unfocusedBorderColor = contentColor,
+                    focusedBorderColor = contentColor
+                )
+            )
+
+            Text(
+                text = "${asCalories(value)} " + stringResource(R.string.unit_kcal),
+                modifier = Modifier.weight(2f),
+                textAlign = TextAlign.Center
+            )
+
+            FilledIconButton(
                 onClick = onConfirm,
                 enabled = error == null
-            )
-            .then(modifier),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        OutlinedTextField(
-            value = textFieldValue,
-            onValueChange = { onValueChange(it) },
-            modifier = Modifier.weight(2f),
-            shape = MaterialTheme.shapes.medium,
-            isError = error != null,
-            label = { Text(stringResource(R.string.weight)) },
-            suffix = suffix,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Number
-            ),
-            keyboardActions = KeyboardActions {
-                if (error == null) {
-                    onConfirm()
-                }
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = stringResource(R.string.action_add)
+                )
             }
-        )
-
-        Text(
-            text = "${asCalories(value)} " + stringResource(R.string.unit_kcal),
-            modifier = Modifier.weight(2f),
-            textAlign = TextAlign.Center
-        )
-
-        FilledIconButton(
-            onClick = onConfirm,
-            enabled = error == null
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = stringResource(R.string.action_add)
-            )
         }
     }
 }
