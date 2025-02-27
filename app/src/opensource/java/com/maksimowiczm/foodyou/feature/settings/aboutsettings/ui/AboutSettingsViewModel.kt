@@ -47,4 +47,8 @@ class AboutSettingsViewModel(
     fun openGithubReadme() {
         linkHandler.openGithubReadme()
     }
+
+    fun onIcons8Click() {
+        linkHandler.openIcons8()
+    }
 }

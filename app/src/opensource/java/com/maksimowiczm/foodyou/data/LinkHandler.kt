@@ -4,4 +4,5 @@ interface LinkHandler {
     fun openGithubRepository()
     fun openGithubReadme()
     fun openGithubIssue()
+    fun openIcons8()
 }

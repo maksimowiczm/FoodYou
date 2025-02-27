@@ -125,4 +125,7 @@
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Produkt zostanie trwale usunięty. Ta czynność nie może być cofnięta. Wszystkie wpisy w dzienniku związane z tym produktem zostaną utracone.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Ten wpis zostanie usunięty z Twojego dziennika. Możesz dodać go ponownie w każdej chwili.</string>
 
+    <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
+    <string name="neutral_see_other_awesome_icons_here">Zobacz inne świetne ikony tutaj</string>
+
 </resources>

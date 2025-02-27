@@ -44,6 +44,7 @@ If you're looking for alternatives or inspiration, check out these open-source p
 ### 💡 Credits
 
 - [ReadYou](https://github.com/Ashinch/ReadYou) — I shamelessly borrowed inspiration from this project. 🙃
+- [Icons8](https://icons8.com) — sushi icon 🍣
 
 ---
 

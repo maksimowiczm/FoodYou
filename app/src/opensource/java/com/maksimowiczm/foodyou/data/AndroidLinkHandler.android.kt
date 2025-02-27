@@ -9,6 +9,10 @@ class AndroidLinkHandler(private val context: Context) : LinkHandler {
     override fun openGithubIssue() =
         openLink(context.resources.getString(R.string.link_github_issue))
 
+    override fun openIcons8() {
+        openLink(context.resources.getString(R.string.link_icons8))
+    }
+
     override fun openGithubRepository() {
         openLink(context.resources.getString(R.string.link_github_repository))
     }

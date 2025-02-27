@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.R
+import com.maksimowiczm.foodyou.ui.AboutIcons8
 import com.maksimowiczm.foodyou.ui.component.CardButton
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
@@ -59,6 +60,7 @@ fun AboutScreen(
         onRequestFeature = viewModel::openGithubIssue,
         onBugReport = viewModel::openGithubIssue,
         onReadme = viewModel::openGithubReadme,
+        onIcons8 = viewModel::onIcons8Click,
         githubStarClicked = githubStarClicked,
         onGithubStarClick = viewModel::onGithubStarClick,
         modifier = modifier
@@ -71,6 +73,7 @@ private fun AboutScreen(
     onRequestFeature: () -> Unit,
     onBugReport: () -> Unit,
     onReadme: () -> Unit,
+    onIcons8: () -> Unit,
     githubStarClicked: Boolean,
     onGithubStarClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -136,6 +139,12 @@ private fun AboutScreen(
             item {
                 ReadmeListItem(
                     onReadme = onReadme
+                )
+            }
+
+            item {
+                AboutIcons8(
+                    onOpenIcons8 = onIcons8
                 )
             }
 
@@ -329,6 +338,7 @@ private fun AboutScreenPreview() {
             onRequestFeature = {},
             onBugReport = {},
             onReadme = {},
+            onIcons8 = {},
             githubStarClicked = true,
             onGithubStarClick = {}
         )
