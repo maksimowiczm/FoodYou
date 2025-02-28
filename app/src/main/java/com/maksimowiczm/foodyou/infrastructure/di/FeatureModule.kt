@@ -5,8 +5,7 @@ import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.meal.DiaryDayMealV
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.CreateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.UpdateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create.CreateProductViewModel
-// import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create.CreateProductViewModel
-// import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.UpdateProductViewModel
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.settings.goalssettings.ui.GoalsSettingsViewModel
@@ -35,5 +34,5 @@ val featureModule = module {
     viewModelOf(::MealsCardViewModel)
     viewModelOf(::DiaryDayMealViewModel)
     viewModelOf(::CreateProductViewModel)
-//    viewModelOf(::UpdateProductViewModel)
+    viewModelOf(::UpdateProductViewModel)
 }

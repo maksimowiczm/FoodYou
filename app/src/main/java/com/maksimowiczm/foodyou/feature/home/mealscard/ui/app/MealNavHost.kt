@@ -32,8 +32,7 @@ import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.Create
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.MeasurementScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.UpdateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create.CreateProductDialog
-// import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create.CreateProductDialog
-// import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.UpdateProductDialog
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.UpdateProductDialog
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchHint
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchHome
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchViewModel
@@ -377,14 +376,14 @@ fun MealNavHost(
                 shadowElevation = 6.dp,
                 shape = MaterialTheme.shapes.medium
             ) {
-//                UpdateProductDialog(
-//                    onClose = { navController.popBackStack<EditProductDialog>(inclusive = true) },
-//                    onSuccess = { navController.popBackStack<EditProductDialog>(inclusive = true) },
-//                    barcodeScannerScreen = barcodeScannerScreen,
-//                    viewModel = koinViewModel(
-//                        parameters = { parametersOf(productId) }
-//                    )
-//                )
+                UpdateProductDialog(
+                    onClose = { navController.popBackStack<EditProductDialog>(inclusive = true) },
+                    onSuccess = { navController.popBackStack<EditProductDialog>(inclusive = true) },
+                    barcodeScannerScreen = barcodeScannerScreen,
+                    viewModel = koinViewModel(
+                        parameters = { parametersOf(productId) }
+                    )
+                )
             }
         }
     }

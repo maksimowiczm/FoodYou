@@ -27,9 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.R
@@ -37,7 +35,6 @@ import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.Bar
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductForm
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductFormState
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.rememberProductFormState
-import com.maksimowiczm.foodyou.ui.preview.BooleanPreviewParameter
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -175,16 +172,9 @@ private fun DiscardDialog(
     )
 }
 
-@Preview(
-    device = "spec:width=400dp,height=1400dp"
-)
-@Preview(
-    device = Devices.TABLET
-)
+@Preview
 @Composable
-private fun CreateProductScreenPreview(
-    @PreviewParameter(BooleanPreviewParameter::class) expanded: Boolean
-) {
+private fun CreateProductScreenPreview() {
     FoodYouTheme {
         CreateProductDialog(
             onClose = {},
