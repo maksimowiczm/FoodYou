@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.WeightUnit
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.GlobalError
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.MyError
@@ -81,6 +82,7 @@ import org.koin.androidx.compose.koinViewModel
 fun CreateProductDialog(
     onClose: () -> Unit,
     onSuccess: (productId: Long) -> Unit,
+    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier,
     viewModel: CreateProductViewModel = koinViewModel()
 ) {
@@ -102,6 +104,7 @@ fun CreateProductDialog(
         onCreate = viewModel::onCreateProduct,
         expanded = showAdditionalFields,
         onExpandedChange = { showAdditionalFields = it },
+        barcodeScannerScreen = barcodeScannerScreen,
         modifier = modifier
     )
 }
@@ -113,6 +116,7 @@ private fun CreateProductDialog(
     onCreate: (ProductFormState) -> Unit,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
+    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier,
     form: ProductFormState = rememberProductFormState()
 ) {
@@ -245,6 +249,7 @@ private fun CreateProductDialog(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Next
                         ),
+                        barcodeScannerScreen = barcodeScannerScreen,
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(16.dp))
@@ -744,6 +749,7 @@ private fun DiscardDialog(
 @Composable
 private fun BarcodeInput(
     barcodeFormField: FormFieldWithTextFieldValue<String?, MyError>,
+    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Number,
@@ -761,7 +767,8 @@ private fun BarcodeInput(
                     barcodeFormField.onRawValueChange(it)
                     showBarcodeScanner = false
                 },
-                onClose = { showBarcodeScanner = false }
+                onClose = { showBarcodeScanner = false },
+                barcodeScannerScreen = barcodeScannerScreen
             )
         }
     }
@@ -801,7 +808,8 @@ private fun CreateProductScreenPreview(
             onClose = {},
             onCreate = {},
             expanded = expanded,
-            onExpandedChange = {}
+            onExpandedChange = {},
+            barcodeScannerScreen = { _, _ -> }
         )
     }
 }

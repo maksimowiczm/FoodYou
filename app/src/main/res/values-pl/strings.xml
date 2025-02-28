@@ -79,6 +79,8 @@
     <string name="action_undo">Cofnij</string>
     <string name="action_close">Zamknij</string>
     <string name="action_discard">Odrzuć</string>
+    <string name="action_enable">Włącz</string>
+    <string name="action_don_t_show_again">Nie pokazuj ponownie</string>
 
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>

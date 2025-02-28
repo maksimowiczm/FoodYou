@@ -49,15 +49,14 @@ import com.google.accompanist.permissions.shouldShowRationale
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.preview.BooleanPreviewParameter
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
-import org.koin.compose.koinInject
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraBarcodeScannerScreen(
     onBarcodeScan: (String) -> Unit,
     onClose: () -> Unit,
-    modifier: Modifier = Modifier,
-    barcodeScannerScreen: BarcodeScannerScreen = koinInject()
+    barcodeScannerScreen: BarcodeScannerScreen,
+    modifier: Modifier = Modifier
 ) {
     val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
     val activity = LocalActivity.current

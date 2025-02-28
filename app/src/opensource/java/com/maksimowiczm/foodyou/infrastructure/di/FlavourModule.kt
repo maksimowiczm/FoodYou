@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.data.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.data.OpenFoodFactsSettingsRepositoryImpl
 import com.maksimowiczm.foodyou.data.ProductRepository
 import com.maksimowiczm.foodyou.data.ProductRepositoryImpl
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.zxingCameraBarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.OpenFoodFactsSearchHintViewModel
 import com.maksimowiczm.foodyou.feature.settings.aboutsettings.ui.AboutSettingsViewModel
 import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.CountryFlag
 import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.OpenFoodFactsSettingsViewModel
@@ -27,12 +27,11 @@ val flavourModule = module {
     factoryOf(::AndroidLinkHandler).bind<LinkHandler>()
     viewModelOf(::AboutSettingsViewModel)
 
+    viewModelOf(::OpenFoodFactsSearchHintViewModel)
     viewModelOf(::OpenFoodFactsSettingsViewModel)
     factoryOf(::OpenFoodFactsSettingsRepositoryImpl).bind<OpenFoodFactsSettingsRepository>()
     singleOf(::OpenFoodFactsRemoteMediatorFactory).bind<ProductRemoteMediatorFactory>()
     factory { flagCdnCountryFlag }.bind<CountryFlag>()
-
-    factory { zxingCameraBarcodeScannerScreen }
 
     factory {
         AddFoodRepositoryImpl(

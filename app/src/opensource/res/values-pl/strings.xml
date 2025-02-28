@@ -24,6 +24,7 @@
 
     <string name="open_food_facts_disclaimer">Open Food Facts to projekt tworzony przez społeczność. Dane mogą być niekompletne, nieaktualne lub nieprecyzyjne. Ta aplikacja nie odpowiada za ich poprawność. Weryfikuj informacje przed użyciem.</string>
 
+    <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">Włącz Open Food Facts w ustawieniach, aby uzyskać szczegółowe informacje o produktach</string>
     <string name="description_open_food_facts">jest darmową i otwartą bazą danych produktów spożywczych z całego świata.</string>
     <string name="description_README_setting">Zobacz README na GitHubie</string>
     <string name="description_about_setting">Dowiedz się więcej o aplikacji</string>

@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.WeightUnit
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.GlobalError
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.MyError
@@ -84,6 +85,7 @@ import org.koin.androidx.compose.koinViewModel
 fun UpdateProductDialog(
     onClose: () -> Unit,
     onSuccess: () -> Unit,
+    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier,
     viewModel: UpdateProductViewModel = koinViewModel()
 ) {
@@ -94,6 +96,7 @@ fun UpdateProductDialog(
         onNavigateBack = onClose,
         onSuccess = onSuccess,
         onUpdateProduct = viewModel::updateProduct,
+        barcodeScannerScreen = barcodeScannerScreen,
         modifier = modifier
     )
 }
@@ -104,6 +107,7 @@ private fun UpdateProductDialog(
     onNavigateBack: () -> Unit,
     onSuccess: () -> Unit,
     onUpdateProduct: (ProductFormState) -> Unit,
+    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier
 ) {
     var showAdditionalFields by rememberSaveable { mutableStateOf(false) }
@@ -129,6 +133,7 @@ private fun UpdateProductDialog(
             onUpdate = onUpdateProduct,
             expanded = showAdditionalFields,
             onExpandedChange = { showAdditionalFields = it },
+            barcodeScannerScreen = barcodeScannerScreen,
             modifier = modifier
         )
     }
@@ -142,6 +147,7 @@ private fun UpdateProductDialog(
     onUpdate: (ProductFormState) -> Unit,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
+    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -273,6 +279,7 @@ private fun UpdateProductDialog(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Next
                         ),
+                        barcodeScannerScreen = barcodeScannerScreen,
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(16.dp))
@@ -741,6 +748,7 @@ private fun WeightUnitDropdownMenu(
 @Composable
 private fun BarcodeInput(
     barcodeFormField: FormFieldWithTextFieldValue<String?, MyError>,
+    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Number,
@@ -758,7 +766,8 @@ private fun BarcodeInput(
                     barcodeFormField.onRawValueChange(it)
                     showBarcodeScanner = false
                 },
-                onClose = { showBarcodeScanner = false }
+                onClose = { showBarcodeScanner = false },
+                barcodeScannerScreen = barcodeScannerScreen
             )
         }
     }
@@ -830,7 +839,8 @@ private fun CreateProductScreenPreview(
             onClose = {},
             onUpdate = {},
             expanded = expanded,
-            onExpandedChange = {}
+            onExpandedChange = {},
+            barcodeScannerScreen = { _, _ -> }
         )
     }
 }

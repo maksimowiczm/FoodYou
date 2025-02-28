@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -24,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.meal.DiaryDayMealScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.CreateMeasurementViewModel
@@ -31,6 +33,7 @@ import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.Measur
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.UpdateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.UpdateProductDialog
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchHint
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchHome
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchViewModel
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
@@ -65,8 +68,11 @@ private data class EditProductDialog(val productId: Long)
 @Composable
 fun MealNavHost(
     outerScope: AnimatedVisibilityScope,
+    outerOnBack: () -> Unit,
     mealId: Long,
     epochDay: Int,
+    barcodeScannerScreen: BarcodeScannerScreen,
+    searchHint: SearchHint,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     skipToSearchScreen: Boolean = false
@@ -159,7 +165,15 @@ fun MealNavHost(
                             }
                         )
                     },
-                    onBack = { navController.popBackStack<Search>(inclusive = true) },
+                    onBack = {
+                        // If stack is empty call outer on back otherwise pop search
+                        @SuppressLint("RestrictedApi")
+                        if (navController.currentBackStack.value.size == 2) {
+                            outerOnBack()
+                        } else {
+                            navController.popBackStack()
+                        }
+                    },
                     onCreateProduct = {
                         navController.navigate(
                             route = CreateProductDialog,
@@ -176,6 +190,7 @@ fun MealNavHost(
                             }
                         )
                     },
+                    searchHint = searchHint,
                     modifier = Modifier
                         .sharedBounds(
                             sharedContentState = rememberSharedContentState(
@@ -215,6 +230,7 @@ fun MealNavHost(
                     )
                 },
                 onClose = { navController.popBackStack<BarcodeScanner>(inclusive = true) },
+                barcodeScannerScreen = barcodeScannerScreen,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -325,7 +341,8 @@ fun MealNavHost(
                                 }
                             }
                         )
-                    }
+                    },
+                    barcodeScannerScreen = barcodeScannerScreen
                 )
             }
         }
@@ -362,6 +379,7 @@ fun MealNavHost(
                 UpdateProductDialog(
                     onClose = { navController.popBackStack<EditProductDialog>(inclusive = true) },
                     onSuccess = { navController.popBackStack<EditProductDialog>(inclusive = true) },
+                    barcodeScannerScreen = barcodeScannerScreen,
                     viewModel = koinViewModel(
                         parameters = { parametersOf(productId) }
                     )

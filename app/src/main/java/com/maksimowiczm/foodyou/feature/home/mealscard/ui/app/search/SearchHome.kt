@@ -6,8 +6,8 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
-import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -70,6 +71,7 @@ fun SearchHome(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
     onBarcodeScanner: () -> Unit,
+    searchHint: SearchHint,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = koinViewModel(),
     lazyListState: LazyListState = rememberLazyListState()
@@ -92,6 +94,7 @@ fun SearchHome(
         onBack = onBack,
         onCreateProduct = onCreateProduct,
         onBarcodeScanner = onBarcodeScanner,
+        searchHint = searchHint,
         modifier = modifier,
         lazyListState = lazyListState
     )
@@ -111,6 +114,7 @@ private fun SearchHome(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
     onBarcodeScanner: () -> Unit,
+    searchHint: SearchHint,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState()
 ) {
@@ -142,21 +146,32 @@ private fun SearchHome(
         )
     }
 
-    var errorCardHeight by remember { mutableIntStateOf(0) }
-    val anchoredDraggableState = rememberSaveable(
-        saver = AnchoredDraggableState.Saver()
-    ) {
-        AnchoredDraggableState(
-            initialValue = if (hasError) ErrorCardState.VISIBLE else ErrorCardState.HIDDEN_END
-        )
-    }
-    val errorCard = @Composable {
-        ErrorCard(
-            anchoredDraggableState = anchoredDraggableState,
-            hasError = hasError,
-            onRetry = pages::retry,
-            modifier = Modifier.onSizeChanged { errorCardHeight = it.height }
-        )
+    var subSearchBarHeight by remember { mutableIntStateOf(0) }
+    val subSearchBar = @Composable {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .onSizeChanged { subSearchBarHeight = it.height },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            DraggableVisibility(
+                initialValue = if (hasError) CardState.VISIBLE else CardState.HIDDEN_END
+            ) {
+                FoodDatabaseErrorCard(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 8.dp),
+                    onRetry = pages::retry
+                )
+            }
+            DraggableVisibility {
+                searchHint(
+                    Modifier
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 8.dp)
+                )
+            }
+        }
     }
 
     // TODO
@@ -188,15 +203,7 @@ private fun SearchHome(
     )
 
     Scaffold(
-        modifier = modifier.onSizeChanged {
-            val draggableAnchors = DraggableAnchors {
-                ErrorCardState.HIDDEN_START at -it.width.toFloat()
-                ErrorCardState.VISIBLE at 0f
-                ErrorCardState.HIDDEN_END at it.width.toFloat()
-            }
-
-            anchoredDraggableState.updateAnchors(draggableAnchors)
-        },
+        modifier = modifier,
         topBar = topBar,
         floatingActionButton = fab
     ) { paddingValues ->
@@ -211,7 +218,8 @@ private fun SearchHome(
                     .zIndex(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                errorCard()
+                subSearchBar()
+
                 AnimatedVisibility(
                     visible = isLoading
                 ) {
@@ -231,7 +239,7 @@ private fun SearchHome(
                 state = lazyListState
             ) {
                 item {
-                    Spacer(Modifier.height(LocalDensity.current.run { errorCardHeight.toDp() }))
+                    Spacer(Modifier.height(LocalDensity.current.run { subSearchBarHeight.toDp() }))
                 }
 
                 if (pages.loadState.refresh == LoadState.Loading && isEmpty) {
@@ -301,44 +309,57 @@ private fun SearchHome(
 }
 
 @Composable
-private fun ErrorCard(
-    anchoredDraggableState: AnchoredDraggableState<ErrorCardState>,
-    hasError: Boolean,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+private fun DraggableVisibility(
+    modifier: Modifier = Modifier,
+    initialValue: CardState = CardState.VISIBLE,
+    content: @Composable () -> Unit
 ) {
-    LaunchedEffect(hasError) {
-        anchoredDraggableState.snapTo(
-            if (hasError) ErrorCardState.VISIBLE else ErrorCardState.HIDDEN_END
+    val anchoredDraggableState = rememberSaveable(
+        initialValue,
+        saver = AnchoredDraggableState.Saver()
+    ) {
+        AnchoredDraggableState(
+            initialValue = initialValue
         )
     }
 
-    AnimatedVisibility(
-        visible = hasError && anchoredDraggableState.settledValue == ErrorCardState.VISIBLE,
-        modifier = modifier
-            .horizontalDisplayCutoutPadding()
-            .fillMaxWidth()
-            .anchoredDraggable(
-                state = anchoredDraggableState,
-                orientation = Orientation.Horizontal
-            )
-    ) {
-        FoodDatabaseErrorCard(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .padding(top = 8.dp)
+    val density = LocalDensity.current
+
+    BoxWithConstraints {
+        SideEffect {
+            with(density) {
+                val draggableAnchors = DraggableAnchors {
+                    CardState.HIDDEN_END at -maxWidth.toPx()
+                    CardState.VISIBLE at 0f
+                    CardState.HIDDEN_START at maxWidth.toPx()
+                }
+
+                anchoredDraggableState.updateAnchors(draggableAnchors)
+            }
+        }
+
+        AnimatedVisibility(
+            visible = anchoredDraggableState.settledValue == CardState.VISIBLE,
+            modifier = modifier
+                .horizontalDisplayCutoutPadding()
+                .fillMaxWidth()
+                .anchoredDraggable(
+                    state = anchoredDraggableState,
+                    orientation = Orientation.Horizontal
+                )
                 .offset {
                     IntOffset(
                         x = anchoredDraggableState.requireOffset().fastRoundToInt(),
                         y = 0
                     )
-                },
-            onRetry = onRetry
-        )
+                }
+        ) {
+            content()
+        }
     }
 }
 
-private enum class ErrorCardState {
+private enum class CardState {
     HIDDEN_START,
     VISIBLE,
     HIDDEN_END

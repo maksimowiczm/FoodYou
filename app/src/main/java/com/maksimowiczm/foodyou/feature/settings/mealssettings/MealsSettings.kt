@@ -32,8 +32,7 @@ object MealsSettings : Feature.Settings {
         forwardBackwardComposable<MealsSettings> {
             MealsSettingsScreen(
                 onBack = {
-                    navController.popBackStack(
-                        route = MealsSettings,
+                    navController.popBackStack<MealsSettings>(
                         inclusive = true
                     )
                 }

@@ -28,6 +28,7 @@
     <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
 
+    <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">Enable Open Food Facts in settings to access detailed information about products</string>
     <string name="description_open_food_facts">is a collaborative, free and open database of food products from around the world.</string>
     <string name="description_README_setting">View the project\'s README on GitHub</string>
     <string name="description_about_setting">Learn more about the app</string>

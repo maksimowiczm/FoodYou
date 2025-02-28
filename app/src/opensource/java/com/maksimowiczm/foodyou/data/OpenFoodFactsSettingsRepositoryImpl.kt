@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.database.dao.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 class OpenFoodFactsSettingsRepositoryImpl(
@@ -31,6 +32,18 @@ class OpenFoodFactsSettingsRepositoryImpl(
             }
         }
 
+    // Show search hint if Open Food Facts is disabled and the hint is not hidden
+    override fun observeOpenFoodFactsShowSearchHint() = combine(
+        observeOpenFoodFactsEnabled(),
+        dataStore.observe(OpenFoodFactsPreferences.hideSearchHint).map { it ?: false }
+    ) { isEnabled, hideSearchHint ->
+        !isEnabled && !hideSearchHint
+    }
+
+    override suspend fun hideOpenFoodFactsSearchHint() {
+        dataStore.set(OpenFoodFactsPreferences.hideSearchHint to true)
+    }
+
     override suspend fun enableOpenFoodFacts() {
         val country = dataStore.get(OpenFoodFactsPreferences.countryCode)
             ?: systemInfoRepository.defaultCountry.code
@@ -42,7 +55,10 @@ class OpenFoodFactsSettingsRepositoryImpl(
     }
 
     override suspend fun disableOpenFoodFacts() {
-        dataStore.set(OpenFoodFactsPreferences.isEnabled to false)
+        dataStore.set(
+            OpenFoodFactsPreferences.isEnabled to false,
+            OpenFoodFactsPreferences.hideSearchHint to false
+        )
     }
 
     override suspend fun setOpenFoodFactsCountry(country: Country) {
