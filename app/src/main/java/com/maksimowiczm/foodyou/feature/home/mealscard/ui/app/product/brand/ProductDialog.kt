@@ -59,6 +59,7 @@ import com.maksimowiczm.foodyou.ui.ext.plus
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.res.pluralString
+import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -219,6 +220,7 @@ fun ProductForm(
                     supportingText = {
                         Text(stringResource(R.string.neutral_calories_are_calculated))
                     },
+                    suffix = { Text(stringResource(R.string.unit_kcal)) },
                     readOnly = true
                 )
             }
@@ -312,14 +314,16 @@ fun ProductForm(
                 item {
                     state.packageWeight.TextFieldNumber(
                         label = { Text(stringResource(R.string.product_package_weight)) },
-                        modifier = Modifier.padding(bottom = 4.dp)
+                        modifier = Modifier.padding(bottom = 4.dp),
+                        suffix = { Text(state.weightUnit.stringResourceShort()) }
                     )
                 }
 
                 item {
                     state.servingWeight.TextFieldNumber(
                         label = { Text(stringResource(R.string.product_serving_weight)) },
-                        modifier = Modifier.padding(bottom = 4.dp)
+                        modifier = Modifier.padding(bottom = 4.dp),
+                        suffix = { Text(state.weightUnit.stringResourceShort()) }
                     )
                 }
 
@@ -365,6 +369,7 @@ private fun <T> FormFieldWithTextFieldValue<T, ProductFormError>.TextField(
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
     supportingText: @Composable (() -> Unit)? = null,
+    suffix: @Composable (() -> Unit)? = null,
     readOnly: Boolean = false,
     keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
@@ -381,6 +386,7 @@ private fun <T> FormFieldWithTextFieldValue<T, ProductFormError>.TextField(
                 Text(error.stringResource())
             }
         },
+        suffix = suffix,
         maxLines = 1,
         readOnly = readOnly,
         keyboardOptions = keyboardOptions,
@@ -393,6 +399,7 @@ private fun <T : Number?> FormFieldWithTextFieldValue<T, ProductFormError>.TextF
     label: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     supportingText: @Composable (() -> Unit)? = null,
+    suffix: @Composable (() -> Unit)? = { Text(stringResource(R.string.unit_gram_short)) },
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Number,
         imeAction = ImeAction.Next
@@ -404,6 +411,7 @@ private fun <T : Number?> FormFieldWithTextFieldValue<T, ProductFormError>.TextF
         keyboardOptions = keyboardOptions,
         modifier = modifier,
         supportingText = supportingText,
+        suffix = suffix,
         keyboardActions = keyboardActions
     )
 }
