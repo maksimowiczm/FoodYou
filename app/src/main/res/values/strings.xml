@@ -100,7 +100,7 @@
     <string name="neutral_permanently_delete_meal">Permanently delete meal?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Meal will be deleted permanently. All data related to this meal will be lost.</string>
     <string name="neutral_required">Required</string>
-    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calories are calculated using macronutrients</string>
+    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calories are calculated automatically based on macronutrients</string>
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Looks like this meal is empty. Add some food to track your calories.</string>
     <string name="neutral_entry_deleted">Entry deleted</string>
 

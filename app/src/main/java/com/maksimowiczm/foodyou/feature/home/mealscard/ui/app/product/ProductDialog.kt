@@ -133,7 +133,8 @@ fun ProductForm(
             state.proteins.TextFieldNumber(
                 label = { Text(stringResource(R.string.nutriment_proteins)) },
                 modifier = Modifier.padding(bottom = 4.dp),
-                supportingText = { Text(requiredString()) }
+                supportingText = { Text(requiredString()) },
+                overrideError = state.globalError == GlobalError.MacronutrientsSumExceeds100
             )
         }
 
@@ -141,7 +142,8 @@ fun ProductForm(
             state.carbohydrates.TextFieldNumber(
                 label = { Text(stringResource(R.string.nutriment_carbohydrates)) },
                 modifier = Modifier.padding(bottom = 4.dp),
-                supportingText = { Text(requiredString()) }
+                supportingText = { Text(requiredString()) },
+                overrideError = state.globalError == GlobalError.MacronutrientsSumExceeds100
             )
         }
 
@@ -156,7 +158,8 @@ fun ProductForm(
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = { expandedFocusRequester.requestFocus() }
-                )
+                ),
+                overrideError = state.globalError == GlobalError.MacronutrientsSumExceeds100
             )
         }
 
@@ -318,14 +321,15 @@ private fun <T> FormFieldWithTextFieldValue<T, ProductFormError>.TextField(
     supportingText: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
     readOnly: Boolean = false,
-    keyboardActions: KeyboardActions = KeyboardActions.Default
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    overrideError: Boolean = false
 ) {
     TextField(
         value = textFieldValue,
         onValueChange = { onValueChange(it) },
         modifier = modifier,
         label = label,
-        isError = error != null,
+        isError = error != null || overrideError,
         supportingText = {
             if (error == null) {
                 supportingText?.invoke()
@@ -351,7 +355,8 @@ private fun <T : Number?> FormFieldWithTextFieldValue<T, ProductFormError>.TextF
         keyboardType = KeyboardType.Number,
         imeAction = ImeAction.Next
     ),
-    keyboardActions: KeyboardActions = KeyboardActions.Default
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    overrideError: Boolean = false
 ) {
     this.TextField(
         label = label,
@@ -359,7 +364,8 @@ private fun <T : Number?> FormFieldWithTextFieldValue<T, ProductFormError>.TextF
         modifier = modifier,
         supportingText = supportingText,
         suffix = suffix,
-        keyboardActions = keyboardActions
+        keyboardActions = keyboardActions,
+        overrideError = overrideError
     )
 }
 
