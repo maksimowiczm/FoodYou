@@ -360,6 +360,8 @@ private fun <T> FormFieldWithTextFieldValue<T, ProductFormError>.TextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     overrideError: Boolean = false
 ) {
+    // https://issuetracker.google.com/issues/294102838?pli=1
+    // Some keyboards will delete whitespaces between words 💀
     TextField(
         value = textFieldValue,
         onValueChange = { onValueChange(it) },
