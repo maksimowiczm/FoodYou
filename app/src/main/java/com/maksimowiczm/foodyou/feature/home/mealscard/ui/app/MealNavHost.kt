@@ -31,6 +31,7 @@ import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.meal.DiaryDayMealS
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.CreateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.MeasurementScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.UpdateMeasurementViewModel
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create.CreateProductDialog
 // import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create.CreateProductDialog
 // import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.UpdateProductDialog
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchHint
@@ -328,22 +329,22 @@ fun MealNavHost(
                 shadowElevation = 6.dp,
                 shape = MaterialTheme.shapes.medium
             ) {
-//                CreateProductDialog(
-//                    onClose = { navController.popBackStack<CreateProductDialog>(inclusive = true) },
-//                    onSuccess = { productId ->
-//                        navController.navigate(
-//                            route = CreateMeasurement(productId),
-//                            navOptions = navOptions {
-//                                launchSingleTop = true
-//
-//                                popUpTo<Search> {
-//                                    inclusive = false
-//                                }
-//                            }
-//                        )
-//                    },
-//                    barcodeScannerScreen = barcodeScannerScreen
-//                )
+                CreateProductDialog(
+                    onClose = { navController.popBackStack<CreateProductDialog>(inclusive = true) },
+                    onSuccess = { productId ->
+                        navController.navigate(
+                            route = CreateMeasurement(productId),
+                            navOptions = navOptions {
+                                launchSingleTop = true
+
+                                popUpTo<Search> {
+                                    inclusive = false
+                                }
+                            }
+                        )
+                    },
+                    barcodeScannerScreen = barcodeScannerScreen
+                )
             }
         }
         // Slide beyond the screen on enter and exit
