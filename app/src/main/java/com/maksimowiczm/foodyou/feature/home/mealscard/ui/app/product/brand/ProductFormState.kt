@@ -41,6 +41,17 @@ enum class ProductFormError {
     }
 }
 
+enum class GlobalError {
+    MacronutrientsSumExceeds100;
+
+    @Composable
+    fun stringResource() = when (this) {
+        MacronutrientsSumExceeds100 -> stringResource(
+            R.string.error_sum_of_macronutrients_cannot_exceed_100g
+        )
+    }
+}
+
 @Composable
 fun rememberProductFormState(product: Product?): ProductFormState {
     val name = rememberFormFieldWithTextFieldValue(
@@ -309,8 +320,20 @@ class ProductFormState(
 ) {
     var weightUnit by mutableStateOf(initialWeightUnit)
 
+    val globalError by derivedStateOf {
+        if (proteins.value != null && carbohydrates.value != null && fats.value != null) {
+            val sum = proteins.value + carbohydrates.value + fats.value
+            if (sum > 100) {
+                return@derivedStateOf GlobalError.MacronutrientsSumExceeds100
+            }
+        }
+
+        null
+    }
+
     val isValid: Boolean by derivedStateOf {
-        name.isValid &&
+        globalError == null &&
+            name.isValid &&
             brand.isValid &&
             barcode.isValid &&
             proteins.isValid &&

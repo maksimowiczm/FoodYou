@@ -207,6 +207,21 @@ fun ProductForm(
             item(
                 span = { GridItemSpan(maxLineSpan) }
             ) {
+                AnimatedVisibility(
+                    visible = state.globalError == GlobalError.MacronutrientsSumExceeds100
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.error_sum_of_macronutrients_cannot_exceed_100g
+                        ),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+
+            item(
+                span = { GridItemSpan(maxLineSpan) }
+            ) {
                 Spacer(Modifier.height(14.dp))
             }
 
