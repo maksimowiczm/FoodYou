@@ -15,7 +15,6 @@ fun <T, E> rememberFormField(
     parser: Parser<T, E>,
     initialError: E? = null,
     initialDirty: Boolean = false,
-    requireDirty: Boolean = true,
     validator: (() -> Validator<T, E>)? = null
 ): FormFieldImpl<T, E> = rememberSaveable(
     saver = Saver(
@@ -34,7 +33,6 @@ fun <T, E> rememberFormField(
                     error = it[1] as E
                 ),
                 initialDirty = it[2] as Boolean,
-                requireDirty = requireDirty,
                 parser = parser,
                 validator = validator
             )
@@ -47,7 +45,6 @@ fun <T, E> rememberFormField(
             error = initialError
         ),
         initialDirty = initialDirty,
-        requireDirty = requireDirty,
         parser = parser,
         validator = validator
     )
@@ -57,7 +54,6 @@ fun <T, E> rememberFormField(
 class FormFieldImpl<T, E>(
     initialFormFieldValue: FormFieldValue<T, E>,
     initialDirty: Boolean,
-    private val requireDirty: Boolean,
     private val parser: Parser<T, E>,
     private val validator: (() -> Validator<T, E>)? = null
 ) : FormField<T, E> {
@@ -72,10 +68,6 @@ class FormFieldImpl<T, E>(
         private set
 
     override val isValid: Boolean by derivedStateOf {
-        if (requireDirty && !dirty) {
-            return@derivedStateOf false
-        }
-
         fieldValue.error == null
     }
 

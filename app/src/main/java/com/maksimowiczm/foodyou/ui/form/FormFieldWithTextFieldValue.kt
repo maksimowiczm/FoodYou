@@ -24,7 +24,6 @@ fun <T, E> rememberFormFieldWithTextFieldValue(
     parser: Parser<T, E>,
     initialError: E? = null,
     initialDirty: Boolean = false,
-    requireDirty: Boolean = true,
     formatter: (T) -> String = { emptyNullFormatter(it) },
     initialTextFieldValue: TextFieldValue = TextFieldValue(
         text = formatter(initialValue),
@@ -39,7 +38,6 @@ fun <T, E> rememberFormFieldWithTextFieldValue(
         initialValue = initialValue,
         initialError = initialError,
         initialDirty = initialDirty,
-        requireDirty = requireDirty,
         parser = parser,
         validator = validator
     )
