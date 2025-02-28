@@ -15,9 +15,11 @@ import com.maksimowiczm.foodyou.data.model.NutrimentHelper
 import com.maksimowiczm.foodyou.data.model.Product
 import com.maksimowiczm.foodyou.data.model.WeightUnit
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
+import com.maksimowiczm.foodyou.ui.form.allowNull
 import com.maksimowiczm.foodyou.ui.form.notNull
 import com.maksimowiczm.foodyou.ui.form.nullableFloatParser
 import com.maksimowiczm.foodyou.ui.form.nullableStringParser
+import com.maksimowiczm.foodyou.ui.form.positive
 import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
@@ -27,13 +29,15 @@ import kotlinx.coroutines.launch
 
 enum class ProductFormError {
     Required,
-    NotANumber
+    NotANumber,
+    NegativeNumber
     ;
 
     @Composable
     fun stringResource() = when (this) {
         Required -> "* " + stringResource(R.string.neutral_required)
         NotANumber -> stringResource(R.string.error_invalid_number)
+        NegativeNumber -> stringResource(R.string.error_value_cannot_be_negative)
     }
 }
 
@@ -69,7 +73,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
     ) {
         notNull(
             onError = { ProductFormError.Required }
-        )
+        ) {
+            positive(
+                onError = { ProductFormError.NegativeNumber }
+            )
+        }
     }
 
     val carbohydrates = rememberFormFieldWithTextFieldValue(
@@ -83,7 +91,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
     ) {
         notNull(
             onError = { ProductFormError.Required }
-        )
+        ) {
+            positive(
+                onError = { ProductFormError.NegativeNumber }
+            )
+        }
     }
 
     val fats = rememberFormFieldWithTextFieldValue(
@@ -97,7 +109,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
     ) {
         notNull(
             onError = { ProductFormError.Required }
-        )
+        ) {
+            positive(
+                onError = { ProductFormError.NegativeNumber }
+            )
+        }
     }
 
     val calories = rememberFormFieldWithTextFieldValue(
@@ -118,7 +134,13 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         formatter = {
             (it?.toString() ?: "").trimEnd('0').trimEnd('.')
         }
-    )
+    ) {
+        allowNull {
+            positive(
+                onError = { ProductFormError.NegativeNumber }
+            )
+        }
+    }
 
     val saturatedFats = rememberFormFieldWithTextFieldValue(
         initialValue = product?.nutrients?.saturatedFats,
@@ -128,7 +150,13 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         formatter = {
             (it?.toString() ?: "").trimEnd('0').trimEnd('.')
         }
-    )
+    ) {
+        allowNull {
+            positive(
+                onError = { ProductFormError.NegativeNumber }
+            )
+        }
+    }
 
     val salt = rememberFormFieldWithTextFieldValue(
         initialValue = product?.nutrients?.salt,
@@ -138,7 +166,13 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         formatter = {
             (it?.toString() ?: "").trimEnd('0').trimEnd('.')
         }
-    )
+    ) {
+        allowNull {
+            positive(
+                onError = { ProductFormError.NegativeNumber }
+            )
+        }
+    }
 
     val sodium = rememberFormFieldWithTextFieldValue(
         initialValue = product?.nutrients?.sodium,
@@ -148,7 +182,13 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         formatter = {
             (it?.toString() ?: "").trimEnd('0').trimEnd('.')
         }
-    )
+    ) {
+        allowNull {
+            positive(
+                onError = { ProductFormError.NegativeNumber }
+            )
+        }
+    }
 
     val fiber = rememberFormFieldWithTextFieldValue(
         initialValue = product?.nutrients?.fiber,
@@ -158,7 +198,13 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         formatter = {
             (it?.toString() ?: "").trimEnd('0').trimEnd('.')
         }
-    )
+    ) {
+        allowNull {
+            positive(
+                onError = { ProductFormError.NegativeNumber }
+            )
+        }
+    }
 
     val packageWeight = rememberFormFieldWithTextFieldValue(
         initialValue = product?.packageWeight,
@@ -168,7 +214,13 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         formatter = {
             (it?.toString() ?: "").trimEnd('0').trimEnd('.')
         }
-    )
+    ) {
+        allowNull {
+            positive(
+                onError = { ProductFormError.NegativeNumber }
+            )
+        }
+    }
 
     val servingWeight = rememberFormFieldWithTextFieldValue(
         initialValue = product?.servingWeight,
@@ -178,7 +230,13 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         formatter = {
             (it?.toString() ?: "").trimEnd('0').trimEnd('.')
         }
-    )
+    ) {
+        allowNull {
+            positive(
+                onError = { ProductFormError.NegativeNumber }
+            )
+        }
+    }
 
     val coroutineScope = rememberCoroutineScope()
 
