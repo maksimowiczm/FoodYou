@@ -349,6 +349,23 @@ class ProductFormState(
             servingWeight.isValid
     }
 
+    val isDirty by derivedStateOf {
+        name.dirty ||
+            brand.dirty ||
+            barcode.dirty ||
+            proteins.dirty ||
+            carbohydrates.dirty ||
+            fats.dirty ||
+            calories.dirty ||
+            sugars.dirty ||
+            saturatedFats.dirty ||
+            salt.dirty ||
+            sodium.dirty ||
+            fiber.dirty ||
+            packageWeight.dirty ||
+            servingWeight.dirty
+    }
+
     init {
         coroutineScope.launch {
             combine(
