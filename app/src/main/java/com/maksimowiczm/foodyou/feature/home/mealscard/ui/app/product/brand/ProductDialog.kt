@@ -200,8 +200,20 @@ fun ProductForm(
             }
 
             // More fields
-
             if (expanded) {
+                item(
+                    span = { GridItemSpan(maxLineSpan) }
+                ) {
+                    Text(
+                        text = stringResource(R.string.headline_nutrients),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp, horizontal = 16.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+
                 item {
                     state.sugars.TextFieldNumber(
                         label = { Text(stringResource(R.string.nutriment_sugars)) },
