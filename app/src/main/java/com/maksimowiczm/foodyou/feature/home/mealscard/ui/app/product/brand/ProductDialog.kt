@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.brand
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -146,6 +147,24 @@ fun ProductForm(
                     label = { Text(stringResource(R.string.product_barcode)) },
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
+            }
+
+            item(
+                span = { GridItemSpan(maxLineSpan) }
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.neutral_all_values_per_x,
+                            "100 ${WeightUnit.Gram.pluralString(100)}"
+                        )
+                    )
+                }
             }
 
             item(
