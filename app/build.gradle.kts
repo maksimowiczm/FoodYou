@@ -19,30 +19,14 @@ android {
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // -- OPEN FOOD FACTS --
-        // https://openfoodfacts.github.io/openfoodfacts-server/api/#authentication
-        // I know that this is in apk file, but it is not in git repository
-        buildConfigField("String", "CONTACT_EMAIL", property("CONTACT_EMAIL").toString())
-
-        buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"https://world.openfoodfacts.net/\"")
-        // Use cached open food facts data for development
-        // buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"<cache-address>\"")
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
-            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
-            )
-
-            buildConfigField(
-                "String",
-                "OPEN_FOOD_FACTS_URL",
-                "\"https://world.openfoodfacts.org/\""
             )
 
             // Test minified version with debug signing config
@@ -50,11 +34,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
         freeCompilerArgs += "-Xwhen-guards"
     }
 
@@ -78,6 +62,41 @@ android {
 
             buildFeatures {
                 viewBinding = true
+            }
+
+            defaultConfig {
+                // -- OPEN FOOD FACTS --
+                // https://openfoodfacts.github.io/openfoodfacts-server/api/#authentication
+                // Sorry no email 😭
+                // https://pub.dev/packages/openfoodfacts#migrating-from-2xx-to-3xx-breaking-changes
+                // https://pub.dev/packages/openfoodfacts#setup-optional
+                buildConfigField(
+                    "String",
+                    "OPEN_FOOD_FACTS_USER_AGENT",
+                    "\"FoodYou/$versionName-opensource (https://github.com/maksimowiczm/FoodYou)\""
+                )
+            }
+
+            buildTypes {
+                debug {
+                    buildConfigField(
+                        "String",
+                        "OPEN_FOOD_FACTS_URL",
+                        "\"https://world.openfoodfacts.net/\""
+                    )
+
+                    // Use cached open food facts data for development. See
+                    // dev/open-food-facts-cache directory for more information
+                    // buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"<cache-address>\"")
+                }
+
+                release {
+                    buildConfigField(
+                        "String",
+                        "OPEN_FOOD_FACTS_URL",
+                        "\"https://world.openfoodfacts.org/\""
+                    )
+                }
             }
         }
 

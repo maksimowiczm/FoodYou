@@ -26,11 +26,7 @@ internal class OpenFoodFactsNetworkDataSource {
         .callTimeout(Duration.ofSeconds(TIMEOUT))
         .addNetworkInterceptor {
             val request = it.request().newBuilder()
-                // https://openfoodfacts.github.io/openfoodfacts-server/api/#authentication
-                .header(
-                    "User-Agent",
-                    "FoodYou/${BuildConfig.VERSION_NAME}-${BuildConfig.FLAVOR} (${BuildConfig.CONTACT_EMAIL})"
-                )
+                .header("User-Agent", BuildConfig.OPEN_FOOD_FACTS_USER_AGENT)
                 .build()
 
             it.proceed(request)
