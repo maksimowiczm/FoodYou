@@ -16,6 +16,7 @@ import com.maksimowiczm.foodyou.data.model.Product
 import com.maksimowiczm.foodyou.data.model.WeightUnit
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.allowNull
+import com.maksimowiczm.foodyou.ui.form.between
 import com.maksimowiczm.foodyou.ui.form.notNull
 import com.maksimowiczm.foodyou.ui.form.nullableFloatParser
 import com.maksimowiczm.foodyou.ui.form.nullableStringParser
@@ -30,7 +31,8 @@ import kotlinx.coroutines.launch
 enum class ProductFormError {
     Required,
     NotANumber,
-    NegativeNumber
+    NegativeNumber,
+    Exceeds100
     ;
 
     @Composable
@@ -38,6 +40,7 @@ enum class ProductFormError {
         Required -> "* " + stringResource(R.string.neutral_required)
         NotANumber -> stringResource(R.string.error_invalid_number)
         NegativeNumber -> stringResource(R.string.error_value_cannot_be_negative)
+        Exceeds100 -> stringResource(R.string.error_value_cannot_exceed_100)
     }
 }
 
@@ -85,8 +88,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         notNull(
             onError = { ProductFormError.Required }
         ) {
-            positive(
-                onError = { ProductFormError.NegativeNumber }
+            between(
+                min = 0f,
+                onMinError = { ProductFormError.NegativeNumber },
+                max = 100f,
+                onMaxError = { ProductFormError.Exceeds100 }
             )
         }
     }
@@ -103,8 +109,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         notNull(
             onError = { ProductFormError.Required }
         ) {
-            positive(
-                onError = { ProductFormError.NegativeNumber }
+            between(
+                min = 0f,
+                onMinError = { ProductFormError.NegativeNumber },
+                max = 100f,
+                onMaxError = { ProductFormError.Exceeds100 }
             )
         }
     }
@@ -121,8 +130,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         notNull(
             onError = { ProductFormError.Required }
         ) {
-            positive(
-                onError = { ProductFormError.NegativeNumber }
+            between(
+                min = 0f,
+                onMinError = { ProductFormError.NegativeNumber },
+                max = 100f,
+                onMaxError = { ProductFormError.Exceeds100 }
             )
         }
     }
@@ -147,8 +159,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         }
     ) {
         allowNull {
-            positive(
-                onError = { ProductFormError.NegativeNumber }
+            between(
+                min = 0f,
+                onMinError = { ProductFormError.NegativeNumber },
+                max = 100f,
+                onMaxError = { ProductFormError.Exceeds100 }
             )
         }
     }
@@ -163,8 +178,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         }
     ) {
         allowNull {
-            positive(
-                onError = { ProductFormError.NegativeNumber }
+            between(
+                min = 0f,
+                onMinError = { ProductFormError.NegativeNumber },
+                max = 100f,
+                onMaxError = { ProductFormError.Exceeds100 }
             )
         }
     }
@@ -179,8 +197,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         }
     ) {
         allowNull {
-            positive(
-                onError = { ProductFormError.NegativeNumber }
+            between(
+                min = 0f,
+                onMinError = { ProductFormError.NegativeNumber },
+                max = 100f,
+                onMaxError = { ProductFormError.Exceeds100 }
             )
         }
     }
@@ -195,8 +216,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         }
     ) {
         allowNull {
-            positive(
-                onError = { ProductFormError.NegativeNumber }
+            between(
+                min = 0f,
+                onMinError = { ProductFormError.NegativeNumber },
+                max = 100f,
+                onMaxError = { ProductFormError.Exceeds100 }
             )
         }
     }
@@ -211,8 +235,11 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         }
     ) {
         allowNull {
-            positive(
-                onError = { ProductFormError.NegativeNumber }
+            between(
+                min = 0f,
+                onMinError = { ProductFormError.NegativeNumber },
+                max = 100f,
+                onMaxError = { ProductFormError.Exceeds100 }
             )
         }
     }
