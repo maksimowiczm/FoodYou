@@ -356,7 +356,7 @@ class ProductFormState(
             proteins.dirty ||
             carbohydrates.dirty ||
             fats.dirty ||
-            calories.dirty ||
+            // calories.dirty || // ignore calories because it's calculated
             sugars.dirty ||
             saturatedFats.dirty ||
             salt.dirty ||
