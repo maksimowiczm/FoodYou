@@ -68,8 +68,12 @@ class FormFieldImpl<T, E>(
         private set
 
     override val isValid: Boolean by derivedStateOf {
+        if (fieldValue.error != null) {
+            return@derivedStateOf false
+        }
+
         if (validator == null) {
-            return@derivedStateOf fieldValue.error == null
+            return@derivedStateOf true
         }
 
         when (validate(fieldValue.value)) {
