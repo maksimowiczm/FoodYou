@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -42,6 +43,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -68,6 +71,7 @@ fun ProductForm(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var expanded by rememberSaveable { mutableStateOf(false) }
+    val expandedFocusRequester = remember { FocusRequester() }
 
     Scaffold(
         modifier = modifier,
@@ -177,7 +181,14 @@ fun ProductForm(
                 state.fats.TextFieldNumber(
                     label = { Text(stringResource(R.string.nutriment_fats)) },
                     modifier = Modifier.padding(bottom = 4.dp),
-                    supportingText = { Text(requiredString()) }
+                    supportingText = { Text(requiredString()) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = if (expanded) ImeAction.Next else ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { expandedFocusRequester.requestFocus() }
+                    )
                 )
             }
 
@@ -217,7 +228,9 @@ fun ProductForm(
                 item {
                     state.sugars.TextFieldNumber(
                         label = { Text(stringResource(R.string.nutriment_sugars)) },
-                        modifier = Modifier.padding(bottom = 4.dp)
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                            .focusRequester(expandedFocusRequester)
                     )
                 }
 
@@ -318,7 +331,8 @@ private fun <T> FormFieldWithTextFieldValue<T, ProductFormError>.TextField(
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
     supportingText: @Composable (() -> Unit)? = null,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     TextField(
         value = textFieldValue,
@@ -335,7 +349,8 @@ private fun <T> FormFieldWithTextFieldValue<T, ProductFormError>.TextField(
         },
         maxLines = 1,
         readOnly = readOnly,
-        keyboardOptions = keyboardOptions
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions
     )
 }
 
@@ -347,13 +362,15 @@ private fun <T : Number?> FormFieldWithTextFieldValue<T, ProductFormError>.TextF
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Number,
         imeAction = ImeAction.Next
-    )
+    ),
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     this.TextField(
         label = label,
         keyboardOptions = keyboardOptions,
         modifier = modifier,
-        supportingText = supportingText
+        supportingText = supportingText,
+        keyboardActions = keyboardActions
     )
 }
 
