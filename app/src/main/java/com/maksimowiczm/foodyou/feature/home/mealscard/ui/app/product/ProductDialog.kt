@@ -40,7 +40,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.R
-import com.maksimowiczm.foodyou.data.model.Product
 import com.maksimowiczm.foodyou.data.model.WeightUnit
 import com.maksimowiczm.foodyou.ui.ext.plus
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
@@ -51,10 +50,9 @@ import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 
 @Composable
 fun ProductForm(
-    product: Product?,
+    state: ProductFormState,
     modifier: Modifier = Modifier,
-    paddingValues: PaddingValues = PaddingValues(0.dp),
-    state: ProductFormState = rememberProductFormState(product = product)
+    paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     val expandedFocusRequester = remember { FocusRequester() }
@@ -433,7 +431,7 @@ private fun WeightUnitDropdownMenu(
 private fun NullProductFormPreview() {
     FoodYouTheme {
         ProductForm(
-            product = null
+            state = rememberProductFormState(null)
         )
     }
 }
@@ -445,7 +443,7 @@ private fun NullProductFormPreview() {
 private fun ProductFormPreview() {
     FoodYouTheme {
         ProductForm(
-            product = ProductPreviewParameterProvider().values.first()
+            state = rememberProductFormState(ProductPreviewParameterProvider().values.first())
         )
     }
 }
