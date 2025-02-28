@@ -68,7 +68,14 @@ class FormFieldImpl<T, E>(
         private set
 
     override val isValid: Boolean by derivedStateOf {
-        fieldValue.error == null
+        if (validator == null) {
+            return@derivedStateOf fieldValue.error == null
+        }
+
+        when (validate(fieldValue.value)) {
+            is ValidationResult.Failure<*> -> false
+            ValidationResult.Success -> true
+        }
     }
 
     override fun touch() {
