@@ -20,6 +20,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -34,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,6 +44,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.WeightUnit
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.CameraBarcodeScannerScreen
+import com.maksimowiczm.foodyou.ui.component.FullScreenDialog
 import com.maksimowiczm.foodyou.ui.ext.plus
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
@@ -51,11 +57,30 @@ import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 @Composable
 fun ProductForm(
     state: ProductFormState,
+    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     val expandedFocusRequester = remember { FocusRequester() }
+
+    var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
+    AnimatedVisibility(
+        visible = showBarcodeScanner
+    ) {
+        FullScreenDialog(
+            onDismissRequest = { showBarcodeScanner = false }
+        ) {
+            CameraBarcodeScannerScreen(
+                onBarcodeScan = {
+                    state.barcode.onRawValueChange(it)
+                    showBarcodeScanner = false
+                },
+                onClose = { showBarcodeScanner = false },
+                barcodeScannerScreen = barcodeScannerScreen
+            )
+        }
+    }
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 300.dp),
@@ -94,7 +119,17 @@ fun ProductForm(
         item {
             state.barcode.TextFieldString(
                 label = { Text(stringResource(R.string.product_barcode)) },
-                modifier = Modifier.padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp),
+                trailingIcon = {
+                    IconButton(
+                        onClick = { showBarcodeScanner = true }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_qr_code_scanner_24),
+                            contentDescription = stringResource(R.string.action_scan_barcode)
+                        )
+                    }
+                }
             )
         }
 
@@ -319,6 +354,7 @@ private fun <T> FormFieldWithTextFieldValue<T, ProductFormError>.TextField(
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
     supportingText: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
     readOnly: Boolean = false,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -337,6 +373,7 @@ private fun <T> FormFieldWithTextFieldValue<T, ProductFormError>.TextField(
                 Text(error.stringResource())
             }
         },
+        trailingIcon = trailingIcon,
         suffix = suffix,
         maxLines = 1,
         readOnly = readOnly,
@@ -374,6 +411,7 @@ private fun FormFieldWithTextFieldValue<String?, ProductFormError>.TextFieldStri
     label: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     supportingText: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Text,
         imeAction = ImeAction.Next
@@ -383,7 +421,8 @@ private fun FormFieldWithTextFieldValue<String?, ProductFormError>.TextFieldStri
         label = label,
         keyboardOptions = keyboardOptions,
         modifier = modifier,
-        supportingText = supportingText
+        supportingText = supportingText,
+        trailingIcon = trailingIcon
     )
 }
 
@@ -437,7 +476,8 @@ private fun WeightUnitDropdownMenu(
 private fun NullProductFormPreview() {
     FoodYouTheme {
         ProductForm(
-            state = rememberProductFormState(null)
+            state = rememberProductFormState(null),
+            barcodeScannerScreen = { _, _ -> }
         )
     }
 }
@@ -449,7 +489,8 @@ private fun NullProductFormPreview() {
 private fun ProductFormPreview() {
     FoodYouTheme {
         ProductForm(
-            state = rememberProductFormState(ProductPreviewParameterProvider().values.first())
+            state = rememberProductFormState(ProductPreviewParameterProvider().values.first()),
+            barcodeScannerScreen = { _, _ -> }
         )
     }
 }

@@ -135,6 +135,7 @@ private fun CreateProductDialog(
     ) { paddingValues ->
         ProductForm(
             state = form,
+            barcodeScannerScreen = barcodeScannerScreen,
             paddingValues = paddingValues,
             modifier = Modifier
                 .padding(horizontal = 8.dp)
