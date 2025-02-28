@@ -1,14 +1,29 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.brand
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.res.stringResource
 import com.maksimowiczm.foodyou.R
+import com.maksimowiczm.foodyou.data.model.NutrimentHelper
 import com.maksimowiczm.foodyou.data.model.Product
+import com.maksimowiczm.foodyou.data.model.WeightUnit
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.notNull
 import com.maksimowiczm.foodyou.ui.form.nullableFloatParser
 import com.maksimowiczm.foodyou.ui.form.nullableStringParser
 import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 
 enum class ProductFormError {
     Required,
@@ -17,8 +32,8 @@ enum class ProductFormError {
 
     @Composable
     fun stringResource() = when (this) {
-        Required -> androidx.compose.ui.res.stringResource(R.string.neutral_required)
-        NotANumber -> androidx.compose.ui.res.stringResource(R.string.error_invalid_number)
+        Required -> "* " + stringResource(R.string.neutral_required)
+        NotANumber -> stringResource(R.string.error_invalid_number)
     }
 }
 
@@ -57,12 +72,161 @@ fun rememberProductFormState(product: Product?): ProductFormState {
         )
     }
 
-    return remember {
+    val carbohydrates = rememberFormFieldWithTextFieldValue(
+        initialValue = product?.nutrients?.carbohydrates,
+        parser = nullableFloatParser(
+            onNan = { ProductFormError.NotANumber }
+        ),
+        formatter = {
+            (it?.toString() ?: "").trimEnd('0').trimEnd('.')
+        }
+    ) {
+        notNull(
+            onError = { ProductFormError.Required }
+        )
+    }
+
+    val fats = rememberFormFieldWithTextFieldValue(
+        initialValue = product?.nutrients?.fats,
+        parser = nullableFloatParser(
+            onNan = { ProductFormError.NotANumber }
+        ),
+        formatter = {
+            (it?.toString() ?: "").trimEnd('0').trimEnd('.')
+        }
+    ) {
+        notNull(
+            onError = { ProductFormError.Required }
+        )
+    }
+
+    val calories = rememberFormFieldWithTextFieldValue(
+        initialValue = product?.nutrients?.calories,
+        parser = nullableFloatParser(
+            onNan = { ProductFormError.NotANumber }
+        ),
+        formatter = {
+            (it?.toString() ?: "").trimEnd('0').trimEnd('.')
+        }
+    )
+
+    val sugars = rememberFormFieldWithTextFieldValue(
+        initialValue = product?.nutrients?.sugars,
+        parser = nullableFloatParser(
+            onNan = { ProductFormError.NotANumber }
+        ),
+        formatter = {
+            (it?.toString() ?: "").trimEnd('0').trimEnd('.')
+        }
+    )
+
+    val saturatedFats = rememberFormFieldWithTextFieldValue(
+        initialValue = product?.nutrients?.saturatedFats,
+        parser = nullableFloatParser(
+            onNan = { ProductFormError.NotANumber }
+        ),
+        formatter = {
+            (it?.toString() ?: "").trimEnd('0').trimEnd('.')
+        }
+    )
+
+    val salt = rememberFormFieldWithTextFieldValue(
+        initialValue = product?.nutrients?.salt,
+        parser = nullableFloatParser(
+            onNan = { ProductFormError.NotANumber }
+        ),
+        formatter = {
+            (it?.toString() ?: "").trimEnd('0').trimEnd('.')
+        }
+    )
+
+    val sodium = rememberFormFieldWithTextFieldValue(
+        initialValue = product?.nutrients?.sodium,
+        parser = nullableFloatParser(
+            onNan = { ProductFormError.NotANumber }
+        ),
+        formatter = {
+            (it?.toString() ?: "").trimEnd('0').trimEnd('.')
+        }
+    )
+
+    val fiber = rememberFormFieldWithTextFieldValue(
+        initialValue = product?.nutrients?.fiber,
+        parser = nullableFloatParser(
+            onNan = { ProductFormError.NotANumber }
+        ),
+        formatter = {
+            (it?.toString() ?: "").trimEnd('0').trimEnd('.')
+        }
+    )
+
+    val packageWeight = rememberFormFieldWithTextFieldValue(
+        initialValue = product?.packageWeight,
+        parser = nullableFloatParser(
+            onNan = { ProductFormError.NotANumber }
+        ),
+        formatter = {
+            (it?.toString() ?: "").trimEnd('0').trimEnd('.')
+        }
+    )
+
+    val servingWeight = rememberFormFieldWithTextFieldValue(
+        initialValue = product?.servingWeight,
+        parser = nullableFloatParser(
+            onNan = { ProductFormError.NotANumber }
+        ),
+        formatter = {
+            (it?.toString() ?: "").trimEnd('0').trimEnd('.')
+        }
+    )
+
+    val coroutineScope = rememberCoroutineScope()
+
+    return rememberSaveable(
+        product,
+        saver = Saver(
+            save = {
+                it.weightUnit
+            },
+            restore = {
+                ProductFormState(
+                    name = name,
+                    brand = brand,
+                    barcode = barcode,
+                    proteins = proteins,
+                    carbohydrates = carbohydrates,
+                    fats = fats,
+                    calories = calories,
+                    sugars = sugars,
+                    saturatedFats = saturatedFats,
+                    salt = salt,
+                    sodium = sodium,
+                    fiber = fiber,
+                    packageWeight = packageWeight,
+                    servingWeight = servingWeight,
+                    initialWeightUnit = it,
+                    coroutineScope = coroutineScope
+                )
+            }
+        )
+    ) {
         ProductFormState(
             name = name,
             brand = brand,
             barcode = barcode,
-            proteins = proteins
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            fats = fats,
+            calories = calories,
+            sugars = sugars,
+            saturatedFats = saturatedFats,
+            salt = salt,
+            sodium = sodium,
+            fiber = fiber,
+            packageWeight = packageWeight,
+            servingWeight = servingWeight,
+            initialWeightUnit = product?.weightUnit ?: WeightUnit.Gram,
+            coroutineScope = coroutineScope
         )
     }
 }
@@ -71,5 +235,54 @@ class ProductFormState(
     val name: FormFieldWithTextFieldValue<String?, ProductFormError>,
     val brand: FormFieldWithTextFieldValue<String?, ProductFormError>,
     val barcode: FormFieldWithTextFieldValue<String?, ProductFormError>,
-    val proteins: FormFieldWithTextFieldValue<Float?, ProductFormError>
-)
+    val proteins: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    val carbohydrates: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    val fats: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    val calories: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    val sugars: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    val saturatedFats: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    val salt: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    val sodium: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    val fiber: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    val packageWeight: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    val servingWeight: FormFieldWithTextFieldValue<Float?, ProductFormError>,
+    initialWeightUnit: WeightUnit,
+    coroutineScope: CoroutineScope
+) {
+    var weightUnit by mutableStateOf(initialWeightUnit)
+
+    val isValid: Boolean by derivedStateOf {
+        name.isValid &&
+            brand.isValid &&
+            barcode.isValid &&
+            proteins.isValid &&
+            carbohydrates.isValid &&
+            fats.isValid &&
+            calories.isValid &&
+            sugars.isValid &&
+            saturatedFats.isValid &&
+            salt.isValid &&
+            sodium.isValid &&
+            fiber.isValid &&
+            packageWeight.isValid &&
+            servingWeight.isValid
+    }
+
+    init {
+        coroutineScope.launch {
+            combine(
+                snapshotFlow { proteins.value }.filterNotNull(),
+                snapshotFlow { carbohydrates.value }.filterNotNull(),
+                snapshotFlow { fats.value }.filterNotNull()
+            ) { proteins, carbohydrates, fats ->
+                NutrimentHelper.calculateCalories(
+                    proteins = proteins,
+                    carbohydrates = carbohydrates,
+                    fats = fats
+                )
+            }.collectLatest {
+                calories.onRawValueChange(it)
+            }
+        }
+    }
+}
