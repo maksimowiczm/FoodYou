@@ -25,4 +25,14 @@
         <from>00:00</from>
         <to>00:00</to>
     </meal>
+    <meal>
+        <name>6</name>
+        <from>00:00</from>
+        <to>00:00</to>
+    </meal>
+    <meal>
+        <name>7</name>
+        <from>00:00</from>
+        <to>00:00</to>
+    </meal>
 </meals>
