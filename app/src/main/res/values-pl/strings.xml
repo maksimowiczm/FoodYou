@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="not_available_short">BD</string>
-
     <string name="headline_create_product">Stwórz produkt</string>
     <string name="headline_settings">Ustawienia</string>
     <string name="headline_diary">Dziennik</string>
     <string name="headline_calories_goal">Cel kaloryczny</string>
     <string name="headline_daily_goals">Cele dzienne</string>
+    <string name="headline_product_serving_and_packaging">Porcja i opakowanie</string>
     <string name="headline_general">Ogólne</string>
     <string name="headline_macronutrients">Makroskładniki</string>
     <string name="headline_nutrients">Składniki odżywcze</string>
@@ -14,7 +14,6 @@
     <string name="headline_delete_product">Usuń produkt</string>
     <string name="headline_edit_product">Edytuj produkt</string>
     <string name="headline_permission_required">Wymagane uprawnienia</string>
-
     <string name="in_x_times_y">W %1$s x %2$s</string>
     <string name="weight">Waga</string>
     <string name="unit_calories">Kalorie</string>
@@ -24,24 +23,22 @@
         <item quantity="one">gram</item>
         <item quantity="few">gramy</item>
         <item quantity="many">gramów</item>
+        <item quantity="other">gramów</item>
     </plurals>
     <plurals name="unit_milliliter">
         <item quantity="one">mililitr</item>
         <item quantity="few">mililitry</item>
         <item quantity="many">mililitrów</item>
+        <item quantity="other">mililitrów</item>
     </plurals>
-
     <string name="product_package_weight">Waga opakowania</string>
     <string name="product_package">Opakowanie</string>
     <string name="product_serving_weight">Waga porcji</string>
     <string name="product_serving">Porcja</string>
-
     <string name="product_name">Nazwa</string>
     <string name="product_brand">Marka</string>
     <string name="product_weight_unit">Jednostka pomiaru</string>
     <string name="product_barcode">Kod kreskowy</string>
-    <string name="headline_product_serving_and_packaging">Porcja i opakowanie</string>
-
     <string name="nutriment_proteins">Białka</string>
     <string name="nutriment_proteins_short">B</string>
     <string name="nutriment_carbohydrates">Węglowodany</string>
@@ -53,7 +50,6 @@
     <string name="nutriment_salt">Sól</string>
     <string name="nutriment_sodium">Sód</string>
     <string name="nutriment_fiber">Błonnik</string>
-
     <string name="action_show_remaining_fields">Pokaż pozostałe pola</string>
     <string name="action_search">Szukaj</string>
     <string name="action_scan_barcode">Skanuj kod kreskowy</string>
@@ -75,22 +71,22 @@
     <string name="action_insert_suggested_search">Wstaw sugerowane wyszukiwanie</string>
     <string name="action_edit_entry">Edytuj wpis</string>
     <string name="action_delete_entry">Usuń wpis</string>
-    <string name="action_add_food">Dodaj</string>
+    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Dodaj</string>
     <string name="action_undo">Cofnij</string>
     <string name="action_close">Zamknij</string>
     <string name="action_discard">Odrzuć</string>
     <string name="action_enable">Włącz</string>
     <string name="action_don_t_show_again">Nie pokazuj ponownie</string>
-
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
     <string name="neutral_no_products_found">Nie znaleziono produktów</string>
-    <string name="neutral_food_database_load_error">Nie udało się pobrać produktów ze zdalnej bazy danych. Wciąż możesz przeglądać produkty wcześniej pobrane.</string>
+    <string name="neutral_food_database_load_error">"Nie udało się pobrać produktów ze zdalnej bazy danych. Wciąż możesz przeglądać produkty wcześniej pobrane."</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">Pozostała %1$d kaloria</item>
         <item quantity="few">Pozostały %1$d kalorie</item>
         <item quantity="many">Pozostało %1$d kalorii</item>
+        <item quantity="other">Pozostało %1$d kalorii</item>
     </plurals>
     <string name="neutral_set_your_daily_goals">Ustaw swoje cele</string>
     <string name="neutral_all_values_per_x">Wszystkie wartości na %1$s</string>
@@ -101,10 +97,8 @@
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kalorie są obliczane automatycznie na podstawie makroskładników</string>
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Wygląda na to, że ten posiłek jest pusty. Dodaj jedzenie, aby śledzić kalorie</string>
     <string name="neutral_entry_deleted">Wpis usunięty</string>
-
     <string name="question_discard_product">Odrzucić produkt?</string>
     <string name="question_discard_changes">Odrzucić zmiany?</string>
-
     <string name="error_this_field_is_required">To pole jest wymagane</string>
     <string name="error_this_field_cannot_be_empty">To pole nie może być puste</string>
     <string name="error_invalid_number">Niepoprawna liczba</string>
@@ -114,21 +108,17 @@
     <string name="error_value_must_be_integer">Wartość musi być liczbą całkowitą</string>
     <string name="error_sum_of_percentages_must_be_100">Suma procentów musi wynosić 100</string>
     <string name="error_value_cannot_exceed_100">Wartość nie może przekraczać 100</string>
-
     <string name="positive_goal_reached">Cel osiągnięty</string>
     <string name="positive_ok">OK</string>
-
     <plurals name="negative_exceeded_by_calories">
         <item quantity="one">Przekroczono o %1$d kalorię</item>
         <item quantity="few">Przekroczono o %1$d kalorie</item>
         <item quantity="many">Przekroczono o %1$d kalorii</item>
+        <item quantity="other">Przekroczono o %1$d kalorii</item>
     </plurals>
-
     <string name="description_calories_goal">Ustaw swój dzienny cel spożycia kalorii. Pomoże Ci to śledzić postępy i pozostać na właściwej ścieżce.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Produkt zostanie trwale usunięty. Ta czynność nie może być cofnięta. Wszystkie wpisy w dzienniku związane z tym produktem zostaną utracone.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Ten wpis zostanie usunięty z Twojego dziennika. Możesz dodać go ponownie w każdej chwili.</string>
-
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Zobacz inne świetne ikony tutaj</string>
-
 </resources>
