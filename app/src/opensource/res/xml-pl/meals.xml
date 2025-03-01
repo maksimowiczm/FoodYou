@@ -11,14 +11,9 @@
         <to>12:00</to>
     </meal>
     <meal>
-        <name>Obiad</name>
+        <name>Kolacja</name>
         <from>12:00</from>
         <to>18:00</to>
-    </meal>
-    <meal>
-        <name>Kolacja</name>
-        <from>18:00</from>
-        <to>00:00</to>
     </meal>
     <meal>
         <name>Przekąski</name>
