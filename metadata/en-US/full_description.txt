@@ -1,1 +1,15 @@
+<b>FoodYou</b> is a modern calorie-tracking app built with Material You aesthetic. It’s designed to make calorie tracking easier and more visually appealing.
+
+<b>Features:</b>
+<ul>
+    <li><b>Material You Design:</b> Dynamic theming for a cohesive and visually pleasing experience.</li>
+    <li><b>Interactive Home Page:</b> Quick access to key features with a card-based interface.</li>
+    <li><b>Open Food Facts Integration:</b> Get accurate food data for precise calorie tracking.</li>
+    <li><b>Edge-to-Edge Layout:</b> Enjoy a more immersive experience with a full-screen design.</li>
+    <li><b>Predictive Back Feature:</b> A seamless navigation experience with predictive back.</li>
+    <li><b>Customizable & Open-Source:</b> Built to be extensible and community-driven, allowing you to contribute and modify.</li>
+</ul>
+
+Start tracking your calories today with FoodYou!
+
 Launcher icon made <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

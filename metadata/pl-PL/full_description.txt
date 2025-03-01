@@ -1,0 +1,15 @@
+<b>FoodYou</b> to nowoczesna aplikacja do śledzenia kalorii, zbudowana z estetyką Material You. Została zaprojektowana, aby ułatwić śledzenie kalorii i uczynić je bardziej atrakcyjnym wizualnie.
+
+<b>Funkcje:</b>
+<ul>
+    <li><b>Design Material You:</b> Dynamiczne motywy, zapewniające spójne i przyjemne wrażenia wizualne.</li>
+    <li><b>Interaktywna Strona Główna:</b> Szybki dostęp do kluczowych funkcji za pomocą interfejsu opartego na kartach.</li>
+    <li><b>Integracja z Open Food Facts:</b> Uzyskaj dokładne dane o jedzeniu do precyzyjnego śledzenia kalorii.</li>
+    <li><b>Układ Edge-to-Edge:</b> Ciesz się bardziej immersyjnym doświadczeniem dzięki pełnoekranowemu projektowi.</li>
+    <li><b>Funkcja Predictive Back:</b> Płynne doświadczenie nawigacyjne z funkcją przewidywanego przejścia wstecz.</li>
+    <li><b>Możliwość dostosowania i Open-Source:</b> Stworzona z myślą o rozszerzalności i współpracy społecznościowej, umożliwiając wniesienie wkładu i modyfikowanie aplikacji.</li>
+</ul>
+
+Zacznij śledzić swoje kalorie już teraz z FoodYou!
+
+Ikona aplikacji stworzona przez <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

@@ -5,14 +5,12 @@ A free and open-source calorie counter app
 <br>
 
 <div align="center">
-    <img src="./metadata/en-US/images/phoneScreenshots/home.png" width="23%" alt="home"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/addfood-searchview.png" width="23%"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/addfood-search.png" width="23%"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/addfood-portion.png" width="23%"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/product-create.png" width="23%"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/settings.png" width="23%"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/product-openfoodfacts-settings.png" width="23%" alt="open food facts settings"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/diary-daily-goals-settings.png" width="23%"/>
+    <img src="./metadata/en-US/images/phoneScreenshots/home.png" width="30%" alt="home"/>
+    <img src="./metadata/en-US/images/phoneScreenshots/meal_day.png" width="30%"/>
+    <img src="./metadata/en-US/images/phoneScreenshots/search.png" width="30%"/>
+    <img src="./metadata/en-US/images/phoneScreenshots/measure_product.png" width="30%"/>
+    <img src="./metadata/en-US/images/phoneScreenshots/create_product.png" width="30%"/>
+    <img src="./metadata/en-US/images/phoneScreenshots/settings.png" width="30%"/>
 </div>
 
 <br>
@@ -30,9 +28,10 @@ I wanted a minimal calorie counter that aligns with Material You, so I decided t
 ### ✨ Features
 
 - **Material You Design**: Dynamic theming for a visually cohesive experience.
-- **Edge-to-Edge Design**: Utilizes the full screen for a more immersive experience.
 - **Interactive Home Page**: Built with cards offering key functionalities.
 - **Open Food Facts Integration**: Fetches food data for accurate tracking.
+- **Edge-to-Edge Design**: Utilizes the full screen for a more immersive experience.
+- **Predictive Back Feature**: A seamless navigation experience with predictive back.
 - **Extensible & Open-Source**: Built to be customizable and community-driven.
 
 ### 🔄 Similar Apps
