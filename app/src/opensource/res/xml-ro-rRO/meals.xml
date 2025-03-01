@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<meals>
+    <!--
+    List of meals with their time ranges.
+    Adapt meal names and times according to cultural norms. Preferably put one meal that lasts all
+    day (e.g. Snacks).
+
+    Meals should be in chronological order. The time format is HH:mm in 24-hour clock.
+
+    Meals with digit as first character are skipped.
+    -->
+    <meal>
+        <name>Breakfast</name>
+        <from>06:00</from>
+        <to>10:00</to>
+    </meal>
+    <meal>
+        <name>Lunch</name>
+        <from>10:00</from>
+        <to>15:00</to>
+    </meal>
+    <meal>
+        <name>Dinner</name>
+        <from>15:00</from>
+        <to>21:00</to>
+    </meal>
+    <meal>
+        <name>Snacks</name>
+        <from>00:00</from>
+        <to>00:00</to>
+    </meal>
+    <meal>
+        <name>5</name>
+        <from>00:00</from>
+        <to>00:00</to>
+    </meal>
+    <meal>
+        <name>6</name>
+        <from>00:00</from>
+        <to>00:00</to>
+    </meal>
+    <meal>
+        <name>7</name>
+        <from>00:00</from>
+        <to>00:00</to>
+    </meal>
+</meals>
