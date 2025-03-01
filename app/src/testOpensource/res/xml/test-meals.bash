@@ -42,7 +42,7 @@ validate_xml_times() {
 }
 
 # Main validation loop
-for file in app/src/opensource/res/xml*/meals.xml; do
+for file in app/src/opensource/res/xml-*/meals.xml; do
     if [ -f "$file" ]; then
         echo "Validating $file"
 

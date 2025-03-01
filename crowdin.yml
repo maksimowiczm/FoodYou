@@ -9,6 +9,5 @@ files:
     translation: /metadata/%locale_with_underscore%/title.txt
   - source: /app/src/opensource/res/xml/meals.xml
     translation: /app/src/opensource/res/xml-%android_code%/meals.xml
-    translate_content: 0
     translate_attributes: 0
     content_segmentation: 0

@@ -9,9 +9,15 @@ import org.xmlpull.v1.XmlPullParser
 
 class AndroidInitializeMealsCallback(private val context: Context) : InitializeMealsCallback() {
     override fun getMeals(): List<MealEntity> {
-        val meals = mutableListOf<MealXml>()
         val parser: XmlResourceParser = context.resources.getXml(R.xml.meals)
 
+        val raw = parse(parser)
+        val filtered = raw.filterNot { it.name[0] in '0'..'9' }
+        return filtered.map(MealXml::toMeal)
+    }
+
+    private fun parse(parser: XmlResourceParser): List<MealXml> {
+        val meals = mutableListOf<MealXml>()
         var name: String? = null
         var from: String? = null
         var to: String? = null
@@ -44,7 +50,7 @@ class AndroidInitializeMealsCallback(private val context: Context) : InitializeM
             parser.close()
         }
 
-        return meals.map(MealXml::toMeal)
+        return meals
     }
 
     private data class MealXml(val name: String, val from: String, val to: String) {
