@@ -2,10 +2,10 @@ files:
   - source: /app/src/**/res/values/strings.xml
     translation: /app/src/**/res/values-%android_code%/strings.xml
   - source: /metadata/en-US/full_description.txt
-    translation: /metadata/%locale_with_underscore%/full_description.txt
+    translation: /metadata/%locale%/full_description.txt
   - source: /metadata/en-US/short_description.txt
-    translation: /metadata/%locale_with_underscore%/short_description.txt
+    translation: /metadata/%locale%/short_description.txt
   - source: /metadata/en-US/title.txt
-    translation: /metadata/%locale_with_underscore%/title.txt
+    translation: /metadata/%locale%/title.txt
   - source: /app/src/opensource/res/xml/meals.xml
     translation: /app/src/opensource/res/xml-%android_code%/meals.xml
