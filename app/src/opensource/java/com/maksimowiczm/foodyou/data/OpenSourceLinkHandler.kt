@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.data
 
-interface LinkHandler {
+interface OpenSourceLinkHandler {
     fun openGithubRepository()
     fun openGithubReadme()
     fun openGithubIssue()

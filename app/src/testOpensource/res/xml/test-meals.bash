@@ -42,12 +42,13 @@ validate_xml_times() {
 }
 
 # Main validation loop
-for file in app/src/main/res/xml*/meals.xml; do
+for file in app/src/opensource/res/xml*/meals.xml; do
     if [ -f "$file" ]; then
         echo "Validating $file"
 
         # Validate XML structure
-        if xmllint --schema app/src/test/res/xml/meals-schema.xsd --noout "$file"; then
+
+        if xmllint --schema app/src/testOpensource/res/xml/meals-schema.xsd --noout "$file"; then
             echo -e "${GREEN}✓ XML structure valid${NC}"
         else
             echo -e "${RED}✗ XML structure invalid${NC}"

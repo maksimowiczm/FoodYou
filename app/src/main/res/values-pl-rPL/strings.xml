@@ -14,6 +14,10 @@
     <string name="headline_delete_product">Usuń produkt</string>
     <string name="headline_edit_product">Edytuj produkt</string>
     <string name="headline_permission_required">Wymagane uprawnienia</string>
+    <string name="headline_language">Język</string>
+    <string name="headline_authors">Autorzy</string>
+    <string name="headline_system">System</string>
+    <string name="headline_system_language_settings">Ustawienia języka systemowego</string>
 
     <string name="in_x_times_y">W %1$s x %2$s</string>
     <string name="weight">Waga</string>
@@ -61,7 +65,6 @@
     <string name="action_go_back">Wróć</string>
     <string name="action_retry">Spróbuj ponownie</string>
     <string name="action_tap_to_allow_access">Kliknij, aby zezwolić</string>
-    <string name="action_tap_to_open_settings">Kliknij, aby otworzyć ustawienia</string>
     <string name="action_create_new_product">Stwórz nowy produkt</string>
     <string name="action_create">Stwórz</string>
     <string name="action_clear">Wyczyść</string>
@@ -81,6 +84,7 @@
     <string name="action_discard">Odrzuć</string>
     <string name="action_enable">Włącz</string>
     <string name="action_don_t_show_again">Nie pokazuj ponownie</string>
+    <string name="action_translate">Przetłumacz</string>
 
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
@@ -101,6 +105,7 @@
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kalorie są obliczane automatycznie na podstawie makroskładników</string>
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Wygląda na to, że ten posiłek jest pusty. Dodaj jedzenie, aby śledzić kalorie</string>
     <string name="neutral_entry_deleted">Wpis usunięty</string>
+    <string name="neutral_help_translating_the_app">Pomóż w tłumaczeniu aplikacji</string>
 
     <string name="question_discard_product">Odrzucić produkt?</string>
     <string name="question_discard_changes">Odrzucić zmiany?</string>

@@ -9,9 +9,12 @@ import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.Upd
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.settings.goalssettings.ui.GoalsSettingsViewModel
+import com.maksimowiczm.foodyou.feature.settings.language.ui.AndroidLanguageViewModel
+import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageViewModel
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealsSettingsViewModel
 import com.maksimowiczm.foodyou.ui.DiaryViewModel
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val featureModule = module {
@@ -35,4 +38,7 @@ val featureModule = module {
     viewModelOf(::DiaryDayMealViewModel)
     viewModelOf(::CreateProductViewModel)
     viewModelOf(::UpdateProductViewModel)
+
+    // -- Language
+    viewModelOf(::AndroidLanguageViewModel).bind<LanguageViewModel>()
 }

@@ -18,6 +18,10 @@
     <string name="headline_delete_product">Delete product</string>
     <string name="headline_edit_product">Edit product</string>
     <string name="headline_permission_required">Permission required</string>
+    <string name="headline_language">Language</string>
+    <string name="headline_authors">Authors</string>
+    <string name="headline_system">System</string>
+    <string name="headline_system_language_settings">System language settings</string>
 
     <string name="in_x_times_y">In %1$s x %2$s</string>
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
@@ -64,7 +68,6 @@
     <string name="action_go_back">Go back</string>
     <string name="action_retry">Retry</string>
     <string name="action_tap_to_allow_access">Tap to allow access</string>
-    <string name="action_tap_to_open_settings">Tap to open settings</string>
     <string name="action_create_new_product">Create new product</string>
     <string name="action_create">Create</string>
     <string name="action_clear">Clear</string>
@@ -84,6 +87,7 @@
     <string name="action_discard">Discard</string>
     <string name="action_enable">Enable</string>
     <string name="action_don_t_show_again">Don\'t show again</string>
+    <string name="action_translate">Translate</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -103,6 +107,7 @@
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calories are calculated automatically based on macronutrients</string>
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Looks like this meal is empty. Add some food to track your calories.</string>
     <string name="neutral_entry_deleted">Entry deleted</string>
+    <string name="neutral_help_translating_the_app">Help translating the app</string>
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>
