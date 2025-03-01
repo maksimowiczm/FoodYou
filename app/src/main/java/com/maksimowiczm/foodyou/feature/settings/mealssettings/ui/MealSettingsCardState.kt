@@ -39,7 +39,6 @@ fun rememberMealsSettingsCardState(meal: Meal): MealSettingsCardState {
             selection = TextRange(meal.name.length)
         ),
         initialValue = meal.name,
-        requireDirty = false,
         parser = stringParser(
             onEmpty = { MealNameError.Empty }
         )

@@ -29,7 +29,6 @@ import kotlinx.coroutines.launch
 fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState {
     val calories = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.calories,
-        requireDirty = false,
         parser = intParser(
             onEmpty = { GoalsFormInputError.Required },
             onNan = { GoalsFormInputError.MustBeInteger }
@@ -48,7 +47,6 @@ fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState
 
     val proteinsPercentage = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.proteinsAsPercentage,
-        requireDirty = false,
         parser = floatParser(
             onEmpty = { GoalsFormInputError.Required },
             onNan = { GoalsFormInputError.InvalidNumber }
@@ -64,7 +62,6 @@ fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState
 
     val proteinsGrams = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.proteinsAsGrams,
-        requireDirty = false,
         parser = intParser(
             onEmpty = { GoalsFormInputError.Required },
             onNan = { GoalsFormInputError.MustBeInteger }
@@ -77,7 +74,6 @@ fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState
 
     val carbsPercentage = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.carbohydratesAsPercentage,
-        requireDirty = false,
         parser = floatParser(
             onEmpty = { GoalsFormInputError.Required },
             onNan = { GoalsFormInputError.InvalidNumber }
@@ -93,7 +89,6 @@ fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState
 
     val carbsGrams = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.carbohydratesAsGrams,
-        requireDirty = false,
         parser = intParser(
             onEmpty = { GoalsFormInputError.Required },
             onNan = { GoalsFormInputError.MustBeInteger }
@@ -106,7 +101,6 @@ fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState
 
     val fatsPercentage = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.fatsAsPercentage,
-        requireDirty = false,
         parser = floatParser(
             onEmpty = { GoalsFormInputError.Required },
             onNan = { GoalsFormInputError.InvalidNumber }
@@ -122,7 +116,6 @@ fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState
 
     val fatsGrams = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.fatsAsGrams,
-        requireDirty = false,
         parser = intParser(
             onEmpty = { GoalsFormInputError.Required },
             onNan = { GoalsFormInputError.MustBeInteger }
