@@ -7,3 +7,8 @@ files:
     translation: /metadata/%locale_with_underscore%/short_description.txt
   - source: /metadata/en-US/title.txt
     translation: /metadata/%locale_with_underscore%/title.txt
+  - source: /app/src/opensource/res/xml/meals.xml
+    translation: /app/src/opensource/res/xml-%two_letters_code%/meals.xml
+    translate_content: 0
+    translate_attributes: 0
+    content_segmentation: 0
