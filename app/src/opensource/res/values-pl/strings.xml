@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="headline_remote_food_database">Zdalna baza danych żywności</string>
     <string name="headline_about">O aplikacji</string>
     <string name="headline_miscellaneous">Różne</string>
@@ -8,7 +7,6 @@
     <string name="headline_share_your_thoughts">Podziel się swoimi przemyśleniami</string>
     <string name="headline_show_some_love">Pokaż swoje wsparcie</string>
     <string name="headline_clear_cache">Wyczyść pamięć podręczną</string>
-
     <string name="action_read_more">Czytaj więcej</string>
     <string name="action_select_country">Wybierz kraj</string>
     <string name="action_use_open_food_facts">Używaj Open Food Facts</string>
@@ -16,14 +14,10 @@
     <string name="action_bug_report_on_github">Zgłoś błąd na GitHubie</string>
     <string name="action_feature_request_on_github">Zgłoś sugestię na GitHubie</string>
     <string name="action_leave_a_star_on_github">Zostaw gwiazdkę na GitHubie</string>
-
     <string name="neutral_manage_food_database">Zarządzaj swoją bazą danych żywności</string>
-
     <string name="link_open_food_facts">https://pl.openfoodfacts.org/</string>
     <string name="link_open_food_facts_terms_of_use">https://pl.openfoodfacts.org/terms-of-use</string>
-
     <string name="open_food_facts_disclaimer">Open Food Facts to projekt tworzony przez społeczność. Dane mogą być niekompletne, nieaktualne lub nieprecyzyjne. Ta aplikacja nie odpowiada za ich poprawność. Weryfikuj informacje przed użyciem.</string>
-
     <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">Włącz Open Food Facts w ustawieniach, aby uzyskać szczegółowe informacje o produktach</string>
     <string name="description_open_food_facts">jest darmową i otwartą bazą danych produktów spożywczych z całego świata.</string>
     <string name="description_README_setting">Zobacz README na GitHubie</string>
@@ -32,5 +26,4 @@
     <string name="description_share_your_thoughts">Jeśli masz jakiekolwiek uwagi, propozycje funkcji lub zgłoszenia błędów, daj mi znać! Chętnie wysłucham Twojej opinii.</string>
     <string name="description_open_food_facts_clear_query_cache">Wyczyść pamięć podręczną zapytań Open Food Facts</string>
     <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">Wyczyszczenie pamięci podręcznej spowoduje ponowne pełne pobranie bazy danych. Nie zaleca się czyszczenia pamięci podręcznej, chyba że wiesz, co robisz.</string>
-
 </resources>
