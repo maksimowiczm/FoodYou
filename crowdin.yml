@@ -1,0 +1,9 @@
+files:
+  - source: /app/src/**/res/values/strings.xml
+    translation: /app/src/**/res/values-%two_letters_code%/strings.xml
+  - source: /metadata/en-US/full_description.txt
+    translation: /metadata/%locale_with_underscore%/full_description.txt
+  - source: /metadata/en-US/short_description.txt
+    translation: /metadata/%locale_with_underscore%/short_description.txt
+  - source: /metadata/en-US/title.txt
+    translation: /metadata/%locale_with_underscore%/title.txt
