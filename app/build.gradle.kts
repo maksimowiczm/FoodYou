@@ -21,6 +21,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    android {
+        androidResources {
+            generateLocaleConfig = true
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
