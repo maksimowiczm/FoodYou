@@ -11,9 +11,12 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalTime
 
-class AndroidStringFormatRepository(private val context: Context) : StringFormatRepository {
+class AndroidStringFormatRepository(
+    private val context: Context,
+    private val androidSystemInfoRepository: AndroidSystemInfoRepository
+) : StringFormatRepository {
     private val defaultLocale: Locale
-        get() = context.resources.configuration.locales[0]
+        get() = androidSystemInfoRepository.defaultLocale
 
     override val weekDayNamesShort: List<String>
         get() = DayOfWeek.entries.map {

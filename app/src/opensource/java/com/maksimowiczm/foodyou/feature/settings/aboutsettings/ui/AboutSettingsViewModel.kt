@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.data.LinkHandler
+import com.maksimowiczm.foodyou.data.OpenSourceLinkHandler
 import com.maksimowiczm.foodyou.data.preferences.AboutPreferences
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class AboutSettingsViewModel(
-    private val linkHandler: LinkHandler,
+    private val linkHandler: OpenSourceLinkHandler,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
     val githubStar = dataStore

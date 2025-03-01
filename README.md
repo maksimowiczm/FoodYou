@@ -19,7 +19,8 @@ A free and open-source calorie counter app
 
 ### 📌 What is this?
 
-**FoodYou** is a simple calorie-tracking app designed with [Material You](https://m4.material.io/) aesthetic - at least,
+**FoodYou** is a simple calorie-tracking app designed with [Material You](https://m3.material.io/)
+aesthetic - at least,
 that was the goal! Since I’m still learning, I can’t say for sure if it fully embraces the style. 😅
 
 ### ❓ Why does it exist?
@@ -41,9 +42,17 @@ If you're looking for alternatives or inspiration, check out these open-source p
 - [FitBook](https://github.com/brandonp2412/FitBook)
 - [Waistline](https://github.com/davidhealey/waistline)
 
+### 🌐 Translations
+
+You can help with translations on [Crowdin](https://crowdin.com/project/food-you)! If you'd like to
+be credited for your contributions, please add your name to
+the [Languages file](app/src/main/java/com/maksimowiczm/foodyou/feature/settings/language/ui/Languages.kt)
+or let me know, and I will add it for you.
+
 ### 💡 Credits
 
-- [ReadYou](https://github.com/Ashinch/ReadYou) — I shamelessly borrowed inspiration from this project. 🙃
+- [ReadYou](https://github.com/Ashinch/ReadYou) — I shamelessly borrowed inspiration from this
+  project. 🙃
 - [Icons8](https://icons8.com) — sushi icon 🍣
 
 ---

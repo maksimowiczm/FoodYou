@@ -1,12 +1,28 @@
 package com.maksimowiczm.foodyou.data
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import com.maksimowiczm.foodyou.data.model.Country
 import java.util.Locale
 
-internal class AndroidSystemInfoRepository(private val context: Context) : SystemInfoRepository {
-    private val defaultLocale: Locale
-        get() = context.resources.configuration.locales[0]
+class AndroidSystemInfoRepository(private val context: Context) : SystemInfoRepository {
+    val defaultLocale: Locale
+        get() {
+            val compat = AppCompatDelegate.getApplicationLocales().get(0)
+            if (compat != null) {
+                return compat
+            }
+
+            val config = context.resources.configuration.locales.get(0)
+
+            if (config != null) {
+                return config
+            }
+
+            val fallback = Locale.getDefault()
+
+            return fallback
+        }
 
     override val defaultCountry: Country
         get() = Country(
