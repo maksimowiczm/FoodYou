@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">N/A</string>
+    <string name="headline_create_product">Create product</string>
+    <string name="headline_settings">Settings</string>
+    <string name="headline_diary">Diary</string>
+    <string name="headline_calories_goal">Calories goal</string>
+    <string name="headline_daily_goals">Daily goals</string>
+    <string name="headline_product_serving_and_packaging">Serving and packaging</string>
+    <string name="headline_general">General</string>
+    <string name="headline_macronutrients">Macronutrients</string>
+    <string name="headline_nutrients">Nutrients</string>
+    <string name="headline_meals">Meals</string>
+    <string name="headline_delete_product">Delete product</string>
+    <string name="headline_edit_product">Edit product</string>
+    <string name="headline_permission_required">Permission required</string>
+    <string name="in_x_times_y">In %1$s x %2$s</string>
+    <string name="weight">Weight</string>
+    <string name="unit_calories">Calories</string>
+    <string name="unit_kcal">kcal</string>
+    <string name="in_x_weight_unit">In %1$s %2$s</string>
+    <plurals name="unit_gram">
+        <item quantity="one">gram</item>
+        <item quantity="few">grams</item>
+        <item quantity="other">grams</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">milliliter</item>
+        <item quantity="few">milliliters</item>
+        <item quantity="other">milliliters</item>
+    </plurals>
+    <string name="product_package_weight">Package weight</string>
+    <string name="product_package">Package</string>
+    <string name="product_serving_weight">Serving weight</string>
+    <string name="product_serving">Serving</string>
+    <string name="product_name">Name</string>
+    <string name="product_brand">Brand</string>
+    <string name="product_weight_unit">Weight unit</string>
+    <string name="product_barcode">Barcode</string>
+    <string name="nutriment_proteins">Proteins</string>
+    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_carbohydrates">Carbohydrates</string>
+    <string name="nutriment_carbohydrates_short">C</string>
+    <string name="nutriment_sugars">Sugars</string>
+    <string name="nutriment_fats">Fats</string>
+    <string name="nutriment_fats_short">F</string>
+    <string name="nutriment_saturated_fats">Saturated fats</string>
+    <string name="nutriment_salt">Salt</string>
+    <string name="nutriment_sodium">Sodium</string>
+    <string name="nutriment_fiber">Fiber</string>
+    <string name="action_show_remaining_fields">Show remaining fields</string>
+    <string name="action_search">Search</string>
+    <string name="action_scan_barcode">Scan barcode</string>
+    <string name="action_add">Add</string>
+    <string name="action_go_back">Go back</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_tap_to_allow_access">Tap to allow access</string>
+    <string name="action_tap_to_open_settings">Tap to open settings</string>
+    <string name="action_create_new_product">Create new product</string>
+    <string name="action_create">Create</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_go_to_settings">Go to settings</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_add_meal">Add meal</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_insert_suggested_search">Insert suggested search</string>
+    <string name="action_edit_entry">Edit entry</string>
+    <string name="action_delete_entry">Delete entry</string>
+    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Add food</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_close">Close</string>
+    <string name="action_discard">Discard</string>
+    <string name="action_enable">Enable</string>
+    <string name="action_don_t_show_again">Don\'t show again</string>
+    <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera permission is required to scan barcodes. Please allow it in the app settings.</string>
+    <string name="neutral_no_products_found">No products found</string>
+    <string name="neutral_food_database_load_error">"Couldn't download products from the remote food database. You can still view your previously downloaded products."</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">%1$d calorie left</item>
+        <item quantity="few">%1$d calories left</item>
+        <item quantity="other">%1$d calories left</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Set your daily goals</string>
+    <string name="neutral_all_values_per_x">All values per %1$s</string>
+    <string name="neutral_set_your_meal_schedule">Set your meal schedule</string>
+    <string name="neutral_permanently_delete_meal">Permanently delete meal?</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Meal will be deleted permanently. All data related to this meal will be lost.</string>
+    <string name="neutral_required">Required</string>
+    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calories are calculated automatically based on macronutrients</string>
+    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Looks like this meal is empty. Add some food to track your calories.</string>
+    <string name="neutral_entry_deleted">Entry deleted</string>
+    <string name="question_discard_product">Discard product?</string>
+    <string name="question_discard_changes">Discard changes?</string>
+    <string name="error_this_field_is_required">This field is required</string>
+    <string name="error_this_field_cannot_be_empty">This field cannot be empty</string>
+    <string name="error_invalid_number">Invalid number</string>
+    <string name="error_value_cannot_be_negative">Value cannot be negative</string>
+    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Sum of macronutrients cannot exceed 100g</string>
+    <string name="error_value_must_be_less_than">Value must be less than %1$s</string>
+    <string name="error_value_must_be_integer">Value must be an integer</string>
+    <string name="error_sum_of_percentages_must_be_100">Sum of percentages must be 100</string>
+    <string name="error_value_cannot_exceed_100">Value cannot exceed 100</string>
+    <string name="positive_goal_reached">Goal reached</string>
+    <string name="positive_ok">OK</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">Exceeded by %1$d calorie</item>
+        <item quantity="few">Exceeded by %1$d calories</item>
+        <item quantity="other">Exceeded by %1$d calories</item>
+    </plurals>
+    <string name="description_calories_goal">Set your daily calories intake goal. This will help you to track your progress and stay on track.</string>
+    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Product will be deleted permanently. This action can\'t be undone. All diary entries related to this product will be deleted.</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database."> This entry will be deleted from your diary. You can add it again anytime.</string>
+    <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
+    <string name="neutral_see_other_awesome_icons_here">See other awesome icons here</string>
+</resources>
