@@ -64,8 +64,6 @@ android {
             dimension = "version"
             isDefault = true
 
-            versionNameSuffix = "-opensource"
-
             buildFeatures {
                 viewBinding = true
             }
