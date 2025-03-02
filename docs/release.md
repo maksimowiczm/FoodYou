@@ -11,3 +11,5 @@
 8. Build the app and sign the APK with the release key.
 9. Create a new release on GitHub with the release notes and upload the signed APK.
 10. Celebrate the new release! 🎉
+
+https://github.com/obfusk/apksigcopier#what-about-signatures-made-by-apksigner-from-build-tools--3500-rc1
