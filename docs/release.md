@@ -7,7 +7,7 @@
    notes can be generated using the Github `Draft a new release` feature.
 5. Ensure that all metadata in the `metadata` folder is up to date.
 6. Merge the branch into `main`.
-7. Tag the merge commit with the new version and push the tag. Tag format: `v<version>`.
-8. Build the app using the GitHub `release-opensource` job.
-9. Create a new release on GitHub with the release notes.
+7. Tag the merge commit with the new version and push the tag. Tag format: `<version>`.
+8. Build the app and sign the APK with the release key.
+9. Create a new release on GitHub with the release notes and upload the signed APK.
 10. Celebrate the new release! 🎉
