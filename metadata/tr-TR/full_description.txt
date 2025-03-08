@@ -1,15 +1,15 @@
-<b>FoodYou</b> is a modern calorie-tracking app built with Material You aesthetic. It’s designed to make calorie tracking easier and more visually appealing.
+<b>FoodYou</b>, Material You estetiğiyle tasarlanmış modern bir kalori takip uygulamasıdır. Kalori takibini daha kolay ve görsel olarak daha çekici hale getirmek için geliştirilmiştir.
 
-<b>Features:</b>
+<b>Özellikler:</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming for a cohesive and visually pleasing experience.</li>
-    <li><b>Interactive Home Page:</b> Quick access to key features with a card-based interface.</li>
-    <li><b>Open Food Facts Integration:</b> Get accurate food data for precise calorie tracking.</li>
-    <li><b>Edge-to-Edge Layout:</b> Enjoy a more immersive experience with a full-screen design.</li>
-    <li><b>Predictive Back Feature:</b> A seamless navigation experience with predictive back.</li>
-    <li><b>Customizable & Open-Source:</b> Built to be extensible and community-driven, allowing you to contribute and modify.</li>
+    <li><b>Material You Tasarımı:</b> Uyumlu ve estetik bir deneyim için dinamik tema desteği.</li>
+    <li><b>Etkileşimli Ana Sayfa:</b> Kart tabanlı arayüz ile önemli özelliklere hızlı erişim.</li>
+    <li><b>Open Food Facts Entegrasyonu:</b> Doğru kalori takibi için güvenilir ve detaylı gıda verileri.</li>
+    <li><b>Tam Ekran Düzeni:</b> Kenardan kenara tasarım ile daha sürükleyici bir deneyim.</li>
+    <li><b>Öngörücü Geri Dönüş Özelliği:</b> Daha akıcı bir gezinme deneyimi için sezgisel geri dönüş desteği.</li>
+    <li><b>Özelleştirilebilir & Açık Kaynak:</b> Geliştirilebilir ve topluluk odaklı bir yapı, katkıda bulunma ve kişiselleştirme imkanı.</li>
 </ul>
 
-Start tracking your calories today with FoodYou!
+Bugün <b>FoodYou</b> ile kalori takibine başlayın!
 
-Launcher icon made <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Başlatıcı simgesi <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a> tarafından yapılmıştır.
