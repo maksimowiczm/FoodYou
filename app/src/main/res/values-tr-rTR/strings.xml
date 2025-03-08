@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">Yok</string>
+    <string name="headline_create_product">Ürün Oluştur</string>
+    <string name="headline_settings">Ayarlar</string>
+    <string name="headline_diary">Günlük</string>
+    <string name="headline_calories_goal">Kalori Hedefi</string>
+    <string name="headline_daily_goals">Günlük Hedefler</string>
+    <string name="headline_product_serving_and_packaging">Porsiyon ve Paketleme</string>
+    <string name="headline_general">Genel</string>
+    <string name="headline_macronutrients">Makro Besinler</string>
+    <string name="headline_nutrients">Besinler</string>
+    <string name="headline_meals">Öğünler</string>
+    <string name="headline_delete_product">Ürünü Sil</string>
+    <string name="headline_edit_product">Ürünü Düzenle</string>
+    <string name="headline_permission_required">İzin Gerekli</string>
+    <string name="headline_language">Dil</string>
+    <string name="headline_authors">Yazarlar</string>
+    <string name="headline_system">Sistem</string>
+    <string name="headline_system_language_settings">Sistem Dil Ayarları</string>
+    <string name="in_x_times_y">%1$s x %2$s içinde</string>
+    <string name="weight">Ağırlık</string>
+    <string name="unit_calories">Kalori</string>
+    <string name="unit_kcal">kcal</string>
+    <string name="in_x_weight_unit">%1$s %2$s içinde</string>
+    <plurals name="unit_gram">
+        <item quantity="one">gram</item>
+        <item quantity="other">gram</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">mililitre</item>
+        <item quantity="other">mililitre</item>
+    </plurals>
+    <string name="product_package_weight">Paket Ağırlığı</string>
+    <string name="product_package">Paket</string>
+    <string name="product_serving_weight">Porsiyon Ağırlığı</string>
+    <string name="product_serving">Porsiyon</string>
+    <string name="product_name">İsim</string>
+    <string name="product_brand">Marka</string>
+    <string name="product_weight_unit">Ağırlık Birimi</string>
+    <string name="product_barcode">Barkod</string>
+    <string name="nutriment_proteins">Proteinler</string>
+    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_carbohydrates">Karbonhidratlar</string>
+    <string name="nutriment_carbohydrates_short">K</string>
+    <string name="nutriment_sugars">Şekerler</string>
+    <string name="nutriment_fats">Yağlar</string>
+    <string name="nutriment_fats_short">Y</string>
+    <string name="nutriment_saturated_fats">Doymuş Yağlar</string>
+    <string name="nutriment_salt">Tuz</string>
+    <string name="nutriment_sodium">Sodyum</string>
+    <string name="nutriment_fiber">Lif</string>
+    <string name="action_show_remaining_fields">Kalan Alanları Göster</string>
+    <string name="action_search">Ara</string>
+    <string name="action_scan_barcode">Barkod Tara</string>
+    <string name="action_add">Ekle</string>
+    <string name="action_go_back">Geri Dön</string>
+    <string name="action_retry">Tekrar Dene</string>
+    <string name="action_tap_to_allow_access">Erişime İzin Vermek İçin Dokun</string>
+    <string name="action_create_new_product">Yeni Ürün Oluştur</string>
+    <string name="action_create">Oluştur</string>
+    <string name="action_clear">Temizle</string>
+    <string name="action_cancel">İptal</string>
+    <string name="action_go_to_settings">Ayarlara Git</string>
+    <string name="action_save">Kaydet</string>
+    <string name="action_delete">Sil</string>
+    <string name="action_confirm">Onayla</string>
+    <string name="action_add_meal">Öğün Ekle</string>
+    <string name="action_edit">Düzenle</string>
+    <string name="action_insert_suggested_search">Önerilen Aramayı Ekle</string>
+    <string name="action_edit_entry">Girişi Düzenle</string>
+    <string name="action_delete_entry">Girişi Sil</string>
+    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Yemek Ekle</string>
+    <string name="action_undo">Geri Al</string>
+    <string name="action_close">Kapat</string>
+    <string name="action_discard">Vazgeç</string>
+    <string name="action_enable">Etkinleştir</string>
+    <string name="action_don_t_show_again">Tekrar Gösterme</string>
+    <string name="action_translate">Çevir</string>
+    <string name="neutral_barcode_scanner_camera_request">Barkod taramak için kameranıza erişime izin verin</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Barkod taramak için erişime izin vermelisiniz</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Barkod taramak için kamera izni gereklidir. Lütfen uygulama ayarlarından izni verin.</string>
+    <string name="neutral_no_products_found">Ürün bulunamadı</string>
+    <string name="neutral_food_database_load_error">"Uzak yemek veritabanından ürünler indirilemedi. Daha önce indirdiğiniz ürünleri hâlâ görüntüleyebilirsiniz."</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">%1$d kalori kaldı</item>
+        <item quantity="other">%1$d kalori kaldı</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Günlük hedeflerinizi belirleyin</string>
+    <string name="neutral_all_values_per_x">Tüm değerler %1$s başına</string>
+    <string name="neutral_set_your_meal_schedule">Öğün planınızı ayarlayın</string>
+    <string name="neutral_permanently_delete_meal">Öğün kalıcı olarak silinsin mi?</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Öğün kalıcı olarak silinecek. Bu öğünle ilgili tüm veriler kaybolacak.</string>
+    <string name="neutral_required">Gerekli</string>
+    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kaloriler, makro besinlere (protein, karbonhidrat, yağ) göre otomatik olarak hesaplanır</string>
+    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Bu öğün boş görünüyor. Kalorilerinizi takip etmek için biraz yemek ekleyin.</string>
+    <string name="neutral_entry_deleted">Giriş silindi</string>
+    <string name="neutral_help_translating_the_app">Uygulamayı çevirmeye yardım et</string>
+    <string name="question_discard_product">Ürün iptal edilsin mi?</string>
+    <string name="question_discard_changes">Değişiklikler iptal edilsin mi?</string>
+    <string name="error_this_field_is_required">Bu alan zorunludur</string>
+    <string name="error_this_field_cannot_be_empty">Bu alan boş olamaz</string>
+    <string name="error_invalid_number">Geçersiz sayı</string>
+    <string name="error_value_cannot_be_negative">Değer negatif olamaz</string>
+    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Makro besinlerin toplamı 100g\'ı aşamaz</string>
+    <string name="error_value_must_be_less_than">Değer %1$s\'den küçük olmalıdır</string>
+    <string name="error_value_must_be_integer">Değer tam sayı olmalıdır</string>
+    <string name="error_sum_of_percentages_must_be_100">Yüzdelerin toplamı 100 olmalıdır</string>
+    <string name="error_value_cannot_exceed_100">Değer 100\'ü aşamaz</string>
+    <string name="positive_goal_reached">Hedefe ulaşıldı</string>
+    <string name="positive_ok">Tamam</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">%1$d kalori aşıldı</item>
+        <item quantity="other">%1$d kalori aşıldı</item>
+    </plurals>
+    <string name="description_calories_goal">Günlük kalori alım hedefinizi belirleyin. Bu, ilerlemenizi takip etmenize ve yolda kalmanıza yardımcı olacak.</string>
+    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Ürün kalıcı olarak silinecek. Bu işlem geri alınamaz. Bu ürünle ilgili tüm günlük girişler silinecek.</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Bu giriş günlüğünüzden silinecek. Ürün veritabanından silinmeyecek ve istediğiniz zaman tekrar ekleyebilirsiniz.</string>
+    <string name="headline_launcher_icon_by_icons8">Başlatıcı simgesi Icons8 tarafından</string>
+    <string name="neutral_see_other_awesome_icons_here">Diğer harika simgeleri burada görün</string>
+</resources>
