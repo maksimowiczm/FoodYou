@@ -5,12 +5,12 @@ A free and open-source calorie counter app
 <br>
 
 <div align="center">
-    <img src="./metadata/en-US/images/phoneScreenshots/home.png" width="30%" alt="home"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/meal_day.png" width="30%"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/search.png" width="30%"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/measure_product.png" width="30%"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/create_product.png" width="30%"/>
-    <img src="./metadata/en-US/images/phoneScreenshots/settings.png" width="30%"/>
+    <img src="metadata/en-US/images/phoneScreenshots/100_home.png" width="30%" alt="home"/>
+    <img src="metadata/en-US/images/phoneScreenshots/200_meal_day.png" width="30%"/>
+    <img src="metadata/en-US/images/phoneScreenshots/300_search.png" width="30%"/>
+    <img src="metadata/en-US/images/phoneScreenshots/400_measure_product.png" width="30%"/>
+    <img src="metadata/en-US/images/phoneScreenshots/500_create_product.png" width="30%"/>
+    <img src="metadata/en-US/images/phoneScreenshots/600_settings.png" width="30%"/>
 </div>
 
 <br>
