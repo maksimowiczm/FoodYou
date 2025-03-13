@@ -42,6 +42,14 @@ abstract class FoodYouApplication :
                 dataModule,
                 featureModule
             )
+
+            val featureModules = featureManager.features.mapNotNull {
+                with(it) {
+                    module()
+                }
+            }
+
+            modules(featureModules)
         }
 
         // Block until all features are initialized
