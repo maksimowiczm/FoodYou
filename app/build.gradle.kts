@@ -149,10 +149,11 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.datetime)
 
-    // Retrofit
-    "opensourceImplementation"(libs.converter.kotlinx.serialization)
-    "opensourceImplementation"(libs.retrofit)
-    "opensourceImplementation"(libs.okhttp)
+    // Ktor
+    "opensourceImplementation"(libs.ktor.client.core)
+    "opensourceImplementation"(libs.ktor.client.okhttp)
+    "opensourceImplementation"(libs.ktor.client.content.negotiation)
+    "opensourceImplementation"(libs.ktor.client.serialization.kotlinx.json)
 
     // Datastore
     implementation(libs.androidx.datastore.preferences)
