@@ -7,15 +7,35 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.MealApp
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.meal.DiaryDayMealViewModel
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.CreateMeasurementViewModel
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.UpdateMeasurementViewModel
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create.CreateProductViewModel
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchHintBuilder
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchViewModel
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.buildMealsCard
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import kotlinx.serialization.Serializable
+import org.koin.core.KoinApplication
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.module
 
 class MealsCard(
     private val searchHintBuilder: SearchHintBuilder,
     private val barcodeScannerScreen: BarcodeScannerScreen
 ) : Feature.Home {
+    override fun KoinApplication.module() = module {
+        viewModelOf(::SearchViewModel)
+        viewModelOf(::CreateMeasurementViewModel)
+        viewModelOf(::UpdateMeasurementViewModel)
+        viewModelOf(::MealsCardViewModel)
+        viewModelOf(::DiaryDayMealViewModel)
+        viewModelOf(::CreateProductViewModel)
+        viewModelOf(::UpdateProductViewModel)
+    }
+
     override fun build(navController: NavController) = buildMealsCard(
         onMealClick = { epochDay, meal ->
             navController.navigate(

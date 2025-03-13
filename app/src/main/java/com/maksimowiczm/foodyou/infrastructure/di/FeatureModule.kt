@@ -1,12 +1,5 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.meal.DiaryDayMealViewModel
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.CreateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.UpdateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create.CreateProductViewModel
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.UpdateProductViewModel
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchViewModel
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.settings.goalssettings.ui.GoalsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.settings.language.ui.AndroidLanguageViewModel
 import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageViewModel
@@ -17,6 +10,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val featureModule = module {
+    // TODO move somewhere else
     // -- Shared
     viewModelOf(::DiaryViewModel)
 
@@ -25,15 +19,6 @@ val featureModule = module {
 
     // -- Meals Settings
     viewModelOf(::MealsSettingsViewModel)
-
-    // -- Meals Card
-    viewModelOf(::SearchViewModel)
-    viewModelOf(::CreateMeasurementViewModel)
-    viewModelOf(::UpdateMeasurementViewModel)
-    viewModelOf(::MealsCardViewModel)
-    viewModelOf(::DiaryDayMealViewModel)
-    viewModelOf(::CreateProductViewModel)
-    viewModelOf(::UpdateProductViewModel)
 
     // -- Language
     viewModelOf(::AndroidLanguageViewModel).bind<LanguageViewModel>()
