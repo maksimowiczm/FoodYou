@@ -4,6 +4,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.data.AddFoodRepository
+import com.maksimowiczm.foodyou.data.DateProvider
+import com.maksimowiczm.foodyou.data.DiaryRepository
+import com.maksimowiczm.foodyou.data.ProductRepository
+import com.maksimowiczm.foodyou.data.StringFormatRepository
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.MealApp
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
@@ -19,12 +24,19 @@ import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.buildMealsCard
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.KoinApplication
+import org.koin.core.definition.KoinDefinition
+import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 class MealsCard(
     private val searchHintBuilder: SearchHintBuilder,
-    private val barcodeScannerScreen: BarcodeScannerScreen
+    private val barcodeScannerScreen: BarcodeScannerScreen,
+    private val addFoodRepository: Module.() -> KoinDefinition<AddFoodRepository>,
+    private val productRepository: Module.() -> KoinDefinition<ProductRepository>,
+    private val diaryRepository: Module.() -> KoinDefinition<DiaryRepository>,
+    private val stringFormatRepository: Module.() -> KoinDefinition<StringFormatRepository>,
+    private val dateProvider: Module.() -> KoinDefinition<DateProvider>
 ) : Feature.Home {
     override fun KoinApplication.module() = module {
         viewModelOf(::SearchViewModel)
@@ -34,6 +46,12 @@ class MealsCard(
         viewModelOf(::DiaryDayMealViewModel)
         viewModelOf(::CreateProductViewModel)
         viewModelOf(::UpdateProductViewModel)
+
+        addFoodRepository()
+        productRepository()
+        diaryRepository()
+        stringFormatRepository()
+        dateProvider()
     }
 
     override fun build(navController: NavController) = buildMealsCard(

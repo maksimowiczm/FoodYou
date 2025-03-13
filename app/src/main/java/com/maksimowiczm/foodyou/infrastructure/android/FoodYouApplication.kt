@@ -3,12 +3,9 @@ package com.maksimowiczm.foodyou.infrastructure.android
 import android.app.Application
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.FeatureManager
-import com.maksimowiczm.foodyou.infrastructure.di.dataModule
 import com.maksimowiczm.foodyou.infrastructure.di.dataStoreModule
 import com.maksimowiczm.foodyou.infrastructure.di.databaseModule
-import com.maksimowiczm.foodyou.infrastructure.di.flavourModule
 import com.maksimowiczm.foodyou.infrastructure.di.platformModule
-import com.maksimowiczm.foodyou.infrastructure.di.uiModule
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
@@ -36,11 +33,8 @@ abstract class FoodYouApplication :
             modules(
                 featureManager.intoModule(this),
                 platformModule,
-                flavourModule,
                 databaseModule,
-                dataStoreModule,
-                dataModule,
-                uiModule
+                dataStoreModule
             )
 
             val featureModules = featureManager.features.mapNotNull {
