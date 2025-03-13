@@ -16,7 +16,7 @@
     </queries>
 
     <application
-        android:name=".infrastructure.android.FoodYouApplication"
+        android:name=".infrastructure.android.OpenSourceApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"

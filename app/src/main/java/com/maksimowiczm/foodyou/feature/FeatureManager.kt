@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature
 /**
  * A manager for features that will be added to the application.
  */
-object FeatureManager {
+class FeatureManager {
     private val _features = mutableListOf<Feature>()
     val features: List<Feature> = _features
 
