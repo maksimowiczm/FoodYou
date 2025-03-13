@@ -1,12 +1,14 @@
 package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.app.Application
+import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.FeatureManager
 import com.maksimowiczm.foodyou.infrastructure.di.coreModule
 import com.maksimowiczm.foodyou.infrastructure.di.dataStoreModule
 import com.maksimowiczm.foodyou.infrastructure.di.databaseModule
 import com.maksimowiczm.foodyou.infrastructure.di.flavourModule
 import com.maksimowiczm.foodyou.infrastructure.di.platformModule
+import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import org.koin.core.component.KoinComponent
@@ -38,6 +40,15 @@ abstract class FoodYouApplication :
                 dataStoreModule,
                 coreModule
             )
+        }
+
+        // Block until all features are initialized
+        runBlocking {
+            featureManager.get<Feature>().forEach { feature ->
+                with(feature) {
+                    initialize()
+                }
+            }
         }
     }
 }

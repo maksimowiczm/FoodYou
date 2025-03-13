@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.feature.home.HomeFeature
 import com.maksimowiczm.foodyou.feature.settings.SettingsFeature
+import org.koin.core.component.KoinComponent
 
 /**
  * A feature is a collection of related functionality that can be added to the application.
@@ -16,6 +17,12 @@ sealed interface Feature {
      * @param navController The main navigation controller.
      */
     fun NavGraphBuilder.graph(navController: NavController) = Unit
+
+    /**
+     * Initialize the feature. This will run before UI is displayed and block the main thread.
+     * Should be fast and not perform any heavy operations.
+     */
+    suspend fun KoinComponent.initialize() = Unit
 
     /**
      * A feature that can be added to the home screen.
