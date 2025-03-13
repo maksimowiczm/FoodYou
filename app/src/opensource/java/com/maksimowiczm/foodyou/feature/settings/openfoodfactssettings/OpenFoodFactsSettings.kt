@@ -5,14 +5,28 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.OpenFoodFactsSearchHint
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.OpenFoodFactsSearchHintViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchHint
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchHintBuilder
+import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.CountryFlag
 import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.OpenFoodFactsSettingsScreen
+import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.OpenFoodFactsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.buildOpenFoodFactsSettingsListItem
+import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.flagCdnCountryFlag
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
+import org.koin.core.KoinApplication
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
 object OpenFoodFactsSettings : Feature.Settings, SearchHintBuilder {
+    override fun KoinApplication.module() = module {
+        viewModelOf(::OpenFoodFactsSearchHintViewModel)
+        viewModelOf(::OpenFoodFactsSettingsViewModel)
+        factory { flagCdnCountryFlag }.bind<CountryFlag>()
+    }
+
     override fun buildSettingsFeatures(navController: NavController) =
         buildOpenFoodFactsSettingsListItem(
             onClick = {
