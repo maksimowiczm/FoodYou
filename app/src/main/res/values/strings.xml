@@ -88,8 +88,8 @@
     <string name="action_enable">Enable</string>
     <string name="action_don_t_show_again">Don\'t show again</string>
     <string name="action_translate">Translate</string>
-    <string name="action_camera_flash_on">Camera flash on</string>
-    <string name="action_camera_flash_off">Camera flash off</string>
+    <string name="action_enable_camera_flash">Enable camera flash</string>
+    <string name="action_disable_camera_flash">Disable camera flash</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>

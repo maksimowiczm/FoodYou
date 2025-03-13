@@ -85,8 +85,8 @@
     <string name="action_enable">Włącz</string>
     <string name="action_don_t_show_again">Nie pokazuj ponownie</string>
     <string name="action_translate">Przetłumacz</string>
-    <string name="action_camera_flash_on">Włącz lampę błyskową aparatu</string>
-    <string name="action_camera_flash_off">Wyłącz lampę błyskową aparatu</string>
+    <string name="action_enable_camera_flash">Włącz lampę błyskową</string>
+    <string name="action_disable_camera_flash">Wyłącz lampę błyskową</string>
 
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>

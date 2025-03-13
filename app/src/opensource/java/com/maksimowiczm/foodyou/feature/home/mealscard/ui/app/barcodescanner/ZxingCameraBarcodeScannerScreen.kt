@@ -97,16 +97,16 @@ val zxingCameraBarcodeScannerScreen =
 private fun FlashlightButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val background by animateColorAsState(
         if (enabled) {
-            MaterialTheme.colorScheme.surface
+            MaterialTheme.colorScheme.primary
         } else {
-            MaterialTheme.colorScheme.secondary
+            MaterialTheme.colorScheme.surface
         }
     )
     val content by animateColorAsState(
         if (enabled) {
-            MaterialTheme.colorScheme.onSurface
+            MaterialTheme.colorScheme.onPrimary
         } else {
-            MaterialTheme.colorScheme.onSecondary
+            MaterialTheme.colorScheme.onSurface
         }
     )
 
@@ -121,15 +121,15 @@ private fun FlashlightButton(enabled: Boolean, onClick: () -> Unit, modifier: Mo
         Icon(
             painter = painterResource(
                 if (enabled) {
-                    R.drawable.ic_flash_off_24
-                } else {
                     R.drawable.ic_flash_on_24
+                } else {
+                    R.drawable.ic_flash_off_24
                 }
             ),
             contentDescription = if (enabled) {
-                stringResource(R.string.action_camera_flash_off)
+                stringResource(R.string.action_disable_camera_flash)
             } else {
-                stringResource(R.string.action_camera_flash_on)
+                stringResource(R.string.action_enable_camera_flash)
             }
         )
     }
