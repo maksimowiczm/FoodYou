@@ -7,10 +7,18 @@ import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.settings.SettingsFeature
 import com.maksimowiczm.foodyou.feature.settings.goalssettings.ui.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.settings.goalssettings.ui.GoalsSettingsScreen
+import com.maksimowiczm.foodyou.feature.settings.goalssettings.ui.GoalsSettingsViewModel
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
+import org.koin.core.KoinApplication
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.module
 
 object GoalsSettings : Feature.Settings {
+    override fun KoinApplication.module() = module {
+        viewModelOf(::GoalsSettingsViewModel)
+    }
+
     override fun buildSettingsFeatures(navController: NavController) = SettingsFeature { modifier ->
         GoalsSettingsListItem(
             onGoalsClick = {

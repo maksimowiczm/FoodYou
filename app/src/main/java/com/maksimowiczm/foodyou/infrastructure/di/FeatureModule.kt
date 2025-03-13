@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.feature.settings.goalssettings.ui.GoalsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.settings.language.ui.AndroidLanguageViewModel
 import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageViewModel
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealsSettingsViewModel
@@ -13,9 +12,6 @@ val featureModule = module {
     // TODO move somewhere else
     // -- Shared
     viewModelOf(::DiaryViewModel)
-
-    // -- Goals Settings
-    viewModelOf(::GoalsSettingsViewModel)
 
     // -- Meals Settings
     viewModelOf(::MealsSettingsViewModel)
