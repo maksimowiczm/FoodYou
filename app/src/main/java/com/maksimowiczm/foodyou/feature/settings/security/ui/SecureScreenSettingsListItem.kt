@@ -20,18 +20,20 @@ import com.maksimowiczm.foodyou.data.SecurityPreferences
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.runBlocking
 import org.koin.compose.koinInject
 
 @Composable
 fun SecureScreenSettingsListItem(
     modifier: Modifier = Modifier,
+    // It is just one boolean flag, lets not bother with a ViewModel for this
     dataStore: DataStore<Preferences> = koinInject()
 ) {
-    val checked by dataStore.observe(SecurityPreferences.showContent).map {
-        it ?: false
-    }.collectAsStateWithLifecycle(false)
+    val checked by dataStore
+        .observe(SecurityPreferences.showContent)
+        .filterNotNull()
+        .collectAsStateWithLifecycle(false)
 
     SecureScreenSettingsListItem(
         checked = checked,

@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.os.Bundle
-import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.feature.FeatureManager
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.ui.FoodYouApp
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
@@ -39,17 +40,15 @@ class FoodYouMainActivity : AppCompatActivity() {
     private suspend fun observeShowContentSecurity() {
         val dataStore = get<DataStore<Preferences>>()
 
-        dataStore.observe(SecurityPreferences.showContent).collectLatest {
-            if (it == true) {
-                window.setFlags(
-                    WindowManager.LayoutParams.FLAG_SECURE,
-                    WindowManager.LayoutParams.FLAG_SECURE
-                )
-            } else {
-                window.clearFlags(
-                    WindowManager.LayoutParams.FLAG_SECURE
-                )
+        dataStore
+            .observe(SecurityPreferences.showContent)
+            .filterNotNull()
+            .collectLatest {
+                if (it) {
+                    window.setFlags(FLAG_SECURE, FLAG_SECURE)
+                } else {
+                    window.clearFlags(FLAG_SECURE)
+                }
             }
-        }
     }
 }
