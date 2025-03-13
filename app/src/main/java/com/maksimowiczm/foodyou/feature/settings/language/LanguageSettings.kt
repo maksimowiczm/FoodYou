@@ -7,14 +7,24 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.settings.SettingsFeature
+import com.maksimowiczm.foodyou.feature.settings.language.ui.AndroidLanguageViewModel
 import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageScreen
 import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageSettingsListItem
+import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageViewModel
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
+import org.koin.core.KoinApplication
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
 class LanguageSettings(
     private val languageSettingsTrailingContent: @Composable (Modifier) -> Unit
 ) : Feature.Settings {
+    override fun KoinApplication.module() = module {
+        viewModelOf(::AndroidLanguageViewModel).bind<LanguageViewModel>()
+    }
+
     override fun buildSettingsFeatures(navController: NavController) = SettingsFeature { modifier ->
         LanguageSettingsListItem(
             onClick = {
