@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.feature.home.calendarcard.ui.CalendarViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.meal.DiaryDayMealViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.CreateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.UpdateMeasurementViewModel
@@ -20,9 +19,6 @@ import org.koin.dsl.module
 val featureModule = module {
     // -- Shared
     viewModelOf(::DiaryViewModel)
-
-    // -- Calendar Card
-    viewModelOf(::CalendarViewModel)
 
     // -- Goals Settings
     viewModelOf(::GoalsSettingsViewModel)
