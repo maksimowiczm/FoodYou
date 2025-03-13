@@ -11,7 +11,6 @@ import com.maksimowiczm.foodyou.data.OpenSourceLinkHandler
 import com.maksimowiczm.foodyou.data.ProductRepository
 import com.maksimowiczm.foodyou.data.ProductRepositoryImpl
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.OpenFoodFactsSearchHintViewModel
-import com.maksimowiczm.foodyou.feature.settings.aboutsettings.ui.AboutSettingsViewModel
 import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.CountryFlag
 import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.OpenFoodFactsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui.flagCdnCountryFlag
@@ -25,7 +24,6 @@ import org.koin.dsl.module
 
 val flavourModule = module {
     factoryOf(::AndroidOpenSourceLinkHandler).bind<OpenSourceLinkHandler>()
-    viewModelOf(::AboutSettingsViewModel)
 
     viewModelOf(::OpenFoodFactsSearchHintViewModel)
     viewModelOf(::OpenFoodFactsSettingsViewModel)
