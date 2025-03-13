@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.ui.DiaryViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-val featureModule = module {
+val uiModule = module {
     // TODO move somewhere else
     // -- Shared
     viewModelOf(::DiaryViewModel)
