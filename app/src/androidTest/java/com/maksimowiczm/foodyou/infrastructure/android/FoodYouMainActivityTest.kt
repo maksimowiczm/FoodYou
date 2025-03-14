@@ -16,6 +16,9 @@ import org.koin.android.ext.android.get
 
 @RunWith(AndroidJUnit4::class)
 class FoodYouMainActivityTest {
+    /**
+     * Integration test for the secure flag.
+     */
     @Test
     fun testSecureFlag() {
         launchActivity<FoodYouMainActivity>().use {
@@ -23,13 +26,18 @@ class FoodYouMainActivityTest {
                 with(activity) {
                     val dataStore = get<DataStore<Preferences>>()
 
+                    // Run on same thread as the activity
                     lifecycleScope.launch {
                         dataStore.set(SecurityPreferences.hideContent to true)
+
+                        // Yield just to be safe
                         yield()
 
                         assert((window.attributes.flags and FLAG_SECURE) == FLAG_SECURE)
 
                         dataStore.set(SecurityPreferences.hideContent to false)
+
+                        // Yield just to be safe
                         yield()
 
                         assert((window.attributes.flags and FLAG_SECURE) == 0)
