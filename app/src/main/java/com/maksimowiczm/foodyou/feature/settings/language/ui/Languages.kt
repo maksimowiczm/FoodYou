@@ -38,6 +38,15 @@ val languages = mapOf(
                 name = "Mateusz Maksimowicz"
             )
         )
+    ),
+    "Türkçe (Türkiye)" to Translation(
+        tag = "tr-TR",
+        authorsStrings = listOf(
+            Author(
+                name = "mikropsoft",
+                link = "https://github.com/mikropsoft"
+            )
+        )
     )
 )
 

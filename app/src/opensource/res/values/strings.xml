@@ -7,7 +7,7 @@
     <string name="headline_readme" translatable="false">README</string>
     <string name="headline_version">Version</string>
     <string name="headline_share_your_thoughts">Share your thoughts</string>
-    <string name="headline_show_some_love">Show some love</string>
+    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Show some love</string>
     <string name="headline_clear_cache">Clear cache</string>
 
     <string name="action_read_more">Read more</string>

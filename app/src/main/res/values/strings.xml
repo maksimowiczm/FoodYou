@@ -137,7 +137,7 @@
 
     <string name="description_calories_goal">Set your daily calories intake goal. This will help you to track your progress and stay on track.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Product will be deleted permanently. This action can\'t be undone. All diary entries related to this product will be deleted.</string>
-    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database."> This entry will be deleted from your diary. You can add it again anytime.</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">This entry will be deleted from your diary. You can add it again anytime.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>

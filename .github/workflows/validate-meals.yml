@@ -1,11 +1,18 @@
 name: Validate Meals XML
 
 on:
+  push:
+    paths:
+      - 'app/src/opensource/res/xml*/meals.xml'
+      - 'app/src/testOpensource/res/xml/meals-schema.xsd'
+      - 'app/src/testOpensource/res/xml/test-meals.bash'
+      - '.github/workflows/validate-meals.yml'
   pull_request:
     paths:
       - 'app/src/opensource/res/xml*/meals.xml'
       - 'app/src/testOpensource/res/xml/meals-schema.xsd'
       - 'app/src/testOpensource/res/xml/test-meals.bash'
+      - '.github/workflows/validate-meals.yml'
 
 jobs:
   validate-meals:

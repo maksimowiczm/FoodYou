@@ -1,0 +1,15 @@
+<b>FoodYou</b>, Material You estetiğiyle tasarlanmış modern bir kalori takip uygulamasıdır. Kalori takibini daha kolay ve görsel olarak daha çekici hale getirmek için geliştirilmiştir.
+
+<b>Özellikler:</b>
+<ul>
+    <li><b>Material You Tasarımı:</b> Uyumlu ve estetik bir deneyim için dinamik tema desteği.</li>
+    <li><b>Etkileşimli Ana Sayfa:</b> Kart tabanlı arayüz ile önemli özelliklere hızlı erişim.</li>
+    <li><b>Open Food Facts Entegrasyonu:</b> Doğru kalori takibi için güvenilir ve detaylı gıda verileri.</li>
+    <li><b>Tam Ekran Düzeni:</b> Kenardan kenara tasarım ile daha sürükleyici bir deneyim.</li>
+    <li><b>Öngörücü Geri Dönüş Özelliği:</b> Daha akıcı bir gezinme deneyimi için sezgisel geri dönüş desteği.</li>
+    <li><b>Özelleştirilebilir & Açık Kaynak:</b> Geliştirilebilir ve topluluk odaklı bir yapı, katkıda bulunma ve kişiselleştirme imkanı.</li>
+</ul>
+
+Bugün <b>FoodYou</b> ile kalori takibine başlayın!
+
+Başlatıcı simgesi <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a> tarafından yapılmıştır
