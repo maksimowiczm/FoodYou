@@ -118,4 +118,30 @@
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Questa voce verrà eliminata dal tuo diario. Puoi aggiungerla di nuovo in qualsiasi momento.</string>
     <string name="headline_launcher_icon_by_icons8">Icona del launcher di Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Guarda altre fantastiche icone qui</string>
+    <string name="headline_remote_food_database">Database alimentare remoto</string>
+    <string name="headline_about">Informazioni</string>
+    <string name="headline_miscellaneous">Varie</string>
+    <string name="headline_version">Versione</string>
+    <string name="headline_share_your_thoughts">Condividi i tuoi pensieri</string>
+    <string name="headline_show_some_love">Mostra il tuo supporto</string>
+    <string name="headline_clear_cache">Pulisci cache</string>
+    <string name="action_read_more">Leddi di più</string>
+    <string name="action_select_country">Seleziona nazione</string>
+    <string name="action_use_open_food_facts">Utilizza Open Food Facts</string>
+    <string name="action_see_terms_of_use">Consulta i termini di utilizzo</string>
+    <string name="action_bug_report_on_github">Segnala un bug su GitHub</string>
+    <string name="action_feature_request_on_github">Richiedi funzionalità su GitHub</string>
+    <string name="action_leave_a_star_on_github">Lascia una stella su GitHub</string>
+    <string name="neutral_manage_food_database">Gestisci il tuo database alimentare</string>
+    <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
+    <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
+    <string name="open_food_facts_disclaimer">Open Food Facts è un progetto supportato dalla community. I dati potrebbero essere incompleti, obsoleti o imprecisi. Questa app non è responsabile della validità delle informazioni. Si prega di verificare prima dell\'uso.</string>
+    <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">Abilita Open Food Facts nelle impostazioni per accedere ad informazioni dettagliate sui prodotti</string>
+    <string name="description_open_food_facts">è un database collaborativo, gratuito e aperto di prodotti alimentari da tutto il mondo.</string>
+    <string name="description_README_setting">Visualizza il README del progetto su GitHub</string>
+    <string name="description_about_setting">Scopri di più sull\'app</string>
+    <string name="description_show_some_love">Se trovi utile questo progetto, considera di dargli una stella su GitHub! Aiuta gli altri a scoprirlo e sostiene il continuo sviluppo.</string>
+    <string name="description_share_your_thoughts">Se hai feedback, richieste di funzionalità o segnalazioni di bug, fammelo sapere! Mi piacerebbe sentire la tua opinione.</string>
+    <string name="description_open_food_facts_clear_query_cache">Cancella la cache delle query di Open Food Facts</string>
+    <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">Pulire la cache causerà un nuovo download dell\'intero database di Open Food Facts. Non è consigliato cancellare la cache a meno che tu non sappia cosa stai facendo.</string>
 </resources>
