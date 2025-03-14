@@ -8,6 +8,42 @@ plugins {
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.gmazzo.buildconfig)
+}
+
+buildConfig {
+    packageName("com.maksimowiczm.foodyou")
+    className("BuildConfig")
+
+    val versionName = libs.versions.version.name.get()
+
+    // -- OPEN FOOD FACTS --
+    // https://openfoodfacts.github.io/openfoodfacts-server/api/#authentication
+    // Sorry no email 😭
+    // https://pub.dev/packages/openfoodfacts#migrating-from-2xx-to-3xx-breaking-changes
+    // https://pub.dev/packages/openfoodfacts#setup-optional
+    buildConfigField(
+        "String",
+        "OPEN_FOOD_FACTS_USER_AGENT",
+        "\"FoodYou/$versionName-opensource (https://github.com/maksimowiczm/FoodYou)\""
+    )
+
+    // TODO Use the correct URL
+//    buildConfigField(
+//        "String",
+//        "OPEN_FOOD_FACTS_URL",
+//        "\"https://world.openfoodfacts.org/\""
+//    )
+
+    buildConfigField(
+        "String",
+        "OPEN_FOOD_FACTS_URL",
+        "\"https://world.openfoodfacts.net/\""
+    )
+
+    // Use cached open food facts data for development. See
+    // dev/open-food-facts-cache directory for more information
+    // buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"<cache-address>\"")
 }
 
 kotlin {
@@ -42,7 +78,8 @@ kotlin {
             implementation(compose.preview)
 
             implementation(compose.runtime)
-            implementation(compose.foundation)
+//            implementation(compose.foundation)
+            implementation(libs.androidx.foundation)
 //            implementation(compose.material3)
             implementation(libs.androidx.material3)
             implementation(compose.material3AdaptiveNavigationSuite)
@@ -94,27 +131,16 @@ kotlin {
 
 android {
     namespace = "com.maksimowiczm.foodyou"
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.maksimowiczm.foodyou"
-        minSdk = 28
-        targetSdk = 35
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 2
-        versionName = "1.0.1"
+        versionName = libs.versions.version.name.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // -- OPEN FOOD FACTS --
-        // https://openfoodfacts.github.io/openfoodfacts-server/api/#authentication
-        // Sorry no email 😭
-        // https://pub.dev/packages/openfoodfacts#migrating-from-2xx-to-3xx-breaking-changes
-        // https://pub.dev/packages/openfoodfacts#setup-optional
-        buildConfigField(
-            "String",
-            "OPEN_FOOD_FACTS_USER_AGENT",
-            "\"FoodYou/$versionName-opensource (https://github.com/maksimowiczm/FoodYou)\""
-        )
     }
 
     android {
@@ -131,26 +157,8 @@ android {
                 "proguard-rules.pro"
             )
 
-            buildConfigField(
-                "String",
-                "OPEN_FOOD_FACTS_URL",
-                "\"https://world.openfoodfacts.org/\""
-            )
-
             // Test minified version with debug signing config
             // signingConfig = signingConfigs.getByName("debug")
-        }
-
-        debug {
-            buildConfigField(
-                "String",
-                "OPEN_FOOD_FACTS_URL",
-                "\"https://world.openfoodfacts.net/\""
-            )
-
-            // Use cached open food facts data for development. See
-            // dev/open-food-facts-cache directory for more information
-            // buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"<cache-address>\"")
         }
     }
     compileOptions {
@@ -160,7 +168,6 @@ android {
 
     buildFeatures {
         compose = true
-        buildConfig = true
         viewBinding = true
     }
 }

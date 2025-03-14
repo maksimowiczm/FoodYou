@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.network.model.v1.OpenFoodFactsPageResponseV1
 import com.maksimowiczm.foodyou.network.model.v2.OpenFoodFactsProductResponseV2
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -21,7 +20,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 internal class OpenFoodFactsNetworkDataSource {
-    private val client = HttpClient(OkHttp) {
+    private val client = HttpClient {
         defaultRequest {
             url(BuildConfig.OPEN_FOOD_FACTS_URL)
             userAgent(BuildConfig.OPEN_FOOD_FACTS_USER_AGENT)
