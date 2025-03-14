@@ -43,7 +43,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.WeightUnit
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.ui.component.FullScreenDialog
 import com.maksimowiczm.foodyou.ui.ext.plus
@@ -61,7 +60,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun ProductForm(
     state: ProductFormState,
-    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -80,8 +78,7 @@ fun ProductForm(
                     state.barcode.onRawValueChange(it)
                     showBarcodeScanner = false
                 },
-                onClose = { showBarcodeScanner = false },
-                barcodeScannerScreen = barcodeScannerScreen
+                onClose = { showBarcodeScanner = false }
             )
         }
     }
@@ -486,8 +483,7 @@ private fun WeightUnitDropdownMenu(
 private fun NullProductFormPreview() {
     FoodYouTheme {
         ProductForm(
-            state = rememberProductFormState(null),
-            barcodeScannerScreen = { _, _ -> }
+            state = rememberProductFormState(null)
         )
     }
 }
@@ -497,8 +493,7 @@ private fun NullProductFormPreview() {
 private fun ProductFormPreview() {
     FoodYouTheme {
         ProductForm(
-            state = rememberProductFormState(ProductPreviewParameterProvider().values.first()),
-            barcodeScannerScreen = { _, _ -> }
+            state = rememberProductFormState(ProductPreviewParameterProvider().values.first())
         )
     }
 }

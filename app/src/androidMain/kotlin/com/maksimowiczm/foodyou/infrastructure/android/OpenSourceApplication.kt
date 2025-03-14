@@ -4,7 +4,6 @@ import com.maksimowiczm.foodyou.feature.FeatureManager
 import com.maksimowiczm.foodyou.feature.home.calendarcard.CalendarCard
 import com.maksimowiczm.foodyou.feature.home.caloriescard.CaloriesCard
 import com.maksimowiczm.foodyou.feature.home.mealscard.MealsCard
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.zxingCameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.settings.aboutsettings.AboutSettings
 import com.maksimowiczm.foodyou.feature.settings.goalssettings.GoalsSettings
 import com.maksimowiczm.foodyou.feature.settings.laguage.AndroidTrailingContent
@@ -18,8 +17,7 @@ class OpenSourceApplication : FoodYouApplication() {
         addHomeFeature(
             CalendarCard,
             MealsCard(
-                searchHintBuilder = OpenFoodFactsSettings,
-                barcodeScannerScreen = zxingCameraBarcodeScannerScreen
+                searchHintBuilder = OpenFoodFactsSettings
             ),
             CaloriesCard
         )

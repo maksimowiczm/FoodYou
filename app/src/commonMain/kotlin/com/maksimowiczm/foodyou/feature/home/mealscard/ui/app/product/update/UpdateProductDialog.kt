@@ -31,7 +31,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.data.model.Product
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductForm
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductFormState
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.rememberProductFormState
@@ -46,7 +45,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun UpdateProductDialog(
     onClose: () -> Unit,
     onSuccess: () -> Unit,
-    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier,
     viewModel: UpdateProductViewModel = koinViewModel()
 ) {
@@ -66,7 +64,6 @@ fun UpdateProductDialog(
         state = uiState,
         onNavigateBack = onClose,
         onUpdateProduct = viewModel::updateProduct,
-        barcodeScannerScreen = barcodeScannerScreen,
         modifier = modifier
     )
 }
@@ -76,7 +73,6 @@ private fun UpdateProductDialog(
     state: UpdateProductState,
     onNavigateBack: () -> Unit,
     onUpdateProduct: (ProductFormState) -> Unit,
-    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -85,7 +81,6 @@ private fun UpdateProductDialog(
             product = state.product,
             onClose = onNavigateBack,
             onUpdate = onUpdateProduct,
-            barcodeScannerScreen = barcodeScannerScreen,
             modifier = modifier
         )
     }
@@ -97,7 +92,6 @@ private fun UpdateProductDialog(
     product: Product,
     onClose: () -> Unit,
     onUpdate: (ProductFormState) -> Unit,
-    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier
 ) {
     val state = rememberProductFormState(
@@ -163,7 +157,6 @@ private fun UpdateProductDialog(
     ) { paddingValues ->
         ProductForm(
             state = state,
-            barcodeScannerScreen = barcodeScannerScreen,
             paddingValues = paddingValues,
             modifier = Modifier
                 .padding(horizontal = 8.dp)
@@ -208,8 +201,7 @@ private fun CreateProductScreenPreview() {
         UpdateProductDialog(
             product = ProductPreviewParameterProvider().values.first(),
             onClose = {},
-            onUpdate = {},
-            barcodeScannerScreen = { _, _ -> }
+            onUpdate = {}
         )
     }
 }

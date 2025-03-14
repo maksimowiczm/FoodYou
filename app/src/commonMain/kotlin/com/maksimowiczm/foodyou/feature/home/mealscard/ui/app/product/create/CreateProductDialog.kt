@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductForm
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductFormState
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.rememberProductFormState
@@ -41,7 +40,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CreateProductDialog(
     onClose: () -> Unit,
     onSuccess: (productId: Long) -> Unit,
-    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier,
     viewModel: CreateProductViewModel = koinViewModel()
 ) {
@@ -59,7 +57,6 @@ fun CreateProductDialog(
     CreateProductDialog(
         onClose = onClose,
         onCreate = viewModel::onCreateProduct,
-        barcodeScannerScreen = barcodeScannerScreen,
         modifier = modifier
     )
 }
@@ -69,7 +66,6 @@ fun CreateProductDialog(
 private fun CreateProductDialog(
     onClose: () -> Unit,
     onCreate: (ProductFormState) -> Unit,
-    barcodeScannerScreen: BarcodeScannerScreen,
     modifier: Modifier = Modifier
 ) {
     val form = rememberProductFormState(null)
@@ -133,7 +129,6 @@ private fun CreateProductDialog(
     ) { paddingValues ->
         ProductForm(
             state = form,
-            barcodeScannerScreen = barcodeScannerScreen,
             paddingValues = paddingValues,
             modifier = Modifier
                 .padding(horizontal = 8.dp)
@@ -177,8 +172,7 @@ private fun CreateProductScreenPreview() {
     FoodYouTheme {
         CreateProductDialog(
             onClose = {},
-            onCreate = {},
-            barcodeScannerScreen = { _, _ -> }
+            onCreate = {}
         )
     }
 }

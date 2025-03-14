@@ -6,16 +6,12 @@ import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.MealApp
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchHintBuilder
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.buildMealsCard
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import kotlinx.serialization.Serializable
 
-class MealsCard(
-    private val searchHintBuilder: SearchHintBuilder,
-    private val barcodeScannerScreen: BarcodeScannerScreen
-) : Feature.Home {
+class MealsCard(private val searchHintBuilder: SearchHintBuilder) : Feature.Home {
     override fun build(navController: NavController) = buildMealsCard(
         onMealClick = { epochDay, meal ->
             navController.navigate(
@@ -56,7 +52,6 @@ class MealsCard(
                 outerOnBack = { navController.popBackStack<Meal>(inclusive = true) },
                 mealId = mealId,
                 epochDay = epochDay,
-                barcodeScannerScreen = barcodeScannerScreen,
                 searchHint = searchHintBuilder.build(navController)
             )
         }
@@ -68,7 +63,6 @@ class MealsCard(
                 outerOnBack = { navController.popBackStack<MealAdd>(inclusive = true) },
                 mealId = mealId,
                 epochDay = epochDay,
-                barcodeScannerScreen = barcodeScannerScreen,
                 searchHint = searchHintBuilder.build(navController),
                 skipToSearchScreen = true
             )

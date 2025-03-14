@@ -8,7 +8,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchHint
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -18,7 +17,6 @@ fun MealApp(
     outerOnBack: () -> Unit,
     mealId: Long,
     epochDay: Int,
-    barcodeScannerScreen: BarcodeScannerScreen,
     searchHint: SearchHint,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
@@ -33,7 +31,6 @@ fun MealApp(
                 outerOnBack = outerOnBack,
                 mealId = mealId,
                 epochDay = epochDay,
-                barcodeScannerScreen = barcodeScannerScreen,
                 searchHint = searchHint,
                 modifier = modifier,
                 navController = navController,

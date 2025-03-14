@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -25,7 +24,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.meal.DiaryDayMealScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.measurement.CreateMeasurementViewModel
@@ -71,7 +69,6 @@ fun MealNavHost(
     outerOnBack: () -> Unit,
     mealId: Long,
     epochDay: Int,
-    barcodeScannerScreen: BarcodeScannerScreen,
     searchHint: SearchHint,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
@@ -167,7 +164,6 @@ fun MealNavHost(
                     },
                     onBack = {
                         // If stack is empty call outer on back otherwise pop search
-                        @SuppressLint("RestrictedApi")
                         if (navController.currentBackStack.value.size == 2) {
                             outerOnBack()
                         } else {
@@ -230,7 +226,6 @@ fun MealNavHost(
                     )
                 },
                 onClose = { navController.popBackStack<BarcodeScanner>(inclusive = true) },
-                barcodeScannerScreen = barcodeScannerScreen,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -341,8 +336,7 @@ fun MealNavHost(
                                 }
                             }
                         )
-                    },
-                    barcodeScannerScreen = barcodeScannerScreen
+                    }
                 )
             }
         }
@@ -379,7 +373,6 @@ fun MealNavHost(
                 UpdateProductDialog(
                     onClose = { navController.popBackStack<EditProductDialog>(inclusive = true) },
                     onSuccess = { navController.popBackStack<EditProductDialog>(inclusive = true) },
-                    barcodeScannerScreen = barcodeScannerScreen,
                     viewModel = koinViewModel(
                         parameters = { parametersOf(productId) }
                     )

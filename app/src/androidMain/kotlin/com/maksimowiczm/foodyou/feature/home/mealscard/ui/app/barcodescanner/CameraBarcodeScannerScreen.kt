@@ -53,11 +53,10 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraBarcodeScannerScreen(
+actual fun CameraBarcodeScannerScreen(
     onBarcodeScan: (String) -> Unit,
     onClose: () -> Unit,
-    barcodeScannerScreen: BarcodeScannerScreen,
-    modifier: Modifier = Modifier
+    modifier: Modifier
 ) {
     val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
     val activity = LocalActivity.current
@@ -109,7 +108,7 @@ fun CameraBarcodeScannerScreen(
         }
 
         if (permissionState.status.isGranted) {
-            barcodeScannerScreen(
+            ZxingCameraBarcodeScannerScreen(
                 onBarcodeScan = {
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                     onBarcodeScan(it)
