@@ -9,8 +9,6 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.res.stringResource
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.NutrimentHelper
 import com.maksimowiczm.foodyou.data.model.Product
 import com.maksimowiczm.foodyou.data.model.WeightUnit
@@ -22,11 +20,13 @@ import com.maksimowiczm.foodyou.ui.form.nullableFloatParser
 import com.maksimowiczm.foodyou.ui.form.nullableStringParser
 import com.maksimowiczm.foodyou.ui.form.positive
 import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
+import foodyou.app.generated.resources.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 enum class ProductFormError {
     Required,
@@ -37,10 +37,10 @@ enum class ProductFormError {
 
     @Composable
     fun stringResource() = when (this) {
-        Required -> "* " + stringResource(R.string.neutral_required)
-        NotANumber -> stringResource(R.string.error_invalid_number)
-        NegativeNumber -> stringResource(R.string.error_value_cannot_be_negative)
-        Exceeds100 -> stringResource(R.string.error_value_cannot_exceed_100)
+        Required -> "* " + stringResource(Res.string.neutral_required)
+        NotANumber -> stringResource(Res.string.error_invalid_number)
+        NegativeNumber -> stringResource(Res.string.error_value_cannot_be_negative)
+        Exceeds100 -> stringResource(Res.string.error_value_cannot_exceed_100)
     }
 }
 
@@ -50,7 +50,7 @@ enum class GlobalError {
     @Composable
     fun stringResource() = when (this) {
         MacronutrientsSumExceeds100 -> stringResource(
-            R.string.error_sum_of_macronutrients_cannot_exceed_100g
+            Res.string.error_sum_of_macronutrients_cannot_exceed_100g
         )
     }
 }

@@ -35,18 +35,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.BuildConfig
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.AboutIcons8
 import com.maksimowiczm.foodyou.ui.component.CardButton
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -89,7 +90,7 @@ private fun AboutScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(R.string.headline_about))
+                    Text(stringResource(Res.string.headline_about))
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -130,7 +131,7 @@ private fun AboutScreen(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .horizontalDisplayCutoutPadding(),
-                    text = stringResource(R.string.headline_miscellaneous),
+                    text = stringResource(Res.string.headline_miscellaneous),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge
                 )
@@ -169,14 +170,14 @@ private fun ShareYourThoughtsItem(
         modifier = modifier.displayCutoutPadding()
     ) {
         Text(
-            text = stringResource(R.string.headline_share_your_thoughts),
+            text = stringResource(Res.string.headline_share_your_thoughts),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Text(
-            text = stringResource(R.string.description_share_your_thoughts),
+            text = stringResource(Res.string.description_share_your_thoughts),
             textAlign = TextAlign.Justify,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
@@ -192,13 +193,13 @@ private fun ShareYourThoughtsItem(
             leadingIcon = {
                 Icon(
                     modifier = Modifier.size(24.dp),
-                    painter = painterResource(R.drawable.ic_github_mark),
+                    painter = painterResource(Res.drawable.ic_github_mark),
                     contentDescription = null
                 )
             },
             text = {
                 Text(
-                    text = stringResource(R.string.action_feature_request_on_github),
+                    text = stringResource(Res.string.action_feature_request_on_github),
                     style = MaterialTheme.typography.titleMedium
                 )
             },
@@ -214,13 +215,13 @@ private fun ShareYourThoughtsItem(
             leadingIcon = {
                 Icon(
                     modifier = Modifier.size(24.dp),
-                    painter = painterResource(R.drawable.ic_github_mark),
+                    painter = painterResource(Res.drawable.ic_github_mark),
                     contentDescription = null
                 )
             },
             text = {
                 Text(
-                    text = stringResource(R.string.action_bug_report_on_github),
+                    text = stringResource(Res.string.action_bug_report_on_github),
                     style = MaterialTheme.typography.titleMedium
                 )
             },
@@ -239,14 +240,14 @@ private fun ShowSomeLoveItem(
         modifier = modifier.displayCutoutPadding()
     ) {
         Text(
-            text = stringResource(R.string.headline_show_some_love),
+            text = stringResource(Res.string.headline_show_some_love),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Text(
-            text = stringResource(R.string.description_show_some_love),
+            text = stringResource(Res.string.description_show_some_love),
             textAlign = TextAlign.Justify,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
@@ -271,7 +272,7 @@ private fun ShowSomeLoveItem(
                         )
                     } else {
                         Icon(
-                            painter = painterResource(R.drawable.ic_star_24),
+                            painter = painterResource(Res.drawable.ic_star),
                             contentDescription = null
                         )
                     }
@@ -279,7 +280,7 @@ private fun ShowSomeLoveItem(
             },
             text = {
                 Text(
-                    text = stringResource(R.string.action_leave_a_star_on_github),
+                    text = stringResource(Res.string.action_leave_a_star_on_github),
                     style = MaterialTheme.typography.titleMedium
                 )
             },
@@ -295,14 +296,14 @@ private fun ReadmeListItem(onReadme: () -> Unit, modifier: Modifier = Modifier) 
             .clickable { onReadme() }
             .horizontalDisplayCutoutPadding(),
         headlineContent = {
-            Text(stringResource(R.string.headline_readme))
+            Text(stringResource(Res.string.headline_readme))
         },
         supportingContent = {
-            Text(stringResource(R.string.description_README_setting))
+            Text(stringResource(Res.string.description_README_setting))
         },
         leadingContent = {
             Icon(
-                painter = painterResource(id = R.drawable.ic_description_24),
+                painter = painterResource(Res.drawable.ic_description),
                 contentDescription = null
             )
         }
@@ -314,11 +315,11 @@ private fun VersionListItem(modifier: Modifier = Modifier) {
     ListItem(
         modifier = modifier.horizontalDisplayCutoutPadding(),
         headlineContent = {
-            Text(stringResource(R.string.headline_version))
+            Text(stringResource(Res.string.headline_version))
         },
         leadingContent = {
             Icon(
-                painter = painterResource(id = R.drawable.ic_info_24),
+                painter = painterResource(Res.drawable.ic_info),
                 contentDescription = null
             )
         },

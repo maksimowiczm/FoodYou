@@ -22,10 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.data.model.WeightUnit
 import com.maksimowiczm.foodyou.ui.component.IndentedList
@@ -33,6 +31,8 @@ import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NutrientsList(
@@ -50,7 +50,7 @@ fun NutrientsList(
     ) {
         Column {
             Text(
-                text = stringResource(R.string.neutral_all_values_per_x, ""),
+                text = stringResource(Res.string.neutral_all_values_per_x, ""),
                 modifier = Modifier.padding(start = startPadding, end = endPadding)
             )
 
@@ -96,10 +96,10 @@ fun NutrientsList(
             ) {
                 item {
                     NutrientsListItem(
-                        label = stringResource(R.string.unit_calories),
+                        label = stringResource(Res.string.unit_calories),
                         value =
                         "${state.nutrients.calories.formatClipZeros()} " +
-                            stringResource(R.string.unit_kcal)
+                            stringResource(Res.string.unit_kcal)
                     )
                 }
 
@@ -109,7 +109,7 @@ fun NutrientsList(
 
                 item {
                     NutrientsListItem(
-                        label = stringResource(R.string.nutriment_proteins),
+                        label = stringResource(Res.string.nutriment_proteins),
                         value = state.nutrients.proteins.stringResource()
                     )
                 }
@@ -120,7 +120,7 @@ fun NutrientsList(
 
                 item {
                     NutrientsListItem(
-                        label = stringResource(R.string.nutriment_carbohydrates),
+                        label = stringResource(Res.string.nutriment_carbohydrates),
                         value = state.nutrients.carbohydrates.stringResource()
                     )
                 }
@@ -129,7 +129,7 @@ fun NutrientsList(
                     level = 1
                 ) {
                     NutrientsListItem(
-                        label = stringResource(R.string.nutriment_sugars),
+                        label = stringResource(Res.string.nutriment_sugars),
                         value = state.nutrients.sugars.stringResource()
                     )
                 }
@@ -140,7 +140,7 @@ fun NutrientsList(
 
                 item {
                     NutrientsListItem(
-                        label = stringResource(R.string.nutriment_fats),
+                        label = stringResource(Res.string.nutriment_fats),
                         value = state.nutrients.fats.stringResource()
                     )
                 }
@@ -149,7 +149,7 @@ fun NutrientsList(
                     level = 1
                 ) {
                     NutrientsListItem(
-                        label = stringResource(R.string.nutriment_saturated_fats),
+                        label = stringResource(Res.string.nutriment_saturated_fats),
                         value = state.nutrients.saturatedFats.stringResource()
                     )
                 }
@@ -160,7 +160,7 @@ fun NutrientsList(
 
                 item {
                     NutrientsListItem(
-                        label = stringResource(R.string.nutriment_salt),
+                        label = stringResource(Res.string.nutriment_salt),
                         value = state.nutrients.salt.stringResource()
                     )
                 }
@@ -169,7 +169,7 @@ fun NutrientsList(
                     level = 1
                 ) {
                     NutrientsListItem(
-                        label = stringResource(R.string.nutriment_sodium),
+                        label = stringResource(Res.string.nutriment_sodium),
                         value = state.nutrients.sodium.stringResource()
                     )
                 }
@@ -180,7 +180,7 @@ fun NutrientsList(
 
                 item {
                     NutrientsListItem(
-                        label = stringResource(R.string.nutriment_fiber),
+                        label = stringResource(Res.string.nutriment_fiber),
                         value = state.nutrients.fiber.stringResource()
                     )
                 }
@@ -216,9 +216,9 @@ private fun Float?.stringResource(): String {
     val clip = this?.formatClipZeros()
 
     return if (clip != null) {
-        "$clip " + stringResource(R.string.unit_gram_short)
+        "$clip " + stringResource(Res.string.unit_gram_short)
     } else {
-        stringResource(R.string.not_available_short)
+        stringResource(Res.string.not_available_short)
     }
 }
 
@@ -227,9 +227,9 @@ private fun WeightMeasurement.stringResource(weightUnit: WeightUnit) = when (thi
     is WeightMeasurement.WeightUnit -> "${weight.formatClipZeros()} " +
         weightUnit.stringResourceShort()
     is WeightMeasurement.Package -> "${quantity.formatClipZeros()} x " +
-        stringResource(R.string.product_package)
+        stringResource(Res.string.product_package)
     is WeightMeasurement.Serving -> "${quantity.formatClipZeros()} x " +
-        stringResource(R.string.product_serving)
+        stringResource(Res.string.product_serving)
 }
 
 @Preview(

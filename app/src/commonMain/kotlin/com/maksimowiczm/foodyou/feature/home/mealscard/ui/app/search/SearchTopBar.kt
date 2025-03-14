@@ -26,13 +26,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.ProductQuery
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,7 +112,7 @@ private fun InputField(
         textFieldState = textFieldState,
         onSearch = onSearch,
         modifier = modifier,
-        placeholder = { Text(stringResource(R.string.action_search)) },
+        placeholder = { Text(stringResource(Res.string.action_search)) },
         leadingIcon = {
             IconButton(
                 onClick = {
@@ -124,7 +125,7 @@ private fun InputField(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.action_go_back)
+                    contentDescription = stringResource(Res.string.action_go_back)
                 )
             }
         },
@@ -136,7 +137,7 @@ private fun InputField(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
-                            contentDescription = stringResource(R.string.action_clear)
+                            contentDescription = stringResource(Res.string.action_clear)
                         )
                     }
                 }
@@ -144,8 +145,8 @@ private fun InputField(
                     onClick = onBarcodeScanner
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_qr_code_scanner_24),
-                        contentDescription = stringResource(R.string.action_scan_barcode)
+                        painter = painterResource(Res.drawable.ic_qr_code_scanner),
+                        contentDescription = stringResource(Res.string.action_scan_barcode)
                     )
                 }
             }
@@ -174,8 +175,8 @@ private fun SearchResults(
                 ),
                 leadingContent = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_schedule_24),
-                        contentDescription = stringResource(R.string.action_search)
+                        painter = painterResource(Res.drawable.ic_schedule),
+                        contentDescription = stringResource(Res.string.action_search)
                     )
                 },
                 trailingContent = {
@@ -183,9 +184,9 @@ private fun SearchResults(
                         onClick = { onQueryClick(productQuery) }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_north_west_24),
+                            painter = painterResource(Res.drawable.ic_north_west),
                             contentDescription = stringResource(
-                                R.string.action_insert_suggested_search
+                                Res.string.action_insert_suggested_search
                             )
                         )
                     }

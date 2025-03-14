@@ -55,18 +55,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.stringParser
 import com.maksimowiczm.foodyou.ui.preview.MealsPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.stringResource
 
 private enum class ActionButtonState {
     Save,
@@ -168,7 +168,7 @@ fun MealSettingsCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Check,
-                        contentDescription = stringResource(R.string.action_confirm)
+                        contentDescription = stringResource(Res.string.action_confirm)
                     )
                 }
 
@@ -187,7 +187,7 @@ fun MealSettingsCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(R.string.action_delete)
+                        contentDescription = stringResource(Res.string.action_delete)
                     )
                 }
 
@@ -247,7 +247,7 @@ fun MealSettingsCard(
                 )
             }
             Text(
-                text = stringResource(R.string.en_dash),
+                text = stringResource(Res.string.en_dash),
                 style = MaterialTheme.typography.headlineSmall
             )
             Card(
@@ -288,7 +288,7 @@ fun MealSettingsCard(
                     }
                 ) {
                     Text(
-                        text = stringResource(R.string.action_confirm)
+                        text = stringResource(Res.string.action_confirm)
                     )
                 }
             },
@@ -298,7 +298,7 @@ fun MealSettingsCard(
                     onClick = { showFromTimePicker = false }
                 ) {
                     Text(
-                        text = stringResource(R.string.action_cancel)
+                        text = stringResource(Res.string.action_cancel)
                     )
                 }
             }
@@ -328,7 +328,7 @@ fun MealSettingsCard(
                     }
                 ) {
                     Text(
-                        text = stringResource(R.string.action_confirm)
+                        text = stringResource(Res.string.action_confirm)
                     )
                 }
             },
@@ -338,7 +338,7 @@ fun MealSettingsCard(
                     onClick = { showToTimePicker = false }
                 ) {
                     Text(
-                        text = stringResource(R.string.action_cancel)
+                        text = stringResource(Res.string.action_cancel)
                     )
                 }
             }
@@ -420,7 +420,7 @@ private fun DeleteDialog(
                 onClick = onConfirm
             ) {
                 Text(
-                    text = stringResource(R.string.action_delete)
+                    text = stringResource(Res.string.action_delete)
                 )
             }
         },
@@ -430,7 +430,7 @@ private fun DeleteDialog(
                 onClick = onDismissRequest
             ) {
                 Text(
-                    text = stringResource(R.string.action_cancel)
+                    text = stringResource(Res.string.action_cancel)
                 )
             }
         },
@@ -442,12 +442,12 @@ private fun DeleteDialog(
         },
         title = {
             Text(
-                text = stringResource(R.string.neutral_permanently_delete_meal)
+                text = stringResource(Res.string.neutral_permanently_delete_meal)
             )
         },
         text = {
             Text(
-                text = stringResource(R.string.neutral_meal_will_be_deleted_permanently)
+                text = stringResource(Res.string.neutral_meal_will_be_deleted_permanently)
             )
         }
     )

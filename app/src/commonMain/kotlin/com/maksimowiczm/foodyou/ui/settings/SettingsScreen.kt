@@ -25,9 +25,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.settings.SettingsFeature
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,14 +46,14 @@ fun SettingsScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.headline_settings)) },
+                title = { Text(stringResource(Res.string.headline_settings)) },
                 navigationIcon = {
                     IconButton(
                         onClick = onBack
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_go_back)
+                            contentDescription = stringResource(Res.string.action_go_back)
                         )
                     }
                 },

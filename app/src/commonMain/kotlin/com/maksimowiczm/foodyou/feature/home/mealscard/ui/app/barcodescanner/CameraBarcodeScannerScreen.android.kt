@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -46,9 +45,11 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.preview.BooleanPreviewParameter
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -102,7 +103,7 @@ fun CameraBarcodeScannerScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(R.string.action_close)
+                    contentDescription = stringResource(Res.string.action_close)
                 )
             }
         }
@@ -131,9 +132,9 @@ private fun RequestCameraPermissionScreen(
     modifier: Modifier = Modifier
 ) {
     val text = if (shouldShowRationale) {
-        stringResource(R.string.neutral_barcode_scanner_camera_request_rationale)
+        stringResource(Res.string.neutral_barcode_scanner_camera_request_rationale)
     } else {
-        stringResource(R.string.neutral_barcode_scanner_camera_request)
+        stringResource(Res.string.neutral_barcode_scanner_camera_request)
     }
 
     Surface(
@@ -154,7 +155,7 @@ private fun RequestCameraPermissionScreen(
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = stringResource(R.string.action_tap_to_allow_access),
+                text = stringResource(Res.string.action_tap_to_allow_access),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelMedium
             )
@@ -174,21 +175,23 @@ private fun RedirectToSettingsAlertDialog(
             TextButton(
                 onClick = onConfirm
             ) {
-                Text(stringResource(R.string.action_go_to_settings))
+                Text(stringResource(Res.string.action_go_to_settings))
             }
         },
         modifier = modifier,
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(stringResource(R.string.action_cancel))
+                Text(stringResource(Res.string.action_cancel))
             }
         },
         title = {
-            Text(stringResource(R.string.headline_permission_required))
+            Text(stringResource(Res.string.headline_permission_required))
         },
         text = {
             Text(
-                stringResource(R.string.neutral_barcode_scanner_camera_request_redirect_to_settings)
+                stringResource(
+                    Res.string.neutral_barcode_scanner_camera_request_redirect_to_settings
+                )
             )
         }
     )

@@ -10,18 +10,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.SecurityPreferences
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -54,7 +54,7 @@ private fun SecureScreenSettingsListItem(
 ) {
     ListItem(
         headlineContent = {
-            Text(stringResource(R.string.headline_secure_screen))
+            Text(stringResource(Res.string.headline_secure_screen))
         },
         modifier = modifier.clickable { onCheckedChange(!checked) },
         leadingContent = {
@@ -64,7 +64,7 @@ private fun SecureScreenSettingsListItem(
             )
         },
         supportingContent = {
-            Text(stringResource(R.string.action_prevent_screen_capture))
+            Text(stringResource(Res.string.action_prevent_screen_capture))
         },
         trailingContent = {
             Switch(

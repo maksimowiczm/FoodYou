@@ -20,11 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.Product
 import com.maksimowiczm.foodyou.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
@@ -35,7 +33,10 @@ import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
 import kotlin.math.roundToInt
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MacroGraph(product: Product, measurement: WeightMeasurement, modifier: Modifier = Modifier) {
@@ -54,23 +55,23 @@ fun MacroGraph(product: Product, measurement: WeightMeasurement, modifier: Modif
                 when (measurement) {
                     is WeightMeasurement.Package -> Text(
                         text = stringResource(
-                            R.string.in_x_times_y,
+                            Res.string.in_x_times_y,
                             measurement.quantity.formatClipZeros(),
-                            stringResource(R.string.product_package)
+                            stringResource(Res.string.product_package)
                         )
                     )
 
                     is WeightMeasurement.Serving -> Text(
                         text = stringResource(
-                            R.string.in_x_times_y,
+                            Res.string.in_x_times_y,
                             measurement.quantity.formatClipZeros(),
-                            stringResource(R.string.product_serving)
+                            stringResource(Res.string.product_serving)
                         )
                     )
 
                     is WeightMeasurement.WeightUnit -> Text(
                         text = stringResource(
-                            R.string.in_x_weight_unit,
+                            Res.string.in_x_weight_unit,
                             measurement.weight.formatClipZeros(),
                             product.weightUnit.stringResourceShort()
                         )
@@ -81,7 +82,7 @@ fun MacroGraph(product: Product, measurement: WeightMeasurement, modifier: Modif
 
         Text(
             text = "${product.nutrients.calories(measurement.weight).roundToInt()} " +
-                stringResource(R.string.unit_kcal),
+                stringResource(Res.string.unit_kcal),
             style = MaterialTheme.typography.bodyLarge
         )
 
@@ -133,19 +134,19 @@ private fun NutrimentPieChart(product: Product, weight: Float, modifier: Modifie
         Column {
             NutrimentLegendItem(
                 color = nutrientsPalette.proteinsOnSurfaceContainer,
-                text = stringResource(R.string.nutriment_proteins),
+                text = stringResource(Res.string.nutriment_proteins),
                 value = (product.nutrients.proteins * weight / 100).formatClipZeros()
             )
 
             NutrimentLegendItem(
                 color = nutrientsPalette.carbohydratesOnSurfaceContainer,
-                text = stringResource(R.string.nutriment_carbohydrates),
+                text = stringResource(Res.string.nutriment_carbohydrates),
                 value = (product.nutrients.carbohydrates * weight / 100).formatClipZeros()
             )
 
             NutrimentLegendItem(
                 color = nutrientsPalette.fatsOnSurfaceContainer,
-                text = stringResource(R.string.nutriment_fats),
+                text = stringResource(Res.string.nutriment_fats),
                 value = (product.nutrients.fats * weight / 100).formatClipZeros()
             )
         }
@@ -183,11 +184,11 @@ private fun NutrimentLegendItem(
             )
 
             Text(
-                stringResource(R.string.en_dash)
+                stringResource(Res.string.en_dash)
             )
 
             Text(
-                text = "$value " + stringResource(R.string.unit_gram_short)
+                text = "$value " + stringResource(Res.string.unit_gram_short)
             )
         }
     }

@@ -13,12 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun FoodDatabaseErrorCard(onRetry: () -> Unit, modifier: Modifier = Modifier) {
@@ -35,7 +35,7 @@ fun FoodDatabaseErrorCard(onRetry: () -> Unit, modifier: Modifier = Modifier) {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.neutral_food_database_load_error),
+                text = stringResource(Res.string.neutral_food_database_load_error),
                 textAlign = TextAlign.Justify,
                 color = MaterialTheme.colorScheme.onError
             )
@@ -53,7 +53,7 @@ fun FoodDatabaseErrorCard(onRetry: () -> Unit, modifier: Modifier = Modifier) {
                         contentColor = MaterialTheme.colorScheme.onErrorContainer
                     )
                 ) {
-                    Text(stringResource(R.string.action_retry))
+                    Text(stringResource(Res.string.action_retry))
                 }
             }
         }

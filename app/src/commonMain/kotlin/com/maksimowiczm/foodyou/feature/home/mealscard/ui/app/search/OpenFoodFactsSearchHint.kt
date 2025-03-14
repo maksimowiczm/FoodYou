@@ -20,13 +20,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -67,14 +68,14 @@ private fun OpenFoodFactsSearchHint(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_cloud_download_24),
+                    painter = painterResource(Res.drawable.ic_cloud_download),
                     contentDescription = null
                 )
 
                 Spacer(Modifier.width(8.dp))
 
                 Text(
-                    text = stringResource(R.string.headline_remote_food_database),
+                    text = stringResource(Res.string.headline_remote_food_database),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -82,7 +83,7 @@ private fun OpenFoodFactsSearchHint(
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = stringResource(R.string.description_open_food_facts_search_hint),
+                text = stringResource(Res.string.description_open_food_facts_search_hint),
                 style = MaterialTheme.typography.bodyMedium
             )
 
@@ -99,14 +100,14 @@ private fun OpenFoodFactsSearchHint(
                         onClick = onDontShowAgain
                     ) {
                         Text(
-                            text = stringResource(R.string.action_don_t_show_again)
+                            text = stringResource(Res.string.action_don_t_show_again)
                         )
                     }
                     Button(
                         onClick = onGoToSettings
                     ) {
                         Text(
-                            text = stringResource(R.string.action_enable)
+                            text = stringResource(Res.string.action_enable)
                         )
                     }
                 }

@@ -43,14 +43,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.Meal
+import foodyou.app.generated.resources.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -110,13 +110,13 @@ private fun MealsSettingsScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_go_back)
+                            contentDescription = stringResource(Res.string.action_go_back)
                         )
                     }
                 },
                 title = {
                     Text(
-                        text = stringResource(R.string.headline_meals)
+                        text = stringResource(Res.string.headline_meals)
                     )
                 },
                 scrollBehavior = topBarScrollBehavior
@@ -238,7 +238,7 @@ private fun CreateMealCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.action_add_meal)
+                    contentDescription = stringResource(Res.string.action_add_meal)
                 )
             }
         }

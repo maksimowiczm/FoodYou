@@ -27,17 +27,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.DailyGoals
 import com.maksimowiczm.foodyou.data.model.defaultGoals
 import com.maksimowiczm.foodyou.feature.settings.goalssettings.ui.calories.CaloriesGoal
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -81,7 +81,7 @@ private fun GoalsSettingsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(R.string.headline_daily_goals))
+                    Text(stringResource(Res.string.headline_daily_goals))
                 },
                 navigationIcon = {
                     IconButton(
@@ -89,7 +89,7 @@ private fun GoalsSettingsScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_go_back)
+                            contentDescription = stringResource(Res.string.action_go_back)
                         )
                     }
                 },

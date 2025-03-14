@@ -19,10 +19,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.home.HomeFeature
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,7 +41,7 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.headline_diary)
+                        text = stringResource(Res.string.headline_diary)
                     )
                 },
                 actions = {
@@ -50,7 +50,7 @@ fun HomeScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(R.string.action_go_to_settings)
+                            contentDescription = stringResource(Res.string.action_go_to_settings)
                         )
                     }
                 },

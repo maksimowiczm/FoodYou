@@ -12,14 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.DailyGoals
 import com.maksimowiczm.foodyou.data.model.defaultGoals
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CaloriesGoal(goals: DailyGoals, onSave: (DailyGoals) -> Unit, modifier: Modifier = Modifier) {
@@ -31,7 +31,7 @@ fun CaloriesGoal(goals: DailyGoals, onSave: (DailyGoals) -> Unit, modifier: Modi
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.headline_calories_goal),
+            text = stringResource(Res.string.headline_calories_goal),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -40,7 +40,7 @@ fun CaloriesGoal(goals: DailyGoals, onSave: (DailyGoals) -> Unit, modifier: Modi
         )
 
         Text(
-            text = stringResource(R.string.description_calories_goal),
+            text = stringResource(Res.string.description_calories_goal),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -63,7 +63,7 @@ fun CaloriesGoal(goals: DailyGoals, onSave: (DailyGoals) -> Unit, modifier: Modi
             onClick = { onSave(state.intoDailyGoals()) },
             enabled = state.isValid
         ) {
-            Text(stringResource(R.string.action_save))
+            Text(stringResource(Res.string.action_save))
         }
     }
 }

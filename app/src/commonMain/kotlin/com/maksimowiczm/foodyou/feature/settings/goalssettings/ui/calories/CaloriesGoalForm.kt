@@ -9,18 +9,18 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.WeightUnit
 import com.maksimowiczm.foodyou.data.model.defaultGoals
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 private fun FormFieldWithTextFieldValue<Int, GoalsFormInputError>.TextField(
@@ -87,13 +87,13 @@ fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         state.calories.TextField(
-            label = { Text(stringResource(R.string.unit_calories)) },
-            suffix = { Text(stringResource(R.string.unit_kcal)) }
+            label = { Text(stringResource(Res.string.unit_calories)) },
+            suffix = { Text(stringResource(Res.string.unit_kcal)) }
         )
 
         Column {
             Text(
-                text = stringResource(R.string.nutriment_proteins),
+                text = stringResource(Res.string.nutriment_proteins),
                 color = nutrientsPalette.proteinsOnSurfaceContainer,
                 style = MaterialTheme.typography.labelLarge
             )
@@ -113,7 +113,7 @@ fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier
 
         Column {
             Text(
-                text = stringResource(R.string.nutriment_carbohydrates),
+                text = stringResource(Res.string.nutriment_carbohydrates),
                 color = nutrientsPalette.carbohydratesOnSurfaceContainer,
                 style = MaterialTheme.typography.labelLarge
             )
@@ -133,7 +133,7 @@ fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier
 
         Column {
             Text(
-                text = stringResource(R.string.nutriment_fats),
+                text = stringResource(Res.string.nutriment_fats),
                 color = nutrientsPalette.fatsOnSurfaceContainer,
                 style = MaterialTheme.typography.labelLarge
             )

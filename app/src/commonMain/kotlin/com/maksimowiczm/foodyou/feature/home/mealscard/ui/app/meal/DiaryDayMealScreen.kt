@@ -70,14 +70,11 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealHeader
@@ -93,6 +90,8 @@ import com.maksimowiczm.foodyou.ui.preview.DiaryDayPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.preview.ProductWithWeightMeasurementPreviewParameter
 import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -101,6 +100,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -198,8 +199,8 @@ private fun DiaryDayMealScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val latestDeleteEntryUndo by rememberUpdatedState(onDeleteEntryUndo)
-    val entryDeletedString = stringResource(R.string.neutral_entry_deleted)
-    val undoString = stringResource(R.string.action_undo)
+    val entryDeletedString = stringResource(Res.string.neutral_entry_deleted)
+    val undoString = stringResource(Res.string.action_undo)
     LaunchedEffect(deletedEntryChannel) {
         deletedEntryChannel.collectLatest { id ->
             val result = snackbarHostState.showSnackbar(
@@ -331,7 +332,7 @@ private fun DiaryDayMealScreen(
                                     text = formatTime(meal.from)
                                 )
                                 Text(
-                                    text = stringResource(R.string.en_dash)
+                                    text = stringResource(Res.string.en_dash)
                                 )
                                 Text(
                                     text = formatTime(meal.to)
@@ -344,7 +345,7 @@ private fun DiaryDayMealScreen(
                     val caloriesLabel = @Composable {
                         Text(
                             text = if (isEmpty) {
-                                stringResource(R.string.em_dash)
+                                stringResource(Res.string.em_dash)
                             } else {
                                 products.sumOf { it.calories }.toString()
                             }
@@ -353,30 +354,30 @@ private fun DiaryDayMealScreen(
                     val proteinsLabel = @Composable {
                         Text(
                             text = if (isEmpty) {
-                                stringResource(R.string.em_dash)
+                                stringResource(Res.string.em_dash)
                             } else {
                                 products.sumOf { it.proteins }
-                                    .toString() + " " + stringResource(R.string.unit_gram_short)
+                                    .toString() + " " + stringResource(Res.string.unit_gram_short)
                             }
                         )
                     }
                     val carbohydratesLabel = @Composable {
                         Text(
                             text = if (isEmpty) {
-                                stringResource(R.string.em_dash)
+                                stringResource(Res.string.em_dash)
                             } else {
                                 products.sumOf { it.carbohydrates }
-                                    .toString() + " " + stringResource(R.string.unit_gram_short)
+                                    .toString() + " " + stringResource(Res.string.unit_gram_short)
                             }
                         )
                     }
                     val fatsLabel = @Composable {
                         Text(
                             text = if (isEmpty) {
-                                stringResource(R.string.em_dash)
+                                stringResource(Res.string.em_dash)
                             } else {
                                 products.sumOf { it.fats }
-                                    .toString() + " " + stringResource(R.string.unit_gram_short)
+                                    .toString() + " " + stringResource(Res.string.unit_gram_short)
                             }
                         )
                     }
@@ -436,8 +437,8 @@ private fun DiaryDayMealScreen(
                         )
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_qr_code_scanner_24),
-                            contentDescription = stringResource(R.string.action_scan_barcode)
+                            painter = painterResource(Res.drawable.ic_qr_code_scanner),
+                            contentDescription = stringResource(Res.string.action_scan_barcode)
                         )
                     }
                 }
@@ -482,7 +483,7 @@ private fun DiaryDayMealScreen(
                                 Row {
                                     Spacer(Modifier.width(8.dp))
                                     Text(
-                                        text = stringResource(R.string.action_add_food)
+                                        text = stringResource(Res.string.action_add_food)
                                     )
                                 }
                             }
@@ -514,7 +515,7 @@ private fun DiaryDayMealScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = stringResource(R.string.neutral_no_products_meal_screen),
+                        text = stringResource(Res.string.neutral_no_products_meal_screen),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.outline
@@ -590,7 +591,7 @@ private fun ModalSheetContent(
         HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
         ListItem(
             headlineContent = {
-                Text(stringResource(R.string.action_edit_entry))
+                Text(stringResource(Res.string.action_edit_entry))
             },
             modifier = Modifier.clickable { onEditEntry() },
             leadingContent = {
@@ -605,7 +606,7 @@ private fun ModalSheetContent(
         )
         ListItem(
             headlineContent = {
-                Text(stringResource(R.string.action_delete_entry))
+                Text(stringResource(Res.string.action_delete_entry))
             },
             modifier = Modifier.clickable { showDeleteDialog = true },
             leadingContent = {
@@ -629,14 +630,14 @@ private fun DeleteDialog(onDismissRequest: () -> Unit, onDeleteEntry: () -> Unit
             TextButton(
                 onClick = onDeleteEntry
             ) {
-                Text(stringResource(R.string.action_delete))
+                Text(stringResource(Res.string.action_delete))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest
             ) {
-                Text(stringResource(R.string.action_cancel))
+                Text(stringResource(Res.string.action_cancel))
             }
         },
         icon = {
@@ -646,10 +647,10 @@ private fun DeleteDialog(onDismissRequest: () -> Unit, onDeleteEntry: () -> Unit
             )
         },
         title = {
-            Text(stringResource(R.string.action_delete_entry))
+            Text(stringResource(Res.string.action_delete_entry))
         },
         text = {
-            Text(stringResource(R.string.description_delete_product_entry))
+            Text(stringResource(Res.string.description_delete_product_entry))
         }
     )
 }

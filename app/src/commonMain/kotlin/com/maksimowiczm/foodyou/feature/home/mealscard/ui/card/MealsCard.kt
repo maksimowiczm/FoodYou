@@ -37,12 +37,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.feature.home.HomeFeature
 import com.maksimowiczm.foodyou.feature.home.HomeState
@@ -62,8 +60,10 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
+import foodyou.app.generated.resources.*
 import kotlin.math.absoluteValue
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 fun buildMealsCard(
@@ -310,7 +310,7 @@ fun SharedTransitionScope.MealCard(
                         text = formatTime(meal.from)
                     )
                     Text(
-                        text = stringResource(R.string.en_dash)
+                        text = stringResource(Res.string.en_dash)
                     )
                     Text(
                         text = formatTime(meal.to)
@@ -322,7 +322,7 @@ fun SharedTransitionScope.MealCard(
         val caloriesLabel = @Composable {
             Text(
                 text = if (isEmpty) {
-                    stringResource(R.string.em_dash)
+                    stringResource(Res.string.em_dash)
                 } else {
                     totalCalories.toString()
                 }
@@ -331,27 +331,27 @@ fun SharedTransitionScope.MealCard(
         val proteinsLabel = @Composable {
             Text(
                 text = if (isEmpty) {
-                    stringResource(R.string.em_dash)
+                    stringResource(Res.string.em_dash)
                 } else {
-                    "$totalProteins " + stringResource(R.string.unit_gram_short)
+                    "$totalProteins " + stringResource(Res.string.unit_gram_short)
                 }
             )
         }
         val carbohydratesLabel = @Composable {
             Text(
                 text = if (isEmpty) {
-                    stringResource(R.string.em_dash)
+                    stringResource(Res.string.em_dash)
                 } else {
-                    "$totalCarbohydrates " + stringResource(R.string.unit_gram_short)
+                    "$totalCarbohydrates " + stringResource(Res.string.unit_gram_short)
                 }
             )
         }
         val fatsLabel = @Composable {
             Text(
                 text = if (isEmpty) {
-                    stringResource(R.string.em_dash)
+                    stringResource(Res.string.em_dash)
                 } else {
-                    "$totalFats " + stringResource(R.string.unit_gram_short)
+                    "$totalFats " + stringResource(Res.string.unit_gram_short)
                 }
             )
         }
@@ -369,7 +369,7 @@ fun SharedTransitionScope.MealCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.action_add)
+                        contentDescription = stringResource(Res.string.action_add)
                     )
                 }
             }

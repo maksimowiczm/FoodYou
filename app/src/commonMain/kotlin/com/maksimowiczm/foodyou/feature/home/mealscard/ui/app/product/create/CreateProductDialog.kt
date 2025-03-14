@@ -25,16 +25,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductForm
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductFormState
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.rememberProductFormState
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -108,13 +108,13 @@ private fun CreateProductDialog(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(R.string.action_close)
+                            contentDescription = stringResource(Res.string.action_close)
                         )
                     }
                 },
                 title = {
                     Text(
-                        text = stringResource(R.string.headline_create_product)
+                        text = stringResource(Res.string.headline_create_product)
                     )
                 },
                 actions = {
@@ -123,7 +123,7 @@ private fun CreateProductDialog(
                         enabled = form.isValid
                     ) {
                         Text(
-                            text = stringResource(R.string.action_create)
+                            text = stringResource(Res.string.action_create)
                         )
                     }
                 },
@@ -155,18 +155,18 @@ private fun DiscardDialog(
             TextButton(
                 onClick = onConfirm
             ) {
-                Text(stringResource(R.string.action_discard))
+                Text(stringResource(Res.string.action_discard))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest
             ) {
-                Text(stringResource(R.string.action_cancel))
+                Text(stringResource(Res.string.action_cancel))
             }
         },
         text = {
-            Text(stringResource(R.string.question_discard_product))
+            Text(stringResource(Res.string.question_discard_product))
         }
     )
 }

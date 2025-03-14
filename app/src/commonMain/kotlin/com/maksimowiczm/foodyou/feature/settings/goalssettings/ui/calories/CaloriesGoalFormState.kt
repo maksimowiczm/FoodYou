@@ -7,8 +7,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.res.stringResource
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.DailyGoals
 import com.maksimowiczm.foodyou.data.model.NutrimentHelper
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
@@ -17,6 +15,7 @@ import com.maksimowiczm.foodyou.ui.form.floatParser
 import com.maksimowiczm.foodyou.ui.form.intParser
 import com.maksimowiczm.foodyou.ui.form.nonNegative
 import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
+import foodyou.app.generated.resources.*
 import java.util.Locale
 import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState {
@@ -153,12 +153,12 @@ enum class GoalsFormInputError {
 
     @Composable
     fun stringResource() = when (this) {
-        Required -> stringResource(R.string.error_this_field_is_required)
-        InvalidNumber -> stringResource(R.string.error_invalid_number)
-        MustBeInteger -> stringResource(R.string.error_value_must_be_integer)
-        NegativeNumber -> stringResource(R.string.error_value_cannot_be_negative)
-        MustBeLessThan100 -> stringResource(R.string.error_value_must_be_less_than, "100")
-        MustBeLessThan40000 -> stringResource(R.string.error_value_must_be_less_than, "40000")
+        Required -> stringResource(Res.string.error_this_field_is_required)
+        InvalidNumber -> stringResource(Res.string.error_invalid_number)
+        MustBeInteger -> stringResource(Res.string.error_value_must_be_integer)
+        NegativeNumber -> stringResource(Res.string.error_value_cannot_be_negative)
+        MustBeLessThan100 -> stringResource(Res.string.error_value_must_be_less_than, "100")
+        MustBeLessThan40000 -> stringResource(Res.string.error_value_must_be_less_than, "40000")
     }
 }
 
@@ -168,7 +168,7 @@ enum class GoalsFormError {
 
     @Composable
     fun stringResource() = when (this) {
-        PercentageMustSumUpTo100 -> stringResource(R.string.error_sum_of_percentages_must_be_100)
+        PercentageMustSumUpTo100 -> stringResource(Res.string.error_sum_of_percentages_must_be_100)
     }
 }
 

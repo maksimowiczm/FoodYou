@@ -9,15 +9,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Constraints
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
 import kotlin.math.max
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ProductWithWeightMeasurement.ListItem(
@@ -142,15 +143,15 @@ private fun SupportingTextLayout(
 val ProductWithWeightMeasurement.measurementStringShort: String
     @Composable get() = when (measurement) {
         is WeightMeasurement.Package -> stringResource(
-            R.string.x_times_y,
+            Res.string.x_times_y,
             measurement.quantity.formatClipZeros(),
-            stringResource(R.string.product_package)
+            stringResource(Res.string.product_package)
         )
 
         is WeightMeasurement.Serving -> stringResource(
-            R.string.x_times_y,
+            Res.string.x_times_y,
             measurement.quantity.formatClipZeros(),
-            stringResource(R.string.product_serving)
+            stringResource(Res.string.product_serving)
         )
 
         is WeightMeasurement.WeightUnit -> measurement.weight.formatClipZeros(".2f") + " " +
@@ -171,4 +172,4 @@ val ProductWithWeightMeasurement.measurementString: String
     }
 
 val ProductWithWeightMeasurement.caloriesString: String
-    @Composable get() = "$calories " + stringResource(R.string.unit_kcal)
+    @Composable get() = "$calories " + stringResource(Res.string.unit_kcal)

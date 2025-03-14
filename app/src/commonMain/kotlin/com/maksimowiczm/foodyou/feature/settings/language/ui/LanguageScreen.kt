@@ -27,12 +27,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -70,7 +71,7 @@ private fun LanguageScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.headline_language)
+                        text = stringResource(Res.string.headline_language)
                     )
                 },
                 navigationIcon = {
@@ -79,7 +80,7 @@ private fun LanguageScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_go_back)
+                            contentDescription = stringResource(Res.string.action_go_back)
                         )
                     }
                 },
@@ -108,16 +109,16 @@ private fun LanguageScreen(
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_translate_24),
+                            painter = painterResource(Res.drawable.ic_translate),
                             contentDescription = null
                         )
                         Column {
                             Text(
-                                text = stringResource(R.string.action_translate),
+                                text = stringResource(Res.string.action_translate),
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text(
-                                text = stringResource(R.string.neutral_help_translating_the_app),
+                                text = stringResource(Res.string.neutral_help_translating_the_app),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -128,7 +129,7 @@ private fun LanguageScreen(
             item {
                 ListItem(
                     headlineContent = {
-                        Text(stringResource(R.string.headline_system))
+                        Text(stringResource(Res.string.headline_system))
                     },
                     leadingContent = {
                         RadioButton(
@@ -149,7 +150,7 @@ private fun LanguageScreen(
                         supportingContent = {
                             translation.authorsStrings.takeIf { it.isNotEmpty() }?.let {
                                 Column {
-                                    Text(stringResource(R.string.headline_authors))
+                                    Text(stringResource(Res.string.headline_authors))
 
                                     it.forEach { author ->
                                         Text(author.toAnnotatedString())

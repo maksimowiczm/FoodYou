@@ -14,10 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AndroidTrailingContent(modifier: Modifier = Modifier) {
@@ -46,7 +46,7 @@ fun AndroidTrailingContent(modifier: Modifier = Modifier) {
 
     ListItem(
         headlineContent = {
-            Text(stringResource(R.string.headline_system_language_settings))
+            Text(stringResource(Res.string.headline_system_language_settings))
         },
         modifier = modifier.clickable { context.startActivity(intent) },
         trailingContent = {

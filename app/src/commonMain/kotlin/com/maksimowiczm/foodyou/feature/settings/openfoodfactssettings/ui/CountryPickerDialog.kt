@@ -26,13 +26,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.Country
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Suppress("ktlint:compose:modifier-missing-check")
 @Composable
@@ -43,7 +43,7 @@ fun CountryPickerDialog(
     onDismissRequest: () -> Unit,
     headline: @Composable () -> Unit = {
         Text(
-            text = stringResource(R.string.action_select_country),
+            text = stringResource(Res.string.action_select_country),
             style = MaterialTheme.typography.titleLarge
         )
     },

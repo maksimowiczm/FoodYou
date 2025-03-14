@@ -7,11 +7,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -37,7 +38,7 @@ private fun LanguageSettingsListItem(
 ) {
     ListItem(
         headlineContent = {
-            Text(stringResource(R.string.headline_language))
+            Text(stringResource(Res.string.headline_language))
         },
         modifier = modifier.clickable { onClick() },
         supportingContent = {
@@ -45,7 +46,7 @@ private fun LanguageSettingsListItem(
         },
         leadingContent = {
             Icon(
-                painter = painterResource(R.drawable.ic_language_24),
+                painter = painterResource(Res.drawable.ic_language),
                 contentDescription = null
             )
         }

@@ -6,18 +6,19 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun GoalsSettingsListItem(onGoalsClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = {
             Text(
-                text = stringResource(R.string.headline_daily_goals)
+                text = stringResource(Res.string.headline_daily_goals)
             )
         },
         modifier = modifier
@@ -25,13 +26,13 @@ fun GoalsSettingsListItem(onGoalsClick: () -> Unit, modifier: Modifier = Modifie
             .horizontalDisplayCutoutPadding(),
         leadingContent = {
             Icon(
-                painter = painterResource(R.drawable.ic_flag_24),
+                painter = painterResource(Res.drawable.ic_flag),
                 contentDescription = null
             )
         },
         supportingContent = {
             Text(
-                text = stringResource(R.string.neutral_set_your_daily_goals)
+                text = stringResource(Res.string.neutral_set_your_daily_goals)
             )
         }
     )

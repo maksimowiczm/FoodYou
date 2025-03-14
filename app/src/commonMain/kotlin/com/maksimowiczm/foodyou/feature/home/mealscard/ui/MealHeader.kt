@@ -15,10 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MealHeader(
@@ -91,7 +92,7 @@ fun NutrientsLayout(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(R.string.unit_kcal)
+                    text = stringResource(Res.string.unit_kcal)
                 )
                 caloriesLabel()
             }
@@ -103,7 +104,7 @@ fun NutrientsLayout(
                     LocalContentColor provides nutrientsPalette.proteinsOnSurfaceContainer
                 ) {
                     Text(
-                        text = stringResource(R.string.nutriment_proteins_short)
+                        text = stringResource(Res.string.nutriment_proteins_short)
                     )
                     proteinsLabel()
                 }
@@ -116,7 +117,7 @@ fun NutrientsLayout(
                     LocalContentColor provides nutrientsPalette.carbohydratesOnSurfaceContainer
                 ) {
                     Text(
-                        text = stringResource(R.string.nutriment_carbohydrates_short)
+                        text = stringResource(Res.string.nutriment_carbohydrates_short)
                     )
                     carbohydratesLabel()
                 }
@@ -129,7 +130,7 @@ fun NutrientsLayout(
                     LocalContentColor provides nutrientsPalette.fatsOnSurfaceContainer
                 ) {
                     Text(
-                        text = stringResource(R.string.nutriment_fats_short)
+                        text = stringResource(Res.string.nutriment_fats_short)
                     )
                     fatsLabel()
                 }

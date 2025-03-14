@@ -5,6 +5,7 @@ import android.content.res.XmlResourceParser
 import android.util.Log
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.database.entity.MealEntity
+import foodyou.app.generated.resources.*
 import org.xmlpull.v1.XmlPullParser
 
 class AndroidInitializeMealsCallback(private val context: Context) : InitializeMealsCallback() {

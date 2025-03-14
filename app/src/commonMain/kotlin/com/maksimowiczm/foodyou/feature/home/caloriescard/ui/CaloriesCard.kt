@@ -28,15 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.home.HomeState
 import com.maksimowiczm.foodyou.ui.DiaryViewModel
@@ -51,8 +48,12 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
 import kotlin.math.abs
 import kotlin.math.max
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -97,7 +98,7 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
-    val kcalSuffix = stringResource(R.string.unit_kcal)
+    val kcalSuffix = stringResource(Res.string.unit_kcal)
 
     val caloriesString =
         remember(valueStatus, left, nutrientsPalette, typography, colorScheme, kcalSuffix) {
@@ -138,7 +139,7 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.unit_calories),
+                text = stringResource(Res.string.unit_calories),
                 style = MaterialTheme.typography.titleLarge
             )
 
@@ -180,7 +181,7 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
             when (valueStatus) {
                 ValueStatus.Exceeded -> Text(
                     text = pluralStringResource(
-                        R.plurals.negative_exceeded_by_calories,
+                        Res.plurals.negative_exceeded_by_calories,
                         left,
                         left
                     ),
@@ -191,7 +192,7 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
 
                 ValueStatus.Remaining -> Text(
                     text = pluralStringResource(
-                        R.plurals.neutral_remaining_calories,
+                        Res.plurals.neutral_remaining_calories,
                         left,
                         left
                     ),
@@ -201,7 +202,7 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
                 )
 
                 ValueStatus.Achieved -> Text(
-                    text = stringResource(R.string.positive_goal_reached),
+                    text = stringResource(Res.string.positive_goal_reached),
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.labelLarge
@@ -214,21 +215,21 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 NutrimentIndicator(
-                    title = stringResource(R.string.nutriment_proteins),
+                    title = stringResource(Res.string.nutriment_proteins),
                     value = diaryDay.totalProteins,
                     goal = diaryDay.dailyGoals.proteinsAsGrams,
                     progressColor = nutrientsPalette.proteinsOnSurfaceContainer
                 )
 
                 NutrimentIndicator(
-                    title = stringResource(R.string.nutriment_carbohydrates),
+                    title = stringResource(Res.string.nutriment_carbohydrates),
                     value = diaryDay.totalCarbohydrates,
                     goal = diaryDay.dailyGoals.carbohydratesAsGrams,
                     progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
                 )
 
                 NutrimentIndicator(
-                    title = stringResource(R.string.nutriment_fats),
+                    title = stringResource(Res.string.nutriment_fats),
                     value = diaryDay.totalFats,
                     goal = diaryDay.dailyGoals.fatsAsGrams,
                     progressColor = nutrientsPalette.fatsOnSurfaceContainer
@@ -248,7 +249,7 @@ private fun NutrimentIndicator(
 ) {
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
-    val gramShort = stringResource(R.string.unit_gram_short)
+    val gramShort = stringResource(Res.string.unit_gram_short)
 
     val valueGoalString = remember(typography, colorScheme, gramShort, title, value, goal) {
         val valueStatus = value withGoal goal

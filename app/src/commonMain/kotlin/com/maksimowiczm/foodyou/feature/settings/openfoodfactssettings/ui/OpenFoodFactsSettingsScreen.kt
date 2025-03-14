@@ -46,8 +46,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -59,11 +57,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.Country
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.koin.dsl.module
@@ -109,7 +110,7 @@ private fun OpenFoodFactsSettingsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(R.string.headline_remote_food_database))
+                    Text(stringResource(Res.string.headline_remote_food_database))
                 },
                 navigationIcon = {
                     IconButton(
@@ -117,7 +118,7 @@ private fun OpenFoodFactsSettingsScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_go_back)
+                            contentDescription = stringResource(Res.string.action_go_back)
                         )
                     }
                 },
@@ -131,7 +132,7 @@ private fun OpenFoodFactsSettingsScreen(
         ) {
             item {
                 Text(
-                    text = stringResource(R.string.headline_open_food_facts),
+                    text = stringResource(Res.string.headline_open_food_facts),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp, horizontal = 16.dp)
@@ -158,7 +159,7 @@ private fun OpenFoodFactsSettingsScreen(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(R.string.action_use_open_food_facts)
+                            text = stringResource(Res.string.action_use_open_food_facts)
                         )
                     },
                     modifier = Modifier
@@ -196,12 +197,12 @@ private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
 
     val annotatedString = buildAnnotatedString {
         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-            append(stringResource(R.string.headline_open_food_facts))
+            append(stringResource(Res.string.headline_open_food_facts))
         }
-        append(" " + stringResource(R.string.description_open_food_facts))
+        append(" " + stringResource(Res.string.description_open_food_facts))
         withLink(
             LinkAnnotation.Url(
-                url = stringResource(R.string.link_open_food_facts),
+                url = stringResource(Res.string.link_open_food_facts),
                 styles = TextLinkStyles(
                     style = SpanStyle(
                         color = linkColor,
@@ -210,7 +211,7 @@ private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
                 )
             )
         ) {
-            append(" " + stringResource(R.string.action_read_more))
+            append(" " + stringResource(Res.string.action_read_more))
         }
     }
 
@@ -236,15 +237,15 @@ private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_info_24),
+                    painter = painterResource(Res.drawable.ic_info),
                     contentDescription = null
                 )
 
                 val disclaimer = buildAnnotatedString {
-                    append(stringResource(R.string.open_food_facts_disclaimer))
+                    append(stringResource(Res.string.open_food_facts_disclaimer))
                     withLink(
                         LinkAnnotation.Url(
-                            url = stringResource(R.string.link_open_food_facts_terms_of_use),
+                            url = stringResource(Res.string.link_open_food_facts_terms_of_use),
                             styles = TextLinkStyles(
                                 style = SpanStyle(
                                     color = linkColor,
@@ -253,7 +254,7 @@ private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
                             )
                         )
                     ) {
-                        append(" " + stringResource(R.string.action_see_terms_of_use))
+                        append(" " + stringResource(Res.string.action_see_terms_of_use))
                     }
                 }
 
@@ -299,7 +300,7 @@ private fun OpenFoodFactsContent(
                 .horizontalDisplayCutoutPadding(),
             headlineContent = {
                 Text(
-                    text = stringResource(R.string.action_select_country)
+                    text = stringResource(Res.string.action_select_country)
                 )
             },
             supportingContent = {
@@ -339,7 +340,7 @@ private fun ClearCacheItem(onCacheClear: () -> Unit, modifier: Modifier = Modifi
     ListItem(
         headlineContent = {
             Text(
-                text = stringResource(R.string.headline_clear_cache)
+                text = stringResource(Res.string.headline_clear_cache)
             )
         },
         modifier = modifier
@@ -347,7 +348,7 @@ private fun ClearCacheItem(onCacheClear: () -> Unit, modifier: Modifier = Modifi
             .horizontalDisplayCutoutPadding(),
         supportingContent = {
             Text(
-                text = stringResource(R.string.description_open_food_facts_clear_query_cache)
+                text = stringResource(Res.string.description_open_food_facts_clear_query_cache)
             )
         }
     )
@@ -374,12 +375,12 @@ private fun ClearCacheDialog(onDismissRequest: () -> Unit, onConfirm: () -> Unit
         },
         title = {
             Text(
-                text = stringResource(R.string.headline_clear_cache)
+                text = stringResource(Res.string.headline_clear_cache)
             )
         },
         text = {
             Text(
-                text = stringResource(R.string.description_open_food_facts_clear_cache)
+                text = stringResource(Res.string.description_open_food_facts_clear_cache)
             )
         },
         confirmButton = {
@@ -389,7 +390,7 @@ private fun ClearCacheDialog(onDismissRequest: () -> Unit, onConfirm: () -> Unit
                 modifier = Modifier.animateContentSize()
             ) {
                 Text(
-                    text = stringResource(R.string.action_clear)
+                    text = stringResource(Res.string.action_clear)
                 )
                 Spacer(Modifier.width(1.dp))
                 Text(
@@ -402,7 +403,7 @@ private fun ClearCacheDialog(onDismissRequest: () -> Unit, onConfirm: () -> Unit
                 onClick = onDismissRequest
             ) {
                 Text(
-                    text = stringResource(R.string.action_cancel)
+                    text = stringResource(Res.string.action_cancel)
                 )
             }
         }

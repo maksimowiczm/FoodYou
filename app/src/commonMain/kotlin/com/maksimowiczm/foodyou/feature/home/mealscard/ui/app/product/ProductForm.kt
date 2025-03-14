@@ -37,13 +37,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.WeightUnit
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.CameraBarcodeScannerScreen
@@ -55,6 +52,10 @@ import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.res.pluralString
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ProductForm(
@@ -94,7 +95,7 @@ fun ProductForm(
             span = { GridItemSpan(maxLineSpan) }
         ) {
             Text(
-                text = stringResource(R.string.headline_general),
+                text = stringResource(Res.string.headline_general),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 16.dp),
@@ -105,7 +106,7 @@ fun ProductForm(
 
         item {
             state.name.TextFieldString(
-                label = { Text(stringResource(R.string.product_name)) },
+                label = { Text(stringResource(Res.string.product_name)) },
                 modifier = Modifier.padding(bottom = 4.dp),
                 supportingText = { Text(requiredString()) }
             )
@@ -113,22 +114,22 @@ fun ProductForm(
 
         item {
             state.brand.TextFieldString(
-                label = { Text(stringResource(R.string.product_brand)) },
+                label = { Text(stringResource(Res.string.product_brand)) },
                 modifier = Modifier.padding(bottom = 4.dp)
             )
         }
 
         item {
             state.barcode.TextFieldString(
-                label = { Text(stringResource(R.string.product_barcode)) },
+                label = { Text(stringResource(Res.string.product_barcode)) },
                 modifier = Modifier.padding(bottom = 4.dp),
                 trailingIcon = {
                     IconButton(
                         onClick = { showBarcodeScanner = true }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_qr_code_scanner_24),
-                            contentDescription = stringResource(R.string.action_scan_barcode)
+                            painter = painterResource(Res.drawable.ic_qr_code_scanner),
+                            contentDescription = stringResource(Res.string.action_scan_barcode)
                         )
                     }
                 }
@@ -146,7 +147,7 @@ fun ProductForm(
             ) {
                 Text(
                     text = stringResource(
-                        R.string.neutral_all_values_per_x,
+                        Res.string.neutral_all_values_per_x,
                         "100 ${WeightUnit.Gram.pluralString(100)}"
                     )
                 )
@@ -157,7 +158,7 @@ fun ProductForm(
             span = { GridItemSpan(maxLineSpan) }
         ) {
             Text(
-                text = stringResource(R.string.headline_macronutrients),
+                text = stringResource(Res.string.headline_macronutrients),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 16.dp),
@@ -168,7 +169,7 @@ fun ProductForm(
 
         item {
             state.proteins.TextFieldNumber(
-                label = { Text(stringResource(R.string.nutriment_proteins)) },
+                label = { Text(stringResource(Res.string.nutriment_proteins)) },
                 modifier = Modifier.padding(bottom = 4.dp),
                 supportingText = { Text(requiredString()) },
                 overrideError = state.globalError == GlobalError.MacronutrientsSumExceeds100
@@ -177,7 +178,7 @@ fun ProductForm(
 
         item {
             state.carbohydrates.TextFieldNumber(
-                label = { Text(stringResource(R.string.nutriment_carbohydrates)) },
+                label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
                 modifier = Modifier.padding(bottom = 4.dp),
                 supportingText = { Text(requiredString()) },
                 overrideError = state.globalError == GlobalError.MacronutrientsSumExceeds100
@@ -186,7 +187,7 @@ fun ProductForm(
 
         item {
             state.fats.TextFieldNumber(
-                label = { Text(stringResource(R.string.nutriment_fats)) },
+                label = { Text(stringResource(Res.string.nutriment_fats)) },
                 modifier = Modifier.padding(bottom = 4.dp),
                 supportingText = { Text(requiredString()) },
                 keyboardOptions = KeyboardOptions(
@@ -202,13 +203,13 @@ fun ProductForm(
 
         item {
             state.calories.TextField(
-                label = { Text(stringResource(R.string.unit_calories)) },
+                label = { Text(stringResource(Res.string.unit_calories)) },
                 keyboardOptions = KeyboardOptions.Default,
                 modifier = Modifier.padding(bottom = 4.dp),
                 supportingText = {
-                    Text(stringResource(R.string.neutral_calories_are_calculated))
+                    Text(stringResource(Res.string.neutral_calories_are_calculated))
                 },
-                suffix = { Text(stringResource(R.string.unit_kcal)) },
+                suffix = { Text(stringResource(Res.string.unit_kcal)) },
                 readOnly = true
             )
         }
@@ -221,7 +222,7 @@ fun ProductForm(
             ) {
                 Text(
                     text = stringResource(
-                        R.string.error_sum_of_macronutrients_cannot_exceed_100g
+                        Res.string.error_sum_of_macronutrients_cannot_exceed_100g
                     ),
                     color = MaterialTheme.colorScheme.error
                 )
@@ -240,7 +241,7 @@ fun ProductForm(
                 span = { GridItemSpan(maxLineSpan) }
             ) {
                 Text(
-                    text = stringResource(R.string.headline_nutrients),
+                    text = stringResource(Res.string.headline_nutrients),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp, horizontal = 16.dp),
@@ -251,7 +252,7 @@ fun ProductForm(
 
             item {
                 state.sugars.TextFieldNumber(
-                    label = { Text(stringResource(R.string.nutriment_sugars)) },
+                    label = { Text(stringResource(Res.string.nutriment_sugars)) },
                     modifier = Modifier
                         .padding(bottom = 4.dp)
                         .focusRequester(expandedFocusRequester)
@@ -260,28 +261,28 @@ fun ProductForm(
 
             item {
                 state.saturatedFats.TextFieldNumber(
-                    label = { Text(stringResource(R.string.nutriment_saturated_fats)) },
+                    label = { Text(stringResource(Res.string.nutriment_saturated_fats)) },
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
 
             item {
                 state.salt.TextFieldNumber(
-                    label = { Text(stringResource(R.string.nutriment_salt)) },
+                    label = { Text(stringResource(Res.string.nutriment_salt)) },
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
 
             item {
                 state.sodium.TextFieldNumber(
-                    label = { Text(stringResource(R.string.nutriment_sodium)) },
+                    label = { Text(stringResource(Res.string.nutriment_sodium)) },
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
 
             item {
                 state.fiber.TextFieldNumber(
-                    label = { Text(stringResource(R.string.nutriment_fiber)) },
+                    label = { Text(stringResource(Res.string.nutriment_fiber)) },
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
@@ -290,7 +291,7 @@ fun ProductForm(
                 span = { GridItemSpan(maxLineSpan) }
             ) {
                 Text(
-                    text = stringResource(R.string.headline_product_serving_and_packaging),
+                    text = stringResource(Res.string.headline_product_serving_and_packaging),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp, horizontal = 16.dp),
@@ -301,7 +302,7 @@ fun ProductForm(
 
             item {
                 state.packageWeight.TextFieldNumber(
-                    label = { Text(stringResource(R.string.product_package_weight)) },
+                    label = { Text(stringResource(Res.string.product_package_weight)) },
                     modifier = Modifier.padding(bottom = 4.dp),
                     suffix = { Text(state.weightUnit.stringResourceShort()) }
                 )
@@ -309,7 +310,7 @@ fun ProductForm(
 
             item {
                 state.servingWeight.TextFieldNumber(
-                    label = { Text(stringResource(R.string.product_serving_weight)) },
+                    label = { Text(stringResource(Res.string.product_serving_weight)) },
                     modifier = Modifier.padding(bottom = 4.dp),
                     suffix = { Text(state.weightUnit.stringResourceShort()) }
                 )
@@ -333,7 +334,7 @@ fun ProductForm(
                         modifier = Modifier.widthIn(min = 250.dp),
                         onClick = { expanded = true }
                     ) {
-                        Text(stringResource(R.string.action_show_remaining_fields))
+                        Text(stringResource(Res.string.action_show_remaining_fields))
                     }
                 }
             }
@@ -348,7 +349,7 @@ fun ProductForm(
 }
 
 @Composable
-private fun requiredString(): String = "* " + stringResource(R.string.neutral_required)
+private fun requiredString(): String = "* " + stringResource(Res.string.neutral_required)
 
 @Composable
 private fun <T> FormFieldWithTextFieldValue<T, ProductFormError>.TextField(
@@ -395,7 +396,7 @@ private fun <T : Number?> FormFieldWithTextFieldValue<T, ProductFormError>.TextF
     supportingText: @Composable () -> Unit = {
         Spacer(Modifier.height(LocalTextStyle.current.toDp()))
     },
-    suffix: @Composable (() -> Unit)? = { Text(stringResource(R.string.unit_gram_short)) },
+    suffix: @Composable (() -> Unit)? = { Text(stringResource(Res.string.unit_gram_short)) },
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Number,
         imeAction = ImeAction.Next
@@ -449,7 +450,7 @@ private fun WeightUnitDropdownMenu(
         onExpandedChange = { expanded = it }
     ) {
         TextField(
-            label = { Text(stringResource(R.string.product_weight_unit)) },
+            label = { Text(stringResource(Res.string.product_weight_unit)) },
             value = weightUnit.pluralString(1),
             onValueChange = {},
             readOnly = true,

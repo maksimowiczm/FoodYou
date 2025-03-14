@@ -65,7 +65,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -74,7 +73,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.data.model.WeightUnit
@@ -82,9 +80,11 @@ import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MeasurementScreen(
@@ -236,7 +236,7 @@ private fun MeasurementScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_go_back)
+                            contentDescription = stringResource(Res.string.action_go_back)
                         )
                     }
                 },
@@ -282,7 +282,7 @@ private fun MeasurementScreen(
                                     formState.packageInput.value
                                 )
                             },
-                            label = { Text(stringResource(R.string.product_package)) },
+                            label = { Text(stringResource(Res.string.product_package)) },
                             weightUnit = formState.product.weightUnit,
                             modifier = Modifier.padding(8.dp),
                             containerColor = containerColor(WeightMeasurementEnum.Package),
@@ -310,7 +310,7 @@ private fun MeasurementScreen(
                                     formState.servingInput.value
                                 )
                             },
-                            label = { Text(stringResource(R.string.product_serving)) },
+                            label = { Text(stringResource(Res.string.product_serving)) },
                             weightUnit = formState.product.weightUnit,
                             modifier = Modifier.padding(8.dp),
                             containerColor = containerColor(WeightMeasurementEnum.Serving),
@@ -350,7 +350,7 @@ private fun MeasurementScreen(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = stringResource(R.string.headline_macronutrients),
+                        text = stringResource(Res.string.headline_macronutrients),
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.labelLarge
                     )
@@ -377,7 +377,7 @@ private fun MeasurementScreen(
             item {
                 Column {
                     Text(
-                        text = stringResource(R.string.headline_nutrients),
+                        text = stringResource(Res.string.headline_nutrients),
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.padding(horizontal = 16.dp)
@@ -413,7 +413,7 @@ private fun MeasurementScreen(
                             contentDescription = null
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text(stringResource(R.string.action_edit))
+                        Text(stringResource(Res.string.action_edit))
                     }
 
                     OutlinedButton(
@@ -424,7 +424,7 @@ private fun MeasurementScreen(
                             contentDescription = null
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text(stringResource(R.string.action_delete))
+                        Text(stringResource(Res.string.action_delete))
                     }
                 }
             }
@@ -499,7 +499,7 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
             }
             val calories: @Composable () -> Unit = {
                 Text(
-                    text = "${asCalories(value)} " + stringResource(R.string.unit_kcal),
+                    text = "${asCalories(value)} " + stringResource(Res.string.unit_kcal),
                     overflow = TextOverflow.Visible,
                     textAlign = TextAlign.Center
                 )
@@ -554,7 +554,7 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.action_add)
+                    contentDescription = stringResource(Res.string.action_add)
                 )
             }
         }
@@ -589,7 +589,7 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
                 modifier = Modifier.weight(2f),
                 shape = MaterialTheme.shapes.medium,
                 isError = error != null,
-                label = { Text(stringResource(R.string.weight)) },
+                label = { Text(stringResource(Res.string.weight)) },
                 suffix = suffix,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,
@@ -615,7 +615,7 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
             )
 
             Text(
-                text = "${asCalories(value)} " + stringResource(R.string.unit_kcal),
+                text = "${asCalories(value)} " + stringResource(Res.string.unit_kcal),
                 modifier = Modifier.weight(2f),
                 textAlign = TextAlign.Center
             )
@@ -626,7 +626,7 @@ private fun FormFieldWithTextFieldValue<Float, MyError>.WeightUnitInput(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.action_add)
+                    contentDescription = stringResource(Res.string.action_add)
                 )
             }
         }
@@ -641,14 +641,14 @@ private fun DeleteDialog(onDismissRequest: () -> Unit, onDelete: () -> Unit) {
             TextButton(
                 onClick = onDelete
             ) {
-                Text(stringResource(R.string.action_delete))
+                Text(stringResource(Res.string.action_delete))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest
             ) {
-                Text(stringResource(R.string.action_cancel))
+                Text(stringResource(Res.string.action_cancel))
             }
         },
         icon = {
@@ -658,10 +658,10 @@ private fun DeleteDialog(onDismissRequest: () -> Unit, onDelete: () -> Unit) {
             )
         },
         title = {
-            Text(stringResource(R.string.headline_delete_product))
+            Text(stringResource(Res.string.headline_delete_product))
         },
         text = {
-            Text(stringResource(R.string.description_delete_product))
+            Text(stringResource(Res.string.description_delete_product))
         }
     )
 }

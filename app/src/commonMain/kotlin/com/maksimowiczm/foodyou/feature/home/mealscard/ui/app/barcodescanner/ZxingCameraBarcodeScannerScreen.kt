@@ -20,8 +20,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
@@ -30,6 +28,10 @@ import com.journeyapps.barcodescanner.CompoundBarcodeView
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.databinding.CameraBarcodeLayoutBinding
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 val zxingCameraBarcodeScannerScreen =
     BarcodeScannerScreen { onBarcodeScan, modifier ->
@@ -121,15 +123,15 @@ private fun FlashlightButton(enabled: Boolean, onClick: () -> Unit, modifier: Mo
         Icon(
             painter = painterResource(
                 if (enabled) {
-                    R.drawable.ic_flash_on_24
+                    Res.drawable.ic_flash_on
                 } else {
-                    R.drawable.ic_flash_off_24
+                    Res.drawable.ic_flash_off
                 }
             ),
             contentDescription = if (enabled) {
-                stringResource(R.string.action_disable_camera_flash)
+                stringResource(Res.string.action_disable_camera_flash)
             } else {
-                stringResource(R.string.action_enable_camera_flash)
+                stringResource(Res.string.action_enable_camera_flash)
             }
         )
     }

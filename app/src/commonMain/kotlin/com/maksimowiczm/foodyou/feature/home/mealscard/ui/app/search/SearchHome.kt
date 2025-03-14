@@ -43,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastRoundToInt
@@ -54,7 +53,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.data.model.ProductQuery
 import com.maksimowiczm.foodyou.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.data.model.WeightMeasurement
@@ -62,7 +60,9 @@ import com.maksimowiczm.foodyou.ui.ext.performToggle
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
+import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -193,7 +193,7 @@ private fun SearchHome(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = stringResource(R.string.action_create_new_product)
+                contentDescription = stringResource(Res.string.action_create_new_product)
             )
         }
     }
@@ -229,7 +229,7 @@ private fun SearchHome(
 
             if (isEmpty && pages.loadState.append != LoadState.Loading) {
                 Text(
-                    text = stringResource(R.string.neutral_no_products_found),
+                    text = stringResource(Res.string.neutral_no_products_found),
                     modifier = Modifier.align(Alignment.Center)
                 )
             }

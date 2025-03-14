@@ -41,16 +41,15 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.feature.home.HomeState
 import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
@@ -60,6 +59,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -132,7 +132,9 @@ private fun CalendarCard(
                     }
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_calendar_month_24),
+                        painter = org.jetbrains.compose.resources.painterResource(
+                            Res.drawable.ic_calendar_month
+                        ),
                         contentDescription = "Calendar"
                     )
                 }
@@ -175,7 +177,7 @@ private fun CalendarCardDatePickerDialog(
                 }
             ) {
                 Text(
-                    text = stringResource(R.string.positive_ok)
+                    text = org.jetbrains.compose.resources.stringResource(Res.string.positive_ok)
                 )
             }
         },
@@ -184,7 +186,7 @@ private fun CalendarCardDatePickerDialog(
                 onClick = onDismissRequest
             ) {
                 Text(
-                    text = stringResource(R.string.action_cancel)
+                    text = stringResource(Res.string.action_cancel)
                 )
             }
         }
@@ -212,7 +214,7 @@ private fun CalendarCardDatePickerDialog(
                             onDismissRequest()
                         }
                     ) {
-                        Text(stringResource(R.string.action_go_to_today))
+                        Text(stringResource(Res.string.action_go_to_today))
                     }
                 }
             },
