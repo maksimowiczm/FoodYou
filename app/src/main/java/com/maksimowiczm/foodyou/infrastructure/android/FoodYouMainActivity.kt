@@ -41,7 +41,7 @@ class FoodYouMainActivity : AppCompatActivity() {
         val dataStore = get<DataStore<Preferences>>()
 
         dataStore
-            .observe(SecurityPreferences.showContent)
+            .observe(SecurityPreferences.hideContent)
             .filterNotNull()
             .collectLatest {
                 if (it) {

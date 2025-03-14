@@ -20,8 +20,8 @@ object SecureScreenSettings : Feature.Settings {
         val dataStore: DataStore<Preferences> = get()
 
         dataStore.edit {
-            if (it[SecurityPreferences.showContent] == null) {
-                it[SecurityPreferences.showContent] = true
+            if (it[SecurityPreferences.hideContent] == null) {
+                it[SecurityPreferences.hideContent] = false
             }
         }
     }

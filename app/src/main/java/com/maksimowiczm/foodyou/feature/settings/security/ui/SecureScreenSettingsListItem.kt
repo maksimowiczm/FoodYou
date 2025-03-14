@@ -31,7 +31,7 @@ fun SecureScreenSettingsListItem(
     dataStore: DataStore<Preferences> = koinInject()
 ) {
     val checked by dataStore
-        .observe(SecurityPreferences.showContent)
+        .observe(SecurityPreferences.hideContent)
         .filterNotNull()
         .collectAsStateWithLifecycle(false)
 
@@ -39,7 +39,7 @@ fun SecureScreenSettingsListItem(
         checked = checked,
         onCheckedChange = { checked ->
             runBlocking {
-                dataStore.set(SecurityPreferences.showContent to checked)
+                dataStore.set(SecurityPreferences.hideContent to checked)
             }
         },
         modifier = modifier
