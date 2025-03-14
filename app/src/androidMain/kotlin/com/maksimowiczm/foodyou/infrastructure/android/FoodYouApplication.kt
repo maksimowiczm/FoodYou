@@ -3,16 +3,11 @@ package com.maksimowiczm.foodyou.infrastructure.android
 import android.app.Application
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.FeatureManager
-import com.maksimowiczm.foodyou.infrastructure.di.coreModule
-import com.maksimowiczm.foodyou.infrastructure.di.dataStoreModule
-import com.maksimowiczm.foodyou.infrastructure.di.databaseModule
-import com.maksimowiczm.foodyou.infrastructure.di.flavourModule
-import com.maksimowiczm.foodyou.infrastructure.di.platformModule
+import com.maksimowiczm.foodyou.infrastructure.di.initKoin
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import org.koin.core.component.KoinComponent
-import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -29,17 +24,9 @@ abstract class FoodYouApplication :
             setupFeatures()
         }
 
-        startKoin {
+        initKoin {
             androidContext(this@FoodYouApplication.applicationContext)
-
-            modules(
-                featureManager.intoModule(this),
-                platformModule,
-                flavourModule,
-                databaseModule,
-                dataStoreModule,
-                coreModule
-            )
+            modules(featureManager.intoModule(this))
         }
 
         // Block until all features are initialized

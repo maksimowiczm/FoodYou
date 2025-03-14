@@ -5,7 +5,7 @@ import okio.Path.Companion.toPath
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val dataStoreModule = module {
+actual val dataStoreModule = module {
     single {
         createDataStore {
             androidContext().filesDir.resolve(
