@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -190,6 +191,31 @@ private fun CalendarCardDatePickerDialog(
     ) {
         DatePicker(
             state = state,
+            title = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 24.dp, end = 12.dp, top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    DatePickerDefaults.DatePickerTitle(
+                        displayMode = state.displayMode
+                    )
+
+                    TextButton(
+                        onClick = {
+                            calendarState.onDateSelect(
+                                date = calendarState.referenceDate,
+                                scroll = true
+                            )
+                            onDismissRequest()
+                        }
+                    ) {
+                        Text(stringResource(R.string.action_go_to_today))
+                    }
+                }
+            },
             // It won't fit on small screens, so we need to scroll
             modifier = Modifier.verticalScroll(rememberScrollState())
         )
@@ -346,6 +372,22 @@ private fun CalendarCardPreview() {
                 selectedDate = selectedDate
             ),
             formatMonthYear = formatMonthYear
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun CalendarCardDatePickerDialogPreview() {
+    FoodYouTheme {
+        CalendarCardDatePickerDialog(
+            calendarState = rememberCalendarState(
+                namesOfDayOfWeek = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"),
+                zeroDay = LocalDate.fromEpochDays(4),
+                referenceDate = LocalDate(2024, 12, 17),
+                selectedDate = LocalDate(2024, 12, 18)
+            ),
+            onDismissRequest = {}
         )
     }
 }
