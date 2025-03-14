@@ -171,7 +171,7 @@
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">See other awesome icons here</string>
 
-    <string name="link_translate" translatable="false">https://crowdin.com/project/foodyou</string>
+    <string name="link_translate" translatable="false">https://crowdin.com/project/food-you</string>
     <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
     <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
     <string name="link_github_issue" translatable="false">https://github.com/maksimowiczm/FoodYou/issues</string>
