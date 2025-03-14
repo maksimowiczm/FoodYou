@@ -17,6 +17,12 @@ buildConfig {
 
     val versionName = libs.versions.version.name.get()
 
+    buildConfigField(
+        "String",
+        "VERSION_NAME",
+        "\"$versionName\""
+    )
+
     // -- OPEN FOOD FACTS --
     // https://openfoodfacts.github.io/openfoodfacts-server/api/#authentication
     // Sorry no email 😭

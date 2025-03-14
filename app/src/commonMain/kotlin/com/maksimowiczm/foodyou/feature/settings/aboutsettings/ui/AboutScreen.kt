@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.ui.AboutIcons8
 import com.maksimowiczm.foodyou.ui.component.CardButton
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
@@ -339,10 +340,7 @@ private fun VersionListItem(modifier: Modifier = Modifier) {
             )
         },
         supportingContent = {
-            // TODO BuildConfig.VERSION_NAME
-            Text(
-                text = ""
-            )
+            Text(text = BuildConfig.VERSION_NAME)
         }
     )
 }
