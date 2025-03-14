@@ -31,6 +31,10 @@ val languages = mapOf(
             )
         )
     ),
+    "العربية" to Translation(
+        tag = "ar",
+        authorsStrings = emptyList()
+    ),
     "italiano (Italia)" to Translation(
         tag = "it-IT",
         authorsStrings = emptyList()

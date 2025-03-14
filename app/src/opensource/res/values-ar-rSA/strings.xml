@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="headline_remote_food_database">قاعدة بيانات الطعام عن بُعد</string>
+    <string name="headline_about">حول</string>
+    <string name="headline_miscellaneous">متنوع</string>
+    <string name="headline_version">الإصدار</string>
+    <string name="headline_share_your_thoughts">شارك أفكارك</string>
+    <string name="headline_show_some_love">إظهار الحب</string>
+    <string name="headline_clear_cache">مسح الملفات المؤقتة</string>
+    <string name="action_read_more">قراءة المزيد</string>
+    <string name="action_select_country">تحديد الدولة</string>
+    <string name="action_use_open_food_facts">استخدم قاعدة بيانات Open Food Facts</string>
+    <string name="action_see_terms_of_use">انظر شروط الاستخدام</string>
+    <string name="action_bug_report_on_github">تقرير الأخطاء على GitHub</string>
+    <string name="action_feature_request_on_github">طلب ميزة على GitHub</string>
+    <string name="action_leave_a_star_on_github">اترك نجمة على GitHub</string>
+    <string name="neutral_manage_food_database">إدارة قاعدة بيانات طعامك</string>
+    <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
+    <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
+    <string name="open_food_facts_disclaimer">مشروع Open Food Facts قائم على مساهمات المجتمع. 
+قد تكون البيانات غير مكتملة أو قديمة أو غير دقيقة. 
+لا يتحمل هذا التطبيق مسؤولية صحة المعلومات. 
+يُرجى التحقق من المعلومات قبل استخدامها.</string>
+    <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">فعّل Open Food Facts في الإعدادات للوصول إلى معلومات مفصلة عن المنتجات</string>
+    <string name="description_open_food_facts">هي قاعدة بيانات تعاونية ومجانية ومفتوحة للمنتجات الغذائية من جميع أنحاء العالم.</string>
+    <string name="description_README_setting">عرض ملف README الخاص بالمشروع على GitHub</string>
+    <string name="description_about_setting">اعرف المزيد حول التطبيق</string>
+    <string name="description_show_some_love">إذا وجدت هذا المشروع مفيدًا، يُرجى تقييمه على GitHub! فهو يُساعد الآخرين على اكتشافه ويُحافظ على استمرارية التطوير.</string>
+    <string name="description_share_your_thoughts">إذا كانت لديكم أي ملاحظات، أو طلب ميزات، أو تقارير عن أخطاء، يُرجى إعلامي! يسعدني سماع آرائكم.</string>
+    <string name="description_open_food_facts_clear_query_cache">مسح الملفات المؤقتة لاستعلام Open Food Facts</string>
+    <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">سيؤدي مسح الملفات المؤقتة إلى إعادة تنزيل قاعدة بيانات Open Food Facts بالكامل. لا يُنصح بمسح الملفات المؤقتة إلا إذا كنتَ على دراية بما تفعله.</string>
+</resources>
