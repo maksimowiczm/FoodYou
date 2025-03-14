@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.laguage
+package com.maksimowiczm.foodyou.feature.settings.language.ui
 
 import android.content.Intent
 import android.content.pm.PackageManager
