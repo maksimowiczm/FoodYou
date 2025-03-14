@@ -8,7 +8,6 @@ import androidx.test.core.app.launchActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.maksimowiczm.foodyou.data.SecurityPreferences
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import org.junit.Test
@@ -17,7 +16,6 @@ import org.koin.android.ext.android.get
 
 @RunWith(AndroidJUnit4::class)
 class FoodYouMainActivityTest {
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testSecureFlag() {
         launchActivity<FoodYouMainActivity>().use {
