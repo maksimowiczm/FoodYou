@@ -187,6 +187,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
+    androidTestImplementation(libs.androidx.test.core.ktx)
     androidTestImplementation(libs.androidx.espresso.core)
     testImplementation(libs.junit)
 }

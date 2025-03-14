@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.feature.settings.language.LanguageSettings
 import com.maksimowiczm.foodyou.feature.settings.language.ui.AndroidTrailingContent
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.MealsSettings
 import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.OpenFoodFactsSettings
+import com.maksimowiczm.foodyou.feature.settings.security.SecureScreenSettings
 
 class OpenSourceApplication : FoodYouApplication() {
     override fun FeatureManager.setupFeatures() {
@@ -27,6 +28,7 @@ class OpenSourceApplication : FoodYouApplication() {
             OpenFoodFactsSettings,
             MealsSettings,
             GoalsSettings,
+            SecureScreenSettings,
             LanguageSettings(
                 languageSettingsTrailingContent = { modifier ->
                     AndroidTrailingContent(modifier)

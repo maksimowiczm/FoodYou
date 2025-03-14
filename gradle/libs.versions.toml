@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.0"
+coreKtxVersion = "1.6.1"
 datastorePreferences = "1.1.2"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
@@ -40,6 +41,7 @@ androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "coreKtxVersion" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core" }

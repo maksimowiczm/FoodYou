@@ -18,6 +18,7 @@
     <string name="headline_authors">Autorzy</string>
     <string name="headline_system">System</string>
     <string name="headline_system_language_settings">Ustawienia języka systemowego</string>
+    <string name="headline_secure_screen">Zabezpieczony ekran</string>
 
     <string name="in_x_times_y">W %1$s x %2$s</string>
     <string name="weight">Waga</string>
@@ -87,6 +88,7 @@
     <string name="action_translate">Przetłumacz</string>
     <string name="action_enable_camera_flash">Włącz lampę błyskową</string>
     <string name="action_disable_camera_flash">Wyłącz lampę błyskową</string>
+    <string name="action_prevent_screen_capture">Zabezpiecz przed przechwytywaniem ekranu</string>
 
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>

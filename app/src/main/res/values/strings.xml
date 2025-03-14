@@ -22,6 +22,7 @@
     <string name="headline_authors">Authors</string>
     <string name="headline_system">System</string>
     <string name="headline_system_language_settings">System language settings</string>
+    <string name="headline_secure_screen">Secure screen</string>
 
     <string name="in_x_times_y">In %1$s x %2$s</string>
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
@@ -90,6 +91,7 @@
     <string name="action_translate">Translate</string>
     <string name="action_enable_camera_flash">Enable camera flash</string>
     <string name="action_disable_camera_flash">Disable camera flash</string>
+    <string name="action_prevent_screen_capture">Prevent screen capture</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
