@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.ime
@@ -87,11 +86,12 @@ private fun CreateProductDialog(
         }
     }
 
-    BackHandler(
-        enabled = form.isDirty
-    ) {
-        showDiscardDialog = true
-    }
+    // TODO
+//    BackHandler(
+//        enabled = form.isDirty
+//    ) {
+//        showDiscardDialog = true
+//    }
 
     Scaffold(
         // Use WindowInsets to prevent spring animation when keyboard is hiding
