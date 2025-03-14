@@ -3,15 +3,15 @@ name: Validate Meals XML
 on:
   push:
     paths:
-      - 'app/src/opensource/res/xml*/meals.xml'
-      - 'app/src/testOpensource/res/xml/meals-schema.xsd'
-      - 'app/src/testOpensource/res/xml/test-meals.bash'
+      - 'app/src/androidTest/res/xml/meals-schema.xsd'
+      - 'app/src/androidTest/res/xml/test-meals.bash'
+      - 'app/src/androidMain/res/xml*/meals.xml'
       - '.github/workflows/validate-meals.yml'
   pull_request:
     paths:
-      - 'app/src/opensource/res/xml*/meals.xml'
-      - 'app/src/testOpensource/res/xml/meals-schema.xsd'
-      - 'app/src/testOpensource/res/xml/test-meals.bash'
+      - 'app/src/androidTest/res/xml/meals-schema.xsd'
+      - 'app/src/androidTest/res/xml/test-meals.bash'
+      - 'app/src/androidMain/res/xml*/meals.xml'
       - '.github/workflows/validate-meals.yml'
 
 jobs:
