@@ -89,6 +89,7 @@
     <string name="action_enable_camera_flash">Włącz lampę błyskową</string>
     <string name="action_disable_camera_flash">Wyłącz lampę błyskową</string>
     <string name="action_prevent_screen_capture">Zabezpiecz przed przechwytywaniem ekranu</string>
+    <string name="action_go_to_today">Przejdź do dzisiaj</string>
 
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
