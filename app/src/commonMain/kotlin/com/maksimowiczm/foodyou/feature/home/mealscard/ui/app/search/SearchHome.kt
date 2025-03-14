@@ -63,7 +63,7 @@ import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SearchHome(

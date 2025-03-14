@@ -20,8 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.Product
 import com.maksimowiczm.foodyou.data.model.WeightMeasurement
@@ -37,6 +35,8 @@ import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @Composable
 fun MacroGraph(product: Product, measurement: WeightMeasurement, modifier: Modifier = Modifier) {
@@ -194,9 +194,7 @@ private fun NutrimentLegendItem(
     }
 }
 
-@Preview(
-    showBackground = true
-)
+@Preview
 @Composable
 private fun MacroGraphPreview(
     @PreviewParameter(WeightMeasurementPreviewParameter::class) measurement: WeightMeasurement

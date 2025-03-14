@@ -1,12 +1,12 @@
 package com.maksimowiczm.foodyou.feature.home.calendarcard.ui
 
 import androidx.lifecycle.ViewModel
-import com.maksimowiczm.foodyou.data.AndroidStringFormatRepository
 import com.maksimowiczm.foodyou.data.DateProvider
+import com.maksimowiczm.foodyou.data.StringFormatRepository
 import kotlinx.datetime.LocalDate
 
 class CalendarViewModel(
-    private val stringFormatRepository: AndroidStringFormatRepository,
+    private val stringFormatRepository: StringFormatRepository,
     dateProvider: DateProvider
 ) : ViewModel() {
     val today = dateProvider.observeDate()

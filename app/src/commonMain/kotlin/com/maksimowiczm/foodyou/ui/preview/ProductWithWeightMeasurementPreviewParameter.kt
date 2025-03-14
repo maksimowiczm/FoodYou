@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.ui.preview
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.maksimowiczm.foodyou.data.model.ProductWithWeightMeasurement
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 class ProductWithWeightMeasurementPreviewParameter :
     PreviewParameterProvider<ProductWithWeightMeasurement> {

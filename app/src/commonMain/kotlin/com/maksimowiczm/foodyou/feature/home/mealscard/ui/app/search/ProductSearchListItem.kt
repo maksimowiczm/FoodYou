@@ -23,8 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.ListItem
@@ -38,6 +36,8 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @Composable
 fun ProductSearchListItem(
@@ -210,9 +210,6 @@ private fun ProductSearchListItemPreview() {
 }
 
 @Preview
-@Preview(
-    fontScale = 2f
-)
 @Composable
 private fun ProductSearchListItemPreview(
     @PreviewParameter(ProductWithWeightMeasurementPreviewParameter::class) model:

@@ -41,7 +41,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.WeightUnit
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.barcodescanner.BarcodeScannerScreen
@@ -57,6 +56,7 @@ import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ProductForm(
@@ -481,9 +481,7 @@ private fun WeightUnitDropdownMenu(
     }
 }
 
-@Preview(
-    showBackground = true
-)
+@Preview
 @Composable
 private fun NullProductFormPreview() {
     FoodYouTheme {
@@ -494,9 +492,7 @@ private fun NullProductFormPreview() {
     }
 }
 
-@Preview(
-    showBackground = true
-)
+@Preview
 @Composable
 private fun ProductFormPreview() {
     FoodYouTheme {

@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.database.callback
 
-import android.util.Log
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.maksimowiczm.foodyou.database.entity.MealEntity
@@ -28,7 +27,7 @@ abstract class InitializeMealsCallback : RoomDatabase.Callback() {
             }
             db.setTransactionSuccessful()
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to insert meals", e)
+//            Log.e(TAG, "Failed to insert meals", e)
         } finally {
             db.endTransaction()
         }

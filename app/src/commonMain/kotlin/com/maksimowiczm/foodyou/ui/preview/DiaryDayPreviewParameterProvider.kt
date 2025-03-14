@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.ui.preview
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.maksimowiczm.foodyou.data.model.DiaryDay
 import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.data.model.defaultGoals
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 class DiaryDayPreviewParameterProvider : PreviewParameterProvider<DiaryDay> {
     private val productMap: Map<Meal, List<ProductWithWeightMeasurement>>

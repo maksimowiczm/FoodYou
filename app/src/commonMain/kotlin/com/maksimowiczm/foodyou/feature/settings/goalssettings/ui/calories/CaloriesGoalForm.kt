@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.WeightUnit
 import com.maksimowiczm.foodyou.data.model.defaultGoals
@@ -21,6 +20,7 @@ import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 private fun FormFieldWithTextFieldValue<Int, GoalsFormInputError>.TextField(
@@ -165,9 +165,7 @@ fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier
     }
 }
 
-@Preview(
-    showBackground = true
-)
+@Preview
 @Composable
 private fun CaloriesGoalFormPreview() {
     val goals = defaultGoals().copy(

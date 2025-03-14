@@ -40,10 +40,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.ui.AboutIcons8
 import com.maksimowiczm.foodyou.ui.component.CardButton
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
@@ -52,7 +50,7 @@ import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AboutScreen(
@@ -328,14 +326,14 @@ private fun VersionListItem(modifier: Modifier = Modifier) {
             )
         },
         supportingContent = {
+            // TODO BuildConfig.VERSION_NAME
             Text(
-                text = BuildConfig.VERSION_NAME
+                text = ""
             )
         }
     )
 }
 
-@PreviewFontScale
 @Composable
 private fun AboutScreenPreview() {
     FoodYouTheme {

@@ -23,11 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.ui.preview.BooleanPreviewParameter
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @Composable
 fun ToggleButton(
@@ -103,7 +103,7 @@ object ToggleButtonDefaults {
     )
 }
 
-@PreviewDynamicColors
+@Preview
 @Composable
 private fun ToggleButtonColorsPreview(
     @PreviewParameter(BooleanPreviewParameter::class) checked: Boolean

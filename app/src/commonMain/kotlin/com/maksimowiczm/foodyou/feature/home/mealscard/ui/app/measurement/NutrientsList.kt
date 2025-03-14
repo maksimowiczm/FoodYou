@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.data.model.WeightUnit
@@ -33,6 +32,7 @@ import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun NutrientsList(
@@ -232,9 +232,7 @@ private fun WeightMeasurement.stringResource(weightUnit: WeightUnit) = when (thi
         stringResource(Res.string.product_serving)
 }
 
-@Preview(
-    showBackground = true
-)
+@Preview
 @Composable
 private fun NutrientsListPreview() {
     val product = ProductPreviewParameterProvider().values.first {

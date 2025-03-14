@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.card
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -37,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -64,7 +62,8 @@ import foodyou.app.generated.resources.*
 import kotlin.math.absoluteValue
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 fun buildMealsCard(
     onMealClick: (epochDay: Int, meal: Meal) -> Unit,
@@ -414,9 +413,7 @@ fun SharedTransitionScope.MealCard(
     }
 }
 
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
+@Preview
 @Composable
 private fun MealsCardSkeletonPreview() {
     FoodYouTheme {

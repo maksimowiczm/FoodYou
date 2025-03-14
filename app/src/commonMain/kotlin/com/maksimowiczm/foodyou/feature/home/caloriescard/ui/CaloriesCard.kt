@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.home.caloriescard.ui
 
-import android.content.res.Configuration
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
@@ -31,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.data.model.DiaryDay
@@ -54,7 +52,8 @@ import kotlin.math.abs
 import kotlin.math.max
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.androidx.compose.koinViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CaloriesCard(
@@ -454,9 +453,7 @@ private fun NutrimentIndicatorSkeleton(shimmerInstance: Shimmer, modifier: Modif
     }
 }
 
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
+@Preview
 @Composable
 private fun CaloriesCardSkeletonPreview() {
     FoodYouTheme {

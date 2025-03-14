@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.ui.preview
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.maksimowiczm.foodyou.data.model.Nutrients
 import com.maksimowiczm.foodyou.data.model.Product
 import com.maksimowiczm.foodyou.data.model.ProductSource
 import com.maksimowiczm.foodyou.data.model.WeightUnit
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 class ProductPreviewParameterProvider : PreviewParameterProvider<Product> {
     override val values: Sequence<Product> = sequenceOf(

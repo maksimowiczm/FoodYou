@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.ui.preview
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.maksimowiczm.foodyou.data.model.Meal
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 class MealsPreviewParameterProvider : PreviewParameterProvider<Meal> {
     override val values: Sequence<Meal> = sequenceOf(

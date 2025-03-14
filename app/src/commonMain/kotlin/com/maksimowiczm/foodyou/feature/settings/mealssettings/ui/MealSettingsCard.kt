@@ -57,8 +57,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.stringParser
@@ -67,6 +65,7 @@ import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private enum class ActionButtonState {
     Save,
@@ -534,7 +533,7 @@ private fun MealSettingsCardPreview() {
     }
 }
 
-@PreviewDynamicColors
+@Preview
 @Composable
 private fun DirtyMealSettingsCardPreview() {
     val meal = MealsPreviewParameterProvider().values.first()
