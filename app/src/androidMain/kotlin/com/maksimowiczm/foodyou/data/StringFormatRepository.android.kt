@@ -11,29 +11,29 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalTime
 
-class AndroidStringFormatRepository(
+actual class StringFormatRepository(
     private val context: Context,
-    private val androidSystemInfoRepository: AndroidSystemInfoRepository
-) : StringFormatRepository {
+    private val androidSystemInfoRepository: SystemInfoRepository
+) {
     private val defaultLocale: Locale
         get() = androidSystemInfoRepository.defaultLocale
 
-    override val weekDayNamesShort: List<String>
+    actual val weekDayNamesShort: List<String>
         get() = DayOfWeek.entries.map {
             it.getDisplayName(TextStyle.SHORT, defaultLocale)
         }
 
-    override fun formatMonthYear(date: LocalDate): String {
+    actual fun formatMonthYear(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("LLLL yyyy", defaultLocale)
         return date.toJavaLocalDate().format(formatter)
     }
 
-    override fun formatDate(date: LocalDate): String {
+    actual fun formatDate(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy, EEEE", defaultLocale)
         return date.toJavaLocalDate().format(formatter)
     }
 
-    override fun formatTime(time: LocalTime): String = if (DateFormat.is24HourFormat(context)) {
+    actual fun formatTime(time: LocalTime): String = if (DateFormat.is24HourFormat(context)) {
         DateTimeFormatter
             .ofPattern("HH:mm", defaultLocale)
             .format(time.toJavaLocalTime())

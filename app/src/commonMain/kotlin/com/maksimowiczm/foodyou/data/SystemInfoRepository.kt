@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.data.model.Country
 /**
  * Provides information about system-specific settings and utilities for date and locale operations.
  */
-interface SystemInfoRepository {
+expect class SystemInfoRepository {
 
     /**
      * The default country code of the system's locale.

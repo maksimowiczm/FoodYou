@@ -2,13 +2,12 @@ package com.maksimowiczm.foodyou.feature.settings.laguage
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.maksimowiczm.foodyou.data.AndroidSystemInfoRepository
+import com.maksimowiczm.foodyou.data.SystemInfoRepository
 import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageViewModel
 import java.util.Locale
 
-class AndroidLanguageViewModel(
-    private val androidSystemInfoRepository: AndroidSystemInfoRepository
-) : LanguageViewModel() {
+class AndroidLanguageViewModel(private val androidSystemInfoRepository: SystemInfoRepository) :
+    LanguageViewModel() {
     private val locale: Locale
         get() = androidSystemInfoRepository.defaultLocale
 

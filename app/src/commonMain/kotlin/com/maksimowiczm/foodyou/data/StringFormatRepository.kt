@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.data
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
-interface StringFormatRepository {
+expect class StringFormatRepository {
     /**
      * The abbreviated names of the days of the week, ordered starting from the first day
      * of the week as defined by the system's locale.
