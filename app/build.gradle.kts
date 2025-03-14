@@ -85,6 +85,9 @@ kotlin {
             implementation(libs.ktor.client.serialization.kotlinx.json)
 
             implementation(libs.androidx.paging.runtime)
+
+            // Logger
+            implementation(libs.kermit)
         }
     }
 }

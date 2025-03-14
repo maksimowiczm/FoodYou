@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.data
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.data.model.DailyGoals
 import com.maksimowiczm.foodyou.data.model.DiaryDay
 import com.maksimowiczm.foodyou.data.model.Meal
@@ -79,7 +79,7 @@ class DiaryRepositoryImpl(
                 val key = meals.firstOrNull { meal -> meal.id == mealId }
 
                 if (key == null) {
-                    Log.e(TAG, "Meal with id $mealId not found. Data inconsistency. BYE BYE")
+                    Logger.e(TAG) { "Meal with id $mealId not found. Data inconsistency. BYE BYE" }
                     error("Meal with id $mealId not found. Data inconsistency. BYE BYE")
                 }
 

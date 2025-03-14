@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.github.michaelbull.result.mapBoth
 import com.maksimowiczm.foodyou.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductFormState
@@ -22,7 +22,7 @@ class UpdateProductViewModel(
     init {
         productRepository.observeProductById(productId).onEach {
             if (it == null) {
-                Log.e(TAG, "Product not found")
+                Logger.e(TAG) { "Product not found" }
                 return@onEach
             }
 
@@ -38,7 +38,7 @@ class UpdateProductViewModel(
     fun updateProduct(formState: ProductFormState) {
         val state = _uiState.value
         if (state !is UpdateProductState.ProductReady) {
-            Log.e(TAG, "Product not ready")
+            Logger.e(TAG) { "Product not ready" }
             return
         }
 
@@ -52,7 +52,7 @@ class UpdateProductViewModel(
                 formState.carbohydrates.value == null ||
                 formState.fats.value == null
             ) {
-                Log.w(TAG, "Required fields are missing")
+                Logger.w(TAG) { "Required fields are missing" }
                 return@launch
             }
 
@@ -80,14 +80,14 @@ class UpdateProductViewModel(
                     val product = _uiState.value as? UpdateProductState.UpdatingProduct
 
                     if (product == null) {
-                        Log.e(TAG, "Product not updating. Invalid state")
+                        Logger.e(TAG) { "Product not updating. Invalid state" }
                         return@mapBoth
                     }
 
                     _uiState.value = UpdateProductState.ProductUpdated(product.product)
                 },
                 failure = {
-                    Log.e(TAG, "Failed to create product $it")
+                    Logger.e(TAG) { "Failed to create product $it" }
                 }
             )
         }

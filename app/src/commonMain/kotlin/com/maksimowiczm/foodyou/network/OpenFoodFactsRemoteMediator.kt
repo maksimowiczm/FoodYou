@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.network
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.data.model.toEntity
 import com.maksimowiczm.foodyou.database.dao.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.database.dao.ProductDao
@@ -66,7 +66,7 @@ internal class OpenFoodFactsRemoteMediator(
                 }
             }
 
-            Log.d(TAG, "Loading page $page")
+            Logger.d(TAG) { "Loading page $page" }
 
             val response = openFoodFactsNetworkDataSource.queryProducts(
                 query = query,
@@ -90,10 +90,9 @@ internal class OpenFoodFactsRemoteMediator(
             val products = response.products.map { remoteProduct ->
                 remoteProduct.toEntity().also {
                     if (it == null) {
-                        Log.w(
-                            TAG,
+                        Logger.w(TAG) {
                             "Failed to convert product: (name=${remoteProduct.productName}, code=${remoteProduct.code})"
-                        )
+                        }
                     }
                 }
             }
@@ -106,7 +105,7 @@ internal class OpenFoodFactsRemoteMediator(
 
             return MediatorResult.Success(endOfPaginationReached)
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to load page", e)
+            Logger.e(TAG, e) { "Failed to load page" }
             return MediatorResult.Error(e)
         }
     }

@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.network
 
-import android.util.Log
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.network.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.network.model.OpenFoodPageResponse
@@ -49,7 +49,7 @@ internal class OpenFoodFactsNetworkDataSource {
         )
 
         if (response.status == HttpStatusCode.NotFound) {
-            Log.d(TAG, "Product not found for code: $code")
+            Logger.d(TAG) { "Product not found for code: $code" }
             return null
         }
 

@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.data
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.Pager
@@ -10,6 +9,7 @@ import androidx.paging.PagingSource.LoadResult.Page
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.paging.map
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.data.model.ProductQuery
 import com.maksimowiczm.foodyou.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.data.model.QuantitySuggestion
@@ -102,7 +102,7 @@ class AddFoodRepositoryImpl(
         ).first()
 
         if (entity == null) {
-            Log.w(TAG, "Measurement not found for ID $measurementId.")
+            Logger.w(TAG) { "Measurement not found for ID $measurementId." }
             return
         }
 
@@ -182,7 +182,7 @@ class AddFoodRepositoryImpl(
         addFoodDao.observeQuantitySuggestionsByProductId(productId)
     ) { product, suggestionList ->
         if (product == null) {
-            Log.w(TAG, "Product not found for ID $productId. Skipping quantity suggestion.")
+            Logger.w(TAG) { "Product not found for ID $productId. Skipping quantity suggestion." }
             return@combine null
         }
 

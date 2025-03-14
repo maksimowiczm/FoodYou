@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.data
 
-import android.util.Log
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -36,18 +36,18 @@ internal class DateProviderImpl(
                 .atStartOfDayIn(TimeZone.currentSystemDefault())
             val delayMillis = (midnight - now).inWholeMilliseconds
 
-            Log.d(TAG, "Current date: $currentDate")
-            Log.d(TAG, "Delaying for $delayMillis ms")
+            Logger.d(TAG) { "Current date: $currentDate" }
+            Logger.d(TAG) { "Delaying for $delayMillis ms" }
             delay(delayMillis)
-            Log.d(TAG, "Woke up")
+            Logger.d(TAG) { "Woke up" }
 
             val newDate = getCurrentDateTime().date
-            Log.d(TAG, "New date: $newDate")
+            Logger.d(TAG) { "New date: $newDate" }
 
             if (newDate != currentDate) {
                 currentDate = newDate
 
-                Log.d(TAG, "Emitting new date: $currentDate")
+                Logger.d(TAG) { "Emitting new date: $currentDate" }
                 emit(currentDate)
             }
         }

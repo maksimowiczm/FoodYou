@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.network
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.paging.ExperimentalPagingApi
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.data.preferences.OpenFoodFactsPreferences
 import com.maksimowiczm.foodyou.database.dao.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.database.dao.ProductDao
@@ -29,7 +29,7 @@ class OpenFoodFactsRemoteMediatorFactory(
                 runBlocking { dataStore.get(OpenFoodFactsPreferences.isEnabled) }
 
             return if (isEnabled != true) {
-                Log.w(TAG, "Open Food Facts is not enabled")
+                Logger.w(TAG) { "Open Food Facts is not enabled" }
                 null
             } else {
                 _openFoodFactsNetworkDataSource
@@ -44,12 +44,12 @@ class OpenFoodFactsRemoteMediatorFactory(
 
         val country = countryCode
         if (country == null) {
-            Log.e(TAG, "Country code is not set")
+            Logger.e(TAG) { "Country code is not set" }
             return null
         }
 
         if (query == null) {
-            Log.d(TAG, "Empty query is not supported")
+            Logger.d(TAG) { "Empty query is not supported" }
             return null
         }
 
@@ -68,7 +68,7 @@ class OpenFoodFactsRemoteMediatorFactory(
 
         val country = countryCode
         if (country == null) {
-            Log.e(TAG, "Country code is not set")
+            Logger.e(TAG) { "Country code is not set" }
             return null
         }
 

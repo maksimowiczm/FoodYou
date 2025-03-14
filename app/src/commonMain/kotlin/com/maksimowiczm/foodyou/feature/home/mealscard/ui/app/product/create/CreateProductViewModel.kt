@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.create
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.github.michaelbull.result.mapBoth
 import com.maksimowiczm.foodyou.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductFormState
@@ -25,7 +25,7 @@ class CreateProductViewModel(private val productRepository: ProductRepository) :
                 formState.carbohydrates.value == null ||
                 formState.fats.value == null
             ) {
-                Log.w(TAG, "Required fields are missing")
+                Logger.w(TAG) { "Required fields are missing" }
                 _uiState.value = CreateProductState.Error
                 return@launch
             }
@@ -53,7 +53,7 @@ class CreateProductViewModel(private val productRepository: ProductRepository) :
                     _uiState.value = CreateProductState.ProductCreated(productId)
                 },
                 failure = {
-                    Log.e(TAG, "Failed to create product $it")
+                    Logger.e(TAG) { "Failed to create product $it" }
                     _uiState.value = CreateProductState.Error
                 }
             )
