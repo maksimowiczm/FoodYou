@@ -28,4 +28,4 @@ jobs:
 
       - name: Validate meals.xml
         run: |
-          ./app/src/testOpensource/res/xml/test-meals.bash
+          ./app/src/androidTest/res/xml/test-meals.bash
