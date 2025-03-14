@@ -13,8 +13,8 @@ import androidx.compose.ui.text.withStyle
 
 val languages = mapOf(
     // If you'd like to be credited for your translations, please add your name here.
-    // "Language (Country)" to Translation(
-    //     tag = "language-COUNTRY",
+    // "language name (Country)" to Translation(
+    //     tag = "language-tag",
     //     authorsStrings = listOf(
     //         Author(
     //             name = "Your Name",
@@ -31,7 +31,11 @@ val languages = mapOf(
             )
         )
     ),
-    "Polski (Polska)" to Translation(
+    "italiano (Italia)" to Translation(
+        tag = "it-IT",
+        authorsStrings = emptyList()
+    ),
+    "polski (Polska)" to Translation(
         tag = "pl-PL",
         authorsStrings = listOf(
             Author(

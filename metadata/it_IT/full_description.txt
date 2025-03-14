@@ -1,0 +1,15 @@
+<b>FoodYou</b> è un'app moderna per il monitoraggio delle calorie, costruita con l'estetica Material You. È progettata per rendere il monitoraggio delle calorie più semplice e visivamente accattivante.
+
+<b>Funzionalità:</b>
+<ul>
+    <li><b>Design Material You:</b> Tema dinamico per un'esperienza coesiva e visivamente piacevole.</li>
+    <li><b>Home Page Interattiva:</b> Accesso rapido alle funzionalità chiave con un'interfaccia a schede.</li>
+    <li><b>Integrazione Open Food Facts l:</b> Ottieni dati alimentari accurati per un monitoraggio calorico preciso.</li>
+    <li><b>Layout Edge-to-Edge:</b> Goditi un'esperienza più immersiva con un design a schermo intero.</li>
+    <li><b>Funzione Indietro Predittivo:</b> Un'esperienza di navigazione fluida con indietro predittivo.</li>
+    <li><b>Personalizzabile e Open-Source:</b> Progettato per essere estendibile e supportato dalla comunità, permettendoti di contribuire e modificarlo.</li>
+</ul>
+
+Inizia a tracciare le tue calorie oggi con FoodYou!
+
+Icona del launcher creata da <a href='https://icons8.com/' target='_blank' rel='nofollow noopener noreferrer'>Icons8</a>
