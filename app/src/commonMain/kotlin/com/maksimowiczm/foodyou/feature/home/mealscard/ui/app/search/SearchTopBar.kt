@@ -10,6 +10,9 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.NorthWest
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,7 +35,6 @@ import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -145,7 +147,7 @@ private fun InputField(
                     onClick = onBarcodeScanner
                 ) {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_qr_code_scanner),
+                        imageVector = Icons.Default.QrCodeScanner,
                         contentDescription = stringResource(Res.string.action_scan_barcode)
                     )
                 }
@@ -175,7 +177,7 @@ private fun SearchResults(
                 ),
                 leadingContent = {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_schedule),
+                        imageVector = Icons.Default.Schedule,
                         contentDescription = stringResource(Res.string.action_search)
                     )
                 },
@@ -184,7 +186,7 @@ private fun SearchResults(
                         onClick = { onQueryClick(productQuery) }
                     ) {
                         Icon(
-                            painter = painterResource(Res.drawable.ic_north_west),
+                            imageVector = Icons.Default.NorthWest,
                             contentDescription = stringResource(
                                 Res.string.action_insert_suggested_search
                             )

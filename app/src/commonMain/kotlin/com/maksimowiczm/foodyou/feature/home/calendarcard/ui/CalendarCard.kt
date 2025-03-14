@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
@@ -132,10 +134,8 @@ private fun CalendarCard(
                     }
                 ) {
                     Icon(
-                        painter = org.jetbrains.compose.resources.painterResource(
-                            Res.drawable.ic_calendar_month
-                        ),
-                        contentDescription = "Calendar"
+                        imageVector = Icons.Default.CalendarMonth,
+                        contentDescription = stringResource(Res.string.action_show_calendar)
                     )
                 }
             }

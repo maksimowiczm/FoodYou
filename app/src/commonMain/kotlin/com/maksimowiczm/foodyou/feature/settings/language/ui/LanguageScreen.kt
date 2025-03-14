@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
@@ -109,7 +109,7 @@ private fun LanguageScreen(
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Icon(
-                            painter = painterResource(Res.drawable.ic_translate),
+                            imageVector = Icons.Default.Translate,
                             contentDescription = null
                         )
                         Column {

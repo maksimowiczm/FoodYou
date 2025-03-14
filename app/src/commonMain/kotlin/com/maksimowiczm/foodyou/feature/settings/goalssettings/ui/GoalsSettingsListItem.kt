@@ -1,6 +1,9 @@
 package com.maksimowiczm.foodyou.feature.settings.goalssettings.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -10,7 +13,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -26,7 +28,7 @@ fun GoalsSettingsListItem(onGoalsClick: () -> Unit, modifier: Modifier = Modifie
             .horizontalDisplayCutoutPadding(),
         leadingContent = {
             Icon(
-                painter = painterResource(Res.drawable.ic_flag),
+                imageVector = Icons.Outlined.Flag,
                 contentDescription = null
             )
         },

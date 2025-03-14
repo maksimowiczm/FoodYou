@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.feature.settings.aboutsettings.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -12,7 +14,6 @@ import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 fun buildAboutSettingsListItem(onClick: () -> Unit) = SettingsFeature { modifier ->
@@ -35,7 +36,7 @@ private fun AboutSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modi
         },
         leadingContent = {
             Icon(
-                painter = painterResource(Res.drawable.ic_info),
+                imageVector = Icons.Outlined.Info,
                 contentDescription = null
             )
         },

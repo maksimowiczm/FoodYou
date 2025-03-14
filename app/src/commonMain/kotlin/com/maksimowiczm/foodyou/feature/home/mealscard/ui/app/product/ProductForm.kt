@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,7 +56,6 @@ import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -128,7 +129,7 @@ fun ProductForm(
                         onClick = { showBarcodeScanner = true }
                     ) {
                         Icon(
-                            painter = painterResource(Res.drawable.ic_qr_code_scanner),
+                            imageVector = Icons.Default.QrCodeScanner,
                             contentDescription = stringResource(Res.string.action_scan_barcode)
                         )
                     }

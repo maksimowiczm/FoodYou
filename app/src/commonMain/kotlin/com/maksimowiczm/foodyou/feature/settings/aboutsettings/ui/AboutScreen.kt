@@ -20,7 +20,11 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -272,7 +276,7 @@ private fun ShowSomeLoveItem(
                         )
                     } else {
                         Icon(
-                            painter = painterResource(Res.drawable.ic_star),
+                            imageVector = Icons.Outlined.Star,
                             contentDescription = null
                         )
                     }
@@ -303,7 +307,7 @@ private fun ReadmeListItem(onReadme: () -> Unit, modifier: Modifier = Modifier) 
         },
         leadingContent = {
             Icon(
-                painter = painterResource(Res.drawable.ic_description),
+                imageVector = Icons.Default.Description,
                 contentDescription = null
             )
         }
@@ -319,7 +323,7 @@ private fun VersionListItem(modifier: Modifier = Modifier) {
         },
         leadingContent = {
             Icon(
-                painter = painterResource(Res.drawable.ic_info),
+                imageVector = Icons.Outlined.Info,
                 contentDescription = null
             )
         },

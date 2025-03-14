@@ -1,6 +1,9 @@
 package com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.outlined.CloudDownload
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -11,7 +14,6 @@ import com.maksimowiczm.foodyou.feature.settings.SettingsFeature
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 fun buildOpenFoodFactsSettingsListItem(onClick: () -> Unit) = SettingsFeature { modifier ->
@@ -34,7 +36,7 @@ private fun OpenFoodFactsSettingsListItem(onClick: () -> Unit, modifier: Modifie
             .horizontalDisplayCutoutPadding(),
         leadingContent = {
             Icon(
-                painter = painterResource(Res.drawable.ic_cloud_download),
+                imageVector = Icons.Outlined.CloudDownload,
                 contentDescription = null
             )
         },

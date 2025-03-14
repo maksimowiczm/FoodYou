@@ -111,6 +111,7 @@
     <string name="action_bug_report_on_github">Bug report on GitHub</string>
     <string name="action_feature_request_on_github">Feature request on GitHub</string>
     <string name="action_leave_a_star_on_github">Leave a star on GitHub</string>
+    <string name="action_show_calendar">Show calendar</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>

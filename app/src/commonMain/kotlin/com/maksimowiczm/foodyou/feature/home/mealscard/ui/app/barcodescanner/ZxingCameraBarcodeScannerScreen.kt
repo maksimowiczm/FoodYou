@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGesturesPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FlashOff
+import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -30,7 +33,6 @@ import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.databinding.CameraBarcodeLayoutBinding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 val zxingCameraBarcodeScannerScreen =
@@ -121,13 +123,11 @@ private fun FlashlightButton(enabled: Boolean, onClick: () -> Unit, modifier: Mo
         )
     ) {
         Icon(
-            painter = painterResource(
-                if (enabled) {
-                    Res.drawable.ic_flash_on
-                } else {
-                    Res.drawable.ic_flash_off
-                }
-            ),
+            imageVector = if (enabled) {
+                Icons.Default.FlashOn
+            } else {
+                Icons.Default.FlashOff
+            },
             contentDescription = if (enabled) {
                 stringResource(Res.string.action_disable_camera_flash)
             } else {

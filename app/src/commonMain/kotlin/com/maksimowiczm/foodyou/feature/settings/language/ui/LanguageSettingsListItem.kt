@@ -1,6 +1,9 @@
 package com.maksimowiczm.foodyou.feature.settings.language.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -11,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
@@ -46,7 +48,7 @@ private fun LanguageSettingsListItem(
         },
         leadingContent = {
             Icon(
-                painter = painterResource(Res.drawable.ic_language),
+                imageVector = Icons.Default.Language,
                 contentDescription = null
             )
         }
