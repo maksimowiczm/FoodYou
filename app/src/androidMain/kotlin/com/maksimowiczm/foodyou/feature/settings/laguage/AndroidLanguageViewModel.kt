@@ -3,13 +3,11 @@ package com.maksimowiczm.foodyou.feature.settings.laguage
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.maksimowiczm.foodyou.data.AndroidSystemInfoRepository
-import com.maksimowiczm.foodyou.data.LinkHandler
 import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageViewModel
 import java.util.Locale
 
 class AndroidLanguageViewModel(
-    private val androidSystemInfoRepository: AndroidSystemInfoRepository,
-    private val linkHandler: LinkHandler
+    private val androidSystemInfoRepository: AndroidSystemInfoRepository
 ) : LanguageViewModel() {
     private val locale: Locale
         get() = androidSystemInfoRepository.defaultLocale
@@ -36,13 +34,5 @@ class AndroidLanguageViewModel(
             val locale = LocaleListCompat.forLanguageTags(tag)
             AppCompatDelegate.setApplicationLocales(locale)
         }
-    }
-
-    override fun onHelpTranslate() {
-        linkHandler.openLink(CROWDIN_LINK)
-    }
-
-    private companion object {
-        private const val CROWDIN_LINK = "https://crowdin.com/project/food-you"
     }
 }

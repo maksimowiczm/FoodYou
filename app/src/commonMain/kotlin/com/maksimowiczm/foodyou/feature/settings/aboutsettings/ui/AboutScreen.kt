@@ -38,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -58,13 +59,26 @@ fun AboutScreen(
 ) {
     val githubStarClicked by viewModel.githubStar.collectAsStateWithLifecycle()
 
+    val uriHandler = LocalUriHandler.current
+
+    val requestFeatureLink = stringResource(Res.string.link_github_issue)
+    val bugReportLink = stringResource(Res.string.link_github_issue)
+    val readmeLink = stringResource(Res.string.link_github_repository)
+    val githubStarLink = stringResource(Res.string.link_github_repository)
+    val icons8Link = stringResource(Res.string.link_icons8)
+
     AboutScreen(
-        onRequestFeature = viewModel::openGithubIssue,
-        onBugReport = viewModel::openGithubIssue,
-        onReadme = viewModel::openGithubReadme,
-        onIcons8 = viewModel::onIcons8Click,
+        onRequestFeature = {
+            uriHandler.openUri(requestFeatureLink)
+        },
+        onBugReport = { uriHandler.openUri(bugReportLink) },
+        onReadme = { uriHandler.openUri(readmeLink) },
+        onIcons8 = { uriHandler.openUri(icons8Link) },
         githubStarClicked = githubStarClicked,
-        onGithubStarClick = viewModel::onGithubStarClick,
+        onGithubStarClick = {
+            viewModel.onGithubStarClick()
+            uriHandler.openUri(githubStarLink)
+        },
         modifier = modifier
     )
 }

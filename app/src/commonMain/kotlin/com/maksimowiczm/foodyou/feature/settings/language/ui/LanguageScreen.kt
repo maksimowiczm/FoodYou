@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
@@ -43,11 +44,14 @@ fun LanguageScreen(
     viewModel: LanguageViewModel = koinViewModel(),
     trailingContent: @Composable (Modifier) -> Unit
 ) {
+    val uriHandler = LocalUriHandler.current
+    val translateLink = stringResource(Res.string.link_translate)
+
     LanguageScreen(
         onBack = onBack,
         selectedTag = remember { viewModel.tag },
         onLanguageSelect = viewModel::onLanguageSelect,
-        onHelpTranslate = viewModel::onHelpTranslate,
+        onHelpTranslate = { uriHandler.openUri(translateLink) },
         modifier = modifier,
         trailingContent = trailingContent
     )

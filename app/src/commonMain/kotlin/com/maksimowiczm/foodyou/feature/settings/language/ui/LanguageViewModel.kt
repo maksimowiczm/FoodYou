@@ -6,5 +6,4 @@ abstract class LanguageViewModel : ViewModel() {
     abstract val tag: String
     abstract val languageName: String
     abstract fun onLanguageSelect(tag: String?)
-    abstract fun onHelpTranslate()
 }
