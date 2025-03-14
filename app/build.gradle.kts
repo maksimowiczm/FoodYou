@@ -1,3 +1,4 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -58,7 +59,11 @@ kotlin {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
+    jvm("desktop")
+
     sourceSets {
+        val desktopMain by getting
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -74,6 +79,12 @@ kotlin {
 
             // Ktor
             implementation(libs.ktor.client.okhttp)
+        }
+        desktopMain.dependencies {
+            implementation(compose.preview)
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.androidx.sqlite.bundle)
         }
         commonMain.dependencies {
             implementation(compose.preview)
@@ -179,7 +190,20 @@ room {
 
 dependencies {
     debugImplementation(compose.uiTooling)
-    listOf("kspAndroid").forEach {
+    listOf("kspAndroid", "kspDesktop").forEach {
         add(it, libs.androidx.room.compiler)
+    }
+}
+
+// Experimental and forgotten
+compose.desktop {
+    application {
+        mainClass = "com.maksimowiczm.foodyou.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "com.maksimowiczm.findmyip"
+            packageVersion = "1.0.0"
+        }
     }
 }
