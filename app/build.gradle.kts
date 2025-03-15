@@ -174,6 +174,12 @@ android {
             // Test minified version with debug signing config
             // signingConfig = signingConfigs.getByName("debug")
         }
+
+        // DO NOT REMOVE THIS!
+        // F-droid release
+        create("opensource") {
+            initWith(getByName("release"))
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
