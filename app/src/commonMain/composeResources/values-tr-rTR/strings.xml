@@ -102,11 +102,11 @@
     <string name="error_this_field_cannot_be_empty">Bu alan boş olamaz</string>
     <string name="error_invalid_number">Geçersiz sayı</string>
     <string name="error_value_cannot_be_negative">Değer negatif olamaz</string>
-    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Makro besinlerin toplamı 100g\'ı aşamaz</string>
-    <string name="error_value_must_be_less_than">Değer %1$s\'den küçük olmalıdır</string>
+    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Makro besinlerin toplamı 100g'ı aşamaz</string>
+    <string name="error_value_must_be_less_than">Değer %1$s'den küçük olmalıdır</string>
     <string name="error_value_must_be_integer">Değer tam sayı olmalıdır</string>
     <string name="error_sum_of_percentages_must_be_100">Yüzdelerin toplamı 100 olmalıdır</string>
-    <string name="error_value_cannot_exceed_100">Değer 100\'ü aşamaz</string>
+    <string name="error_value_cannot_exceed_100">Değer 100'ü aşamaz</string>
     <string name="positive_goal_reached">Hedefe ulaşıldı</string>
     <string name="positive_ok">Tamam</string>
     <plurals name="negative_exceeded_by_calories">
@@ -129,18 +129,18 @@
     <string name="action_select_country">Ülke seç</string>
     <string name="action_use_open_food_facts">Open Food Facts kullan</string>
     <string name="action_see_terms_of_use">Kullanım koşullarını gör</string>
-    <string name="action_bug_report_on_github">GitHub\'da hata raporu</string>
-    <string name="action_feature_request_on_github">GitHub\'da özellik talebi</string>
-    <string name="action_leave_a_star_on_github">GitHub\'da yıldız bırak</string>
+    <string name="action_bug_report_on_github">GitHub'da hata raporu</string>
+    <string name="action_feature_request_on_github">GitHub'da özellik talebi</string>
+    <string name="action_leave_a_star_on_github">GitHub'da yıldız bırak</string>
     <string name="neutral_manage_food_database">Gıda veritabanınızı yönetin</string>
     <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
     <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
     <string name="open_food_facts_disclaimer">Open Food Facts, topluluk tarafından yürütülen bir projedir. Veriler eksik, güncel olmayan veya hatalı olabilir. Bu uygulama, bilgilerin doğruluğundan sorumlu değildir. Lütfen kullanmadan önce doğruluğunu kontrol edin.</string>
-    <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">Ürünler hakkında detaylı bilgilere erişmek için ayarlardan Open Food Facts\'i etkinleştirin</string>
+    <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">Ürünler hakkında detaylı bilgilere erişmek için ayarlardan Open Food Facts'i etkinleştirin</string>
     <string name="description_open_food_facts">dünyanın dört bir yanından gıda ürünlerinin yer aldığı işbirlikçi, ücretsiz ve açık bir veritabanıdır.</string>
-    <string name="description_README_setting">Projenin README dosyasını GitHub\'da görüntüle</string>
+    <string name="description_README_setting">Projenin README dosyasını GitHub'da görüntüle</string>
     <string name="description_about_setting">Uygulama hakkında daha fazla bilgi edinin</string>
-    <string name="description_show_some_love">Bu projeyi faydalı buluyorsanız, lütfen GitHub\'da bir yıldız vermeyi düşünün! Bu, başkalarının projeyi keşfetmesine yardımcı olur ve geliştirmenin devam etmesini sağlar.</string>
+    <string name="description_show_some_love">Bu projeyi faydalı buluyorsanız, lütfen GitHub'da bir yıldız vermeyi düşünün! Bu, başkalarının projeyi keşfetmesine yardımcı olur ve geliştirmenin devam etmesini sağlar.</string>
     <string name="description_share_your_thoughts">Geri bildiriminiz, özellik talepleriniz veya hata raporlarınız varsa, lütfen bana bildirin! Sizden haber almak isterim.</string>
     <string name="description_open_food_facts_clear_query_cache">Open Food Facts sorgu önbelleğini temizle</string>
     <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">Önbelleği temizlemek, Open Food Facts veritabanının tamamının yeniden indirilmesine neden olur. Ne yaptığınızı bilmiyorsanız önbelleği temizlemeniz önerilmez.</string>

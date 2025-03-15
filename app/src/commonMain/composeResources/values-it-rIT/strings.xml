@@ -56,7 +56,7 @@
     <string name="action_add">Aggiungi</string>
     <string name="action_go_back">Indietro</string>
     <string name="action_retry">Riprova</string>
-    <string name="action_tap_to_allow_access">Tocca per consentire l\'accesso</string>
+    <string name="action_tap_to_allow_access">Tocca per consentire l'accesso</string>
     <string name="action_create_new_product">Crea nuovo prodotto</string>
     <string name="action_create">Crea</string>
     <string name="action_clear">Pulisci</string>
@@ -77,9 +77,9 @@
     <string name="action_enable">Abilita</string>
     <string name="action_don_t_show_again">Non mostrare più</string>
     <string name="action_translate">Traduci</string>
-    <string name="neutral_barcode_scanner_camera_request">Permetti l\'accesso alla tua fotocamera per scansionare i codici a barre</string>
-    <string name="neutral_barcode_scanner_camera_request_rationale">Devi permettere l\'accesso per scansionare i codici a barre</string>
-    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L\'autorizzazione alla fotocamera è necessaria per scansionare i codici a barre. Per favore, concedila nelle impostazioni dell\'app.</string>
+    <string name="neutral_barcode_scanner_camera_request">Permetti l'accesso alla tua fotocamera per scansionare i codici a barre</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Devi permettere l'accesso per scansionare i codici a barre</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L'autorizzazione alla fotocamera è necessaria per scansionare i codici a barre. Per favore, concedila nelle impostazioni dell'app.</string>
     <string name="neutral_no_products_found">Nessun prodotto trovato</string>
     <string name="neutral_food_database_load_error">"Impossibile scaricare i prodotti dal database alimentare remoto. Puoi comunque visualizzare i prodotti scaricati in precedenza."</string>
     <plurals name="neutral_remaining_calories">
@@ -95,8 +95,8 @@
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Le calorie sono calcolate automaticamente in base ai macronutrienti</string>
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Sembra che questo pasto sia vuoto. Aggiungi alcuni alimenti per tracciare le tue calorie.</string>
     <string name="neutral_entry_deleted">Voce eliminata</string>
-    <string name="neutral_help_translating_the_app">Aiuta a tradurre l\'app</string>
-    <string name="question_discard_product">Abbandonare l\'inserimento del prodotto?</string>
+    <string name="neutral_help_translating_the_app">Aiuta a tradurre l'app</string>
+    <string name="question_discard_product">Abbandonare l'inserimento del prodotto?</string>
     <string name="question_discard_changes">Abbandonare le modifiche?</string>
     <string name="error_this_field_is_required">Questo campo è richiesto</string>
     <string name="error_this_field_cannot_be_empty">Questo campo non può essere vuoto</string>
@@ -135,13 +135,13 @@
     <string name="neutral_manage_food_database">Gestisci il tuo database alimentare</string>
     <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
     <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
-    <string name="open_food_facts_disclaimer">Open Food Facts è un progetto supportato dalla community. I dati potrebbero essere incompleti, obsoleti o imprecisi. Questa app non è responsabile della validità delle informazioni. Si prega di verificare prima dell\'uso.</string>
+    <string name="open_food_facts_disclaimer">Open Food Facts è un progetto supportato dalla community. I dati potrebbero essere incompleti, obsoleti o imprecisi. Questa app non è responsabile della validità delle informazioni. Si prega di verificare prima dell'uso.</string>
     <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">Abilita Open Food Facts nelle impostazioni per accedere ad informazioni dettagliate sui prodotti</string>
     <string name="description_open_food_facts">è un database collaborativo, gratuito e aperto di prodotti alimentari da tutto il mondo.</string>
     <string name="description_README_setting">Visualizza il README del progetto su GitHub</string>
-    <string name="description_about_setting">Scopri di più sull\'app</string>
+    <string name="description_about_setting">Scopri di più sull'app</string>
     <string name="description_show_some_love">Se trovi utile questo progetto, considera di dargli una stella su GitHub! Aiuta gli altri a scoprirlo e sostiene il continuo sviluppo.</string>
     <string name="description_share_your_thoughts">Se hai feedback, richieste di funzionalità o segnalazioni di bug, fammelo sapere! Mi piacerebbe sentire la tua opinione.</string>
     <string name="description_open_food_facts_clear_query_cache">Cancella la cache delle query di Open Food Facts</string>
-    <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">Pulire la cache causerà un nuovo download dell\'intero database di Open Food Facts. Non è consigliato cancellare la cache a meno che tu non sappia cosa stai facendo.</string>
+    <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">Pulire la cache causerà un nuovo download dell'intero database di Open Food Facts. Non è consigliato cancellare la cache a meno che tu non sappia cosa stai facendo.</string>
 </resources>
