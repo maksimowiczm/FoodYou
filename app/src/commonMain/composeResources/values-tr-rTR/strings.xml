@@ -81,7 +81,7 @@
     <string name="neutral_barcode_scanner_camera_request_rationale">Barkod taramak için erişime izin vermelisiniz</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Barkod taramak için kamera izni gereklidir. Lütfen uygulama ayarlarından izni verin.</string>
     <string name="neutral_no_products_found">Ürün bulunamadı</string>
-    <string name="neutral_food_database_load_error">"Uzak yemek veritabanından ürünler indirilemedi. Daha önce indirdiğiniz ürünleri hâlâ görüntüleyebilirsiniz."</string>
+    <string name="neutral_food_database_load_error">Uzak yemek veritabanından ürünler indirilemedi. Daha önce indirdiğiniz ürünleri hâlâ görüntüleyebilirsiniz.</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d kalori kaldı</item>
         <item quantity="other">%1$d kalori kaldı</item>
