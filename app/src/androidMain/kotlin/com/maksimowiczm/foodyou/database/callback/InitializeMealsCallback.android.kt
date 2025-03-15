@@ -7,8 +7,8 @@ import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.database.entity.MealEntity
 import org.xmlpull.v1.XmlPullParser
 
-class AndroidInitializeMealsCallback(private val context: Context) : InitializeMealsCallback() {
-    override fun getMeals(): List<MealEntity> {
+actual class InitializeMealsCallback(private val context: Context) : InitializeMealsCallbackBase() {
+    actual override fun getMeals(): List<MealEntity> {
         val parser: XmlResourceParser = context.resources.getXml(R.xml.meals)
 
         val raw = parse(parser)

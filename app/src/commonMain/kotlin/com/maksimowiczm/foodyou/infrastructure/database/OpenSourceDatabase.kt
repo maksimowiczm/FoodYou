@@ -44,10 +44,10 @@ abstract class OpenSourceDatabase : RoomDatabase() {
         private val migrations: List<Migration> = emptyList()
 
         fun Builder<OpenSourceDatabase>.buildDatabase(
-            mealsCallback: InitializeMealsCallback
+            initializeMealsCallback: InitializeMealsCallback
         ): OpenSourceDatabase {
             migrations.forEach(::addMigrations)
-            addCallback(mealsCallback)
+            addCallback(initializeMealsCallback)
             return build()
         }
     }

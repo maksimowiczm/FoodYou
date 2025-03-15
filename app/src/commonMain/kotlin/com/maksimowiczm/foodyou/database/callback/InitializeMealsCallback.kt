@@ -6,7 +6,11 @@ import androidx.sqlite.execSQL
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.database.entity.MealEntity
 
-abstract class InitializeMealsCallback : RoomDatabase.Callback() {
+expect class InitializeMealsCallback : InitializeMealsCallbackBase {
+    override fun getMeals(): List<MealEntity>
+}
+
+abstract class InitializeMealsCallbackBase : RoomDatabase.Callback() {
     abstract fun getMeals(): List<MealEntity>
 
     override fun onCreate(connection: SQLiteConnection) {

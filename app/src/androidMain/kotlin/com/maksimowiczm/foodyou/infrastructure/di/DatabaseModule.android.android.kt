@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.maksimowiczm.foodyou.database.callback.AndroidInitializeMealsCallback
+import com.maksimowiczm.foodyou.database.callback.InitializeMealsCallback
 import com.maksimowiczm.foodyou.infrastructure.database.OpenSourceDatabase
 import com.maksimowiczm.foodyou.infrastructure.database.OpenSourceDatabase.Companion.buildDatabase
 import org.koin.android.ext.koin.androidContext
@@ -17,7 +17,7 @@ actual val databaseModule = module {
                 name = "open_source_database.db"
             )
 
-        builder.buildDatabase(AndroidInitializeMealsCallback(androidContext()))
+        builder.buildDatabase(InitializeMealsCallback(androidContext()))
     }
     factory { database().productDao() }
     factory { database().addFoodDao() }
