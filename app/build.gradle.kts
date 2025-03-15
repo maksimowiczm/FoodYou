@@ -1,4 +1,6 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -62,6 +64,11 @@ kotlin {
     // Leave it here
     // Otherwise IDE won't mark android dependencies as error in common code
     jvm("desktop")
+
+    androidTarget {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
+    }
 
     sourceSets {
         androidMain.dependencies {
@@ -132,6 +139,13 @@ kotlin {
             // Logger
             implementation(libs.kermit)
         }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
     }
 }
 
@@ -181,4 +195,7 @@ dependencies {
     listOf("kspAndroid").forEach {
         add(it, libs.androidx.room.compiler)
     }
+
+    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.androidx.test.core.ktx)
 }
