@@ -17,11 +17,7 @@ buildConfig {
 
     val versionName = libs.versions.version.name.get()
 
-    buildConfigField(
-        "String",
-        "VERSION_NAME",
-        "\"$versionName\""
-    )
+    buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
 
     // -- OPEN FOOD FACTS --
     // https://openfoodfacts.github.io/openfoodfacts-server/api/#authentication
@@ -34,22 +30,21 @@ buildConfig {
         "\"FoodYou/$versionName-opensource (https://github.com/maksimowiczm/FoodYou)\""
     )
 
-    // TODO Use the correct URL
-//    buildConfigField(
-//        "String",
-//        "OPEN_FOOD_FACTS_URL",
-//        "\"https://world.openfoodfacts.org/\""
-//    )
+    sourceSets.getByName("main") {
+        buildConfigField(
+            "String",
+            "OPEN_FOOD_FACTS_URL",
+            "\"https://world.openfoodfacts.org/\""
+        )
+    }
 
-    buildConfigField(
-        "String",
-        "OPEN_FOOD_FACTS_URL",
-        "\"https://world.openfoodfacts.net/\""
-    )
-
-    // Use cached open food facts data for development. See
-    // dev/open-food-facts-cache directory for more information
-    // buildConfigField("String", "OPEN_FOOD_FACTS_URL", "\"<cache-address>\"")
+    sourceSets.getByName("test") {
+        buildConfigField(
+            "String",
+            "OPEN_FOOD_FACTS_URL",
+            "\"https://world.openfoodfacts.net/\""
+        )
+    }
 }
 
 kotlin {
