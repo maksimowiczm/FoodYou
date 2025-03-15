@@ -1,3 +1,4 @@
+
 package com.maksimowiczm.foodyou.ui.motion
 
 import androidx.compose.animation.core.CubicBezierEasing
@@ -7,6 +8,7 @@ import androidx.compose.animation.core.CubicBezierEasing
  */
 @Suppress("ktlint:standard:property-naming")
 object AnimationConstantsExt {
+    @Suppress("ConstPropertyName")
     const val EmphasizedDurationMillis: Int = 500
 }
 
