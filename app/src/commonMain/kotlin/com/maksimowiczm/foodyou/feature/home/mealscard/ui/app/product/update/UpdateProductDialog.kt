@@ -33,6 +33,7 @@ import com.maksimowiczm.foodyou.data.model.Product
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductForm
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductFormState
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.rememberProductFormState
+import com.maksimowiczm.foodyou.ui.component.BackHandler
 import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
@@ -114,12 +115,11 @@ private fun UpdateProductDialog(
         }
     }
 
-    // TODO
-//    BackHandler(
-//        enabled = state.isDirty
-//    ) {
-//        showDiscardDialog = true
-//    }
+    BackHandler(
+        enabled = state.isDirty
+    ) {
+        showDiscardDialog = true
+    }
 
     Scaffold(
         // Use WindowInsets to prevent spring animation when keyboard is hiding

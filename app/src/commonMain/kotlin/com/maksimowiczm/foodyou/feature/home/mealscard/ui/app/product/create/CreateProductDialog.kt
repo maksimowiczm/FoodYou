@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductForm
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.ProductFormState
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.rememberProductFormState
+import com.maksimowiczm.foodyou.ui.component.BackHandler
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -86,12 +87,11 @@ private fun CreateProductDialog(
         }
     }
 
-    // TODO
-//    BackHandler(
-//        enabled = form.isDirty
-//    ) {
-//        showDiscardDialog = true
-//    }
+    BackHandler(
+        enabled = form.isDirty
+    ) {
+        showDiscardDialog = true
+    }
 
     Scaffold(
         // Use WindowInsets to prevent spring animation when keyboard is hiding
