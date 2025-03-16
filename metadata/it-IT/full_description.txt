@@ -4,7 +4,7 @@
 <ul>
     <li><b>Design Material You:</b> Tema dinamico per un'esperienza coesiva e visivamente piacevole.</li>
     <li><b>Home Page Interattiva:</b> Accesso rapido alle funzionalità chiave con un'interfaccia a schede.</li>
-    <li><b>Integrazione Open Food Facts l:</b> Ottieni dati alimentari accurati per un monitoraggio calorico preciso.</li>
+    <li><b>Integrazione Open Food Facts:</b> Ottieni dati alimentari accurati per un monitoraggio calorico preciso.</li>
     <li><b>Layout Edge-to-Edge:</b> Goditi un'esperienza più immersiva con un design a schermo intero.</li>
     <li><b>Funzione Indietro Predittivo:</b> Un'esperienza di navigazione fluida con indietro predittivo.</li>
     <li><b>Personalizzabile e Open-Source:</b> Progettato per essere estendibile e supportato dalla comunità, permettendoti di contribuire e modificarlo.</li>
