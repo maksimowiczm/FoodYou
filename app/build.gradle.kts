@@ -157,7 +157,7 @@ android {
         applicationId = "com.maksimowiczm.foodyou"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 2
+        versionCode = libs.versions.android.versionCode.get().toInt()
         versionName = libs.versions.version.name.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

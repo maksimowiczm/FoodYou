@@ -1,0 +1,12 @@
+New Features
+- camera flashlight support
+- screen capture protection
+- "Go to Today" button in the calendar
+
+Translations
+- Added Italian
+- Added Turkish (thanks to mikropsoft)
+
+Codebase Updates
+- Migrated from Retrofit to Ktor
+- Migrated to Compose Multiplatform
