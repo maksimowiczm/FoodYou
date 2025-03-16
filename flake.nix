@@ -26,6 +26,7 @@
 
           buildInputs = [
             pkgs.just
+            pkgs.temurin-bin-17
           ];
 
           nativeBuildInputs = with pkgs; [
