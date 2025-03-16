@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.navigation.NavController
-import com.maksimowiczm.foodyou.data.SecurityPreferences
+import com.maksimowiczm.foodyou.data.preferences.SecurityPreferences
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.settings.SettingsFeature
 import com.maksimowiczm.foodyou.feature.settings.security.ui.SecureScreenSettingsListItem

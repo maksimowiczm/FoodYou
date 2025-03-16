@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.data
+package com.maksimowiczm.foodyou.data.preferences
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 

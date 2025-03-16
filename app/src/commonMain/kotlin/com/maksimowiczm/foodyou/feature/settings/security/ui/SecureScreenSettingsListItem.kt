@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.data.SecurityPreferences
+import com.maksimowiczm.foodyou.data.preferences.SecurityPreferences
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
