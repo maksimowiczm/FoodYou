@@ -8,7 +8,7 @@
     <string name="headline_create_product">Create product</string>
     <string name="headline_settings">Settings</string>
     <string name="headline_diary">Diary</string>
-    <string name="headline_calories_goal">Calories goal</string>
+    <string name="headline_calories_goal">Calorie goal</string>
     <string name="headline_daily_goals">Daily goals</string>
     <string name="headline_product_serving_and_packaging">Serving and packaging</string>
     <string name="headline_general">General</string>
@@ -131,7 +131,7 @@
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calories are calculated automatically based on macronutrients</string>
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Looks like this meal is empty. Add some food to track your calories.</string>
     <string name="neutral_entry_deleted">Entry deleted</string>
-    <string name="neutral_help_translating_the_app">Help translating the app</string>
+    <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_manage_food_database">Manage your food database</string>
 
     <string name="question_discard_product">Discard product?</string>
@@ -155,7 +155,7 @@
         <item quantity="other">Exceeded by %1$d calories</item>
     </plurals>
 
-    <string name="description_calories_goal">Set your daily calories intake goal. This will help you to track your progress and stay on track.</string>
+    <string name="description_calories_goal">Set your daily calorie intake goal. This will help you to track your progress and stay on track.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Product will be deleted permanently. This action can't be undone. All diary entries related to this product will be deleted.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">This entry will be deleted from your diary. You can add it again anytime.</string>
     <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">Enable Open Food Facts in settings to access detailed information about products</string>
