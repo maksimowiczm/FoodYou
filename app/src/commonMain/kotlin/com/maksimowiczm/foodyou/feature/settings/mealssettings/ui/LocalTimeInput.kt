@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable

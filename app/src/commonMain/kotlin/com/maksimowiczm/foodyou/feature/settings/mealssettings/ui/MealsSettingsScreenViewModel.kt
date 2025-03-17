@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

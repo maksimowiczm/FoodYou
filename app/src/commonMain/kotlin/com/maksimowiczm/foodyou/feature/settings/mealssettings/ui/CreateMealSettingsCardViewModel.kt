@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import com.maksimowiczm.foodyou.data.DiaryRepository
 import com.maksimowiczm.foodyou.data.StringFormatRepository

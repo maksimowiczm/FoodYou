@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,11 +10,11 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.CreateMealSettingsCardTestTags.CREATE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.CreateMealSettingsCardTestTags.CREATE_MEAL_SETTINGS_CARD
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.CONFIRM_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.DELETE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.NAME_INPUT
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_MEAL_SETTINGS_CARD
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.CONFIRM_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.DELETE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.NAME_INPUT
 import org.junit.Test
 
 @OptIn(ExperimentalTestApi::class)

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
