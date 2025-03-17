@@ -45,7 +45,11 @@ fun CreateMealSettingsCard(
                 viewModel.createMeal(
                     name = state.nameInput.value,
                     from = state.fromInput.value,
-                    to = state.toInput.value
+                    to = if (state.isAllDay) {
+                        state.fromInput.value
+                    } else {
+                        state.toInput.value
+                    }
                 )
                 onCreatingChange(false)
             },
