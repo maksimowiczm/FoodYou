@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,7 @@ fun rememberMealSettingsCardState(meal: Meal, isLoading: Boolean): MealSettingsC
 
     return remember {
         MealSettingsCardStateImpl(
+            meal = meal,
             nameInput = nameInput,
             fromInput = fromInput,
             toInput = toInput,
@@ -53,12 +55,19 @@ fun rememberMealSettingsCardState(meal: Meal, isLoading: Boolean): MealSettingsC
 }
 
 private class MealSettingsCardStateImpl(
+    private val meal: Meal,
     override val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
     override val fromInput: LocalTimeInput,
     override val toInput: LocalTimeInput,
     override val isLoading: Boolean
 ) : MealSettingsCardState {
-    override val isDirty: Boolean by mutableStateOf(false)
+    override val isDirty: Boolean by derivedStateOf {
+        nameInput.value != meal.name ||
+            fromInput.value != meal.from ||
+            toInput.value != meal.to ||
+            isAllDay != meal.isAllDay
+    }
+
     override val isValid: Boolean by mutableStateOf(false)
 
     override var isAllDay: Boolean by mutableStateOf(false)

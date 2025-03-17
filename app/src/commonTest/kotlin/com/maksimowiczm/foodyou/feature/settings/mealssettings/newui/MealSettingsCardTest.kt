@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -9,15 +9,14 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.maksimowiczm.foodyou.data.model.Meal
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.ALL_DAY_SWITCH
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.ALL_DAY_SWITCH_CONTAINER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.CONFIRM_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.DELETE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.FROM_TIME_PICKER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.LOADING_INDICATOR
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.NAME_INPUT
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.TIME_PICKER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.TO_TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.ALL_DAY_SWITCH
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.ALL_DAY_SWITCH_CONTAINER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.CONFIRM_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.DELETE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.FROM_TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.NAME_INPUT
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.TO_TIME_PICKER
 import kotlinx.datetime.LocalTime
 import org.junit.Test
 
@@ -39,11 +38,12 @@ class MealSettingsCardTest {
                         from = from,
                         to = to
                     ),
-                    onUpdate = {},
-                    onDelete = {}
+                    isLoading = false
                 ),
-                showDeleteDialog = false,
-                formatTime = formatTime
+                onUpdate = {},
+                onDelete = {},
+                formatTime = formatTime,
+                showDeleteDialog = false
             )
         }
 
@@ -53,7 +53,7 @@ class MealSettingsCardTest {
 
         onNodeWithTag(DELETE_BUTTON).assertIsDisplayed()
         onNodeWithTag(CONFIRM_BUTTON).assertDoesNotExist()
-        onNodeWithTag(LOADING_INDICATOR).assertDoesNotExist()
+        onNodeWithTag(MealSettingsCardTestTags.LOADING_INDICATOR).assertDoesNotExist()
 
         onNodeWithTag(ALL_DAY_SWITCH).assertIsDisplayed()
         onNodeWithTag(TIME_PICKER).assertIsDisplayed()
@@ -75,11 +75,12 @@ class MealSettingsCardTest {
                         from = from,
                         to = to
                     ),
-                    onUpdate = {},
-                    onDelete = {}
+                    isLoading = false
                 ),
-                showDeleteDialog = false,
-                formatTime = formatTime
+                onUpdate = {},
+                onDelete = {},
+                formatTime = formatTime,
+                showDeleteDialog = false
             )
         }
 
