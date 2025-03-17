@@ -23,13 +23,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -63,6 +67,13 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
     val coroutineScope = rememberCoroutineScope()
 
     var isCreating by rememberSaveable { mutableStateOf(false) }
+
+    val createCardFocusRequester = remember { FocusRequester() }
+    LaunchedEffect(isCreating) {
+        if (isCreating) {
+            createCardFocusRequester.requestFocus()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -117,7 +128,9 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
                 CreateMealSettingsCard(
                     isCreating = isCreating,
                     onCreatingChange = { isCreating = it },
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .focusRequester(createCardFocusRequester),
                     coroutineScope = coroutineScope
                 )
             }
