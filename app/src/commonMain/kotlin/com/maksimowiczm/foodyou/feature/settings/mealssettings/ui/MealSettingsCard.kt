@@ -402,7 +402,6 @@ fun MealSettingsCard(
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH_CONTAINER)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
@@ -417,7 +416,10 @@ fun MealSettingsCard(
                         modifier = Modifier.testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH)
                     )
                     Spacer(Modifier.width(16.dp))
-                    Text(stringResource(Res.string.headline_all_day))
+                    Text(
+                        text = stringResource(Res.string.headline_all_day),
+                        style = MaterialTheme.typography.labelLarge
+                    )
                 }
             }
         }
