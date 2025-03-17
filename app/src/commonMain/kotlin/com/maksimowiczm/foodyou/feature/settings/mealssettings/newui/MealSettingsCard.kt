@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -61,23 +61,37 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 
-private enum class ActionButtonState {
-    Save,
-    Delete,
-    Loading
+@Composable
+fun MealSettingsCard(viewModel: MealSettingsCardViewModel, modifier: Modifier = Modifier) {
+    val viewModelState by viewModel.state.collectAsStateWithLifecycle()
+    val state = rememberMealSettingsCardState(
+        meal = viewModelState.meal,
+        isLoading = viewModelState.isLoading
+    )
+
+    MealSettingsCard(
+        state = state,
+        onDelete = {},
+        onUpdate = {},
+        formatTime = viewModel::formatTime,
+        modifier = modifier
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealSettingsCard(
     state: MealSettingsCardState,
-    showDeleteDialog: Boolean,
+    onDelete: () -> Unit,
+    onUpdate: () -> Unit,
     formatTime: (LocalTime) -> String,
     modifier: Modifier = Modifier,
+    showDeleteDialog: Boolean = true,
     shape: Shape = MealSettingsCardDefaults.shape,
     colors: MealSettingsCardColors = MealSettingsCardDefaults.colors()
 ) {
@@ -145,7 +159,7 @@ fun MealSettingsCard(
     if (deleteDialog) {
         DeleteDialog(
             onDismissRequest = { deleteDialog = false },
-            onConfirm = state::delete
+            onConfirm = onUpdate
         )
     }
 
@@ -155,7 +169,7 @@ fun MealSettingsCard(
         ) {
             when (it) {
                 ActionButtonState.Save -> FilledIconButton(
-                    onClick = state::update,
+                    onClick = onUpdate,
                     enabled = state.isValid,
                     modifier = Modifier.testTag(MealSettingsCardTestTags.CONFIRM_BUTTON),
                     colors = IconButtonDefaults.filledIconButtonColors(
@@ -174,7 +188,7 @@ fun MealSettingsCard(
                         if (showDeleteDialog) {
                             deleteDialog = true
                         } else {
-                            state.delete()
+                            onDelete()
                         }
                     },
                     modifier = Modifier.testTag(MealSettingsCardTestTags.DELETE_BUTTON),
@@ -440,6 +454,12 @@ fun MealSettingsCard(
             }
         }
     }
+}
+
+private enum class ActionButtonState {
+    Save,
+    Delete,
+    Loading
 }
 
 @Composable

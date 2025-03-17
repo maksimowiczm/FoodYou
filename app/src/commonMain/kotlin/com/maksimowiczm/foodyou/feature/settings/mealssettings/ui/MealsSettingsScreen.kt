@@ -68,7 +68,8 @@ private fun MealsSettingsScreen(
     onBack: () -> Unit,
     screenState: MealsSettingsScreenState,
     formatTime: (LocalTime) -> String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
     val topBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -115,13 +116,15 @@ private fun MealsSettingsScreen(
                 items = screenState.meals,
                 key = { meal -> meal.id }
             ) { meal ->
-                val state = screenState.rememberMealState(meal)
+                val state = rememberMealSettingsCardState(
+                    meal = meal,
+                    onUpdate = screenState.onUpdate,
+                    onDelete = screenState.onDelete
+                )
 
                 MealSettingsCard(
                     state = state,
                     showDeleteDialog = true,
-                    onDelete = state::onDelete,
-                    onConfirm = state::onUpdate,
                     formatTime = formatTime,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)

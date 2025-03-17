@@ -8,6 +8,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.ALL_DAY_SWITCH
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.ALL_DAY_SWITCH_CONTAINER
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.CONFIRM_BUTTON
@@ -29,22 +30,22 @@ class MealSettingsCardTest {
         val to = LocalTime(14, 0, 0)
         val formatTime: (LocalTime) -> String = { it.toString() }
 
-//        setContent {
-//            MealSettingsCard(
-//                state = rememberMealsSettingsCardState(
-//                    meal = Meal(
-//                        id = 0,
-//                        name = name,
-//                        from = from,
-//                        to = to
-//                    )
-//                ),
-//                showDeleteDialog = false,
-//                onDelete = {},
-//                onConfirm = {},
-//                formatTime = formatTime
-//            )
-//        }
+        setContent {
+            MealSettingsCard(
+                state = rememberMealSettingsCardState(
+                    meal = Meal(
+                        id = 0,
+                        name = name,
+                        from = from,
+                        to = to
+                    ),
+                    onUpdate = {},
+                    onDelete = {}
+                ),
+                showDeleteDialog = false,
+                formatTime = formatTime
+            )
+        }
 
         onNodeWithTag(NAME_INPUT).assertIsDisplayed().assertTextEquals(name)
         onNodeWithTag(FROM_TIME_PICKER).assertIsDisplayed().assertTextEquals(formatTime(from))
@@ -65,22 +66,22 @@ class MealSettingsCardTest {
         val to = LocalTime(14, 0, 0)
         val formatTime: (LocalTime) -> String = { it.toString() }
 
-//        setContent {
-//            MealSettingsCard(
-//                state = rememberMealsSettingsCardState(
-//                    meal = Meal(
-//                        id = 0,
-//                        name = name,
-//                        from = from,
-//                        to = to
-//                    )
-//                ),
-//                showDeleteDialog = false,
-//                onDelete = {},
-//                onConfirm = {},
-//                formatTime = formatTime
-//            )
-//        }
+        setContent {
+            MealSettingsCard(
+                state = rememberMealSettingsCardState(
+                    meal = Meal(
+                        id = 0,
+                        name = name,
+                        from = from,
+                        to = to
+                    ),
+                    onUpdate = {},
+                    onDelete = {}
+                ),
+                showDeleteDialog = false,
+                formatTime = formatTime
+            )
+        }
 
         // Toggle ON
         onNodeWithTag(ALL_DAY_SWITCH_CONTAINER).performClick()

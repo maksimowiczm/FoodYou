@@ -181,6 +181,15 @@ interface AddFoodDao {
     )
     fun observeMeals(): Flow<List<MealEntity>>
 
+    @Query(
+        """
+        SELECT *
+        FROM MealEntity
+        WHERE id = :id
+        """
+    )
+    fun observeMealById(id: Long): Flow<MealEntity>
+
     @Insert
     suspend fun insertMeal(meal: MealEntity)
 

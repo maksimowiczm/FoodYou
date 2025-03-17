@@ -16,6 +16,8 @@ interface DiaryRepository {
 
     fun observeMeals(): Flow<List<Meal>>
 
+    fun observeMealById(id: Long): Flow<Meal>
+
     suspend fun createMeal(name: String, from: LocalTime, to: LocalTime)
 
     suspend fun updateMeal(meal: Meal)
