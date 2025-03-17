@@ -11,5 +11,6 @@ data class MealEntity(
     val fromHour: Int,
     val fromMinute: Int,
     val toHour: Int,
-    val toMinute: Int
+    val toMinute: Int,
+    val lexoRank: String
 )

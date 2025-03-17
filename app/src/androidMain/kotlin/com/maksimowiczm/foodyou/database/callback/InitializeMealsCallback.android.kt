@@ -35,7 +35,14 @@ actual class InitializeMealsCallback(private val context: Context) : InitializeM
 
                     XmlPullParser.END_TAG -> {
                         if (parser.name == "meal" && name != null && from != null && to != null) {
-                            meals.add(MealXml(name, from, to))
+                            meals.add(
+                                MealXml(
+                                    name = name,
+                                    from = from,
+                                    to = to,
+                                    lexoRank = ('a'.code + meals.size).toChar().toString()
+                                )
+                            )
                             name = null
                             from = null
                             to = null
@@ -53,7 +60,12 @@ actual class InitializeMealsCallback(private val context: Context) : InitializeM
         return meals
     }
 
-    private data class MealXml(val name: String, val from: String, val to: String) {
+    private data class MealXml(
+        val name: String,
+        val from: String,
+        val to: String,
+        val lexoRank: String
+    ) {
         fun toMeal(): MealEntity {
             val fromHour = from.substringBefore(':').toInt()
             val fromMinute = from.substringAfter(':').toInt()
@@ -65,7 +77,8 @@ actual class InitializeMealsCallback(private val context: Context) : InitializeM
                 fromHour = fromHour,
                 fromMinute = fromMinute,
                 toHour = toHour,
-                toMinute = toMinute
+                toMinute = toMinute,
+                lexoRank = lexoRank
             )
         }
     }

@@ -20,15 +20,19 @@ abstract class InitializeMealsCallbackBase : RoomDatabase.Callback() {
 
         try {
             meals.forEach { meal ->
-                val statement = connection.prepare(
-                    "INSERT INTO MealEntity (name, fromHour, fromMinute, toHour, toMinute) VALUES ($1, $2, $3, $4, $5)"
-                )
+                val query = """
+                    INSERT INTO MealEntity (name, fromHour, fromMinute, toHour, toMinute, lexorank) 
+                    VALUES ($1, $2, $3, $4, $5, $6)
+                """.trimIndent()
+
+                val statement = connection.prepare(query)
 
                 statement.bindText(1, meal.name)
                 statement.bindInt(2, meal.fromHour)
                 statement.bindInt(3, meal.fromMinute)
                 statement.bindInt(4, meal.toHour)
                 statement.bindInt(5, meal.toMinute)
+                statement.bindText(6, meal.lexoRank)
 
                 statement.step()
 
