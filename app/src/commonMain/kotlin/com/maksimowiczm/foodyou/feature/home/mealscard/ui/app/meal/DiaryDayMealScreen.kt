@@ -328,15 +328,21 @@ private fun DiaryDayMealScreen(
                                 LocalContentColor provides MaterialTheme.colorScheme.outline,
                                 LocalTextStyle provides MaterialTheme.typography.bodyLarge
                             ) {
-                                Text(
-                                    text = formatTime(meal.from)
-                                )
-                                Text(
-                                    text = stringResource(Res.string.en_dash)
-                                )
-                                Text(
-                                    text = formatTime(meal.to)
-                                )
+                                if (meal.isAllDay) {
+                                    Text(
+                                        text = stringResource(Res.string.headline_all_day)
+                                    )
+                                } else {
+                                    Text(
+                                        text = formatTime(meal.from)
+                                    )
+                                    Text(
+                                        text = stringResource(Res.string.en_dash)
+                                    )
+                                    Text(
+                                        text = formatTime(meal.to)
+                                    )
+                                }
                             }
                         }
                     }
