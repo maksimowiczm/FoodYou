@@ -22,7 +22,6 @@ interface MealSettingsCardState {
     val fromInput: LocalTimeInput
     val toInput: LocalTimeInput
 
-    val isLoading: Boolean
     val isDirty: Boolean
     val isValid: Boolean
     val isAllDay: Boolean
@@ -32,7 +31,7 @@ interface MealSettingsCardState {
 }
 
 @Composable
-fun rememberMealSettingsCardState(meal: Meal, isLoading: Boolean): MealSettingsCardState {
+fun rememberMealSettingsCardState(meal: Meal): MealSettingsCardState {
     val nameInput = rememberFormFieldWithTextFieldValue(
         initialTextFieldValue = TextFieldValue(
             text = meal.name,
@@ -46,13 +45,12 @@ fun rememberMealSettingsCardState(meal: Meal, isLoading: Boolean): MealSettingsC
     val fromInput = rememberLocalTimeInput(meal.from)
     val toInput = rememberLocalTimeInput(meal.to)
 
-    return remember(meal, nameInput, fromInput, toInput, isLoading) {
+    return remember(meal, nameInput, fromInput, toInput) {
         MealSettingsCardStateImpl(
             meal = meal,
             nameInput = nameInput,
             fromInput = fromInput,
-            toInput = toInput,
-            isLoading = isLoading
+            toInput = toInput
         )
     }
 }
@@ -63,7 +61,6 @@ private class MealSettingsCardStateImpl(
     override val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
     override val fromInput: LocalTimeInput,
     override val toInput: LocalTimeInput,
-    override val isLoading: Boolean,
     initialIsAllDay: Boolean = meal.isAllDay
 ) : MealSettingsCardState {
     override val isDirty: Boolean by derivedStateOf {

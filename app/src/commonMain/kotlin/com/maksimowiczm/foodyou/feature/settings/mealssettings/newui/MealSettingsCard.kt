@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -28,7 +27,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
@@ -68,11 +66,8 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MealSettingsCard(viewModel: MealSettingsCardViewModel, modifier: Modifier = Modifier) {
-    val viewModelState by viewModel.state.collectAsStateWithLifecycle()
-    val state = rememberMealSettingsCardState(
-        meal = viewModelState.meal,
-        isLoading = viewModelState.isLoading
-    )
+    val meal by viewModel.meal.collectAsStateWithLifecycle()
+    val state = rememberMealSettingsCardState(meal)
 
     MealSettingsCard(
         state = state,
@@ -103,7 +98,6 @@ fun MealSettingsCard(
         BasicTextField(
             value = state.nameInput.textFieldValue,
             onValueChange = { state.nameInput.onValueChange(it) },
-            enabled = !state.isLoading,
             modifier = Modifier
                 .testTag(MealSettingsCardTestTags.NAME_INPUT)
                 .defaultMinSize(minWidth = 50.dp)
@@ -148,10 +142,9 @@ fun MealSettingsCard(
         )
     }
 
-    val actionButtonState by remember(state.isDirty, state.isLoading) {
+    val actionButtonState by remember(state.isDirty) {
         derivedStateOf {
             when {
-                state.isLoading -> ActionButtonState.Loading
                 state.nameInput.textFieldValue.text.isEmpty() -> ActionButtonState.Delete
                 state.isDirty -> ActionButtonState.Save
                 else -> ActionButtonState.Delete
@@ -206,17 +199,6 @@ fun MealSettingsCard(
                         contentDescription = stringResource(Res.string.action_delete)
                     )
                 }
-
-                ActionButtonState.Loading -> Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .testTag(MealSettingsCardTestTags.LOADING_INDICATOR),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
             }
         }
     }
@@ -226,9 +208,7 @@ fun MealSettingsCard(
 
     val dateInput = @Composable {
         val containerColor by animateColorAsState(
-            if (state.isLoading) {
-                colors.disabledTimeContainerColor
-            } else if (state.isDirty) {
+            if (state.isDirty) {
                 colors.dirtyTimeContainerColor
             } else {
                 colors.timeContainerColor
@@ -236,9 +216,7 @@ fun MealSettingsCard(
         )
 
         val contentColor by animateColorAsState(
-            if (state.isLoading) {
-                colors.disabledTimeContentColor
-            } else if (state.isDirty) {
+            if (state.isDirty) {
                 colors.dirtyTimeContentColor
             } else {
                 colors.timeContentColor
@@ -252,7 +230,6 @@ fun MealSettingsCard(
         ) {
             Card(
                 onClick = { showFromTimePicker = true },
-                enabled = !state.isLoading,
                 modifier = Modifier.testTag(MealSettingsCardTestTags.FROM_TIME_PICKER),
                 colors = CardDefaults.cardColors(
                     containerColor = containerColor,
@@ -271,7 +248,6 @@ fun MealSettingsCard(
             )
             Card(
                 onClick = { showToTimePicker = true },
-                enabled = !state.isLoading,
                 modifier = Modifier.testTag(MealSettingsCardTestTags.TO_TIME_PICKER),
                 colors = CardDefaults.cardColors(
                     containerColor = containerColor,
@@ -369,9 +345,7 @@ fun MealSettingsCard(
     }
 
     val surfaceColor by animateColorAsState(
-        targetValue = if (state.isLoading) {
-            colors.disabledContainerColor
-        } else if (state.isDirty) {
+        targetValue = if (state.isDirty) {
             colors.dirtyContainerColor
         } else {
             colors.containerColor
@@ -379,9 +353,7 @@ fun MealSettingsCard(
     )
 
     val contentColor by animateColorAsState(
-        targetValue = if (state.isLoading) {
-            colors.disabledContentColor
-        } else if (state.isDirty) {
+        targetValue = if (state.isDirty) {
             colors.dirtyContentColor
         } else {
             colors.contentColor
@@ -447,7 +419,6 @@ fun MealSettingsCard(
                     Switch(
                         checked = state.isAllDay,
                         onCheckedChange = state::setIsAllDay,
-                        enabled = !state.isLoading,
                         modifier = Modifier.testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH)
                     )
                     Spacer(Modifier.width(16.dp))
@@ -462,8 +433,7 @@ fun MealSettingsCard(
 
 private enum class ActionButtonState {
     Save,
-    Delete,
-    Loading
+    Delete
 }
 
 @Composable
@@ -518,11 +488,6 @@ data class MealSettingsCardColors(
     val timeContainerColor: Color,
     val timeContentColor: Color,
 
-    val disabledContainerColor: Color,
-    val disabledContentColor: Color,
-    val disabledTimeContainerColor: Color,
-    val disabledTimeContentColor: Color,
-
     val dirtyContainerColor: Color,
     val dirtyContentColor: Color,
     val dirtyTimeContainerColor: Color,
@@ -545,10 +510,6 @@ object MealSettingsCardDefaults {
         contentColor: Color = MaterialTheme.colorScheme.onSurface,
         timeContainerColor: Color = MaterialTheme.colorScheme.surfaceContainerHighest,
         timeContentColor: Color = MaterialTheme.colorScheme.onSurface,
-        disabledContainerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
-        disabledContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-        disabledTimeContainerColor: Color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        disabledTimeContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
         dirtyContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
         dirtyContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
         dirtyTimeContainerColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
@@ -562,10 +523,6 @@ object MealSettingsCardDefaults {
         contentColor = contentColor,
         timeContainerColor = timeContainerColor,
         timeContentColor = timeContentColor,
-        disabledContainerColor = disabledContainerColor,
-        disabledContentColor = disabledContentColor,
-        disabledTimeContainerColor = disabledTimeContainerColor,
-        disabledTimeContentColor = disabledTimeContentColor,
         dirtyContainerColor = dirtyContainerColor,
         dirtyContentColor = dirtyContentColor,
         dirtyTimeContainerColor = dirtyTimeContainerColor,
@@ -581,7 +538,6 @@ object MealSettingsCardTestTags {
     const val NAME_INPUT = "Name input"
     const val DELETE_BUTTON = "Delete button"
     const val CONFIRM_BUTTON = "Confirm button"
-    const val LOADING_INDICATOR = "Loading indicator"
     const val TIME_PICKER = "Time picker"
     const val ALL_DAY_SWITCH_CONTAINER = "All day switch container"
     const val ALL_DAY_SWITCH = "All day switch"

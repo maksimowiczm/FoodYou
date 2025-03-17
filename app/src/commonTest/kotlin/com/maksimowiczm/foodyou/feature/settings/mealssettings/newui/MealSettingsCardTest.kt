@@ -15,7 +15,6 @@ import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSetting
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.CONFIRM_BUTTON
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.DELETE_BUTTON
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.FROM_TIME_PICKER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.LOADING_INDICATOR
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.NAME_INPUT
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.TIME_PICKER
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.TO_TIME_PICKER
@@ -38,8 +37,7 @@ class MealSettingsCardTest {
                         name = name,
                         from = from,
                         to = to
-                    ),
-                    isLoading = false
+                    )
                 ),
                 onUpdate = {},
                 onDelete = {},
@@ -64,7 +62,6 @@ class MealSettingsCardTest {
 
         onNodeWithTag(DELETE_BUTTON).assertIsDisplayed()
         onNodeWithTag(CONFIRM_BUTTON).assertDoesNotExist()
-        onNodeWithTag(LOADING_INDICATOR).assertDoesNotExist()
 
         onNodeWithTag(ALL_DAY_SWITCH).assertIsDisplayed()
         onNodeWithTag(TIME_PICKER).assertIsDisplayed()
@@ -87,7 +84,6 @@ class MealSettingsCardTest {
         onNodeWithTag(TO_TIME_PICKER).assertDoesNotExist()
         onNodeWithTag(CONFIRM_BUTTON).assertIsDisplayed().assertIsEnabled()
         onNodeWithTag(DELETE_BUTTON).assertDoesNotExist()
-        onNodeWithTag(LOADING_INDICATOR).assertDoesNotExist()
     }
 
     @Test
@@ -104,7 +100,6 @@ class MealSettingsCardTest {
 
         onNodeWithTag(DELETE_BUTTON).assertIsDisplayed()
         onNodeWithTag(CONFIRM_BUTTON).assertDoesNotExist()
-        onNodeWithTag(LOADING_INDICATOR).assertDoesNotExist()
 
         onNodeWithTag(ALL_DAY_SWITCH).assertIsDisplayed().assertIsOn()
         onNodeWithTag(TIME_PICKER).assertDoesNotExist()
@@ -126,6 +121,5 @@ class MealSettingsCardTest {
         onNodeWithTag(TO_TIME_PICKER).assertIsDisplayed().assertTextEquals(formatTime(time))
         onNodeWithTag(CONFIRM_BUTTON).assertDoesNotExist()
         onNodeWithTag(DELETE_BUTTON).assertIsDisplayed()
-        onNodeWithTag(LOADING_INDICATOR).assertDoesNotExist()
     }
 }
