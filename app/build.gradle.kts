@@ -54,6 +54,9 @@ kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
+
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
     compilerOptions {
@@ -64,11 +67,6 @@ kotlin {
     // Leave it here
     // Otherwise IDE won't mark android dependencies as error in common code
     jvm("desktop")
-
-    androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
-    }
 
     sourceSets {
         androidMain.dependencies {
