@@ -6,8 +6,8 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextRange
@@ -30,9 +30,30 @@ fun rememberMealsSettingsScreenState(
     onUpdate: suspend (Meal) -> Unit,
     onDelete: suspend (Meal) -> Unit,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
-): MealsSettingsScreenState = remember(meals, onCreate, onUpdate, onDelete) {
+): MealsSettingsScreenState = rememberSaveable(
+    meals,
+    onCreate,
+    onUpdate,
+    onDelete,
+    saver = Saver(
+        save = {
+            it.creating
+        },
+        restore = {
+            MealsSettingsScreenState(
+                meals = meals,
+                initialCreating = it,
+                onCreate = onCreate,
+                onUpdate = onUpdate,
+                onDelete = onDelete,
+                coroutineScope = coroutineScope
+            )
+        }
+    )
+) {
     MealsSettingsScreenState(
         meals = meals,
+        initialCreating = false,
         onCreate = onCreate,
         onUpdate = onUpdate,
         onDelete = onDelete,
@@ -54,6 +75,7 @@ enum class MealNameError {
 @Stable
 class MealsSettingsScreenState(
     meals: List<Meal>,
+    initialCreating: Boolean,
     private val onCreate: suspend (name: String, from: LocalTime, to: LocalTime) -> Unit,
     private val onUpdate: suspend (Meal) -> Unit,
     private val onDelete: suspend (Meal) -> Unit,
@@ -62,7 +84,7 @@ class MealsSettingsScreenState(
     var meals by mutableStateOf(meals)
         private set
 
-    private var loadingMealsIds: List<Long> by mutableStateOf(emptyList())
+    var creating by mutableStateOf(initialCreating)
 
     @Composable
     fun rememberMealState(meal: Meal): MealState {
@@ -80,14 +102,30 @@ class MealsSettingsScreenState(
         val toInput = rememberLocalTimeInput(meal.to)
         val isAllDayState = rememberSaveable { mutableStateOf(meal.isAllDay) }
 
-        return remember(
+        return rememberSaveable(
             nameInput,
             fromInput,
             toInput,
-            meal
+            meal,
+            saver = Saver(
+                save = {
+                    it.isLoading
+                },
+                restore = {
+                    MealState(
+                        meal = meal,
+                        initialIsLoading = it,
+                        nameInput = nameInput,
+                        fromInput = fromInput,
+                        toInput = toInput,
+                        isAllDayState = isAllDayState
+                    )
+                }
+            )
         ) {
             MealState(
                 meal = meal,
+                initialIsLoading = false,
                 nameInput = nameInput,
                 fromInput = fromInput,
                 toInput = toInput,
@@ -99,6 +137,7 @@ class MealsSettingsScreenState(
     @Stable
     inner class MealState(
         private val meal: Meal,
+        initialIsLoading: Boolean,
         val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
         val fromInput: LocalTimeInput,
         val toInput: LocalTimeInput,
@@ -115,9 +154,8 @@ class MealsSettingsScreenState(
             nameInput.error == null && !isLoading
         }
 
-        val isLoading by derivedStateOf {
-            this@MealsSettingsScreenState.loadingMealsIds.contains(meal.id)
-        }
+        var isLoading by mutableStateOf(initialIsLoading)
+            private set
 
         var isAllDay: Boolean
             get() = isAllDayState.value
@@ -133,17 +171,15 @@ class MealsSettingsScreenState(
 
         fun onDelete() {
             coroutineScope.launch {
-                loadingMealsIds = loadingMealsIds + meal.id
+                isLoading = true
                 onDelete(meal)
-                loadingMealsIds = loadingMealsIds - meal.id
             }
         }
 
         fun onUpdate() {
             coroutineScope.launch {
-                loadingMealsIds = loadingMealsIds + meal.id
+                isLoading = true
                 onUpdate(intoMeal())
-                loadingMealsIds = loadingMealsIds - meal.id
             }
         }
 
