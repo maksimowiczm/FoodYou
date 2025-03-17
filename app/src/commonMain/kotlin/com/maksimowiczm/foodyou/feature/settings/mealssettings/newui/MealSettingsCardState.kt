@@ -10,17 +10,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.maksimowiczm.foodyou.data.model.Meal
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.LocalTimeInput
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealNameError
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.rememberLocalTimeInput
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.stringParser
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.error_this_field_cannot_be_empty
 import kotlin.time.Duration.Companion.hours
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+
+enum class MealNameError {
+    Empty;
+
+    @Composable
+    fun stringResource() = when (this) {
+        Empty -> org.jetbrains.compose.resources.stringResource(
+            Res.string.error_this_field_cannot_be_empty
+        )
+    }
+}
 
 interface MealSettingsCardState {
     val nameInput: FormFieldWithTextFieldValue<String, MealNameError>
