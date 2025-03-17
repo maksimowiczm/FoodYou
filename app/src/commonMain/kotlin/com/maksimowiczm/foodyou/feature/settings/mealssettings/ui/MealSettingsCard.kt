@@ -60,16 +60,10 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
-import com.maksimowiczm.foodyou.ui.form.stringParser
-import com.maksimowiczm.foodyou.ui.preview.MealsPreviewParameterProvider
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private enum class ActionButtonState {
     Save,
@@ -80,7 +74,7 @@ private enum class ActionButtonState {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealSettingsCard(
-    state: MealSettingsCardState,
+    state: MealsSettingsScreenState.MealState,
     showDeleteDialog: Boolean,
     onDelete: () -> Unit,
     onConfirm: () -> Unit,
@@ -573,47 +567,4 @@ object MealSettingsCardTestTags {
     const val ALL_DAY_SWITCH = "All day switch"
     const val FROM_TIME_PICKER = "From time picker"
     const val TO_TIME_PICKER = "To time picker"
-}
-
-@Preview
-@Composable
-private fun MealSettingsCardPreview() {
-    val meal = MealsPreviewParameterProvider().values.first()
-
-    FoodYouTheme {
-        MealSettingsCard(
-            state = rememberMealsSettingsCardState(meal),
-            onDelete = {},
-            onConfirm = {},
-            showDeleteDialog = true,
-            formatTime = { it.toString() }
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun DirtyMealSettingsCardPreview() {
-    val meal = MealsPreviewParameterProvider().values.first()
-
-    FoodYouTheme {
-        MealSettingsCard(
-            state = rememberMealsSettingsCardState(
-                initialName = meal.name,
-                initialFrom = meal.from,
-                initialTo = meal.to,
-                nameInput = rememberFormFieldWithTextFieldValue(
-                    initialTextFieldValue = TextFieldValue("I am dirty"),
-                    initialValue = "I am dirty",
-                    parser = stringParser(
-                        onEmpty = { MealNameError.Empty }
-                    )
-                )
-            ),
-            onDelete = {},
-            onConfirm = {},
-            showDeleteDialog = true,
-            formatTime = { it.toString() }
-        )
-    }
 }
