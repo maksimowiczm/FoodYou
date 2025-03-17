@@ -122,10 +122,10 @@ class MealSettingsCardTest {
 
         onNodeWithTag(ALL_DAY_SWITCH).assertIsDisplayed().assertIsOff()
         onNodeWithTag(TIME_PICKER).assertIsDisplayed()
-        onNodeWithTag(FROM_TIME_PICKER).assertIsDisplayed()
-        onNodeWithTag(TO_TIME_PICKER).assertIsDisplayed()
-        onNodeWithTag(CONFIRM_BUTTON).assertIsDisplayed().assertIsEnabled()
-        onNodeWithTag(DELETE_BUTTON).assertDoesNotExist()
+        onNodeWithTag(FROM_TIME_PICKER).assertIsDisplayed().assertTextEquals(formatTime(time))
+        onNodeWithTag(TO_TIME_PICKER).assertIsDisplayed().assertTextEquals(formatTime(time))
+        onNodeWithTag(CONFIRM_BUTTON).assertDoesNotExist()
+        onNodeWithTag(DELETE_BUTTON).assertIsDisplayed()
         onNodeWithTag(LOADING_INDICATOR).assertDoesNotExist()
     }
 }

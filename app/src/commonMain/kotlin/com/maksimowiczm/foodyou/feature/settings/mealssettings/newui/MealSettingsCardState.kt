@@ -67,10 +67,14 @@ private class MealSettingsCardStateImpl(
     initialIsAllDay: Boolean = meal.isAllDay
 ) : MealSettingsCardState {
     override val isDirty: Boolean by derivedStateOf {
-        nameInput.value != meal.name ||
-            fromInput.value != meal.from ||
-            toInput.value != meal.to ||
-            isAllDay != meal.isAllDay
+        val input =
+            nameInput.value != meal.name || fromInput.value != meal.from || toInput.value != meal.to
+
+        if (meal.from == meal.to) {
+            input
+        } else {
+            input || isAllDay != meal.isAllDay
+        }
     }
 
     override val isValid: Boolean by derivedStateOf { nameInput.error == null }
