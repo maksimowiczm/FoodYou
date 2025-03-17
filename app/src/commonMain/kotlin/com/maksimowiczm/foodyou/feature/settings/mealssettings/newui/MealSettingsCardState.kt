@@ -69,7 +69,7 @@ private class MealSettingsCardStateImpl(
             isAllDay != meal.isAllDay
     }
 
-    override val isValid: Boolean by mutableStateOf(false)
+    override val isValid: Boolean by derivedStateOf { nameInput.error == null }
 
     override var isAllDay: Boolean by mutableStateOf(initialIsAllDay)
         private set
