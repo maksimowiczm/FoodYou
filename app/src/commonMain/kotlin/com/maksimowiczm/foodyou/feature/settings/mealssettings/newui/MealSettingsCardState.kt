@@ -26,6 +26,8 @@ interface MealSettingsCardState {
     val isValid: Boolean
     val isAllDay: Boolean
     fun setIsAllDay(value: Boolean)
+
+    fun toMeal(): Meal
 }
 
 @Composable
@@ -43,7 +45,7 @@ fun rememberMealSettingsCardState(meal: Meal, isLoading: Boolean): MealSettingsC
     val fromInput = rememberLocalTimeInput(meal.from)
     val toInput = rememberLocalTimeInput(meal.to)
 
-    return remember {
+    return remember(meal, nameInput, fromInput, toInput, isLoading) {
         MealSettingsCardStateImpl(
             meal = meal,
             nameInput = nameInput,
@@ -76,5 +78,19 @@ private class MealSettingsCardStateImpl(
 
     override fun setIsAllDay(value: Boolean) {
         isAllDay = value
+    }
+
+    override fun toMeal(): Meal {
+        val to = if (isAllDay) {
+            fromInput.value
+        } else {
+            toInput.value
+        }
+
+        return meal.copy(
+            name = nameInput.value,
+            from = fromInput.value,
+            to = to
+        )
     }
 }

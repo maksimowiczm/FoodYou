@@ -12,14 +12,15 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalTime
 
 class MealSettingsCardViewModel(
-    diaryRepository: DiaryRepository,
+    private val diaryRepository: DiaryRepository,
     private val stringFormatRepository: StringFormatRepository,
     mealId: Long,
-    coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope
 ) {
     private val isLoading = MutableStateFlow(false)
 
@@ -48,6 +49,22 @@ class MealSettingsCardViewModel(
     )
 
     fun formatTime(time: LocalTime) = stringFormatRepository.formatTime(time)
+
+    fun updateMeal(meal: Meal) {
+        coroutineScope.launch {
+            isLoading.value = true
+            diaryRepository.updateMeal(meal)
+            isLoading.value = false
+        }
+    }
+
+    fun deleteMeal(meal: Meal) {
+        coroutineScope.launch {
+            isLoading.value = true
+            diaryRepository.deleteMeal(meal)
+            isLoading.value = false
+        }
+    }
 }
 
 data class MealCardState(val isLoading: Boolean, val meal: Meal)

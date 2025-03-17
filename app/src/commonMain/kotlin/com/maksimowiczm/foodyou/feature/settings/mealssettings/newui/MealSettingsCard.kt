@@ -76,8 +76,12 @@ fun MealSettingsCard(viewModel: MealSettingsCardViewModel, modifier: Modifier = 
 
     MealSettingsCard(
         state = state,
-        onDelete = {},
-        onUpdate = {},
+        onDelete = {
+            viewModel.deleteMeal(state.toMeal())
+        },
+        onUpdate = {
+            viewModel.updateMeal(state.toMeal())
+        },
         formatTime = viewModel::formatTime,
         modifier = modifier
     )
