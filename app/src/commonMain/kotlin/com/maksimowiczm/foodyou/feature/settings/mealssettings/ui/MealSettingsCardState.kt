@@ -20,15 +20,14 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 
 enum class MealNameError {
     Empty;
 
     @Composable
     fun stringResource() = when (this) {
-        Empty -> org.jetbrains.compose.resources.stringResource(
-            Res.string.error_this_field_cannot_be_empty
-        )
+        Empty -> stringResource(Res.string.error_this_field_cannot_be_empty)
     }
 }
 
