@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -49,6 +50,7 @@ fun rememberMealsSettingsCardState(meal: Meal): MealSettingsCardState {
     val toInput = rememberLocalTimeInput(
         initialValue = meal.to
     )
+    val isAllDayState = rememberSaveable { mutableStateOf(meal.isAllDay) }
 
     return rememberSaveable(
         nameInput,
@@ -65,9 +67,11 @@ fun rememberMealsSettingsCardState(meal: Meal): MealSettingsCardState {
                     initialName = meal.name,
                     initialFrom = meal.from,
                     initialTo = meal.to,
+                    initialIsAllDay = meal.isAllDay,
                     nameInput = nameInput,
                     fromInput = fromInput,
-                    toInput = toInput
+                    toInput = toInput,
+                    isAllDayState = isAllDayState
                 )
             }
         )
@@ -77,9 +81,11 @@ fun rememberMealsSettingsCardState(meal: Meal): MealSettingsCardState {
             initialName = meal.name,
             initialFrom = meal.from,
             initialTo = meal.to,
+            initialIsAllDay = meal.isAllDay,
             nameInput = nameInput,
             fromInput = fromInput,
-            toInput = toInput
+            toInput = toInput,
+            isAllDayState = isAllDayState
         )
     }
 }
@@ -113,36 +119,48 @@ fun rememberMealsSettingsCardState(
             .time
             .trimSeconds()
     )
-) = rememberSaveable(
-    nameInput,
-    fromInput,
-    toInput,
-    saver = Saver(
-        save = {
-            it.isLoading
-        },
-        restore = {
-            MealSettingsCardState(
-                initialIsLoading = it,
-                initialName = initialName,
-                initialFrom = initialFrom,
-                initialTo = initialTo,
-                nameInput = nameInput,
-                fromInput = fromInput,
-                toInput = toInput
-            )
-        }
-    )
-) {
-    MealSettingsCardState(
-        initialIsLoading = false,
-        initialName = initialName,
-        initialFrom = initialFrom,
-        initialTo = initialTo,
-        nameInput = nameInput,
-        fromInput = fromInput,
-        toInput = toInput
-    )
+): MealSettingsCardState {
+    val isAllDayState = rememberSaveable {
+        mutableStateOf(
+            initialFrom == initialTo
+        )
+    }
+
+    return rememberSaveable(
+        nameInput,
+        fromInput,
+        toInput,
+        saver = Saver(
+            save = {
+                it.isLoading
+            },
+            restore = {
+                MealSettingsCardState(
+                    initialIsLoading = it,
+                    initialName = initialName,
+                    initialFrom = initialFrom,
+                    initialTo = initialTo,
+                    initialIsAllDay = initialFrom == initialTo,
+                    nameInput = nameInput,
+                    fromInput = fromInput,
+                    toInput = toInput,
+                    isAllDayState = isAllDayState
+                )
+            }
+        )
+    ) {
+        MealSettingsCardState(
+            initialIsLoading = false,
+            initialName = initialName,
+            initialFrom = initialFrom,
+            initialTo = initialTo,
+            initialIsAllDay = initialFrom == initialTo,
+            nameInput = nameInput,
+            fromInput = fromInput,
+            toInput = toInput,
+            isAllDayState = isAllDayState
+        )
+    }
 }
 
 @Stable
@@ -151,10 +169,11 @@ class MealSettingsCardState(
     private val initialName: String?,
     private val initialFrom: LocalTime?,
     private val initialTo: LocalTime?,
-    private val initialIsAllDay: Boolean = initialFrom == initialTo,
+    private val initialIsAllDay: Boolean,
     val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
     val fromInput: LocalTimeInput,
-    val toInput: LocalTimeInput
+    val toInput: LocalTimeInput,
+    val isAllDayState: MutableState<Boolean>
 ) {
     val dirty by derivedStateOf {
         nameInput.textFieldValue.text != initialName ||
@@ -169,14 +188,32 @@ class MealSettingsCardState(
 
     var isLoading by mutableStateOf(initialIsLoading)
 
-    var isAllDay by mutableStateOf(initialFrom == initialTo)
+    var isAllDay: Boolean
+        get() = isAllDayState.value
+        set(value) {
+            if (!value && fromInput.value == toInput.value) {
+                val from = fromInput.value
+                val to = LocalTime(from.hour + 2, from.minute)
+                toInput.onValueChange(to)
+            }
 
-    fun intoMeal(id: Long) = Meal(
-        id = id,
-        name = nameInput.value,
-        from = fromInput.value,
-        to = toInput.value
-    )
+            isAllDayState.value = value
+        }
+
+    fun intoMeal(id: Long): Meal {
+        val to = if (isAllDay) {
+            fromInput.value
+        } else {
+            toInput.value
+        }
+
+        return Meal(
+            id = id,
+            name = nameInput.value,
+            from = fromInput.value,
+            to = to
+        )
+    }
 }
 
 private fun LocalTime.trimSeconds() = LocalTime(hour, minute)
