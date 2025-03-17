@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +39,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
@@ -55,6 +58,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -91,6 +95,7 @@ fun MealSettingsCard(
             onValueChange = { state.nameInput.onValueChange(it) },
             enabled = !state.isLoading,
             modifier = Modifier
+                .testTag(MealSettingsCardTestTags.NAME_INPUT)
                 .defaultMinSize(minWidth = 50.dp)
                 .width(IntrinsicSize.Min)
                 .weight(1f, false),
@@ -160,6 +165,7 @@ fun MealSettingsCard(
                 ActionButtonState.Save -> FilledIconButton(
                     onClick = onConfirm,
                     enabled = state.isValid,
+                    modifier = Modifier.testTag(MealSettingsCardTestTags.CONFIRM_BUTTON),
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = colors.confirmButtonContainerColor,
                         contentColor = colors.confirmButtonContentColor
@@ -179,6 +185,7 @@ fun MealSettingsCard(
                             onDelete()
                         }
                     },
+                    modifier = Modifier.testTag(MealSettingsCardTestTags.DELETE_BUTTON),
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = colors.deleteButtonContainerColor,
                         contentColor = colors.deleteButtonContentColor
@@ -191,7 +198,9 @@ fun MealSettingsCard(
                 }
 
                 ActionButtonState.Loading -> Box(
-                    modifier = Modifier.size(48.dp),
+                    modifier = Modifier
+                        .size(48.dp)
+                        .testTag(MealSettingsCardTestTags.LOADING_INDICATOR),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
@@ -398,9 +407,41 @@ fun MealSettingsCard(
                     )
                 }
 
+                AnimatedVisibility(
+                    visible = true
+                ) {
+                    Column(
+                        modifier = Modifier.testTag(MealSettingsCardTestTags.TIME_PICKER)
+                    ) {
+                        Spacer(Modifier.height(8.dp))
+
+                        dateInput()
+                    }
+                }
+
                 Spacer(Modifier.height(8.dp))
 
-                dateInput()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = {}
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Switch(
+                        checked = false,
+                        onCheckedChange = {},
+                        enabled = !state.isLoading
+                    )
+                    Spacer(Modifier.width(16.dp))
+                    Text(
+                        text = "All day"
+                    )
+                }
             }
         }
     }
@@ -515,6 +556,15 @@ object MealSettingsCardDefaults {
         deleteButtonContainerColor = deleteButtonContainerColor,
         deleteButtonContentColor = deleteButtonContentColor
     )
+}
+
+object MealSettingsCardTestTags {
+    const val NAME_INPUT = "Name input"
+    const val DELETE_BUTTON = "Delete button"
+    const val CONFIRM_BUTTON = "Confirm button"
+    const val LOADING_INDICATOR = "Loading indicator"
+    const val TIME_PICKER = "Time picker"
+    const val ALL_DAY_SWITCH = "All day switch"
 }
 
 @Preview
