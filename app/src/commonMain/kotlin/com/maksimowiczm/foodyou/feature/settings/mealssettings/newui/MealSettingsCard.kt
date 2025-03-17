@@ -417,9 +417,7 @@ fun MealSettingsCard(
                         modifier = Modifier.testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH)
                     )
                     Spacer(Modifier.width(16.dp))
-                    Text(
-                        text = "All day"
-                    )
+                    Text(stringResource(Res.string.headline_all_day))
                 }
             }
         }
