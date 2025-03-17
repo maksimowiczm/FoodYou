@@ -5,7 +5,8 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -57,7 +58,24 @@ fun rememberMealSettingsCardState(meal: Meal): MealSettingsCardStateImpl {
     val fromInput = rememberLocalTimeInput(meal.from)
     val toInput = rememberLocalTimeInput(meal.to)
 
-    return remember(meal, nameInput, fromInput, toInput) {
+    return rememberSaveable(
+        meal,
+        nameInput,
+        fromInput,
+        toInput,
+        saver = Saver(
+            save = { it.isAllDay },
+            restore = {
+                MealSettingsCardStateImpl(
+                    meal = meal,
+                    nameInput = nameInput,
+                    fromInput = fromInput,
+                    toInput = toInput,
+                    initialIsAllDay = it
+                )
+            }
+        )
+    ) {
         MealSettingsCardStateImpl(
             meal = meal,
             nameInput = nameInput,
@@ -135,7 +153,15 @@ fun rememberMealSettingsCardState(): NoMealSettingsCardStateImpl {
             .trimSeconds()
     )
 
-    return remember(nameInput, fromInput, toInput) {
+    return rememberSaveable(
+        nameInput,
+        fromInput,
+        toInput,
+        saver = Saver(
+            save = { it.isAllDay },
+            restore = { NoMealSettingsCardStateImpl(nameInput, fromInput, toInput) }
+        )
+    ) {
         NoMealSettingsCardStateImpl(
             nameInput = nameInput,
             fromInput = fromInput,
