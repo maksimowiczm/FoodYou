@@ -161,44 +161,40 @@ fun MealSettingsCard(
     }
 
     val actionButton = @Composable {
-        AnimatedContent(
-            targetState = actionButtonState
-        ) {
-            when (it) {
-                ActionButtonState.Save -> FilledIconButton(
-                    onClick = onUpdate,
-                    enabled = state.isValid,
-                    modifier = Modifier.testTag(MealSettingsCardTestTags.CONFIRM_BUTTON),
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = colors.confirmButtonContainerColor,
-                        contentColor = colors.confirmButtonContentColor
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = stringResource(Res.string.action_confirm)
-                    )
-                }
+        when (actionButtonState) {
+            ActionButtonState.Save -> FilledIconButton(
+                onClick = onUpdate,
+                enabled = state.isValid,
+                modifier = Modifier.testTag(MealSettingsCardTestTags.CONFIRM_BUTTON),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = colors.confirmButtonContainerColor,
+                    contentColor = colors.confirmButtonContentColor
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = stringResource(Res.string.action_confirm)
+                )
+            }
 
-                ActionButtonState.Delete -> IconButton(
-                    onClick = {
-                        if (showDeleteDialog) {
-                            deleteDialog = true
-                        } else {
-                            onDelete()
-                        }
-                    },
-                    modifier = Modifier.testTag(MealSettingsCardTestTags.DELETE_BUTTON),
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = colors.deleteButtonContainerColor,
-                        contentColor = colors.deleteButtonContentColor
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(Res.string.action_delete)
-                    )
-                }
+            ActionButtonState.Delete -> IconButton(
+                onClick = {
+                    if (showDeleteDialog) {
+                        deleteDialog = true
+                    } else {
+                        onDelete()
+                    }
+                },
+                modifier = Modifier.testTag(MealSettingsCardTestTags.DELETE_BUTTON),
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = colors.deleteButtonContainerColor,
+                    contentColor = colors.deleteButtonContentColor
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = stringResource(Res.string.action_delete)
+                )
             }
         }
     }
