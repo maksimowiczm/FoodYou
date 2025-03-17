@@ -9,38 +9,75 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.CreateMealSettingsCardTestTags.CREATE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.CreateMealSettingsCardTestTags.CREATE_MEAL_SETTINGS_CARD
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_add_meal
+import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
-fun CreateMealSettingsCard(modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier.testTag(CREATE_BUTTON),
-        colors = CardDefaults.outlinedCardColors(
-            containerColor = MealSettingsCardDefaults.colors().containerColor,
-            contentColor = MealSettingsCardDefaults.colors().contentColor
+fun CreateMealSettingsCard(
+    isCreating: Boolean,
+    onCreatingChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    coroutineScope: CoroutineScope = rememberCoroutineScope()
+) {
+    if (isCreating) {
+        val viewModel = CreateMealSettingsCardViewModel(
+            diaryRepository = koinInject(),
+            stringFormatRepository = koinInject(),
+            coroutineScope = coroutineScope
         )
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = stringResource(Res.string.action_add_meal)
+
+        val state = rememberMealSettingsCardState()
+
+        MealSettingsCard(
+            state = state,
+            onDelete = { onCreatingChange(false) },
+            onUpdate = {
+                viewModel.createMeal(
+                    name = state.nameInput.value,
+                    from = state.fromInput.value,
+                    to = state.toInput.value
+                )
+                onCreatingChange(false)
+            },
+            formatTime = viewModel::formatTime,
+            showDeleteDialog = false,
+            modifier = modifier.testTag(CREATE_MEAL_SETTINGS_CARD)
+        )
+    } else {
+        Card(
+            onClick = { onCreatingChange(true) },
+            modifier = modifier.testTag(CREATE_BUTTON),
+            colors = CardDefaults.outlinedCardColors(
+                containerColor = MealSettingsCardDefaults.colors().containerColor,
+                contentColor = MealSettingsCardDefaults.colors().contentColor
             )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(Res.string.action_add_meal)
+                )
+            }
         }
     }
 }
 
 object CreateMealSettingsCardTestTags {
     const val CREATE_BUTTON = "CreateButton"
+    const val CREATE_MEAL_SETTINGS_CARD = "CreateMealSettingsCard"
 }

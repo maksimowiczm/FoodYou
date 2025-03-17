@@ -16,6 +16,11 @@ import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.rememberLocalT
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.stringParser
+import kotlin.time.Duration.Companion.hours
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 interface MealSettingsCardState {
     val nameInput: FormFieldWithTextFieldValue<String, MealNameError>
@@ -26,12 +31,10 @@ interface MealSettingsCardState {
     val isValid: Boolean
     val isAllDay: Boolean
     fun setIsAllDay(value: Boolean)
-
-    fun toMeal(): Meal
 }
 
 @Composable
-fun rememberMealSettingsCardState(meal: Meal): MealSettingsCardState {
+fun rememberMealSettingsCardState(meal: Meal): MealSettingsCardStateImpl {
     val nameInput = rememberFormFieldWithTextFieldValue(
         initialTextFieldValue = TextFieldValue(
             text = meal.name,
@@ -56,7 +59,7 @@ fun rememberMealSettingsCardState(meal: Meal): MealSettingsCardState {
 }
 
 @Stable
-private class MealSettingsCardStateImpl(
+class MealSettingsCardStateImpl(
     private val meal: Meal,
     override val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
     override val fromInput: LocalTimeInput,
@@ -83,7 +86,7 @@ private class MealSettingsCardStateImpl(
         isAllDay = value
     }
 
-    override fun toMeal(): Meal {
+    fun toMeal(): Meal {
         val to = if (isAllDay) {
             fromInput.value
         } else {
@@ -97,3 +100,54 @@ private class MealSettingsCardStateImpl(
         )
     }
 }
+
+@Composable
+fun rememberMealSettingsCardState(): NoMealSettingsCardStateImpl {
+    val nameInput = rememberFormFieldWithTextFieldValue(
+        initialTextFieldValue = TextFieldValue(),
+        initialValue = "",
+        parser = stringParser(
+            onEmpty = { MealNameError.Empty }
+        )
+    )
+
+    val fromInput = rememberLocalTimeInput(
+        Clock.System.now()
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .time
+            .trimSeconds()
+    )
+
+    val toInput = rememberLocalTimeInput(
+        Clock.System.now()
+            .plus(2.hours)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .time
+            .trimSeconds()
+    )
+
+    return remember(nameInput, fromInput, toInput) {
+        NoMealSettingsCardStateImpl(
+            nameInput = nameInput,
+            fromInput = fromInput,
+            toInput = toInput
+        )
+    }
+}
+
+@Stable
+class NoMealSettingsCardStateImpl(
+    override val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
+    override val fromInput: LocalTimeInput,
+    override val toInput: LocalTimeInput
+) : MealSettingsCardState {
+    override val isDirty: Boolean by derivedStateOf { nameInput.value.isNotEmpty() }
+    override val isValid: Boolean by derivedStateOf { nameInput.error == null }
+    override var isAllDay: Boolean by mutableStateOf(false)
+
+    override fun setIsAllDay(value: Boolean) {
+        isAllDay = value
+    }
+}
+
+private fun LocalTime.trimSeconds() = LocalTime(hour, minute)

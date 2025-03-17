@@ -17,7 +17,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,6 +52,8 @@ fun MealsSettingsScreen(
 fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifier = Modifier) {
     val topBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val coroutineScope = rememberCoroutineScope()
+
+    var isCreating by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -99,9 +104,12 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
                 key = "create"
             ) {
                 CreateMealSettingsCard(
+                    isCreating = isCreating,
+                    onCreatingChange = { isCreating = it },
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                        .animateItem()
+                        .animateItem(),
+                    coroutineScope = coroutineScope
                 )
             }
 
