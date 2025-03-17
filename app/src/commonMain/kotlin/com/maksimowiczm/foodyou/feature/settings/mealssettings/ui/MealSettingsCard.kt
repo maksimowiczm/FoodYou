@@ -1,9 +1,10 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,18 +16,16 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
@@ -37,6 +36,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
@@ -55,33 +55,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
-import com.maksimowiczm.foodyou.ui.form.stringParser
-import com.maksimowiczm.foodyou.ui.preview.MealsPreviewParameterProvider
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
-private enum class ActionButtonState {
-    Save,
-    Delete,
-    Loading
+@Composable
+fun MealSettingsCard(viewModel: MealSettingsCardViewModel, modifier: Modifier = Modifier) {
+    val meal by viewModel.meal.collectAsStateWithLifecycle()
+    val state = rememberMealSettingsCardState(meal)
+
+    MealSettingsCard(
+        state = state,
+        onDelete = {
+            viewModel.deleteMeal(state.toMeal())
+        },
+        onUpdate = {
+            viewModel.updateMeal(state.toMeal())
+        },
+        formatTime = viewModel::formatTime,
+        modifier = modifier
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealSettingsCard(
     state: MealSettingsCardState,
-    showDeleteDialog: Boolean,
     onDelete: () -> Unit,
-    onConfirm: () -> Unit,
+    onUpdate: () -> Unit,
     formatTime: (LocalTime) -> String,
     modifier: Modifier = Modifier,
+    showDeleteDialog: Boolean = true,
     shape: Shape = MealSettingsCardDefaults.shape,
     colors: MealSettingsCardColors = MealSettingsCardDefaults.colors()
 ) {
@@ -89,9 +97,9 @@ fun MealSettingsCard(
         BasicTextField(
             value = state.nameInput.textFieldValue,
             onValueChange = { state.nameInput.onValueChange(it) },
-            enabled = !state.isLoading,
             modifier = Modifier
-                .defaultMinSize(minWidth = 50.dp)
+                .testTag(MealSettingsCardTestTags.NAME_INPUT)
+                .defaultMinSize(minWidth = 150.dp)
                 .width(IntrinsicSize.Min)
                 .weight(1f, false),
             textStyle = LocalTextStyle.current
@@ -133,12 +141,11 @@ fun MealSettingsCard(
         )
     }
 
-    val actionButtonState by remember(state.dirty, state.isLoading) {
+    val actionButtonState by remember(state.isDirty) {
         derivedStateOf {
             when {
-                state.isLoading -> ActionButtonState.Loading
                 state.nameInput.textFieldValue.text.isEmpty() -> ActionButtonState.Delete
-                state.dirty -> ActionButtonState.Save
+                state.isDirty -> ActionButtonState.Save
                 else -> ActionButtonState.Delete
             }
         }
@@ -153,51 +160,40 @@ fun MealSettingsCard(
     }
 
     val actionButton = @Composable {
-        AnimatedContent(
-            targetState = actionButtonState
-        ) {
-            when (it) {
-                ActionButtonState.Save -> FilledIconButton(
-                    onClick = onConfirm,
-                    enabled = state.isValid,
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = colors.confirmButtonContainerColor,
-                        contentColor = colors.confirmButtonContentColor
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = stringResource(Res.string.action_confirm)
-                    )
-                }
+        when (actionButtonState) {
+            ActionButtonState.Save -> FilledIconButton(
+                onClick = onUpdate,
+                enabled = state.isValid,
+                modifier = Modifier.testTag(MealSettingsCardTestTags.CONFIRM_BUTTON),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = colors.confirmButtonContainerColor,
+                    contentColor = colors.confirmButtonContentColor
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Save,
+                    contentDescription = stringResource(Res.string.action_save)
+                )
+            }
 
-                ActionButtonState.Delete -> IconButton(
-                    onClick = {
-                        if (showDeleteDialog) {
-                            deleteDialog = true
-                        } else {
-                            onDelete()
-                        }
-                    },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = colors.deleteButtonContainerColor,
-                        contentColor = colors.deleteButtonContentColor
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(Res.string.action_delete)
-                    )
-                }
-
-                ActionButtonState.Loading -> Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
+            ActionButtonState.Delete -> IconButton(
+                onClick = {
+                    if (showDeleteDialog) {
+                        deleteDialog = true
+                    } else {
+                        onDelete()
+                    }
+                },
+                modifier = Modifier.testTag(MealSettingsCardTestTags.DELETE_BUTTON),
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = colors.deleteButtonContainerColor,
+                    contentColor = colors.deleteButtonContentColor
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = stringResource(Res.string.action_delete)
+                )
             }
         }
     }
@@ -207,9 +203,7 @@ fun MealSettingsCard(
 
     val dateInput = @Composable {
         val containerColor by animateColorAsState(
-            if (state.isLoading) {
-                colors.disabledTimeContainerColor
-            } else if (state.dirty) {
+            if (state.isDirty) {
                 colors.dirtyTimeContainerColor
             } else {
                 colors.timeContainerColor
@@ -217,9 +211,7 @@ fun MealSettingsCard(
         )
 
         val contentColor by animateColorAsState(
-            if (state.isLoading) {
-                colors.disabledTimeContentColor
-            } else if (state.dirty) {
+            if (state.isDirty) {
                 colors.dirtyTimeContentColor
             } else {
                 colors.timeContentColor
@@ -233,7 +225,7 @@ fun MealSettingsCard(
         ) {
             Card(
                 onClick = { showFromTimePicker = true },
-                enabled = !state.isLoading,
+                modifier = Modifier.testTag(MealSettingsCardTestTags.FROM_TIME_PICKER),
                 colors = CardDefaults.cardColors(
                     containerColor = containerColor,
                     contentColor = contentColor
@@ -251,7 +243,7 @@ fun MealSettingsCard(
             )
             Card(
                 onClick = { showToTimePicker = true },
-                enabled = !state.isLoading,
+                modifier = Modifier.testTag(MealSettingsCardTestTags.TO_TIME_PICKER),
                 colors = CardDefaults.cardColors(
                     containerColor = containerColor,
                     contentColor = contentColor
@@ -348,9 +340,7 @@ fun MealSettingsCard(
     }
 
     val surfaceColor by animateColorAsState(
-        targetValue = if (state.isLoading) {
-            colors.disabledContainerColor
-        } else if (state.dirty) {
+        targetValue = if (state.isDirty) {
             colors.dirtyContainerColor
         } else {
             colors.containerColor
@@ -358,9 +348,7 @@ fun MealSettingsCard(
     )
 
     val contentColor by animateColorAsState(
-        targetValue = if (state.isLoading) {
-            colors.disabledContentColor
-        } else if (state.dirty) {
+        targetValue = if (state.isDirty) {
             colors.dirtyContentColor
         } else {
             colors.contentColor
@@ -398,12 +386,49 @@ fun MealSettingsCard(
                     )
                 }
 
+                AnimatedVisibility(
+                    visible = !state.isAllDay
+                ) {
+                    Column(
+                        modifier = Modifier.testTag(MealSettingsCardTestTags.TIME_PICKER)
+                    ) {
+                        Spacer(Modifier.height(8.dp))
+
+                        dateInput()
+                    }
+                }
+
                 Spacer(Modifier.height(8.dp))
 
-                dateInput()
+                Row(
+                    modifier = Modifier
+                        .testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH_CONTAINER)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = { state.setIsAllDay(!state.isAllDay) }
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Switch(
+                        checked = state.isAllDay,
+                        onCheckedChange = state::setIsAllDay,
+                        modifier = Modifier.testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH)
+                    )
+                    Spacer(Modifier.width(16.dp))
+                    Text(
+                        text = stringResource(Res.string.headline_all_day),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
             }
         }
     }
+}
+
+private enum class ActionButtonState {
+    Save,
+    Delete
 }
 
 @Composable
@@ -458,11 +483,6 @@ data class MealSettingsCardColors(
     val timeContainerColor: Color,
     val timeContentColor: Color,
 
-    val disabledContainerColor: Color,
-    val disabledContentColor: Color,
-    val disabledTimeContainerColor: Color,
-    val disabledTimeContentColor: Color,
-
     val dirtyContainerColor: Color,
     val dirtyContentColor: Color,
     val dirtyTimeContainerColor: Color,
@@ -485,10 +505,6 @@ object MealSettingsCardDefaults {
         contentColor: Color = MaterialTheme.colorScheme.onSurface,
         timeContainerColor: Color = MaterialTheme.colorScheme.surfaceContainerHighest,
         timeContentColor: Color = MaterialTheme.colorScheme.onSurface,
-        disabledContainerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
-        disabledContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-        disabledTimeContainerColor: Color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        disabledTimeContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
         dirtyContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
         dirtyContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
         dirtyTimeContainerColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
@@ -502,10 +518,6 @@ object MealSettingsCardDefaults {
         contentColor = contentColor,
         timeContainerColor = timeContainerColor,
         timeContentColor = timeContentColor,
-        disabledContainerColor = disabledContainerColor,
-        disabledContentColor = disabledContentColor,
-        disabledTimeContainerColor = disabledTimeContainerColor,
-        disabledTimeContentColor = disabledTimeContentColor,
         dirtyContainerColor = dirtyContainerColor,
         dirtyContentColor = dirtyContentColor,
         dirtyTimeContainerColor = dirtyTimeContainerColor,
@@ -517,45 +529,13 @@ object MealSettingsCardDefaults {
     )
 }
 
-@Preview
-@Composable
-private fun MealSettingsCardPreview() {
-    val meal = MealsPreviewParameterProvider().values.first()
-
-    FoodYouTheme {
-        MealSettingsCard(
-            state = rememberMealsSettingsCardState(meal),
-            onDelete = {},
-            onConfirm = {},
-            showDeleteDialog = true,
-            formatTime = { it.toString() }
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun DirtyMealSettingsCardPreview() {
-    val meal = MealsPreviewParameterProvider().values.first()
-
-    FoodYouTheme {
-        MealSettingsCard(
-            state = rememberMealsSettingsCardState(
-                initialName = meal.name,
-                initialFrom = meal.from,
-                initialTo = meal.to,
-                nameInput = rememberFormFieldWithTextFieldValue(
-                    initialTextFieldValue = TextFieldValue("I am dirty"),
-                    initialValue = "I am dirty",
-                    parser = stringParser(
-                        onEmpty = { MealNameError.Empty }
-                    )
-                )
-            ),
-            onDelete = {},
-            onConfirm = {},
-            showDeleteDialog = true,
-            formatTime = { it.toString() }
-        )
-    }
+object MealSettingsCardTestTags {
+    const val NAME_INPUT = "Name input"
+    const val DELETE_BUTTON = "Delete button"
+    const val CONFIRM_BUTTON = "Confirm button"
+    const val TIME_PICKER = "Time picker"
+    const val ALL_DAY_SWITCH_CONTAINER = "All day switch container"
+    const val ALL_DAY_SWITCH = "All day switch"
+    const val FROM_TIME_PICKER = "From time picker"
+    const val TO_TIME_PICKER = "To time picker"
 }

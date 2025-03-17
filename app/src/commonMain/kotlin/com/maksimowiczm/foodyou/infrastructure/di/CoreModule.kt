@@ -11,7 +11,7 @@ import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.product.update.Upd
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search.SearchViewModel
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.settings.goalssettings.ui.GoalsSettingsViewModel
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealsSettingsViewModel
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealsSettingsScreenViewModel
 import com.maksimowiczm.foodyou.ui.DiaryViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
@@ -31,7 +31,7 @@ val coreModule = module {
     viewModelOf(::GoalsSettingsViewModel)
 
     // -- Meals Settings
-    viewModelOf(::MealsSettingsViewModel)
+    viewModelOf(::MealsSettingsScreenViewModel)
 
     // -- Meals Card
     viewModelOf(::SearchViewModel)

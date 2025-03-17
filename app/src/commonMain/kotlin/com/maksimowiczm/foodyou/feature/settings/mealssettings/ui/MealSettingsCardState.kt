@@ -14,7 +14,8 @@ import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.stringParser
-import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.error_this_field_cannot_be_empty
 import kotlin.time.Duration.Companion.hours
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalTime
@@ -31,8 +32,19 @@ enum class MealNameError {
     }
 }
 
+interface MealSettingsCardState {
+    val nameInput: FormFieldWithTextFieldValue<String, MealNameError>
+    val fromInput: LocalTimeInput
+    val toInput: LocalTimeInput
+
+    val isDirty: Boolean
+    val isValid: Boolean
+    val isAllDay: Boolean
+    fun setIsAllDay(value: Boolean)
+}
+
 @Composable
-fun rememberMealsSettingsCardState(meal: Meal): MealSettingsCardState {
+fun rememberMealSettingsCardState(meal: Meal): MealSettingsCardStateImpl {
     val nameInput = rememberFormFieldWithTextFieldValue(
         initialTextFieldValue = TextFieldValue(
             text = meal.name,
@@ -43,40 +55,29 @@ fun rememberMealsSettingsCardState(meal: Meal): MealSettingsCardState {
             onEmpty = { MealNameError.Empty }
         )
     )
-    val fromInput = rememberLocalTimeInput(
-        initialValue = meal.from
-    )
-    val toInput = rememberLocalTimeInput(
-        initialValue = meal.to
-    )
+    val fromInput = rememberLocalTimeInput(meal.from)
+    val toInput = rememberLocalTimeInput(meal.to)
 
     return rememberSaveable(
+        meal,
         nameInput,
         fromInput,
         toInput,
-        meal,
         saver = Saver(
-            save = {
-                it.isLoading
-            },
+            save = { it.isAllDay },
             restore = {
-                MealSettingsCardState(
-                    initialIsLoading = it,
-                    initialName = meal.name,
-                    initialFrom = meal.from,
-                    initialTo = meal.to,
+                MealSettingsCardStateImpl(
+                    meal = meal,
                     nameInput = nameInput,
                     fromInput = fromInput,
-                    toInput = toInput
+                    toInput = toInput,
+                    initialIsAllDay = it
                 )
             }
         )
     ) {
-        MealSettingsCardState(
-            initialIsLoading = false,
-            initialName = meal.name,
-            initialFrom = meal.from,
-            initialTo = meal.to,
+        MealSettingsCardStateImpl(
+            meal = meal,
             nameInput = nameInput,
             fromInput = fromInput,
             toInput = toInput
@@ -84,95 +85,105 @@ fun rememberMealsSettingsCardState(meal: Meal): MealSettingsCardState {
     }
 }
 
+@Stable
+class MealSettingsCardStateImpl(
+    private val meal: Meal,
+    override val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
+    override val fromInput: LocalTimeInput,
+    override val toInput: LocalTimeInput,
+    initialIsAllDay: Boolean = meal.isAllDay
+) : MealSettingsCardState {
+    override val isDirty: Boolean by derivedStateOf {
+        val input =
+            nameInput.value != meal.name || fromInput.value != meal.from || toInput.value != meal.to
+
+        // If the meal is all day meal ignore the all day switch state
+        if (meal.from == meal.to) {
+            input
+        } else {
+            input || isAllDay != meal.isAllDay
+        }
+    }
+
+    override val isValid: Boolean by derivedStateOf { nameInput.error == null }
+
+    override var isAllDay: Boolean by mutableStateOf(initialIsAllDay)
+        private set
+
+    override fun setIsAllDay(value: Boolean) {
+        isAllDay = value
+    }
+
+    fun toMeal(): Meal {
+        val to = if (isAllDay) {
+            fromInput.value
+        } else {
+            toInput.value
+        }
+
+        return meal.copy(
+            name = nameInput.value,
+            from = fromInput.value,
+            to = to
+        )
+    }
+}
+
 @Composable
-fun rememberMealsSettingsCardState(
-    initialName: String? = null,
-    initialFrom: LocalTime? = null,
-    initialTo: LocalTime? = null,
-    nameInput: FormFieldWithTextFieldValue<String, MealNameError> =
-        rememberFormFieldWithTextFieldValue(
-            initialTextFieldValue = TextFieldValue(
-                text = initialName ?: "",
-                selection = TextRange(initialName?.length ?: 0)
-            ),
-            initialValue = initialName ?: "",
-            parser = stringParser(
-                onEmpty = { MealNameError.Empty }
-            )
-        ),
-    fromInput: LocalTimeInput = rememberLocalTimeInput(
-        initialFrom ?: Clock.System.now()
+fun rememberMealSettingsCardState(): NoMealSettingsCardStateImpl {
+    val nameInput = rememberFormFieldWithTextFieldValue(
+        initialTextFieldValue = TextFieldValue(),
+        initialValue = "",
+        parser = stringParser(
+            onEmpty = { MealNameError.Empty }
+        )
+    )
+
+    val fromInput = rememberLocalTimeInput(
+        Clock.System.now()
             .toLocalDateTime(TimeZone.currentSystemDefault())
             .time
             .trimSeconds()
-    ),
-    toInput: LocalTimeInput = rememberLocalTimeInput(
-        initialTo ?: Clock.System.now()
+    )
+
+    val toInput = rememberLocalTimeInput(
+        Clock.System.now()
             .plus(2.hours)
             .toLocalDateTime(TimeZone.currentSystemDefault())
             .time
             .trimSeconds()
     )
-) = rememberSaveable(
-    nameInput,
-    fromInput,
-    toInput,
-    saver = Saver(
-        save = {
-            it.isLoading
-        },
-        restore = {
-            MealSettingsCardState(
-                initialIsLoading = it,
-                initialName = initialName,
-                initialFrom = initialFrom,
-                initialTo = initialTo,
-                nameInput = nameInput,
-                fromInput = fromInput,
-                toInput = toInput
-            )
-        }
-    )
-) {
-    MealSettingsCardState(
-        initialIsLoading = false,
-        initialName = initialName,
-        initialFrom = initialFrom,
-        initialTo = initialTo,
-        nameInput = nameInput,
-        fromInput = fromInput,
-        toInput = toInput
-    )
+
+    return rememberSaveable(
+        nameInput,
+        fromInput,
+        toInput,
+        saver = Saver(
+            save = { it.isAllDay },
+            restore = { NoMealSettingsCardStateImpl(nameInput, fromInput, toInput) }
+        )
+    ) {
+        NoMealSettingsCardStateImpl(
+            nameInput = nameInput,
+            fromInput = fromInput,
+            toInput = toInput
+        )
+    }
 }
 
 @Stable
-class MealSettingsCardState(
-    initialIsLoading: Boolean,
-    private val initialName: String?,
-    private val initialFrom: LocalTime?,
-    private val initialTo: LocalTime?,
-    val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
-    val fromInput: LocalTimeInput,
-    val toInput: LocalTimeInput
-) {
-    val dirty by derivedStateOf {
-        nameInput.textFieldValue.text != initialName ||
-            fromInput.value != initialFrom ||
-            toInput.value != initialTo
+class NoMealSettingsCardStateImpl(
+    override val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
+    override val fromInput: LocalTimeInput,
+    override val toInput: LocalTimeInput
+) : MealSettingsCardState {
+    override val isDirty: Boolean by derivedStateOf { nameInput.value.isNotEmpty() }
+    override val isValid: Boolean by derivedStateOf { nameInput.error == null }
+    override var isAllDay: Boolean by mutableStateOf(false)
+
+    override fun setIsAllDay(value: Boolean) {
+        isAllDay = value
     }
-
-    val isValid by derivedStateOf {
-        nameInput.error == null && !isLoading
-    }
-
-    var isLoading by mutableStateOf(initialIsLoading)
-
-    fun intoMeal(id: Long) = Meal(
-        id = id,
-        name = nameInput.value,
-        from = fromInput.value,
-        to = toInput.value
-    )
 }
 
 private fun LocalTime.trimSeconds() = LocalTime(hour, minute)
