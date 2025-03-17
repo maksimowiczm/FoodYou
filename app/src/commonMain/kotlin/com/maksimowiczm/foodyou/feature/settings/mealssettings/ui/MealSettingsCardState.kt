@@ -97,6 +97,7 @@ class MealSettingsCardStateImpl(
         val input =
             nameInput.value != meal.name || fromInput.value != meal.from || toInput.value != meal.to
 
+        // If the meal is all day meal ignore the all day switch state
         if (meal.from == meal.to) {
             input
         } else {
