@@ -121,9 +121,7 @@ fun rememberMealsSettingsCardState(
     )
 ): MealSettingsCardState {
     val isAllDayState = rememberSaveable {
-        mutableStateOf(
-            initialFrom == initialTo
-        )
+        mutableStateOf(fromInput.value == toInput.value)
     }
 
     return rememberSaveable(
