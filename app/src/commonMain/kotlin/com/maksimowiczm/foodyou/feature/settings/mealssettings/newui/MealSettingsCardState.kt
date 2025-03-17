@@ -59,7 +59,8 @@ private class MealSettingsCardStateImpl(
     override val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
     override val fromInput: LocalTimeInput,
     override val toInput: LocalTimeInput,
-    override val isLoading: Boolean
+    override val isLoading: Boolean,
+    initialIsAllDay: Boolean = meal.isAllDay
 ) : MealSettingsCardState {
     override val isDirty: Boolean by derivedStateOf {
         nameInput.value != meal.name ||
@@ -70,7 +71,7 @@ private class MealSettingsCardStateImpl(
 
     override val isValid: Boolean by mutableStateOf(false)
 
-    override var isAllDay: Boolean by mutableStateOf(false)
+    override var isAllDay: Boolean by mutableStateOf(initialIsAllDay)
         private set
 
     override fun setIsAllDay(value: Boolean) {
