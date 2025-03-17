@@ -107,7 +107,7 @@ class DiaryRepositoryImpl(
         list.map(MealEntity::toDomain)
     }
 
-    override fun observeMealById(id: Long) = addFoodDao.observeMealById(id).map { it.toDomain() }
+    override fun observeMealById(id: Long) = addFoodDao.observeMealById(id).map { it?.toDomain() }
 
     override suspend fun createMeal(name: String, from: LocalTime, to: LocalTime) {
         addFoodDao.insertMeal(

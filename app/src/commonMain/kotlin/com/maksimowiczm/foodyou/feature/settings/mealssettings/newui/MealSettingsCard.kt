@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -156,7 +155,7 @@ fun MealSettingsCard(
     if (deleteDialog) {
         DeleteDialog(
             onDismissRequest = { deleteDialog = false },
-            onConfirm = onUpdate
+            onConfirm = onDelete
         )
     }
 

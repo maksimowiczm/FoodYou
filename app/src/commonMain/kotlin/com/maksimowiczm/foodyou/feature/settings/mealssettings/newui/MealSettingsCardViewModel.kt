@@ -18,7 +18,7 @@ class MealSettingsCardViewModel(
     mealId: Long,
     private val coroutineScope: CoroutineScope
 ) {
-    val meal = diaryRepository.observeMealById(mealId).stateIn(
+    val meal = diaryRepository.observeMealById(mealId).filterNotNull().stateIn(
         scope = coroutineScope,
         started = SharingStarted.WhileSubscribed(2_000),
         initialValue = runBlocking {

@@ -188,7 +188,7 @@ interface AddFoodDao {
         WHERE id = :id
         """
     )
-    fun observeMealById(id: Long): Flow<MealEntity>
+    fun observeMealById(id: Long): Flow<MealEntity?>
 
     @Insert
     suspend fun insertMeal(meal: MealEntity)
