@@ -99,7 +99,7 @@ fun MealSettingsCard(
             onValueChange = { state.nameInput.onValueChange(it) },
             modifier = Modifier
                 .testTag(MealSettingsCardTestTags.NAME_INPUT)
-                .defaultMinSize(minWidth = 50.dp)
+                .defaultMinSize(minWidth = 150.dp)
                 .width(IntrinsicSize.Min)
                 .weight(1f, false),
             textStyle = LocalTextStyle.current
