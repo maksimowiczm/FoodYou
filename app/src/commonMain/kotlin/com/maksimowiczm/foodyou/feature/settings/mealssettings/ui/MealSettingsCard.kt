@@ -243,6 +243,7 @@ fun MealSettingsCard(
             Card(
                 onClick = { showFromTimePicker = true },
                 enabled = !state.isLoading,
+                modifier = Modifier.testTag(MealSettingsCardTestTags.FROM_TIME_PICKER),
                 colors = CardDefaults.cardColors(
                     containerColor = containerColor,
                     contentColor = contentColor
@@ -261,6 +262,7 @@ fun MealSettingsCard(
             Card(
                 onClick = { showToTimePicker = true },
                 enabled = !state.isLoading,
+                modifier = Modifier.testTag(MealSettingsCardTestTags.TO_TIME_PICKER),
                 colors = CardDefaults.cardColors(
                     containerColor = containerColor,
                     contentColor = contentColor
@@ -408,7 +410,7 @@ fun MealSettingsCard(
                 }
 
                 AnimatedVisibility(
-                    visible = true
+                    visible = !state.isAllDay
                 ) {
                     Column(
                         modifier = Modifier.testTag(MealSettingsCardTestTags.TIME_PICKER)
@@ -424,18 +426,21 @@ fun MealSettingsCard(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH)
+                        .testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH_CONTAINER)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                            onClick = {}
+                            onClick = {
+                                state.isAllDay = true
+                            }
                         ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Switch(
-                        checked = false,
-                        onCheckedChange = {},
-                        enabled = !state.isLoading
+                        checked = state.isAllDay,
+                        onCheckedChange = { state.isAllDay = it },
+                        enabled = !state.isLoading,
+                        modifier = Modifier.testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH)
                     )
                     Spacer(Modifier.width(16.dp))
                     Text(
@@ -564,7 +569,10 @@ object MealSettingsCardTestTags {
     const val CONFIRM_BUTTON = "Confirm button"
     const val LOADING_INDICATOR = "Loading indicator"
     const val TIME_PICKER = "Time picker"
+    const val ALL_DAY_SWITCH_CONTAINER = "All day switch container"
     const val ALL_DAY_SWITCH = "All day switch"
+    const val FROM_TIME_PICKER = "From time picker"
+    const val TO_TIME_PICKER = "To time picker"
 }
 
 @Preview

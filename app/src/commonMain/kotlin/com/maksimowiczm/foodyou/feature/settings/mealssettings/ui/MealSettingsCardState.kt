@@ -151,6 +151,7 @@ class MealSettingsCardState(
     private val initialName: String?,
     private val initialFrom: LocalTime?,
     private val initialTo: LocalTime?,
+    private val initialIsAllDay: Boolean = initialFrom == initialTo,
     val nameInput: FormFieldWithTextFieldValue<String, MealNameError>,
     val fromInput: LocalTimeInput,
     val toInput: LocalTimeInput
@@ -158,7 +159,8 @@ class MealSettingsCardState(
     val dirty by derivedStateOf {
         nameInput.textFieldValue.text != initialName ||
             fromInput.value != initialFrom ||
-            toInput.value != initialTo
+            toInput.value != initialTo ||
+            isAllDay != initialIsAllDay
     }
 
     val isValid by derivedStateOf {
@@ -166,6 +168,8 @@ class MealSettingsCardState(
     }
 
     var isLoading by mutableStateOf(initialIsLoading)
+
+    var isAllDay by mutableStateOf(initialFrom == initialTo)
 
     fun intoMeal(id: Long) = Meal(
         id = id,
