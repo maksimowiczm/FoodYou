@@ -94,6 +94,20 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
 
                 Spacer(Modifier.height(8.dp))
             }
+
+            item(
+                key = "create"
+            ) {
+                CreateMealSettingsCard(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .animateItem()
+                )
+            }
+
+            item {
+                Spacer(Modifier.height(8.dp))
+            }
         }
     }
 }
