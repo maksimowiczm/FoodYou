@@ -3,18 +3,12 @@ package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -84,9 +78,7 @@ private fun MealsSettingsScreen(
     modifier: Modifier = Modifier,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) {
-    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
-        .add(WindowInsets.ime)
+    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets.add(WindowInsets.ime)
 
     val topBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -128,14 +120,9 @@ private fun MealsSettingsScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .consumeWindowInsets(paddingValues)
-                .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
+                .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues
         ) {
-            item {
-                Spacer(Modifier.height(8.dp))
-            }
-
             items(
                 items = meals,
                 key = { meal -> meal.id }
@@ -181,14 +168,10 @@ private fun MealsSettingsScreen(
                         .focusRequester(createCardFocusRequester),
                     coroutineScope = coroutineScope
                 )
-
-                Spacer(Modifier.height(8.dp))
             }
 
-            item(
-                key = "bottom"
-            ) {
-                Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
+            item {
+                Spacer(Modifier.height(8.dp))
             }
         }
     }
