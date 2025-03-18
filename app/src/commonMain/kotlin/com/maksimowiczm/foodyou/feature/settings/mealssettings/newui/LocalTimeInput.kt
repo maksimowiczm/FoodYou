@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -19,7 +19,7 @@ class LocalTimeInput(initialValue: LocalTime) {
     companion object {
         val Saver = Saver<LocalTimeInput, Int>(
             save = { it.value.toSecondOfDay() },
-            restore = { LocalTimeInput(LocalTime.fromSecondOfDay(it)) }
+            restore = { LocalTimeInput(LocalTime.Companion.fromSecondOfDay(it)) }
         )
     }
 }

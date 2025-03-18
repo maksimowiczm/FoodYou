@@ -19,6 +19,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.Meal
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.LocalTimeInput
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.ALL_DAY_SWITCH
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.CONFIRM_BUTTON
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.DELETE_BUTTON
@@ -26,7 +27,6 @@ import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSetting
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.NAME_INPUT
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.TIME_PICKER
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.TO_TIME_PICKER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.LocalTimeInput
 import kotlinx.datetime.LocalTime
 import org.junit.Test
 
