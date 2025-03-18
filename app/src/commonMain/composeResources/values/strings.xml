@@ -114,6 +114,8 @@
     <string name="action_leave_a_star_on_github">Leave a star on GitHub</string>
     <string name="action_show_calendar">Show calendar</string>
     <string name="action_reorder">Reorder</string>
+    <string name="action_move_up" description="reorder list item up">Move up</string>
+    <string name="action_move_down" description="reorder list item down">Move down</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
