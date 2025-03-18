@@ -77,8 +77,10 @@ fun MealSettingsCard(
 ) {
     val nameInput: @Composable RowScope.() -> Unit = {
         BasicTextField(
-            value = state.nameInput.textFieldValue,
-            onValueChange = { state.nameInput.onValueChange(it) },
+            value = state.nameInput.value,
+            onValueChange = {
+                state.nameInput.value = it
+            },
             modifier = Modifier
                 .testTag(MealSettingsCardTestTags.NAME_INPUT)
                 .defaultMinSize(minWidth = 150.dp)
@@ -106,7 +108,7 @@ fun MealSettingsCard(
                         }
 
                         HorizontalDivider(
-                            color = if (state.nameInput.error != null) {
+                            color = if (!state.isValid) {
                                 MaterialTheme.colorScheme.error
                             } else {
                                 MaterialTheme.colorScheme.outline
@@ -126,7 +128,7 @@ fun MealSettingsCard(
     val actionButtonState by remember(state.isDirty) {
         derivedStateOf {
             when {
-                state.nameInput.textFieldValue.text.isEmpty() -> ActionButtonState.Delete
+                state.nameInput.value.text.isEmpty() -> ActionButtonState.Delete
                 state.isDirty -> ActionButtonState.Save
                 else -> ActionButtonState.Delete
             }
@@ -219,7 +221,7 @@ fun MealSettingsCard(
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = formatTime(state.fromInput.value),
+                    text = formatTime(state.fromInput.value.value),
                     style = MaterialTheme.typography.headlineSmall
                 )
             }
@@ -237,7 +239,7 @@ fun MealSettingsCard(
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = formatTime(state.toInput.value),
+                    text = formatTime(state.toInput.value.value),
                     style = MaterialTheme.typography.headlineSmall
                 )
             }
@@ -246,8 +248,8 @@ fun MealSettingsCard(
 
     if (showFromTimePicker) {
         val timePickerState = rememberTimePickerState(
-            initialHour = state.fromInput.value.hour,
-            initialMinute = state.fromInput.value.minute
+            initialHour = state.fromInput.value.value.hour,
+            initialMinute = state.fromInput.value.value.minute
         )
 
         TimePickerDialog(
@@ -256,7 +258,7 @@ fun MealSettingsCard(
                 TextButton(
                     onClick = {
                         showFromTimePicker = false
-                        state.fromInput.onValueChange(
+                        state.fromInput.value.onValueChange(
                             LocalTime(
                                 hour = timePickerState.hour,
                                 minute = timePickerState.minute
@@ -286,8 +288,8 @@ fun MealSettingsCard(
 
     if (showToTimePicker) {
         val timePickerState = rememberTimePickerState(
-            initialHour = state.toInput.value.hour,
-            initialMinute = state.toInput.value.minute
+            initialHour = state.toInput.value.value.hour,
+            initialMinute = state.toInput.value.value.minute
         )
 
         TimePickerDialog(
@@ -296,7 +298,7 @@ fun MealSettingsCard(
                 TextButton(
                     onClick = {
                         showToTimePicker = false
-                        state.toInput.onValueChange(
+                        state.toInput.value.onValueChange(
                             LocalTime(
                                 hour = timePickerState.hour,
                                 minute = timePickerState.minute
@@ -361,15 +363,6 @@ fun MealSettingsCard(
                 ) {
                     nameInput()
                     actionButton()
-                }
-
-                AnimatedVisibility(
-                    visible = state.nameInput.error != null
-                ) {
-                    Text(
-                        text = state.nameInput.error?.stringResource() ?: "",
-                        color = MaterialTheme.colorScheme.error
-                    )
                 }
 
                 AnimatedVisibility(

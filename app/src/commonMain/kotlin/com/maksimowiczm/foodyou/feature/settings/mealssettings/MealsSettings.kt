@@ -6,7 +6,7 @@ import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.settings.SettingsFeature
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealsSettingsListItem
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealsSettingsScreen
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealsSettingsScreen
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 

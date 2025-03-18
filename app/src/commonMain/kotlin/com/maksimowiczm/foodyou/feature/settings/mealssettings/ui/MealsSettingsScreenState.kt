@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.data.model.Meal
 
 @Composable
@@ -16,7 +17,6 @@ fun rememberMealsSettingsScreenState(meals: List<Meal>): MealsSettingsScreenStat
         .map { it to rememberMealSettingsCardState(it) }
 
     return rememberSaveable(
-        mealsWithState,
         saver = Saver(
             save = {
                 arrayListOf(
@@ -53,10 +53,15 @@ class MealsSettingsScreenState(
         private set
 
     fun updateMeals(newMeals: List<Meal>) {
-        val newOrder = meals
-            .mapNotNull { old ->
-                newMeals.find { it.id == old.first.id }?.let { it to old.second }
-            }
+        val newOrder = newMeals.map { newMeal ->
+            val state = meals.find { it.first.id == newMeal.id }?.second ?: TODO()
+
+            newMeal to state
+        }
+
+        Logger.d("DUPA") {
+            "newOrder: ${newOrder.map { it.first.name }}"
+        }
 
         meals = newOrder
     }

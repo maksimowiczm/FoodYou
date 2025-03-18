@@ -29,28 +29,28 @@ fun CreateMealSettingsCard(
     modifier: Modifier = Modifier
 ) {
     if (isCreating) {
-        val state = rememberMealSettingsCardState()
-
-        MealSettingsCard(
-            state = state,
-            onDelete = { onCreatingChange(false) },
-            onUpdate = {
-                onCreate(
-                    state.nameInput.value,
-                    state.fromInput.value,
-                    if (state.isAllDay) {
-                        state.fromInput.value
-                    } else {
-                        state.toInput.value
-                    }
-                )
-                onCreatingChange(false)
-            },
-            formatTime = formatTime,
-            showDeleteDialog = false,
-            action = null,
-            modifier = modifier.testTag(CREATE_MEAL_SETTINGS_CARD)
-        )
+//        val state = rememberMealSettingsCardState()
+//
+//        MealSettingsCard(
+//            state = state,
+//            onDelete = { onCreatingChange(false) },
+//            onUpdate = {
+//                onCreate(
+//                    state.nameInput.text,
+//                    state.fromInput.value,
+//                    if (state.isAllDay) {
+//                        state.fromInput.value
+//                    } else {
+//                        state.toInput.value
+//                    }
+//                )
+//                onCreatingChange(false)
+//            },
+//            formatTime = formatTime,
+//            showDeleteDialog = false,
+//            action = null,
+//            modifier = modifier.testTag(CREATE_MEAL_SETTINGS_CARD)
+//        )
     } else {
         Card(
             onClick = { onCreatingChange(true) },
