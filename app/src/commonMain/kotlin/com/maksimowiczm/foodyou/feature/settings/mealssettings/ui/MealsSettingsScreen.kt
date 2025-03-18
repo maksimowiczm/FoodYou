@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -153,9 +154,17 @@ fun MealsSettingsScreen(
                 },
                 onMove = {
                 }
-            ) { i, meal, idk ->
+            ) { i, meal, isDragging ->
                 key(meal.id) {
                     val interactionSource = remember { MutableInteractionSource() }
+
+                    val containerColor by animateColorAsState(
+                        if (isDragging) {
+                            MaterialTheme.colorScheme.surfaceContainerHigh
+                        } else {
+                            MealSettingsCardDefaults.colors().containerColor
+                        }
+                    )
 
                     Column {
                         MealSettingsCard(
@@ -186,7 +195,10 @@ fun MealsSettingsScreen(
                                         )
                                     }
                                 }
-                            }
+                            },
+                            colors = MealSettingsCardDefaults.colors(
+                                containerColor = containerColor
+                            )
                         )
 
                         Spacer(Modifier.height(8.dp))

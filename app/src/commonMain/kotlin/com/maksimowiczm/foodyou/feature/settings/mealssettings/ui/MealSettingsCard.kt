@@ -67,7 +67,8 @@ import org.jetbrains.compose.resources.stringResource
 fun MealSettingsCard(
     viewModel: MealSettingsCardViewModel,
     modifier: Modifier = Modifier,
-    action: (@Composable () -> Unit)? = null
+    action: (@Composable () -> Unit)? = null,
+    colors: MealSettingsCardColors = MealSettingsCardDefaults.colors()
 ) {
     val meal by viewModel.meal.collectAsStateWithLifecycle()
     val state = rememberMealSettingsCardState(meal)
@@ -82,7 +83,8 @@ fun MealSettingsCard(
         },
         formatTime = viewModel::formatTime,
         action = action,
-        modifier = modifier
+        modifier = modifier,
+        colors = colors
     )
 }
 
