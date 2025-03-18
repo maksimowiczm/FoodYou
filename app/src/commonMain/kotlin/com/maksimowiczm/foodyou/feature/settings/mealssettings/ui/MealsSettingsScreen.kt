@@ -33,7 +33,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -91,6 +94,9 @@ fun MealsSettingsScreen(
 
     var isReordering by rememberSaveable { mutableStateOf(false) }
     var isCreating by rememberSaveable { mutableStateOf(false) }
+
+    val moveUpString = stringResource(Res.string.action_move_up)
+    val moveDownString = stringResource(Res.string.action_move_down)
 
     Scaffold(
         modifier = modifier.imePadding(),
@@ -178,7 +184,40 @@ fun MealsSettingsScreen(
                             onDelete = {
                                 onDeleteMeal(cardState.meal)
                             },
-                            modifier = Modifier.padding(horizontal = 8.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp).semantics {
+                                customActions = listOf(
+                                    CustomAccessibilityAction(
+                                        label = moveUpString,
+                                        action = {
+                                            val index = cardStates.indexOf(cardState)
+
+                                            if (index > 0) {
+                                                cardStates = cardStates.toMutableList().apply {
+                                                    add(index - 1, removeAt(index))
+                                                }
+                                                true
+                                            } else {
+                                                false
+                                            }
+                                        }
+                                    ),
+                                    CustomAccessibilityAction(
+                                        label = moveDownString,
+                                        action = {
+                                            val index = cardStates.indexOf(cardState)
+
+                                            if (index < cardStates.size - 1) {
+                                                cardStates = cardStates.toMutableList().apply {
+                                                    add(index + 1, removeAt(index))
+                                                }
+                                                true
+                                            } else {
+                                                false
+                                            }
+                                        }
+                                    )
+                                )
+                            },
                             colors = if (isDragging) {
                                 MealSettingsCardDefaults.colors(
                                     containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
