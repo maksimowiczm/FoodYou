@@ -24,7 +24,9 @@ class CreateMealSettingsCardTest {
         setContent {
             CreateMealSettingsCard(
                 isCreating = false,
-                onCreatingChange = {}
+                onCreatingChange = {},
+                onCreate = { _, _, _ -> },
+                formatTime = { it.toString() }
             )
         }
 
@@ -38,7 +40,9 @@ class CreateMealSettingsCardTest {
 
             CreateMealSettingsCard(
                 isCreating = isCreating,
-                onCreatingChange = { isCreating = it }
+                onCreatingChange = { isCreating = it },
+                onCreate = { _, _, _ -> },
+                formatTime = { it.toString() }
             )
         }
 
@@ -55,7 +59,9 @@ class CreateMealSettingsCardTest {
 
             CreateMealSettingsCard(
                 isCreating = isCreating,
-                onCreatingChange = { isCreating = it }
+                onCreatingChange = { isCreating = it },
+                onCreate = { _, _, _ -> },
+                formatTime = { it.toString() }
             )
         }
 
@@ -75,7 +81,9 @@ class CreateMealSettingsCardTest {
 
             CreateMealSettingsCard(
                 isCreating = isCreating,
-                onCreatingChange = { isCreating = it }
+                onCreatingChange = { isCreating = it },
+                onCreate = { _, _, _ -> },
+                formatTime = { it.toString() }
             )
         }
 
