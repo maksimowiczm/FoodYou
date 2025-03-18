@@ -19,8 +19,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -110,16 +113,24 @@ fun MealsSettingsScreen(
                 },
                 actions = {
                     if (isReordering) {
-                        IconButton(
-                            onClick = {
-                                onSaveMealOrder(cardStates.map { it.meal })
-                                isReordering = false
-                            }
+                        TooltipBox(
+                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
+                            tooltip = {
+                                Text(stringResource(Res.string.action_reorder))
+                            },
+                            state = rememberTooltipState()
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Done,
-                                contentDescription = stringResource(Res.string.action_save)
-                            )
+                            IconButton(
+                                onClick = {
+                                    onSaveMealOrder(cardStates.map { it.meal })
+                                    isReordering = false
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Done,
+                                    contentDescription = stringResource(Res.string.action_save)
+                                )
+                            }
                         }
                     } else {
                         IconButton(
