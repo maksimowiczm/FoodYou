@@ -2,20 +2,27 @@ package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,9 +30,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.LocalTimeInput
 import foodyou.app.generated.resources.*
@@ -46,14 +55,25 @@ fun MealsSettingsScreen(
     MealsSettingsScreen(
         meals = sortedMeals,
         formatTime = viewModel::formatTime,
+        onBack = onBack,
+        onCreateMeal = viewModel::createMeal,
+        onUpdateMeal = viewModel::updateMeal,
+        onDeleteMeal = viewModel::deleteMeal,
+        onSaveMealOrder = viewModel::orderMeals,
         modifier = modifier
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealsSettingsScreen(
     meals: List<Meal>,
     formatTime: (LocalTime) -> String,
+    onBack: () -> Unit,
+    onCreateMeal: (String, LocalTime, LocalTime) -> Unit,
+    onUpdateMeal: (Meal) -> Unit,
+    onDeleteMeal: (Meal) -> Unit,
+    onSaveMealOrder: (List<Meal>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var cardStates by rememberMealsSettingsCardStates(meals)
@@ -65,11 +85,61 @@ fun MealsSettingsScreen(
         }
     }
 
+    val scrollBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
+
+    var isReordering by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
-        modifier = modifier
+        modifier = modifier.imePadding(),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(Res.string.headline_meals)
+                    )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onBack
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(Res.string.action_go_back)
+                        )
+                    }
+                },
+                actions = {
+                    if (isReordering) {
+                        IconButton(
+                            onClick = {
+                                onSaveMealOrder(cardStates.map { it.first })
+                                isReordering = false
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Done,
+                                contentDescription = stringResource(Res.string.action_save)
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            onClick = {
+                                isReordering = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.DragHandle,
+                                contentDescription = stringResource(Res.string.action_reorder)
+                            )
+                        }
+                    }
+                },
+                scrollBehavior = scrollBehaviour
+            )
+        }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection),
             state = lazyListState,
             contentPadding = paddingValues
         ) {
@@ -86,9 +156,19 @@ fun MealsSettingsScreen(
                             state = cardState,
                             isDirty = false,
                             formatTime = formatTime,
-                            onSave = {},
+                            onSave = {
+                                onUpdateMeal(
+                                    meal.copy(
+                                        name = cardState.nameInput.text.toString(),
+                                        from = cardState.fromTimeInput.value,
+                                        to = cardState.toTimeInput.value
+                                    )
+                                )
+                            },
                             shouldShowDeleteDialog = true,
-                            onDelete = {},
+                            onDelete = {
+                                onDeleteMeal(meal)
+                            },
                             modifier = Modifier.padding(horizontal = 8.dp),
                             colors = if (isDragging) {
                                 MealSettingsCardDefaults.colors(
@@ -97,20 +177,24 @@ fun MealsSettingsScreen(
                             } else {
                                 MealSettingsCardDefaults.colors()
                             },
-                            action = {
-                                IconButton(
-                                    onClick = {},
-                                    modifier = Modifier
-                                        .clearAndSetSemantics { }
-                                        .draggableHandle()
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.DragHandle,
-                                        contentDescription = stringResource(
-                                            Res.string.action_reorder
+                            action = if (isReordering) {
+                                {
+                                    IconButton(
+                                        onClick = {},
+                                        modifier = Modifier
+                                            .clearAndSetSemantics { }
+                                            .draggableHandle()
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.DragHandle,
+                                            contentDescription = stringResource(
+                                                Res.string.action_reorder
+                                            )
                                         )
-                                    )
+                                    }
                                 }
+                            } else {
+                                null
                             }
                         )
                         Spacer(Modifier.height(8.dp))
