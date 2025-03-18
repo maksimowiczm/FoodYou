@@ -97,7 +97,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
 
             // min 1.4.0-alpha08
-            implementation(libs.android.androidx.material3)
+            // implementation(libs.android.androidx.material3)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

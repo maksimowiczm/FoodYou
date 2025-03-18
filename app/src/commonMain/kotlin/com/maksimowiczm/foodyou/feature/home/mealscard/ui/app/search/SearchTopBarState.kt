@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SearchBarState
-import androidx.compose.material3.SearchBarValue
-import androidx.compose.material3.rememberSearchBarState
+// import androidx.compose.material3.SearchBarState
+// import androidx.compose.material3.SearchBarValue
+// import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -21,9 +21,9 @@ fun rememberSearchTopBarState(
     query: String? = null,
     recentQueries: List<ProductQuery> = emptyList()
 ): SearchTopBarState {
-    val searchBarState = rememberSearchBarState(
-        initialValue = if (initialExpanded) SearchBarValue.Expanded else SearchBarValue.Collapsed
-    )
+//    val searchBarState = rememberSearchBarState(
+//        initialValue = if (initialExpanded) SearchBarValue.Expanded else SearchBarValue.Collapsed
+//    )
 
     return remember(
         query,
@@ -31,7 +31,7 @@ fun rememberSearchTopBarState(
     ) {
         SearchTopBarState(
             query = query ?: "",
-            searchBarState = searchBarState,
+//            searchBarState = searchBarState,
             recentQueries = recentQueries
         )
     }
@@ -41,6 +41,6 @@ fun rememberSearchTopBarState(
 @Stable
 class SearchTopBarState(
     val query: String,
-    val searchBarState: SearchBarState,
+//    val searchBarState: SearchBarState,
     val recentQueries: List<ProductQuery>
 )

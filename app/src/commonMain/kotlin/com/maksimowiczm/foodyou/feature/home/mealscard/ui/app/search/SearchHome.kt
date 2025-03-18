@@ -134,16 +134,16 @@ private fun SearchHome(
     }
 
     val topBar = @Composable {
-        SearchTopBar(
-            state = rememberSearchTopBarState(
-                query = query,
-                recentQueries = recentQueries
-            ),
-            onBarcodeScanner = onBarcodeScanner,
-            onSearch = onSearch,
-            onClearSearch = onClearSearch,
-            onBack = onBack
-        )
+//        SearchTopBar(
+//            state = rememberSearchTopBarState(
+//                query = query,
+//                recentQueries = recentQueries
+//            ),
+//            onBarcodeScanner = onBarcodeScanner,
+//            onSearch = onSearch,
+//            onClearSearch = onClearSearch,
+//            onBack = onBack
+//        )
     }
 
     var subSearchBarHeight by remember { mutableIntStateOf(0) }

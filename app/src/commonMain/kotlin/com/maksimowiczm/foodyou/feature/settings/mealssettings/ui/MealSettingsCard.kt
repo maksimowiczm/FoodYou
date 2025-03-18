@@ -39,8 +39,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerDialog
+// import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -264,38 +263,38 @@ fun MealSettingsCard(
             initialMinute = state.fromInput.value.minute
         )
 
-        TimePickerDialog(
-            onDismissRequest = { showFromTimePicker = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showFromTimePicker = false
-                        state.fromInput.onValueChange(
-                            LocalTime(
-                                hour = timePickerState.hour,
-                                minute = timePickerState.minute
-                            )
-                        )
-                    }
-                ) {
-                    Text(
-                        text = stringResource(Res.string.action_confirm)
-                    )
-                }
-            },
-            title = {},
-            dismissButton = {
-                TextButton(
-                    onClick = { showFromTimePicker = false }
-                ) {
-                    Text(
-                        text = stringResource(Res.string.action_cancel)
-                    )
-                }
-            }
-        ) {
-            TimePicker(timePickerState)
-        }
+//        TimePickerDialog(
+//            onDismissRequest = { showFromTimePicker = false },
+//            confirmButton = {
+//                TextButton(
+//                    onClick = {
+//                        showFromTimePicker = false
+//                        state.fromInput.onValueChange(
+//                            LocalTime(
+//                                hour = timePickerState.hour,
+//                                minute = timePickerState.minute
+//                            )
+//                        )
+//                    }
+//                ) {
+//                    Text(
+//                        text = stringResource(Res.string.action_confirm)
+//                    )
+//                }
+//            },
+//            title = {},
+//            dismissButton = {
+//                TextButton(
+//                    onClick = { showFromTimePicker = false }
+//                ) {
+//                    Text(
+//                        text = stringResource(Res.string.action_cancel)
+//                    )
+//                }
+//            }
+//        ) {
+//            TimePicker(timePickerState)
+//        }
     }
 
     if (showToTimePicker) {
@@ -304,39 +303,39 @@ fun MealSettingsCard(
             initialMinute = state.toInput.value.minute
         )
 
-        TimePickerDialog(
-            onDismissRequest = { showToTimePicker = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showToTimePicker = false
-                        state.toInput.onValueChange(
-                            LocalTime(
-                                hour = timePickerState.hour,
-                                minute = timePickerState.minute
-                            )
-                        )
-                    }
-                ) {
-                    Text(
-                        text = stringResource(Res.string.action_confirm)
-                    )
-                }
-            },
-            title = {},
-            dismissButton = {
-                TextButton(
-                    onClick = { showToTimePicker = false }
-                ) {
-                    Text(
-                        text = stringResource(Res.string.action_cancel)
-                    )
-                }
-            }
-
-        ) {
-            TimePicker(timePickerState)
-        }
+//        TimePickerDialog(
+//            onDismissRequest = { showToTimePicker = false },
+//            confirmButton = {
+//                TextButton(
+//                    onClick = {
+//                        showToTimePicker = false
+//                        state.toInput.onValueChange(
+//                            LocalTime(
+//                                hour = timePickerState.hour,
+//                                minute = timePickerState.minute
+//                            )
+//                        )
+//                    }
+//                ) {
+//                    Text(
+//                        text = stringResource(Res.string.action_confirm)
+//                    )
+//                }
+//            },
+//            title = {},
+//            dismissButton = {
+//                TextButton(
+//                    onClick = { showToTimePicker = false }
+//                ) {
+//                    Text(
+//                        text = stringResource(Res.string.action_cancel)
+//                    )
+//                }
+//            }
+//
+//        ) {
+//            TimePicker(timePickerState)
+//        }
     }
 
     val surfaceColor by animateColorAsState(
