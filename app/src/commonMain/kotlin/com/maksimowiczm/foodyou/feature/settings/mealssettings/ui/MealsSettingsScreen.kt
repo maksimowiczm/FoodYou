@@ -69,7 +69,7 @@ fun MealsSettingsScreen(
     val state = rememberMealsSettingsScreenState(meals)
 
     LaunchedEffect(meals) {
-        state.updateRanks(meals)
+        state.meals = meals
     }
 
     MealsSettingsScreen(
@@ -214,7 +214,7 @@ private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: Co
         onSettle = { from, to ->
             val newMeals = state.meals.toMutableList()
             newMeals.add(to, newMeals.removeAt(from))
-            state.updateRanks(newMeals)
+            state.meals = newMeals
             hapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
         },
         onMove = {
@@ -253,7 +253,7 @@ private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: Co
                                         if (i > 0) {
                                             val newMeals = state.meals.toMutableList()
                                             newMeals.add(i - 1, newMeals.removeAt(i))
-                                            state.updateRanks(newMeals)
+                                            state.meals = newMeals
                                             true
                                         } else {
                                             false
@@ -266,7 +266,7 @@ private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: Co
                                         if (i < state.meals.size - 1) {
                                             val newMeals = state.meals.toMutableList()
                                             newMeals.add(i + 1, newMeals.removeAt(i))
-                                            state.updateRanks(newMeals)
+                                            state.meals = newMeals
                                             true
                                         } else {
                                             false
