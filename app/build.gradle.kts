@@ -95,15 +95,19 @@ kotlin {
 
             // Ktor
             implementation(libs.ktor.client.okhttp)
+
+            // min 1.4.0-alpha08
+            implementation(libs.android.androidx.material3)
         }
         commonMain.dependencies {
             implementation(compose.preview)
 
             implementation(compose.runtime)
+            // Wait for the compose 1.8.0 release and material 1.4.0
 //            implementation(compose.foundation)
-            implementation(libs.androidx.foundation)
 //            implementation(compose.material3)
-            implementation(libs.androidx.material3)
+            implementation("org.jetbrains.compose.foundation:foundation:1.8.0-alpha03")
+            implementation("org.jetbrains.compose.material3:material3:1.8.0-alpha03")
             implementation(compose.material3AdaptiveNavigationSuite)
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
