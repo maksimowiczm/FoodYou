@@ -1,5 +1,10 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -10,6 +15,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.ALL_DAY_SWITCH
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.CONFIRM_BUTTON
@@ -27,7 +33,8 @@ class MealSettingsCardTest {
         name: String,
         from: LocalTime,
         to: LocalTime,
-        formatTime: (LocalTime) -> String
+        formatTime: (LocalTime) -> String,
+        action: @Composable (() -> Unit)? = null
     ) {
         setContent {
             MealSettingsCard(
@@ -36,12 +43,14 @@ class MealSettingsCardTest {
                         id = 0,
                         name = name,
                         from = from,
-                        to = to
+                        to = to,
+                        rank = 0
                     )
                 ),
-                onUpdate = {},
                 onDelete = {},
+                onUpdate = {},
                 formatTime = formatTime,
+                action = action,
                 showDeleteDialog = false
             )
         }
@@ -121,5 +130,20 @@ class MealSettingsCardTest {
         onNodeWithTag(TO_TIME_PICKER).assertIsDisplayed().assertTextEquals(formatTime(time))
         onNodeWithTag(CONFIRM_BUTTON).assertDoesNotExist()
         onNodeWithTag(DELETE_BUTTON).assertIsDisplayed()
+    }
+
+    @Test
+    fun test_action_button() = runComposeUiTest {
+        val name = "Test"
+        val time = LocalTime(12, 0, 0)
+        val formatTime: (LocalTime) -> String = { it.toString() }
+
+        setupCard(name, time, time, formatTime) {
+            Box(modifier = Modifier.size(50.dp).testTag("TEST"))
+        }
+
+        onNodeWithTag("TEST").assertIsDisplayed()
+        onNodeWithTag(CONFIRM_BUTTON).assertDoesNotExist()
+        onNodeWithTag(DELETE_BUTTON).assertDoesNotExist()
     }
 }
