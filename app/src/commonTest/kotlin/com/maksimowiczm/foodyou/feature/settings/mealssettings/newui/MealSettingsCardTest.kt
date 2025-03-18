@@ -1,8 +1,9 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ComposeUiTest
@@ -15,15 +16,17 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.Meal
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.ALL_DAY_SWITCH
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.CONFIRM_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.DELETE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.FROM_TIME_PICKER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.NAME_INPUT
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.TIME_PICKER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.TO_TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.ALL_DAY_SWITCH
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.CONFIRM_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.DELETE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.FROM_TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.NAME_INPUT
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.MealSettingsCardTestTags.TO_TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.LocalTimeInput
 import kotlinx.datetime.LocalTime
 import org.junit.Test
 
@@ -36,22 +39,28 @@ class MealSettingsCardTest {
         formatTime: (LocalTime) -> String,
         action: @Composable (() -> Unit)? = null
     ) {
+        val meal = Meal(
+            id = 0,
+            name = name,
+            from = from,
+            to = to,
+            rank = 0
+        )
+
         setContent {
             MealSettingsCard(
-                state = rememberMealSettingsCardState(
-                    meal = Meal(
-                        id = 0,
-                        name = name,
-                        from = from,
-                        to = to,
-                        rank = 0
-                    )
+                state = MealSettingsCardState(
+                    meal = meal,
+                    nameInput = mutableStateOf(TextFieldValue(meal.name)),
+                    fromTimeInput = LocalTimeInput(from),
+                    toTimeInput = LocalTimeInput(to),
+                    isAllDay = mutableStateOf(meal.isAllDay)
                 ),
-                onDelete = {},
-                onUpdate = {},
                 formatTime = formatTime,
-                action = action,
-                showDeleteDialog = false
+                onSave = {},
+                shouldShowDeleteDialog = true,
+                onDelete = {},
+                action = action
             )
         }
     }
