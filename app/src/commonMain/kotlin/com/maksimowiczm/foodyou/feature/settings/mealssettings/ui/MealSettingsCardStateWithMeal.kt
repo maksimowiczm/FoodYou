@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.input.TextFieldValue
 import com.maksimowiczm.foodyou.data.model.Meal
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.LocalTimeInput
 import kotlin.time.Duration.Companion.hours
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone

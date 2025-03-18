@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.CreateMealSettingsCardTestTags.CREATE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.CreateMealSettingsCardTestTags.CREATE_MEAL_SETTINGS_CARD
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_MEAL_SETTINGS_CARD
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_add_meal
 import kotlinx.datetime.LocalTime

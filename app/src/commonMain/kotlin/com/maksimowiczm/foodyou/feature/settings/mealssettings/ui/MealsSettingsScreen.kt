@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,7 +36,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.data.model.Meal
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.LocalTimeInput
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
