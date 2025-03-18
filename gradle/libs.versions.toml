@@ -28,6 +28,7 @@ gmazzoBuildConfig = "5.5.2"
 androidx-lifecycle = "2.8.4"
 navigationCompose = "2.9.0-alpha14"
 kermit = "2.0.4"
+reorderable = "2.4.3"
 
 [libraries]
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -61,6 +62,7 @@ androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", nam
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

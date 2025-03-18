@@ -1,11 +1,13 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
@@ -14,9 +16,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Reorder
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
@@ -44,6 +49,7 @@ import foodyou.app.generated.resources.headline_meals
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import sh.calvin.reorderable.ReorderableColumn
 
 @Composable
 fun MealsSettingsScreen(
@@ -63,7 +69,7 @@ fun MealsSettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifier = Modifier) {
-    val topBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val coroutineScope = rememberCoroutineScope()
 
     var isCreating by rememberSaveable { mutableStateOf(false) }
@@ -74,6 +80,8 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
             createCardFocusRequester.requestFocus()
         }
     }
+
+    var reorder by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -93,7 +101,27 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
                         text = stringResource(Res.string.headline_meals)
                     )
                 },
-                scrollBehavior = topBarScrollBehavior
+                actions = {
+                    IconButton(
+                        onClick = { reorder = !reorder }
+                    ) {
+                        if (reorder) {
+                            Icon(
+                                imageVector = Icons.Default.Save,
+                                contentDescription = "Reorder"
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Reorder,
+                                contentDescription = "Save"
+                            )
+                        }
+                    }
+                },
+                scrollBehavior = topBarScrollBehavior,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                )
             )
         },
         modifier = modifier
@@ -103,24 +131,47 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
             .exclude(ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Bottom))
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(paddingValues)
-                .animateContentSize()
+            modifier = Modifier.padding(paddingValues)
         ) {
-            meals.forEachIndexed { i, meal ->
+            ReorderableColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .animateContentSize(),
+                list = meals,
+                onSettle = { from, to ->
+                    val fromMeal = meals[from]
+                    val toMeal = meals[to]
+                },
+                onMove = {
+                }
+            ) { i, meal, idk ->
                 key(meal.id) {
-                    MealSettingsCard(
-                        viewModel = MealSettingsCardViewModel(
-                            diaryRepository = koinInject(),
-                            stringFormatRepository = koinInject(),
-                            mealId = meal.id,
-                            coroutineScope = coroutineScope
-                        ),
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
+                    val interactionSource = remember { MutableInteractionSource() }
 
-                    Spacer(Modifier.height(8.dp))
+                    Column(
+                        modifier = if (reorder) {
+                            Modifier.draggableHandle(
+                                onDragStarted = {},
+                                onDragStopped = {},
+                                interactionSource = interactionSource
+                            )
+                        } else {
+                            Modifier
+                        }
+                    ) {
+                        MealSettingsCard(
+                            viewModel = MealSettingsCardViewModel(
+                                diaryRepository = koinInject(),
+                                stringFormatRepository = koinInject(),
+                                mealId = meal.id,
+                                coroutineScope = coroutineScope
+                            ),
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+
+                        Spacer(Modifier.height(8.dp))
+                    }
                 }
             }
 

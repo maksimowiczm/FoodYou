@@ -136,6 +136,9 @@ kotlin {
 
             // Logger
             implementation(libs.kermit)
+
+            // Reorderable list
+            implementation(libs.reorderable)
         }
 
         commonTest.dependencies {
