@@ -183,7 +183,7 @@ fun MealsSettingsScreen(
                     key = cardState.meal.id
                 ) { isDragging ->
                     Column {
-                        MealSettingsCard(
+                        MealCard(
                             state = cardState,
                             formatTime = formatTime,
                             onSave = {
@@ -228,11 +228,11 @@ fun MealsSettingsScreen(
                                 )
                             },
                             colors = if (isDragging) {
-                                MealSettingsCardDefaults.colors(
+                                MealCardDefaults.colors(
                                     containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                 )
                             } else {
-                                MealSettingsCardDefaults.colors()
+                                MealCardDefaults.colors()
                             },
                             action = if (isReordering) {
                                 {
@@ -260,7 +260,7 @@ fun MealsSettingsScreen(
             }
 
             item {
-                CreateMealSettingsCard(
+                CreateMealCard(
                     isCreating = isCreating,
                     onCreatingChange = { isCreating = it },
                     onCreate = onCreateMeal,
@@ -278,9 +278,7 @@ fun MealsSettingsScreen(
 //
 // tbh why meals have to be sorted but it works so I won't touch it for now tf
 @Composable
-fun rememberMealsSettingsCardStates(
-    meals: List<Meal>
-): MutableState<List<MealSettingsCardStateWithMeal>> {
+fun rememberMealsSettingsCardStates(meals: List<Meal>): MutableState<List<MealCardStateWithMeal>> {
     val stableMeals = meals.sortedBy { it.id }
 
     val textFieldStates = stableMeals.map { meal ->
@@ -323,7 +321,7 @@ fun rememberMealsSettingsCardStates(
 
     return remember(meals) {
         val res = meals.map { meal ->
-            MealSettingsCardStateWithMeal(
+            MealCardStateWithMeal(
                 meal = meal,
                 nameInput = textFieldStates.first { it.first == meal.id }.second,
                 fromTimeInput = fromTimeStates.first { it.first == meal.id }.second,

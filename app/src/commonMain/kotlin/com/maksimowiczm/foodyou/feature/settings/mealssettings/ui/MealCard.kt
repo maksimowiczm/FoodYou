@@ -63,15 +63,15 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MealSettingsCard(
-    state: MealSettingsCardState,
+fun MealCard(
+    state: MealCardState,
     formatTime: (LocalTime) -> String,
     onSave: () -> Unit,
     shouldShowDeleteDialog: Boolean,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
-    colors: MealSettingsCardColors = MealSettingsCardDefaults.colors(),
-    shape: Shape = MealSettingsCardDefaults.shape,
+    colors: MealCardColors = MealCardDefaults.colors(),
+    shape: Shape = MealCardDefaults.shape,
     action: (@Composable () -> Unit)? = null
 ) {
     val nameInput: @Composable RowScope.() -> Unit = {
@@ -79,7 +79,7 @@ fun MealSettingsCard(
             value = state.nameInput.value,
             onValueChange = { state.nameInput.value = it },
             modifier = Modifier
-                .testTag(MealSettingsCardTestTags.NAME_INPUT)
+                .testTag(MealCardTestTags.NAME_INPUT)
                 .defaultMinSize(minWidth = 150.dp)
                 .width(IntrinsicSize.Min)
                 .weight(1f, false),
@@ -149,7 +149,7 @@ fun MealSettingsCard(
                 ActionButtonState.Save -> FilledIconButton(
                     onClick = { onSave() },
                     enabled = true,
-                    modifier = Modifier.testTag(MealSettingsCardTestTags.CONFIRM_BUTTON),
+                    modifier = Modifier.testTag(MealCardTestTags.CONFIRM_BUTTON),
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = colors.confirmButtonContainerColor,
                         contentColor = colors.confirmButtonContentColor
@@ -169,7 +169,7 @@ fun MealSettingsCard(
                             onDelete()
                         }
                     },
-                    modifier = Modifier.testTag(MealSettingsCardTestTags.DELETE_BUTTON),
+                    modifier = Modifier.testTag(MealCardTestTags.DELETE_BUTTON),
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = colors.deleteButtonContainerColor,
                         contentColor = colors.deleteButtonContentColor
@@ -211,7 +211,7 @@ fun MealSettingsCard(
         ) {
             Card(
                 onClick = { showFromTimePicker = true },
-                modifier = Modifier.testTag(MealSettingsCardTestTags.FROM_TIME_PICKER),
+                modifier = Modifier.testTag(MealCardTestTags.FROM_TIME_PICKER),
                 colors = CardDefaults.cardColors(
                     containerColor = containerColor,
                     contentColor = contentColor
@@ -229,7 +229,7 @@ fun MealSettingsCard(
             )
             Card(
                 onClick = { showToTimePicker = true },
-                modifier = Modifier.testTag(MealSettingsCardTestTags.TO_TIME_PICKER),
+                modifier = Modifier.testTag(MealCardTestTags.TO_TIME_PICKER),
                 colors = CardDefaults.cardColors(
                     containerColor = containerColor,
                     contentColor = contentColor
@@ -367,7 +367,7 @@ fun MealSettingsCard(
                     visible = !state.isAllDay.value
                 ) {
                     Column(
-                        modifier = Modifier.testTag(MealSettingsCardTestTags.TIME_PICKER)
+                        modifier = Modifier.testTag(MealCardTestTags.TIME_PICKER)
                     ) {
                         Spacer(Modifier.height(8.dp))
 
@@ -379,7 +379,7 @@ fun MealSettingsCard(
 
                 Row(
                     modifier = Modifier
-                        .testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH_CONTAINER)
+                        .testTag(MealCardTestTags.ALL_DAY_SWITCH_CONTAINER)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
@@ -390,7 +390,7 @@ fun MealSettingsCard(
                     Switch(
                         checked = state.isAllDay.value,
                         onCheckedChange = { state.isAllDay.value = it },
-                        modifier = Modifier.testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH)
+                        modifier = Modifier.testTag(MealCardTestTags.ALL_DAY_SWITCH)
                     )
                     Spacer(Modifier.width(16.dp))
                     Text(
@@ -454,7 +454,7 @@ private fun DeleteDialog(
     )
 }
 
-data class MealSettingsCardColors(
+data class MealCardColors(
     val containerColor: Color,
     val contentColor: Color,
     val timeContainerColor: Color,
@@ -472,7 +472,7 @@ data class MealSettingsCardColors(
     val deleteButtonContentColor: Color
 )
 
-object MealSettingsCardDefaults {
+object MealCardDefaults {
     val shape: Shape
         @Composable get() = MaterialTheme.shapes.medium
 
@@ -490,7 +490,7 @@ object MealSettingsCardDefaults {
         confirmButtonContentColor: Color = MaterialTheme.colorScheme.onPrimary,
         deleteButtonContainerColor: Color = Color.Transparent,
         deleteButtonContentColor: Color = MaterialTheme.colorScheme.onSurface
-    ) = MealSettingsCardColors(
+    ) = MealCardColors(
         containerColor = containerColor,
         contentColor = contentColor,
         timeContainerColor = timeContainerColor,
@@ -506,7 +506,7 @@ object MealSettingsCardDefaults {
     )
 }
 
-object MealSettingsCardTestTags {
+object MealCardTestTags {
     const val NAME_INPUT = "Name input"
     const val DELETE_BUTTON = "Delete button"
     const val CONFIRM_BUTTON = "Confirm button"

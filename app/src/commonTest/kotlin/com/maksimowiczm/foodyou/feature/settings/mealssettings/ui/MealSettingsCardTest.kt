@@ -19,13 +19,13 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.Meal
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.ALL_DAY_SWITCH
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.CONFIRM_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.DELETE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.FROM_TIME_PICKER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.NAME_INPUT
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.TIME_PICKER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.TO_TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.ALL_DAY_SWITCH
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.CONFIRM_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.DELETE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.FROM_TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.NAME_INPUT
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.TO_TIME_PICKER
 import kotlinx.datetime.LocalTime
 import org.junit.Test
 
@@ -47,8 +47,8 @@ class MealSettingsCardTest {
         )
 
         setContent {
-            MealSettingsCard(
-                state = MealSettingsCardStateWithMeal(
+            MealCard(
+                state = MealCardStateWithMeal(
                     meal = meal,
                     nameInput = mutableStateOf(TextFieldValue(meal.name)),
                     fromTimeInput = LocalTimeInput(from),

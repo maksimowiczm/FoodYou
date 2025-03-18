@@ -13,17 +13,17 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @Stable
-class MealSettingsCardStateWithoutMeal(
+class MealCardStateWithoutMeal(
     override val nameInput: MutableState<TextFieldValue>,
     override val fromTimeInput: LocalTimeInput,
     override val toTimeInput: LocalTimeInput,
     override val isAllDay: MutableState<Boolean>
-) : MealSettingsCardState {
+) : MealCardState {
     override val isDirty = true
 }
 
 @Composable
-fun rememberMealSettingsCardState(): MealSettingsCardState {
+fun rememberMealCardState(): MealCardState {
     val nameInput = rememberSaveable(
         stateSaver = TextFieldValue.Saver
     ) {
@@ -50,7 +50,7 @@ fun rememberMealSettingsCardState(): MealSettingsCardState {
     }
 
     return remember {
-        MealSettingsCardStateWithoutMeal(
+        MealCardStateWithoutMeal(
             nameInput = nameInput,
             fromTimeInput = fromTimeInput,
             toTimeInput = toTimeInput,

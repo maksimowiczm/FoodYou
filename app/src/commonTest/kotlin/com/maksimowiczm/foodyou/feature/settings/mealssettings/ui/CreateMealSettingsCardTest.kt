@@ -10,11 +10,11 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_MEAL_SETTINGS_CARD
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.CONFIRM_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.DELETE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.NAME_INPUT
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealCardTestTags.CREATE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealCardTestTags.CREATE_MEAL_SETTINGS_CARD
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.CONFIRM_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.DELETE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.NAME_INPUT
 import org.junit.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -22,7 +22,7 @@ class CreateMealSettingsCardTest {
     @Test
     fun test_create_button() = runComposeUiTest {
         setContent {
-            CreateMealSettingsCard(
+            CreateMealCard(
                 isCreating = false,
                 onCreatingChange = {},
                 onCreate = { _, _, _ -> },
@@ -38,7 +38,7 @@ class CreateMealSettingsCardTest {
         setContent {
             var isCreating by remember { mutableStateOf(false) }
 
-            CreateMealSettingsCard(
+            CreateMealCard(
                 isCreating = isCreating,
                 onCreatingChange = { isCreating = it },
                 onCreate = { _, _, _ -> },
@@ -57,7 +57,7 @@ class CreateMealSettingsCardTest {
         setContent {
             var isCreating by remember { mutableStateOf(true) }
 
-            CreateMealSettingsCard(
+            CreateMealCard(
                 isCreating = isCreating,
                 onCreatingChange = { isCreating = it },
                 onCreate = { _, _, _ -> },
@@ -79,7 +79,7 @@ class CreateMealSettingsCardTest {
         setContent {
             var isCreating by remember { mutableStateOf(true) }
 
-            CreateMealSettingsCard(
+            CreateMealCard(
                 isCreating = isCreating,
                 onCreatingChange = { isCreating = it },
                 onCreate = { _, _, _ -> },

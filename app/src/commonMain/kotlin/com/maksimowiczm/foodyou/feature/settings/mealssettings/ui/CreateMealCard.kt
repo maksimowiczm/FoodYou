@@ -13,15 +13,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_MEAL_SETTINGS_CARD
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealCardTestTags.CREATE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealCardTestTags.CREATE_MEAL_SETTINGS_CARD
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_add_meal
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun CreateMealSettingsCard(
+fun CreateMealCard(
     isCreating: Boolean,
     onCreatingChange: (Boolean) -> Unit,
     onCreate: (name: String, from: LocalTime, to: LocalTime) -> Unit,
@@ -29,9 +29,9 @@ fun CreateMealSettingsCard(
     modifier: Modifier = Modifier
 ) {
     if (isCreating) {
-        val state = rememberMealSettingsCardState()
+        val state = rememberMealCardState()
 
-        MealSettingsCard(
+        MealCard(
             state = state,
             onDelete = { onCreatingChange(false) },
             onSave = {
@@ -56,8 +56,8 @@ fun CreateMealSettingsCard(
             onClick = { onCreatingChange(true) },
             modifier = modifier.testTag(CREATE_BUTTON),
             colors = CardDefaults.outlinedCardColors(
-                containerColor = MealSettingsCardDefaults.colors().containerColor,
-                contentColor = MealSettingsCardDefaults.colors().contentColor
+                containerColor = MealCardDefaults.colors().containerColor,
+                contentColor = MealCardDefaults.colors().contentColor
             )
         ) {
             Box(
@@ -75,7 +75,7 @@ fun CreateMealSettingsCard(
     }
 }
 
-object CreateMealSettingsCardTestTags {
+object CreateMealCardTestTags {
     const val CREATE_BUTTON = "CreateButton"
     const val CREATE_MEAL_SETTINGS_CARD = "CreateMealSettingsCard"
 }

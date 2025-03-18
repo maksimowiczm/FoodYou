@@ -7,22 +7,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.input.TextFieldValue
 import com.maksimowiczm.foodyou.data.model.Meal
 
-interface MealSettingsCardState {
-    val nameInput: MutableState<TextFieldValue>
-    val fromTimeInput: LocalTimeInput
-    val toTimeInput: LocalTimeInput
-    val isAllDay: MutableState<Boolean>
-    val isDirty: Boolean
-}
-
 @Stable
-class MealSettingsCardStateWithMeal(
+class MealCardStateWithMeal(
     val meal: Meal,
     override val nameInput: MutableState<TextFieldValue>,
     override val fromTimeInput: LocalTimeInput,
     override val toTimeInput: LocalTimeInput,
     override val isAllDay: MutableState<Boolean>
-) : MealSettingsCardState {
+) : MealCardState {
     private val name by derivedStateOf { nameInput.value.text }
     private val fromTime by derivedStateOf { fromTimeInput.value }
     private val toTime by derivedStateOf { toTimeInput.value }
