@@ -117,7 +117,7 @@ class DiaryRepositoryImpl(
                 fromMinute = from.minute,
                 toHour = to.hour,
                 toMinute = to.minute,
-                lexoRank = "a"
+                rank = 0
             )
         )
     }

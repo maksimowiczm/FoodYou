@@ -21,7 +21,7 @@ abstract class InitializeMealsCallbackBase : RoomDatabase.Callback() {
         try {
             meals.forEach { meal ->
                 val query = """
-                    INSERT INTO MealEntity (name, fromHour, fromMinute, toHour, toMinute, lexorank) 
+                    INSERT INTO MealEntity (name, fromHour, fromMinute, toHour, toMinute, rank) 
                     VALUES ($1, $2, $3, $4, $5, $6)
                 """.trimIndent()
 
@@ -32,7 +32,7 @@ abstract class InitializeMealsCallbackBase : RoomDatabase.Callback() {
                 statement.bindInt(3, meal.fromMinute)
                 statement.bindInt(4, meal.toHour)
                 statement.bindInt(5, meal.toMinute)
-                statement.bindText(6, meal.lexoRank)
+                statement.bindLong(6, meal.rank)
 
                 statement.step()
 

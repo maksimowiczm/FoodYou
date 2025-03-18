@@ -26,7 +26,7 @@ class MealsCardState(val diaryDay: DiaryDay?, val time: LocalTime, val shimmer: 
     @Stable
     val meals by derivedStateOf {
         diaryDay?.meals?.sortedBy {
-            if (shouldShowMeal(it, time)) it.lexoRank else "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"
+            if (shouldShowMeal(it, time)) it.rank else -1
         }
     }
 

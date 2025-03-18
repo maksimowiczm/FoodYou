@@ -8,7 +8,7 @@ data class Meal(
     val name: String,
     val from: LocalTime,
     val to: LocalTime,
-    val lexoRank: String
+    val rank: Long
 ) {
     val isAllDay: Boolean
         get() = from == to
@@ -23,7 +23,7 @@ fun MealEntity.toDomain(): Meal {
         name = name,
         from = from,
         to = to,
-        lexoRank = lexoRank
+        rank = rank
     )
 }
 
@@ -34,5 +34,5 @@ fun Meal.toEntity() = MealEntity(
     fromMinute = from.minute,
     toHour = to.hour,
     toMinute = to.minute,
-    lexoRank = lexoRank
+    rank = rank
 )

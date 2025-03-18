@@ -58,12 +58,31 @@ abstract class OpenSourceDatabase : RoomDatabase() {
 }
 
 private val MIGRATION_1_2 = object : Migration(1, 2) {
-    private val query = """
-        ALTER TABLE MealEntity
-        ADD COLUMN lexoRank TEXT NOT NULL DEFAULT 'a'
-    """.trimIndent()
-
     override fun migrate(connection: SQLiteConnection) {
-        connection.execSQL(query)
+        connection.execSQL("BEGIN TRANSACTION")
+        connection.execSQL(
+            """
+            ALTER TABLE MealEntity 
+            ADD COLUMN rank INTEGER NOT NULL DEFAULT 0
+            """.trimIndent()
+        )
+        connection.execSQL(
+            """
+            UPDATE MealEntity 
+            SET rank = id
+            """.trimIndent()
+        )
+        connection.execSQL(
+            """
+            ALTER TABLE MealEntity 
+            ADD COLUMN rank INTEGER NOT NULL
+            """.trimIndent()
+        )
+        connection.execSQL(
+            """
+            CREATE INDEX index_MealEntity_rank ON MealEntity(rank)
+            """.trimIndent()
+        )
+        connection.execSQL("COMMIT")
     }
 }

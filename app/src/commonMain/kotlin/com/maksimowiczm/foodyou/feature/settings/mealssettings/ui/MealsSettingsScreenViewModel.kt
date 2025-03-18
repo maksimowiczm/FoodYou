@@ -11,10 +11,10 @@ import kotlinx.coroutines.runBlocking
 
 class MealsSettingsScreenViewModel(diaryRepository: DiaryRepository) : ViewModel() {
     private fun DiaryRepository.observeSortedMeals() =
-        observeMeals().map { it.sortedBy { it.lexoRank } }
+        observeMeals().map { it.sortedBy { it.rank } }
 
     val meals = diaryRepository.observeSortedMeals()
-        .map { it.sortedBy { it.lexoRank } }
+        .map { it.sortedBy { it.rank } }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(2_000),
