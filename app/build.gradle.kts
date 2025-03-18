@@ -100,8 +100,6 @@ kotlin {
             implementation(libs.android.androidx.material3)
         }
         commonMain.dependencies {
-            implementation(compose.preview)
-
             implementation(compose.runtime)
             // Wait for the compose 1.8.0 release and material 1.4.0
 //            implementation(compose.foundation)
