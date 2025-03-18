@@ -22,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +33,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.LocalTimeInput
 import foodyou.app.generated.resources.*
@@ -229,7 +227,11 @@ fun rememberMealsSettingsCardStates(
         }
     }
 
-    return remember {
+    val isAllDayStates = meals.map { meal ->
+        meal.id to rememberSaveable { mutableStateOf(false) }
+    }
+
+    return remember(meals) {
         mutableStateOf(
             meals.map { meal ->
                 Pair<Meal, MealsSettingsCardState>(
@@ -237,7 +239,8 @@ fun rememberMealsSettingsCardStates(
                     MealsSettingsCardState(
                         textFieldStates.first { it.first == meal.id }.second,
                         fromTimeStates.first { it.first == meal.id }.second,
-                        toTimeStates.first { it.first == meal.id }.second
+                        toTimeStates.first { it.first == meal.id }.second,
+                        isAllDayStates.first { it.first == meal.id }.second
                     )
                 )
             }

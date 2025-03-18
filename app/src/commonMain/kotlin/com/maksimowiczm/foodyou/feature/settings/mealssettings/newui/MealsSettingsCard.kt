@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -367,15 +368,19 @@ fun MealsSettingsCard(
                     actionButton()
                 }
 
-                Column(
-                    modifier = Modifier.testTag(MealSettingsCardTestTags.TIME_PICKER)
+                AnimatedVisibility(
+                    visible = !state.isAllDay.value
                 ) {
+                    Column(
+                        modifier = Modifier.testTag(MealSettingsCardTestTags.TIME_PICKER)
+                    ) {
+                        Spacer(Modifier.height(8.dp))
+
+                        dateInput()
+                    }
+
                     Spacer(Modifier.height(8.dp))
-
-                    dateInput()
                 }
-
-                Spacer(Modifier.height(8.dp))
 
                 Row(
                     modifier = Modifier
@@ -383,15 +388,13 @@ fun MealsSettingsCard(
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                            onClick = {
-                                TODO()
-                            }
+                            onClick = { state.isAllDay.value = !state.isAllDay.value }
                         ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Switch(
-                        checked = false,
-                        onCheckedChange = { TODO() },
+                        checked = state.isAllDay.value,
+                        onCheckedChange = { state.isAllDay.value = it },
                         modifier = Modifier.testTag(MealSettingsCardTestTags.ALL_DAY_SWITCH)
                     )
                     Spacer(Modifier.width(16.dp))
