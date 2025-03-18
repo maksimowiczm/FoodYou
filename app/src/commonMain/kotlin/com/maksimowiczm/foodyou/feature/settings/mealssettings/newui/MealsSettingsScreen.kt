@@ -111,7 +111,7 @@ fun MealsSettingsScreen(
                     if (isReordering) {
                         IconButton(
                             onClick = {
-                                onSaveMealOrder(cardStates.map { it.first })
+                                onSaveMealOrder(cardStates.map { it.meal })
                                 isReordering = false
                             }
                         ) {
@@ -146,11 +146,11 @@ fun MealsSettingsScreen(
         ) {
             items(
                 items = cardStates,
-                key = { (meal, _) -> meal.id }
-            ) { (meal, cardState) ->
+                key = { state -> state.meal.id }
+            ) { cardState ->
                 ReorderableItem(
                     state = reorderableLazyListState,
-                    key = meal.id
+                    key = cardState.meal.id
                 ) { isDragging ->
                     Column {
                         MealSettingsCard(
@@ -161,7 +161,7 @@ fun MealsSettingsScreen(
                             },
                             shouldShowDeleteDialog = true,
                             onDelete = {
-                                onDeleteMeal(meal)
+                                onDeleteMeal(cardState.meal)
                             },
                             modifier = Modifier.padding(horizontal = 8.dp),
                             colors = if (isDragging) {
@@ -199,10 +199,11 @@ fun MealsSettingsScreen(
     }
 }
 
+// Why is it so wierd?
+// Data can't leave inside lazy list item because it will be lost when not visible. It must be
+// stored outside the lazy list.
 @Composable
-fun rememberMealsSettingsCardStates(
-    meals: List<Meal>
-): MutableState<List<Pair<Meal, MealSettingsCardState>>> {
+fun rememberMealsSettingsCardStates(meals: List<Meal>): MutableState<List<MealSettingsCardState>> {
     val stableMeals = meals.sortedBy { it.id }
 
     val textFieldStates = stableMeals.map { meal ->
@@ -239,15 +240,12 @@ fun rememberMealsSettingsCardStates(
 
     return remember(meals) {
         val res = meals.map { meal ->
-            Pair<Meal, MealSettingsCardState>(
-                meal,
-                MealSettingsCardState(
-                    meal = meal,
-                    nameInput = textFieldStates.first { it.first == meal.id }.second,
-                    fromTimeInput = fromTimeStates.first { it.first == meal.id }.second,
-                    toTimeInput = toTimeStates.first { it.first == meal.id }.second,
-                    isAllDay = isAllDayStates.first { it.first == meal.id }.second
-                )
+            MealSettingsCardState(
+                meal = meal,
+                nameInput = textFieldStates.first { it.first == meal.id }.second,
+                fromTimeInput = fromTimeStates.first { it.first == meal.id }.second,
+                toTimeInput = toTimeStates.first { it.first == meal.id }.second,
+                isAllDay = isAllDayStates.first { it.first == meal.id }.second
             )
         }
 
