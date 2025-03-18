@@ -88,6 +88,7 @@ fun MealsSettingsScreen(
     val scrollBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
 
     var isReordering by rememberSaveable { mutableStateOf(false) }
+    var isCreating by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier.imePadding(),
@@ -134,6 +135,9 @@ fun MealsSettingsScreen(
                         }
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                ),
                 scrollBehavior = scrollBehaviour
             )
         }
@@ -196,6 +200,16 @@ fun MealsSettingsScreen(
                     }
                 }
             }
+
+            item {
+                CreateMealSettingsCard(
+                    isCreating = isCreating,
+                    onCreatingChange = { isCreating = it },
+                    onCreate = onCreateMeal,
+                    formatTime = formatTime,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
         }
     }
 }
@@ -206,7 +220,9 @@ fun MealsSettingsScreen(
 //
 // tbh why meals have to be sorted but it works so I won't touch it for now tf
 @Composable
-fun rememberMealsSettingsCardStates(meals: List<Meal>): MutableState<List<MealSettingsCardState>> {
+fun rememberMealsSettingsCardStates(
+    meals: List<Meal>
+): MutableState<List<MealSettingsCardStateWithMeal>> {
     val stableMeals = meals.sortedBy { it.id }
 
     val textFieldStates = stableMeals.map { meal ->
@@ -249,7 +265,7 @@ fun rememberMealsSettingsCardStates(meals: List<Meal>): MutableState<List<MealSe
 
     return remember(meals) {
         val res = meals.map { meal ->
-            MealSettingsCardState(
+            MealSettingsCardStateWithMeal(
                 meal = meal,
                 nameInput = textFieldStates.first { it.first == meal.id }.second,
                 fromTimeInput = fromTimeStates.first { it.first == meal.id }.second,

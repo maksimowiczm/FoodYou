@@ -49,7 +49,7 @@ class MealSettingsCardTest {
 
         setContent {
             MealSettingsCard(
-                state = MealSettingsCardState(
+                state = MealSettingsCardStateWithMeal(
                     meal = meal,
                     nameInput = mutableStateOf(TextFieldValue(meal.name)),
                     fromTimeInput = LocalTimeInput(from),

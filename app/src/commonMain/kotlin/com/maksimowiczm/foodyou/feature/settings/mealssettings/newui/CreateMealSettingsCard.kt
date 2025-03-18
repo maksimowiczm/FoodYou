@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
+package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.CreateMealSettingsCardTestTags.CREATE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.newui.CreateMealSettingsCardTestTags.CREATE_MEAL_SETTINGS_CARD
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_add_meal
 import kotlinx.datetime.LocalTime
@@ -28,28 +29,28 @@ fun CreateMealSettingsCard(
     modifier: Modifier = Modifier
 ) {
     if (isCreating) {
-//        val state = rememberMealSettingsCardState()
-//
-//        MealSettingsCard(
-//            state = state,
-//            onDelete = { onCreatingChange(false) },
-//            onUpdate = {
-//                onCreate(
-//                    state.nameInput.text,
-//                    state.fromInput.value,
-//                    if (state.isAllDay) {
-//                        state.fromInput.value
-//                    } else {
-//                        state.toInput.value
-//                    }
-//                )
-//                onCreatingChange(false)
-//            },
-//            formatTime = formatTime,
-//            showDeleteDialog = false,
-//            action = null,
-//            modifier = modifier.testTag(CREATE_MEAL_SETTINGS_CARD)
-//        )
+        val state = rememberMealSettingsCardState()
+
+        MealSettingsCard(
+            state = state,
+            onDelete = { onCreatingChange(false) },
+            onSave = {
+                onCreate(
+                    state.nameInput.value.text,
+                    state.fromTimeInput.value,
+                    if (state.isAllDay.value) {
+                        state.fromTimeInput.value
+                    } else {
+                        state.toTimeInput.value
+                    }
+                )
+                onCreatingChange(false)
+            },
+            formatTime = formatTime,
+            action = null,
+            shouldShowDeleteDialog = false,
+            modifier = modifier.testTag(CREATE_MEAL_SETTINGS_CARD)
+        )
     } else {
         Card(
             onClick = { onCreatingChange(true) },
