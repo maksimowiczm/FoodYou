@@ -203,6 +203,8 @@ fun MealsSettingsScreen(
 // Why is it so wierd?
 // Data can't leave inside lazy list item because it will be lost when not visible. It must be
 // stored outside the lazy list.
+//
+// tbh why meals have to be sorted but it works so I won't touch it for now tf
 @Composable
 fun rememberMealsSettingsCardStates(meals: List<Meal>): MutableState<List<MealSettingsCardState>> {
     val stableMeals = meals.sortedBy { it.id }
