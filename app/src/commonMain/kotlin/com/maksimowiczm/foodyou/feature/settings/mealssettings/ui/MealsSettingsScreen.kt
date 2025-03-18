@@ -47,6 +47,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -148,103 +149,10 @@ fun MealsSettingsScreen(
                 .animateContentSize()
                 .fillMaxSize()
         ) {
-            ReorderableColumn(
-                modifier = Modifier.fillMaxSize(),
-                list = state.meals,
-                onSettle = { from, to ->
-                    val newMeals = state.meals.toMutableList()
-                    newMeals.add(to, newMeals.removeAt(from))
-                    state.updateMeals(newMeals)
-                },
-                onMove = {
-                }
-            ) { i, meal, isDragging ->
-                key(meal.id) {
-                    val interactionSource = remember { MutableInteractionSource() }
-
-                    val containerColor by animateColorAsState(
-                        if (isDragging) {
-                            MaterialTheme.colorScheme.surfaceContainerHigh
-                        } else {
-                            MealSettingsCardDefaults.colors().containerColor
-                        }
-                    )
-
-                    val moveUpString = stringResource(Res.string.action_move_up)
-                    val moveDownString = stringResource(Res.string.action_move_down)
-
-                    Column {
-                        MealSettingsCard(
-                            viewModel = MealSettingsCardViewModel(
-                                diaryRepository = koinInject(),
-                                stringFormatRepository = koinInject(),
-                                mealId = meal.id,
-                                coroutineScope = coroutineScope
-                            ),
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .semantics {
-                                    customActions = listOf(
-                                        CustomAccessibilityAction(
-                                            label = moveUpString,
-                                            action = {
-                                                if (i > 0) {
-                                                    val newMeals = state.meals.toMutableList()
-                                                    newMeals.add(i - 1, newMeals.removeAt(i))
-                                                    state.updateMeals(newMeals)
-                                                    true
-                                                } else {
-                                                    false
-                                                }
-                                            }
-                                        ),
-                                        CustomAccessibilityAction(
-                                            label = moveDownString,
-                                            action = {
-                                                if (i < state.meals.size - 1) {
-                                                    val newMeals = state.meals.toMutableList()
-                                                    newMeals.add(i + 1, newMeals.removeAt(i))
-                                                    state.updateMeals(newMeals)
-                                                    true
-                                                } else {
-                                                    false
-                                                }
-                                            }
-                                        )
-                                    )
-                                },
-                            action = if (!state.isReordering) {
-                                null
-                            } else {
-                                {
-                                    IconButton(
-                                        modifier = Modifier
-                                            .draggableHandle(
-                                                onDragStarted = {},
-                                                onDragStopped = {},
-                                                interactionSource = interactionSource
-                                            )
-                                            .clearAndSetSemantics { },
-                                        onClick = {}
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.DragHandle,
-                                            contentDescription = stringResource(
-                                                Res.string.action_reorder
-                                            )
-                                        )
-                                    }
-                                }
-                            },
-                            colors = MealSettingsCardDefaults.colors(
-                                containerColor = containerColor
-                            )
-                        )
-
-                        Spacer(Modifier.height(8.dp))
-                    }
-                }
-            }
+            ReorderableMeals(
+                state = state,
+                coroutineScope = coroutineScope
+            )
 
             Column {
                 CreateMealSettingsCard(
@@ -262,6 +170,107 @@ fun MealsSettingsScreen(
                     .only(WindowInsetsSides.Bottom)
                     .asPaddingValues().calculateBottomPadding()
                 Spacer(Modifier.height(bottomPadding))
+            }
+        }
+    }
+}
+
+@Composable
+private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: CoroutineScope) {
+    ReorderableColumn(
+        modifier = Modifier.fillMaxSize(),
+        list = state.meals,
+        onSettle = { from, to ->
+            val newMeals = state.meals.toMutableList()
+            newMeals.add(to, newMeals.removeAt(from))
+            state.updateMeals(newMeals)
+        },
+        onMove = {
+        }
+    ) { i, meal, isDragging ->
+        key(meal.id) {
+            val interactionSource = remember { MutableInteractionSource() }
+
+            val containerColor by animateColorAsState(
+                if (isDragging) {
+                    MaterialTheme.colorScheme.surfaceContainerHigh
+                } else {
+                    MealSettingsCardDefaults.colors().containerColor
+                }
+            )
+
+            val moveUpString = stringResource(Res.string.action_move_up)
+            val moveDownString = stringResource(Res.string.action_move_down)
+
+            Column {
+                MealSettingsCard(
+                    viewModel = MealSettingsCardViewModel(
+                        diaryRepository = koinInject(),
+                        stringFormatRepository = koinInject(),
+                        mealId = meal.id,
+                        coroutineScope = coroutineScope
+                    ),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .semantics {
+                            customActions = listOf(
+                                CustomAccessibilityAction(
+                                    label = moveUpString,
+                                    action = {
+                                        if (i > 0) {
+                                            val newMeals = state.meals.toMutableList()
+                                            newMeals.add(i - 1, newMeals.removeAt(i))
+                                            state.updateMeals(newMeals)
+                                            true
+                                        } else {
+                                            false
+                                        }
+                                    }
+                                ),
+                                CustomAccessibilityAction(
+                                    label = moveDownString,
+                                    action = {
+                                        if (i < state.meals.size - 1) {
+                                            val newMeals = state.meals.toMutableList()
+                                            newMeals.add(i + 1, newMeals.removeAt(i))
+                                            state.updateMeals(newMeals)
+                                            true
+                                        } else {
+                                            false
+                                        }
+                                    }
+                                )
+                            )
+                        },
+                    action = if (!state.isReordering) {
+                        null
+                    } else {
+                        {
+                            IconButton(
+                                modifier = Modifier
+                                    .draggableHandle(
+                                        onDragStarted = {},
+                                        onDragStopped = {},
+                                        interactionSource = interactionSource
+                                    )
+                                    .clearAndSetSemantics { },
+                                onClick = {}
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.DragHandle,
+                                    contentDescription = stringResource(
+                                        Res.string.action_reorder
+                                    )
+                                )
+                            }
+                        }
+                    },
+                    colors = MealSettingsCardDefaults.colors(
+                        containerColor = containerColor
+                    )
+                )
+
+                Spacer(Modifier.height(8.dp))
             }
         }
     }
