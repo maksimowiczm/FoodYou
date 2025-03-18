@@ -373,9 +373,9 @@ fun MealSettingsCard(
 
                         dateInput()
                     }
-
-                    Spacer(Modifier.height(8.dp))
                 }
+
+                Spacer(Modifier.height(8.dp))
 
                 Row(
                     modifier = Modifier
@@ -395,7 +395,7 @@ fun MealSettingsCard(
                     Spacer(Modifier.width(16.dp))
                     Text(
                         text = stringResource(Res.string.headline_all_day),
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }
