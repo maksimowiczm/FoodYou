@@ -39,7 +39,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -52,10 +51,10 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.data.model.Meal
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import sh.calvin.reorderable.ReorderableColumn
 
@@ -76,6 +75,10 @@ fun MealsSettingsScreen(
         onBack = onBack,
         state = state,
         onRankSave = { viewModel.orderMeals(state.meals) },
+        onMealUpdate = viewModel::updateMeal,
+        onMealDelete = viewModel::deleteMeal,
+        onMealCreate = viewModel::createMeal,
+        formatTime = viewModel::formatTime,
         modifier = modifier
     )
 }
@@ -86,10 +89,13 @@ fun MealsSettingsScreen(
     onBack: () -> Unit,
     state: MealsSettingsScreenState,
     onRankSave: () -> Unit,
+    onMealUpdate: (Meal) -> Unit,
+    onMealDelete: (Meal) -> Unit,
+    onMealCreate: (name: String, from: LocalTime, to: LocalTime) -> Unit,
+    formatTime: (LocalTime) -> String,
     modifier: Modifier = Modifier
 ) {
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val coroutineScope = rememberCoroutineScope()
 
     val createCardFocusRequester = remember { FocusRequester() }
     LaunchedEffect(state.isCreating) {
@@ -180,17 +186,21 @@ fun MealsSettingsScreen(
         ) {
             ReorderableMeals(
                 state = state,
-                coroutineScope = coroutineScope
+                onUpdate = onMealUpdate,
+                onDelete = onMealDelete,
+                formatTime = formatTime,
+                modifier = Modifier.fillMaxSize()
             )
 
             Column {
                 CreateMealSettingsCard(
                     isCreating = state.isCreating,
                     onCreatingChange = { state.isCreating = it },
+                    onCreate = onMealCreate,
+                    formatTime = formatTime,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                        .focusRequester(createCardFocusRequester),
-                    coroutineScope = coroutineScope
+                        .focusRequester(createCardFocusRequester)
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -205,11 +215,17 @@ fun MealsSettingsScreen(
 }
 
 @Composable
-private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: CoroutineScope) {
+private fun ReorderableMeals(
+    state: MealsSettingsScreenState,
+    onUpdate: (Meal) -> Unit,
+    onDelete: (Meal) -> Unit,
+    formatTime: (LocalTime) -> String,
+    modifier: Modifier = Modifier
+) {
     val hapticFeedback = LocalHapticFeedback.current
 
     ReorderableColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         list = state.meals,
         onSettle = { from, to ->
             val newMeals = state.meals.toMutableList()
@@ -235,14 +251,13 @@ private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: Co
             val moveUpString = stringResource(Res.string.action_move_up)
             val moveDownString = stringResource(Res.string.action_move_down)
 
+            val cardState = rememberMealSettingsCardState(meal)
+
             Column {
                 MealSettingsCard(
-                    viewModel = MealSettingsCardViewModel(
-                        diaryRepository = koinInject(),
-                        stringFormatRepository = koinInject(),
-                        mealId = meal.id,
-                        coroutineScope = coroutineScope
-                    ),
+                    state = cardState,
+                    onDelete = { onDelete(cardState.toMeal()) },
+                    onUpdate = { onUpdate(cardState.toMeal()) },
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .semantics {
@@ -298,7 +313,8 @@ private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: Co
                     },
                     colors = MealSettingsCardDefaults.colors(
                         containerColor = containerColor
-                    )
+                    ),
+                    formatTime = formatTime
                 )
 
                 Spacer(Modifier.height(8.dp))

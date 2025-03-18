@@ -58,35 +58,9 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
-
-@Composable
-fun MealSettingsCard(
-    viewModel: MealSettingsCardViewModel,
-    modifier: Modifier = Modifier,
-    action: (@Composable () -> Unit)? = null,
-    colors: MealSettingsCardColors = MealSettingsCardDefaults.colors()
-) {
-    val meal by viewModel.meal.collectAsStateWithLifecycle()
-    val state = rememberMealSettingsCardState(meal)
-
-    MealSettingsCard(
-        state = state,
-        onDelete = {
-            viewModel.deleteMeal(state.toMeal())
-        },
-        onUpdate = {
-            viewModel.updateMeal(state.toMeal())
-        },
-        formatTime = viewModel::formatTime,
-        action = action,
-        modifier = modifier,
-        colors = colors
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
