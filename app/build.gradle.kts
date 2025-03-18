@@ -95,8 +95,6 @@ kotlin {
 
             // Ktor
             implementation(libs.ktor.client.okhttp)
-
-            implementation(libs.coil.network.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.preview)
@@ -131,6 +129,7 @@ kotlin {
 
             // Coil
             implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
 
             // Datastore
             implementation(libs.androidx.datastore.preferences)
