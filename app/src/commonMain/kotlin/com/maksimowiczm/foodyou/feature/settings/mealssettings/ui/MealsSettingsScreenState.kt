@@ -51,7 +51,13 @@ class MealsSettingsScreenState(
             val oldMeal = this.meals.find { it.id == meal.id }
 
             if (oldMeal == null) {
-                return@mapIndexedNotNull null
+                if (newMeals.size > this.meals.size) {
+                    return@mapIndexedNotNull meal.copy(
+                        rank = i
+                    )
+                } else {
+                    return@mapIndexedNotNull null
+                }
             }
 
             oldMeal.copy(
