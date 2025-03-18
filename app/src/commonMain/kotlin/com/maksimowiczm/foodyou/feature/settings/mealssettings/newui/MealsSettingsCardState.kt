@@ -19,7 +19,6 @@ class MealsSettingsCardState(
     private val name by derivedStateOf { nameInput.value.text }
     private val fromTime by derivedStateOf { fromTimeInput.value }
     private val toTime by derivedStateOf { toTimeInput.value }
-    private val _isAllDay by isAllDay
 
     val isDirty by derivedStateOf {
         val input = name != meal.name || fromTime != meal.from || toTime != meal.to
@@ -28,12 +27,12 @@ class MealsSettingsCardState(
         if (meal.from == meal.to) {
             input
         } else {
-            input || _isAllDay != meal.isAllDay
+            input || isAllDay.value != meal.isAllDay
         }
     }
 
     fun intoMeal(): Meal {
-        val toTime = if (_isAllDay) {
+        val toTime = if (isAllDay.value) {
             fromTime
         } else {
             toTime

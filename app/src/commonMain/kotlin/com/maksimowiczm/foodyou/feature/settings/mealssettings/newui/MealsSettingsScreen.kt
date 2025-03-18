@@ -24,7 +24,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -216,6 +215,7 @@ fun rememberMealsSettingsCardStates(
 
     val fromTimeStates = stableMeals.map { meal ->
         meal.id to rememberSaveable(
+            meal.from,
             saver = LocalTimeInput.Saver
         ) {
             LocalTimeInput(meal.from)
@@ -224,6 +224,7 @@ fun rememberMealsSettingsCardStates(
 
     val toTimeStates = stableMeals.map { meal ->
         meal.id to rememberSaveable(
+            meal.to,
             saver = LocalTimeInput.Saver
         ) {
             LocalTimeInput(meal.to)
@@ -232,7 +233,7 @@ fun rememberMealsSettingsCardStates(
 
     val isAllDayStates = stableMeals.map { meal ->
         meal.id to rememberSaveable {
-            mutableStateOf(false)
+            mutableStateOf(meal.isAllDay)
         }
     }
 

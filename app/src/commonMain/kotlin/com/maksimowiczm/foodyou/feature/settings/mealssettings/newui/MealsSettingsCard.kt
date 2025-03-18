@@ -355,10 +355,6 @@ fun MealsSettingsCard(
                     .fillMaxWidth()
                     .animateContentSize()
             ) {
-                Text(
-                    text = state.meal.toString()
-                )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
