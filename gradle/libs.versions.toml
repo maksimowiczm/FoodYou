@@ -13,7 +13,6 @@ activityCompose = "1.10.1"
 composeFoundation = "1.8.0-rc01"
 material3 = "1.4.0-alpha10"
 koin = "4.0.2"
-pagingCompose = "3.3.6"
 room = "2.7.0-rc02"
 ksp = "2.1.10-1.0.31"
 kotlinResult = "2.0.1"
@@ -31,7 +30,6 @@ kermit = "2.0.4"
 
 [libraries]
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
-androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingCompose" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "coreKtxVersion" }
