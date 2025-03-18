@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -32,20 +33,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.data.model.Meal
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -58,30 +54,31 @@ fun MealsSettingsScreen(
     viewModel: MealsSettingsScreenViewModel = koinViewModel()
 ) {
     val meals by viewModel.meals.collectAsStateWithLifecycle()
+    val state = rememberMealsSettingsScreenState(meals)
 
     MealsSettingsScreen(
         onBack = onBack,
-        meals = meals,
+        state = state,
         modifier = modifier
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifier = Modifier) {
+fun MealsSettingsScreen(
+    onBack: () -> Unit,
+    state: MealsSettingsScreenState,
+    modifier: Modifier = Modifier
+) {
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val coroutineScope = rememberCoroutineScope()
 
-    var isCreating by rememberSaveable { mutableStateOf(false) }
-
     val createCardFocusRequester = remember { FocusRequester() }
-    LaunchedEffect(isCreating) {
-        if (isCreating) {
+    LaunchedEffect(state.isCreating) {
+        if (state.isCreating) {
             createCardFocusRequester.requestFocus()
         }
     }
-
-    var reorder by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -103,9 +100,9 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
                 },
                 actions = {
                     IconButton(
-                        onClick = { reorder = !reorder }
+                        onClick = { state.isReordering = !state.isReordering }
                     ) {
-                        if (reorder) {
+                        if (state.isReordering) {
                             Icon(
                                 imageVector = Icons.Default.Save,
                                 contentDescription = stringResource(Res.string.action_reorder)
@@ -131,17 +128,20 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
             .exclude(ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Bottom))
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier
+                .padding(paddingValues)
+                .consumeWindowInsets(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .animateContentSize()
+                .fillMaxSize()
         ) {
             ReorderableColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .animateContentSize(),
-                list = meals,
+                modifier = Modifier.fillMaxSize(),
+                list = state.meals,
                 onSettle = { from, to ->
-                    val fromMeal = meals[from]
-                    val toMeal = meals[to]
+                    val newMeals = state.meals.toMutableList()
+                    newMeals.add(to, newMeals.removeAt(from))
+                    state.meals = newMeals
                 },
                 onMove = {
                 }
@@ -158,7 +158,7 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
                                 coroutineScope = coroutineScope
                             ),
                             modifier = Modifier.padding(horizontal = 16.dp),
-                            action = if (!reorder) {
+                            action = if (!state.isReordering) {
                                 null
                             } else {
                                 {
@@ -186,23 +186,23 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
                 }
             }
 
-            key("create") {
+            Column {
                 CreateMealSettingsCard(
-                    isCreating = isCreating,
-                    onCreatingChange = { isCreating = it },
+                    isCreating = state.isCreating,
+                    onCreatingChange = { state.isCreating = it },
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .focusRequester(createCardFocusRequester),
                     coroutineScope = coroutineScope
                 )
+
+                Spacer(Modifier.height(8.dp))
+
+                val bottomPadding = ScaffoldDefaults.contentWindowInsets
+                    .only(WindowInsetsSides.Bottom)
+                    .asPaddingValues().calculateBottomPadding()
+                Spacer(Modifier.height(bottomPadding))
             }
-
-            Spacer(Modifier.height(8.dp))
-
-            val bottomPadding = ScaffoldDefaults.contentWindowInsets
-                .only(WindowInsetsSides.Bottom)
-                .asPaddingValues().calculateBottomPadding()
-            Spacer(Modifier.height(bottomPadding))
         }
     }
 }
