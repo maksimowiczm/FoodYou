@@ -2,13 +2,13 @@ package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.data.model.Meal
@@ -137,7 +139,9 @@ fun MealsSettingsScreen(
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection),
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehaviour.nestedScrollConnection),
             state = lazyListState,
             contentPadding = paddingValues
         ) {
@@ -152,16 +156,9 @@ fun MealsSettingsScreen(
                     Column {
                         MealsSettingsCard(
                             state = cardState,
-                            isDirty = false,
                             formatTime = formatTime,
                             onSave = {
-                                onUpdateMeal(
-                                    meal.copy(
-                                        name = cardState.nameInput.text.toString(),
-                                        from = cardState.fromTimeInput.value,
-                                        to = cardState.toTimeInput.value
-                                    )
-                                )
+                                onUpdateMeal(cardState.intoMeal())
                             },
                             shouldShowDeleteDialog = true,
                             onDelete = {
@@ -207,11 +204,17 @@ fun MealsSettingsScreen(
 fun rememberMealsSettingsCardStates(
     meals: List<Meal>
 ): MutableState<List<Pair<Meal, MealsSettingsCardState>>> {
-    val textFieldStates = meals.map { meal ->
-        meal.id to rememberTextFieldState(meal.name)
+    val stableMeals = meals.sortedBy { it.id }
+
+    val textFieldStates = stableMeals.map { meal ->
+        meal.id to rememberSaveable(
+            stateSaver = TextFieldValue.Saver
+        ) {
+            mutableStateOf(TextFieldValue(meal.name))
+        }
     }
 
-    val fromTimeStates = meals.map { meal ->
+    val fromTimeStates = stableMeals.map { meal ->
         meal.id to rememberSaveable(
             saver = LocalTimeInput.Saver
         ) {
@@ -219,7 +222,7 @@ fun rememberMealsSettingsCardStates(
         }
     }
 
-    val toTimeStates = meals.map { meal ->
+    val toTimeStates = stableMeals.map { meal ->
         meal.id to rememberSaveable(
             saver = LocalTimeInput.Saver
         ) {
@@ -227,23 +230,26 @@ fun rememberMealsSettingsCardStates(
         }
     }
 
-    val isAllDayStates = meals.map { meal ->
-        meal.id to rememberSaveable { mutableStateOf(false) }
+    val isAllDayStates = stableMeals.map { meal ->
+        meal.id to rememberSaveable {
+            mutableStateOf(false)
+        }
     }
 
     return remember(meals) {
-        mutableStateOf(
-            meals.map { meal ->
-                Pair<Meal, MealsSettingsCardState>(
-                    meal,
-                    MealsSettingsCardState(
-                        textFieldStates.first { it.first == meal.id }.second,
-                        fromTimeStates.first { it.first == meal.id }.second,
-                        toTimeStates.first { it.first == meal.id }.second,
-                        isAllDayStates.first { it.first == meal.id }.second
-                    )
+        val res = meals.map { meal ->
+            Pair<Meal, MealsSettingsCardState>(
+                meal,
+                MealsSettingsCardState(
+                    meal = meal,
+                    nameInput = textFieldStates.first { it.first == meal.id }.second,
+                    fromTimeInput = fromTimeStates.first { it.first == meal.id }.second,
+                    toTimeInput = toTimeStates.first { it.first == meal.id }.second,
+                    isAllDay = isAllDayStates.first { it.first == meal.id }.second
                 )
-            }
-        )
+            )
+        }
+
+        mutableStateOf(res)
     }
 }

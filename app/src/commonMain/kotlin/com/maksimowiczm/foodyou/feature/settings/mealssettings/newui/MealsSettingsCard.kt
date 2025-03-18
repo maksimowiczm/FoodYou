@@ -44,7 +44,6 @@ import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,7 +65,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MealsSettingsCard(
     state: MealsSettingsCardState,
-    isDirty: Boolean,
     formatTime: (LocalTime) -> String,
     onSave: () -> Unit,
     shouldShowDeleteDialog: Boolean,
@@ -78,7 +76,8 @@ fun MealsSettingsCard(
 ) {
     val nameInput: @Composable RowScope.() -> Unit = {
         BasicTextField(
-            state = state.nameInput,
+            value = state.nameInput.value,
+            onValueChange = { state.nameInput.value = it },
             modifier = Modifier
                 .testTag(MealSettingsCardTestTags.NAME_INPUT)
                 .defaultMinSize(minWidth = 150.dp)
@@ -91,7 +90,7 @@ fun MealsSettingsCard(
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
             ),
-            decorator = {
+            decorationBox = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -106,7 +105,7 @@ fun MealsSettingsCard(
                         }
 
                         HorizontalDivider(
-                            color = if (state.nameInput.text.isEmpty()) {
+                            color = if (state.nameInput.value.text.isEmpty()) {
                                 MaterialTheme.colorScheme.error
                             } else {
                                 MaterialTheme.colorScheme.outline
@@ -123,14 +122,10 @@ fun MealsSettingsCard(
         )
     }
 
-    val actionButtonState by remember(Unit) {
-        derivedStateOf {
-            when {
-                state.nameInput.text.isEmpty() -> ActionButtonState.Delete
-                isDirty -> ActionButtonState.Save
-                else -> ActionButtonState.Delete
-            }
-        }
+    val actionButtonState = when {
+        state.nameInput.value.text.isEmpty() -> ActionButtonState.Delete
+        state.isDirty -> ActionButtonState.Save
+        else -> ActionButtonState.Delete
     }
 
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
@@ -194,7 +189,7 @@ fun MealsSettingsCard(
 
     val dateInput = @Composable {
         val containerColor by animateColorAsState(
-            if (isDirty) {
+            if (state.isDirty) {
                 colors.dirtyTimeContainerColor
             } else {
                 colors.timeContainerColor
@@ -202,7 +197,7 @@ fun MealsSettingsCard(
         )
 
         val contentColor by animateColorAsState(
-            if (isDirty) {
+            if (state.isDirty) {
                 colors.dirtyTimeContentColor
             } else {
                 colors.timeContentColor
@@ -331,7 +326,7 @@ fun MealsSettingsCard(
     }
 
     val surfaceColor by animateColorAsState(
-        targetValue = if (false) {
+        targetValue = if (state.isDirty) {
             colors.dirtyContainerColor
         } else {
             colors.containerColor
@@ -339,7 +334,7 @@ fun MealsSettingsCard(
     )
 
     val contentColor by animateColorAsState(
-        targetValue = if (false) {
+        targetValue = if (state.isDirty) {
             colors.dirtyContentColor
         } else {
             colors.contentColor
@@ -360,6 +355,10 @@ fun MealsSettingsCard(
                     .fillMaxWidth()
                     .animateContentSize()
             ) {
+                Text(
+                    text = state.meal.toString()
+                )
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
