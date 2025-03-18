@@ -16,6 +16,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,44 +56,11 @@ fun MealsSettingsScreen(
     formatTime: (LocalTime) -> String,
     modifier: Modifier = Modifier
 ) {
-    val textFieldStates = meals.map { meal ->
-        meal.id to rememberTextFieldState(meal.name)
-    }
-
-    val fromTimeStates = meals.map { meal ->
-        meal.id to rememberSaveable(
-            saver = LocalTimeInput.Saver
-        ) {
-            LocalTimeInput(meal.from)
-        }
-    }
-
-    val toTimeStates = meals.map { meal ->
-        meal.id to rememberSaveable(
-            saver = LocalTimeInput.Saver
-        ) {
-            LocalTimeInput(meal.to)
-        }
-    }
-
-    var internalList by remember {
-        mutableStateOf(
-            meals.map { meal ->
-                Pair<Meal, MealsSettingsCardState>(
-                    meal,
-                    MealsSettingsCardState(
-                        textFieldStates.first { it.first == meal.id }.second,
-                        fromTimeStates.first { it.first == meal.id }.second,
-                        toTimeStates.first { it.first == meal.id }.second
-                    )
-                )
-            }
-        )
-    }
+    var cardStates by rememberMealsSettingsCardStates(meals)
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        internalList = internalList.toMutableList().apply {
+        cardStates = cardStates.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }
     }
@@ -106,7 +74,7 @@ fun MealsSettingsScreen(
             contentPadding = paddingValues
         ) {
             items(
-                items = internalList,
+                items = cardStates,
                 key = { (meal, _) -> meal.id }
             ) { (meal, cardState) ->
                 ReorderableItem(
@@ -150,5 +118,45 @@ fun MealsSettingsScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun rememberMealsSettingsCardStates(
+    meals: List<Meal>
+): MutableState<List<Pair<Meal, MealsSettingsCardState>>> {
+    val textFieldStates = meals.map { meal ->
+        meal.id to rememberTextFieldState(meal.name)
+    }
+
+    val fromTimeStates = meals.map { meal ->
+        meal.id to rememberSaveable(
+            saver = LocalTimeInput.Saver
+        ) {
+            LocalTimeInput(meal.from)
+        }
+    }
+
+    val toTimeStates = meals.map { meal ->
+        meal.id to rememberSaveable(
+            saver = LocalTimeInput.Saver
+        ) {
+            LocalTimeInput(meal.to)
+        }
+    }
+
+    return remember {
+        mutableStateOf(
+            meals.map { meal ->
+                Pair<Meal, MealsSettingsCardState>(
+                    meal,
+                    MealsSettingsCardState(
+                        textFieldStates.first { it.first == meal.id }.second,
+                        fromTimeStates.first { it.first == meal.id }.second,
+                        toTimeStates.first { it.first == meal.id }.second
+                    )
+                )
+            }
+        )
     }
 }
