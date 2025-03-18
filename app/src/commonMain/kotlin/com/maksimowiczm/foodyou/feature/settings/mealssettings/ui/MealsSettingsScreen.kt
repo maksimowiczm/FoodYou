@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,9 +44,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.data.model.Meal
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_go_back
-import foodyou.app.generated.resources.headline_meals
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -108,12 +108,12 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
                         if (reorder) {
                             Icon(
                                 imageVector = Icons.Default.Save,
-                                contentDescription = "Reorder"
+                                contentDescription = stringResource(Res.string.action_reorder)
                             )
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Reorder,
-                                contentDescription = "Save"
+                                contentDescription = stringResource(Res.string.action_save)
                             )
                         }
                     }
@@ -149,17 +149,7 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
                 key(meal.id) {
                     val interactionSource = remember { MutableInteractionSource() }
 
-                    Column(
-                        modifier = if (reorder) {
-                            Modifier.draggableHandle(
-                                onDragStarted = {},
-                                onDragStopped = {},
-                                interactionSource = interactionSource
-                            )
-                        } else {
-                            Modifier
-                        }
-                    ) {
+                    Column {
                         MealSettingsCard(
                             viewModel = MealSettingsCardViewModel(
                                 diaryRepository = koinInject(),
@@ -167,7 +157,28 @@ fun MealsSettingsScreen(onBack: () -> Unit, meals: List<Meal>, modifier: Modifie
                                 mealId = meal.id,
                                 coroutineScope = coroutineScope
                             ),
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            action = if (!reorder) {
+                                null
+                            } else {
+                                {
+                                    IconButton(
+                                        modifier = Modifier.draggableHandle(
+                                            onDragStarted = {},
+                                            onDragStopped = {},
+                                            interactionSource = interactionSource
+                                        ),
+                                        onClick = {}
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.DragHandle,
+                                            contentDescription = stringResource(
+                                                Res.string.action_reorder
+                                            )
+                                        )
+                                    }
+                                }
+                            }
                         )
 
                         Spacer(Modifier.height(8.dp))

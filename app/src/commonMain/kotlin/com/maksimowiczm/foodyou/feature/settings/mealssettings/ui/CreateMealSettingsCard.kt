@@ -55,6 +55,7 @@ fun CreateMealSettingsCard(
             },
             formatTime = viewModel::formatTime,
             showDeleteDialog = false,
+            action = null,
             modifier = modifier.testTag(CREATE_MEAL_SETTINGS_CARD)
         )
     } else {

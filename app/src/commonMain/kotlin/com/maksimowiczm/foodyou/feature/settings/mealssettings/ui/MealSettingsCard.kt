@@ -64,7 +64,11 @@ import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MealSettingsCard(viewModel: MealSettingsCardViewModel, modifier: Modifier = Modifier) {
+fun MealSettingsCard(
+    viewModel: MealSettingsCardViewModel,
+    modifier: Modifier = Modifier,
+    action: (@Composable () -> Unit)? = null
+) {
     val meal by viewModel.meal.collectAsStateWithLifecycle()
     val state = rememberMealSettingsCardState(meal)
 
@@ -77,6 +81,7 @@ fun MealSettingsCard(viewModel: MealSettingsCardViewModel, modifier: Modifier = 
             viewModel.updateMeal(state.toMeal())
         },
         formatTime = viewModel::formatTime,
+        action = action,
         modifier = modifier
     )
 }
@@ -88,6 +93,7 @@ fun MealSettingsCard(
     onDelete: () -> Unit,
     onUpdate: () -> Unit,
     formatTime: (LocalTime) -> String,
+    action: (@Composable () -> Unit)?,
     modifier: Modifier = Modifier,
     showDeleteDialog: Boolean = true,
     shape: Shape = MealSettingsCardDefaults.shape,
@@ -160,40 +166,44 @@ fun MealSettingsCard(
     }
 
     val actionButton = @Composable {
-        when (actionButtonState) {
-            ActionButtonState.Save -> FilledIconButton(
-                onClick = onUpdate,
-                enabled = state.isValid,
-                modifier = Modifier.testTag(MealSettingsCardTestTags.CONFIRM_BUTTON),
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = colors.confirmButtonContainerColor,
-                    contentColor = colors.confirmButtonContentColor
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Save,
-                    contentDescription = stringResource(Res.string.action_save)
-                )
-            }
+        if (action != null) {
+            action()
+        } else {
+            when (actionButtonState) {
+                ActionButtonState.Save -> FilledIconButton(
+                    onClick = onUpdate,
+                    enabled = state.isValid,
+                    modifier = Modifier.testTag(MealSettingsCardTestTags.CONFIRM_BUTTON),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = colors.confirmButtonContainerColor,
+                        contentColor = colors.confirmButtonContentColor
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Save,
+                        contentDescription = stringResource(Res.string.action_save)
+                    )
+                }
 
-            ActionButtonState.Delete -> IconButton(
-                onClick = {
-                    if (showDeleteDialog) {
-                        deleteDialog = true
-                    } else {
-                        onDelete()
-                    }
-                },
-                modifier = Modifier.testTag(MealSettingsCardTestTags.DELETE_BUTTON),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = colors.deleteButtonContainerColor,
-                    contentColor = colors.deleteButtonContentColor
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = stringResource(Res.string.action_delete)
-                )
+                ActionButtonState.Delete -> IconButton(
+                    onClick = {
+                        if (showDeleteDialog) {
+                            deleteDialog = true
+                        } else {
+                            onDelete()
+                        }
+                    },
+                    modifier = Modifier.testTag(MealSettingsCardTestTags.DELETE_BUTTON),
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = colors.deleteButtonContainerColor,
+                        contentColor = colors.deleteButtonContentColor
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(Res.string.action_delete)
+                    )
+                }
             }
         }
     }
