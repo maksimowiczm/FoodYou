@@ -46,7 +46,17 @@ class MealsSettingsScreenState(
     var meals by mutableStateOf(initialMeals)
         private set
 
-    fun updateMeals(meals: List<Meal>) {
-        this.meals = meals
+    fun updateRanks(newMeals: List<Meal>) {
+        this.meals = newMeals.mapIndexedNotNull { i, meal ->
+            val oldMeal = this.meals.find { it.id == meal.id }
+
+            if (oldMeal == null) {
+                return@mapIndexedNotNull null
+            }
+
+            oldMeal.copy(
+                rank = i
+            )
+        }
     }
 }

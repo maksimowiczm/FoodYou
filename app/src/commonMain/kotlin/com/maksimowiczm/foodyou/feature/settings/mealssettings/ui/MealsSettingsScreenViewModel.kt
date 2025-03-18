@@ -16,13 +16,13 @@ class MealsSettingsScreenViewModel(private val diaryRepository: DiaryRepository)
         observeMeals().map { it.sortedBy { it.rank } }
 
     val meals = diaryRepository.observeSortedMeals()
-        .map { it.sortedBy { it.rank } }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(2_000),
             initialValue = runBlocking { diaryRepository.observeSortedMeals().first() }
         )
 
+    // TODO add item
     fun orderMeals(meals: List<Meal>) {
         viewModelScope.launch {
             val map = meals.mapIndexed { index, meal -> meal.id to index }.toMap()

@@ -39,7 +39,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
@@ -63,16 +65,13 @@ fun MealsSettingsScreen(
     val state = rememberMealsSettingsScreenState(meals)
 
     LaunchedEffect(meals) {
-        state.updateMeals(meals)
-    }
-
-    LaunchedEffect(state.meals) {
-        viewModel.orderMeals(state.meals)
+        state.updateRanks(meals)
     }
 
     MealsSettingsScreen(
         onBack = onBack,
         state = state,
+        onRankSave = { viewModel.orderMeals(state.meals) },
         modifier = modifier
     )
 }
@@ -82,6 +81,7 @@ fun MealsSettingsScreen(
 fun MealsSettingsScreen(
     onBack: () -> Unit,
     state: MealsSettingsScreenState,
+    onRankSave: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -93,6 +93,8 @@ fun MealsSettingsScreen(
             createCardFocusRequester.requestFocus()
         }
     }
+
+    val hapticFeedback = LocalHapticFeedback.current
 
     Scaffold(
         topBar = {
@@ -113,15 +115,26 @@ fun MealsSettingsScreen(
                     )
                 },
                 actions = {
-                    IconButton(
-                        onClick = { state.isReordering = !state.isReordering }
-                    ) {
-                        if (state.isReordering) {
+                    if (state.isReordering) {
+                        IconButton(
+                            onClick = {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                                onRankSave()
+                                state.isReordering = false
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Save,
-                                contentDescription = stringResource(Res.string.action_reorder)
+                                contentDescription = stringResource(Res.string.action_save)
                             )
-                        } else {
+                        }
+                    } else {
+                        IconButton(
+                            onClick = {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                                state.isReordering = true
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Reorder,
                                 contentDescription = stringResource(Res.string.action_save)
@@ -177,15 +190,19 @@ fun MealsSettingsScreen(
 
 @Composable
 private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: CoroutineScope) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     ReorderableColumn(
         modifier = Modifier.fillMaxSize(),
         list = state.meals,
         onSettle = { from, to ->
             val newMeals = state.meals.toMutableList()
             newMeals.add(to, newMeals.removeAt(from))
-            state.updateMeals(newMeals)
+            state.updateRanks(newMeals)
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
         },
         onMove = {
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
         }
     ) { i, meal, isDragging ->
         key(meal.id) {
@@ -220,7 +237,7 @@ private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: Co
                                         if (i > 0) {
                                             val newMeals = state.meals.toMutableList()
                                             newMeals.add(i - 1, newMeals.removeAt(i))
-                                            state.updateMeals(newMeals)
+                                            state.updateRanks(newMeals)
                                             true
                                         } else {
                                             false
@@ -233,7 +250,7 @@ private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: Co
                                         if (i < state.meals.size - 1) {
                                             val newMeals = state.meals.toMutableList()
                                             newMeals.add(i + 1, newMeals.removeAt(i))
-                                            state.updateMeals(newMeals)
+                                            state.updateRanks(newMeals)
                                             true
                                         } else {
                                             false
@@ -249,8 +266,6 @@ private fun ReorderableMeals(state: MealsSettingsScreenState, coroutineScope: Co
                             IconButton(
                                 modifier = Modifier
                                     .draggableHandle(
-                                        onDragStarted = {},
-                                        onDragStopped = {},
                                         interactionSource = interactionSource
                                     )
                                     .clearAndSetSemantics { },
