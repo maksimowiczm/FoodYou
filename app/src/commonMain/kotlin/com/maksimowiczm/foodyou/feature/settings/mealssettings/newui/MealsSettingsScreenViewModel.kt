@@ -20,7 +20,7 @@ class MealsSettingsScreenViewModel(
     private fun DiaryRepository.observeSortedMeals() =
         observeMeals().map { it.sortedBy { it.rank } }
 
-    val meals = diaryRepository.observeSortedMeals()
+    val sortedMeals = diaryRepository.observeSortedMeals()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(2_000),

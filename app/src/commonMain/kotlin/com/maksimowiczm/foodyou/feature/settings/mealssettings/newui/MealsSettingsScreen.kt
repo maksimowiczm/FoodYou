@@ -1,59 +1,58 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.newui
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DragHandle
-import androidx.compose.material.icons.filled.Reorder
-import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
-import androidx.compose.material3.Text
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.data.model.Meal
-import foodyou.app.generated.resources.*
-import kotlinx.datetime.LocalTime
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.action_reorder
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import sh.calvin.reorderable.ReorderableColumn
+import sh.calvin.reorderable.ReorderableCollectionItemScope
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
 fun MealsSettingsScreen(
@@ -61,232 +60,141 @@ fun MealsSettingsScreen(
     modifier: Modifier = Modifier,
     viewModel: MealsSettingsScreenViewModel = koinViewModel()
 ) {
-    val meals by viewModel.meals.collectAsStateWithLifecycle()
-    val state = rememberMealsSettingsScreenState(meals)
-
-    LaunchedEffect(meals) {
-        state.updateMeals(meals)
-    }
+    val sortedMeals by viewModel.sortedMeals.collectAsStateWithLifecycle()
 
     MealsSettingsScreen(
-        onBack = onBack,
-        state = state,
-        onRankSave = {
-            viewModel.orderMeals(
-                state.meals.map { it.first }
-            )
-        },
-        onMealUpdate = viewModel::updateMeal,
-        onMealDelete = viewModel::deleteMeal,
-        onMealCreate = viewModel::createMeal,
-        formatTime = viewModel::formatTime,
+        meals = sortedMeals,
         modifier = modifier
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MealsSettingsScreen(
-    onBack: () -> Unit,
-    state: MealsSettingsScreenState,
-    onRankSave: () -> Unit,
-    onMealUpdate: (Meal) -> Unit,
-    onMealDelete: (Meal) -> Unit,
-    onMealCreate: (name: String, from: LocalTime, to: LocalTime) -> Unit,
-    formatTime: (LocalTime) -> String,
-    modifier: Modifier = Modifier
-) {
-    val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+fun MealsSettingsScreen(meals: List<Meal>, modifier: Modifier = Modifier) {
+    val textFieldStates = meals.map { meal ->
+        meal.id to rememberTextFieldState(meal.name)
+    }
 
-    val createCardFocusRequester = remember { FocusRequester() }
-    LaunchedEffect(state.isCreating) {
-        if (state.isCreating) {
-            createCardFocusRequester.requestFocus()
+    var internalList by remember {
+        mutableStateOf(
+            meals.map { meal ->
+                Pair<Meal, TextFieldState>(
+                    meal,
+                    textFieldStates.first { it.first == meal.id }.second
+                )
+            }
+        )
+    }
+
+    val lazyListState = rememberLazyListState()
+    val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
+        internalList = internalList.toMutableList().apply {
+            add(to.index, removeAt(from.index))
         }
     }
 
-    val hapticFeedback = LocalHapticFeedback.current
-
     Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(
-                        onClick = onBack
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(Res.string.action_go_back)
-                        )
-                    }
-                },
-                title = {
-                    Text(
-                        text = stringResource(Res.string.headline_meals)
-                    )
-                },
-                actions = {
-                    if (state.isReordering) {
-                        IconButton(
-                            onClick = {
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                                onRankSave()
-                                state.isReordering = false
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Save,
-                                contentDescription = stringResource(Res.string.action_save)
-                            )
-                        }
-                    } else {
-                        TooltipBox(
-                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
-                            tooltip = {
-                                PlainTooltip {
-                                    Text(
-                                        text = stringResource(Res.string.action_reorder)
-                                    )
-                                }
-                            },
-                            state = rememberTooltipState()
-                        ) {
-                            IconButton(
-                                onClick = {
-                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                                    state.isReordering = true
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Reorder,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    }
-                },
-                scrollBehavior = topBarScrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                )
-            )
-        },
         modifier = modifier
-            .imePadding()
-            .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-            .exclude(ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Bottom))
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .consumeWindowInsets(paddingValues)
-                .verticalScroll(rememberScrollState())
-                .animateContentSize()
-                .fillMaxSize()
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            state = lazyListState,
+            contentPadding = paddingValues
         ) {
-            ReorderableMeals(
-                state = state,
-                onUpdate = onMealUpdate,
-                onDelete = onMealDelete,
-                formatTime = formatTime,
-                modifier = Modifier.fillMaxSize()
-            )
-
-            Column {
-                CreateMealSettingsCard(
-                    isCreating = state.isCreating,
-                    onCreatingChange = { state.isCreating = it },
-                    onCreate = onMealCreate,
-                    formatTime = formatTime,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .focusRequester(createCardFocusRequester)
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                val bottomPadding = ScaffoldDefaults.contentWindowInsets
-                    .only(WindowInsetsSides.Bottom)
-                    .asPaddingValues().calculateBottomPadding()
-                Spacer(Modifier.height(bottomPadding))
+            items(
+                items = internalList,
+                key = { (meal, _) -> meal.id }
+            ) { (meal, nameInputState) ->
+                ReorderableItem(
+                    state = reorderableLazyListState,
+                    key = meal.id
+                ) { isDragging ->
+                    Column {
+                        MealCard(
+                            nameInputState = nameInputState,
+                            meal = meal,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                        Spacer(Modifier.height(8.dp))
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun ReorderableMeals(
-    state: MealsSettingsScreenState,
-    onUpdate: (Meal) -> Unit,
-    onDelete: (Meal) -> Unit,
-    formatTime: (LocalTime) -> String,
+private fun ReorderableCollectionItemScope.MealCard(
+    nameInputState: TextFieldState,
+    meal: Meal,
     modifier: Modifier = Modifier
 ) {
-    val hapticFeedback = LocalHapticFeedback.current
-
-    ReorderableColumn(
-        modifier = modifier,
-        list = state.meals,
-        onSettle = { from, to ->
-            val newMeals = state.meals.map { it.first }.toMutableList()
-            newMeals.add(to, newMeals.removeAt(from))
-            state.updateMeals(newMeals)
-            hapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
-        },
-        onMove = {
-            hapticFeedback.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
-        }
-    ) { i, (meal, cardState), isDragging ->
-        key(meal.id) {
-            val interactionSource = remember { MutableInteractionSource() }
-
-            val containerColor by animateColorAsState(
-                if (isDragging) {
-                    MaterialTheme.colorScheme.surfaceContainerHigh
-                } else {
-                    MealSettingsCardDefaults.colors().containerColor
-                }
-            )
-
-            // TODO
-            val moveUpString = stringResource(Res.string.action_move_up)
-            val moveDownString = stringResource(Res.string.action_move_down)
-
-            Column {
-                MealSettingsCard(
-                    state = cardState,
-                    onDelete = { onDelete(cardState.toMeal()) },
-                    onUpdate = { onUpdate(cardState.toMeal()) },
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    action = if (!state.isReordering) {
-                        null
-                    } else {
-                        {
-                            IconButton(
-                                modifier = Modifier
-                                    .draggableHandle(
-                                        interactionSource = interactionSource
-                                    )
-                                    .clearAndSetSemantics { },
-                                onClick = {}
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.DragHandle,
-                                    contentDescription = stringResource(
-                                        Res.string.action_reorder
-                                    )
-                                )
-                            }
+    val nameInput: @Composable RowScope.() -> Unit = {
+        BasicTextField(
+            state = nameInputState,
+            modifier = Modifier
+                .testTag(MealSettingsCardTestTags.NAME_INPUT)
+                .defaultMinSize(minWidth = 150.dp)
+                .width(IntrinsicSize.Min)
+                .weight(1f, false),
+            textStyle = LocalTextStyle.current
+                .merge(MaterialTheme.typography.headlineMedium)
+                .merge(LocalContentColor.current),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            ),
+            decorator = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f, false)
+                    ) {
+                        Box(
+                            modifier = Modifier.padding(horizontal = 4.dp)
+                        ) {
+                            it()
                         }
-                    },
-                    colors = MealSettingsCardDefaults.colors(
-                        containerColor = containerColor
-                    ),
-                    formatTime = formatTime
-                )
 
-                Spacer(Modifier.height(8.dp))
+                        HorizontalDivider(
+                            color = if (nameInputState.text.isEmpty()) {
+                                MaterialTheme.colorScheme.error
+                            } else {
+                                MaterialTheme.colorScheme.outline
+                            }
+                        )
+                    }
+
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = null
+                    )
+                }
+            }
+        )
+    }
+
+    Card(
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp).fillMaxWidth()
+        ) {
+            Row {
+                nameInput()
+                Spacer(Modifier.weight(1f))
+                IconButton(
+                    onClick = {},
+                    modifier = Modifier
+                        .clearAndSetSemantics { }
+                        .draggableHandle()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DragHandle,
+                        contentDescription = stringResource(Res.string.action_reorder)
+                    )
+                }
             }
         }
     }

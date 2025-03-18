@@ -26,37 +26,47 @@ interface MealSettingsCardState {
 }
 
 @Composable
-fun rememberMealSettingsCardState(meal: Meal): MealSettingsCardStateImpl {
-    return rememberSaveable(
-        meal,
-        saver = Saver(
-            save = { state ->
-                listOf(
-                    state.isAllDay,
-                    with(TextFieldValue.Saver) { save(state.nameInput.value) },
-                    with(LocalTimeInput.Saver) { save(state.fromInput.value) },
-                    with(LocalTimeInput.Saver) { save(state.toInput.value) }
-                )
-            },
-            restore = { (isAllDay, nameInput, fromInput, toInput) ->
-                MealSettingsCardStateImpl(
-                    meal = meal,
-                    nameInput = mutableStateOf(with(TextFieldValue.Saver) { restore(nameInput!!)!! }),
-                    fromInput = mutableStateOf(with(LocalTimeInput.Saver) { restore(fromInput as Int)!! }),
-                    toInput = mutableStateOf(with(LocalTimeInput.Saver) { restore(toInput as Int)!! }),
-                    initialIsAllDay = isAllDay as Boolean
-                )
-            }
-        )
-    ) {
-        MealSettingsCardStateImpl(
-            meal = meal,
-            nameInput = mutableStateOf(TextFieldValue(meal.name, TextRange(meal.name.length))),
-            fromInput = mutableStateOf(LocalTimeInput(meal.from)),
-            toInput = mutableStateOf(LocalTimeInput(meal.to)),
-            initialIsAllDay = meal.isAllDay
-        )
-    }
+fun rememberMealSettingsCardState(meal: Meal): MealSettingsCardStateImpl = rememberSaveable(
+    meal,
+    saver = Saver(
+        save = { state ->
+            listOf(
+                state.isAllDay,
+                with(TextFieldValue.Saver) { save(state.nameInput.value) },
+                with(LocalTimeInput.Saver) { save(state.fromInput.value) },
+                with(LocalTimeInput.Saver) { save(state.toInput.value) }
+            )
+        },
+        restore = { (isAllDay, nameInput, fromInput, toInput) ->
+            MealSettingsCardStateImpl(
+                meal = meal,
+                nameInput = mutableStateOf(
+                    with(TextFieldValue.Saver) {
+                        restore(nameInput!!)!!
+                    }
+                ),
+                fromInput = mutableStateOf(
+                    with(LocalTimeInput.Saver) {
+                        restore(fromInput as Int)!!
+                    }
+                ),
+                toInput = mutableStateOf(
+                    with(LocalTimeInput.Saver) {
+                        restore(toInput as Int)!!
+                    }
+                ),
+                initialIsAllDay = isAllDay as Boolean
+            )
+        }
+    )
+) {
+    MealSettingsCardStateImpl(
+        meal = meal,
+        nameInput = mutableStateOf(TextFieldValue(meal.name, TextRange(meal.name.length))),
+        fromInput = mutableStateOf(LocalTimeInput(meal.from)),
+        toInput = mutableStateOf(LocalTimeInput(meal.to)),
+        initialIsAllDay = meal.isAllDay
+    )
 }
 
 @Stable
@@ -69,7 +79,9 @@ class MealSettingsCardStateImpl(
 ) : MealSettingsCardState {
     override val isDirty: Boolean by derivedStateOf {
         val input =
-            nameInput.value.text != meal.name || fromInput.value.value != meal.from || toInput.value.value != meal.to
+            nameInput.value.text != meal.name ||
+                fromInput.value.value != meal.from ||
+                toInput.value.value != meal.to
 
         // If the meal is all day meal ignore the all day switch state
         if (meal.from == meal.to) {
@@ -103,8 +115,8 @@ class MealSettingsCardStateImpl(
     }
 }
 
-//@Composable
-//fun rememberMealSettingsCardState(): NoMealSettingsCardStateImpl {
+// @Composable
+// fun rememberMealSettingsCardState(): NoMealSettingsCardStateImpl {
 //    return rememberSaveable(
 //        saver = Saver(
 //            save = { state ->
@@ -132,15 +144,15 @@ class MealSettingsCardStateImpl(
 //            initialIsAllDay = false
 //        )
 //    }
-//}
+// }
 
-//@Stable
-//class NoMealSettingsCardStateImpl(
+// @Stable
+// class NoMealSettingsCardStateImpl(
 //    override val nameInput: TextFieldValue,
 //    override val fromInput: LocalTimeInput,
 //    override val toInput: LocalTimeInput,
 //    initialIsAllDay: Boolean
-//) : MealSettingsCardState {
+// ) : MealSettingsCardState {
 //    override val isDirty: Boolean by derivedStateOf { nameInput.text.isNotEmpty() }
 //    override val isValid: Boolean by derivedStateOf { nameInput.text.isNotEmpty() }
 //    override var isAllDay: Boolean by mutableStateOf(initialIsAllDay)
@@ -148,6 +160,6 @@ class MealSettingsCardStateImpl(
 //    override fun setIsAllDay(value: Boolean) {
 //        isAllDay = value
 //    }
-//}
+// }
 
 private fun LocalTime.trimSeconds() = LocalTime(hour, minute)
