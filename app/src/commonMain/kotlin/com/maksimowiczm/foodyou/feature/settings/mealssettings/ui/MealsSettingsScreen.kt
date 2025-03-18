@@ -1,9 +1,7 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,10 +30,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
@@ -46,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.data.model.Meal
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -82,7 +85,8 @@ fun MealsSettingsScreen(
     onUpdateMeal: (Meal) -> Unit,
     onDeleteMeal: (Meal) -> Unit,
     onSaveMealOrder: (List<Meal>) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    hapticFeedback: HapticFeedback = LocalHapticFeedback.current
 ) {
     var cardStates by rememberMealsSettingsCardStates(meals)
 
@@ -90,6 +94,23 @@ fun MealsSettingsScreen(
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
         cardStates = cardStates.toMutableList().apply {
             add(to.index, removeAt(from.index))
+        }
+    }
+
+    LaunchedEffect(reorderableLazyListState) {
+        var previousState: Boolean? = null
+        snapshotFlow { reorderableLazyListState.isAnyItemDragging }.collect {
+            val type = when {
+                previousState == false && it -> HapticFeedbackType.GestureThresholdActivate
+                previousState == true && !it -> HapticFeedbackType.GestureEnd
+                else -> null
+            }
+
+            if (type != null) {
+                hapticFeedback.performHapticFeedback(type)
+            }
+
+            previousState = it
         }
     }
 
@@ -139,6 +160,7 @@ fun MealsSettingsScreen(
                                 onClick = {
                                     onSaveMealOrder(cardStates.map { it.meal })
                                     isReordering = false
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                                 }
                             ) {
                                 Icon(
@@ -151,6 +173,7 @@ fun MealsSettingsScreen(
                         IconButton(
                             onClick = {
                                 isReordering = true
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                             }
                         ) {
                             Icon(
@@ -172,7 +195,8 @@ fun MealsSettingsScreen(
                 .fillMaxSize()
                 .nestedScroll(scrollBehaviour.nestedScrollConnection),
             state = lazyListState,
-            contentPadding = paddingValues
+            contentPadding = paddingValues,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(
                 items = cardStates,
@@ -182,80 +206,78 @@ fun MealsSettingsScreen(
                     state = reorderableLazyListState,
                     key = cardState.meal.id
                 ) { isDragging ->
-                    Column {
-                        MealCard(
-                            state = cardState,
-                            formatTime = formatTime,
-                            onSave = {
-                                onUpdateMeal(cardState.intoMeal())
-                            },
-                            shouldShowDeleteDialog = true,
-                            onDelete = {
-                                onDeleteMeal(cardState.meal)
-                            },
-                            modifier = Modifier.padding(horizontal = 8.dp).semantics {
-                                customActions = listOf(
-                                    CustomAccessibilityAction(
-                                        label = moveUpString,
-                                        action = {
-                                            val index = cardStates.indexOf(cardState)
+                    MealCard(
+                        state = cardState,
+                        formatTime = formatTime,
+                        onSave = {
+                            onUpdateMeal(cardState.intoMeal())
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                        },
+                        shouldShowDeleteDialog = true,
+                        onDelete = {
+                            onDeleteMeal(cardState.meal)
+                        },
+                        modifier = Modifier.padding(horizontal = 8.dp).semantics {
+                            customActions = listOf(
+                                CustomAccessibilityAction(
+                                    label = moveUpString,
+                                    action = {
+                                        val index = cardStates.indexOf(cardState)
 
-                                            if (index > 0) {
-                                                cardStates = cardStates.toMutableList().apply {
-                                                    add(index - 1, removeAt(index))
-                                                }
-                                                true
-                                            } else {
-                                                false
+                                        if (index > 0) {
+                                            cardStates = cardStates.toMutableList().apply {
+                                                add(index - 1, removeAt(index))
                                             }
+                                            true
+                                        } else {
+                                            false
                                         }
-                                    ),
-                                    CustomAccessibilityAction(
-                                        label = moveDownString,
-                                        action = {
-                                            val index = cardStates.indexOf(cardState)
-
-                                            if (index < cardStates.size - 1) {
-                                                cardStates = cardStates.toMutableList().apply {
-                                                    add(index + 1, removeAt(index))
-                                                }
-                                                true
-                                            } else {
-                                                false
-                                            }
-                                        }
-                                    )
-                                )
-                            },
-                            colors = if (isDragging) {
-                                MealCardDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                                )
-                            } else {
-                                MealCardDefaults.colors()
-                            },
-                            action = if (isReordering) {
-                                {
-                                    IconButton(
-                                        onClick = {},
-                                        modifier = Modifier
-                                            .clearAndSetSemantics { }
-                                            .draggableHandle()
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.DragHandle,
-                                            contentDescription = stringResource(
-                                                Res.string.action_reorder
-                                            )
-                                        )
                                     }
+                                ),
+                                CustomAccessibilityAction(
+                                    label = moveDownString,
+                                    action = {
+                                        val index = cardStates.indexOf(cardState)
+
+                                        if (index < cardStates.size - 1) {
+                                            cardStates = cardStates.toMutableList().apply {
+                                                add(index + 1, removeAt(index))
+                                            }
+                                            true
+                                        } else {
+                                            false
+                                        }
+                                    }
+                                )
+                            )
+                        },
+                        colors = if (isDragging) {
+                            MealCardDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                            )
+                        } else {
+                            MealCardDefaults.colors()
+                        },
+                        action = if (isReordering) {
+                            {
+                                IconButton(
+                                    onClick = {},
+                                    modifier = Modifier
+                                        .clearAndSetSemantics { }
+                                        .draggableHandle()
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.DragHandle,
+                                        contentDescription = stringResource(
+                                            Res.string.action_reorder
+                                        )
+                                    )
                                 }
-                            } else {
-                                null
                             }
-                        )
-                        Spacer(Modifier.height(8.dp))
-                    }
+                        } else {
+                            null
+                        }
+                    )
                 }
             }
 
