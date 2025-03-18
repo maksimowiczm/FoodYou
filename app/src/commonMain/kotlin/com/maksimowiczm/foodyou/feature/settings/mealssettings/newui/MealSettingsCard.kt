@@ -63,14 +63,14 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MealsSettingsCard(
-    state: MealsSettingsCardState,
+fun MealSettingsCard(
+    state: MealSettingsCardState,
     formatTime: (LocalTime) -> String,
     onSave: () -> Unit,
     shouldShowDeleteDialog: Boolean,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
-    colors: MealsSettingsCardColors = MealSettingsCardDefaults.colors(),
+    colors: MealSettingsCardColors = MealSettingsCardDefaults.colors(),
     shape: Shape = MealSettingsCardDefaults.shape,
     action: (@Composable () -> Unit)? = null
 ) {
@@ -454,7 +454,7 @@ private fun DeleteDialog(
     )
 }
 
-data class MealsSettingsCardColors(
+data class MealSettingsCardColors(
     val containerColor: Color,
     val contentColor: Color,
     val timeContainerColor: Color,
@@ -490,7 +490,7 @@ object MealSettingsCardDefaults {
         confirmButtonContentColor: Color = MaterialTheme.colorScheme.onPrimary,
         deleteButtonContainerColor: Color = Color.Transparent,
         deleteButtonContentColor: Color = MaterialTheme.colorScheme.onSurface
-    ) = MealsSettingsCardColors(
+    ) = MealSettingsCardColors(
         containerColor = containerColor,
         contentColor = contentColor,
         timeContainerColor = timeContainerColor,

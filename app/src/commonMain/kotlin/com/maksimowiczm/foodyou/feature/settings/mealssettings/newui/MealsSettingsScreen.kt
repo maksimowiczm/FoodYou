@@ -153,7 +153,7 @@ fun MealsSettingsScreen(
                     key = meal.id
                 ) { isDragging ->
                     Column {
-                        MealsSettingsCard(
+                        MealSettingsCard(
                             state = cardState,
                             formatTime = formatTime,
                             onSave = {
@@ -202,7 +202,7 @@ fun MealsSettingsScreen(
 @Composable
 fun rememberMealsSettingsCardStates(
     meals: List<Meal>
-): MutableState<List<Pair<Meal, MealsSettingsCardState>>> {
+): MutableState<List<Pair<Meal, MealSettingsCardState>>> {
     val stableMeals = meals.sortedBy { it.id }
 
     val textFieldStates = stableMeals.map { meal ->
@@ -239,9 +239,9 @@ fun rememberMealsSettingsCardStates(
 
     return remember(meals) {
         val res = meals.map { meal ->
-            Pair<Meal, MealsSettingsCardState>(
+            Pair<Meal, MealSettingsCardState>(
                 meal,
-                MealsSettingsCardState(
+                MealSettingsCardState(
                     meal = meal,
                     nameInput = textFieldStates.first { it.first == meal.id }.second,
                     fromTimeInput = fromTimeStates.first { it.first == meal.id }.second,

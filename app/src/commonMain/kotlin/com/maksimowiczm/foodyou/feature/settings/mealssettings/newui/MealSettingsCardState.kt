@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.data.model.Meal
 import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.LocalTimeInput
 
 @Stable
-class MealsSettingsCardState(
+class MealSettingsCardState(
     val meal: Meal,
     val nameInput: MutableState<TextFieldValue>,
     val fromTimeInput: LocalTimeInput,
