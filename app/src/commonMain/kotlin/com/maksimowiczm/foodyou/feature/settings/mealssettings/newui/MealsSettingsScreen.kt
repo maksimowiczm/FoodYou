@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
@@ -79,9 +78,9 @@ fun MealsSettingsScreen(
     var internalList by remember {
         mutableStateOf(
             meals.map { meal ->
-                Pair<Meal, Triple<TextFieldState, LocalTimeInput, LocalTimeInput>>(
+                Pair<Meal, MealsSettingsCardState>(
                     meal,
-                    Triple(
+                    MealsSettingsCardState(
                         textFieldStates.first { it.first == meal.id }.second,
                         fromTimeStates.first { it.first == meal.id }.second,
                         toTimeStates.first { it.first == meal.id }.second
@@ -109,18 +108,14 @@ fun MealsSettingsScreen(
             items(
                 items = internalList,
                 key = { (meal, _) -> meal.id }
-            ) { (meal, triple) ->
-                val (nameInputState, fromTimeInput, toTimeInput) = triple
-
+            ) { (meal, cardState) ->
                 ReorderableItem(
                     state = reorderableLazyListState,
                     key = meal.id
                 ) { isDragging ->
                     Column {
                         MealsSettingsCard(
-                            nameInputState = nameInputState,
-                            fromTimeInput = fromTimeInput,
-                            toTimeInput = toTimeInput,
+                            state = cardState,
                             isDirty = false,
                             formatTime = formatTime,
                             onSave = {},

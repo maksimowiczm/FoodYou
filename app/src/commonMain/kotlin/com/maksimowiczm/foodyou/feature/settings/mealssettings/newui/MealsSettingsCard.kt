@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -58,7 +57,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.LocalTimeInput
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
@@ -66,9 +64,7 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealsSettingsCard(
-    nameInputState: TextFieldState,
-    fromTimeInput: LocalTimeInput,
-    toTimeInput: LocalTimeInput,
+    state: MealsSettingsCardState,
     isDirty: Boolean,
     formatTime: (LocalTime) -> String,
     onSave: () -> Unit,
@@ -81,7 +77,7 @@ fun MealsSettingsCard(
 ) {
     val nameInput: @Composable RowScope.() -> Unit = {
         BasicTextField(
-            state = nameInputState,
+            state = state.nameInput,
             modifier = Modifier
                 .testTag(MealSettingsCardTestTags.NAME_INPUT)
                 .defaultMinSize(minWidth = 150.dp)
@@ -109,7 +105,7 @@ fun MealsSettingsCard(
                         }
 
                         HorizontalDivider(
-                            color = if (nameInputState.text.isEmpty()) {
+                            color = if (state.nameInput.text.isEmpty()) {
                                 MaterialTheme.colorScheme.error
                             } else {
                                 MaterialTheme.colorScheme.outline
@@ -129,7 +125,7 @@ fun MealsSettingsCard(
     val actionButtonState by remember(Unit) {
         derivedStateOf {
             when {
-                nameInputState.text.isEmpty() -> ActionButtonState.Delete
+                state.nameInput.text.isEmpty() -> ActionButtonState.Delete
                 isDirty -> ActionButtonState.Save
                 else -> ActionButtonState.Delete
             }
@@ -227,7 +223,7 @@ fun MealsSettingsCard(
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = formatTime(fromTimeInput.value),
+                    text = formatTime(state.fromTimeInput.value),
                     style = MaterialTheme.typography.headlineSmall
                 )
             }
@@ -245,7 +241,7 @@ fun MealsSettingsCard(
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = formatTime(toTimeInput.value),
+                    text = formatTime(state.toTimeInput.value),
                     style = MaterialTheme.typography.headlineSmall
                 )
             }
@@ -254,8 +250,8 @@ fun MealsSettingsCard(
 
     if (showFromTimePicker) {
         val timePickerState = rememberTimePickerState(
-            initialHour = fromTimeInput.value.hour,
-            initialMinute = fromTimeInput.value.minute
+            initialHour = state.fromTimeInput.value.hour,
+            initialMinute = state.fromTimeInput.value.minute
         )
 
         TimePickerDialog(
@@ -264,7 +260,7 @@ fun MealsSettingsCard(
                 TextButton(
                     onClick = {
                         showFromTimePicker = false
-                        fromTimeInput.onValueChange(
+                        state.fromTimeInput.onValueChange(
                             LocalTime(
                                 hour = timePickerState.hour,
                                 minute = timePickerState.minute
@@ -294,8 +290,8 @@ fun MealsSettingsCard(
 
     if (showToTimePicker) {
         val timePickerState = rememberTimePickerState(
-            initialHour = toTimeInput.value.hour,
-            initialMinute = toTimeInput.value.minute
+            initialHour = state.toTimeInput.value.hour,
+            initialMinute = state.toTimeInput.value.minute
         )
 
         TimePickerDialog(
@@ -304,7 +300,7 @@ fun MealsSettingsCard(
                 TextButton(
                     onClick = {
                         showToTimePicker = false
-                        toTimeInput.onValueChange(
+                        state.toTimeInput.onValueChange(
                             LocalTime(
                                 hour = timePickerState.hour,
                                 minute = timePickerState.minute
