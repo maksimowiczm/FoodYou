@@ -56,6 +56,14 @@ fun MealsSettingsScreen(
     val meals by viewModel.meals.collectAsStateWithLifecycle()
     val state = rememberMealsSettingsScreenState(meals)
 
+    LaunchedEffect(meals) {
+        state.updateMeals(meals)
+    }
+
+    LaunchedEffect(state.meals) {
+        viewModel.orderMeals(state.meals)
+    }
+
     MealsSettingsScreen(
         onBack = onBack,
         state = state,
@@ -141,7 +149,7 @@ fun MealsSettingsScreen(
                 onSettle = { from, to ->
                     val newMeals = state.meals.toMutableList()
                     newMeals.add(to, newMeals.removeAt(from))
-                    state.meals = newMeals
+                    state.updateMeals(newMeals)
                 },
                 onMove = {
                 }

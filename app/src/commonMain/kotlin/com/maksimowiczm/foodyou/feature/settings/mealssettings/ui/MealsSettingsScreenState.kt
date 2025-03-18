@@ -10,8 +10,7 @@ import androidx.compose.runtime.setValue
 import com.maksimowiczm.foodyou.data.model.Meal
 
 @Composable
-fun rememberMealsSettingsScreenState(meals: List<Meal>) = rememberSaveable(
-    meals,
+fun rememberMealsSettingsScreenState(initialMeals: List<Meal>) = rememberSaveable(
     saver = Saver(
         save = {
             arrayListOf(
@@ -21,7 +20,7 @@ fun rememberMealsSettingsScreenState(meals: List<Meal>) = rememberSaveable(
         },
         restore = {
             MealsSettingsScreenState(
-                meals = meals,
+                initialMeals = initialMeals,
                 isCreating = it[0],
                 isReordering = it[1]
             )
@@ -29,15 +28,25 @@ fun rememberMealsSettingsScreenState(meals: List<Meal>) = rememberSaveable(
     )
 ) {
     MealsSettingsScreenState(
-        meals = meals,
+        initialMeals = initialMeals,
         isCreating = false,
         isReordering = false
     )
 }
 
 @Stable
-class MealsSettingsScreenState(meals: List<Meal>, isCreating: Boolean, isReordering: Boolean) {
+class MealsSettingsScreenState(
+    initialMeals: List<Meal>,
+    isCreating: Boolean,
+    isReordering: Boolean
+) {
     var isCreating by mutableStateOf(isCreating)
     var isReordering by mutableStateOf(isReordering)
-    var meals by mutableStateOf(meals)
+
+    var meals by mutableStateOf(initialMeals)
+        private set
+
+    fun updateMeals(meals: List<Meal>) {
+        this.meals = meals
+    }
 }

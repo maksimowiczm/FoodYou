@@ -110,14 +110,14 @@ class DiaryRepositoryImpl(
     override fun observeMealById(id: Long) = addFoodDao.observeMealById(id).map { it?.toDomain() }
 
     override suspend fun createMeal(name: String, from: LocalTime, to: LocalTime) {
-        addFoodDao.insertMeal(
+        addFoodDao.insertWithLastRank(
             MealEntity(
                 name = name,
                 fromHour = from.hour,
                 fromMinute = from.minute,
                 toHour = to.hour,
                 toMinute = to.minute,
-                rank = 0
+                rank = -1
             )
         )
     }
@@ -128,6 +128,10 @@ class DiaryRepositoryImpl(
 
     override suspend fun deleteMeal(meal: Meal) {
         addFoodDao.deleteMeal(meal.toEntity())
+    }
+
+    override suspend fun orderMeals(map: Map<Long, Long>) {
+        addFoodDao.orderMeals(map)
     }
 
     companion object {
