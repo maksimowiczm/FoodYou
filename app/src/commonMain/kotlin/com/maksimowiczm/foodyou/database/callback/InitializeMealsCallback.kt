@@ -32,7 +32,7 @@ abstract class InitializeMealsCallbackBase : RoomDatabase.Callback() {
                 statement.bindInt(3, meal.fromMinute)
                 statement.bindInt(4, meal.toHour)
                 statement.bindInt(5, meal.toMinute)
-                statement.bindLong(6, meal.rank)
+                statement.bindInt(6, meal.rank)
 
                 statement.step()
 

@@ -40,7 +40,7 @@ actual class InitializeMealsCallback(private val context: Context) : InitializeM
                                     name = name,
                                     from = from,
                                     to = to,
-                                    rank = meals.size.toLong()
+                                    rank = meals.size
                                 )
                             )
                             name = null
@@ -60,7 +60,7 @@ actual class InitializeMealsCallback(private val context: Context) : InitializeM
         return meals
     }
 
-    private data class MealXml(val name: String, val from: String, val to: String, val rank: Long) {
+    private data class MealXml(val name: String, val from: String, val to: String, val rank: Int) {
         fun toMeal(): MealEntity {
             val fromHour = from.substringBefore(':').toInt()
             val fromMinute = from.substringAfter(':').toInt()

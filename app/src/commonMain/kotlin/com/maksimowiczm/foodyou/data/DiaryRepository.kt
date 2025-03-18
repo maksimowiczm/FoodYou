@@ -29,5 +29,5 @@ interface DiaryRepository {
      *
      * @param map A map where the key is the meal ID and the value is the new rank.
      */
-    suspend fun orderMeals(map: Map<Long, Long>)
+    suspend fun orderMeals(map: Map<Long, Int>)
 }

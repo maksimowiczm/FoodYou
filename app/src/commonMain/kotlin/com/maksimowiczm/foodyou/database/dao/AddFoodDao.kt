@@ -210,10 +210,10 @@ interface AddFoodDao {
         WHERE id = :mealId
         """
     )
-    suspend fun updateMealRank(mealId: Long, rank: Long)
+    suspend fun updateMealRank(mealId: Long, rank: Int)
 
     @Transaction
-    suspend fun orderMeals(map: Map<Long, Long>) {
+    suspend fun orderMeals(map: Map<Long, Int>) {
         map.forEach { (mealId, rank) ->
             updateMealRank(mealId, rank)
         }
