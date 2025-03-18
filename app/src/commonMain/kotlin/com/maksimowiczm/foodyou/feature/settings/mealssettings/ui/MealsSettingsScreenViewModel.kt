@@ -26,7 +26,7 @@ class MealsSettingsScreenViewModel(private val diaryRepository: DiaryRepository)
     fun orderMeals(meals: List<Meal>) {
         viewModelScope.launch {
             val map = meals.mapIndexed { index, meal -> meal.id to index }.toMap()
-            diaryRepository.orderMeals(map)
+            diaryRepository.updateMealsRanks(map)
         }
     }
 }

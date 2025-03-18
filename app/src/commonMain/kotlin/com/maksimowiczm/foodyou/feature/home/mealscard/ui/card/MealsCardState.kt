@@ -25,9 +25,7 @@ fun rememberMealsCardState(diaryDay: DiaryDay?, time: LocalTime, shimmer: Shimme
 class MealsCardState(val diaryDay: DiaryDay?, val time: LocalTime, val shimmer: Shimmer) {
     @Stable
     val meals by derivedStateOf {
-        diaryDay?.meals?.sortedBy {
-            if (shouldShowMeal(it, time)) it.rank else -1
-        }
+        diaryDay?.meals?.sortedBy { it.rank }
     }
 
     /**

@@ -130,7 +130,7 @@ class DiaryRepositoryImpl(
         addFoodDao.deleteMeal(meal.toEntity())
     }
 
-    override suspend fun orderMeals(map: Map<Long, Int>) {
+    override suspend fun updateMealsRanks(map: Map<Long, Int>) {
         addFoodDao.orderMeals(map)
     }
 
