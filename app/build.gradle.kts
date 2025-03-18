@@ -74,7 +74,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "app"
+            baseName = "ComposeApp"
             isStatic = true
         }
     }
@@ -95,6 +95,8 @@ kotlin {
 
             // Ktor
             implementation(libs.ktor.client.okhttp)
+
+            implementation(libs.coil.network.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.preview)
@@ -129,7 +131,6 @@ kotlin {
 
             // Coil
             implementation(libs.coil.compose)
-            implementation(libs.coil.network.okhttp)
 
             // Datastore
             implementation(libs.androidx.datastore.preferences)
@@ -142,8 +143,6 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.serialization.kotlinx.json)
-
-            implementation(libs.androidx.paging.runtime)
 
             // Logger
             implementation(libs.kermit)
