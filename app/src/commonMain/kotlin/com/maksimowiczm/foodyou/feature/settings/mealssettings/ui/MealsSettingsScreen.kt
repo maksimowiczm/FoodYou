@@ -25,6 +25,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -94,6 +97,12 @@ fun MealsSettingsScreen(
 
     var isReordering by rememberSaveable { mutableStateOf(false) }
     var isCreating by rememberSaveable { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(isCreating) {
+        runCatching {
+            focusRequester.requestFocus()
+        }
+    }
 
     val moveUpString = stringResource(Res.string.action_move_up)
     val moveDownString = stringResource(Res.string.action_move_down)
@@ -256,7 +265,7 @@ fun MealsSettingsScreen(
                     onCreatingChange = { isCreating = it },
                     onCreate = onCreateMeal,
                     formatTime = formatTime,
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester)
                 )
             }
         }
