@@ -59,7 +59,6 @@ abstract class OpenSourceDatabase : RoomDatabase() {
 
 private val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(connection: SQLiteConnection) {
-        connection.execSQL("BEGIN TRANSACTION")
         connection.execSQL(
             """
             ALTER TABLE MealEntity 
@@ -83,6 +82,5 @@ private val MIGRATION_1_2 = object : Migration(1, 2) {
             CREATE INDEX index_MealEntity_rank ON MealEntity(rank)
             """.trimIndent()
         )
-        connection.execSQL("COMMIT")
     }
 }
