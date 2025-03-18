@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -208,9 +209,15 @@ fun rememberMealsSettingsCardStates(meals: List<Meal>): MutableState<List<MealSe
 
     val textFieldStates = stableMeals.map { meal ->
         meal.id to rememberSaveable(
+            meal.name,
             stateSaver = TextFieldValue.Saver
         ) {
-            mutableStateOf(TextFieldValue(meal.name))
+            mutableStateOf(
+                TextFieldValue(
+                    text = meal.name,
+                    selection = TextRange(meal.name.length)
+                )
+            )
         }
     }
 
@@ -233,7 +240,7 @@ fun rememberMealsSettingsCardStates(meals: List<Meal>): MutableState<List<MealSe
     }
 
     val isAllDayStates = stableMeals.map { meal ->
-        meal.id to rememberSaveable {
+        meal.id to rememberSaveable(meal.isAllDay) {
             mutableStateOf(meal.isAllDay)
         }
     }
