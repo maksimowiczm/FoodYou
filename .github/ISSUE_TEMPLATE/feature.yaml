@@ -1,7 +1,7 @@
 name: Feature Request
 description: Suggest a new feature or improvement.
 title: "[Feature]: "
-labels: [ "enhancement", "triage" ]
+labels: ["enhancement", "triage"]
 body:
   - type: markdown
     attributes:
@@ -21,8 +21,6 @@ body:
       label: What problem does this feature solve?
       description: Explain how this feature will improve the project or address a specific issue.
       placeholder: Describe the problem or scenario.
-    validations:
-      required: true
   - type: textarea
     id: alternatives
     attributes:

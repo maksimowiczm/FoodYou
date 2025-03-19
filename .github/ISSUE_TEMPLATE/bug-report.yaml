@@ -4,7 +4,7 @@ description: Report an issue with the application.
 
 title: "[Bug]: "
 
-labels: [ "bug", "triage" ]
+labels: ["bug", "triage"]
 
 body:
   - type: markdown
@@ -18,19 +18,6 @@ body:
       label: Describe the bug
       description: Provide a clear and concise description of the issue.
       placeholder: Explain the problem you encountered.
-    validations:
-      required: true
-
-  - type: textarea
-    id: steps-to-reproduce
-    attributes:
-      label: Steps to Reproduce
-      description: List the steps to reproduce the issue.
-      placeholder: |
-        1. Open the app
-        2. Navigate to...
-        3. Perform action...
-        4. Observe the issue
     validations:
       required: true
 
@@ -49,28 +36,6 @@ body:
       label: Actual Behavior
       description: Describe what actually happened.
       placeholder: Instead, the app...
-    validations:
-      required: true
-
-  - type: input
-    id: device-info
-    attributes:
-      label: Device & OS Information
-      description: Include device model and Android version.
-      placeholder: Pixel 6, Android 12
-    validations:
-      required: true
-
-  - type: dropdown
-    id: version
-    attributes:
-      label: Version
-      description: What version of our software are you running?
-      options:
-        - 1.0.0 (Latest)
-      default: 0
-    validations:
-      required: true
 
   - type: textarea
     id: additional-context
