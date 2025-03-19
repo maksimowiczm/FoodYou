@@ -100,9 +100,12 @@ fun MealsCard(
 
     val time by viewModel.time.collectAsStateWithLifecycle()
 
+    val useTimeBasedSorting by viewModel.useTimeBasedSorting.collectAsStateWithLifecycle()
+
     MealsCard(
         animatedVisibilityScope = animatedVisibilityScope,
         state = rememberMealsCardState(
+            timeBasedSorting = useTimeBasedSorting,
             diaryDay = diaryDay,
             time = time,
             shimmer = homeState.shimmer
@@ -115,13 +118,14 @@ fun MealsCard(
 }
 
 @Composable
-fun MealsCard(meals: List<Meal>, formatTime: (LocalTime) -> String) {
+fun MealsCard(meals: List<Meal>, formatTime: (LocalTime) -> String, useTimeBasedSorting: Boolean) {
     val date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
     val time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).time
 
     MealsCard(
         animatedVisibilityScope = null,
         state = rememberMealsCardState(
+            timeBasedSorting = useTimeBasedSorting,
             diaryDay = DiaryDay(
                 date = date,
                 mealProductMap = meals.associateWith { emptyList() },

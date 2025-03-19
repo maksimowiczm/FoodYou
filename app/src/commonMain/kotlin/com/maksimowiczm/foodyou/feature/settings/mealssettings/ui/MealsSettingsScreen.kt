@@ -1,7 +1,11 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,8 +18,10 @@ import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
@@ -47,8 +53,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.data.model.Meal
+import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.MealsCard
+import com.maksimowiczm.foodyou.ui.ext.performToggle
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -62,15 +69,18 @@ fun MealsSettingsScreen(
     viewModel: MealsSettingsScreenViewModel = koinViewModel()
 ) {
     val sortedMeals by viewModel.sortedMeals.collectAsStateWithLifecycle()
+    val useTimeBasedSorting by viewModel.useTimeBasedSorting.collectAsStateWithLifecycle()
 
     MealsSettingsScreen(
         meals = sortedMeals,
+        useTimeBasedSorting = useTimeBasedSorting,
         formatTime = viewModel::formatTime,
         onBack = onBack,
         onCreateMeal = viewModel::createMeal,
         onUpdateMeal = viewModel::updateMeal,
         onDeleteMeal = viewModel::deleteMeal,
         onSaveMealOrder = viewModel::orderMeals,
+        onToggleTimeBasedSorting = viewModel::toggleTimeBasedSorting,
         modifier = modifier
     )
 }
@@ -79,12 +89,14 @@ fun MealsSettingsScreen(
 @Composable
 fun MealsSettingsScreen(
     meals: List<Meal>,
+    useTimeBasedSorting: Boolean,
     formatTime: (LocalTime) -> String,
     onBack: () -> Unit,
     onCreateMeal: (String, LocalTime, LocalTime) -> Unit,
     onUpdateMeal: (Meal) -> Unit,
     onDeleteMeal: (Meal) -> Unit,
     onSaveMealOrder: (List<Meal>) -> Unit,
+    onToggleTimeBasedSorting: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     hapticFeedback: HapticFeedback = LocalHapticFeedback.current
 ) {
@@ -92,6 +104,7 @@ fun MealsSettingsScreen(
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
+        // Must subtract 1 because the first item isn't reorderable
         cardStates = cardStates.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }
@@ -290,7 +303,83 @@ fun MealsSettingsScreen(
                     modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester)
                 )
             }
+
+            item {
+                TimeBasedSettingsWithPreview(
+                    meals = meals,
+                    useTimeBasedSorting = useTimeBasedSorting,
+                    formatTime = formatTime,
+                    onToggleTimeBasedSorting = onToggleTimeBasedSorting,
+                    hapticFeedback = hapticFeedback
+                )
+            }
+
+            item {
+                Spacer(Modifier.height(8.dp))
+            }
         }
+    }
+}
+
+@Composable
+private fun TimeBasedSettingsWithPreview(
+    meals: List<Meal>,
+    useTimeBasedSorting: Boolean,
+    formatTime: (LocalTime) -> String,
+    onToggleTimeBasedSorting: (Boolean) -> Unit,
+    hapticFeedback: HapticFeedback
+) {
+    val toggle = { newState: Boolean ->
+        onToggleTimeBasedSorting(newState)
+        hapticFeedback.performToggle(newState)
+    }
+
+    Column {
+        Text(
+            text = stringResource(Res.string.headline_other),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        ListItem(
+            headlineContent = {
+                Text(
+                    text = stringResource(Res.string.action_use_time_based_sorting)
+                )
+            },
+            modifier = Modifier.clickable { toggle(!useTimeBasedSorting) },
+            supportingContent = {
+                Text(
+                    text = stringResource(
+                        Res.string.description_time_based_meals_sorting
+                    )
+                )
+            },
+            trailingContent = {
+                Switch(
+                    checked = useTimeBasedSorting,
+                    onCheckedChange = toggle
+                )
+            }
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        Text(
+            text = stringResource(Res.string.headline_preview),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        MealsCard(
+            meals = meals,
+            formatTime = formatTime,
+            useTimeBasedSorting = useTimeBasedSorting
+        )
     }
 }
 

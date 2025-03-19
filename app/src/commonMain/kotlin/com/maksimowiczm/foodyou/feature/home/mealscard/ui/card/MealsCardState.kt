@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.card
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -12,20 +11,35 @@ import com.valentinilk.shimmer.Shimmer
 import kotlinx.datetime.LocalTime
 
 @Composable
-fun rememberMealsCardState(diaryDay: DiaryDay?, time: LocalTime, shimmer: Shimmer) =
-    remember(diaryDay, time, shimmer) {
-        MealsCardState(
-            diaryDay = diaryDay,
-            time = time,
-            shimmer = shimmer
-        )
-    }
+fun rememberMealsCardState(
+    timeBasedSorting: Boolean,
+    diaryDay: DiaryDay?,
+    time: LocalTime,
+    shimmer: Shimmer
+) = remember(timeBasedSorting, diaryDay, time, shimmer) {
+    MealsCardState(
+        timeBasedSorting = timeBasedSorting,
+        diaryDay = diaryDay,
+        time = time,
+        shimmer = shimmer
+    )
+}
 
-@Immutable
-class MealsCardState(val diaryDay: DiaryDay?, val time: LocalTime, val shimmer: Shimmer) {
-    @Stable
+@Stable
+class MealsCardState(
+    val timeBasedSorting: Boolean,
+    val diaryDay: DiaryDay?,
+    val time: LocalTime,
+    val shimmer: Shimmer
+) {
     val meals by derivedStateOf {
-        diaryDay?.meals?.sortedBy { it.rank }
+        diaryDay?.meals?.sortedBy {
+            if (timeBasedSorting) {
+                if (shouldShowMeal(it, time)) it.rank else 1_000_000 + it.rank
+            } else {
+                it.rank
+            }
+        }
     }
 
     /**

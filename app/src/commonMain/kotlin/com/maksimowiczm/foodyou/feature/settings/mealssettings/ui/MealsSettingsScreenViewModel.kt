@@ -1,10 +1,16 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.data.DiaryRepository
 import com.maksimowiczm.foodyou.data.StringFormatRepository
 import com.maksimowiczm.foodyou.data.model.Meal
+import com.maksimowiczm.foodyou.data.preferences.DiaryPreferences
+import com.maksimowiczm.foodyou.infrastructure.datastore.get
+import com.maksimowiczm.foodyou.infrastructure.datastore.observe
+import com.maksimowiczm.foodyou.infrastructure.datastore.set
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -15,7 +21,8 @@ import kotlinx.datetime.LocalTime
 
 class MealsSettingsScreenViewModel(
     private val diaryRepository: DiaryRepository,
-    private val stringFormatRepository: StringFormatRepository
+    private val stringFormatRepository: StringFormatRepository,
+    private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
     private fun DiaryRepository.observeSortedMeals() =
         observeMeals().map { it.sortedBy { it.rank } }
@@ -25,6 +32,15 @@ class MealsSettingsScreenViewModel(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(2_000),
             initialValue = runBlocking { diaryRepository.observeSortedMeals().first() }
+        )
+
+    val useTimeBasedSorting = dataStore
+        .observe(DiaryPreferences.timeBasedSorting)
+        .map { it ?: false }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = runBlocking { dataStore.get(DiaryPreferences.timeBasedSorting) ?: false }
         )
 
     fun orderMeals(meals: List<Meal>) {
@@ -53,6 +69,12 @@ class MealsSettingsScreenViewModel(
                 from = from,
                 to = to
             )
+        }
+    }
+
+    fun toggleTimeBasedSorting(state: Boolean) {
+        viewModelScope.launch {
+            dataStore.set(DiaryPreferences.timeBasedSorting to state)
         }
     }
 
