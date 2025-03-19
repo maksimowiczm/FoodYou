@@ -1,5 +1,11 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -10,14 +16,16 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.Meal
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.ALL_DAY_SWITCH
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.CONFIRM_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.DELETE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.FROM_TIME_PICKER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.NAME_INPUT
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.TIME_PICKER
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealSettingsCardTestTags.TO_TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.ALL_DAY_SWITCH
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.CONFIRM_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.DELETE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.FROM_TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.NAME_INPUT
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.TIME_PICKER
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.MealCardTestTags.TO_TIME_PICKER
 import kotlinx.datetime.LocalTime
 import org.junit.Test
 
@@ -27,22 +35,31 @@ class MealSettingsCardTest {
         name: String,
         from: LocalTime,
         to: LocalTime,
-        formatTime: (LocalTime) -> String
+        formatTime: (LocalTime) -> String,
+        action: @Composable (() -> Unit)? = null
     ) {
+        val meal = Meal(
+            id = 0,
+            name = name,
+            from = from,
+            to = to,
+            rank = 0
+        )
+
         setContent {
-            MealSettingsCard(
-                state = rememberMealSettingsCardState(
-                    meal = Meal(
-                        id = 0,
-                        name = name,
-                        from = from,
-                        to = to
-                    )
+            MealCard(
+                state = MealCardStateWithMeal(
+                    meal = meal,
+                    nameInput = mutableStateOf(TextFieldValue(meal.name)),
+                    fromTimeInput = LocalTimeInput(from),
+                    toTimeInput = LocalTimeInput(to),
+                    isAllDay = mutableStateOf(meal.isAllDay)
                 ),
-                onUpdate = {},
-                onDelete = {},
                 formatTime = formatTime,
-                showDeleteDialog = false
+                onSave = {},
+                shouldShowDeleteDialog = true,
+                onDelete = {},
+                action = action
             )
         }
     }
@@ -121,5 +138,20 @@ class MealSettingsCardTest {
         onNodeWithTag(TO_TIME_PICKER).assertIsDisplayed().assertTextEquals(formatTime(time))
         onNodeWithTag(CONFIRM_BUTTON).assertDoesNotExist()
         onNodeWithTag(DELETE_BUTTON).assertIsDisplayed()
+    }
+
+    @Test
+    fun test_action_button() = runComposeUiTest {
+        val name = "Test"
+        val time = LocalTime(12, 0, 0)
+        val formatTime: (LocalTime) -> String = { it.toString() }
+
+        setupCard(name, time, time, formatTime) {
+            Box(modifier = Modifier.size(50.dp).testTag("TEST"))
+        }
+
+        onNodeWithTag("TEST").assertIsDisplayed()
+        onNodeWithTag(CONFIRM_BUTTON).assertDoesNotExist()
+        onNodeWithTag(DELETE_BUTTON).assertDoesNotExist()
     }
 }

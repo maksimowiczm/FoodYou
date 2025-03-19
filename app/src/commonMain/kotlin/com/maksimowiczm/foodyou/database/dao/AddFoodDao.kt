@@ -15,6 +15,7 @@ import com.maksimowiczm.foodyou.database.entity.ProductWithWeightMeasurementEnti
 import com.maksimowiczm.foodyou.database.entity.QuantitySuggestionEntity
 import com.maksimowiczm.foodyou.database.entity.WeightMeasurementEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 @Dao
 interface AddFoodDao {
@@ -193,8 +194,30 @@ interface AddFoodDao {
     @Insert
     suspend fun insertMeal(meal: MealEntity)
 
+    @Transaction
+    suspend fun insertWithLastRank(meal: MealEntity) {
+        val lastRank = observeMeals().first().maxOfOrNull(MealEntity::rank) ?: -1
+        insertMeal(meal.copy(rank = lastRank + 1))
+    }
+
     @Update
     suspend fun updateMeal(meal: MealEntity)
+
+    @Query(
+        """
+        UPDATE MealEntity
+        SET rank = :rank
+        WHERE id = :mealId
+        """
+    )
+    suspend fun updateMealRank(mealId: Long, rank: Int)
+
+    @Transaction
+    suspend fun updateMealsRanks(map: Map<Long, Int>) {
+        map.forEach { (mealId, rank) ->
+            updateMealRank(mealId, rank)
+        }
+    }
 
     @Delete
     suspend fun deleteMeal(meal: MealEntity)

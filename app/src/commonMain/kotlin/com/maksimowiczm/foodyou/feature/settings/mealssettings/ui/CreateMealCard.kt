@@ -9,52 +9,46 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_BUTTON
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealSettingsCardTestTags.CREATE_MEAL_SETTINGS_CARD
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealCardTestTags.CREATE_BUTTON
+import com.maksimowiczm.foodyou.feature.settings.mealssettings.ui.CreateMealCardTestTags.CREATE_MEAL_SETTINGS_CARD
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_add_meal
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
-fun CreateMealSettingsCard(
+fun CreateMealCard(
     isCreating: Boolean,
     onCreatingChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+    onCreate: (name: String, from: LocalTime, to: LocalTime) -> Unit,
+    formatTime: (LocalTime) -> String,
+    modifier: Modifier = Modifier
 ) {
     if (isCreating) {
-        val viewModel = CreateMealSettingsCardViewModel(
-            diaryRepository = koinInject(),
-            stringFormatRepository = koinInject(),
-            coroutineScope = coroutineScope
-        )
+        val state = rememberMealCardState()
 
-        val state = rememberMealSettingsCardState()
-
-        MealSettingsCard(
+        MealCard(
             state = state,
             onDelete = { onCreatingChange(false) },
-            onUpdate = {
-                viewModel.createMeal(
-                    name = state.nameInput.value,
-                    from = state.fromInput.value,
-                    to = if (state.isAllDay) {
-                        state.fromInput.value
+            onSave = {
+                onCreate(
+                    state.nameInput.value.text,
+                    state.fromTimeInput.value,
+                    if (state.isAllDay.value) {
+                        state.fromTimeInput.value
                     } else {
-                        state.toInput.value
+                        state.toTimeInput.value
                     }
                 )
                 onCreatingChange(false)
             },
-            formatTime = viewModel::formatTime,
-            showDeleteDialog = false,
+            formatTime = formatTime,
+            action = null,
+            shouldShowDeleteDialog = false,
             modifier = modifier.testTag(CREATE_MEAL_SETTINGS_CARD)
         )
     } else {
@@ -62,8 +56,8 @@ fun CreateMealSettingsCard(
             onClick = { onCreatingChange(true) },
             modifier = modifier.testTag(CREATE_BUTTON),
             colors = CardDefaults.outlinedCardColors(
-                containerColor = MealSettingsCardDefaults.colors().containerColor,
-                contentColor = MealSettingsCardDefaults.colors().contentColor
+                containerColor = MealCardDefaults.colors().containerColor,
+                contentColor = MealCardDefaults.colors().contentColor
             )
         ) {
             Box(
@@ -81,7 +75,7 @@ fun CreateMealSettingsCard(
     }
 }
 
-object CreateMealSettingsCardTestTags {
+object CreateMealCardTestTags {
     const val CREATE_BUTTON = "CreateButton"
     const val CREATE_MEAL_SETTINGS_CARD = "CreateMealSettingsCard"
 }

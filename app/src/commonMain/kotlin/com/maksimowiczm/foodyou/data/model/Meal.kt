@@ -3,7 +3,13 @@ package com.maksimowiczm.foodyou.data.model
 import com.maksimowiczm.foodyou.database.entity.MealEntity
 import kotlinx.datetime.LocalTime
 
-data class Meal(val id: Long, val name: String, val from: LocalTime, val to: LocalTime) {
+data class Meal(
+    val id: Long,
+    val name: String,
+    val from: LocalTime,
+    val to: LocalTime,
+    val rank: Int
+) {
     val isAllDay: Boolean
         get() = from == to
 }
@@ -16,7 +22,8 @@ fun MealEntity.toDomain(): Meal {
         id = id,
         name = name,
         from = from,
-        to = to
+        to = to,
+        rank = rank
     )
 }
 
@@ -26,5 +33,6 @@ fun Meal.toEntity() = MealEntity(
     fromHour = from.hour,
     fromMinute = from.minute,
     toHour = to.hour,
-    toMinute = to.minute
+    toMinute = to.minute,
+    rank = rank
 )

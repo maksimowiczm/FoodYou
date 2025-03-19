@@ -23,4 +23,11 @@ interface DiaryRepository {
     suspend fun updateMeal(meal: Meal)
 
     suspend fun deleteMeal(meal: Meal)
+
+    /**
+     * Orders meals by their rank.
+     *
+     * @param map A map where the key is the meal ID and the value is the new rank.
+     */
+    suspend fun updateMealsRanks(map: Map<Long, Int>)
 }

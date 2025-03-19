@@ -4,6 +4,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 import com.maksimowiczm.foodyou.database.callback.InitializeMealsCallback
 import com.maksimowiczm.foodyou.database.converter.ProductSourceConverter
 import com.maksimowiczm.foodyou.database.converter.WeightMeasurementTypeConverter
@@ -39,9 +41,11 @@ abstract class OpenSourceDatabase : RoomDatabase() {
     abstract fun openFoodFactsDao(): OpenFoodFactsDao
 
     companion object {
-        const val VERSION = 1
+        const val VERSION = 2
 
-        private val migrations: List<Migration> = emptyList()
+        private val migrations: List<Migration> = listOf(
+            MIGRATION_1_2
+        )
 
         fun Builder<OpenSourceDatabase>.buildDatabase(
             initializeMealsCallback: InitializeMealsCallback
@@ -50,5 +54,22 @@ abstract class OpenSourceDatabase : RoomDatabase() {
             addCallback(initializeMealsCallback)
             return build()
         }
+    }
+}
+
+private val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            ALTER TABLE MealEntity 
+            ADD COLUMN rank INTEGER NOT NULL DEFAULT -1
+            """.trimIndent()
+        )
+        connection.execSQL(
+            """
+            UPDATE MealEntity 
+            SET rank = id
+            """.trimIndent()
+        )
     }
 }
