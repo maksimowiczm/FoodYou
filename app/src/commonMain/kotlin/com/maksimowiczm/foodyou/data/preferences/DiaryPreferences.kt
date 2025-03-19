@@ -11,4 +11,6 @@ object DiaryPreferences {
     val fatsGoal = floatPreferencesKey("fats_goal")
 
     val timeBasedSorting = booleanPreferencesKey("time_based_sorting")
+    val allDayMealsAsCurrentlyHappening =
+        booleanPreferencesKey("all_day_meals_as_currently_happening")
 }

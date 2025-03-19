@@ -35,5 +35,16 @@ class MealsCardViewModel(
             initialValue = runBlocking { dataStore.get(DiaryPreferences.timeBasedSorting) ?: false }
         )
 
+    val allDayMealsAsCurrentlyHappening = dataStore
+        .observe(DiaryPreferences.allDayMealsAsCurrentlyHappening)
+        .map { it ?: false }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = runBlocking {
+                dataStore.get(DiaryPreferences.allDayMealsAsCurrentlyHappening) ?: false
+            }
+        )
+
     fun formatTime(time: LocalTime): String = stringFormatRepository.formatTime(time)
 }

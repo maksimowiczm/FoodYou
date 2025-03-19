@@ -66,10 +66,13 @@ fun MealsSettingsScreen(
 ) {
     val sortedMeals by viewModel.sortedMeals.collectAsStateWithLifecycle()
     val useTimeBasedSorting by viewModel.useTimeBasedSorting.collectAsStateWithLifecycle()
+    val allDayMealAsCurrentlyHappening
+        by viewModel.allDayMealsAsCurrentlyHappening.collectAsStateWithLifecycle()
 
     MealsSettingsScreen(
         meals = sortedMeals,
         useTimeBasedSorting = useTimeBasedSorting,
+        allDayMealAsCurrentlyHappening = allDayMealAsCurrentlyHappening,
         formatTime = viewModel::formatTime,
         onBack = onBack,
         onCreateMeal = viewModel::createMeal,
@@ -77,6 +80,7 @@ fun MealsSettingsScreen(
         onDeleteMeal = viewModel::deleteMeal,
         onSaveMealOrder = viewModel::orderMeals,
         onToggleTimeBasedSorting = viewModel::toggleTimeBasedSorting,
+        onToggleAllDayMealsAsCurrentlyHappening = viewModel::toggleAllDayMealsAsCurrentlyHappening,
         modifier = modifier
     )
 }
@@ -86,6 +90,7 @@ fun MealsSettingsScreen(
 fun MealsSettingsScreen(
     meals: List<Meal>,
     useTimeBasedSorting: Boolean,
+    allDayMealAsCurrentlyHappening: Boolean,
     formatTime: (LocalTime) -> String,
     onBack: () -> Unit,
     onCreateMeal: (String, LocalTime, LocalTime) -> Unit,
@@ -93,6 +98,7 @@ fun MealsSettingsScreen(
     onDeleteMeal: (Meal) -> Unit,
     onSaveMealOrder: (List<Meal>) -> Unit,
     onToggleTimeBasedSorting: (Boolean) -> Unit,
+    onToggleAllDayMealsAsCurrentlyHappening: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     hapticFeedback: HapticFeedback = LocalHapticFeedback.current
 ) {
@@ -301,7 +307,14 @@ fun MealsSettingsScreen(
             }
 
             item {
-                val toggle = { newState: Boolean ->
+                Text(
+                    text = stringResource(Res.string.headline_other),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                val toggleTimeBased = { newState: Boolean ->
                     onToggleTimeBasedSorting(newState)
                     hapticFeedback.performToggle(newState)
                 }
@@ -312,7 +325,7 @@ fun MealsSettingsScreen(
                             text = stringResource(Res.string.action_use_time_based_sorting)
                         )
                     },
-                    modifier = Modifier.clickable { toggle(!useTimeBasedSorting) },
+                    modifier = Modifier.clickable { toggleTimeBased(!useTimeBasedSorting) },
                     supportingContent = {
                         Text(
                             text = stringResource(
@@ -323,7 +336,41 @@ fun MealsSettingsScreen(
                     trailingContent = {
                         Switch(
                             checked = useTimeBasedSorting,
-                            onCheckedChange = toggle
+                            onCheckedChange = toggleTimeBased
+                        )
+                    }
+                )
+
+                val toggleAllDayMealsAsCurrentlyHappening = { newState: Boolean ->
+                    onToggleAllDayMealsAsCurrentlyHappening(newState)
+                    hapticFeedback.performToggle(newState)
+                }
+
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(
+                                Res.string.action_treat_all_day_meals_as_currently_happening
+                            )
+                        )
+                    },
+                    modifier = Modifier.clickable(
+                        enabled = useTimeBasedSorting
+                    ) {
+                        toggleAllDayMealsAsCurrentlyHappening(!allDayMealAsCurrentlyHappening)
+                    },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(
+                                Res.string.description_treat_all_day_meals_as_currently_happening
+                            )
+                        )
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = allDayMealAsCurrentlyHappening,
+                            onCheckedChange = toggleAllDayMealsAsCurrentlyHappening,
+                            enabled = useTimeBasedSorting
                         )
                     }
                 )

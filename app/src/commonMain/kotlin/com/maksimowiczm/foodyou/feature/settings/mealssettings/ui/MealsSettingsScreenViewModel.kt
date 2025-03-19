@@ -43,6 +43,17 @@ class MealsSettingsScreenViewModel(
             initialValue = runBlocking { dataStore.get(DiaryPreferences.timeBasedSorting) ?: false }
         )
 
+    val allDayMealsAsCurrentlyHappening = dataStore
+        .observe(DiaryPreferences.allDayMealsAsCurrentlyHappening)
+        .map { it ?: false }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = runBlocking {
+                dataStore.get(DiaryPreferences.allDayMealsAsCurrentlyHappening) ?: false
+            }
+        )
+
     fun orderMeals(meals: List<Meal>) {
         viewModelScope.launch {
             val map = meals.mapIndexed { index, meal -> meal.id to index }.toMap()
@@ -75,6 +86,12 @@ class MealsSettingsScreenViewModel(
     fun toggleTimeBasedSorting(state: Boolean) {
         viewModelScope.launch {
             dataStore.set(DiaryPreferences.timeBasedSorting to state)
+        }
+    }
+
+    fun toggleAllDayMealsAsCurrentlyHappening(state: Boolean) {
+        viewModelScope.launch {
+            dataStore.set(DiaryPreferences.allDayMealsAsCurrentlyHappening to state)
         }
     }
 
