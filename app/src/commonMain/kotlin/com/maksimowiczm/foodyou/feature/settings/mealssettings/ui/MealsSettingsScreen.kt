@@ -81,7 +81,7 @@ fun MealsSettingsScreen(
         onCreateMeal = viewModel::createMeal,
         onUpdateMeal = viewModel::updateMeal,
         onDeleteMeal = viewModel::deleteMeal,
-        onSaveMealOrder = viewModel::orderMeals,
+        onSaveMealOrder = viewModel::updateMealsRanks,
         onToggleTimeBasedSorting = viewModel::toggleTimeBasedSorting,
         onToggleAllDayMealsAsCurrentlyHappening = viewModel::toggleAllDayMealsAsCurrentlyHappening,
         modifier = modifier

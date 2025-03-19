@@ -131,7 +131,7 @@ class DiaryRepositoryImpl(
     }
 
     override suspend fun updateMealsRanks(map: Map<Long, Int>) {
-        addFoodDao.orderMeals(map)
+        addFoodDao.updateMealsRanks(map)
     }
 
     companion object {
