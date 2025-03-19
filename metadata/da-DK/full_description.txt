@@ -1,0 +1,15 @@
+<b>FoodYou</b> er en moderne kalorieregistrerings-app bygget med Material You-æstetik. Den er designet til at gøre kalorieregistrering nemmere og mere visuelt tiltalende.
+
+<b>Funktioner:</b>
+<ul>
+    <li><b>Material You Design:</b> Dynamisk tematisering for en sammenhængende og visuelt behagelig oplevelse.</li>
+    <li><b>Interaktiv Hjem-side:</b> Hurtig adgang til nøglefunktioner med en kortbaseret brugerflade.</li>
+    <li><b>Open Food Facts-integrering:</b> Få nøjagtige føde(vare)data til præcis kalorieregistrering.</li>
+    <li><b>Kant-til-Kant layout:</b> Nyd en mere fordybende oplevelse med et fuldskærmsdesign.</li>
+    <li><b>Forudsigende Tilbage-funktion:</b> En glidende navigationsoplevelse med forudsigelig tilbage.</li>
+    <li><b>Tilpasselig og Open-Source:</b> Bygget at være udvidelsesbar og fællesskabsdrevet, så man kan bidrage og ændre.</li>
+</ul>
+
+Begynd at registrere kalorierne i dag med FoodYou!
+
+Launcher-ikon kreeret af <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
