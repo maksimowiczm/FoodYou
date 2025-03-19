@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
@@ -69,13 +70,12 @@ fun MealsSettingsScreen(
 ) {
     val sortedMeals by viewModel.sortedMeals.collectAsStateWithLifecycle()
     val useTimeBasedSorting by viewModel.useTimeBasedSorting.collectAsStateWithLifecycle()
-    val allDayMealAsCurrentlyHappening
-        by viewModel.allDayMealsAsCurrentlyHappening.collectAsStateWithLifecycle()
+    val includeAllDayMeals by viewModel.includeAllDayMeals.collectAsStateWithLifecycle()
 
     MealsSettingsScreen(
         meals = sortedMeals,
         useTimeBasedSorting = useTimeBasedSorting,
-        allDayMealAsCurrentlyHappening = allDayMealAsCurrentlyHappening,
+        includeAllDayMeals = includeAllDayMeals,
         formatTime = viewModel::formatTime,
         onBack = onBack,
         onCreateMeal = viewModel::createMeal,
@@ -83,7 +83,7 @@ fun MealsSettingsScreen(
         onDeleteMeal = viewModel::deleteMeal,
         onSaveMealOrder = viewModel::updateMealsRanks,
         onToggleTimeBasedSorting = viewModel::toggleTimeBasedSorting,
-        onToggleAllDayMealsAsCurrentlyHappening = viewModel::toggleAllDayMealsAsCurrentlyHappening,
+        onToggleIncludeAllDayMeals = viewModel::toggleIncludeAllDayMeals,
         modifier = modifier
     )
 }
@@ -93,7 +93,7 @@ fun MealsSettingsScreen(
 fun MealsSettingsScreen(
     meals: List<Meal>,
     useTimeBasedSorting: Boolean,
-    allDayMealAsCurrentlyHappening: Boolean,
+    includeAllDayMeals: Boolean,
     formatTime: (LocalTime) -> String,
     onBack: () -> Unit,
     onCreateMeal: (String, LocalTime, LocalTime) -> Unit,
@@ -101,7 +101,7 @@ fun MealsSettingsScreen(
     onDeleteMeal: (Meal) -> Unit,
     onSaveMealOrder: (List<Meal>) -> Unit,
     onToggleTimeBasedSorting: (Boolean) -> Unit,
-    onToggleAllDayMealsAsCurrentlyHappening: (Boolean) -> Unit,
+    onToggleIncludeAllDayMeals: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     hapticFeedback: HapticFeedback = LocalHapticFeedback.current
 ) {
@@ -318,7 +318,7 @@ fun MealsSettingsScreen(
 
             item {
                 Text(
-                    text = stringResource(Res.string.headline_other),
+                    text = stringResource(Res.string.headline_time_based_ordering),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -332,7 +332,7 @@ fun MealsSettingsScreen(
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(Res.string.action_use_time_based_sorting)
+                            text = stringResource(Res.string.action_use_time_based_ordering)
                         )
                     },
                     modifier = Modifier.clickable { toggleTimeBased(!useTimeBasedSorting) },
@@ -351,38 +351,45 @@ fun MealsSettingsScreen(
                     }
                 )
 
-                val toggleAllDayMealsAsCurrentlyHappening = { newState: Boolean ->
-                    onToggleAllDayMealsAsCurrentlyHappening(newState)
+                val toggleIncludeAllDayMeals = { newState: Boolean ->
+                    onToggleIncludeAllDayMeals(newState)
                     hapticFeedback.performToggle(newState)
                 }
 
+                val contentColor = if (useTimeBasedSorting) {
+                    MaterialTheme.colorScheme.onSurface
+                } else {
+                    MaterialTheme.colorScheme.outline
+                }
                 ListItem(
                     headlineContent = {
                         Text(
-                            text = stringResource(
-                                Res.string.action_treat_all_day_meals_as_currently_happening
-                            )
+                            text = stringResource(Res.string.action_include_all_day_meals)
                         )
                     },
                     modifier = Modifier.clickable(
                         enabled = useTimeBasedSorting
                     ) {
-                        toggleAllDayMealsAsCurrentlyHappening(!allDayMealAsCurrentlyHappening)
+                        toggleIncludeAllDayMeals(!includeAllDayMeals)
                     },
                     supportingContent = {
                         Text(
                             text = stringResource(
-                                Res.string.description_treat_all_day_meals_as_currently_happening
+                                Res.string.description_action_include_all_day_meals
                             )
                         )
                     },
                     trailingContent = {
                         Switch(
-                            checked = allDayMealAsCurrentlyHappening,
-                            onCheckedChange = toggleAllDayMealsAsCurrentlyHappening,
+                            checked = includeAllDayMeals,
+                            onCheckedChange = toggleIncludeAllDayMeals,
                             enabled = useTimeBasedSorting
                         )
-                    }
+                    },
+                    colors = ListItemDefaults.colors(
+                        headlineColor = contentColor,
+                        supportingColor = contentColor
+                    )
                 )
             }
         }

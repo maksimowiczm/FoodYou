@@ -43,14 +43,14 @@ class MealsSettingsScreenViewModel(
             initialValue = runBlocking { dataStore.get(DiaryPreferences.timeBasedSorting) ?: false }
         )
 
-    val allDayMealsAsCurrentlyHappening = dataStore
-        .observe(DiaryPreferences.allDayMealsAsCurrentlyHappening)
+    val includeAllDayMeals = dataStore
+        .observe(DiaryPreferences.includeAllDayMeals)
         .map { it ?: false }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(2_000),
             initialValue = runBlocking {
-                dataStore.get(DiaryPreferences.allDayMealsAsCurrentlyHappening) ?: false
+                dataStore.get(DiaryPreferences.includeAllDayMeals) ?: false
             }
         )
 
@@ -89,9 +89,9 @@ class MealsSettingsScreenViewModel(
         }
     }
 
-    fun toggleAllDayMealsAsCurrentlyHappening(state: Boolean) {
+    fun toggleIncludeAllDayMeals(state: Boolean) {
         viewModelScope.launch {
-            dataStore.set(DiaryPreferences.allDayMealsAsCurrentlyHappening to state)
+            dataStore.set(DiaryPreferences.includeAllDayMeals to state)
         }
     }
 

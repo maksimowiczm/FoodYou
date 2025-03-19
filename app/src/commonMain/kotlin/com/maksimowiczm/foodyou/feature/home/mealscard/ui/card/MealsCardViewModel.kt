@@ -35,14 +35,14 @@ class MealsCardViewModel(
             initialValue = runBlocking { dataStore.get(DiaryPreferences.timeBasedSorting) ?: false }
         )
 
-    val allDayMealsAsCurrentlyHappening = dataStore
-        .observe(DiaryPreferences.allDayMealsAsCurrentlyHappening)
+    val includeAllDayMeals = dataStore
+        .observe(DiaryPreferences.includeAllDayMeals)
         .map { it ?: false }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(2_000),
             initialValue = runBlocking {
-                dataStore.get(DiaryPreferences.allDayMealsAsCurrentlyHappening) ?: false
+                dataStore.get(DiaryPreferences.includeAllDayMeals) ?: false
             }
         )
 

@@ -97,14 +97,13 @@ fun MealsCard(
 
     val useTimeBasedSorting by viewModel.useTimeBasedSorting.collectAsStateWithLifecycle()
 
-    val allDayMealsAsCurrentlyHappening
-        by viewModel.allDayMealsAsCurrentlyHappening.collectAsStateWithLifecycle()
+    val includeAllDayMeals by viewModel.includeAllDayMeals.collectAsStateWithLifecycle()
 
     MealsCard(
         animatedVisibilityScope = animatedVisibilityScope,
         state = rememberMealsCardState(
             timeBasedSorting = useTimeBasedSorting,
-            allDayMealsAsCurrentlyHappening = allDayMealsAsCurrentlyHappening,
+            includeAllDayMeals = includeAllDayMeals,
             diaryDay = diaryDay,
             time = time,
             shimmer = homeState.shimmer

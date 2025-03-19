@@ -13,14 +13,14 @@ import kotlinx.datetime.LocalTime
 @Composable
 fun rememberMealsCardState(
     timeBasedSorting: Boolean,
-    allDayMealsAsCurrentlyHappening: Boolean,
+    includeAllDayMeals: Boolean,
     diaryDay: DiaryDay?,
     time: LocalTime,
     shimmer: Shimmer
 ) = remember(timeBasedSorting, diaryDay, time, shimmer) {
     MealsCardState(
         timeBasedSorting = timeBasedSorting,
-        allDayMealsAsCurrentlyHappening = allDayMealsAsCurrentlyHappening,
+        includeAllDayMeals = includeAllDayMeals,
         diaryDay = diaryDay,
         time = time,
         shimmer = shimmer
@@ -30,7 +30,7 @@ fun rememberMealsCardState(
 @Stable
 class MealsCardState(
     val timeBasedSorting: Boolean,
-    val allDayMealsAsCurrentlyHappening: Boolean,
+    val includeAllDayMeals: Boolean,
     val diaryDay: DiaryDay?,
     val time: LocalTime,
     val shimmer: Shimmer
@@ -63,7 +63,7 @@ class MealsCardState(
      * falls within the start and end times.
      */
     private fun shouldShowMeal(meal: Meal, time: LocalTime): Boolean = if (meal.isAllDay) {
-        allDayMealsAsCurrentlyHappening
+        includeAllDayMeals
     } else if (meal.to < meal.from) {
         val minuteBeforeMidnight = LocalTime(23, 59, 59)
         val midnight = LocalTime(0, 0, 0)
