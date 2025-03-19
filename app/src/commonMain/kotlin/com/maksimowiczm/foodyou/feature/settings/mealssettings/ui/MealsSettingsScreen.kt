@@ -10,13 +10,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -164,37 +165,39 @@ fun MealsSettingsScreen(
                 },
                 actions = {
                     if (isReordering) {
+                        IconButton(
+                            onClick = {
+                                onSaveMealOrder(cardStates.map { it.meal })
+                                isReordering = false
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Save,
+                                contentDescription = stringResource(Res.string.action_save)
+                            )
+                        }
+                    } else {
                         TooltipBox(
                             positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
                             tooltip = {
-                                Text(stringResource(Res.string.action_reorder))
+                                PlainTooltip {
+                                    Text(stringResource(Res.string.action_reorder))
+                                }
                             },
                             state = rememberTooltipState()
                         ) {
                             IconButton(
                                 onClick = {
-                                    onSaveMealOrder(cardStates.map { it.meal })
-                                    isReordering = false
+                                    isReordering = true
                                     hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                                 }
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Done,
-                                    contentDescription = stringResource(Res.string.action_save)
+                                    imageVector = Icons.Default.DragHandle,
+                                    contentDescription = stringResource(Res.string.action_reorder)
                                 )
                             }
-                        }
-                    } else {
-                        IconButton(
-                            onClick = {
-                                isReordering = true
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.DragHandle,
-                                contentDescription = stringResource(Res.string.action_reorder)
-                            )
                         }
                     }
                 },
