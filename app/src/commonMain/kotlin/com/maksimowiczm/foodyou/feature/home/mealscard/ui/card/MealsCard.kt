@@ -39,7 +39,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.data.model.DiaryDay
 import com.maksimowiczm.foodyou.data.model.Meal
+import com.maksimowiczm.foodyou.data.model.defaultGoals
 import com.maksimowiczm.foodyou.feature.home.HomeFeature
 import com.maksimowiczm.foodyou.feature.home.HomeState
 import com.maksimowiczm.foodyou.feature.home.mealscard.ui.MealHeader
@@ -60,7 +62,10 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.absoluteValue
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -109,10 +114,34 @@ fun MealsCard(
     )
 }
 
+@Composable
+fun MealsCard(meals: List<Meal>, formatTime: (LocalTime) -> String) {
+    val date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    val time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).time
+
+    MealsCard(
+        animatedVisibilityScope = null,
+        state = rememberMealsCardState(
+            diaryDay = DiaryDay(
+                date = date,
+                mealProductMap = meals.associateWith { emptyList() },
+                dailyGoals = defaultGoals()
+            ),
+            time = time,
+            shimmer = rememberShimmer(
+                ShimmerBounds.View
+            )
+        ),
+        formatTime = formatTime,
+        onMealClick = {},
+        onAddClick = {}
+    )
+}
+
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun MealsCard(
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    animatedVisibilityScope: AnimatedVisibilityScope?,
     state: MealsCardState,
     formatTime: (LocalTime) -> String,
     onMealClick: (Meal) -> Unit,
@@ -242,7 +271,7 @@ fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.MealCard(
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    animatedVisibilityScope: AnimatedVisibilityScope?,
     epochDay: Int,
     meal: Meal,
     isEmpty: Boolean,
@@ -257,49 +286,61 @@ fun SharedTransitionScope.MealCard(
 ) {
     FoodYouHomeCard(
         onClick = onMealClick,
-        modifier = modifier.sharedBounds(
-            sharedContentState = rememberSharedContentState(
-                key = MealHeaderTransitionKeys.MealContainer(
-                    mealId = meal.id,
-                    epochDay = epochDay
+        modifier = modifier then if (animatedVisibilityScope != null) {
+            Modifier.sharedBounds(
+                sharedContentState = rememberSharedContentState(
+                    key = MealHeaderTransitionKeys.MealContainer(
+                        mealId = meal.id,
+                        epochDay = epochDay
+                    )
+                ),
+                animatedVisibilityScope = animatedVisibilityScope,
+                enter = MealHeaderTransitionSpecs.containerEnterTransition,
+                exit = MealHeaderTransitionSpecs.containerExitTransition,
+                resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                clipInOverlayDuringTransition = OverlayClip(
+                    animatedVisibilityScope.overlayClipFromCardToScreen()
                 )
-            ),
-            animatedVisibilityScope = animatedVisibilityScope,
-            enter = MealHeaderTransitionSpecs.containerEnterTransition,
-            exit = MealHeaderTransitionSpecs.containerExitTransition,
-            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
-            clipInOverlayDuringTransition = OverlayClip(
-                animatedVisibilityScope.overlayClipFromCardToScreen()
             )
-        )
+        } else {
+            Modifier
+        }
     ) {
         val headline = @Composable {
             Text(
                 text = meal.name,
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.sharedBounds(
-                    sharedContentState = rememberSharedContentState(
-                        key = MealHeaderTransitionKeys.MealTitle(
-                            mealId = meal.id,
-                            epochDay = epochDay
-                        )
-                    ),
-                    animatedVisibilityScope = animatedVisibilityScope
-                )
+                modifier = if (animatedVisibilityScope != null) {
+                    Modifier.sharedBounds(
+                        sharedContentState = rememberSharedContentState(
+                            key = MealHeaderTransitionKeys.MealTitle(
+                                mealId = meal.id,
+                                epochDay = epochDay
+                            )
+                        ),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                } else {
+                    Modifier
+                }
             )
         }
         val time = @Composable {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.sharedBounds(
-                    sharedContentState = rememberSharedContentState(
-                        key = MealHeaderTransitionKeys.MealTime(
-                            mealId = meal.id,
-                            epochDay = epochDay
-                        )
-                    ),
-                    animatedVisibilityScope = animatedVisibilityScope
-                )
+                modifier = if (animatedVisibilityScope != null) {
+                    Modifier.sharedBounds(
+                        sharedContentState = rememberSharedContentState(
+                            key = MealHeaderTransitionKeys.MealTime(
+                                mealId = meal.id,
+                                epochDay = epochDay
+                            )
+                        ),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                } else {
+                    Modifier
+                }
             ) {
                 CompositionLocalProvider(
                     LocalContentColor provides MaterialTheme.colorScheme.outline,
@@ -362,20 +403,22 @@ fun SharedTransitionScope.MealCard(
         }
 
         val actionButton = @Composable {
-            with(animatedVisibilityScope) {
-                FilledIconButton(
-                    onClick = onAddClick,
-                    modifier = Modifier
-                        .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
-                        .animateEnterExit(
-                            enter = crossfadeIn(),
-                            exit = fadeOut(tween(50))
+            if (animatedVisibilityScope != null) {
+                with(animatedVisibilityScope) {
+                    FilledIconButton(
+                        onClick = onAddClick,
+                        modifier = Modifier
+                            .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
+                            .animateEnterExit(
+                                enter = crossfadeIn(),
+                                exit = fadeOut(tween(50))
+                            )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = stringResource(Res.string.action_add)
                         )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(Res.string.action_add)
-                    )
+                    }
                 }
             }
         }
@@ -398,15 +441,19 @@ fun SharedTransitionScope.MealCard(
                             proteinsLabel = proteinsLabel,
                             carbohydratesLabel = carbohydratesLabel,
                             fatsLabel = fatsLabel,
-                            modifier = Modifier.sharedBounds(
-                                sharedContentState = rememberSharedContentState(
-                                    key = MealHeaderTransitionKeys.MealNutrients(
-                                        mealId = meal.id,
-                                        epochDay = epochDay
-                                    )
-                                ),
-                                animatedVisibilityScope = animatedVisibilityScope
-                            )
+                            modifier = if (animatedVisibilityScope != null) {
+                                Modifier.sharedBounds(
+                                    sharedContentState = rememberSharedContentState(
+                                        key = MealHeaderTransitionKeys.MealNutrients(
+                                            mealId = meal.id,
+                                            epochDay = epochDay
+                                        )
+                                    ),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                            } else {
+                                Modifier
+                            }
                         )
 
                         Spacer(Modifier.weight(1f))
