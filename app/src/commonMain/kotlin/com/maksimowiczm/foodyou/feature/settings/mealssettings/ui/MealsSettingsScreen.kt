@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -225,6 +226,10 @@ fun MealsSettingsScreen(
                     state = reorderableLazyListState,
                     key = cardState.meal.id
                 ) { isDragging ->
+
+                    val tonalElevation by animateDpAsState(if (isDragging) 16.dp else 0.dp)
+                    val shadowElevation by animateDpAsState(if (isDragging) 16.dp else 0.dp)
+
                     MealCard(
                         state = cardState,
                         formatTime = formatTime,
@@ -232,8 +237,7 @@ fun MealsSettingsScreen(
                             onUpdateMeal(cardState.intoMeal())
                             hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                         },
-                        shouldShowDeleteDialog = true,
-                        onDelete = {
+                        shouldShowDeleteDialog = true, onDelete = {
                             onDeleteMeal(cardState.meal)
                         },
                         modifier = Modifier.padding(horizontal = 8.dp).semantics {
@@ -277,6 +281,8 @@ fun MealsSettingsScreen(
                         } else {
                             MealCardDefaults.colors()
                         },
+                        tonalElevation = tonalElevation,
+                        shadowElevation = shadowElevation,
                         action = if (isReordering) {
                             {
                                 IconButton(

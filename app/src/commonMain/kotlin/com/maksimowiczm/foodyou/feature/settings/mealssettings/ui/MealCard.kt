@@ -56,6 +56,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
@@ -72,6 +73,8 @@ fun MealCard(
     modifier: Modifier = Modifier,
     colors: MealCardColors = MealCardDefaults.colors(),
     shape: Shape = MealCardDefaults.shape,
+    tonalElevation: Dp = 0.dp,
+    shadowElevation: Dp = 0.dp,
     action: (@Composable () -> Unit)? = null
 ) {
     val nameInput: @Composable RowScope.() -> Unit = {
@@ -344,7 +347,9 @@ fun MealCard(
     Surface(
         modifier = modifier,
         color = surfaceColor,
-        shape = shape
+        shape = shape,
+        tonalElevation = tonalElevation,
+        shadowElevation = shadowElevation
     ) {
         CompositionLocalProvider(
             LocalContentColor provides contentColor
