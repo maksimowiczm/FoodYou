@@ -44,6 +44,7 @@ import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -125,10 +126,14 @@ fun MealCard(
         )
     }
 
-    val actionButtonState = when {
-        state.nameInput.value.text.isEmpty() -> ActionButtonState.Delete
-        state.isDirty -> ActionButtonState.Save
-        else -> ActionButtonState.Delete
+    val actionButtonState by remember(state.nameInput, state.isDirty) {
+        derivedStateOf {
+            when {
+                state.nameInput.value.text.isEmpty() -> ActionButtonState.Delete
+                state.isDirty -> ActionButtonState.Save
+                else -> ActionButtonState.Delete
+            }
+        }
     }
 
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
