@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -24,15 +23,12 @@ import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopSearchBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.TextRange
 import com.maksimowiczm.foodyou.data.model.ProductQuery
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -50,20 +46,24 @@ fun SearchTopBar(
     val scope = rememberCoroutineScope()
 
     val onSearchInternal: (String) -> Unit = {
+        state.textFieldState.setTextAndPlaceCursorAtEnd(it)
         onSearch(it)
         scope.launch { state.searchBarState.animateToCollapsed() }
     }
 
-    val textFieldState = mirroredTextFieldState(state.query)
+    val onClearInternal = {
+        state.textFieldState.setTextAndPlaceCursorAtEnd("")
+        onClearSearch()
+    }
 
     TopSearchBar(
         state = state.searchBarState,
         inputField = {
             InputField(
-                textFieldState = textFieldState,
+                textFieldState = state.textFieldState,
                 state = state,
                 onSearch = onSearchInternal,
-                onClear = onClearSearch,
+                onClear = onClearInternal,
                 onBarcodeScanner = onBarcodeScanner,
                 onBack = onBack,
                 scope = scope,
@@ -77,10 +77,10 @@ fun SearchTopBar(
         state = state.searchBarState,
         inputField = {
             InputField(
-                textFieldState = textFieldState,
+                textFieldState = state.textFieldState,
                 state = state,
                 onSearch = onSearchInternal,
-                onClear = onClearSearch,
+                onClear = onClearInternal,
                 onBarcodeScanner = onBarcodeScanner,
                 onBack = onBack,
                 scope = scope,
@@ -91,7 +91,7 @@ fun SearchTopBar(
         SearchResults(
             state = state,
             onSearch = onSearchInternal,
-            onQueryClick = { textFieldState.setTextAndPlaceCursorAtEnd(it.query) },
+            onQueryClick = { state.textFieldState.setTextAndPlaceCursorAtEnd(it.query) },
             modifier = Modifier.testTag("SearchResults")
         )
     }
@@ -196,21 +196,4 @@ private fun SearchResults(
             )
         }
     }
-}
-
-// This might be a bit confusing because SearchViewModel contains real query and refreshes
-// the SearchTopBarState but SearchBarDefaults.InputField requires TextFieldState to be passed
-// so we need to keep TextFieldState in sync using this thing.
-@Composable
-private fun mirroredTextFieldState(query: String): TextFieldState {
-    val textFieldState = rememberTextFieldState(
-        initialText = query,
-        initialSelection = TextRange(query.length)
-    )
-
-    LaunchedEffect(query) {
-        textFieldState.setTextAndPlaceCursorAtEnd(query)
-    }
-
-    return textFieldState
 }
