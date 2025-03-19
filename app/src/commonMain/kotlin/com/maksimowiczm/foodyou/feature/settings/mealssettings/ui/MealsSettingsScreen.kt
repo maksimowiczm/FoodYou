@@ -2,10 +2,7 @@ package com.maksimowiczm.foodyou.feature.settings.mealssettings.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -53,7 +50,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.data.model.Meal
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.card.MealsCard
 import com.maksimowiczm.foodyou.ui.ext.performToggle
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
@@ -305,81 +301,34 @@ fun MealsSettingsScreen(
             }
 
             item {
-                TimeBasedSettingsWithPreview(
-                    meals = meals,
-                    useTimeBasedSorting = useTimeBasedSorting,
-                    formatTime = formatTime,
-                    onToggleTimeBasedSorting = onToggleTimeBasedSorting,
-                    hapticFeedback = hapticFeedback
-                )
-            }
+                val toggle = { newState: Boolean ->
+                    onToggleTimeBasedSorting(newState)
+                    hapticFeedback.performToggle(newState)
+                }
 
-            item {
-                Spacer(Modifier.height(8.dp))
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(Res.string.action_use_time_based_sorting)
+                        )
+                    },
+                    modifier = Modifier.clickable { toggle(!useTimeBasedSorting) },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(
+                                Res.string.description_time_based_meals_sorting
+                            )
+                        )
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = useTimeBasedSorting,
+                            onCheckedChange = toggle
+                        )
+                    }
+                )
             }
         }
-    }
-}
-
-@Composable
-private fun TimeBasedSettingsWithPreview(
-    meals: List<Meal>,
-    useTimeBasedSorting: Boolean,
-    formatTime: (LocalTime) -> String,
-    onToggleTimeBasedSorting: (Boolean) -> Unit,
-    hapticFeedback: HapticFeedback
-) {
-    val toggle = { newState: Boolean ->
-        onToggleTimeBasedSorting(newState)
-        hapticFeedback.performToggle(newState)
-    }
-
-    Column {
-        Text(
-            text = stringResource(Res.string.headline_other),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
-        ListItem(
-            headlineContent = {
-                Text(
-                    text = stringResource(Res.string.action_use_time_based_sorting)
-                )
-            },
-            modifier = Modifier.clickable { toggle(!useTimeBasedSorting) },
-            supportingContent = {
-                Text(
-                    text = stringResource(
-                        Res.string.description_time_based_meals_sorting
-                    )
-                )
-            },
-            trailingContent = {
-                Switch(
-                    checked = useTimeBasedSorting,
-                    onCheckedChange = toggle
-                )
-            }
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        Text(
-            text = stringResource(Res.string.headline_preview),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        MealsCard(
-            meals = meals,
-            formatTime = formatTime,
-            useTimeBasedSorting = useTimeBasedSorting
-        )
     }
 }
 
