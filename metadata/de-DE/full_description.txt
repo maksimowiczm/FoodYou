@@ -1,0 +1,15 @@
+<b>FoodYou</b> ist eine moderne App zur Kalorienerfassung, die in der Material-You-Ästhetik entwickelt wurde. Es wurde entwickelt, um die Kalorienerfassung einfacher und optisch ansprechender zu gestalten.
+
+<b>Merkmale:</b>
+<ul>
+    <li><b>Material Sie Design:</b> Dynamische Thematisierung für ein zusammenhängendes und visuell ansprechendes Erlebnis.</li>
+    <li><b>Interaktive Startseite:</b> Schneller Zugriff auf die wichtigsten Funktionen über eine kartenbasierte Schnittstelle.</li>
+    <li><b>Open Food Facts Integration:</b> Erhalte genaue Lebensmitteldaten für eine präzise Kalorienverfolgung.</li>
+    <li><b>Rand-zu-Rand-Layout:</b> Genieße ein intensiveres Erlebnis mit einem bildschirmfüllenden Design.</li>
+    <li><b>Vorhersagende Rückwärtsfunktion:</b> Ein nahtloses Navigationserlebnis mit vorhersagendem Rückwärtsgang.</li>
+    <li><b>Anpassbar & Open-Source:</b> Entwickelt, um erweiterbar zu sein und von der Community unterstützt zu werden, damit du etwas beitragen und verändern kannst.</li>
+</ul>
+
+Beginne noch heute, deine Kalorien mit FoodYou zu erfassen!
+
+Startsymbol erstellt <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Symbole8</a>
