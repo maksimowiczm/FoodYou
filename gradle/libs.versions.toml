@@ -1,6 +1,6 @@
 [versions]
-version-name = "1.1.0"
-android-versionCode = "3"
+version-name = "1.2.0"
+android-versionCode = "4"
 android-compileSdk = "35"
 android-minSdk = "26"
 android-targetSdk = "35"
