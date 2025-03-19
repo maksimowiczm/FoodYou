@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.search
 
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBarState
 import androidx.compose.material3.SearchBarValue
@@ -7,6 +9,7 @@ import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.text.TextRange
 import com.maksimowiczm.foodyou.data.model.ProductQuery
 
 /**
@@ -21,16 +24,20 @@ fun rememberSearchTopBarState(
     query: String? = null,
     recentQueries: List<ProductQuery> = emptyList()
 ): SearchTopBarState {
+    val query = query ?: ""
+
     val searchBarState = rememberSearchBarState(
         initialValue = if (initialExpanded) SearchBarValue.Expanded else SearchBarValue.Collapsed
     )
 
-    return remember(
-        query,
-        recentQueries
-    ) {
+    val textFieldState = rememberTextFieldState(
+        initialText = query,
+        initialSelection = TextRange(query.length)
+    )
+
+    return remember(recentQueries) {
         SearchTopBarState(
-            query = query ?: "",
+            textFieldState = textFieldState,
             searchBarState = searchBarState,
             recentQueries = recentQueries
         )
@@ -40,7 +47,7 @@ fun rememberSearchTopBarState(
 @OptIn(ExperimentalMaterial3Api::class)
 @Stable
 class SearchTopBarState(
-    val query: String,
+    val textFieldState: TextFieldState,
     val searchBarState: SearchBarState,
     val recentQueries: List<ProductQuery>
 )
