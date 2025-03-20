@@ -1,17 +1,17 @@
 package com.maksimowiczm.foodyou.data
 
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
 interface DateProvider {
     /**
-     * Returns a [StateFlow] that emits the current date at midnight.
+     * Returns a [Flow] that emits the current date and updates it at midnight.
      */
-    fun observeDate(): StateFlow<LocalDate>
+    fun observeDate(): Flow<LocalDate>
 
     /**
-     * Returns a [StateFlow] that emits the current time every minute.
+     * Returns a [Flow] that emits the current time and updates it every minute.
      */
-    fun observeMinutes(): StateFlow<LocalTime>
+    fun observeMinutes(): Flow<LocalTime>
 }

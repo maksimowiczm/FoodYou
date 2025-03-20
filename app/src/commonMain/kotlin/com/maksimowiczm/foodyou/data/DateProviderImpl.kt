@@ -1,14 +1,9 @@
 package com.maksimowiczm.foodyou.data
 
 import co.touchlab.kermit.Logger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -20,13 +15,11 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 
-internal class DateProviderImpl(
-    private val coroutineScope: CoroutineScope = CoroutineScope(
-        SupervisorJob() + Dispatchers.Default
-    )
-) : DateProvider {
-    override fun observeDate(): StateFlow<LocalDate> = flow {
+internal class DateProviderImpl : DateProvider {
+    override fun observeDate(): Flow<LocalDate> = flow {
         var currentDate = getCurrentDateTime().date
+
+        emit(currentDate)
 
         while (true) {
             val now = Clock.System.now()
@@ -51,13 +44,9 @@ internal class DateProviderImpl(
                 emit(currentDate)
             }
         }
-    }.stateIn(
-        scope = coroutineScope,
-        started = SharingStarted.WhileSubscribed(2000),
-        initialValue = getCurrentDateTime().date
-    )
+    }
 
-    override fun observeMinutes(): StateFlow<LocalTime> = flow {
+    override fun observeMinutes(): Flow<LocalTime> = flow {
         while (true) {
             val time = getCurrentDateTime().time
             emit(time)
@@ -66,11 +55,7 @@ internal class DateProviderImpl(
             val secondsUntilNextMinute = 60 - time.second
             delay(secondsUntilNextMinute * 1000L)
         }
-    }.stateIn(
-        scope = coroutineScope,
-        started = SharingStarted.WhileSubscribed(2000),
-        initialValue = getCurrentDateTime().time
-    )
+    }
 
     private fun getCurrentDateTime(): LocalDateTime =
         Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())

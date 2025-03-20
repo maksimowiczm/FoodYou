@@ -14,7 +14,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class MealsCardViewModel(
     diaryRepository: DiaryRepository,
@@ -24,7 +27,11 @@ class MealsCardViewModel(
 ) : DiaryViewModel(
     diaryRepository
 ) {
-    val time = dateProvider.observeMinutes()
+    val time = dateProvider.observeMinutes().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).time
+    )
 
     val useTimeBasedSorting = dataStore
         .observe(DiaryPreferences.timeBasedSorting)
