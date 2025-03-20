@@ -25,6 +25,8 @@
     <string name="headline_share_your_thoughts">Podziel się swoimi przemyśleniami</string>
     <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Pokaż swoje wsparcie</string>
     <string name="headline_clear_cache">Wyczyść pamięć podręczną</string>
+    <string name="headline_all_day" description="All-day (meal)">Cały dzień</string>
+    <string name="headline_time_based_ordering">Kolejność oparta na czasie</string>
     <string name="headline_remote_food_database">Zdalna baza danych żywności</string>
     <string name="open_food_facts_disclaimer">Open Food Facts to projekt tworzony przez społeczność. Dane mogą być niekompletne, nieaktualne lub nieprecyzyjne. Ta aplikacja nie odpowiada za ich poprawność. Weryfikuj informacje przed użyciem.</string>
     <string name="in_x_times_y">W %1$s x %2$s</string>
@@ -102,6 +104,11 @@
     <string name="action_feature_request_on_github">Zgłoś sugestię na GitHubie</string>
     <string name="action_leave_a_star_on_github">Zostaw gwiazdkę na GitHubie</string>
     <string name="action_show_calendar">Pokaż kalendarz</string>
+    <string name="action_reorder">Zmień kolejność</string>
+    <string name="action_move_up" description="reorder list item up">Przesuń w górę</string>
+    <string name="action_move_down" description="reorder list item down">Przesuń w dół</string>
+    <string name="action_use_time_based_ordering">Używaj kolejności opartej na czasie</string>
+    <string name="action_include_all_day_meals">Uwzględnij całodniowe posiłki</string>
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
@@ -154,6 +161,8 @@
     <string name="description_share_your_thoughts">Jeśli masz jakiekolwiek uwagi, propozycje funkcji lub zgłoszenia błędów, daj mi znać! Chętnie wysłucham Twojej opinii.</string>
     <string name="description_open_food_facts_clear_query_cache">Wyczyść pamięć podręczną zapytań Open Food Facts</string>
     <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">Wyczyszczenie pamięci podręcznej spowoduje ponowne pełne pobranie bazy danych. Nie zaleca się czyszczenia pamięci podręcznej, chyba że wiesz, co robisz.</string>
+    <string name="description_time_based_meals_sorting">Gdy włączone, posiłki trwające w danym momencie będą wyświetlane jako pierwsze</string>
+    <string name="description_action_include_all_day_meals">Całodniowe posiłki zostaną uwzględnione w aktualnej liście posiłków</string>
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Zobacz inne świetne ikony tutaj</string>
     <string name="link_open_food_facts">https://pl.openfoodfacts.org/</string>

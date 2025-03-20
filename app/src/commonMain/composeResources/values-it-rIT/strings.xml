@@ -18,7 +18,7 @@
     <string name="headline_authors">Autori</string>
     <string name="headline_system">Sistema</string>
     <string name="headline_system_language_settings">Impostazioni lingua di sistema</string>
-    <string name="headline_secure_screen">Secure screen</string>
+    <string name="headline_secure_screen">Protezione schermo</string>
     <string name="headline_about">Informazioni</string>
     <string name="headline_miscellaneous">Varie</string>
     <string name="headline_version">Versione</string>
@@ -86,10 +86,10 @@
     <string name="action_enable">Abilita</string>
     <string name="action_don_t_show_again">Non mostrare più</string>
     <string name="action_translate">Traduci</string>
-    <string name="action_enable_camera_flash">Enable camera flash</string>
-    <string name="action_disable_camera_flash">Disable camera flash</string>
-    <string name="action_prevent_screen_capture">Prevent screen capture</string>
-    <string name="action_go_to_today">Go to today</string>
+    <string name="action_enable_camera_flash">Attiva il flash della fotocamera</string>
+    <string name="action_disable_camera_flash">Disattiva il flash della fotocamera</string>
+    <string name="action_prevent_screen_capture">Impedisci l\'acquisizione dello schermo</string>
+    <string name="action_go_to_today">Vai a oggi</string>
     <string name="action_read_more">Leddi di più</string>
     <string name="action_select_country">Seleziona nazione</string>
     <string name="action_use_open_food_facts">Utilizza Open Food Facts</string>
@@ -97,7 +97,7 @@
     <string name="action_bug_report_on_github">Segnala un bug su GitHub</string>
     <string name="action_feature_request_on_github">Richiedi funzionalità su GitHub</string>
     <string name="action_leave_a_star_on_github">Lascia una stella su GitHub</string>
-    <string name="action_show_calendar">Show calendar</string>
+    <string name="action_show_calendar">Mostra calendario</string>
     <string name="neutral_barcode_scanner_camera_request">Permetti l\'accesso alla tua fotocamera per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Devi permettere l\'accesso per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L\'autorizzazione alla fotocamera è necessaria per scansionare i codici a barre. Per favore, concedila nelle impostazioni dell\'app.</string>
