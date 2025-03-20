@@ -1,0 +1,12 @@
+New Features
+- all day meals 
+- meals reordering
+
+Fixed bugs
+- clear button resets search properly
+- calendar properly refreshes today's date
+
+Translations
+- corrected English wording
+- added German
+- added Danish
