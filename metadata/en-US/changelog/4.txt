@@ -4,6 +4,7 @@ New Features
 
 Fixed bugs
 - clear button resets search properly
+- calendar properly refreshes today's date
 
 Translations
 - corrected English wording
