@@ -16,13 +16,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.UnfoldLess
+import androidx.compose.material.icons.filled.UnfoldMore
+import androidx.compose.material.icons.filled.UnfoldMoreDouble
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,13 +55,18 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
-import kotlin.math.abs
-import kotlin.math.max
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.math.abs
+import kotlin.math.max
+
+private enum class CaloriesCardState {
+    Compact,
+    Default,
+    Expanded
+}
 
 @Composable
 fun CaloriesCard(
@@ -85,6 +98,8 @@ fun CaloriesCard(
 
 @Composable
 private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
+    var state by rememberSaveable { mutableStateOf(CaloriesCardState.Default) }
+
     val calories = diaryDay.totalCalories
     val goal = diaryDay.dailyGoals.calories
     val valueStatus by remember(calories, goal) {
@@ -129,7 +144,14 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
     val animatedFats by animateFloatAsState(diaryDay.totalCaloriesFats.toFloat())
 
     FoodYouHomeCard(
-        modifier = modifier
+        modifier = modifier,
+        onClick = {
+            state = when (state) {
+                CaloriesCardState.Compact -> CaloriesCardState.Default
+                CaloriesCardState.Default -> CaloriesCardState.Expanded
+                CaloriesCardState.Expanded -> CaloriesCardState.Compact
+            }
+        }
     ) {
         Column(
             modifier = Modifier
@@ -137,10 +159,23 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
                 .animateContentSize()
                 .padding(16.dp)
         ) {
-            Text(
-                text = stringResource(Res.string.unit_calories),
-                style = MaterialTheme.typography.titleLarge
-            )
+            Row {
+                Text(
+                    text = stringResource(Res.string.unit_calories),
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(Modifier.weight(1f))
+
+                Icon(
+                    imageVector = when (state) {
+                        CaloriesCardState.Compact -> Icons.Default.UnfoldLess
+                        CaloriesCardState.Default -> Icons.Default.UnfoldMore
+                        CaloriesCardState.Expanded -> Icons.Default.UnfoldMoreDouble
+                    },
+                    contentDescription = null
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
 
