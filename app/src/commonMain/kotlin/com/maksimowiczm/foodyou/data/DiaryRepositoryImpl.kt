@@ -27,7 +27,7 @@ class DiaryRepositoryImpl(
 ) : DiaryRepository {
 
     override fun observeDailyGoals(): Flow<DailyGoals> {
-        val nutrimentGoals = combine(
+        val nutrientGoal = combine(
             dataStore.observe(DiaryPreferences.proteinsGoal),
             dataStore.observe(DiaryPreferences.carbohydratesGoal),
             dataStore.observe(DiaryPreferences.fatsGoal)
@@ -41,7 +41,7 @@ class DiaryRepositoryImpl(
 
         return combine(
             dataStore.observe(DiaryPreferences.caloriesGoal),
-            nutrimentGoals
+            nutrientGoal
         ) { calories, nutrients ->
             if (nutrients == null || calories == null) {
                 return@combine defaultGoals()

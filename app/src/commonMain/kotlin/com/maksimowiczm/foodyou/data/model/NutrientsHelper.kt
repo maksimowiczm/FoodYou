@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.data.model
 
-object NutrimentHelper {
+object NutrientsHelper {
     const val PROTEINS = 4
     const val CARBOHYDRATES = 4
     const val FATS = 9
