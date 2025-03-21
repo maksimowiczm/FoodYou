@@ -6,18 +6,16 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
-import com.maksimowiczm.foodyou.database.callback.InitializeMealsCallback
-import com.maksimowiczm.foodyou.database.converter.ProductSourceConverter
-import com.maksimowiczm.foodyou.database.converter.WeightMeasurementTypeConverter
-import com.maksimowiczm.foodyou.database.converter.WeightUnitConverter
-import com.maksimowiczm.foodyou.database.dao.AddFoodDao
-import com.maksimowiczm.foodyou.database.dao.OpenFoodFactsDao
-import com.maksimowiczm.foodyou.database.dao.ProductDao
-import com.maksimowiczm.foodyou.database.entity.MealEntity
-import com.maksimowiczm.foodyou.database.entity.OpenFoodFactsPagingKey
-import com.maksimowiczm.foodyou.database.entity.ProductEntity
-import com.maksimowiczm.foodyou.database.entity.ProductQueryEntity
-import com.maksimowiczm.foodyou.database.entity.WeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
+import com.maksimowiczm.foodyou.feature.diary.database.callback.InitializeMealsCallback
+import com.maksimowiczm.foodyou.feature.diary.database.converter.ProductSourceConverter
+import com.maksimowiczm.foodyou.feature.diary.database.converter.WeightMeasurementTypeConverter
+import com.maksimowiczm.foodyou.feature.diary.database.converter.WeightUnitConverter
+import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
+import com.maksimowiczm.foodyou.feature.diary.database.entity.OpenFoodFactsPagingKey
+import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
+import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
+import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
 
 @Database(
     entities = [
@@ -35,11 +33,9 @@ import com.maksimowiczm.foodyou.database.entity.WeightMeasurementEntity
     ProductSourceConverter::class,
     WeightMeasurementTypeConverter::class
 )
-abstract class OpenSourceDatabase : RoomDatabase() {
-    abstract fun addFoodDao(): AddFoodDao
-    abstract fun productDao(): ProductDao
-    abstract fun openFoodFactsDao(): OpenFoodFactsDao
-
+abstract class OpenSourceDatabase :
+    RoomDatabase(),
+    DiaryDatabase {
     companion object {
         const val VERSION = 2
 

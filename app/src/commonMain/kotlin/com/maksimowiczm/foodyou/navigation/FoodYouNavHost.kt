@@ -18,8 +18,7 @@ data object Settings
 
 @Composable
 fun FoodYouNavHost(
-    homeFeatures: List<Feature.Home>,
-    settingsFeatures: List<Feature.Settings>,
+    features: List<Feature>,
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
@@ -29,7 +28,7 @@ fun FoodYouNavHost(
         crossfadeComposable<Home> {
             HomeScreen(
                 animatedVisibilityScope = this,
-                homeFeatures = homeFeatures.map { it.build(navController) },
+                homeFeatures = features.flatMap { it.buildHomeFeatures(navController) },
                 onSettingsClick = {
                     navController.navigate(
                         route = Settings,
@@ -42,7 +41,7 @@ fun FoodYouNavHost(
         }
         forwardBackwardComposable<Settings> {
             SettingsScreen(
-                settingsFeatures = settingsFeatures.map {
+                settingsFeatures = features.flatMap {
                     it.buildSettingsFeatures(navController)
                 },
                 onBack = {
@@ -53,12 +52,7 @@ fun FoodYouNavHost(
                 }
             )
         }
-        homeFeatures.forEach { feature ->
-            feature.run {
-                graph(navController)
-            }
-        }
-        settingsFeatures.forEach { feature ->
+        features.forEach { feature ->
             feature.run {
                 graph(navController)
             }

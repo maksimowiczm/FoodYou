@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.lifecycleScope
-import com.maksimowiczm.foodyou.data.preferences.SecurityPreferences
 import com.maksimowiczm.foodyou.feature.FeatureManager
+import com.maksimowiczm.foodyou.feature.security.data.SecurityPreferences
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.ui.FoodYouApp
 import kotlinx.coroutines.flow.collectLatest
@@ -31,8 +31,7 @@ class FoodYouMainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContent {
             FoodYouApp(
-                homeFeatures = featureManager.get(),
-                settingsFeatures = featureManager.get()
+                features = featureManager.get()
             )
         }
     }

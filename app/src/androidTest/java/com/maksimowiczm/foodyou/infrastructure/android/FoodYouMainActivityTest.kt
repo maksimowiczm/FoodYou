@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.lifecycleScope
 import androidx.test.core.app.launchActivity
-import com.maksimowiczm.foodyou.data.preferences.SecurityPreferences
+import com.maksimowiczm.foodyou.feature.security.data.SecurityPreferences
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield

@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.ui.preview
 
-import com.maksimowiczm.foodyou.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 class WeightMeasurementPreviewParameter : PreviewParameterProvider<WeightMeasurement> {

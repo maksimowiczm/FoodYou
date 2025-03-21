@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.ui.preview
 
-import com.maksimowiczm.foodyou.data.model.Nutrients
-import com.maksimowiczm.foodyou.data.model.Product
-import com.maksimowiczm.foodyou.data.model.ProductSource
-import com.maksimowiczm.foodyou.data.model.WeightUnit
+import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrients
+import com.maksimowiczm.foodyou.feature.diary.data.model.Product
+import com.maksimowiczm.foodyou.feature.diary.data.model.ProductSource
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightUnit
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 class ProductPreviewParameterProvider : PreviewParameterProvider<Product> {

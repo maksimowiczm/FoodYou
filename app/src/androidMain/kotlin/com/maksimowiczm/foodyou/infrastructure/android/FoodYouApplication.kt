@@ -3,16 +3,13 @@ package com.maksimowiczm.foodyou.infrastructure.android
 import android.app.Application
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.FeatureManager
-import com.maksimowiczm.foodyou.feature.home.calendarcard.CalendarCard
-import com.maksimowiczm.foodyou.feature.home.caloriescard.CaloriesCard
-import com.maksimowiczm.foodyou.feature.home.mealscard.MealsCard
-import com.maksimowiczm.foodyou.feature.settings.aboutsettings.AboutSettings
-import com.maksimowiczm.foodyou.feature.settings.goalssettings.GoalsSettings
-import com.maksimowiczm.foodyou.feature.settings.language.LanguageSettings
-import com.maksimowiczm.foodyou.feature.settings.language.ui.AndroidTrailingContent
-import com.maksimowiczm.foodyou.feature.settings.mealssettings.MealsSettings
-import com.maksimowiczm.foodyou.feature.settings.openfoodfactssettings.OpenFoodFactsSettings
-import com.maksimowiczm.foodyou.feature.settings.security.SecureScreenSettings
+import com.maksimowiczm.foodyou.feature.about.AboutSettings
+import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
+import com.maksimowiczm.foodyou.feature.diary.DiaryFeature
+import com.maksimowiczm.foodyou.feature.language.LanguageFeature
+import com.maksimowiczm.foodyou.feature.language.ui.AndroidTrailingContent
+import com.maksimowiczm.foodyou.feature.security.SecurityFeature
+import com.maksimowiczm.foodyou.feature.system.SystemFeature
 import com.maksimowiczm.foodyou.infrastructure.di.initKoin
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
@@ -25,20 +22,12 @@ class FoodYouApplication :
     Application(),
     KoinComponent {
     fun FeatureManager.setupFeatures() {
-        addHomeFeature(
+        addFeature(
+            SystemFeature,
             CalendarCard,
-            MealsCard(
-                searchHintBuilder = OpenFoodFactsSettings
-            ),
-            CaloriesCard
-        )
-
-        addSettingsFeature(
-            OpenFoodFactsSettings,
-            MealsSettings,
-            GoalsSettings,
-            SecureScreenSettings,
-            LanguageSettings(
+            DiaryFeature,
+            SecurityFeature,
+            LanguageFeature(
                 languageSettingsTrailingContent = { modifier ->
                     AndroidTrailingContent(modifier)
                 }
@@ -55,7 +44,9 @@ class FoodYouApplication :
             setupFeatures()
         }
 
-        initKoin {
+        initKoin(
+            features = featureManager.features
+        ) {
             androidContext(this@FoodYouApplication.applicationContext)
             modules(featureManager.intoModule(this))
         }

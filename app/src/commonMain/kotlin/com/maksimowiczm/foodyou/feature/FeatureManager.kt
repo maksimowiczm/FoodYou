@@ -7,11 +7,7 @@ class FeatureManager {
     private val _features = mutableListOf<Feature>()
     val features: List<Feature> = _features
 
-    fun addHomeFeature(vararg feature: Feature.Home) {
-        _features.addAll(feature)
-    }
-
-    fun addSettingsFeature(vararg feature: Feature.Settings) {
+    fun addFeature(vararg feature: Feature) {
         _features.addAll(feature)
     }
 

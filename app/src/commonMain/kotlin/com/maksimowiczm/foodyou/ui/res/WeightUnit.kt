@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.ui.res
 
 import androidx.compose.runtime.Composable
-import com.maksimowiczm.foodyou.data.model.WeightUnit
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightUnit
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.pluralStringResource

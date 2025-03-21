@@ -7,7 +7,7 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import com.maksimowiczm.foodyou.feature.home.mealscard.ui.app.LocalMealSharedTransitionScope
+import com.maksimowiczm.foodyou.feature.diary.ui.LocalMealSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
 
 /**

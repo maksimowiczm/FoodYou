@@ -25,7 +25,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.maksimowiczm.foodyou.feature.settings.SettingsFeature
+import com.maksimowiczm.foodyou.feature.SettingsFeature
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

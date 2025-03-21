@@ -47,7 +47,7 @@ fun rememberHomeState(
 
 @Stable
 class HomeState(initialSelectedDate: LocalDate, override val shimmer: Shimmer) :
-    com.maksimowiczm.foodyou.feature.home.HomeState {
+    com.maksimowiczm.foodyou.feature.HomeState {
     override var selectedDate by mutableStateOf(initialSelectedDate)
         private set
 

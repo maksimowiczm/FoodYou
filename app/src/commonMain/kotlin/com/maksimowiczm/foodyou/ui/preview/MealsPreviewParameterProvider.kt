@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.ui.preview
 
-import com.maksimowiczm.foodyou.data.model.Meal
+import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
