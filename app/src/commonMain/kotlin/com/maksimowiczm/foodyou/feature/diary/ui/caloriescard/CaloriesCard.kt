@@ -144,7 +144,7 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
     val animatedFats by animateFloatAsState(diaryDay.totalCaloriesFats.toFloat())
 
     FoodYouHomeCard(
-        modifier = modifier,
+        modifier = modifier.animateContentSize(),
         onClick = {
             state = when (state) {
                 CaloriesCardState.Compact -> CaloriesCardState.Default
@@ -243,31 +243,33 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
                 )
             }
 
-            Spacer(Modifier.height(16.dp))
+            if (state != CaloriesCardState.Compact) {
+                Spacer(Modifier.height(16.dp))
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                NutrientIndicator(
-                    title = stringResource(Res.string.nutriment_proteins),
-                    value = diaryDay.totalProteins,
-                    goal = diaryDay.dailyGoals.proteinsAsGrams,
-                    progressColor = nutrientsPalette.proteinsOnSurfaceContainer
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    NutrientIndicator(
+                        title = stringResource(Res.string.nutriment_proteins),
+                        value = diaryDay.totalProteins,
+                        goal = diaryDay.dailyGoals.proteinsAsGrams,
+                        progressColor = nutrientsPalette.proteinsOnSurfaceContainer
+                    )
 
-                NutrientIndicator(
-                    title = stringResource(Res.string.nutriment_carbohydrates),
-                    value = diaryDay.totalCarbohydrates,
-                    goal = diaryDay.dailyGoals.carbohydratesAsGrams,
-                    progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
-                )
+                    NutrientIndicator(
+                        title = stringResource(Res.string.nutriment_carbohydrates),
+                        value = diaryDay.totalCarbohydrates,
+                        goal = diaryDay.dailyGoals.carbohydratesAsGrams,
+                        progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
+                    )
 
-                NutrientIndicator(
-                    title = stringResource(Res.string.nutriment_fats),
-                    value = diaryDay.totalFats,
-                    goal = diaryDay.dailyGoals.fatsAsGrams,
-                    progressColor = nutrientsPalette.fatsOnSurfaceContainer
-                )
+                    NutrientIndicator(
+                        title = stringResource(Res.string.nutriment_fats),
+                        value = diaryDay.totalFats,
+                        goal = diaryDay.dailyGoals.fatsAsGrams,
+                        progressColor = nutrientsPalette.fatsOnSurfaceContainer
+                    )
+                }
             }
         }
     }
