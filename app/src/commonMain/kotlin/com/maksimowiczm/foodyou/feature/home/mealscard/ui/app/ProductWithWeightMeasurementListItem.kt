@@ -1,20 +1,27 @@
 package com.maksimowiczm.foodyou.feature.home.mealscard.ui.app
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.data.model.ProductWithWeightMeasurement
 import com.maksimowiczm.foodyou.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
+import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlin.math.max
@@ -44,12 +51,21 @@ fun ProductWithWeightMeasurement.ListItem(
             }
         },
         supportingContent = {
-            SupportingTextLayout(
-                measurementString = measurementString,
-                measurementStringShort = measurementStringShort,
-                caloriesString = caloriesString,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column {
+                NutrientsRow(
+                    proteins = proteins,
+                    carbohydrates = carbohydrates,
+                    fats = fats,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                MeasurementSummaryLayout(
+                    measurementString = measurementString,
+                    measurementStringShort = measurementStringShort,
+                    caloriesString = caloriesString,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         },
         trailingContent = trailingContent,
         colors = colors
@@ -57,7 +73,41 @@ fun ProductWithWeightMeasurement.ListItem(
 }
 
 @Composable
-private fun SupportingTextLayout(
+private fun NutrientsRow(
+    proteins: Int,
+    carbohydrates: Int,
+    fats: Int,
+    modifier: Modifier = Modifier
+) {
+    val nutrientsPalette = LocalNutrientsPalette.current
+
+    CompositionLocalProvider(
+        LocalTextStyle provides MaterialTheme.typography.labelMedium
+    ) {
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = proteins.toString() + " " + stringResource(Res.string.unit_gram_short),
+                color = nutrientsPalette.proteinsOnSurfaceContainer
+            )
+
+            Text(
+                text = carbohydrates.toString() + " " + stringResource(Res.string.unit_gram_short),
+                color = nutrientsPalette.carbohydratesOnSurfaceContainer
+            )
+
+            Text(
+                text = fats.toString() + " " + stringResource(Res.string.unit_gram_short),
+                color = nutrientsPalette.fatsOnSurfaceContainer
+            )
+        }
+    }
+}
+
+@Composable
+private fun MeasurementSummaryLayout(
     measurementString: String,
     measurementStringShort: String,
     caloriesString: String,
