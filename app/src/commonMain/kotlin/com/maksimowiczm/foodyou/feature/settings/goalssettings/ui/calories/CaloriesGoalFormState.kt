@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import com.maksimowiczm.foodyou.data.model.DailyGoals
-import com.maksimowiczm.foodyou.data.model.NutrimentHelper
+import com.maksimowiczm.foodyou.data.model.NutrientsHelper
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.form.between
 import com.maksimowiczm.foodyou.ui.form.floatParser
@@ -267,7 +267,7 @@ class CaloriesGoalFormState(
             }.collectLatest { (proteinsValue, carbohydratesValue, fatsValue) ->
                 if (editing != Editing.Grams) return@collectLatest
 
-                val caloriesValue = NutrimentHelper.calculateCalories(
+                val caloriesValue = NutrientsHelper.calculateCalories(
                     proteins = proteinsValue.toFloat(),
                     carbohydrates = carbohydratesValue.toFloat(),
                     fats = fatsValue.toFloat()
@@ -275,12 +275,12 @@ class CaloriesGoalFormState(
 
                 val dailyGoals = DailyGoals(
                     calories = caloriesValue,
-                    proteins = NutrimentHelper.proteinsPercentage(caloriesValue, proteinsValue),
-                    carbohydrates = NutrimentHelper.carbohydratesPercentage(
+                    proteins = NutrientsHelper.proteinsPercentage(caloriesValue, proteinsValue),
+                    carbohydrates = NutrientsHelper.carbohydratesPercentage(
                         caloriesValue,
                         carbohydratesValue
                     ),
-                    fats = NutrimentHelper.fatsPercentage(caloriesValue, fatsValue)
+                    fats = NutrientsHelper.fatsPercentage(caloriesValue, fatsValue)
                 )
 
                 calories.onRawValueChange(caloriesValue)

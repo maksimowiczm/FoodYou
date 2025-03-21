@@ -213,21 +213,21 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                NutrimentIndicator(
+                NutrientIndicator(
                     title = stringResource(Res.string.nutriment_proteins),
                     value = diaryDay.totalProteins,
                     goal = diaryDay.dailyGoals.proteinsAsGrams,
                     progressColor = nutrientsPalette.proteinsOnSurfaceContainer
                 )
 
-                NutrimentIndicator(
+                NutrientIndicator(
                     title = stringResource(Res.string.nutriment_carbohydrates),
                     value = diaryDay.totalCarbohydrates,
                     goal = diaryDay.dailyGoals.carbohydratesAsGrams,
                     progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
                 )
 
-                NutrimentIndicator(
+                NutrientIndicator(
                     title = stringResource(Res.string.nutriment_fats),
                     value = diaryDay.totalFats,
                     goal = diaryDay.dailyGoals.fatsAsGrams,
@@ -239,7 +239,7 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun NutrimentIndicator(
+private fun NutrientIndicator(
     title: String,
     value: Int,
     goal: Int,
@@ -406,16 +406,16 @@ fun CaloriesCardSkeleton(
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                NutrimentIndicatorSkeleton(shimmerInstance)
-                NutrimentIndicatorSkeleton(shimmerInstance)
-                NutrimentIndicatorSkeleton(shimmerInstance)
+                NutrientIndicatorSkeleton(shimmerInstance)
+                NutrientIndicatorSkeleton(shimmerInstance)
+                NutrientIndicatorSkeleton(shimmerInstance)
             }
         }
     }
 }
 
 @Composable
-private fun NutrimentIndicatorSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
+private fun NutrientIndicatorSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)

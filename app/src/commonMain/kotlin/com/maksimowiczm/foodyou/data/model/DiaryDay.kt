@@ -32,17 +32,17 @@ data class DiaryDay(
 
     val totalCaloriesProteins: Int
         get() = mealProductMap.values.flatten().fold(0f) { acc, product ->
-            NutrimentHelper.proteinsToCalories(product.proteins) + acc
+            NutrientsHelper.proteinsToCalories(product.proteins) + acc
         }.roundToInt()
 
     val totalCaloriesCarbohydrates: Int
         get() = mealProductMap.values.flatten().fold(0f) { acc, product ->
-            NutrimentHelper.carbohydratesToCalories(product.carbohydrates) + acc
+            NutrientsHelper.carbohydratesToCalories(product.carbohydrates) + acc
         }.roundToInt()
 
     val totalCaloriesFats: Int
         get() = mealProductMap.values.flatten().fold(0f) { acc, product ->
-            NutrimentHelper.fatsToCalories(product.fats) + acc
+            NutrientsHelper.fatsToCalories(product.fats) + acc
         }.roundToInt()
 
     val totalProteins: Int

@@ -9,7 +9,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import com.maksimowiczm.foodyou.data.model.NutrimentHelper
+import com.maksimowiczm.foodyou.data.model.NutrientsHelper
 import com.maksimowiczm.foodyou.data.model.Product
 import com.maksimowiczm.foodyou.data.model.WeightUnit
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
@@ -400,7 +400,7 @@ class ProductFormState(
                 snapshotFlow { carbohydrates.value }.filterNotNull(),
                 snapshotFlow { fats.value }.filterNotNull()
             ) { proteins, carbohydrates, fats ->
-                NutrimentHelper.calculateCalories(
+                NutrientsHelper.calculateCalories(
                     proteins = proteins,
                     carbohydrates = carbohydrates,
                     fats = fats

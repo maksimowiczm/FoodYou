@@ -91,7 +91,7 @@ fun MacroGraph(product: Product, measurement: WeightMeasurement, modifier: Modif
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.bodyMedium
         ) {
-            NutrimentPieChart(
+            NutrientPieChart(
                 product = product,
                 weight = measurement.weight
             )
@@ -100,7 +100,7 @@ fun MacroGraph(product: Product, measurement: WeightMeasurement, modifier: Modif
 }
 
 @Composable
-private fun NutrimentPieChart(product: Product, weight: Float, modifier: Modifier = Modifier) {
+private fun NutrientPieChart(product: Product, weight: Float, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
     val sum = product.nutrients.proteins + product.nutrients.carbohydrates + product.nutrients.fats
@@ -132,19 +132,19 @@ private fun NutrimentPieChart(product: Product, weight: Float, modifier: Modifie
         Spacer(Modifier.height(8.dp))
 
         Column {
-            NutrimentLegendItem(
+            NutrientLegendItem(
                 color = nutrientsPalette.proteinsOnSurfaceContainer,
                 text = stringResource(Res.string.nutriment_proteins),
                 value = (product.nutrients.proteins * weight / 100).formatClipZeros()
             )
 
-            NutrimentLegendItem(
+            NutrientLegendItem(
                 color = nutrientsPalette.carbohydratesOnSurfaceContainer,
                 text = stringResource(Res.string.nutriment_carbohydrates),
                 value = (product.nutrients.carbohydrates * weight / 100).formatClipZeros()
             )
 
-            NutrimentLegendItem(
+            NutrientLegendItem(
                 color = nutrientsPalette.fatsOnSurfaceContainer,
                 text = stringResource(Res.string.nutriment_fats),
                 value = (product.nutrients.fats * weight / 100).formatClipZeros()
@@ -154,7 +154,7 @@ private fun NutrimentPieChart(product: Product, weight: Float, modifier: Modifie
 }
 
 @Composable
-private fun NutrimentLegendItem(
+private fun NutrientLegendItem(
     color: Color,
     text: String,
     value: String,
