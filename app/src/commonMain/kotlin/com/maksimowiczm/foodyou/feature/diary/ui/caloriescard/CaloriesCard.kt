@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -143,16 +144,10 @@ private fun CaloriesCard(
     val animatedCarbohydrates by animateFloatAsState(diaryDay.totalCaloriesCarbohydrates.toFloat())
     val animatedFats by animateFloatAsState(diaryDay.totalCaloriesFats.toFloat())
 
-    FoodYouHomeCard(
-        modifier = modifier.animateContentSize(),
-        onClick = toggleState
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize()
-                .padding(16.dp)
-        ) {
+    CaloriesCardLayout(
+        state = state,
+        toggleState = toggleState,
+        compactContent = {
             CaloriesCardHeader(
                 state = state
             ) {
@@ -227,34 +222,67 @@ private fun CaloriesCard(
                     style = MaterialTheme.typography.labelLarge
                 )
             }
+        },
+        defaultContent = {
+            Spacer(Modifier.height(16.dp))
 
-            if (state != CaloriesCardState.Compact) {
-                Spacer(Modifier.height(16.dp))
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                NutrientIndicator(
+                    title = stringResource(Res.string.nutriment_proteins),
+                    value = diaryDay.totalProteins.roundToInt(),
+                    goal = diaryDay.dailyGoals.proteinsAsGrams,
+                    progressColor = nutrientsPalette.proteinsOnSurfaceContainer
+                )
 
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    NutrientIndicator(
-                        title = stringResource(Res.string.nutriment_proteins),
-                        value = diaryDay.totalProteins.roundToInt(),
-                        goal = diaryDay.dailyGoals.proteinsAsGrams,
-                        progressColor = nutrientsPalette.proteinsOnSurfaceContainer
-                    )
+                NutrientIndicator(
+                    title = stringResource(Res.string.nutriment_carbohydrates),
+                    value = diaryDay.totalCarbohydrates.roundToInt(),
+                    goal = diaryDay.dailyGoals.carbohydratesAsGrams,
+                    progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
+                )
 
-                    NutrientIndicator(
-                        title = stringResource(Res.string.nutriment_carbohydrates),
-                        value = diaryDay.totalCarbohydrates.roundToInt(),
-                        goal = diaryDay.dailyGoals.carbohydratesAsGrams,
-                        progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
-                    )
+                NutrientIndicator(
+                    title = stringResource(Res.string.nutriment_fats),
+                    value = diaryDay.totalFats.roundToInt(),
+                    goal = diaryDay.dailyGoals.fatsAsGrams,
+                    progressColor = nutrientsPalette.fatsOnSurfaceContainer
+                )
+            }
+        },
+        expandedContent = {},
+        modifier = modifier
+    )
+}
 
-                    NutrientIndicator(
-                        title = stringResource(Res.string.nutriment_fats),
-                        value = diaryDay.totalFats.roundToInt(),
-                        goal = diaryDay.dailyGoals.fatsAsGrams,
-                        progressColor = nutrientsPalette.fatsOnSurfaceContainer
-                    )
-                }
+@Composable
+private fun CaloriesCardLayout(
+    state: CaloriesCardState,
+    toggleState: () -> Unit,
+    compactContent: @Composable ColumnScope.() -> Unit,
+    defaultContent: @Composable ColumnScope.() -> Unit,
+    expandedContent: @Composable ColumnScope.() -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FoodYouHomeCard(
+        modifier = modifier.animateContentSize(),
+        onClick = toggleState
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .padding(16.dp)
+        ) {
+            compactContent()
+
+            if (state == CaloriesCardState.Default || state == CaloriesCardState.Expanded) {
+                defaultContent()
+            }
+
+            if (state == CaloriesCardState.Expanded) {
+                expandedContent()
             }
         }
     }
@@ -402,16 +430,10 @@ fun CaloriesCardSkeleton(
     modifier: Modifier = Modifier,
     shimmerInstance: Shimmer = rememberShimmer(ShimmerBounds.View)
 ) {
-    FoodYouHomeCard(
-        modifier = modifier,
-        onClick = toggleState
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize()
-                .padding(16.dp)
-        ) {
+    CaloriesCardLayout(
+        state = state,
+        toggleState = toggleState,
+        compactContent = {
             CaloriesCardHeader(
                 state = state
             ) {
@@ -454,20 +476,21 @@ fun CaloriesCardSkeleton(
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
+        },
+        defaultContent = {
+            Spacer(Modifier.height(16.dp))
 
-            if (state != CaloriesCardState.Compact) {
-                Spacer(Modifier.height(16.dp))
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    NutrientIndicatorSkeleton(shimmerInstance)
-                    NutrientIndicatorSkeleton(shimmerInstance)
-                    NutrientIndicatorSkeleton(shimmerInstance)
-                }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                NutrientIndicatorSkeleton(shimmerInstance)
+                NutrientIndicatorSkeleton(shimmerInstance)
+                NutrientIndicatorSkeleton(shimmerInstance)
             }
-        }
-    }
+        },
+        expandedContent = {},
+        modifier = modifier
+    )
 }
 
 @Composable
