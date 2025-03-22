@@ -27,10 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.HomeState
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
-import com.maksimowiczm.foodyou.feature.diary.ui.DiaryViewModel
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.ui.ext.toDp
@@ -63,21 +59,17 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
-private enum class CaloriesCardState {
-    Compact,
-    Default,
-    Expanded
-}
-
 @Composable
 fun CaloriesCard(
     homeState: HomeState,
     modifier: Modifier = Modifier,
-    viewModel: DiaryViewModel = koinViewModel()
+    viewModel: CaloriesCardViewModel = koinViewModel()
 ) {
     val diaryDay by viewModel
         .observeDiaryDay(homeState.selectedDate)
         .collectAsStateWithLifecycle(null)
+
+    val state by viewModel.state.collectAsStateWithLifecycle(CaloriesCardState.Default)
 
     val dd = diaryDay
 
@@ -87,7 +79,9 @@ fun CaloriesCard(
     ) {
         if (it && dd != null) {
             CaloriesCard(
-                diaryDay = dd
+                diaryDay = dd,
+                state = state,
+                toggleState = viewModel::toggleCaloriesCardState
             )
         } else {
             CaloriesCardSkeleton(
@@ -98,9 +92,12 @@ fun CaloriesCard(
 }
 
 @Composable
-private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
-    var state by rememberSaveable { mutableStateOf(CaloriesCardState.Default) }
-
+private fun CaloriesCard(
+    diaryDay: DiaryDay,
+    state: CaloriesCardState,
+    toggleState: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val calories = diaryDay.totalCalories.roundToInt()
     val goal = diaryDay.dailyGoals.calories
     val valueStatus by remember(calories, goal) {
@@ -146,13 +143,7 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
 
     FoodYouHomeCard(
         modifier = modifier.animateContentSize(),
-        onClick = {
-            state = when (state) {
-                CaloriesCardState.Compact -> CaloriesCardState.Default
-                CaloriesCardState.Default -> CaloriesCardState.Expanded
-                CaloriesCardState.Expanded -> CaloriesCardState.Compact
-            }
-        }
+        onClick = toggleState
     ) {
         Column(
             modifier = Modifier
@@ -504,7 +495,9 @@ private fun CaloriesCardSkeletonPreview() {
 private fun CaloriesCardPreview() {
     FoodYouTheme {
         CaloriesCard(
-            diaryDay = DiaryDayPreviewParameterProvider().values.first()
+            diaryDay = DiaryDayPreviewParameterProvider().values.first(),
+            state = CaloriesCardState.Default,
+            toggleState = {}
         )
     }
 }

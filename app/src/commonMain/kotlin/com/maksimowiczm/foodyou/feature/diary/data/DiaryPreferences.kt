@@ -12,4 +12,6 @@ object DiaryPreferences {
 
     val timeBasedSorting = booleanPreferencesKey("time_based_sorting")
     val includeAllDayMeals = booleanPreferencesKey("include_all_day_meals")
+
+    val caloriesCardState = intPreferencesKey("calories_card_state")
 }

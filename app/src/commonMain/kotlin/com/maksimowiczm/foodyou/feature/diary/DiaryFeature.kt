@@ -21,6 +21,7 @@ import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFacto
 import com.maksimowiczm.foodyou.feature.diary.ui.DiaryViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.MealApp
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
+import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsViewModel
@@ -245,5 +246,7 @@ object DiaryFeature : Feature {
         factory { get<DiaryDatabase>().addFoodDao() }
         factory { get<DiaryDatabase>().productDao() }
         factory { get<DiaryDatabase>().openFoodFactsDao() }
+
+        viewModelOf(::CaloriesCardViewModel)
     }
 }
