@@ -4,16 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.UnfoldLess
-import androidx.compose.material.icons.filled.UnfoldMore
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,16 +24,16 @@ import com.valentinilk.shimmer.shimmer
 @Composable
 fun CaloriesCardSkeleton(
     state: CaloriesCardState,
-    toggleState: () -> Unit,
+    onToggleState: () -> Unit,
     modifier: Modifier = Modifier,
     shimmerInstance: Shimmer = rememberShimmer(ShimmerBounds.View)
 ) {
     CaloriesCardLayout(
         state = state,
-        toggleState = toggleState,
         header = {
-            Header(
-                state = state
+            CaloriesCardLayoutDefaults.Header(
+                state = state,
+                onToggleState = onToggleState
             ) {
                 Box(
                     modifier = Modifier
@@ -129,30 +124,6 @@ private fun NutrientIndicatorSkeleton(shimmerInstance: Shimmer, modifier: Modifi
                 .fillMaxWidth()
                 .clip(MaterialTheme.shapes.small)
                 .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-        )
-    }
-}
-
-@Composable
-fun ColumnScope.Header(
-    state: CaloriesCardState,
-    modifier: Modifier = Modifier,
-    title: @Composable () -> Unit
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        title()
-
-        Spacer(Modifier.weight(1f))
-
-        Icon(
-            imageVector = when (state) {
-                CaloriesCardState.Compact -> Icons.Default.UnfoldLess
-                CaloriesCardState.Expanded -> Icons.Default.UnfoldMore
-            },
-            contentDescription = null
         )
     }
 }

@@ -65,12 +65,12 @@ fun CaloriesCard(
             CaloriesCard(
                 diaryDay = dd,
                 state = state,
-                toggleState = viewModel::toggleCaloriesCardState
+                onToggleState = viewModel::toggleCaloriesCardState
             )
         } else {
             CaloriesCardSkeleton(
                 state = state,
-                toggleState = viewModel::toggleCaloriesCardState,
+                onToggleState = viewModel::toggleCaloriesCardState,
                 shimmerInstance = homeState.shimmer
             )
         }
@@ -81,14 +81,16 @@ fun CaloriesCard(
 private fun CaloriesCard(
     diaryDay: DiaryDay,
     state: CaloriesCardState,
-    toggleState: () -> Unit,
+    onToggleState: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     CaloriesCardLayout(
         state = state,
-        toggleState = toggleState,
         header = {
-            Header(state) {
+            CaloriesCardLayoutDefaults.Header(
+                state = state,
+                onToggleState = onToggleState
+            ) {
                 Text(
                     text = stringResource(Res.string.unit_calories),
                     style = MaterialTheme.typography.titleLarge
