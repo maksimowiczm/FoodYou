@@ -69,7 +69,7 @@ fun CaloriesCard(
         .observeDiaryDay(homeState.selectedDate)
         .collectAsStateWithLifecycle(null)
 
-    val state by viewModel.state.collectAsStateWithLifecycle(CaloriesCardState.Default)
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val dd = diaryDay
 
@@ -85,6 +85,8 @@ fun CaloriesCard(
             )
         } else {
             CaloriesCardSkeleton(
+                state = state,
+                toggleState = viewModel::toggleCaloriesCardState,
                 shimmerInstance = homeState.shimmer
             )
         }
@@ -151,21 +153,12 @@ private fun CaloriesCard(
                 .animateContentSize()
                 .padding(16.dp)
         ) {
-            Row {
+            CaloriesCardHeader(
+                state = state
+            ) {
                 Text(
                     text = stringResource(Res.string.unit_calories),
                     style = MaterialTheme.typography.titleLarge
-                )
-
-                Spacer(Modifier.weight(1f))
-
-                Icon(
-                    imageVector = when (state) {
-                        CaloriesCardState.Compact -> Icons.Default.UnfoldLess
-                        CaloriesCardState.Default -> Icons.Default.UnfoldMore
-                        CaloriesCardState.Expanded -> Icons.Default.UnfoldMoreDouble
-                    },
-                    contentDescription = null
                 )
             }
 
@@ -264,6 +257,31 @@ private fun CaloriesCard(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun CaloriesCardHeader(
+    state: CaloriesCardState,
+    modifier: Modifier = Modifier,
+    title: @Composable () -> Unit
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        title()
+
+        Spacer(Modifier.weight(1f))
+
+        Icon(
+            imageVector = when (state) {
+                CaloriesCardState.Compact -> Icons.Default.UnfoldLess
+                CaloriesCardState.Default -> Icons.Default.UnfoldMore
+                CaloriesCardState.Expanded -> Icons.Default.UnfoldMoreDouble
+            },
+            contentDescription = null
+        )
     }
 }
 
@@ -379,11 +397,14 @@ private infix fun <N : Comparable<N>> N.withGoal(goal: N) = when {
 
 @Composable
 fun CaloriesCardSkeleton(
+    state: CaloriesCardState,
+    toggleState: () -> Unit,
     modifier: Modifier = Modifier,
     shimmerInstance: Shimmer = rememberShimmer(ShimmerBounds.View)
 ) {
     FoodYouHomeCard(
-        modifier = modifier
+        modifier = modifier,
+        onClick = toggleState
     ) {
         Column(
             modifier = Modifier
@@ -391,13 +412,17 @@ fun CaloriesCardSkeleton(
                 .animateContentSize()
                 .padding(16.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .shimmer(shimmerInstance)
-                    .size(100.dp, MaterialTheme.typography.titleLarge.toDp())
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            )
+            CaloriesCardHeader(
+                state = state
+            ) {
+                Box(
+                    modifier = Modifier
+                        .shimmer(shimmerInstance)
+                        .size(100.dp, MaterialTheme.typography.titleLarge.toDp())
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
 
@@ -430,14 +455,16 @@ fun CaloriesCardSkeleton(
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
 
-            Spacer(Modifier.height(16.dp))
+            if (state != CaloriesCardState.Compact) {
+                Spacer(Modifier.height(16.dp))
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                NutrientIndicatorSkeleton(shimmerInstance)
-                NutrientIndicatorSkeleton(shimmerInstance)
-                NutrientIndicatorSkeleton(shimmerInstance)
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    NutrientIndicatorSkeleton(shimmerInstance)
+                    NutrientIndicatorSkeleton(shimmerInstance)
+                    NutrientIndicatorSkeleton(shimmerInstance)
+                }
             }
         }
     }
@@ -486,7 +513,10 @@ private fun NutrientIndicatorSkeleton(shimmerInstance: Shimmer, modifier: Modifi
 @Composable
 private fun CaloriesCardSkeletonPreview() {
     FoodYouTheme {
-        CaloriesCardSkeleton()
+        CaloriesCardSkeleton(
+            state = CaloriesCardState.Default,
+            toggleState = {}
+        )
     }
 }
 
