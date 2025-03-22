@@ -55,12 +55,13 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.math.abs
-import kotlin.math.max
 
 private enum class CaloriesCardState {
     Compact,
@@ -100,7 +101,7 @@ fun CaloriesCard(
 private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
     var state by rememberSaveable { mutableStateOf(CaloriesCardState.Default) }
 
-    val calories = diaryDay.totalCalories
+    val calories = diaryDay.totalCalories.roundToInt()
     val goal = diaryDay.dailyGoals.calories
     val valueStatus by remember(calories, goal) {
         derivedStateOf { calories withGoal goal }
@@ -251,21 +252,21 @@ private fun CaloriesCard(diaryDay: DiaryDay, modifier: Modifier = Modifier) {
                 ) {
                     NutrientIndicator(
                         title = stringResource(Res.string.nutriment_proteins),
-                        value = diaryDay.totalProteins,
+                        value = diaryDay.totalProteins.roundToInt(),
                         goal = diaryDay.dailyGoals.proteinsAsGrams,
                         progressColor = nutrientsPalette.proteinsOnSurfaceContainer
                     )
 
                     NutrientIndicator(
                         title = stringResource(Res.string.nutriment_carbohydrates),
-                        value = diaryDay.totalCarbohydrates,
+                        value = diaryDay.totalCarbohydrates.roundToInt(),
                         goal = diaryDay.dailyGoals.carbohydratesAsGrams,
                         progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
                     )
 
                     NutrientIndicator(
                         title = stringResource(Res.string.nutriment_fats),
-                        value = diaryDay.totalFats,
+                        value = diaryDay.totalFats.roundToInt(),
                         goal = diaryDay.dailyGoals.fatsAsGrams,
                         progressColor = nutrientsPalette.fatsOnSurfaceContainer
                     )

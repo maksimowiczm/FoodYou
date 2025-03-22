@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrient
 import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrients
 import com.maksimowiczm.foodyou.feature.diary.data.model.Product
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
@@ -76,12 +77,12 @@ class NutrientsListState(
             calories = product.nutrients.calories(selectedFilter.weight),
             proteins = product.nutrients.proteins(selectedFilter.weight),
             carbohydrates = product.nutrients.carbohydrates(selectedFilter.weight),
-            sugars = product.nutrients.sugars(selectedFilter.weight),
+            sugars = product.nutrients.get(Nutrient.Sugars, selectedFilter.weight),
             fats = product.nutrients.fats(selectedFilter.weight),
-            saturatedFats = product.nutrients.saturatedFats(selectedFilter.weight),
-            salt = product.nutrients.salt(selectedFilter.weight),
-            sodium = product.nutrients.sodium(selectedFilter.weight),
-            fiber = product.nutrients.fiber(selectedFilter.weight)
+            saturatedFats = product.nutrients.get(Nutrient.SaturatedFats, selectedFilter.weight),
+            salt = product.nutrients.get(Nutrient.Salt, selectedFilter.weight),
+            sodium = product.nutrients.get(Nutrient.Sodium, selectedFilter.weight),
+            fiber = product.nutrients.get(Nutrient.Fiber, selectedFilter.weight)
         )
     }
 }

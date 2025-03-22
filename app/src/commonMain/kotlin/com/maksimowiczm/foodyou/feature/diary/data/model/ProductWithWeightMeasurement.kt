@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.feature.diary.data.model
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductSearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
-import kotlin.math.roundToInt
 
 data class ProductWithWeightMeasurement(
     val product: Product,
@@ -13,17 +12,17 @@ data class ProductWithWeightMeasurement(
     val weight: Float
         get() = measurement.weight
 
-    val calories: Int
-        get() = product.nutrients.calories(weight).roundToInt()
+    val calories: Float
+        get() = product.nutrients.calories(weight)
 
-    val proteins: Int
-        get() = product.nutrients.proteins(weight).roundToInt()
+    val proteins: Float
+        get() = product.nutrients.proteins(weight)
 
-    val carbohydrates: Int
-        get() = product.nutrients.carbohydrates(weight).roundToInt()
+    val carbohydrates: Float
+        get() = product.nutrients.carbohydrates(weight)
 
-    val fats: Int
-        get() = product.nutrients.fats(weight).roundToInt()
+    val fats: Float
+        get() = product.nutrients.fats(weight)
 }
 
 fun ProductWithWeightMeasurementEntity.toDomain(): ProductWithWeightMeasurement {

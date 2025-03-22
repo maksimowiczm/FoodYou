@@ -60,6 +60,7 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.absoluteValue
+import kotlin.math.roundToInt
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -165,10 +166,10 @@ private fun MealsCard(
                         epochDay = state.diaryDay.date.toEpochDays(),
                         meal = meal,
                         isEmpty = state.diaryDay.mealProductMap[meal]?.isEmpty() == true,
-                        totalCalories = state.diaryDay.totalCalories(meal),
-                        totalProteins = state.diaryDay.totalProteins(meal),
-                        totalCarbohydrates = state.diaryDay.totalCarbohydrates(meal),
-                        totalFats = state.diaryDay.totalFats(meal),
+                        totalCalories = state.diaryDay.totalCalories(meal).roundToInt(),
+                        totalProteins = state.diaryDay.totalProteins(meal).roundToInt(),
+                        totalCarbohydrates = state.diaryDay.totalCarbohydrates(meal).roundToInt(),
+                        totalFats = state.diaryDay.totalFats(meal).roundToInt(),
                         formatTime = formatTime,
                         onMealClick = { onMealClick(meal) },
                         onAddClick = { onAddClick(meal) }
@@ -449,10 +450,10 @@ private fun MealsCardPreview() {
                 epochDay = 0,
                 meal = meal,
                 isEmpty = false,
-                totalCalories = diaryDay.totalCalories(meal),
-                totalProteins = diaryDay.totalProteins(meal),
-                totalCarbohydrates = diaryDay.totalCarbohydrates(meal),
-                totalFats = diaryDay.totalFats(meal),
+                totalCalories = diaryDay.totalCalories(meal).roundToInt(),
+                totalProteins = diaryDay.totalProteins(meal).roundToInt(),
+                totalCarbohydrates = diaryDay.totalCarbohydrates(meal).roundToInt(),
+                totalFats = diaryDay.totalFats(meal).roundToInt(),
                 formatTime = { it.toString() },
                 onMealClick = {},
                 onAddClick = {}

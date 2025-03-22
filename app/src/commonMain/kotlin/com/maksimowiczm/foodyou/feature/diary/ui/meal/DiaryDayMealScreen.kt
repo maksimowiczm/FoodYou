@@ -92,6 +92,7 @@ import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
+import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -353,7 +354,7 @@ private fun DiaryDayMealScreen(
                             text = if (isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.calories }.toString()
+                                products.sumOf { it.calories.roundToInt() }.toString()
                             }
                         )
                     }
@@ -362,7 +363,7 @@ private fun DiaryDayMealScreen(
                             text = if (isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.proteins }
+                                products.sumOf { it.proteins.roundToInt() }
                                     .toString() + " " + stringResource(Res.string.unit_gram_short)
                             }
                         )
@@ -372,7 +373,7 @@ private fun DiaryDayMealScreen(
                             text = if (isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.carbohydrates }
+                                products.sumOf { it.carbohydrates.roundToInt() }
                                     .toString() + " " + stringResource(Res.string.unit_gram_short)
                             }
                         )
@@ -382,7 +383,7 @@ private fun DiaryDayMealScreen(
                             text = if (isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.fats }
+                                products.sumOf { it.fats.roundToInt() }
                                     .toString() + " " + stringResource(Res.string.unit_gram_short)
                             }
                         )
