@@ -25,9 +25,11 @@ fun CaloriesCardLayout(
     header: @Composable ColumnScope.() -> Unit,
     compactContent: @Composable ColumnScope.() -> Unit,
     expandedContent: @Composable ColumnScope.() -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     FoodYouHomeCard(
+        onClick = onClick,
         modifier = modifier.animateContentSize()
     ) {
         Column(

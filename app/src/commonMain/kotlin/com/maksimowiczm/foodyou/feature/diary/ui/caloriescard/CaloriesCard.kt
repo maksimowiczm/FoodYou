@@ -46,6 +46,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CaloriesCard(
     homeState: HomeState,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CaloriesCardViewModel = koinViewModel()
 ) {
@@ -65,13 +66,15 @@ fun CaloriesCard(
             CaloriesCard(
                 diaryDay = dd,
                 state = state,
-                onToggleState = viewModel::toggleCaloriesCardState
+                onToggleState = viewModel::toggleCaloriesCardState,
+                onClick = onClick
             )
         } else {
             CaloriesCardSkeleton(
                 state = state,
                 onToggleState = viewModel::toggleCaloriesCardState,
-                shimmerInstance = homeState.shimmer
+                shimmerInstance = homeState.shimmer,
+                onClick = onClick
             )
         }
     }
@@ -82,6 +85,7 @@ private fun CaloriesCard(
     diaryDay: DiaryDay,
     state: CaloriesCardState,
     onToggleState: () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     CaloriesCardLayout(
@@ -99,6 +103,7 @@ private fun CaloriesCard(
         },
         compactContent = { Compact(diaryDay) },
         expandedContent = { Expanded(diaryDay) },
+        onClick = onClick,
         modifier = modifier
     )
 }

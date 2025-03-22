@@ -21,6 +21,7 @@ import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFacto
 import com.maksimowiczm.foodyou.feature.diary.ui.MealApp
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCardViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen.CaloriesScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsViewModel
@@ -80,7 +81,17 @@ object DiaryFeature : Feature {
         HomeFeature { _, modifier, homeState ->
             CaloriesCard(
                 homeState = homeState,
-                modifier = modifier
+                modifier = modifier,
+                onClick = {
+                    navController.navigate(
+                        route = CaloriesDetails(
+                            epochDay = homeState.selectedDate.toEpochDays()
+                        ),
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                }
             )
         }
     )
@@ -138,6 +149,9 @@ object DiaryFeature : Feature {
 
     @Serializable
     private data class MealAdd(val epochDay: Int, val mealId: Long)
+
+    @Serializable
+    private data class CaloriesDetails(val epochDay: Int)
 
     override fun NavGraphBuilder.graph(navController: NavController) {
         forwardBackwardComposable<GoalsSettings> {
@@ -207,6 +221,12 @@ object DiaryFeature : Feature {
                     )
                 }
             )
+        }
+
+        crossfadeComposable<CaloriesDetails> {
+            val (epochDay) = it.toRoute<CaloriesDetails>()
+
+            CaloriesScreen()
         }
     }
 

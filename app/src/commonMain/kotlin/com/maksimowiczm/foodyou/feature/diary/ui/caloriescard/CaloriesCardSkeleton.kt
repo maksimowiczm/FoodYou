@@ -25,6 +25,7 @@ import com.valentinilk.shimmer.shimmer
 fun CaloriesCardSkeleton(
     state: CaloriesCardState,
     onToggleState: () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     shimmerInstance: Shimmer = rememberShimmer(ShimmerBounds.View)
 ) {
@@ -85,6 +86,7 @@ fun CaloriesCardSkeleton(
                 NutrientIndicatorSkeleton(shimmerInstance)
             }
         },
+        onClick = onClick,
         modifier = modifier
     )
 }
