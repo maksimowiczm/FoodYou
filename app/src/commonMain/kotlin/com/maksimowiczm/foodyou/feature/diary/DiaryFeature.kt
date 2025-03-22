@@ -22,6 +22,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.MealApp
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen.CaloriesScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen.CaloriesScreenViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsViewModel
@@ -44,6 +45,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.search.OpenFoodFactsSearchHintV
 import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchViewModel
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -225,8 +227,11 @@ object DiaryFeature : Feature {
 
         crossfadeComposable<CaloriesDetails> {
             val (epochDay) = it.toRoute<CaloriesDetails>()
+            val date = LocalDate.fromEpochDays(epochDay)
 
-            CaloriesScreen()
+            CaloriesScreen(
+                date = date
+            )
         }
     }
 
@@ -265,5 +270,6 @@ object DiaryFeature : Feature {
         factory { get<DiaryDatabase>().openFoodFactsDao() }
 
         viewModelOf(::CaloriesCardViewModel)
+        viewModelOf(::CaloriesScreenViewModel)
     }
 }

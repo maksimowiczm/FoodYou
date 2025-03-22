@@ -346,10 +346,18 @@ private fun NutrientIndicator(
     }
 }
 
-private enum class ValueStatus {
+enum class ValueStatus {
     Remaining,
     Achieved,
-    Exceeded
+    Exceeded;
+
+    companion object {
+        fun <N : Comparable<N>> N.asValueStatus(goal: N) = when {
+            this < goal -> Remaining
+            this > goal -> Exceeded
+            else -> Achieved
+        }
+    }
 }
 
 private infix fun <N : Comparable<N>> N.withGoal(goal: N) = when {
