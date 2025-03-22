@@ -34,7 +34,6 @@ class CaloriesCardViewModel(
                 val currentState = state.value
                 val newState = when (currentState) {
                     CaloriesCardState.Compact -> 1
-                    CaloriesCardState.Default -> 2
                     CaloriesCardState.Expanded -> 0
                 }
 
@@ -47,15 +46,13 @@ class CaloriesCardViewModel(
         dataStore.observe(DiaryPreferences.caloriesCardState).map {
             when (it) {
                 0 -> CaloriesCardState.Compact
-                1 -> CaloriesCardState.Default
-                2 -> CaloriesCardState.Expanded
-                else -> CaloriesCardState.Default
+                1 -> CaloriesCardState.Expanded
+                else -> CaloriesCardState.Expanded
             }
         }
 }
 
 enum class CaloriesCardState {
     Compact,
-    Default,
     Expanded
 }

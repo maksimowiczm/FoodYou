@@ -1,27 +1,18 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.caloriescard
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.UnfoldLess
-import androidx.compose.material.icons.filled.UnfoldMore
-import androidx.compose.material.icons.filled.UnfoldMoreDouble
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,15 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.HomeState
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
-import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrient
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
-import com.maksimowiczm.foodyou.ui.ext.toDp
-import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
-import com.valentinilk.shimmer.Shimmer
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.abs
@@ -111,74 +96,9 @@ private fun CaloriesCard(
             }
         },
         compactContent = { Compact(diaryDay) },
-        defaultContent = { Default(diaryDay) },
         expandedContent = { Expanded(diaryDay) },
         modifier = modifier
     )
-}
-
-@Composable
-private fun CaloriesCardLayout(
-    state: CaloriesCardState,
-    toggleState: () -> Unit,
-    header: @Composable ColumnScope.() -> Unit,
-    compactContent: @Composable ColumnScope.() -> Unit,
-    defaultContent: @Composable ColumnScope.() -> Unit,
-    expandedContent: @Composable ColumnScope.() -> Unit,
-    modifier: Modifier = Modifier
-) {
-    FoodYouHomeCard(
-        modifier = modifier.animateContentSize(),
-        onClick = toggleState
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize()
-                .padding(16.dp)
-        ) {
-            header()
-
-            Spacer(Modifier.height(16.dp))
-
-            compactContent()
-
-            if (state == CaloriesCardState.Default || state == CaloriesCardState.Expanded) {
-                Spacer(Modifier.height(16.dp))
-                defaultContent()
-            }
-
-            if (state == CaloriesCardState.Expanded) {
-                Spacer(Modifier.height(16.dp))
-                expandedContent()
-            }
-        }
-    }
-}
-
-@Composable
-private fun ColumnScope.Header(
-    state: CaloriesCardState,
-    modifier: Modifier = Modifier,
-    title: @Composable () -> Unit
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        title()
-
-        Spacer(Modifier.weight(1f))
-
-        Icon(
-            imageVector = when (state) {
-                CaloriesCardState.Compact -> Icons.Default.UnfoldLess
-                CaloriesCardState.Default -> Icons.Default.UnfoldMore
-                CaloriesCardState.Expanded -> Icons.Default.UnfoldMoreDouble
-            },
-            contentDescription = null
-        )
-    }
 }
 
 @Composable
@@ -292,7 +212,7 @@ private fun ColumnScope.Compact(diaryDay: DiaryDay) {
 }
 
 @Composable
-private fun ColumnScope.Default(diaryDay: DiaryDay) {
+private fun ColumnScope.Expanded(diaryDay: DiaryDay) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
     Column(
@@ -319,14 +239,6 @@ private fun ColumnScope.Default(diaryDay: DiaryDay) {
             progressColor = nutrientsPalette.fatsOnSurfaceContainer
         )
     }
-}
-
-@Composable
-private fun ColumnScope.Expanded(diaryDay: DiaryDay) {
-    Text(diaryDay.total(Nutrient.Sugars).toString())
-    Text(diaryDay.total(Nutrient.Fiber).toString())
-    Text(diaryDay.total(Nutrient.SaturatedFats).toString())
-    Text(diaryDay.total(Nutrient.Sodium).toString())
 }
 
 @Composable
@@ -437,112 +349,4 @@ private infix fun <N : Comparable<N>> N.withGoal(goal: N) = when {
     this < goal -> ValueStatus.Remaining
     this > goal -> ValueStatus.Exceeded
     else -> ValueStatus.Achieved
-}
-
-@Composable
-private fun CaloriesCardSkeleton(
-    state: CaloriesCardState,
-    toggleState: () -> Unit,
-    modifier: Modifier = Modifier,
-    shimmerInstance: Shimmer = rememberShimmer(ShimmerBounds.View)
-) {
-    CaloriesCardLayout(
-        state = state,
-        toggleState = toggleState,
-        header = {
-            Header(
-                state = state
-            ) {
-                Box(
-                    modifier = Modifier
-                        .shimmer(shimmerInstance)
-                        .size(100.dp, MaterialTheme.typography.titleLarge.toDp())
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                )
-            }
-        },
-        compactContent = {
-            Box(
-                modifier = Modifier
-                    .shimmer(shimmerInstance)
-                    .size(160.dp, MaterialTheme.typography.headlineLarge.toDp())
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            )
-
-            Spacer(Modifier.height(8.dp))
-
-            Box(
-                modifier = Modifier
-                    .shimmer(shimmerInstance)
-                    .height(16.dp)
-                    .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.small)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            )
-
-            Spacer(Modifier.height(8.dp))
-
-            Box(
-                modifier = Modifier
-                    .shimmer(shimmerInstance)
-                    .size(100.dp, MaterialTheme.typography.labelLarge.toDp())
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            )
-        },
-        defaultContent = {
-            Spacer(Modifier.height(16.dp))
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                NutrientIndicatorSkeleton(shimmerInstance)
-                NutrientIndicatorSkeleton(shimmerInstance)
-                NutrientIndicatorSkeleton(shimmerInstance)
-            }
-        },
-        expandedContent = {},
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun NutrientIndicatorSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .shimmer(shimmerInstance)
-                    .size(60.dp, MaterialTheme.typography.titleMedium.toDp())
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            )
-
-            Spacer(Modifier.weight(1f))
-
-            Box(
-                modifier = Modifier
-                    .shimmer(shimmerInstance)
-                    .size(60.dp, MaterialTheme.typography.headlineSmall.toDp())
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .shimmer(shimmerInstance)
-                .height(4.dp)
-                .fillMaxWidth()
-                .clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-        )
-    }
 }
