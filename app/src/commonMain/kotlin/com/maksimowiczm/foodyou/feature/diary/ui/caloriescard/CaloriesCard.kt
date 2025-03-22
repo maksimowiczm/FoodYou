@@ -44,8 +44,6 @@ import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.ui.preview.DiaryDayPreviewParameterProvider
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
@@ -57,7 +55,6 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -101,6 +98,90 @@ private fun CaloriesCard(
     toggleState: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    CaloriesCardLayout(
+        state = state,
+        toggleState = toggleState,
+        header = {
+            Header(state) {
+                Text(
+                    text = stringResource(Res.string.unit_calories),
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+        },
+        compactContent = { Compact(diaryDay) },
+        defaultContent = { Default(diaryDay) },
+        expandedContent = {},
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun CaloriesCardLayout(
+    state: CaloriesCardState,
+    toggleState: () -> Unit,
+    header: @Composable ColumnScope.() -> Unit,
+    compactContent: @Composable ColumnScope.() -> Unit,
+    defaultContent: @Composable ColumnScope.() -> Unit,
+    expandedContent: @Composable ColumnScope.() -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FoodYouHomeCard(
+        modifier = modifier.animateContentSize(),
+        onClick = toggleState
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .padding(16.dp)
+        ) {
+            header()
+
+            Spacer(Modifier.height(16.dp))
+
+            compactContent()
+
+            if (state == CaloriesCardState.Default || state == CaloriesCardState.Expanded) {
+                Spacer(Modifier.height(16.dp))
+                defaultContent()
+            }
+
+            if (state == CaloriesCardState.Expanded) {
+                Spacer(Modifier.height(16.dp))
+                expandedContent()
+            }
+        }
+    }
+}
+
+@Composable
+private fun ColumnScope.Header(
+    state: CaloriesCardState,
+    modifier: Modifier = Modifier,
+    title: @Composable () -> Unit
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        title()
+
+        Spacer(Modifier.weight(1f))
+
+        Icon(
+            imageVector = when (state) {
+                CaloriesCardState.Compact -> Icons.Default.UnfoldLess
+                CaloriesCardState.Default -> Icons.Default.UnfoldMore
+                CaloriesCardState.Expanded -> Icons.Default.UnfoldMoreDouble
+            },
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun ColumnScope.Compact(diaryDay: DiaryDay) {
     val calories = diaryDay.totalCalories.roundToInt()
     val goal = diaryDay.dailyGoals.calories
     val valueStatus by remember(calories, goal) {
@@ -144,171 +225,97 @@ private fun CaloriesCard(
     val animatedCarbohydrates by animateFloatAsState(diaryDay.totalCaloriesCarbohydrates.toFloat())
     val animatedFats by animateFloatAsState(diaryDay.totalCaloriesFats.toFloat())
 
-    CaloriesCardLayout(
-        state = state,
-        toggleState = toggleState,
-        compactContent = {
-            CaloriesCardHeader(
-                state = state
-            ) {
-                Text(
-                    text = stringResource(Res.string.unit_calories),
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
-
-            Spacer(Modifier.height(8.dp))
-
-            Text(
-                text = caloriesString,
-                // Must manually set because otherwise its not same height
-                style = MaterialTheme.typography.headlineLarge
-            )
-
-            Spacer(Modifier.height(8.dp))
-
-            val max = max(goal, calories)
-            val animatedMax by animateFloatAsState(max.toFloat())
-            MultiColorProgressIndicator(
-                items = listOf(
-                    MultiColorProgressIndicatorItem(
-                        progress = animatedProteins / animatedMax,
-                        color = nutrientsPalette.proteinsOnSurfaceContainer
-                    ),
-                    MultiColorProgressIndicatorItem(
-                        progress = animatedCarbohydrates / animatedMax,
-                        color = nutrientsPalette.carbohydratesOnSurfaceContainer
-                    ),
-                    MultiColorProgressIndicatorItem(
-                        progress = animatedFats / animatedMax,
-                        color = nutrientsPalette.fatsOnSurfaceContainer
-                    )
-                ),
-                modifier = Modifier
-                    .height(16.dp)
-                    .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.small)
-            )
-
-            Spacer(Modifier.height(8.dp))
-
-            when (valueStatus) {
-                ValueStatus.Exceeded -> Text(
-                    text = pluralStringResource(
-                        Res.plurals.negative_exceeded_by_calories,
-                        left,
-                        left
-                    ),
-                    color = MaterialTheme.colorScheme.error,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelLarge
-                )
-
-                ValueStatus.Remaining -> Text(
-                    text = pluralStringResource(
-                        Res.plurals.neutral_remaining_calories,
-                        left,
-                        left
-                    ),
-                    color = MaterialTheme.colorScheme.outline,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelLarge
-                )
-
-                ValueStatus.Achieved -> Text(
-                    text = stringResource(Res.string.positive_goal_reached),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
-        },
-        defaultContent = {
-            Spacer(Modifier.height(16.dp))
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                NutrientIndicator(
-                    title = stringResource(Res.string.nutriment_proteins),
-                    value = diaryDay.totalProteins.roundToInt(),
-                    goal = diaryDay.dailyGoals.proteinsAsGrams,
-                    progressColor = nutrientsPalette.proteinsOnSurfaceContainer
-                )
-
-                NutrientIndicator(
-                    title = stringResource(Res.string.nutriment_carbohydrates),
-                    value = diaryDay.totalCarbohydrates.roundToInt(),
-                    goal = diaryDay.dailyGoals.carbohydratesAsGrams,
-                    progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
-                )
-
-                NutrientIndicator(
-                    title = stringResource(Res.string.nutriment_fats),
-                    value = diaryDay.totalFats.roundToInt(),
-                    goal = diaryDay.dailyGoals.fatsAsGrams,
-                    progressColor = nutrientsPalette.fatsOnSurfaceContainer
-                )
-            }
-        },
-        expandedContent = {},
-        modifier = modifier
+    Text(
+        text = caloriesString,
+        // Must manually set because otherwise its not same height
+        style = MaterialTheme.typography.headlineLarge
     )
-}
 
-@Composable
-private fun CaloriesCardLayout(
-    state: CaloriesCardState,
-    toggleState: () -> Unit,
-    compactContent: @Composable ColumnScope.() -> Unit,
-    defaultContent: @Composable ColumnScope.() -> Unit,
-    expandedContent: @Composable ColumnScope.() -> Unit,
-    modifier: Modifier = Modifier
-) {
-    FoodYouHomeCard(
-        modifier = modifier.animateContentSize(),
-        onClick = toggleState
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize()
-                .padding(16.dp)
-        ) {
-            compactContent()
+    Spacer(Modifier.height(8.dp))
 
-            if (state == CaloriesCardState.Default || state == CaloriesCardState.Expanded) {
-                defaultContent()
-            }
+    val max = max(goal, calories)
+    val animatedMax by animateFloatAsState(max.toFloat())
+    MultiColorProgressIndicator(
+        items = listOf(
+            MultiColorProgressIndicatorItem(
+                progress = animatedProteins / animatedMax,
+                color = nutrientsPalette.proteinsOnSurfaceContainer
+            ),
+            MultiColorProgressIndicatorItem(
+                progress = animatedCarbohydrates / animatedMax,
+                color = nutrientsPalette.carbohydratesOnSurfaceContainer
+            ),
+            MultiColorProgressIndicatorItem(
+                progress = animatedFats / animatedMax,
+                color = nutrientsPalette.fatsOnSurfaceContainer
+            )
+        ),
+        modifier = Modifier
+            .height(16.dp)
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.small)
+    )
 
-            if (state == CaloriesCardState.Expanded) {
-                expandedContent()
-            }
-        }
+    Spacer(Modifier.height(8.dp))
+
+    when (valueStatus) {
+        ValueStatus.Exceeded -> Text(
+            text = pluralStringResource(
+                Res.plurals.negative_exceeded_by_calories,
+                left,
+                left
+            ),
+            color = MaterialTheme.colorScheme.error,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.labelLarge
+        )
+
+        ValueStatus.Remaining -> Text(
+            text = pluralStringResource(
+                Res.plurals.neutral_remaining_calories,
+                left,
+                left
+            ),
+            color = MaterialTheme.colorScheme.outline,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.labelLarge
+        )
+
+        ValueStatus.Achieved -> Text(
+            text = stringResource(Res.string.positive_goal_reached),
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.labelLarge
+        )
     }
 }
 
 @Composable
-private fun CaloriesCardHeader(
-    state: CaloriesCardState,
-    modifier: Modifier = Modifier,
-    title: @Composable () -> Unit
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+private fun ColumnScope.Default(diaryDay: DiaryDay) {
+    val nutrientsPalette = LocalNutrientsPalette.current
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        title()
+        NutrientIndicator(
+            title = stringResource(Res.string.nutriment_proteins),
+            value = diaryDay.totalProteins.roundToInt(),
+            goal = diaryDay.dailyGoals.proteinsAsGrams,
+            progressColor = nutrientsPalette.proteinsOnSurfaceContainer
+        )
 
-        Spacer(Modifier.weight(1f))
+        NutrientIndicator(
+            title = stringResource(Res.string.nutriment_carbohydrates),
+            value = diaryDay.totalCarbohydrates.roundToInt(),
+            goal = diaryDay.dailyGoals.carbohydratesAsGrams,
+            progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
+        )
 
-        Icon(
-            imageVector = when (state) {
-                CaloriesCardState.Compact -> Icons.Default.UnfoldLess
-                CaloriesCardState.Default -> Icons.Default.UnfoldMore
-                CaloriesCardState.Expanded -> Icons.Default.UnfoldMoreDouble
-            },
-            contentDescription = null
+        NutrientIndicator(
+            title = stringResource(Res.string.nutriment_fats),
+            value = diaryDay.totalFats.roundToInt(),
+            goal = diaryDay.dailyGoals.fatsAsGrams,
+            progressColor = nutrientsPalette.fatsOnSurfaceContainer
         )
     }
 }
@@ -424,7 +431,7 @@ private infix fun <N : Comparable<N>> N.withGoal(goal: N) = when {
 }
 
 @Composable
-fun CaloriesCardSkeleton(
+private fun CaloriesCardSkeleton(
     state: CaloriesCardState,
     toggleState: () -> Unit,
     modifier: Modifier = Modifier,
@@ -433,8 +440,8 @@ fun CaloriesCardSkeleton(
     CaloriesCardLayout(
         state = state,
         toggleState = toggleState,
-        compactContent = {
-            CaloriesCardHeader(
+        header = {
+            Header(
                 state = state
             ) {
                 Box(
@@ -445,9 +452,8 @@ fun CaloriesCardSkeleton(
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
             }
-
-            Spacer(Modifier.height(8.dp))
-
+        },
+        compactContent = {
             Box(
                 modifier = Modifier
                     .shimmer(shimmerInstance)
@@ -528,29 +534,6 @@ private fun NutrientIndicatorSkeleton(shimmerInstance: Shimmer, modifier: Modifi
                 .fillMaxWidth()
                 .clip(MaterialTheme.shapes.small)
                 .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun CaloriesCardSkeletonPreview() {
-    FoodYouTheme {
-        CaloriesCardSkeleton(
-            state = CaloriesCardState.Default,
-            toggleState = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun CaloriesCardPreview() {
-    FoodYouTheme {
-        CaloriesCard(
-            diaryDay = DiaryDayPreviewParameterProvider().values.first(),
-            state = CaloriesCardState.Default,
-            toggleState = {}
         )
     }
 }
