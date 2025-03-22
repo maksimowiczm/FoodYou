@@ -18,7 +18,6 @@ import com.maksimowiczm.foodyou.feature.diary.data.ProductRepositoryImpl
 import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.feature.diary.network.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
-import com.maksimowiczm.foodyou.feature.diary.ui.DiaryViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.MealApp
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCardViewModel
@@ -228,8 +227,6 @@ object DiaryFeature : Feature {
         factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
 
         factoryOf(::DiaryRepositoryImpl).bind<DiaryRepository>()
-
-        viewModelOf(::DiaryViewModel)
 
         viewModelOf(::GoalsSettingsViewModel)
 
