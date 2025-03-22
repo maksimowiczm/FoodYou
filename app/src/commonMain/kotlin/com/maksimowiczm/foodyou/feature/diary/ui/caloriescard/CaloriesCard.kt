@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.HomeState
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
+import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrient
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.ui.ext.toDp
@@ -111,7 +112,7 @@ private fun CaloriesCard(
         },
         compactContent = { Compact(diaryDay) },
         defaultContent = { Default(diaryDay) },
-        expandedContent = {},
+        expandedContent = { Expanded(diaryDay) },
         modifier = modifier
     )
 }
@@ -318,6 +319,14 @@ private fun ColumnScope.Default(diaryDay: DiaryDay) {
             progressColor = nutrientsPalette.fatsOnSurfaceContainer
         )
     }
+}
+
+@Composable
+private fun ColumnScope.Expanded(diaryDay: DiaryDay) {
+    Text(diaryDay.total(Nutrient.Sugars).toString())
+    Text(diaryDay.total(Nutrient.Fiber).toString())
+    Text(diaryDay.total(Nutrient.SaturatedFats).toString())
+    Text(diaryDay.total(Nutrient.Sodium).toString())
 }
 
 @Composable

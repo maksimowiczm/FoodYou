@@ -31,12 +31,8 @@ data class DiaryDay(
     fun totalFats(meal: Meal): Float = mealProductMap[meal]
         ?.sumOf { it.fats } ?: 0f
 
-    fun total(nutrient: Nutrient, meal: Meal): NutrientSummary? {
-        val products = mealProductMap[meal]
-
-        if (products == null) {
-            return null
-        }
+    fun total(nutrient: Nutrient): NutrientSummary? {
+        val products = mealProductMap.values.flatten()
 
         val incomplete = products.any { it.product.nutrients.get(nutrient, it.weight) == null }
 
