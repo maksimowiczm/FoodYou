@@ -18,17 +18,36 @@ data class DiaryDay(
     /**
      * Total calories for the meal in the diary day.
      */
-    fun totalCalories(meal: Meal): Float = mealProductMap[meal]
-        ?.sumOf { it.calories } ?: 0f
+    fun totalCalories(meal: Meal) = mealProductMap[meal]?.sumOf { it.calories } ?: 0f
 
-    fun totalProteins(meal: Meal): Float = mealProductMap[meal]
-        ?.sumOf { it.proteins } ?: 0f
+    fun totalProteins(meal: Meal) = mealProductMap[meal]?.sumOf { it.proteins } ?: 0f
 
-    fun totalCarbohydrates(meal: Meal): Float = mealProductMap[meal]
-        ?.sumOf { it.carbohydrates } ?: 0f
+    fun totalCarbohydrates(meal: Meal) = mealProductMap[meal]?.sumOf { it.carbohydrates } ?: 0f
 
-    fun totalFats(meal: Meal): Float = mealProductMap[meal]
-        ?.sumOf { it.fats } ?: 0f
+    fun totalFats(meal: Meal) = mealProductMap[meal]?.sumOf { it.fats } ?: 0f
+
+    /**
+     * Total calories for the diary day.
+     */
+    val totalCalories: Float
+        get() = mealProductMap.values.flatten().sumOf { it.calories }
+
+    fun totalCalories(meals: List<Meal>) = meals.sumOf { totalCalories(it) }
+
+    val totalProteins: Float
+        get() = mealProductMap.values.flatten().sumOf { it.proteins }
+
+    fun totalProteins(meals: List<Meal>) = meals.sumOf { totalProteins(it) }
+
+    val totalCarbohydrates: Float
+        get() = mealProductMap.values.flatten().sumOf { it.carbohydrates }
+
+    fun totalCarbohydrates(meals: List<Meal>) = meals.sumOf { totalCarbohydrates(it) }
+
+    val totalFats: Float
+        get() = mealProductMap.values.flatten().sumOf { it.fats }
+
+    fun totalFats(meals: List<Meal>) = meals.sumOf { totalFats(it) }
 
     /**
      * Total nutrient for the given meals in the diary day.
@@ -49,26 +68,6 @@ data class DiaryDay(
             NutrientSummary.Complete(total)
         }
     }
-
-    val totalCalories: Float
-        get() = mealProductMap.values.flatten().sumOf { it.calories }
-
-    fun totalCalories(meals: List<Meal>) = meals.sumOf { totalCalories(it) }
-
-    val totalProteins: Float
-        get() = mealProductMap.values.flatten().sumOf { it.proteins }
-
-    fun totalProteins(meals: List<Meal>) = meals.sumOf { totalProteins(it) }
-
-    val totalCarbohydrates: Float
-        get() = mealProductMap.values.flatten().sumOf { it.carbohydrates }
-
-    fun totalCarbohydrates(meals: List<Meal>) = meals.sumOf { totalCarbohydrates(it) }
-
-    val totalFats: Float
-        get() = mealProductMap.values.flatten().sumOf { it.fats }
-
-    fun totalFats(meals: List<Meal>) = meals.sumOf { totalFats(it) }
 
     /**
      * List of all meals in the diary day.
