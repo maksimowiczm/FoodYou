@@ -1,10 +1,14 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.component
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +27,10 @@ import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.ValueStatus
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.ValueStatus.Companion.asValueStatus
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
+import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.abs
 import kotlin.math.max
@@ -49,7 +56,10 @@ fun CaloriesIndicator(
         )
 
         Text(
-            text = rememberCaloriesString(calories, caloriesGoal)
+            text = rememberCaloriesString(calories, caloriesGoal),
+            // MUST use style because otherwise the text won't have the correct height
+            // (because of the AnnotatedString wierd behavior?)
+            style = MaterialTheme.typography.headlineLarge
         )
 
         CaloriesProgressIndicator(
@@ -63,6 +73,52 @@ fun CaloriesIndicator(
         CaloriesLabel(
             calories = calories,
             goal = caloriesGoal
+        )
+    }
+}
+
+@Composable
+fun CaloriesIndicatorSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        // Calories
+        Spacer(
+            modifier = Modifier
+                .shimmer(shimmer)
+                .width(100.dp)
+                .height(MaterialTheme.typography.titleLarge.toDp())
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+        )
+
+        // Calories value
+        Spacer(
+            modifier = Modifier
+                .shimmer(shimmer)
+                .size(160.dp, MaterialTheme.typography.headlineLarge.toDp())
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+        )
+
+        // Calories progress
+        Spacer(
+            modifier = Modifier
+                .shimmer(shimmer)
+                .height(16.dp)
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.small)
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+        )
+
+        // Calories label
+        Spacer(
+            modifier = Modifier
+                .shimmer(shimmer)
+                .size(150.dp, MaterialTheme.typography.labelLarge.toDp())
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
         )
     }
 }
