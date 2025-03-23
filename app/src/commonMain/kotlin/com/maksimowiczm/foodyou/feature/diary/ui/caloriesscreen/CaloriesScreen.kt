@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.AnimationConstants.DefaultDurationMillis
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -10,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.asPaddingValues
@@ -17,9 +17,15 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,7 +34,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -79,6 +91,13 @@ private fun CaloriesScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
+    var enabledMeals by rememberSaveable(diaryDay) {
+        mutableStateOf(diaryDay.meals.map { it.id })
+    }
+    val meals by remember(enabledMeals, diaryDay) {
+        derivedStateOf { diaryDay.meals.filter { it.id in enabledMeals } }
+    }
+
     val nutrientsPalette = LocalNutrientsPalette.current
 
     val homeSTS = LocalHomeSharedTransitionScope.current ?: error("No SharedTransitionScope")
@@ -148,6 +167,46 @@ private fun CaloriesScreen(
                 contentPadding = paddingValues
             ) {
                 item {
+                    FlowRow(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        diaryDay.meals.forEach { meal ->
+                            val enabled = meal.id in enabledMeals
+
+                            key(meal.id) {
+                                FilterChip(
+                                    selected = enabled,
+                                    onClick = {
+                                        enabledMeals = if (enabled) {
+                                            enabledMeals - meal.id
+                                        } else {
+                                            enabledMeals + meal.id
+                                        }
+                                    },
+                                    leadingIcon = {
+                                        if (enabled) {
+                                            Icon(
+                                                imageVector = Icons.Default.Check,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(
+                                                    FilterChipDefaults.IconSize
+                                                )
+                                            )
+                                        }
+                                    },
+                                    label = {
+                                        Text(
+                                            text = meal.name.toString()
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                item {
                     CaloriesScreenListItem(
                         label = {
                             Text(
@@ -156,7 +215,7 @@ private fun CaloriesScreen(
                             )
                         },
                         value = {
-                            val value = diaryDay.totalProteins.formatClipZeros()
+                            val value = diaryDay.totalProteins(meals).formatClipZeros()
                             val g = stringResource(Res.string.unit_gram_short)
                             Text(text = "$value $g")
                         },
@@ -177,7 +236,7 @@ private fun CaloriesScreen(
                             )
                         },
                         value = {
-                            val value = diaryDay.totalCarbohydrates.formatClipZeros()
+                            val value = diaryDay.totalCarbohydrates(meals).formatClipZeros()
                             val g = stringResource(Res.string.unit_gram_short)
                             Text(text = "$value $g")
                         },
@@ -197,7 +256,7 @@ private fun CaloriesScreen(
                             )
                         },
                         value = {
-                            val summary = diaryDay.total(Nutrient.Sugars)
+                            val summary = diaryDay.total(Nutrient.Sugars, meals)
                             val g = stringResource(Res.string.unit_gram_short)
                             val prefix = summary.prefix()
                             val value = summary.value.formatClipZeros()
@@ -223,7 +282,7 @@ private fun CaloriesScreen(
                             )
                         },
                         value = {
-                            val value = diaryDay.totalFats.formatClipZeros()
+                            val value = diaryDay.totalFats(meals).formatClipZeros()
                             val g = stringResource(Res.string.unit_gram_short)
                             Text(text = "$value $g")
                         },
@@ -243,7 +302,7 @@ private fun CaloriesScreen(
                             )
                         },
                         value = {
-                            val summary = diaryDay.total(Nutrient.SaturatedFats)
+                            val summary = diaryDay.total(Nutrient.SaturatedFats, meals)
                             val g = stringResource(Res.string.unit_gram_short)
                             val prefix = summary.prefix()
                             val value = summary.value.formatClipZeros()
@@ -269,7 +328,7 @@ private fun CaloriesScreen(
                             )
                         },
                         value = {
-                            val summary = diaryDay.total(Nutrient.Salt)
+                            val summary = diaryDay.total(Nutrient.Salt, meals)
                             val g = stringResource(Res.string.unit_gram_short)
                             val prefix = summary.prefix()
                             val value = summary.value.formatClipZeros()
@@ -294,7 +353,7 @@ private fun CaloriesScreen(
                             )
                         },
                         value = {
-                            val summary = diaryDay.total(Nutrient.Fiber)
+                            val summary = diaryDay.total(Nutrient.Fiber, meals)
                             val g = stringResource(Res.string.unit_gram_short)
                             val prefix = summary.prefix()
                             val value = summary.value.formatClipZeros()
@@ -319,7 +378,7 @@ private fun CaloriesScreen(
                             )
                         },
                         value = {
-                            val summary = diaryDay.total(Nutrient.Sodium)
+                            val summary = diaryDay.total(Nutrient.Sodium, meals)
                             val g = stringResource(Res.string.unit_gram_short)
                             val prefix = summary.prefix()
                             val value = summary.value.formatClipZeros()
@@ -335,10 +394,10 @@ private fun CaloriesScreen(
                 item {
                     Text(
                         text =
-                            PREFIX_INCOMPLETE_NUTRIENT_DATA + " " +
-                                    stringResource(
-                                        Res.string.description_incomplete_nutrition_data
-                                    ),
+                        "$PREFIX_INCOMPLETE_NUTRIENT_DATA " +
+                            stringResource(
+                                Res.string.description_incomplete_nutrition_data
+                            ),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.outline,
                         textAlign = TextAlign.Center,
