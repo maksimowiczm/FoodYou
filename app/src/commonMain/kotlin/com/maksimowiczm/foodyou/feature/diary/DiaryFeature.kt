@@ -80,8 +80,9 @@ object DiaryFeature : Feature {
                 )
             }
         ),
-        HomeFeature { _, modifier, homeState ->
+        HomeFeature { animatedVisibilityScope, modifier, homeState ->
             CaloriesCard(
+                animatedVisibilityScope = animatedVisibilityScope,
                 homeState = homeState,
                 modifier = modifier,
                 onClick = {

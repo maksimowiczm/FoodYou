@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen
 
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.AnimationConstants.DefaultDurationMillis
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -34,7 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrient
+import com.maksimowiczm.foodyou.feature.diary.ui.CaloriesIndicatorTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesIndicator
+import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
@@ -67,7 +71,7 @@ fun CaloriesScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 private fun CaloriesScreen(
     diaryDay: DiaryDay,
@@ -77,45 +81,57 @@ private fun CaloriesScreen(
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
+    val homeSTS = LocalHomeSharedTransitionScope.current ?: error("No SharedTransitionScope")
+
     val topBar = @Composable {
         val insets = TopAppBarDefaults.windowInsets
 
-        Surface(
-            color = MaterialTheme.colorScheme.surfaceContainerLow
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(insets.asPaddingValues())
-                    .consumeWindowInsets(insets)
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+        with(homeSTS) {
+            Surface(
+                color = MaterialTheme.colorScheme.surfaceContainerLow
             ) {
-                with(animatedVisibilityScope) {
-                    Text(
-                        text = formatDate(diaryDay.date),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier
-                            .padding(vertical = 8.dp)
-                            .animateEnterExit(
-                                enter = fadeIn(
-                                    tween(
-                                        delayMillis = DefaultDurationMillis
-                                    )
-                                ),
-                                exit = fadeOut(tween(50))
-                            )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(insets.asPaddingValues())
+                        .consumeWindowInsets(insets)
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    with(animatedVisibilityScope) {
+                        Text(
+                            text = formatDate(diaryDay.date),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
+                                .animateEnterExit(
+                                    enter = fadeIn(
+                                        tween(
+                                            delayMillis = DefaultDurationMillis
+                                        )
+                                    ),
+                                    exit = fadeOut(tween(50))
+                                )
+                        )
+                    }
+
+                    CaloriesIndicator(
+                        calories = diaryDay.totalCalories.roundToInt(),
+                        caloriesGoal = diaryDay.dailyGoals.calories,
+                        proteins = diaryDay.totalProteins.roundToInt(),
+                        carbohydrates = diaryDay.totalCarbohydrates.roundToInt(),
+                        fats = diaryDay.totalFats.roundToInt(),
+                        modifier = Modifier.sharedElement(
+                            sharedContentState = rememberSharedContentState(
+                                key = CaloriesIndicatorTransitionKeys.CaloriesIndicator(
+                                    epochDay = diaryDay.date.toEpochDays()
+                                )
+                            ),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
                     )
                 }
-
-                CaloriesIndicator(
-                    calories = diaryDay.totalCalories.roundToInt(),
-                    caloriesGoal = diaryDay.dailyGoals.calories,
-                    proteins = diaryDay.totalProteins.roundToInt(),
-                    carbohydrates = diaryDay.totalCarbohydrates.roundToInt(),
-                    fats = diaryDay.totalFats.roundToInt()
-                )
             }
         }
     }
@@ -319,8 +335,10 @@ private fun CaloriesScreen(
                 item {
                     Text(
                         text =
-                        PREFIX_INCOMPLETE_NUTRIENT_DATA + " " +
-                            stringResource(Res.string.description_incomplete_nutrition_data),
+                            PREFIX_INCOMPLETE_NUTRIENT_DATA + " " +
+                                    stringResource(
+                                        Res.string.description_incomplete_nutrition_data
+                                    ),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.outline,
                         textAlign = TextAlign.Center,
