@@ -219,6 +219,26 @@ private fun CaloriesScreen(
                     CaloriesScreenListItem(
                         label = {
                             Text(
+                                text = stringResource(Res.string.unit_calories)
+                            )
+                        },
+                        value = {
+                            val value = diaryDay.totalCalories(meals).formatClipZeros()
+                            val kcal = stringResource(Res.string.unit_kcal)
+                            Text(text = "$value $kcal")
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
+
+                item {
+                    HorizontalDivider(Modifier.padding(horizontal = 48.dp))
+                }
+
+                item {
+                    CaloriesScreenListItem(
+                        label = {
+                            Text(
                                 text = stringResource(Res.string.nutriment_proteins),
                                 color = nutrientsPalette.proteinsOnSurfaceContainer
                             )
