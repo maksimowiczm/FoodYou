@@ -51,6 +51,7 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrient
 import com.maksimowiczm.foodyou.feature.diary.ui.CaloriesIndicatorTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesIndicator
 import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.ui.modifier.animatePlacement
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
@@ -199,7 +200,8 @@ private fun CaloriesScreen(
                                         Text(
                                             text = meal.name.toString()
                                         )
-                                    }
+                                    },
+                                    modifier = Modifier.animatePlacement()
                                 )
                             }
                         }
