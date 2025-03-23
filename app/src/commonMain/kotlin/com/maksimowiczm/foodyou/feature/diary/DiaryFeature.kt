@@ -230,7 +230,8 @@ object DiaryFeature : Feature {
             val date = LocalDate.fromEpochDays(epochDay)
 
             CaloriesScreen(
-                date = date
+                date = date,
+                animatedVisibilityScope = this@crossfadeComposable
             )
         }
     }
