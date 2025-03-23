@@ -1,7 +1,17 @@
 package com.maksimowiczm.foodyou.feature.diary
 
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
@@ -40,17 +50,21 @@ import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.OpenFoodF
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.buildOpenFoodFactsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.flagCdnCountryFlag
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.search.OpenFoodFactsSearchHintViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchViewModel
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -156,6 +170,9 @@ object DiaryFeature : Feature {
     @Serializable
     private data class CaloriesDetails(val epochDay: Int)
 
+    @Serializable
+    private data class EditProductDialog(val productId: Long)
+
     override fun NavGraphBuilder.graph(navController: NavController) {
         forwardBackwardComposable<GoalsSettings> {
             GoalsSettingsScreen(
@@ -232,8 +249,57 @@ object DiaryFeature : Feature {
 
             CaloriesScreen(
                 date = date,
-                animatedVisibilityScope = this@crossfadeComposable
+                animatedVisibilityScope = this@crossfadeComposable,
+                onProductClick = {
+                    navController.navigate(
+                        route = EditProductDialog(
+                            productId = it.id
+                        ),
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                }
             )
+        }
+
+        composable<EditProductDialog>(
+            enterTransition = {
+                crossfadeIn() + slideInVertically(
+                    animationSpec = tween(
+                        easing = LinearOutSlowInEasing
+                    ),
+                    initialOffsetY = { it }
+                )
+            },
+            exitTransition = {
+                slideOutVertically(
+                    animationSpec = tween(
+                        easing = FastOutLinearInEasing
+                    ),
+                    targetOffsetY = { it }
+                ) + scaleOut(
+                    targetScale = 0.8f,
+                    animationSpec = tween(
+                        easing = FastOutLinearInEasing
+                    )
+                )
+            }
+        ) {
+            val (productId) = it.toRoute<EditProductDialog>()
+
+            Surface(
+                shadowElevation = 6.dp,
+                shape = MaterialTheme.shapes.medium
+            ) {
+                UpdateProductDialog(
+                    onClose = { navController.popBackStack<EditProductDialog>(inclusive = true) },
+                    onSuccess = { navController.popBackStack<EditProductDialog>(inclusive = true) },
+                    viewModel = koinViewModel(
+                        parameters = { parametersOf(productId) }
+                    )
+                )
+            }
         }
     }
 

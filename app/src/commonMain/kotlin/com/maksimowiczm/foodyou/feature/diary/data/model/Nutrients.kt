@@ -32,6 +32,16 @@ data class Nutrients(
         Nutrient.Sodium -> sodium?.times(weight)?.div(100)
         Nutrient.Fiber -> fiber?.times(weight)?.div(100)
     }
+
+    /**
+     * All fields are present.
+     */
+    val isComplete: Boolean
+        get() = sugars != null &&
+            saturatedFats != null &&
+            salt != null &&
+            sodium != null &&
+            fiber != null
 }
 
 enum class Nutrient {

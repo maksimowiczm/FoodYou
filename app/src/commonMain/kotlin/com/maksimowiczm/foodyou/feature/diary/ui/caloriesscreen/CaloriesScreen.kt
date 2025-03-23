@@ -6,6 +6,8 @@ import androidx.compose.animation.core.AnimationConstants.DefaultDurationMillis
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrient
+import com.maksimowiczm.foodyou.feature.diary.data.model.Product
 import com.maksimowiczm.foodyou.feature.diary.ui.CaloriesIndicatorTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesIndicator
 import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
@@ -65,6 +68,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CaloriesScreen(
     date: LocalDate,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    onProductClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CaloriesScreenViewModel = koinViewModel()
 ) {
@@ -75,6 +79,7 @@ fun CaloriesScreen(
             diaryDay = diaryDay!!,
             formatDate = viewModel::formatDate,
             animatedVisibilityScope = animatedVisibilityScope,
+            onProductClick = onProductClick,
             modifier = modifier
         )
     } else {
@@ -89,6 +94,7 @@ fun CaloriesScreen(
 private fun CaloriesScreen(
     diaryDay: DiaryDay,
     formatDate: (LocalDate) -> String,
+    onProductClick: (Product) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
@@ -402,9 +408,57 @@ private fun CaloriesScreen(
                             ),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.outline,
-                        textAlign = TextAlign.Center,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
+                }
+
+                item {
+                    val anyProductIncomplete = diaryDay.meals
+                        .filter { it.id in enabledMeals }
+                        .flatMap { diaryDay.mealProductMap[it] ?: emptyList() }
+                        .any { !it.product.nutrients.isComplete }
+
+                    // Display incomplete products
+                    if (anyProductIncomplete) {
+                        Column(
+                            modifier = Modifier.padding(
+                                horizontal = 16.dp,
+                                vertical = 8.dp
+                            )
+                        ) {
+                            Text(
+                                text = "Incomplete products",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.outline
+                            )
+
+                            diaryDay.meals
+                                .filter { it.id in enabledMeals }
+                                .forEach { meal ->
+                                    val products = diaryDay.mealProductMap[meal] ?: return@forEach
+
+                                    products.forEach { product ->
+                                        if (!product.product.nutrients.isComplete) {
+                                            Text(
+                                                text = product.product.name,
+                                                style = MaterialTheme.typography.labelMedium,
+                                                color = MaterialTheme.colorScheme.outline,
+                                                textAlign = TextAlign.Center,
+                                                modifier = Modifier.clickable(
+                                                    interactionSource = remember {
+                                                        MutableInteractionSource()
+                                                    },
+                                                    indication = null,
+                                                    onClick = {
+                                                        onProductClick(product.product)
+                                                    }
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                        }
+                    }
                 }
             }
         }
