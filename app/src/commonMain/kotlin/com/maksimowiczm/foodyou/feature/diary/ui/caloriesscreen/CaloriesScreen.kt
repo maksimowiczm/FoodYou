@@ -11,7 +11,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.asPaddingValues
@@ -20,15 +19,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -40,9 +33,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,8 +45,9 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrient
 import com.maksimowiczm.foodyou.feature.diary.data.model.Product
 import com.maksimowiczm.foodyou.feature.diary.ui.CaloriesIndicatorTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesIndicator
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MealsFilter
+import com.maksimowiczm.foodyou.feature.diary.ui.component.rememberMealsFilterState
 import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
-import com.maksimowiczm.foodyou.ui.modifier.animatePlacement
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
@@ -99,11 +91,15 @@ private fun CaloriesScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
-    var enabledMeals by rememberSaveable(diaryDay) {
-        mutableStateOf(diaryDay.meals.map { it.id })
-    }
-    val meals by remember(enabledMeals, diaryDay) {
-        derivedStateOf { diaryDay.meals.filter { it.id in enabledMeals } }
+    val filterState = rememberMealsFilterState(diaryDay.meals.toSet())
+    val meals by remember(filterState.selectedMeals) {
+        derivedStateOf {
+            if (filterState.selectedMeals.isEmpty()) {
+                diaryDay.meals
+            } else {
+                diaryDay.meals.filter { it.id in filterState.selectedMeals }
+            }
+        }
     }
 
     val nutrientsPalette = LocalNutrientsPalette.current
@@ -175,44 +171,10 @@ private fun CaloriesScreen(
                 contentPadding = paddingValues
             ) {
                 item {
-                    FlowRow(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        diaryDay.meals.forEach { meal ->
-                            val enabled = meal.id in enabledMeals
-
-                            key(meal.id) {
-                                FilterChip(
-                                    selected = enabled,
-                                    onClick = {
-                                        enabledMeals = if (enabled) {
-                                            enabledMeals - meal.id
-                                        } else {
-                                            enabledMeals + meal.id
-                                        }
-                                    },
-                                    leadingIcon = {
-                                        if (enabled) {
-                                            Icon(
-                                                imageVector = Icons.Default.Check,
-                                                contentDescription = null,
-                                                modifier = Modifier.size(
-                                                    FilterChipDefaults.IconSize
-                                                )
-                                            )
-                                        }
-                                    },
-                                    label = {
-                                        Text(
-                                            text = meal.name.toString()
-                                        )
-                                    },
-                                    modifier = Modifier.animatePlacement()
-                                )
-                            }
-                        }
-                    }
+                    MealsFilter(
+                        state = filterState,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
                 }
 
                 item {
@@ -422,7 +384,7 @@ private fun CaloriesScreen(
 
                 item {
                     val anyProductIncomplete = diaryDay.meals
-                        .filter { it.id in enabledMeals }
+                        .filter { it in meals }
                         .flatMap { diaryDay.mealProductMap[it] ?: emptyList() }
                         .any { !it.product.nutrients.isComplete }
 
@@ -453,9 +415,10 @@ private fun CaloriesScreen(
                             )
 
                             diaryDay.meals
-                                .filter { it.id in enabledMeals }
+                                .filter { it in meals }
                                 .forEach { meal ->
-                                    val products = diaryDay.mealProductMap[meal] ?: return@forEach
+                                    val products =
+                                        diaryDay.mealProductMap[meal] ?: return@forEach
 
                                     products.forEach { product ->
                                         if (!product.product.nutrients.isComplete) {
