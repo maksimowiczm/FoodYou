@@ -411,32 +411,30 @@ private fun CaloriesScreen(
                                 color = MaterialTheme.colorScheme.outline
                             )
 
-                            diaryDay.meals
+                            val products = diaryDay.meals
                                 .filter { it in meals }
-                                .forEach { meal ->
-                                    val products =
-                                        diaryDay.mealProductMap[meal] ?: return@forEach
+                                .flatMap { diaryDay.mealProductMap[it] ?: emptyList() }
+                                .map { it.product }
+                                .distinct()
+                                .filter { !it.nutrients.isComplete }
 
-                                    products.forEach { product ->
-                                        if (!product.product.nutrients.isComplete) {
-                                            Text(
-                                                text = product.product.name,
-                                                style = MaterialTheme.typography.labelMedium,
-                                                color = MaterialTheme.colorScheme.outline,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier.clickable(
-                                                    interactionSource = remember {
-                                                        MutableInteractionSource()
-                                                    },
-                                                    indication = null,
-                                                    onClick = {
-                                                        onProductClick(product.product)
-                                                    }
-                                                )
-                                            )
+                            products.forEach { product ->
+                                Text(
+                                    text = product.name,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.outline,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.clickable(
+                                        interactionSource = remember {
+                                            MutableInteractionSource()
+                                        },
+                                        indication = null,
+                                        onClick = {
+                                            onProductClick(product)
                                         }
-                                    }
-                                }
+                                    )
+                                )
+                            }
                         }
                     }
                 }
