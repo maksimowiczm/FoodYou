@@ -116,16 +116,13 @@ private fun CaloriesScreen(
                         .fillMaxWidth()
                         .padding(insets.asPaddingValues())
                         .consumeWindowInsets(insets)
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(16.dp)
                 ) {
                     with(animatedVisibilityScope) {
                         Text(
                             text = formatDate(diaryDay.date),
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier
-                                .padding(vertical = 8.dp)
                                 .animateEnterExit(
                                     enter = fadeIn(
                                         tween(
@@ -136,6 +133,8 @@ private fun CaloriesScreen(
                                 )
                         )
                     }
+
+                    Spacer(Modifier.height(16.dp))
 
                     CaloriesIndicator(
                         calories = diaryDay.totalCalories.roundToInt(),
