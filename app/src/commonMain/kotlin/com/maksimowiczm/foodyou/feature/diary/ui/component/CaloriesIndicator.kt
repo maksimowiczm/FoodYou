@@ -23,8 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.diary.data.NutrientsHelper
-import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.ValueStatus
-import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.ValueStatus.Companion.asValueStatus
+import com.maksimowiczm.foodyou.feature.diary.ui.ValueStatus
+import com.maksimowiczm.foodyou.feature.diary.ui.asValueStatus
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.ui.ext.toDp

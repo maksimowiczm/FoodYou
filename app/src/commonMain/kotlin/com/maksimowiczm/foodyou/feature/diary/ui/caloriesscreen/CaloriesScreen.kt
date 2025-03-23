@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrient
-import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.ValueStatus
-import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.ValueStatus.Companion.asValueStatus
+import com.maksimowiczm.foodyou.feature.diary.ui.ValueStatus
+import com.maksimowiczm.foodyou.feature.diary.ui.asValueStatus
 import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCardDefaults
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import foodyou.app.generated.resources.Res

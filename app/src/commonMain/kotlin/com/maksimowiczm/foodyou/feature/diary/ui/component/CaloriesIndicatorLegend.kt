@@ -24,8 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.ValueStatus
-import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.ValueStatus.Companion.asValueStatus
+import com.maksimowiczm.foodyou.feature.diary.ui.ValueStatus
+import com.maksimowiczm.foodyou.feature.diary.ui.asValueStatus
 import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import com.valentinilk.shimmer.Shimmer
