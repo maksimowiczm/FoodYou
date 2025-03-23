@@ -33,6 +33,7 @@
     <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="headline_all_day" description="All-day (meal)">All-day</string>
     <string name="headline_time_based_ordering">Time-based ordering</string>
+    <string name="headline_incomplete_products">Incomplete products</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
