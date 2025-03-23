@@ -61,7 +61,7 @@ fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState
     }
 
     val proteinsGrams = rememberFormFieldWithTextFieldValue(
-        initialValue = dailyGoals.proteinsAsGrams,
+        initialValue = dailyGoals.proteinsAsGrams.roundToInt(),
         parser = intParser(
             onEmpty = { GoalsFormInputError.Required },
             onNan = { GoalsFormInputError.MustBeInteger }
@@ -88,7 +88,7 @@ fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState
     }
 
     val carbsGrams = rememberFormFieldWithTextFieldValue(
-        initialValue = dailyGoals.carbohydratesAsGrams,
+        initialValue = dailyGoals.carbohydratesAsGrams.roundToInt(),
         parser = intParser(
             onEmpty = { GoalsFormInputError.Required },
             onNan = { GoalsFormInputError.MustBeInteger }
@@ -115,7 +115,7 @@ fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState
     }
 
     val fatsGrams = rememberFormFieldWithTextFieldValue(
-        initialValue = dailyGoals.fatsAsGrams,
+        initialValue = dailyGoals.fatsAsGrams.roundToInt(),
         parser = intParser(
             onEmpty = { GoalsFormInputError.Required },
             onNan = { GoalsFormInputError.MustBeInteger }
@@ -229,9 +229,9 @@ class CaloriesGoalFormState(
 
                 if (editing != Editing.Calories) return@collectLatest
 
-                proteinsGrams.onRawValueChange(dailyGoals.proteinsAsGrams)
-                carbohydratesGrams.onRawValueChange(dailyGoals.carbohydratesAsGrams)
-                fatsGrams.onRawValueChange(dailyGoals.fatsAsGrams)
+                proteinsGrams.onRawValueChange(dailyGoals.proteinsAsGrams.roundToInt())
+                carbohydratesGrams.onRawValueChange(dailyGoals.carbohydratesAsGrams.roundToInt())
+                fatsGrams.onRawValueChange(dailyGoals.fatsAsGrams.roundToInt())
             }
         }
 
@@ -249,9 +249,11 @@ class CaloriesGoalFormState(
                 val dailyGoals = intoDailyGoals()
 
                 if (isValid) {
-                    proteinsGrams.onRawValueChange(dailyGoals.proteinsAsGrams)
-                    carbohydratesGrams.onRawValueChange(dailyGoals.carbohydratesAsGrams)
-                    fatsGrams.onRawValueChange(dailyGoals.fatsAsGrams)
+                    proteinsGrams.onRawValueChange(dailyGoals.proteinsAsGrams.roundToInt())
+                    carbohydratesGrams.onRawValueChange(
+                        dailyGoals.carbohydratesAsGrams.roundToInt()
+                    )
+                    fatsGrams.onRawValueChange(dailyGoals.fatsAsGrams.roundToInt())
                 }
             }
         }

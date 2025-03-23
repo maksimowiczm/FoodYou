@@ -228,21 +228,21 @@ private fun ColumnScope.Expanded(diaryDay: DiaryDay) {
         NutrientIndicator(
             title = stringResource(Res.string.nutriment_proteins),
             value = diaryDay.totalProteins.roundToInt(),
-            goal = diaryDay.dailyGoals.proteinsAsGrams,
+            goal = diaryDay.dailyGoals.proteinsAsGrams.roundToInt(),
             progressColor = nutrientsPalette.proteinsOnSurfaceContainer
         )
 
         NutrientIndicator(
             title = stringResource(Res.string.nutriment_carbohydrates),
             value = diaryDay.totalCarbohydrates.roundToInt(),
-            goal = diaryDay.dailyGoals.carbohydratesAsGrams,
+            goal = diaryDay.dailyGoals.carbohydratesAsGrams.roundToInt(),
             progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
         )
 
         NutrientIndicator(
             title = stringResource(Res.string.nutriment_fats),
             value = diaryDay.totalFats.roundToInt(),
-            goal = diaryDay.dailyGoals.fatsAsGrams,
+            goal = diaryDay.dailyGoals.fatsAsGrams.roundToInt(),
             progressColor = nutrientsPalette.fatsOnSurfaceContainer
         )
     }
