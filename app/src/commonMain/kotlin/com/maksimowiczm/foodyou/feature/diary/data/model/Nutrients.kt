@@ -43,15 +43,3 @@ data class Nutrients(
             sodium != null &&
             fiber != null
 }
-
-enum class Nutrient {
-    Calories,
-    Proteins,
-    Carbohydrates,
-    Sugars,
-    Fats,
-    SaturatedFats,
-    Salt,
-    Sodium,
-    Fiber
-}
