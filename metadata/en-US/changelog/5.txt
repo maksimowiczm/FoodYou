@@ -1,0 +1,3 @@
+New Features
+- display product nutrient values on the product list
+- diary day summary (click on calories card)
