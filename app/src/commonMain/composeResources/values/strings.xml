@@ -33,6 +33,7 @@
     <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="headline_all_day" description="All-day (meal)">All-day</string>
     <string name="headline_time_based_ordering">Time-based ordering</string>
+    <string name="headline_incomplete_products">Incomplete products</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
@@ -175,6 +176,7 @@
     <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">Clearing the cache will cause the entire Open Food Facts database to be re-downloaded. It is not recommended to clear the cache unless you know what you are doing.</string>
     <string name="description_time_based_meals_sorting">When enabled, meals that are currently happening will be displayed first</string>
     <string name="description_action_include_all_day_meals">All-day meals will be included in the current meal list</string>
+    <string name="description_incomplete_nutrition_data">Some of the used products lack this value; therefore, the displayed value might not be accurate</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>

@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.data.model
 
 import com.maksimowiczm.foodyou.feature.diary.data.NutrientsHelper
-import kotlin.math.roundToInt
 
 data class DailyGoals(
     val calories: Int,
@@ -42,20 +41,20 @@ data class DailyGoals(
     /**
      * Proteins goal in grams.
      */
-    val proteinsAsGrams: Int
-        get() = (calories * proteins / NutrientsHelper.PROTEINS).roundToInt()
+    val proteinsAsGrams: Float
+        get() = (calories * proteins / NutrientsHelper.PROTEINS)
 
     /**
      * Carbohydrates goal in grams.
      */
-    val carbohydratesAsGrams: Int
-        get() = (calories * carbohydrates / NutrientsHelper.CARBOHYDRATES).roundToInt()
+    val carbohydratesAsGrams: Float
+        get() = (calories * carbohydrates / NutrientsHelper.CARBOHYDRATES)
 
     /**
      * Fats goal in grams.
      */
-    val fatsAsGrams: Int
-        get() = (calories * fats / NutrientsHelper.FATS).roundToInt()
+    val fatsAsGrams: Float
+        get() = (calories * fats / NutrientsHelper.FATS)
 }
 
 fun defaultGoals() = DailyGoals(

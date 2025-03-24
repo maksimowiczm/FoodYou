@@ -26,6 +26,7 @@ import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlin.math.max
+import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -54,9 +55,9 @@ fun ProductWithWeightMeasurement.ListItem(
         supportingContent = {
             Column {
                 NutrientsRow(
-                    proteins = proteins,
-                    carbohydrates = carbohydrates,
-                    fats = fats,
+                    proteins = proteins.roundToInt(),
+                    carbohydrates = carbohydrates.roundToInt(),
+                    fats = fats.roundToInt(),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -223,4 +224,4 @@ val ProductWithWeightMeasurement.measurementString: String
     }
 
 val ProductWithWeightMeasurement.caloriesString: String
-    @Composable get() = "$calories " + stringResource(Res.string.unit_kcal)
+    @Composable get() = "${calories.roundToInt()} " + stringResource(Res.string.unit_kcal)

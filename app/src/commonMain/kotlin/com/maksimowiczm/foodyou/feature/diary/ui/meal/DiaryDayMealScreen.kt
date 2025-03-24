@@ -14,18 +14,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -55,6 +48,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -92,6 +86,7 @@ import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
+import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -247,12 +242,7 @@ private fun DiaryDayMealScreen(
     }
 
     val topBar = @Composable {
-        val bottomInset = WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
-
-        val insets = WindowInsets.systemBars
-            .union(WindowInsets.displayCutout)
-            .exclude(bottomInset)
-            .asPaddingValues()
+        val insets = TopAppBarDefaults.windowInsets
 
         with(homeSTS) {
             Surface(
@@ -276,7 +266,7 @@ private fun DiaryDayMealScreen(
                 Column(
                     modifier = Modifier
                         .padding(16.dp)
-                        .padding(insets)
+                        .padding(insets.asPaddingValues())
                         .consumeWindowInsets(insets)
                 ) {
                     with(mealHeaderScope) {
@@ -353,7 +343,7 @@ private fun DiaryDayMealScreen(
                             text = if (isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.calories }.toString()
+                                products.sumOf { it.calories.roundToInt() }.toString()
                             }
                         )
                     }
@@ -362,7 +352,7 @@ private fun DiaryDayMealScreen(
                             text = if (isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.proteins }
+                                products.sumOf { it.proteins.roundToInt() }
                                     .toString() + " " + stringResource(Res.string.unit_gram_short)
                             }
                         )
@@ -372,7 +362,7 @@ private fun DiaryDayMealScreen(
                             text = if (isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.carbohydrates }
+                                products.sumOf { it.carbohydrates.roundToInt() }
                                     .toString() + " " + stringResource(Res.string.unit_gram_short)
                             }
                         )
@@ -382,7 +372,7 @@ private fun DiaryDayMealScreen(
                             text = if (isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.fats }
+                                products.sumOf { it.fats.roundToInt() }
                                     .toString() + " " + stringResource(Res.string.unit_gram_short)
                             }
                         )
