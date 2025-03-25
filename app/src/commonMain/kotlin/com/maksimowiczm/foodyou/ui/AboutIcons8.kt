@@ -6,12 +6,10 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * AboutIcons8 is a composable that displays the Icons8 attribution. Must be used in the about
@@ -38,14 +36,4 @@ fun AboutIcons8(onOpenIcons8: () -> Unit, modifier: Modifier = Modifier) {
             )
         }
     )
-}
-
-@Preview
-@Composable
-private fun AboutIcons8Preview() {
-    FoodYouTheme {
-        AboutIcons8(
-            onOpenIcons8 = {}
-        )
-    }
 }

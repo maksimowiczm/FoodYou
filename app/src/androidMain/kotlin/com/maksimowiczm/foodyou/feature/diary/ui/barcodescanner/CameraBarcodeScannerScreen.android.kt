@@ -43,13 +43,9 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import com.maksimowiczm.foodyou.ui.preview.BooleanPreviewParameter
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -201,28 +197,4 @@ private fun redirectToSettings(context: Context) {
         data = Uri.fromParts("package", context.packageName, null)
     }
     context.startActivity(intent)
-}
-
-@Preview
-@Composable
-private fun RequestCameraPermissionScreenPreview(
-    @PreviewParameter(BooleanPreviewParameter::class) shouldShowRationale: Boolean
-) {
-    FoodYouTheme {
-        RequestCameraPermissionScreen(
-            onRequest = {},
-            shouldShowRationale = shouldShowRationale
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun RedirectToSettingsAlertDialogPreview() {
-    FoodYouTheme {
-        RedirectToSettingsAlertDialog(
-            onDismissRequest = {},
-            onConfirm = {}
-        )
-    }
 }

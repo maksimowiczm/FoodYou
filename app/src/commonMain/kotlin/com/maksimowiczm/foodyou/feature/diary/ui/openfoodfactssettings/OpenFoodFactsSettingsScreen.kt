@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -45,7 +44,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -59,15 +57,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.system.data.model.Country
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
-import org.koin.dsl.module
 
 @Composable
 fun OpenFoodFactsSettingsScreen(
@@ -408,59 +402,4 @@ private fun ClearCacheDialog(onDismissRequest: () -> Unit, onConfirm: () -> Unit
             }
         }
     )
-}
-
-@Preview
-@Composable
-private fun OpenFoodFactsSettingsDisabledPreview() {
-    FoodYouTheme {
-        OpenFoodFactsSettingsScreen(
-            settings = OpenFoodFactsSettings.Disabled,
-            onToggle = {},
-            onCountrySelect = {},
-            onCacheClear = {},
-            onBack = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun OpenFoodFactsSettingsPreview() {
-    val countryFlag = CountryFlag { c, modifier ->
-        Box(
-            modifier = modifier,
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = c.code)
-        }
-    }
-
-    KoinApplication(
-        application = { modules(module { single { countryFlag } }) }
-    ) {
-        FoodYouTheme {
-            OpenFoodFactsSettingsScreen(
-                settings = OpenFoodFactsSettings.Enabled(
-                    country = Country.Poland,
-                    availableCountries = listOf(Country.Poland, Country.UnitedStates)
-                ),
-                onToggle = {},
-                onCountrySelect = {},
-                onCacheClear = {},
-                onBack = {}
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun ClearCacheDialogPreview() {
-    FoodYouTheme {
-        ClearCacheDialog(
-            onDismissRequest = {},
-            onConfirm = {}
-        )
-    }
 }

@@ -6,9 +6,6 @@ import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,10 +21,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.ui.preview.BooleanPreviewParameter
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @Composable
 fun ToggleButton(
@@ -101,24 +94,4 @@ object ToggleButtonDefaults {
         checkedContentColor = checkedContentColor,
         uncheckedColor = uncheckedColor
     )
-}
-
-@Preview
-@Composable
-private fun ToggleButtonColorsPreview(
-    @PreviewParameter(BooleanPreviewParameter::class) checked: Boolean
-) {
-    FoodYouTheme {
-        ToggleButton(
-            checked = checked,
-            onCheckChange = {}
-        ) {
-            if (checked) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = null
-                )
-            }
-        }
-    }
 }

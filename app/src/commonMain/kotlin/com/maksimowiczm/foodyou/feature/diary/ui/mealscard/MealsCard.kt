@@ -51,19 +51,13 @@ import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
-import com.maksimowiczm.foodyou.ui.preview.DiaryDayPreviewParameterProvider
-import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.valentinilk.shimmer.Shimmer
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 fun buildMealsCard(
@@ -421,70 +415,6 @@ fun SharedTransitionScope.MealCard(
                         actionButton()
                     }
                 }
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun MealsCardSkeletonPreview() {
-    FoodYouTheme {
-        MealCardSkeleton(
-            shimmerInstance = rememberShimmer(shimmerBounds = ShimmerBounds.View)
-        )
-    }
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Preview
-@Composable
-private fun MealsCardPreview() {
-    val diaryDay = DiaryDayPreviewParameterProvider().values.first()
-    val meal = diaryDay.meals.first()
-
-    FoodYouTheme {
-        SharedTransitionPreview {
-            MealCard(
-                animatedVisibilityScope = it,
-                epochDay = 0,
-                meal = meal,
-                isEmpty = false,
-                totalCalories = diaryDay.totalCalories(meal).roundToInt(),
-                totalProteins = diaryDay.totalProteins(meal).roundToInt(),
-                totalCarbohydrates = diaryDay.totalCarbohydrates(meal).roundToInt(),
-                totalFats = diaryDay.totalFats(meal).roundToInt(),
-                formatTime = { it.toString() },
-                onMealClick = {},
-                onAddClick = {}
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Preview
-@Composable
-private fun EmptyMealsCardPreview() {
-    val init = DiaryDayPreviewParameterProvider().values.first()
-    val diaryDay = init.copy(
-        mealProductMap = init.mealProductMap.mapValues { emptyList() }
-    )
-
-    FoodYouTheme {
-        SharedTransitionPreview {
-            MealCard(
-                animatedVisibilityScope = it,
-                epochDay = 0,
-                meal = diaryDay.meals.first(),
-                isEmpty = true,
-                totalCalories = 0,
-                totalProteins = 0,
-                totalCarbohydrates = 0,
-                totalFats = 0,
-                formatTime = { it.toString() },
-                onMealClick = {},
-                onAddClick = {}
             )
         }
     }

@@ -76,15 +76,12 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightUnit
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
-import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MeasurementScreen(
@@ -664,26 +661,4 @@ private fun DeleteDialog(onDismissRequest: () -> Unit, onDelete: () -> Unit) {
             Text(stringResource(Res.string.description_delete_product))
         }
     )
-}
-
-@Preview
-@Composable
-private fun MeasurementScreenPreview() {
-    val product = ProductPreviewParameterProvider().values.first {
-        it.packageWeight != null && it.servingWeight != null
-    }
-
-    FoodYouTheme {
-        MeasurementScreen(
-            suggestion = QuantitySuggestion(
-                product = product,
-                quantitySuggestions = QuantitySuggestion.defaultSuggestion
-            ),
-            onBack = {},
-            onConfirm = { _, _ -> },
-            onEditClick = {},
-            onDeleteClick = {},
-            highlight = WeightMeasurementEnum.Serving
-        )
-    }
 }

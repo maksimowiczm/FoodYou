@@ -29,10 +29,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.maksimowiczm.foodyou.feature.system.data.model.Country
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Suppress("ktlint:compose:modifier-missing-check")
 @Composable
@@ -119,25 +117,5 @@ fun CountryPickerDialog(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun CountryPickerDialogPreview() {
-    FoodYouTheme {
-        CountryPickerDialog(
-            availableCountries = listOf(Country.Poland, Country.UnitedStates),
-            countryFlag = { (code), modifier ->
-                Box(
-                    modifier = modifier,
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = code)
-                }
-            },
-            onCountrySelect = {},
-            onDismissRequest = {}
-        )
     }
 }

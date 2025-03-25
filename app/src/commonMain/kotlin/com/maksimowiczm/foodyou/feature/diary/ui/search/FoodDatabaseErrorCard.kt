@@ -15,10 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun FoodDatabaseErrorCard(onRetry: () -> Unit, modifier: Modifier = Modifier) {
@@ -57,13 +55,5 @@ fun FoodDatabaseErrorCard(onRetry: () -> Unit, modifier: Modifier = Modifier) {
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun FoodDatabaseErrorCardPreview() {
-    FoodYouTheme {
-        FoodDatabaseErrorCard(onRetry = {})
     }
 }

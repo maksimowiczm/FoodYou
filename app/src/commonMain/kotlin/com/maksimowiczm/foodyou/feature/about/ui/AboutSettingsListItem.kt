@@ -10,11 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.maksimowiczm.foodyou.feature.SettingsFeature
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 fun buildAboutSettingsListItem(onClick: () -> Unit) = SettingsFeature { modifier ->
     AboutSettingsListItem(
@@ -46,14 +44,4 @@ private fun AboutSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modi
             )
         }
     )
-}
-
-@Preview
-@Composable
-private fun AboutSettingsListItemPreview() {
-    FoodYouTheme {
-        AboutSettingsListItem(
-            onClick = {}
-        )
-    }
 }

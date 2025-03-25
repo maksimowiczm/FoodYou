@@ -48,7 +48,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.HomeState
 import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.flow.collectLatest
@@ -61,7 +60,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -355,41 +353,4 @@ object CalendarCardDefaults {
         referenceDateContainerColor = referenceDateContainerColor,
         referenceDateContentColor = referenceDateContentColor
     )
-}
-
-@Preview
-@Composable
-private fun CalendarCardPreview() {
-    val namesOfDayOfWeek = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
-    val referenceDate = LocalDate(2024, 12, 17)
-    val selectedDate = LocalDate(2024, 12, 18)
-    val formatMonthYear = { _: LocalDate -> "December 2024" }
-
-    FoodYouTheme {
-        CalendarCard(
-            calendarState = rememberCalendarState(
-                namesOfDayOfWeek = namesOfDayOfWeek,
-                zeroDay = LocalDate.fromEpochDays(4),
-                referenceDate = referenceDate,
-                selectedDate = selectedDate
-            ),
-            formatMonthYear = formatMonthYear
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun CalendarCardDatePickerDialogPreview() {
-    FoodYouTheme {
-        CalendarCardDatePickerDialog(
-            calendarState = rememberCalendarState(
-                namesOfDayOfWeek = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"),
-                zeroDay = LocalDate.fromEpochDays(4),
-                referenceDate = LocalDate(2024, 12, 17),
-                selectedDate = LocalDate(2024, 12, 18)
-            ),
-            onDismissRequest = {}
-        )
-    }
 }

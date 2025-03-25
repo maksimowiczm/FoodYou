@@ -48,14 +48,11 @@ import com.maksimowiczm.foodyou.ui.component.FullScreenDialog
 import com.maksimowiczm.foodyou.ui.ext.plus
 import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
-import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.res.pluralString
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ProductForm(
@@ -475,25 +472,5 @@ private fun WeightUnitDropdownMenu(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun NullProductFormPreview() {
-    FoodYouTheme {
-        ProductForm(
-            state = rememberProductFormState(null)
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun ProductFormPreview() {
-    FoodYouTheme {
-        ProductForm(
-            state = rememberProductFormState(ProductPreviewParameterProvider().values.first())
-        )
     }
 }

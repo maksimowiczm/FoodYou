@@ -16,12 +16,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.security.data.SecurityPreferences
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Composable
@@ -73,12 +71,4 @@ private fun SecureScreenSettingsListItem(
             )
         }
     )
-}
-
-@Preview
-@Composable
-private fun SecureScreenSettingsListItemPreview() {
-    FoodYouTheme {
-        SecureScreenSettingsListItem(checked = true, onCheckedChange = {})
-    }
 }

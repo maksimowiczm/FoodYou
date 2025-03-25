@@ -24,11 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -114,16 +112,5 @@ private fun OpenFoodFactsSearchHint(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun OpenFoodFactsSearchHintPreview() {
-    FoodYouTheme {
-        OpenFoodFactsSearchHint(
-            onGoToSettings = {},
-            onDontShowAgain = {}
-        )
     }
 }

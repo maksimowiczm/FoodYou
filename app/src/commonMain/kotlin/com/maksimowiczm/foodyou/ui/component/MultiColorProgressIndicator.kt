@@ -12,7 +12,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Immutable
 data class MultiColorProgressIndicatorItem(val progress: Float, val color: Color)
@@ -61,18 +60,4 @@ fun MultiColorProgressIndicator(
 object MultiColorProgressIndicatorDefaults {
     val width = 240.dp
     val height = 4.dp
-}
-
-@Preview
-@Composable
-private fun MultiColorProgressIndicatorPreview() {
-    MaterialTheme {
-        MultiColorProgressIndicator(
-            items = listOf(
-                MultiColorProgressIndicatorItem(0.15f, Color.Red),
-                MultiColorProgressIndicatorItem(0.1f, Color.Green),
-                MultiColorProgressIndicatorItem(0.3f, Color.Blue)
-            )
-        )
-    }
 }

@@ -13,7 +13,6 @@ import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 fun buildOpenFoodFactsSettingsListItem(onClick: () -> Unit) = SettingsFeature { modifier ->
     OpenFoodFactsSettingsListItem(
@@ -45,10 +44,4 @@ private fun OpenFoodFactsSettingsListItem(onClick: () -> Unit, modifier: Modifie
             )
         }
     )
-}
-
-@Preview
-@Composable
-private fun FoodDatabaseSettingsListItemPreview() {
-    OpenFoodFactsSettingsListItem(onClick = {})
 }

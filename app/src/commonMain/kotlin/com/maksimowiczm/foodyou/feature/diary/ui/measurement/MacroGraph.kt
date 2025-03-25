@@ -25,18 +25,13 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.Product
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
-import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
-import com.maksimowiczm.foodyou.ui.preview.WeightMeasurementPreviewParameter
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @Composable
 fun MacroGraph(product: Product, measurement: WeightMeasurement, modifier: Modifier = Modifier) {
@@ -191,20 +186,5 @@ private fun NutrientLegendItem(
                 text = "$value " + stringResource(Res.string.unit_gram_short)
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun MacroGraphPreview(
-    @PreviewParameter(WeightMeasurementPreviewParameter::class) measurement: WeightMeasurement
-) {
-    FoodYouTheme {
-        MacroGraph(
-            product = ProductPreviewParameterProvider().values.first {
-                it.packageWeight != null && it.servingWeight != null
-            },
-            measurement = measurement
-        )
     }
 }

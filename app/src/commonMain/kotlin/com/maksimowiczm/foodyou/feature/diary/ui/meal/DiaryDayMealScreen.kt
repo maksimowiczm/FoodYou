@@ -80,10 +80,6 @@ import com.maksimowiczm.foodyou.feature.diary.ui.MealHeaderTransitionSpecs.overl
 import com.maksimowiczm.foodyou.feature.diary.ui.NutrientsLayout
 import com.maksimowiczm.foodyou.feature.diary.ui.SearchSharedTransition
 import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
-import com.maksimowiczm.foodyou.ui.preview.DiaryDayPreviewParameterProvider
-import com.maksimowiczm.foodyou.ui.preview.ProductWithWeightMeasurementPreviewParameter
-import com.maksimowiczm.foodyou.ui.preview.SharedTransitionPreview
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlin.math.roundToInt
@@ -91,12 +87,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -649,84 +643,4 @@ private fun DeleteDialog(onDismissRequest: () -> Unit, onDeleteEntry: () -> Unit
             Text(stringResource(Res.string.description_delete_product_entry))
         }
     )
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Preview
-@Composable
-private fun EmptyDiaryDayMealScreenPreview() {
-    val diaryDay = DiaryDayPreviewParameterProvider().values.first()
-    val meal = diaryDay.meals.first()
-
-    FoodYouTheme {
-        SharedTransitionPreview { animatedVisibilityScope ->
-            DiaryDayMealScreen(
-                navigationScope = animatedVisibilityScope,
-                mealHeaderScope = animatedVisibilityScope,
-                date = diaryDay.date,
-                meal = meal,
-                products = emptyList(),
-                deletedEntryChannel = flowOf(),
-                onProductAdd = {},
-                onBarcodeScan = {},
-                onEditEntry = {},
-                onDeleteEntry = {},
-                onDeleteEntryUndo = {},
-                formatTime = { it.toString() },
-                formatDate = { it.toString() }
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Preview
-@Composable
-private fun DiaryDayMealScreenPreview() {
-    val diaryDay = DiaryDayPreviewParameterProvider().values.first()
-    val meal = diaryDay.meals.first()
-
-    val products = diaryDay.mealProductMap
-        .flatMap { it.value }
-        .mapIndexed { i, p ->
-            p.copy(
-                measurementId = i.toLong()
-            )
-        }
-
-    FoodYouTheme {
-        SharedTransitionPreview { animatedVisibilityScope ->
-            DiaryDayMealScreen(
-                navigationScope = animatedVisibilityScope,
-                mealHeaderScope = animatedVisibilityScope,
-                date = diaryDay.date,
-                meal = meal,
-                products = products,
-                deletedEntryChannel = flowOf(),
-                onProductAdd = {},
-                onBarcodeScan = {},
-                onEditEntry = {},
-                onDeleteEntry = {},
-                onDeleteEntryUndo = {},
-                formatTime = { it.toString() },
-                formatDate = { it.toString() }
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun ModalSheetContentPreview() {
-    val model = ProductWithWeightMeasurementPreviewParameter().values.first()
-
-    FoodYouTheme {
-        Column {
-            ModalSheetContent(
-                model = model,
-                onEditEntry = {},
-                onDeleteEntry = {}
-            )
-        }
-    }
 }

@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 interface NestedListScope {
     /**
@@ -57,33 +55,5 @@ fun IndentedList(
         modifier = modifier
     ) {
         items.forEach { it() }
-    }
-}
-
-@Preview
-@Composable
-private fun NestedListPreview() {
-    IndentedList {
-        item {
-            Text("Item level 0")
-        }
-        item(1) {
-            Text("Item level 1")
-        }
-        item(2) {
-            Text("Item level 2")
-        }
-        item(1) {
-            Text("Item level 1")
-        }
-        item(2) {
-            Text("Item level 2")
-        }
-        item {
-            Text("Item level 0")
-        }
-        item(5) {
-            Text("Item level 5")
-        }
     }
 }

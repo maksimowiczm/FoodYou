@@ -30,10 +30,8 @@ import com.maksimowiczm.foodyou.feature.diary.ui.product.ProductForm
 import com.maksimowiczm.foodyou.feature.diary.ui.product.ProductFormState
 import com.maksimowiczm.foodyou.feature.diary.ui.product.rememberProductFormState
 import com.maksimowiczm.foodyou.ui.component.BackHandler
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -164,15 +162,4 @@ private fun DiscardDialog(
             Text(stringResource(Res.string.question_discard_product))
         }
     )
-}
-
-@Preview
-@Composable
-private fun CreateProductScreenPreview() {
-    FoodYouTheme {
-        CreateProductDialog(
-            onClose = {},
-            onCreate = {}
-        )
-    }
 }

@@ -26,13 +26,10 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightUnit
 import com.maksimowiczm.foodyou.ui.component.IndentedList
-import com.maksimowiczm.foodyou.ui.preview.ProductPreviewParameterProvider
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun NutrientsList(
@@ -230,21 +227,4 @@ private fun WeightMeasurement.stringResource(weightUnit: WeightUnit) = when (thi
         stringResource(Res.string.product_package)
     is WeightMeasurement.Serving -> "${quantity.formatClipZeros()} x " +
         stringResource(Res.string.product_serving)
-}
-
-@Preview
-@Composable
-private fun NutrientsListPreview() {
-    val product = ProductPreviewParameterProvider().values.first {
-        it.packageWeight != null && it.servingWeight != null
-    }
-
-    FoodYouTheme {
-        NutrientsList(
-            state = rememberNutrientsListState(
-                product = product
-            ),
-            paddingValues = PaddingValues(16.dp)
-        )
-    }
 }

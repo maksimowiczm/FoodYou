@@ -30,14 +30,10 @@ import com.maksimowiczm.foodyou.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.ui.component.ToggleButtonDefaults
 import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
-import com.maksimowiczm.foodyou.ui.preview.ProductWithWeightMeasurementPreviewParameter
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @Composable
 fun ProductSearchListItem(
@@ -186,41 +182,4 @@ fun ProductSearchListItemSkeleton(
         },
         modifier = modifier.horizontalDisplayCutoutPadding()
     )
-}
-
-@Preview
-@Composable
-private fun ProductSearchListItemSkeletonPreview() {
-    FoodYouTheme {
-        ProductSearchListItemSkeleton()
-    }
-}
-
-@Preview
-@Composable
-private fun ProductSearchListItemPreview() {
-    FoodYouTheme {
-        ProductSearchListItem(
-            model = ProductWithWeightMeasurementPreviewParameter().values.first(),
-            onClick = {},
-            onCheckChange = {},
-            isChecked = true
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun ProductSearchListItemPreview(
-    @PreviewParameter(ProductWithWeightMeasurementPreviewParameter::class) model:
-    ProductWithWeightMeasurement
-) {
-    FoodYouTheme {
-        ProductSearchListItem(
-            model = model,
-            onClick = {},
-            onCheckChange = {},
-            isChecked = false
-        )
-    }
 }

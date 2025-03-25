@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,11 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
-import com.maksimowiczm.foodyou.feature.diary.data.model.defaultGoals
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun CaloriesGoal(goals: DailyGoals, onSave: (DailyGoals) -> Unit, modifier: Modifier = Modifier) {
@@ -64,19 +60,6 @@ fun CaloriesGoal(goals: DailyGoals, onSave: (DailyGoals) -> Unit, modifier: Modi
             enabled = state.isValid
         ) {
             Text(stringResource(Res.string.action_save))
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun CaloriesGoalPreview() {
-    FoodYouTheme {
-        Surface {
-            CaloriesGoal(
-                goals = defaultGoals(),
-                onSave = {}
-            )
         }
     }
 }
