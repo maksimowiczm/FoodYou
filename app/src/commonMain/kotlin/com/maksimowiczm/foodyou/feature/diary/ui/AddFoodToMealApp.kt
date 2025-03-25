@@ -220,6 +220,7 @@ private fun AppNavHost(
                             }
                         )
                     },
+                    onCreateRecipe = {},
                     onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
                     initialScreen = if (startOnBarcodeScanner) {
                         AddFoodSearchScreen.BarcodeScanner

@@ -61,7 +61,7 @@ fun DiarySearchEntity.toSearchModel(): DiarySearchModel {
         }
 
         DiarySearchModel(
-            uniqueId = "p_${productId}_${measurementId}",
+            uniqueId = "p_${productId}_$measurementId",
             foodId = FoodId.Product(productId),
             measurementId = measurementId?.let { MeasurementId.Product(measurementId) },
             name = name,
@@ -76,7 +76,7 @@ fun DiarySearchEntity.toSearchModel(): DiarySearchModel {
         )
     } else if (recipeId != null) {
         DiarySearchModel(
-            uniqueId = "r_${recipeId}_${measurementId}",
+            uniqueId = "r_${recipeId}_$measurementId",
             foodId = FoodId.Recipe(recipeId),
             measurementId = measurementId?.let { MeasurementId.Recipe(measurementId) },
             name = name,
