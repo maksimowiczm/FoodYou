@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.meal
 
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
-import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepository
+import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
 import com.maksimowiczm.foodyou.feature.diary.ui.DiaryViewModel
 import com.maksimowiczm.foodyou.feature.system.data.StringFormatRepository
 import kotlinx.coroutines.channels.Channel
@@ -12,10 +12,10 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
 class DiaryDayMealViewModel(
-    diaryRepository: DiaryRepository,
-    private val addFoodRepository: AddFoodRepository,
+    observeDiaryDayUseCase: ObserveDiaryDayUseCase,
+    private val measurementRepository: MeasurementRepository,
     private val stringFormatRepository: StringFormatRepository
-) : DiaryViewModel(diaryRepository) {
+) : DiaryViewModel(observeDiaryDayUseCase) {
 
     fun formatTime(time: LocalTime): String = stringFormatRepository.formatTime(time)
     fun formatDate(date: LocalDate): String = stringFormatRepository.formatDate(date)
@@ -25,14 +25,14 @@ class DiaryDayMealViewModel(
 
     fun onDeleteEntry(entryId: Long) {
         viewModelScope.launch {
-            addFoodRepository.removeMeasurement(entryId)
+            measurementRepository.removeMeasurement(entryId)
             deleteChannel.send(entryId)
         }
     }
 
     fun onDeleteEntryUndo(entryId: Long) {
         viewModelScope.launch {
-            addFoodRepository.restoreMeasurement(entryId)
+            measurementRepository.restoreMeasurement(entryId)
         }
     }
 }

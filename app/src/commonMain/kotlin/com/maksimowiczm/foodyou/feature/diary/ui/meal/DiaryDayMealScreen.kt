@@ -70,7 +70,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithWeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.ListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.LocalMealSharedTransitionScope
 import com.maksimowiczm.foodyou.feature.diary.ui.MealHeader
@@ -128,14 +128,8 @@ fun DiaryDayMealScreen(
                 deletedEntryChannel = viewModel.deleteEvent,
                 onProductAdd = onProductAdd,
                 onBarcodeScan = onBarcodeScan,
-                onEditEntry = {
-                    onEditEntry(it.measurementId ?: error("No measurement ID to edit"))
-                },
-                onDeleteEntry = {
-                    viewModel.onDeleteEntry(
-                        it.measurementId ?: error("No measurement ID to delete")
-                    )
-                },
+                onEditEntry = onEditEntry,
+                onDeleteEntry = viewModel::onDeleteEntry,
                 onDeleteEntryUndo = viewModel::onDeleteEntryUndo,
                 formatTime = viewModel::formatTime,
                 formatDate = viewModel::formatDate,
@@ -156,14 +150,14 @@ private fun DiaryDayMealScreen(
     mealHeaderScope: AnimatedVisibilityScope,
     date: LocalDate,
     meal: Meal,
-    products: List<ProductWithWeightMeasurement>,
+    products: List<ProductWithMeasurement.Measurement>,
     deletedEntryChannel: Flow<Long>,
     onProductAdd: () -> Unit,
     onBarcodeScan: () -> Unit,
     formatTime: (LocalTime) -> String,
     formatDate: (LocalDate) -> String,
-    onEditEntry: (ProductWithWeightMeasurement) -> Unit,
-    onDeleteEntry: (ProductWithWeightMeasurement) -> Unit,
+    onEditEntry: (measurementId: Long) -> Unit,
+    onDeleteEntry: (measurementId: Long) -> Unit,
     onDeleteEntryUndo: (id: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -219,14 +213,14 @@ private fun DiaryDayMealScreen(
                 model = selectedProduct,
                 onEditEntry = {
                     coroutineScope.launch {
-                        onEditEntry(selectedProduct)
+                        onEditEntry(selectedProduct.measurementId)
                         modalSheetState.hide()
                         selectedIndex = null
                     }
                 },
                 onDeleteEntry = {
                     coroutineScope.launch {
-                        onDeleteEntry(selectedProduct)
+                        onDeleteEntry(selectedProduct.measurementId)
                         modalSheetState.hide()
                         selectedIndex = null
                     }
@@ -556,7 +550,7 @@ private fun DiaryDayMealScreen(
 
 @Composable
 private fun ModalSheetContent(
-    model: ProductWithWeightMeasurement,
+    model: ProductWithMeasurement,
     onEditEntry: () -> Unit,
     onDeleteEntry: () -> Unit
 ) {

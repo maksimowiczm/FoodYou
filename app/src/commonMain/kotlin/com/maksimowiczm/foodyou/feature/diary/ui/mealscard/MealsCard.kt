@@ -41,7 +41,7 @@ import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.HomeFeature
 import com.maksimowiczm.foodyou.feature.HomeState
-import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
+import com.maksimowiczm.foodyou.feature.diary.domain.Meal
 import com.maksimowiczm.foodyou.feature.diary.ui.MealHeader
 import com.maksimowiczm.foodyou.feature.diary.ui.MealHeaderTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.MealHeaderTransitionSpecs
@@ -55,7 +55,6 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.absoluteValue
-import kotlin.math.roundToInt
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -84,8 +83,8 @@ fun MealsCard(
     modifier: Modifier = Modifier,
     viewModel: MealsCardViewModel = koinViewModel()
 ) {
-    val diaryDay by viewModel
-        .observeDiaryDay(homeState.selectedDate)
+    val meals by viewModel
+        .observeMealsByDate(homeState.selectedDate)
         .collectAsStateWithLifecycle(null)
 
     val time by viewModel.time.collectAsStateWithLifecycle()
@@ -95,17 +94,18 @@ fun MealsCard(
     val includeAllDayMeals by viewModel.includeAllDayMeals.collectAsStateWithLifecycle()
 
     MealsCard(
-        animatedVisibilityScope = animatedVisibilityScope,
         state = rememberMealsCardState(
             timeBasedSorting = useTimeBasedSorting,
             includeAllDayMeals = includeAllDayMeals,
-            diaryDay = diaryDay,
+            meals = meals,
             time = time,
             shimmer = homeState.shimmer
         ),
         formatTime = viewModel::formatTime,
         onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
         onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
+        animatedVisibilityScope = animatedVisibilityScope,
+        epochDay = homeState.selectedDate.toEpochDays(),
         modifier = modifier
     )
 }
@@ -113,11 +113,12 @@ fun MealsCard(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun MealsCard(
-    animatedVisibilityScope: AnimatedVisibilityScope,
     state: MealsCardState,
     formatTime: (LocalTime) -> String,
     onMealClick: (Meal) -> Unit,
     onAddClick: (Meal) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    epochDay: Int,
     modifier: Modifier = Modifier
 ) {
     // Must be same as meals count or more but since we don't have meals count yet set it to some
@@ -125,7 +126,7 @@ private fun MealsCard(
     // last item which is annoying for the user.
     // Let's assume that user won't use more than 20 meals
     val pagerState = rememberPagerState(
-        pageCount = { state.diaryDay?.meals?.size ?: 20 }
+        pageCount = { state.meals?.size ?: 20 }
     )
 
     val sharedTransitionScope =
@@ -142,10 +143,10 @@ private fun MealsCard(
         ) { page ->
             val pageOffset = pagerState.currentPage - page + pagerState.currentPageOffsetFraction
             val fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
-            val meal = state.meals?.getOrNull(page)
+            val meal = state.availableMeals?.getOrNull(page)
 
             Crossfade(
-                targetState = state.diaryDay != null,
+                targetState = state.meals != null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 2.dp)
@@ -154,16 +155,16 @@ private fun MealsCard(
                         scaleY = lerp(0.9f, 1f, fraction)
                     )
             ) {
-                if (it && meal != null && state.diaryDay != null) {
+                if (it && meal != null && state.meals != null) {
                     MealCard(
                         animatedVisibilityScope = animatedVisibilityScope,
-                        epochDay = state.diaryDay.date.toEpochDays(),
+                        epochDay = epochDay,
                         meal = meal,
-                        isEmpty = state.diaryDay.mealProductMap[meal]?.isEmpty() == true,
-                        totalCalories = state.diaryDay.totalCalories(meal).roundToInt(),
-                        totalProteins = state.diaryDay.totalProteins(meal).roundToInt(),
-                        totalCarbohydrates = state.diaryDay.totalCarbohydrates(meal).roundToInt(),
-                        totalFats = state.diaryDay.totalFats(meal).roundToInt(),
+                        isEmpty = meal.isEmpty,
+                        totalCalories = meal.calories,
+                        totalProteins = meal.proteins,
+                        totalCarbohydrates = meal.carbohydrates,
+                        totalFats = meal.fats,
                         formatTime = formatTime,
                         onMealClick = { onMealClick(meal) },
                         onAddClick = { onAddClick(meal) }

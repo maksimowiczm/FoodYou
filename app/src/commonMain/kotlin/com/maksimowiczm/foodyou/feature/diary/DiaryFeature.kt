@@ -18,14 +18,18 @@ import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.HomeFeature
 import com.maksimowiczm.foodyou.feature.SettingsFeature
 import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
-import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepositoryImpl
 import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepository
-import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepositoryImpl
+import com.maksimowiczm.foodyou.feature.diary.data.GoalsRepository
+import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
+import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.OpenFoodFactsSettingsRepository
-import com.maksimowiczm.foodyou.feature.diary.data.OpenFoodFactsSettingsRepositoryImpl
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepositoryImpl
 import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCase
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCaseImpl
+import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.network.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.ui.MealApp
@@ -66,6 +70,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.bind
+import org.koin.dsl.binds
 import org.koin.dsl.module
 
 object DiaryFeature : Feature {
@@ -306,20 +311,31 @@ object DiaryFeature : Feature {
     override val module: Module = module {
         viewModelOf(::OpenFoodFactsSearchHintViewModel)
         viewModelOf(::OpenFoodFactsSettingsViewModel)
-        factoryOf(::OpenFoodFactsSettingsRepositoryImpl).bind<OpenFoodFactsSettingsRepository>()
+        factoryOf(::OpenFoodFactsSettingsRepository)
         singleOf(::OpenFoodFactsRemoteMediatorFactory).bind<ProductRemoteMediatorFactory>()
         factory { flagCdnCountryFlag }.bind<CountryFlag>()
 
         factory {
-            AddFoodRepositoryImpl(
+            DiaryRepository(
                 addFoodDao = get(),
                 productDao = get(),
-                productRemoteMediatorFactory = get()
+                productRemoteMediatorFactory = get(),
+                dataStore = get()
             )
-        }.bind<AddFoodRepository>()
-        factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
+        }.binds(
+            arrayOf(
+                GoalsRepository::class,
+                MealRepository::class,
+                AddFoodRepository::class,
+                MeasurementRepository::class,
+                QueryProductsUseCase::class,
+                ObserveDiaryDayUseCase::class
+            )
+        )
 
-        factoryOf(::DiaryRepositoryImpl).bind<DiaryRepository>()
+        factoryOf(::ObserveMealsByDateUseCaseImpl).bind<ObserveMealsByDateUseCase>()
+
+        factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
 
         viewModelOf(::GoalsSettingsViewModel)
 

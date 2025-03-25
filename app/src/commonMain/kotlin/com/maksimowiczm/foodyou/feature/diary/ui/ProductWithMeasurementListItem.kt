@@ -18,7 +18,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithWeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
@@ -30,7 +30,7 @@ import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ProductWithWeightMeasurement.ListItem(
+fun ProductWithMeasurement.ListItem(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
@@ -192,8 +192,8 @@ private fun MeasurementSummaryLayout(
     }
 }
 
-val ProductWithWeightMeasurement.measurementStringShort: String
-    @Composable get() = when (measurement) {
+val ProductWithMeasurement.measurementStringShort: String
+    @Composable get() = when (val measurement = measurement) {
         is WeightMeasurement.Package -> stringResource(
             Res.string.x_times_y,
             measurement.quantity.formatClipZeros(),
@@ -210,7 +210,7 @@ val ProductWithWeightMeasurement.measurementStringShort: String
             product.weightUnit.stringResourceShort()
     }
 
-val ProductWithWeightMeasurement.measurementString: String
+val ProductWithMeasurement.measurementString: String
     @Composable get() {
         val short = measurementStringShort
 
@@ -223,5 +223,5 @@ val ProductWithWeightMeasurement.measurementString: String
         return "$short (${grams.formatClipZeros()} ${product.weightUnit.stringResourceShort()})"
     }
 
-val ProductWithWeightMeasurement.caloriesString: String
+val ProductWithMeasurement.caloriesString: String
     @Composable get() = "${calories.roundToInt()} " + stringResource(Res.string.unit_kcal)

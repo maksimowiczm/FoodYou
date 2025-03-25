@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.diary.ui.measurement
 
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
+import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
@@ -16,6 +17,7 @@ import kotlinx.datetime.LocalDate
 class CreateMeasurementViewModel(
     productRepository: ProductRepository,
     private val addFoodRepository: AddFoodRepository,
+    private val measurementRepository: MeasurementRepository,
     private val mealId: Long,
     private val date: LocalDate,
     productId: Long
@@ -89,7 +91,7 @@ class CreateMeasurementViewModel(
         }
 
         viewModelScope.launch {
-            addFoodRepository.addMeasurement(
+            measurementRepository.addMeasurement(
                 date = date,
                 mealId = mealId,
                 productId = uiState.product.id,

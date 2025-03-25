@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithWeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.ListItem
 import com.maksimowiczm.foodyou.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.ui.component.ToggleButtonDefaults
@@ -37,7 +37,7 @@ import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun ProductSearchListItem(
-    model: ProductWithWeightMeasurement,
+    model: ProductWithMeasurement,
     onClick: () -> Unit,
     isChecked: Boolean,
     onCheckChange: (Boolean) -> Unit,

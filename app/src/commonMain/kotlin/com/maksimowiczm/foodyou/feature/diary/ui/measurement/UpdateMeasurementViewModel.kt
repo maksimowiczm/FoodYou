@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.diary.ui.measurement
 
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
+import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 class UpdateMeasurementViewModel(
     productRepository: ProductRepository,
     private val addFoodRepository: AddFoodRepository,
+    private val measurementRepository: MeasurementRepository,
     private val measurementId: Long
 ) : MeasurementViewModel(productRepository) {
     private val _uiEvent = MutableStateFlow<MeasurementEvent>(MeasurementEvent.Empty)
@@ -95,7 +97,7 @@ class UpdateMeasurementViewModel(
         }
 
         viewModelScope.launch {
-            addFoodRepository.updateMeasurement(
+            measurementRepository.updateMeasurement(
                 measurementId = measurementId,
                 weightMeasurement = weightMeasurement
             )

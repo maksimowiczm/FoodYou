@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.data.model
 
+import com.maksimowiczm.foodyou.ext.sumOf
 import kotlinx.datetime.LocalDate
 
 data class DiaryDay(
@@ -8,7 +9,7 @@ data class DiaryDay(
     /**
      * Map of meals with list of products for each meal.
      */
-    val mealProductMap: Map<Meal, List<ProductWithWeightMeasurement>>,
+    val mealProductMap: Map<Meal, List<ProductWithMeasurement.Measurement>>,
 
     /**
      * Daily goals for the day.
@@ -83,8 +84,4 @@ data class DiaryDay(
         @JvmInline
         value class Incomplete(override val value: Float) : NutrientSummary
     }
-}
-
-private inline fun <T> List<T>.sumOf(selector: (T) -> Float) = fold(0f) { acc, element ->
-    selector(element) + acc
 }

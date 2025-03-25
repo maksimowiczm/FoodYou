@@ -9,8 +9,7 @@ import kotlinx.coroutines.launch
 
 abstract class MeasurementViewModel(private val productRepository: ProductRepository) :
     ViewModel() {
-    abstract val uiEvent:
-        StateFlow<MeasurementEvent>
+    abstract val uiEvent: StateFlow<MeasurementEvent>
     abstract fun onAddMeasurement(weightMeasurementEnum: WeightMeasurementEnum, quantity: Float)
 
     fun onProductDelete(productId: Long) {

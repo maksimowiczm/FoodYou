@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.data
+package com.maksimowiczm.foodyou.feature.diary.data.preferences
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey

@@ -5,8 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
-import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
+import com.maksimowiczm.foodyou.feature.diary.domain.Meal
 import com.valentinilk.shimmer.Shimmer
 import kotlinx.datetime.LocalTime
 
@@ -14,14 +13,14 @@ import kotlinx.datetime.LocalTime
 fun rememberMealsCardState(
     timeBasedSorting: Boolean,
     includeAllDayMeals: Boolean,
-    diaryDay: DiaryDay?,
+    meals: List<Meal>?,
     time: LocalTime,
     shimmer: Shimmer
-) = remember(timeBasedSorting, diaryDay, time, shimmer) {
+) = remember(timeBasedSorting, meals, time, shimmer) {
     MealsCardState(
         timeBasedSorting = timeBasedSorting,
         includeAllDayMeals = includeAllDayMeals,
-        diaryDay = diaryDay,
+        availableMeals = meals,
         time = time,
         shimmer = shimmer
     )
@@ -31,14 +30,14 @@ fun rememberMealsCardState(
 class MealsCardState(
     val timeBasedSorting: Boolean,
     val includeAllDayMeals: Boolean,
-    val diaryDay: DiaryDay?,
+    val availableMeals: List<Meal>?,
     val time: LocalTime,
     val shimmer: Shimmer
 ) {
     val meals by derivedStateOf {
         // If time-based sorting is enabled, show meals that are currently happening first, sorted
         // by their rank and the rest of the meals sorted by their rank.
-        diaryDay?.meals?.sortedBy {
+        availableMeals?.sortedBy {
             if (timeBasedSorting) {
                 if (shouldShowMeal(it, time)) it.rank else 1_000_000 + it.rank
             } else {

@@ -4,9 +4,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.feature.diary.data.DiaryPreferences
-import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepository
+import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
+import com.maksimowiczm.foodyou.feature.diary.data.preferences.DiaryPreferences
 import com.maksimowiczm.foodyou.feature.system.data.StringFormatRepository
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
@@ -20,18 +20,17 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalTime
 
 class MealsSettingsScreenViewModel(
-    private val diaryRepository: DiaryRepository,
+    private val mealRepository: MealRepository,
     private val stringFormatRepository: StringFormatRepository,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
-    private fun DiaryRepository.observeSortedMeals() =
-        observeMeals().map { it.sortedBy { it.rank } }
+    private fun MealRepository.observeSortedMeals() = observeMeals().map { it.sortedBy { it.rank } }
 
-    val sortedMeals = diaryRepository.observeSortedMeals()
+    val sortedMeals = mealRepository.observeSortedMeals()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = runBlocking { diaryRepository.observeSortedMeals().first() }
+            initialValue = runBlocking { mealRepository.observeSortedMeals().first() }
         )
 
     val useTimeBasedSorting = dataStore
@@ -57,25 +56,25 @@ class MealsSettingsScreenViewModel(
     fun updateMealsRanks(meals: List<Meal>) {
         viewModelScope.launch {
             val map = meals.mapIndexed { index, meal -> meal.id to index }.toMap()
-            diaryRepository.updateMealsRanks(map)
+            mealRepository.updateMealsRanks(map)
         }
     }
 
     fun updateMeal(meal: Meal) {
         viewModelScope.launch {
-            diaryRepository.updateMeal(meal)
+            mealRepository.updateMeal(meal)
         }
     }
 
     fun deleteMeal(meal: Meal) {
         viewModelScope.launch {
-            diaryRepository.deleteMeal(meal)
+            mealRepository.deleteMeal(meal)
         }
     }
 
     fun createMeal(name: String, from: LocalTime, to: LocalTime) {
         viewModelScope.launch {
-            diaryRepository.createMeal(
+            mealRepository.createMeal(
                 name = name,
                 from = from,
                 to = to

@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
+import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,6 +17,8 @@ import kotlinx.datetime.LocalDate
 
 class SearchViewModel(
     private val addFoodRepository: AddFoodRepository,
+    private val measurementRepository: MeasurementRepository,
+    private val queryProductsUseCase: QueryProductsUseCase,
     val mealId: Long,
     val date: LocalDate
 ) : ViewModel() {
@@ -35,7 +39,7 @@ class SearchViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val productsWithMeasurements = _searchQuery.flatMapLatest { query ->
-        addFoodRepository.queryProducts(
+        queryProductsUseCase(
             mealId = mealId,
             date = date,
             query = query
@@ -50,7 +54,7 @@ class SearchViewModel(
 
     fun onQuickAdd(productId: Long, measurement: WeightMeasurement) {
         viewModelScope.launch {
-            addFoodRepository.addMeasurement(
+            measurementRepository.addMeasurement(
                 date = date,
                 mealId = mealId,
                 productId = productId,
@@ -61,7 +65,7 @@ class SearchViewModel(
 
     fun onQuickRemove(measurementId: Long) {
         viewModelScope.launch {
-            addFoodRepository.removeMeasurement(measurementId)
+            measurementRepository.removeMeasurement(measurementId)
         }
     }
 }

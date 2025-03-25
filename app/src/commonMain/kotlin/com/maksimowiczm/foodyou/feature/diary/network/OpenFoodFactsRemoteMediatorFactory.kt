@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.paging.ExperimentalPagingApi
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.feature.diary.data.OpenFoodFactsPreferences
+import com.maksimowiczm.foodyou.feature.diary.data.preferences.OpenFoodFactsPreferences
 import com.maksimowiczm.foodyou.feature.diary.database.dao.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.feature.diary.database.dao.ProductDao
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
