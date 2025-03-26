@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.component
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,15 +24,12 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.diary.data.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.diary.ui.ValueStatus
 import com.maksimowiczm.foodyou.feature.diary.ui.asValueStatus
-import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
-import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.abs
-import kotlin.math.max
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -67,7 +63,8 @@ fun CaloriesIndicator(
             proteins = NutrientsHelper.proteinsToCalories(proteins.toFloat()),
             carbohydrates = NutrientsHelper.carbohydratesToCalories(carbohydrates.toFloat()),
             fats = NutrientsHelper.fatsToCalories(fats.toFloat()),
-            goal = caloriesGoal.toFloat()
+            goal = caloriesGoal.toFloat(),
+            modifier = Modifier.fillMaxWidth()
         )
 
         CaloriesLabel(
@@ -160,45 +157,6 @@ private fun rememberCaloriesString(calories: Int, goal: Int): AnnotatedString {
             }
         }
     }
-}
-
-@Composable
-private fun CaloriesProgressIndicator(
-    calories: Float,
-    proteins: Float,
-    carbohydrates: Float,
-    fats: Float,
-    goal: Float
-) {
-    val nutrientsPalette = LocalNutrientsPalette.current
-
-    val animatedProteins by animateFloatAsState(proteins)
-    val animatedCarbohydrates by animateFloatAsState(carbohydrates)
-    val animatedFats by animateFloatAsState(fats)
-
-    val max = max(goal, calories)
-    val animatedMax by animateFloatAsState(max.toFloat())
-
-    MultiColorProgressIndicator(
-        items = listOf(
-            MultiColorProgressIndicatorItem(
-                progress = animatedProteins / animatedMax,
-                color = nutrientsPalette.proteinsOnSurfaceContainer
-            ),
-            MultiColorProgressIndicatorItem(
-                progress = animatedCarbohydrates / animatedMax,
-                color = nutrientsPalette.carbohydratesOnSurfaceContainer
-            ),
-            MultiColorProgressIndicatorItem(
-                progress = animatedFats / animatedMax,
-                color = nutrientsPalette.fatsOnSurfaceContainer
-            )
-        ),
-        modifier = Modifier
-            .height(16.dp)
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.small)
-    )
 }
 
 @Composable

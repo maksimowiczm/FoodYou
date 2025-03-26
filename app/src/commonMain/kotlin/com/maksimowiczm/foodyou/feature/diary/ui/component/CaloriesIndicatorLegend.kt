@@ -30,11 +30,8 @@ import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.nutriment_carbohydrates
-import foodyou.app.generated.resources.nutriment_fats
-import foodyou.app.generated.resources.nutriment_proteins
-import foodyou.app.generated.resources.unit_gram_short
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -48,7 +45,7 @@ fun CaloriesIndicatorLegend(
     carbohydratesGoal: Int,
     fats: Int,
     fatsGoal: Int,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
@@ -97,7 +94,7 @@ private fun NutrientIndicator(
     value: Int,
     goal: Int,
     progressColor: Color,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier
 ) {
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
@@ -136,10 +133,10 @@ private fun NutrientIndicator(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.Companion.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Canvas(
-                modifier = Modifier.Companion
+                modifier = Modifier
                     .size(16.dp)
                     .clip(MaterialTheme.shapes.extraSmall)
             ) {
@@ -148,14 +145,14 @@ private fun NutrientIndicator(
                 )
             }
 
-            Spacer(Modifier.Companion.width(8.dp))
+            Spacer(Modifier.width(8.dp))
 
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium
             )
 
-            Spacer(Modifier.Companion.weight(1f))
+            Spacer(Modifier.weight(1f))
 
             Text(
                 text = valueGoalString,
@@ -165,7 +162,7 @@ private fun NutrientIndicator(
 
         if (animatedValue > animatedGoal) {
             LinearProgressIndicator(
-                modifier = Modifier.Companion.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 trackColor = progressColor,
                 color = colorScheme.error,
                 progress = {
@@ -179,7 +176,7 @@ private fun NutrientIndicator(
             )
         } else {
             LinearProgressIndicator(
-                modifier = Modifier.Companion.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 color = progressColor,
                 progress = {
                     if (animatedGoal == 0) 1f else animatedValue / animatedGoal.toFloat()
@@ -210,7 +207,7 @@ private fun NutrientIndicatorSkeleton(shimmer: Shimmer, modifier: Modifier = Mod
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
 
-                Spacer(Modifier.Companion.width(8.dp))
+                Spacer(Modifier.width(8.dp))
 
                 // Title
                 Spacer(

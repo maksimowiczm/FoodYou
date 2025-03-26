@@ -72,9 +72,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightUnit
+import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesProgressIndicator
+import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsList
 import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import foodyou.app.generated.resources.*
@@ -187,6 +190,10 @@ private fun MeasurementScreen(
 
     val formState = rememberMeasurementFormState(
         suggestion = suggestion
+    )
+    val chipState = rememberMeasurementChipListState(
+        product = formState.product,
+        extraFilters = listOf(formState.latestMeasurement)
     )
 
     // Fade in top app bar title when scrolling down
@@ -343,35 +350,6 @@ private fun MeasurementScreen(
             }
 
             item {
-                Column(
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                ) {
-                    Text(
-                        text = stringResource(Res.string.headline_macronutrients),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.labelLarge
-                    )
-
-                    MacroGraph(
-                        product = formState.product,
-                        measurement = formState.latestMeasurement
-                    )
-                }
-            }
-
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
-
-            item {
-                HorizontalDivider()
-            }
-
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
-
-            item {
                 Column {
                     Text(
                         text = stringResource(Res.string.headline_nutrients),
@@ -380,12 +358,44 @@ private fun MeasurementScreen(
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
 
-                    NutrientsList(
-                        state = rememberNutrientsListState(
+                    Spacer(Modifier.height(8.dp))
+
+                    Text(
+                        text = stringResource(Res.string.neutral_all_values_per_x, ""),
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+
+                    MeasurementChipList(
+                        state = chipState,
+                        paddingValues = PaddingValues(horizontal = 8.dp)
+                    )
+
+                    val measurement = remember(chipState.selectedFilter) {
+                        ProductWithMeasurement.Suggestion(
                             product = formState.product,
-                            extraFilters = listOf(formState.latestMeasurement)
-                        ),
-                        paddingValues = PaddingValues(horizontal = 16.dp)
+                            measurement = chipState.selectedFilter
+                        )
+                    }
+
+                    Spacer(Modifier.height(8.dp))
+
+                    CaloriesProgressIndicator(
+                        proteins = suggestion.product.nutrients.proteins,
+                        carbohydrates = suggestion.product.nutrients.carbohydrates,
+                        fats = suggestion.product.nutrients.fats,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(16.dp)
+                            .padding(horizontal = 16.dp)
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    NutrientsList(
+                        products = listOf(measurement),
+                        onProductClick = {},
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        showIncompleteProducts = false
                     )
                 }
             }

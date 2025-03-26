@@ -14,10 +14,10 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.Product
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 
 @Composable
-fun rememberNutrientsListState(
+fun rememberMeasurementChipListState(
     product: Product,
     extraFilters: List<WeightMeasurement> = emptyList()
-): NutrientsListState = rememberSaveable(
+): MeasurementChipListState = rememberSaveable(
     product,
     extraFilters,
     saver = Saver(
@@ -27,7 +27,7 @@ fun rememberNutrientsListState(
             )
         },
         restore = {
-            NutrientsListState(
+            MeasurementChipListState(
                 product = product,
                 extraFilters = extraFilters,
                 initialSelectedFilterIndex = it[0] as Int
@@ -35,7 +35,7 @@ fun rememberNutrientsListState(
         }
     )
 ) {
-    NutrientsListState(
+    MeasurementChipListState(
         product = product,
         extraFilters = extraFilters,
         initialSelectedFilterIndex = 0
@@ -43,7 +43,7 @@ fun rememberNutrientsListState(
 }
 
 @Stable
-class NutrientsListState(
+class MeasurementChipListState(
     val product: Product,
     extraFilters: List<WeightMeasurement>,
     initialSelectedFilterIndex: Int
