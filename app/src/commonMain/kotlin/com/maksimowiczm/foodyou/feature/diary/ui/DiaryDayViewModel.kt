@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
 import kotlinx.datetime.LocalDate
 
-abstract class DiaryViewModel(private val observeDiaryDayUseCase: ObserveDiaryDayUseCase) :
+abstract class DiaryDayViewModel(private val observeDiaryDayUseCase: ObserveDiaryDayUseCase) :
     ViewModel() {
     fun observeDiaryDay(date: LocalDate) = observeDiaryDayUseCase(date)
 }

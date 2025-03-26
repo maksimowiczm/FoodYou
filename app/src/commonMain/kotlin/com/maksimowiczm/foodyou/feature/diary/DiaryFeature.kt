@@ -32,7 +32,7 @@ import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCaseIm
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.network.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
-import com.maksimowiczm.foodyou.feature.diary.ui.MealApp
+import com.maksimowiczm.foodyou.feature.diary.ui.AddFoodToMealApp
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen.CaloriesScreen
@@ -56,8 +56,8 @@ import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.flagCdnCo
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.search.MealDateSearchViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.search.OpenFoodFactsSearchHintViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchViewModel
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
@@ -213,7 +213,7 @@ object DiaryFeature : Feature {
         crossfadeComposable<Meal> {
             val (epochDay, mealId) = it.toRoute<Meal>()
 
-            MealApp(
+            AddFoodToMealApp(
                 outerScope = this@crossfadeComposable,
                 outerOnBack = { navController.popBackStack<Meal>(inclusive = true) },
                 mealId = mealId,
@@ -231,7 +231,7 @@ object DiaryFeature : Feature {
         crossfadeComposable<MealAdd> {
             val (epochDay, mealId) = it.toRoute<MealAdd>()
 
-            MealApp(
+            AddFoodToMealApp(
                 outerScope = this@crossfadeComposable,
                 outerOnBack = { navController.popBackStack<MealAdd>(inclusive = true) },
                 mealId = mealId,
@@ -341,7 +341,7 @@ object DiaryFeature : Feature {
 
         viewModelOf(::MealsSettingsScreenViewModel)
 
-        viewModelOf(::SearchViewModel)
+        viewModelOf(::MealDateSearchViewModel)
         viewModelOf(::CreateMeasurementViewModel)
         viewModelOf(::UpdateMeasurementViewModel)
         viewModelOf(::MealsCardViewModel)

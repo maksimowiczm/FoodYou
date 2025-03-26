@@ -2,27 +2,20 @@ package com.maksimowiczm.foodyou.feature.diary.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
+import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
-import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
+import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
+import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 
-class SearchViewModel(
-    private val addFoodRepository: AddFoodRepository,
-    private val measurementRepository: MeasurementRepository,
-    private val queryProductsUseCase: QueryProductsUseCase,
-    val mealId: Long,
-    val date: LocalDate
-) : ViewModel() {
-    val recentQueries = addFoodRepository.observeProductQueries(
+abstract class SearchViewModel(addFoodRepository: AddFoodRepository) : ViewModel() {
+    val recentQueries: StateFlow<List<ProductQuery>> = addFoodRepository.observeProductQueries(
         limit = 20
     ).stateIn(
         scope = viewModelScope,
@@ -30,42 +23,21 @@ class SearchViewModel(
         initialValue = emptyList()
     )
 
-    private val _searchQuery = MutableSharedFlow<String?>(replay = 1).apply { tryEmit(null) }
-    val searchQuery = _searchQuery.stateIn(
+    protected val mutableSearchQuery =
+        MutableSharedFlow<String?>(replay = 1).apply { tryEmit(null) }
+    val searchQuery = mutableSearchQuery.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(30_000L),
         initialValue = null
     )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val productsWithMeasurements = _searchQuery.flatMapLatest { query ->
-        queryProductsUseCase(
-            mealId = mealId,
-            date = date,
-            query = query
-        )
-    }.cachedIn(viewModelScope)
-
     fun onSearch(query: String?) {
         viewModelScope.launch {
-            _searchQuery.emit(query?.takeIf { it.isNotBlank() })
+            mutableSearchQuery.emit(query?.takeIf { it.isNotBlank() })
         }
     }
 
-    fun onQuickAdd(productId: Long, measurement: WeightMeasurement) {
-        viewModelScope.launch {
-            measurementRepository.addMeasurement(
-                date = date,
-                mealId = mealId,
-                productId = productId,
-                weightMeasurement = measurement
-            )
-        }
-    }
-
-    fun onQuickRemove(measurementId: Long) {
-        viewModelScope.launch {
-            measurementRepository.removeMeasurement(measurementId)
-        }
-    }
+    abstract val pages: Flow<PagingData<ProductWithMeasurement>>
+    abstract fun onQuickAdd(productId: Long, measurement: WeightMeasurement)
+    abstract fun onQuickRemove(measurementId: Long)
 }

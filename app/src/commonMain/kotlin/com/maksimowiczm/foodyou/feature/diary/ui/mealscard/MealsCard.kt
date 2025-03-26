@@ -42,11 +42,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.HomeFeature
 import com.maksimowiczm.foodyou.feature.HomeState
 import com.maksimowiczm.foodyou.feature.diary.domain.Meal
-import com.maksimowiczm.foodyou.feature.diary.ui.MealHeader
-import com.maksimowiczm.foodyou.feature.diary.ui.MealHeaderTransitionKeys
-import com.maksimowiczm.foodyou.feature.diary.ui.MealHeaderTransitionSpecs
-import com.maksimowiczm.foodyou.feature.diary.ui.MealHeaderTransitionSpecs.overlayClipFromCardToScreen
-import com.maksimowiczm.foodyou.feature.diary.ui.NutrientsLayout
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeader
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionKeys
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionSpecs
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionSpecs.overlayClipFromCardToScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsLayout
 import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
 import com.maksimowiczm.foodyou.ui.ext.toDp
 import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard

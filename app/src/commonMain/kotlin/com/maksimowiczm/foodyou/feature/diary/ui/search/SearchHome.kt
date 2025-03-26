@@ -65,7 +65,6 @@ import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SearchHome(
@@ -73,12 +72,12 @@ fun SearchHome(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
     onBarcodeScanner: () -> Unit,
-    onGoToSettings: () -> Unit,
+    viewModel: SearchViewModel,
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = koinViewModel(),
-    lazyListState: LazyListState = rememberLazyListState()
+    lazyListState: LazyListState = rememberLazyListState(),
+    searchHint: (@Composable () -> Unit)? = null
 ) {
-    val productsWithMeasurements = viewModel.productsWithMeasurements.collectAsLazyPagingItems(
+    val productsWithMeasurements = viewModel.pages.collectAsLazyPagingItems(
         viewModel.viewModelScope.coroutineContext
     )
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
@@ -96,9 +95,9 @@ fun SearchHome(
         onBack = onBack,
         onCreateProduct = onCreateProduct,
         onBarcodeScanner = onBarcodeScanner,
-        onGoToSettings = onGoToSettings,
         modifier = modifier,
-        lazyListState = lazyListState
+        lazyListState = lazyListState,
+        searchHint = searchHint
     )
 }
 
@@ -116,9 +115,9 @@ private fun SearchHome(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
     onBarcodeScanner: () -> Unit,
-    onGoToSettings: () -> Unit,
     modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState()
+    lazyListState: LazyListState = rememberLazyListState(),
+    searchHint: (@Composable () -> Unit)? = null
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
@@ -166,13 +165,16 @@ private fun SearchHome(
                     onRetry = pages::retry
                 )
             }
-            DraggableVisibility {
-                OpenFoodFactsSearchHint(
-                    onGoToSettings = onGoToSettings,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .padding(bottom = 8.dp)
-                )
+            searchHint?.let {
+                DraggableVisibility {
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .padding(bottom = 8.dp)
+                    ) {
+                        searchHint()
+                    }
+                }
             }
         }
     }

@@ -71,14 +71,14 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.ListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.LocalMealSharedTransitionScope
-import com.maksimowiczm.foodyou.feature.diary.ui.MealHeader
-import com.maksimowiczm.foodyou.feature.diary.ui.MealHeaderTransitionKeys
-import com.maksimowiczm.foodyou.feature.diary.ui.MealHeaderTransitionSpecs
-import com.maksimowiczm.foodyou.feature.diary.ui.MealHeaderTransitionSpecs.overlayClipFromScreenToCard
-import com.maksimowiczm.foodyou.feature.diary.ui.NutrientsLayout
 import com.maksimowiczm.foodyou.feature.diary.ui.SearchSharedTransition
+import com.maksimowiczm.foodyou.feature.diary.ui.component.ListItem
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeader
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionKeys
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionSpecs
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionSpecs.overlayClipFromScreenToCard
+import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsLayout
 import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
@@ -514,7 +514,7 @@ private fun DiaryDayMealScreen(
                 itemsIndexed(
                     items = products,
                     key = { _, model ->
-                        model.measurementId ?: error("No measurement ID, cannot create key")
+                        model.measurementId
                     }
                 ) { i, model ->
                     Column(

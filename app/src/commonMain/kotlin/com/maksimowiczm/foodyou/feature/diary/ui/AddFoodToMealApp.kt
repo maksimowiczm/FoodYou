@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.diary.ui
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -31,14 +33,45 @@ import com.maksimowiczm.foodyou.feature.diary.ui.measurement.MeasurementScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.UpdateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
+import com.maksimowiczm.foodyou.feature.diary.ui.search.MealDateSearchViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.search.OpenFoodFactsSearchHint
 import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchHome
-import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchViewModel
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun AddFoodToMealApp(
+    outerScope: AnimatedVisibilityScope,
+    outerOnBack: () -> Unit,
+    mealId: Long,
+    epochDay: Int,
+    onGoToSettings: () -> Unit,
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    skipToSearchScreen: Boolean = false
+) {
+    SharedTransitionLayout {
+        CompositionLocalProvider(
+            LocalMealSharedTransitionScope provides this
+        ) {
+            AppNavHost(
+                outerScope = outerScope,
+                outerOnBack = outerOnBack,
+                mealId = mealId,
+                epochDay = epochDay,
+                onGoToSettings = onGoToSettings,
+                modifier = modifier,
+                navController = navController,
+                skipToSearchScreen = skipToSearchScreen
+            )
+        }
+    }
+}
 
 @Serializable
 private data object MealHome
@@ -63,7 +96,7 @@ private data class EditProductDialog(val productId: Long)
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun MealNavHost(
+private fun AppNavHost(
     outerScope: AnimatedVisibilityScope,
     outerOnBack: () -> Unit,
     mealId: Long,
@@ -74,7 +107,7 @@ fun MealNavHost(
     skipToSearchScreen: Boolean = false
 ) {
     val date = LocalDate.fromEpochDays(epochDay)
-    val searchViewModel = koinViewModel<SearchViewModel>(
+    val searchViewModel = koinViewModel<MealDateSearchViewModel>(
         parameters = { parametersOf(date, mealId) }
     )
     val lazyListState = rememberLazyListState()
@@ -185,7 +218,6 @@ fun MealNavHost(
                             }
                         )
                     },
-                    onGoToSettings = onGoToSettings,
                     modifier = Modifier
                         .sharedBounds(
                             sharedContentState = rememberSharedContentState(
@@ -204,7 +236,12 @@ fun MealNavHost(
                             exit = SearchSharedTransition.screenContentExitTransition
                         ),
                     viewModel = searchViewModel,
-                    lazyListState = lazyListState
+                    lazyListState = lazyListState,
+                    searchHint = {
+                        OpenFoodFactsSearchHint(
+                            onGoToSettings = onGoToSettings
+                        )
+                    }
                 )
             }
         }

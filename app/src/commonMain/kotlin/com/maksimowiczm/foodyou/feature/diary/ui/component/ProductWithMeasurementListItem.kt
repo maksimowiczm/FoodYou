@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui
+package com.maksimowiczm.foodyou.feature.diary.ui.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
