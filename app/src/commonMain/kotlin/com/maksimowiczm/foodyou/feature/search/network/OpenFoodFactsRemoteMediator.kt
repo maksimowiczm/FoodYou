@@ -6,8 +6,11 @@ import androidx.paging.PagingState
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.search.database.dao.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.feature.search.database.dao.ProductDao
+import com.maksimowiczm.foodyou.feature.search.database.entity.FoodForm
+import com.maksimowiczm.foodyou.feature.search.database.entity.Nutrients
 import com.maksimowiczm.foodyou.feature.search.database.entity.OpenFoodFactsPagingKeyEntity
 import com.maksimowiczm.foodyou.feature.search.database.entity.ProductEntity
+import com.maksimowiczm.foodyou.feature.search.database.entity.ProductSource
 import com.maksimowiczm.foodyou.feature.search.network.model.OpenFoodFactsProduct
 
 @OptIn(ExperimentalPagingApi::class)
@@ -118,4 +121,55 @@ internal class OpenFoodFactsRemoteMediator(
     }
 }
 
-private fun OpenFoodFactsProduct.toEntity(): ProductEntity? = null
+private fun OpenFoodFactsProduct.toEntity(): ProductEntity? {
+    val packageQuantityForm = packageQuantityUnit?.foodForm()
+    val servingQuantityForm = servingQuantityUnit?.foodForm()
+
+    if (
+        packageQuantityForm != null &&
+        servingQuantityForm != null &&
+        packageQuantityForm != servingQuantityForm
+    ) {
+        return null
+    }
+
+    val form = packageQuantityForm ?: FoodForm.Solid
+
+    if (listOf(
+            nutrients.energy100g,
+            nutrients.proteins100g,
+            nutrients.carbohydrates100g,
+            nutrients.fat100g,
+            code
+        ).any { it == null }
+    ) {
+        return null
+    }
+
+    return ProductEntity(
+        name = productName,
+        brand = brands,
+        barcode = code,
+        packageWeight = packageQuantity ?: 0f,
+        servingWeight = servingQuantity ?: 0f,
+        foodForm = form,
+        productSource = ProductSource.OpenFoodFacts,
+        nutrients = Nutrients(
+            calories = nutrients.energy100g!!,
+            proteins = nutrients.proteins100g!!,
+            carbohydrates = nutrients.carbohydrates100g!!,
+            sugars = nutrients.sugars100g,
+            fats = nutrients.fat100g!!,
+            saturatedFats = nutrients.saturatedFat100g,
+            salt = nutrients.salt100g,
+            sodium = nutrients.sodium100g,
+            fiber = nutrients.fiber100g
+        )
+    )
+}
+
+private fun String.foodForm(): FoodForm? = when (this) {
+    "g" -> FoodForm.Solid
+    "ml" -> FoodForm.Liquid
+    else -> null
+}

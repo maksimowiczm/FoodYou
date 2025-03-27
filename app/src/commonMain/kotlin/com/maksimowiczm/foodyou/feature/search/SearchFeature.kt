@@ -4,16 +4,25 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.HomeFeature
+import com.maksimowiczm.foodyou.feature.search.data.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.feature.search.data.SearchRepository
 import com.maksimowiczm.foodyou.feature.search.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.search.network.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.search.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.search.ui.SearchScreen
 import com.maksimowiczm.foodyou.feature.search.ui.SearchViewModel
+import com.maksimowiczm.foodyou.feature.search.ui.openfoodfactssettings.CountryFlag
+import com.maksimowiczm.foodyou.feature.search.ui.openfoodfactssettings.OpenFoodFactsSettingsScreen
+import com.maksimowiczm.foodyou.feature.search.ui.openfoodfactssettings.OpenFoodFactsSettingsViewModel
+import com.maksimowiczm.foodyou.feature.search.ui.openfoodfactssettings.buildOpenFoodFactsSettingsListItem
+import com.maksimowiczm.foodyou.feature.search.ui.openfoodfactssettings.flagCdnCountryFlag
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
@@ -34,6 +43,10 @@ object SearchFeature : Feature {
                         productRemoteMediatorFactory = get()
                     )
                 }.bind<QueryProductsUseCase>()
+
+                factory { flagCdnCountryFlag }.bind<CountryFlag>()
+                factoryOf(::OpenFoodFactsSettingsRepository)
+                viewModelOf(::OpenFoodFactsSettingsViewModel)
             }
         )
     }
@@ -41,9 +54,21 @@ object SearchFeature : Feature {
     @Serializable
     private data object Search
 
+    @Serializable
+    private data object FoodDatabaseSettings
+
     override fun NavGraphBuilder.graph(navController: NavController) {
         crossfadeComposable<Search> {
             SearchScreen()
+        }
+        forwardBackwardComposable<FoodDatabaseSettings> {
+            OpenFoodFactsSettingsScreen(
+                onBack = {
+                    navController.popBackStack<FoodDatabaseSettings>(
+                        inclusive = true
+                    )
+                }
+            )
         }
     }
 
@@ -57,5 +82,18 @@ object SearchFeature : Feature {
                 Text("Search")
             }
         }
+    )
+
+    override fun buildSettingsFeatures(navController: NavController) = listOf(
+        buildOpenFoodFactsSettingsListItem(
+            onClick = {
+                navController.navigate(
+                    route = FoodDatabaseSettings,
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            }
+        )
     )
 }

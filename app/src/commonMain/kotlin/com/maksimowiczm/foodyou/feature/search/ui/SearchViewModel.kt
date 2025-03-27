@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class SearchViewModel(private val queryProductsUseCase: QueryProductsUseCase) : ViewModel() {
     private val mutableSearchQuery = MutableSharedFlow<String?>(replay = 1).apply { tryEmit(null) }
@@ -25,4 +26,10 @@ class SearchViewModel(private val queryProductsUseCase: QueryProductsUseCase) : 
     val pages: Flow<PagingData<Product>> = mutableSearchQuery.flatMapLatest { query ->
         queryProductsUseCase(query)
     }.cachedIn(viewModelScope)
+
+    fun onSearch(query: String?) {
+        viewModelScope.launch {
+            mutableSearchQuery.emit(query)
+        }
+    }
 }

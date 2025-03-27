@@ -17,7 +17,7 @@ internal class OpenFoodFactsRemoteMediatorFactory(
     searchDatabase: SearchDatabase
 ) : ProductRemoteMediatorFactory {
 
-    private val openFoodFactsDao = searchDatabase.openFoodFactsPagingKeyDao
+    private val openFoodFactsDao = searchDatabase.openFoodFactsDao
     private val productDao = searchDatabase.productDao
 
     private val _openFoodFactsNetworkDataSource by lazy {

@@ -63,6 +63,7 @@ interface ProductDao {
         """
         SELECT * FROM productentity 
         WHERE name LIKE '%' || :query || '%'
+        OR brand LIKE '%' || :query || '%'
         """
     )
     fun queryProductsWithQuery(query: String): PagingSource<Int, ProductEntity>

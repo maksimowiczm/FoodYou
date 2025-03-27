@@ -9,9 +9,9 @@ interface SearchDatabase {
     val productDao: ProductDao
         get() = productDao()
 
-    fun openFoodFactsPagingKeyDao(): OpenFoodFactsDao
-    val openFoodFactsPagingKeyDao: OpenFoodFactsDao
-        get() = openFoodFactsPagingKeyDao()
+    fun openFoodFactsDao(): OpenFoodFactsDao
+    val openFoodFactsDao: OpenFoodFactsDao
+        get() = openFoodFactsDao()
 
     fun searchDao(): SearchDao
     val searchDao: SearchDao
