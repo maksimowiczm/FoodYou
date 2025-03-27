@@ -71,8 +71,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.feature.garbage.ui.search.FoodDatabaseErrorCard
-import com.maksimowiczm.foodyou.feature.search.domain.Product
 import com.maksimowiczm.foodyou.feature.search.domain.ProductQuery
+import com.maksimowiczm.foodyou.feature.search.domain.model.Product
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*

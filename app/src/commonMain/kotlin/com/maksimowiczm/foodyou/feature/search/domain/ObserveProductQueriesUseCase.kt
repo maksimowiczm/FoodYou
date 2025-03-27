@@ -5,7 +5,6 @@ import kotlinx.datetime.LocalDateTime
 
 data class ProductQuery(val query: String, val date: LocalDateTime)
 
-interface ObserveProductQueries {
+interface ObserveProductQueriesUseCase {
     fun observeProductQueries(limit: Int): Flow<List<ProductQuery>>
-    operator fun invoke(limit: Int): Flow<List<ProductQuery>> = observeProductQueries(limit)
 }
