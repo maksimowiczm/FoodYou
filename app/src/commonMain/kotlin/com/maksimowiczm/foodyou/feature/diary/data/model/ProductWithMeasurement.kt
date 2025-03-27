@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.diary.data.model
 /**
  * Represents a product with a specific weight measurement
  */
-sealed interface ProductWithMeasurement {
+interface ProductWithMeasurement {
     val product: Product
     val measurement: WeightMeasurement
 

@@ -7,4 +7,8 @@ data class Recipe(
     val ingredients: List<RecipeIngredient>
 )
 
-data class RecipeIngredient(val id: Long)
+data class RecipeIngredient(
+    val id: Long,
+    override val product: Product,
+    override val measurement: WeightMeasurement
+) : ProductWithMeasurement

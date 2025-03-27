@@ -61,12 +61,7 @@ fun ProductWithMeasurement.ListItem(
 }
 
 @Composable
-private fun NutrientsRow(
-    proteins: Int,
-    carbohydrates: Int,
-    fats: Int,
-    modifier: Modifier = Modifier
-) {
+fun NutrientsRow(proteins: Int, carbohydrates: Int, fats: Int, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
     CompositionLocalProvider(

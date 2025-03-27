@@ -39,7 +39,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.ext.sumOf
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.RecipeIngredient
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesProgressIndicator
+import com.maksimowiczm.foodyou.feature.diary.ui.component.ListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsList
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
@@ -198,8 +200,8 @@ private fun GeneralSection(modifier: Modifier = Modifier) {
 
 private fun LazyListScope.ingredientsSection(
     onAddIngredient: () -> Unit,
-    ingredients: List<Ingredient>,
-    onIngredientClick: (Ingredient) -> Unit
+    ingredients: List<RecipeIngredient>,
+    onIngredientClick: (RecipeIngredient) -> Unit
 ) {
     item {
         Row(
@@ -231,10 +233,10 @@ private fun LazyListScope.ingredientsSection(
 
     items(
         items = ingredients
-    ) { model ->
-//        model.ListItem(
-//            onClick = { onIngredientClick(model.id) }
-//        )
+    ) {
+        it.ListItem(
+            onClick = { onIngredientClick(it) }
+        )
     }
 }
 

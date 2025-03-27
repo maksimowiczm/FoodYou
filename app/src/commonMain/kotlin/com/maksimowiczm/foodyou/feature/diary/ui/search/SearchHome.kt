@@ -298,9 +298,12 @@ private fun SearchHome(
                     items(
                         count = pages.itemCount,
                         key = pages.itemKey {
-                            when (it) {
+                            return@itemKey when (it) {
                                 is Measurement -> "${it.product.id} ${it.measurementId}"
                                 is Suggestion -> "${it.product.id}"
+                                else -> {
+                                    error("Unknown item type $it")
+                                }
                             }
                         }
                     ) {
