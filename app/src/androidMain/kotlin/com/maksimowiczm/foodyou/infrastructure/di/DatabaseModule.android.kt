@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
+import com.maksimowiczm.foodyou.feature.diary.database.callback.InitializeMealsCallback
 import com.maksimowiczm.foodyou.feature.search.database.SearchDatabase
 import com.maksimowiczm.foodyou.infrastructure.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.infrastructure.database.FoodYouDatabase.Companion.buildDatabase
@@ -18,10 +20,11 @@ actual val databaseModule = module {
                 name = DATABASE_NAME
             )
 
-        builder.buildDatabase()
+        builder.buildDatabase(InitializeMealsCallback(androidContext()))
     }.binds(
         arrayOf(
-            SearchDatabase::class
+            SearchDatabase::class,
+            DiaryDatabase::class
         )
     )
 }
