@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.garbage.network.model.v1
+package com.maksimowiczm.foodyou.feature.search.network.model.v2
 
 import com.maksimowiczm.foodyou.feature.garbage.network.model.OpenFoodFactsNutrients
 import com.maksimowiczm.foodyou.feature.garbage.network.model.OpenFoodFactsProduct
@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class OpenFoodFactsProductV1(
+internal data class OpenFoodFactsProductV2(
     @SerialName("product_name")
     override val productName: String,
     @SerialName("brands")
@@ -16,11 +16,16 @@ internal data class OpenFoodFactsProductV1(
     @SerialName("nutriments")
     override val nutrients: OpenFoodFactsNutrients,
     @SerialName("product_quantity")
-    override val packageQuantity: Float? = null,
+    val packageQuantityString: String? = null,
     @SerialName("product_quantity_unit")
     override val packageQuantityUnit: String? = null,
     @SerialName("serving_quantity")
-    override val servingQuantity: Float? = null,
+    val servingQuantityString: String? = null,
     @SerialName("serving_quantity_unit")
     override val servingQuantityUnit: String? = null
-) : OpenFoodFactsProduct
+) : OpenFoodFactsProduct {
+    override val packageQuantity: Float?
+        get() = packageQuantityString?.toFloatOrNull()
+    override val servingQuantity: Float?
+        get() = servingQuantityString?.toFloatOrNull()
+}

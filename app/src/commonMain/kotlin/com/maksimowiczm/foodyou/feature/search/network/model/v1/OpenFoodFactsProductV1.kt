@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.garbage.network.model.v1
+package com.maksimowiczm.foodyou.feature.search.network.model.v1
 
 import com.maksimowiczm.foodyou.feature.garbage.network.model.OpenFoodFactsNutrients
 import com.maksimowiczm.foodyou.feature.garbage.network.model.OpenFoodFactsProduct

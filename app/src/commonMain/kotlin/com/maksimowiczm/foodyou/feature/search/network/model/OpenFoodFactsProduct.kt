@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.garbage.network.model
+package com.maksimowiczm.foodyou.feature.search.network.model
 
 interface OpenFoodFactsProduct {
     val productName: String

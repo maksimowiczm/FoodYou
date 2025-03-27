@@ -13,8 +13,6 @@ internal data class OpenFoodFactsProductV2(
     override val brands: String? = null,
     @SerialName("code")
     override val code: String? = null,
-    @SerialName("image_url")
-    override val imageUrl: String? = null,
     @SerialName("nutriments")
     override val nutrients: OpenFoodFactsNutrients,
     @SerialName("product_quantity")
