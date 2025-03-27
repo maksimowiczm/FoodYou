@@ -26,7 +26,7 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
         Index(value = ["recipeId"])
     ]
 )
-data class RecipeProductEntry(
+data class RecipeProductEntryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
 

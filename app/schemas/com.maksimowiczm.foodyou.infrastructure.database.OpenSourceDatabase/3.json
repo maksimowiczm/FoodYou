@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "02d8f27b47ca418dfd6224cb4fbefe0a",
+    "identityHash": "3a8bbe8462e47a7882827746d04deecd",
     "entities": [
       {
         "tableName": "OpenFoodFactsPagingKey",
@@ -368,7 +368,7 @@
         }
       },
       {
-        "tableName": "RecipeProductEntry",
+        "tableName": "RecipeProductEntryEntity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `productId` INTEGER NOT NULL, `recipeId` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, FOREIGN KEY(`productId`) REFERENCES `ProductEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`recipeId`) REFERENCES `RecipeEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
@@ -410,22 +410,22 @@
         },
         "indices": [
           {
-            "name": "index_RecipeProductEntry_productId",
+            "name": "index_RecipeProductEntryEntity_productId",
             "unique": false,
             "columnNames": [
               "productId"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeProductEntry_productId` ON `${TABLE_NAME}` (`productId`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeProductEntryEntity_productId` ON `${TABLE_NAME}` (`productId`)"
           },
           {
-            "name": "index_RecipeProductEntry_recipeId",
+            "name": "index_RecipeProductEntryEntity_recipeId",
             "unique": false,
             "columnNames": [
               "recipeId"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeProductEntry_recipeId` ON `${TABLE_NAME}` (`recipeId`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeProductEntryEntity_recipeId` ON `${TABLE_NAME}` (`recipeId`)"
           }
         ],
         "foreignKeys": [
@@ -456,7 +456,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '02d8f27b47ca418dfd6224cb4fbefe0a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3a8bbe8462e47a7882827746d04deecd')"
     ]
   }
 }

@@ -17,7 +17,7 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.OpenFoodFactsPagin
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeProductEntry
+import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeProductEntryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
 
 @Database(
@@ -28,7 +28,7 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementE
         ProductQueryEntity::class,
         MealEntity::class,
         RecipeEntity::class,
-        RecipeProductEntry::class
+        RecipeProductEntryEntity::class
     ],
     version = OpenSourceDatabase.VERSION,
     exportSchema = true,

@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductSearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.QuantitySuggestionEntity
+import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeProductSearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -100,17 +101,40 @@ interface AddFoodDao {
     @Query(
         """
         WITH 
-        Suggestions AS (
+        RecipeEntry AS (
+            SELECT 
+                re.id AS id,
+                re.productId AS productId,
+                re.recipeId AS recipeId,
+                re.measurement AS measurement,
+                re.quantity AS quantity,
+                1 AS flag
+            FROM RecipeProductEntryEntity re
+            WHERE re.recipeId = :recipeId
+        ),
+        Rest AS (
            SELECT
-                *,
-                0 AS todaysMeasurement
+                NULL AS id,
+                wm.productId AS productId,
+                NULL AS recipeId,
+                wm.measurement AS measurement,
+                wm.quantity AS quantity,
+                0 AS flag
             FROM WeightMeasurementEntity wm
-            WHERE wm.createdAt = (
+            WHERE wm.productId NOT IN (
+                SELECT productId 
+                FROM RecipeEntry
+            )
+            AND wm.createdAt = (
                 SELECT MAX(wm2.createdAt) 
                 FROM WeightMeasurementEntity wm2 
                 WHERE wm2.productId = wm.productId
             )
             GROUP BY wm.productId
+        ),
+        Suggestions AS (
+            SELECT * FROM RecipeEntry 
+            UNION SELECT * FROM Rest
         )
         SELECT 
             p.id AS p_id,
@@ -131,14 +155,11 @@ interface AddFoodDao {
             p.weightUnit AS p_weightUnit,
             p.productSource AS p_productSource,
             s.id AS m_id,
-            s.mealId AS m_mealId,
-            s.diaryEpochDay AS m_diaryEpochDay,
+            s.recipeId AS m_recipeId,
             s.productId AS m_productId,
-            s.createdAt AS m_createdAt,
             s.measurement AS m_measurement,
             s.quantity AS m_quantity,
-            s.isDeleted AS m_isDeleted,
-            s.todaysMeasurement
+            s.flag
         FROM ProductEntity p
         LEFT JOIN Suggestions s ON s.productId = p.id
         WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
@@ -146,10 +167,11 @@ interface AddFoodDao {
         ORDER BY p.id, s.id
         """
     )
-    fun observePagedProductsWithMeasurement(
+    fun observePagedRecipeProductsWithMeasurement(
         query: String?,
-        barcode: String?
-    ): PagingSource<Int, ProductSearchEntity>
+        barcode: String?,
+        recipeId: Long
+    ): PagingSource<Int, RecipeProductSearchEntity>
 
     @Query(
         """

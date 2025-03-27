@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
-import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryRecipeProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,7 +38,7 @@ class RecipeSearchViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val pages = mutableSearchQuery.flatMapLatest { query ->
-        queryProducts(query)
+        queryProducts(query, 0)
     }.cachedIn(viewModelScope)
 
     override fun onSearch(query: String?) {
@@ -47,11 +47,11 @@ class RecipeSearchViewModel(
         }
     }
 
-    override fun onQuickAdd(productId: Long, measurement: WeightMeasurement) {
+    override fun onQuickAdd(model: ProductWithMeasurement) {
         TODO("Not yet implemented")
     }
 
-    override fun onQuickRemove(measurementId: Long) {
+    override fun onQuickRemove(model: ProductWithMeasurement) {
         TODO("Not yet implemented")
     }
 }

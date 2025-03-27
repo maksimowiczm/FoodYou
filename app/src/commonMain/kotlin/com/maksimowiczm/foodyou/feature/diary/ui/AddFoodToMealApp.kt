@@ -26,6 +26,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntrySuggestion
+import com.maksimowiczm.foodyou.feature.diary.data.model.RecipeIngredient
+import com.maksimowiczm.foodyou.feature.diary.data.model.RecipeSearchProduct
 import com.maksimowiczm.foodyou.feature.diary.ui.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.DiaryDayMealScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateMeasurementViewModel
@@ -192,8 +196,16 @@ private fun AppNavHost(
             with(sharedTransitionScope) {
                 SearchHome(
                     onProductClick = {
+                        val id = when (it) {
+                            is DiaryEntry -> it.product.id
+                            is DiaryEntrySuggestion -> it.product.id
+
+                            is RecipeIngredient,
+                            is RecipeSearchProduct -> TODO()
+                        }
+
                         navController.navigate(
-                            route = CreateMeasurement(it),
+                            route = CreateMeasurement(id),
                             navOptions = navOptions {
                                 launchSingleTop = true
                             }

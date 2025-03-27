@@ -21,6 +21,7 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.Product
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.QuantitySuggestion
+import com.maksimowiczm.foodyou.feature.diary.data.model.RecipeSearchProduct
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.diary.data.model.defaultGoals
@@ -34,6 +35,8 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductSearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeProductEntryEntity
+import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeProductSearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
@@ -352,7 +355,10 @@ class DiaryRepository(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun queryProducts(query: String?): Flow<PagingData<ProductWithMeasurement>> {
+    override fun queryProducts(
+        query: String?,
+        recipeId: Long
+    ): Flow<PagingData<ProductWithMeasurement>> {
         val barcode = query?.takeIf { it.all(Char::isDigit) }
 
         val localOnly = query == null
@@ -360,7 +366,7 @@ class DiaryRepository(
             localOnly -> null
             barcode != null -> productRemoteMediatorFactory.createWithBarcode(barcode)
             else -> productRemoteMediatorFactory.createWithQuery(query)
-        }?.let { ProductSearchRemoteMediatorAdapter(it) }
+        }?.let { RecipeProductSearchRemoteMediatorAdapter(it) }
 
         // Insert query if it's not a barcode and not empty
         if (barcode == null && query?.isNotBlank() == true) {
@@ -376,18 +382,20 @@ class DiaryRepository(
             remoteMediator = remoteMediator
         ) {
             if (barcode != null) {
-                addFoodDao.observePagedProductsWithMeasurement(
+                addFoodDao.observePagedRecipeProductsWithMeasurement(
                     query = null,
-                    barcode = barcode
+                    barcode = barcode,
+                    recipeId = recipeId
                 )
             } else {
-                addFoodDao.observePagedProductsWithMeasurement(
+                addFoodDao.observePagedRecipeProductsWithMeasurement(
                     query = query,
-                    barcode = null
+                    barcode = null,
+                    recipeId = recipeId
                 )
             }
         }.flow.map { pagingData ->
-            pagingData.map { it.toQueryProduct() }
+            pagingData.map { it.toRecipeSearchProduct() }
         }
     }
 
@@ -460,7 +468,37 @@ private class ProductSearchRemoteMediatorAdapter(
     }
 }
 
-private val PagingState<Int, ProductSearchEntity>.leadingPlaceholderCount: Int
+// Adapter for RemoteMediator<Int, ProductSearchEntity> to RemoteMediator<Int, ProductEntity>
+// Got to love paging3 library :) (most likely skill issue from my side)
+@OptIn(ExperimentalPagingApi::class)
+private class RecipeProductSearchRemoteMediatorAdapter(
+    private val productRemoteMediator: ProductRemoteMediator
+) : RemoteMediator<Int, RecipeProductSearchEntity>() {
+    override suspend fun load(
+        loadType: LoadType,
+        state: PagingState<Int, RecipeProductSearchEntity>
+    ): MediatorResult {
+        val pages: List<Page<Int, ProductEntity>> = state.pages.map { page ->
+            Page(
+                data = page.data.map { it.product },
+                nextKey = page.nextKey,
+                prevKey = page.prevKey
+            )
+        }
+
+        return productRemoteMediator.load(
+            loadType = loadType,
+            state = PagingState(
+                pages = pages,
+                config = state.config,
+                anchorPosition = state.anchorPosition,
+                leadingPlaceholderCount = state.leadingPlaceholderCount
+            )
+        )
+    }
+}
+
+private val <T : Any>PagingState<Int, T>.leadingPlaceholderCount: Int
     get() {
         val field = PagingState::class.java.getDeclaredField("leadingPlaceholderCount")
         field.isAccessible = true
@@ -517,5 +555,34 @@ private fun WeightMeasurementEntity.toDomain(product: Product) = when (this.meas
     WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(
         quantity = quantity,
         servingWeight = product.servingWeight!!
+    )
+}
+
+private fun RecipeProductEntryEntity.toWeightMeasurement(product: Product): WeightMeasurement =
+    when (this.measurement) {
+        WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(
+            weight = quantity
+        )
+
+        WeightMeasurementEnum.Package -> WeightMeasurement.Package(
+            quantity = quantity,
+            packageWeight = product.packageWeight!!
+        )
+
+        WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(
+            quantity = quantity,
+            servingWeight = product.servingWeight!!
+        )
+    }
+
+private fun RecipeProductSearchEntity.toRecipeSearchProduct(): RecipeSearchProduct {
+    val product = this.product.toDomain()
+    val weightMeasurement =
+        this.recipeProductEntryEntity?.toWeightMeasurement(product)
+            ?: WeightMeasurement.defaultForProduct(product)
+
+    return RecipeSearchProduct(
+        product = product,
+        measurement = weightMeasurement
     )
 }

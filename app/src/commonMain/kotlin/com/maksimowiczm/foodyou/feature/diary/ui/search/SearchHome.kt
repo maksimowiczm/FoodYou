@@ -74,7 +74,8 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntrySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
-import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.RecipeIngredient
+import com.maksimowiczm.foodyou.feature.diary.data.model.RecipeSearchProduct
 import com.maksimowiczm.foodyou.ui.component.BackHandler
 import com.maksimowiczm.foodyou.ui.component.FloatingActionButtonWithActions
 import com.maksimowiczm.foodyou.ui.ext.performToggle
@@ -87,7 +88,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SearchHome(
-    onProductClick: (productId: Long) -> Unit,
+    onProductClick: (ProductWithMeasurement) -> Unit,
     onBack: () -> Unit,
     onBarcodeScanner: () -> Unit,
     viewModel: SearchViewModel,
@@ -126,9 +127,9 @@ private fun SearchHome(
     pages: LazyPagingItems<ProductWithMeasurement>,
     recentQueries: List<ProductQuery>,
     query: String?,
-    onProductClick: (productId: Long) -> Unit,
-    onQuickAdd: (productId: Long, measurement: WeightMeasurement) -> Unit,
-    onQuickRemove: (measurementId: Long) -> Unit,
+    onProductClick: (ProductWithMeasurement) -> Unit,
+    onQuickAdd: (ProductWithMeasurement) -> Unit,
+    onQuickRemove: (ProductWithMeasurement) -> Unit,
     onSearch: (query: String) -> Unit,
     onClearSearch: () -> Unit,
     onBack: () -> Unit,
@@ -270,9 +271,10 @@ private fun SearchHome(
                             return@itemKey when (it) {
                                 is DiaryEntry -> "${it.product.id} ${it.entryId}"
                                 is DiaryEntrySuggestion -> "${it.product.id}"
-                                else -> {
-                                    error("Unknown item type $it")
-                                }
+
+                                // TODO
+                                is RecipeIngredient -> "${it.product.id}"
+                                is RecipeSearchProduct -> "${it.product.id}"
                             }
                         }
                     ) {
@@ -295,14 +297,13 @@ private fun SearchHome(
                                     onCheckChange = { newState ->
                                         hapticFeedback.performToggle(newState)
 
-                                        when (target) {
-                                            is DiaryEntry -> onQuickRemove(target.entryId)
-
-                                            is DiaryEntrySuggestion ->
-                                                onQuickAdd(target.product.id, target.measurement)
+                                        if (newState) {
+                                            onQuickAdd(target)
+                                        } else {
+                                            onQuickRemove(target)
                                         }
                                     },
-                                    onClick = { onProductClick(target.product.id) }
+                                    onClick = { onProductClick(target) }
                                 )
                             }
                         }
