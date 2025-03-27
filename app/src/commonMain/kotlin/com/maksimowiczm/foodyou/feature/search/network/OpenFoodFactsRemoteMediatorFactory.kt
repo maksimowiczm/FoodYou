@@ -4,9 +4,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.paging.ExperimentalPagingApi
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.feature.garbage.data.preferences.OpenFoodFactsPreferences
-import com.maksimowiczm.foodyou.feature.garbage.database.dao.OpenFoodFactsDao
-import com.maksimowiczm.foodyou.feature.garbage.database.dao.ProductDao
+import com.maksimowiczm.foodyou.feature.search.data.preferences.OpenFoodFactsPreferences
+import com.maksimowiczm.foodyou.feature.search.database.dao.OpenFoodFactsDao
+import com.maksimowiczm.foodyou.feature.search.database.dao.ProductDao
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import kotlinx.coroutines.runBlocking
 
@@ -25,8 +25,7 @@ internal class OpenFoodFactsRemoteMediatorFactory(
 
     private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource?
         get() {
-            val isEnabled =
-                runBlocking { dataStore.get(OpenFoodFactsPreferences.isEnabled) }
+            val isEnabled = runBlocking { dataStore.get(OpenFoodFactsPreferences.isEnabled) }
 
             return if (isEnabled != true) {
                 Logger.w(TAG) { "Open Food Facts is not enabled" }

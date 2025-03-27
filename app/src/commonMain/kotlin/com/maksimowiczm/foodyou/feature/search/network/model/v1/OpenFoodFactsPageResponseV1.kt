@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.search.network.model.v1
 
-import com.maksimowiczm.foodyou.feature.garbage.network.model.OpenFoodPageResponse
+import com.maksimowiczm.foodyou.feature.search.network.model.OpenFoodPageResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

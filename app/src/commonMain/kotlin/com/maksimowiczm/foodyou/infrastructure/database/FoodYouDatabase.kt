@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.infrastructure.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
-import com.maksimowiczm.foodyou.feature.search.database.OpenFoodFactsPagingKeyEntity
-import com.maksimowiczm.foodyou.feature.search.database.ProductEntity
+import com.maksimowiczm.foodyou.feature.search.database.entity.OpenFoodFactsPagingKeyEntity
+import com.maksimowiczm.foodyou.feature.search.database.entity.ProductEntity
 
 @Database(
     entities = [

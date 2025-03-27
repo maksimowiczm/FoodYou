@@ -4,11 +4,11 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.feature.garbage.data.model.toEntity
-import com.maksimowiczm.foodyou.feature.garbage.database.dao.OpenFoodFactsDao
-import com.maksimowiczm.foodyou.feature.garbage.database.dao.ProductDao
-import com.maksimowiczm.foodyou.feature.garbage.database.entity.OpenFoodFactsPagingKey
-import com.maksimowiczm.foodyou.feature.garbage.database.entity.ProductEntity
+import com.maksimowiczm.foodyou.feature.search.database.dao.OpenFoodFactsDao
+import com.maksimowiczm.foodyou.feature.search.database.dao.ProductDao
+import com.maksimowiczm.foodyou.feature.search.database.entity.OpenFoodFactsPagingKeyEntity
+import com.maksimowiczm.foodyou.feature.search.database.entity.ProductEntity
+import com.maksimowiczm.foodyou.feature.search.network.model.OpenFoodFactsProduct
 
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediator(
@@ -79,7 +79,7 @@ internal class OpenFoodFactsRemoteMediator(
                 ((response.page - 1) * response.pageSize).coerceAtLeast(0) + response.products.size
 
             openFoodFactsDao.upsertPagingKey(
-                OpenFoodFactsPagingKey(
+                OpenFoodFactsPagingKeyEntity(
                     queryString = query,
                     country = country,
                     fetchedCount = fetchedCount,
@@ -117,3 +117,5 @@ internal class OpenFoodFactsRemoteMediator(
         private const val PAGE_SIZE = 50
     }
 }
+
+private fun OpenFoodFactsProduct.toEntity(): ProductEntity? = null

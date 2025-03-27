@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.search.database
+package com.maksimowiczm.foodyou.feature.search.database.entity
 
 data class Nutrients(
     val calories: Float,

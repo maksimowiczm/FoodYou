@@ -2,10 +2,10 @@ package com.maksimowiczm.foodyou.feature.search.network
 
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.BuildConfig
-import com.maksimowiczm.foodyou.feature.garbage.network.model.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.feature.garbage.network.model.OpenFoodPageResponse
-import com.maksimowiczm.foodyou.feature.garbage.network.model.v1.OpenFoodFactsPageResponseV1
-import com.maksimowiczm.foodyou.feature.garbage.network.model.v2.OpenFoodFactsProductResponseV2
+import com.maksimowiczm.foodyou.feature.search.network.model.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.feature.search.network.model.OpenFoodPageResponse
+import com.maksimowiczm.foodyou.feature.search.network.model.v1.OpenFoodFactsPageResponseV1
+import com.maksimowiczm.foodyou.feature.search.network.model.v2.OpenFoodFactsProductResponseV2
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
