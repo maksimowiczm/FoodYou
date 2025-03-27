@@ -41,7 +41,7 @@ import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.HomeFeature
 import com.maksimowiczm.foodyou.feature.HomeState
-import com.maksimowiczm.foodyou.feature.diary.domain.Meal
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCase.Meal
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeader
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionSpecs

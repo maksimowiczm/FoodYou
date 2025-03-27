@@ -5,7 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import com.maksimowiczm.foodyou.feature.diary.domain.Meal
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCase.Meal
 import com.valentinilk.shimmer.Shimmer
 import kotlinx.datetime.LocalTime
 
