@@ -54,13 +54,15 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+typealias SearchScreenItemFactory = () -> (@Composable (Product?) -> Unit)
+
 @Composable
 fun SearchScreen(
     onBack: () -> Unit,
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = koinViewModel(),
-    item: () -> (@Composable (Product?) -> Unit)
+    item: SearchScreenItemFactory
 ) {
     val pages = viewModel.pages.collectAsLazyPagingItems(
         viewModel.viewModelScope.coroutineContext
@@ -91,7 +93,7 @@ private fun SearchScreen(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    item: () -> (@Composable (Product?) -> Unit)
+    item: SearchScreenItemFactory
 ) {
     val searchBarState = rememberSearchBarState(
         initialValue = SearchBarValue.Collapsed
@@ -103,7 +105,7 @@ private fun SearchScreen(
     val isLoading by remember(pages.loadState) {
         derivedStateOf {
             pages.loadState.refresh == LoadState.Loading ||
-                pages.loadState.append == LoadState.Loading
+                    pages.loadState.append == LoadState.Loading
         }
     }
 
