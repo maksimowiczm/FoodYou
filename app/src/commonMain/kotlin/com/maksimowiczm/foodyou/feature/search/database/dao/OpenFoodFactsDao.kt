@@ -10,7 +10,7 @@ interface OpenFoodFactsDao {
     @Query(
         """
         SELECT * 
-        FROM OpenFoodFactsPagingKey 
+        FROM OpenFoodFactsPagingKeyEntity
         WHERE queryString = :query
             AND country = :country
         """
@@ -22,7 +22,7 @@ interface OpenFoodFactsDao {
 
     @Query(
         """
-        DELETE FROM OpenFoodFactsPagingKey 
+        DELETE FROM OpenFoodFactsPagingKeyEntity 
         """
     )
     suspend fun clearPagingKeys()

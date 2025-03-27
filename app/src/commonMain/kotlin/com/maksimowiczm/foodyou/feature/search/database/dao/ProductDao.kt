@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.search.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -57,4 +58,27 @@ interface ProductDao {
 
     @Upsert
     suspend fun upsertProducts(products: List<ProductEntity>)
+
+    @Query(
+        """
+        SELECT * FROM productentity 
+        WHERE name LIKE '%' || :query || '%'
+        """
+    )
+    fun queryProductsWithQuery(query: String): PagingSource<Int, ProductEntity>
+
+    @Query(
+        """
+        SELECT * FROM productentity 
+        WHERE barcode = :barcode
+        """
+    )
+    fun queryProductsWithBarcode(barcode: String): PagingSource<Int, ProductEntity>
+
+    @Query(
+        """
+        SELECT * FROM productentity
+        """
+    )
+    fun observeProducts(): PagingSource<Int, ProductEntity>
 }
