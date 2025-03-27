@@ -5,6 +5,7 @@ import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.SearchRecipeEntry
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryRecipeProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
 class RecipeSearchViewModel(
     addFoodRepository: AddFoodRepository,
     private val queryProducts: QueryRecipeProductsUseCase
-) : SearchViewModel() {
+) : SearchViewModel<SearchRecipeEntry>() {
     override val recentQueries: StateFlow<List<ProductQuery>> =
         addFoodRepository.observeProductQueries(
             limit = 20
@@ -47,11 +48,11 @@ class RecipeSearchViewModel(
         }
     }
 
-    override fun onQuickAdd(model: ProductWithMeasurement) {
+    override fun onQuickAdd(model: SearchRecipeEntry) {
         TODO("Not yet implemented")
     }
 
-    override fun onQuickRemove(model: ProductWithMeasurement) {
+    override fun onQuickRemove(model: SearchRecipeEntry) {
         TODO("Not yet implemented")
     }
 }

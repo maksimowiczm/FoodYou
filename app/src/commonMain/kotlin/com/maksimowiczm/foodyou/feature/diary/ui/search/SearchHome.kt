@@ -70,12 +70,10 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntrySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.RecipeIngredient
-import com.maksimowiczm.foodyou.feature.diary.data.model.RecipeSearchProduct
+import com.maksimowiczm.foodyou.feature.diary.data.model.SearchRecipeEntry
 import com.maksimowiczm.foodyou.ui.component.BackHandler
 import com.maksimowiczm.foodyou.ui.component.FloatingActionButtonWithActions
 import com.maksimowiczm.foodyou.ui.ext.performToggle
@@ -87,11 +85,11 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SearchHome(
-    onProductClick: (ProductWithMeasurement) -> Unit,
+fun <M : ProductWithMeasurement>SearchHome(
+    onProductClick: (M) -> Unit,
     onBack: () -> Unit,
     onBarcodeScanner: () -> Unit,
-    viewModel: SearchViewModel,
+    viewModel: SearchViewModel<M>,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     searchHint: (@Composable () -> Unit)? = null,
@@ -123,13 +121,13 @@ fun SearchHome(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun SearchHome(
-    pages: LazyPagingItems<ProductWithMeasurement>,
+private fun <M: ProductWithMeasurement>SearchHome(
+    pages: LazyPagingItems<M>,
     recentQueries: List<ProductQuery>,
     query: String?,
-    onProductClick: (ProductWithMeasurement) -> Unit,
-    onQuickAdd: (ProductWithMeasurement) -> Unit,
-    onQuickRemove: (ProductWithMeasurement) -> Unit,
+    onProductClick: (M) -> Unit,
+    onQuickAdd: (M) -> Unit,
+    onQuickRemove: (M) -> Unit,
     onSearch: (query: String) -> Unit,
     onClearSearch: () -> Unit,
     onBack: () -> Unit,
@@ -268,14 +266,15 @@ private fun SearchHome(
                     items(
                         count = pages.itemCount,
                         key = pages.itemKey {
-                            return@itemKey when (it) {
-                                is DiaryEntry -> "${it.product.id} ${it.entryId}"
-                                is DiaryEntrySuggestion -> "${it.product.id}"
-
-                                // TODO
-                                is RecipeIngredient -> "${it.product.id}"
-                                is RecipeSearchProduct -> "${it.product.id}"
-                            }
+                            TODO()
+//                            return@itemKey when (it) {
+//                                is DiaryEntry -> "${it.product.id} ${it.entryId}"
+//                                is DiaryEntrySuggestion -> "${it.product.id}"
+//
+//                                // TODO
+//                                is RecipeIngredient -> "${it.product.id}"
+//                                is SearchRecipeEntry -> "${it.product.id}"
+//                            }
                         }
                     ) {
                         Crossfade(

@@ -4,10 +4,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntrySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.SearchDiaryEntry
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,7 +22,7 @@ class MealDateSearchViewModel(
     private val queryProductsUseCase: QueryProductsUseCase,
     val mealId: Long,
     val date: LocalDate
-) : SearchViewModel() {
+) : SearchViewModel<SearchDiaryEntry>() {
     override val recentQueries: StateFlow<List<ProductQuery>> =
         addFoodRepository.observeProductQueries(
             limit = 20
@@ -57,8 +55,8 @@ class MealDateSearchViewModel(
         }
     }
 
-    override fun onQuickAdd(model: ProductWithMeasurement) {
-        model as? DiaryEntrySuggestion ?: return
+    override fun onQuickAdd(model: SearchDiaryEntry) {
+        model as? SearchDiaryEntry.Suggestion ?: return
 
         viewModelScope.launch {
             measurementRepository.addMeasurement(
@@ -70,8 +68,8 @@ class MealDateSearchViewModel(
         }
     }
 
-    override fun onQuickRemove(model: ProductWithMeasurement) {
-        model as? DiaryEntry ?: return
+    override fun onQuickRemove(model: SearchDiaryEntry) {
+        model as? SearchDiaryEntry.Measurement ?: return
 
         viewModelScope.launch {
             measurementRepository.removeMeasurement(model.entryId)

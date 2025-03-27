@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.feature.diary.data
 
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.QuantitySuggestion
+import com.maksimowiczm.foodyou.feature.diary.data.model.SearchDiaryEntry
 import kotlinx.coroutines.flow.Flow
 
 interface AddFoodRepository {
@@ -11,5 +11,5 @@ interface AddFoodRepository {
 
     fun observeProductQueries(limit: Int): Flow<List<ProductQuery>>
 
-    fun observeProductByMeasurementId(measurementId: Long): Flow<DiaryEntry?>
+    fun observeProductByMeasurementId(measurementId: Long): Flow<SearchDiaryEntry.Measurement?>
 }

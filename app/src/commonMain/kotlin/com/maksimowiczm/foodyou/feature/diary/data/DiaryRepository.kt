@@ -15,13 +15,12 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntrySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.Product
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.QuantitySuggestion
-import com.maksimowiczm.foodyou.feature.diary.data.model.RecipeSearchProduct
+import com.maksimowiczm.foodyou.feature.diary.data.model.SearchRecipeEntry
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.diary.data.model.defaultGoals
@@ -575,13 +574,13 @@ private fun RecipeProductEntryEntity.toWeightMeasurement(product: Product): Weig
         )
     }
 
-private fun RecipeProductSearchEntity.toRecipeSearchProduct(): RecipeSearchProduct {
+private fun RecipeProductSearchEntity.toRecipeSearchProduct(): SearchRecipeEntry {
     val product = this.product.toDomain()
     val weightMeasurement =
         this.recipeProductEntryEntity?.toWeightMeasurement(product)
             ?: WeightMeasurement.defaultForProduct(product)
 
-    return RecipeSearchProduct(
+    return SearchRecipeEntry(
         product = product,
         measurement = weightMeasurement
     )
