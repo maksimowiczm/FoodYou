@@ -5,8 +5,8 @@ import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.HomeFeature
 import com.maksimowiczm.foodyou.feature.calendar.ui.CalendarCard
 import com.maksimowiczm.foodyou.feature.calendar.ui.CalendarViewModel
-import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 /**
@@ -20,7 +20,11 @@ object CalendarCard : Feature.Home() {
         )
     }
 
-    override val module: Module = module {
-        viewModelOf(::CalendarViewModel)
+    override fun declare(): KoinAppDeclaration = {
+        modules(
+            module {
+                viewModelOf(::CalendarViewModel)
+            }
+        )
     }
 }

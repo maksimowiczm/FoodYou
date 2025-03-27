@@ -9,8 +9,8 @@ import com.maksimowiczm.foodyou.feature.about.ui.AboutSettingsViewModel
 import com.maksimowiczm.foodyou.feature.about.ui.buildAboutSettingsListItem
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
-import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 object AboutSettings : Feature.Settings() {
@@ -25,8 +25,12 @@ object AboutSettings : Feature.Settings() {
         }
     )
 
-    override val module: Module = module {
-        viewModelOf(::AboutSettingsViewModel)
+    override fun declare(): KoinAppDeclaration = {
+        modules(
+            module {
+                viewModelOf(::AboutSettingsViewModel)
+            }
+        )
     }
 
     @Serializable

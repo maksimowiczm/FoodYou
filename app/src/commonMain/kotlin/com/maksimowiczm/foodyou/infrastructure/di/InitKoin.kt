@@ -12,9 +12,7 @@ fun initKoin(features: List<Feature>, config: KoinAppDeclaration? = null) = star
         dataStoreModule
     )
 
-    val featureModules = features.map { feature ->
-        feature.module
+    features.forEach { feature ->
+        feature.declare().invoke(this)
     }
-
-    modules(featureModules)
 }

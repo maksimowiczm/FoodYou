@@ -3,8 +3,7 @@ package com.maksimowiczm.foodyou.feature
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import org.koin.core.component.KoinComponent
-import org.koin.core.module.Module
-import org.koin.dsl.module
+import org.koin.dsl.KoinAppDeclaration
 
 /**
  * A feature is a collection of related functionality that can be added to the application.
@@ -19,10 +18,9 @@ interface Feature {
     fun NavGraphBuilder.graph(navController: NavController) = Unit
 
     /**
-     * Koin modules that will be added to the main Koin application.
+     * Declare Koin.
      */
-    val module: Module
-        get() = module {}
+    fun declare(): KoinAppDeclaration = {}
 
     /**
      * Initialize the feature. This will run before UI is displayed and block the main thread.

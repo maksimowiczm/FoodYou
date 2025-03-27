@@ -12,6 +12,7 @@ import com.maksimowiczm.foodyou.feature.language.ui.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.module.Module
+import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 expect fun Module.languageViewModel()
@@ -32,8 +33,12 @@ class LanguageFeature(private val languageSettingsTrailingContent: @Composable (
         )
     }
 
-    override val module: Module = module {
-        languageViewModel()
+    override fun declare(): KoinAppDeclaration = {
+        modules(
+            module {
+                languageViewModel()
+            }
+        )
     }
 
     @Serializable

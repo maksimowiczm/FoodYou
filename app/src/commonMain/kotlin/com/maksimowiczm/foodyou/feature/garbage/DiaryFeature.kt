@@ -308,7 +308,7 @@ object DiaryFeature : Feature {
         }
     }
 
-    override val module: Module = module {
+    val module: Module = module {
         viewModelOf(::OpenFoodFactsSearchHintViewModel)
         viewModelOf(::OpenFoodFactsSettingsViewModel)
         factoryOf(::OpenFoodFactsSettingsRepository)
