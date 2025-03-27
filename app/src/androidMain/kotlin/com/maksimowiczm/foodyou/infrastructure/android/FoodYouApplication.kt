@@ -5,7 +5,6 @@ import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.FeatureManager
 import com.maksimowiczm.foodyou.feature.about.AboutSettings
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
-import com.maksimowiczm.foodyou.feature.diary.DiaryFeature
 import com.maksimowiczm.foodyou.feature.language.LanguageFeature
 import com.maksimowiczm.foodyou.feature.language.ui.AndroidTrailingContent
 import com.maksimowiczm.foodyou.feature.security.SecurityFeature
@@ -25,7 +24,6 @@ class FoodYouApplication :
         addFeature(
             SystemFeature,
             CalendarCard,
-            DiaryFeature,
             SecurityFeature,
             LanguageFeature(
                 languageSettingsTrailingContent = { modifier ->

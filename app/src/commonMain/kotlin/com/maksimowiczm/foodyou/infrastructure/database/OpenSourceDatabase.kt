@@ -6,16 +6,16 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
-import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
-import com.maksimowiczm.foodyou.feature.diary.database.callback.InitializeMealsCallback
-import com.maksimowiczm.foodyou.feature.diary.database.converter.ProductSourceConverter
-import com.maksimowiczm.foodyou.feature.diary.database.converter.WeightMeasurementTypeConverter
-import com.maksimowiczm.foodyou.feature.diary.database.converter.WeightUnitConverter
-import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.OpenFoodFactsPagingKey
-import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.garbage.database.DiaryDatabase
+import com.maksimowiczm.foodyou.feature.garbage.database.callback.InitializeMealsCallback
+import com.maksimowiczm.foodyou.feature.garbage.database.converter.ProductSourceConverter
+import com.maksimowiczm.foodyou.feature.garbage.database.converter.WeightMeasurementTypeConverter
+import com.maksimowiczm.foodyou.feature.garbage.database.converter.WeightUnitConverter
+import com.maksimowiczm.foodyou.feature.garbage.database.entity.MealEntity
+import com.maksimowiczm.foodyou.feature.garbage.database.entity.OpenFoodFactsPagingKey
+import com.maksimowiczm.foodyou.feature.garbage.database.entity.ProductEntity
+import com.maksimowiczm.foodyou.feature.garbage.database.entity.ProductQueryEntity
+import com.maksimowiczm.foodyou.feature.garbage.database.entity.WeightMeasurementEntity
 
 @Database(
     entities = [
