@@ -393,9 +393,15 @@ private fun MeasurementScreen(
 
                     NutrientsList(
                         products = listOf(measurement),
-                        onProductClick = {},
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        showIncompleteProducts = false
+                        incompleteValue = {
+                            {
+                                Text(
+                                    text = stringResource(Res.string.not_available_short),
+                                    color = MaterialTheme.colorScheme.outline
+                                )
+                            }
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
             }

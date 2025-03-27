@@ -14,9 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
@@ -25,7 +22,6 @@ import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import kotlin.math.max
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
@@ -37,21 +33,11 @@ fun ProductWithMeasurement.ListItem(
     colors: ListItemColors = ListItemDefaults.colors()
 ) {
     ListItem(
-        headlineContent = {
-            Text(
-                text = product.name
-            )
-        },
+        headlineContent = { Text(product.name) },
         modifier = modifier.then(
             if (onClick == null) Modifier else Modifier.clickable { onClick() }
         ),
-        overlineContent = {
-            product.brand?.let {
-                Text(
-                    text = it
-                )
-            }
-        },
+        overlineContent = { product.brand?.let { Text(it) } },
         supportingContent = {
             Column {
                 NutrientsRow(
@@ -61,7 +47,7 @@ fun ProductWithMeasurement.ListItem(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                MeasurementSummaryLayout(
+                MeasurementSummary(
                     measurementString = measurementString,
                     measurementStringShort = measurementStringShort,
                     caloriesString = caloriesString,
@@ -104,90 +90,6 @@ private fun NutrientsRow(
                 text = fats.toString() + " " + stringResource(Res.string.unit_gram_short),
                 color = nutrientsPalette.fatsOnSurfaceContainer
             )
-        }
-    }
-}
-
-@Composable
-private fun MeasurementSummaryLayout(
-    measurementString: String,
-    measurementStringShort: String,
-    caloriesString: String,
-    modifier: Modifier = Modifier
-) {
-    val textStyle = LocalTextStyle.current
-    val measurement = @Composable { Text(text = measurementString, maxLines = 1) }
-    val measurementShort = @Composable { Text(text = measurementStringShort, maxLines = 1) }
-    val calories = @Composable { Text(text = caloriesString, maxLines = 1) }
-    val textMeasurer = rememberTextMeasurer()
-
-    Layout(
-        contents = listOf(
-            measurement,
-            measurementShort,
-            calories
-        ),
-        modifier = modifier
-    ) { (measurement, measurementShort, calories), constraints ->
-        val measurementWidth = textMeasurer.measure(
-            text = measurementString,
-            style = textStyle
-        ).size.width
-        val measurementShortWidth = textMeasurer.measure(
-            text = measurementStringShort,
-            style = textStyle
-        ).size.width
-        val caloriesWidth = textMeasurer.measure(
-            text = caloriesString,
-            style = textStyle
-        ).size.width
-
-        if (constraints.maxWidth > measurementWidth + caloriesWidth) {
-            val measurementPlaceable =
-                measurement.first().measure(Constraints.fixedWidth(measurementWidth))
-            val caloriesPlaceable = calories.first().measure(Constraints.fixedWidth(caloriesWidth))
-
-            val height = max(measurementPlaceable.height, caloriesPlaceable.height)
-
-            layout(constraints.maxWidth, height) {
-                measurementPlaceable.placeRelative(0, 0)
-                caloriesPlaceable.placeRelative(
-                    constraints.maxWidth - caloriesPlaceable.width,
-                    0
-                )
-            }
-        } else if (constraints.maxWidth > measurementShortWidth + caloriesWidth) {
-            val measurementShortPlaceable =
-                measurementShort.first().measure(Constraints.fixedWidth(measurementShortWidth))
-            val caloriesPlaceable = calories.first().measure(Constraints.fixedWidth(caloriesWidth))
-
-            val height = max(measurementShortPlaceable.height, caloriesPlaceable.height)
-
-            layout(constraints.maxWidth, height) {
-                measurementShortPlaceable.placeRelative(0, 0)
-                caloriesPlaceable.placeRelative(
-                    constraints.maxWidth - caloriesPlaceable.width,
-                    0
-                )
-            }
-        } else if (constraints.maxWidth > measurementWidth) {
-            val measurementPlaceable =
-                measurement.first().measure(Constraints.fixedWidth(measurementWidth))
-
-            val height = measurementPlaceable.height
-
-            layout(constraints.maxWidth, height) {
-                measurementPlaceable.placeRelative(0, 0)
-            }
-        } else {
-            val measurementShortPlaceable =
-                measurementShort.first().measure(Constraints.fixedWidth(measurementShortWidth))
-
-            val height = measurementShortPlaceable.height
-
-            layout(constraints.maxWidth, height) {
-                measurementShortPlaceable.placeRelative(0, 0)
-            }
         }
     }
 }
