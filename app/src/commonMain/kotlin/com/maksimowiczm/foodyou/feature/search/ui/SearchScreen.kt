@@ -2,11 +2,21 @@ package com.maksimowiczm.foodyou.feature.search.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.clearText
@@ -33,21 +43,33 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopSearchBar
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastRoundToInt
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.feature.garbage.ui.search.FoodDatabaseErrorCard
 import com.maksimowiczm.foodyou.feature.search.domain.Product
 import com.maksimowiczm.foodyou.feature.search.domain.ProductQuery
+import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -105,8 +127,11 @@ private fun SearchScreen(
     val isLoading by remember(pages.loadState) {
         derivedStateOf {
             pages.loadState.refresh == LoadState.Loading ||
-                    pages.loadState.append == LoadState.Loading
+                pages.loadState.append == LoadState.Loading
         }
+    }
+    val hasError by remember(pages.loadState) {
+        derivedStateOf { pages.loadState.hasError }
     }
 
     val inputField = @Composable {
@@ -166,6 +191,27 @@ private fun SearchScreen(
         )
     }
 
+    var subSearchBarHeight by remember { mutableIntStateOf(0) }
+    val subSearchBar = @Composable {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .onSizeChanged { subSearchBarHeight = it.height },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            DraggableVisibility(
+                initialValue = if (hasError) CardState.VISIBLE else CardState.HIDDEN_END
+            ) {
+                FoodDatabaseErrorCard(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 8.dp),
+                    onRetry = pages::retry
+                )
+            }
+        }
+    }
+
     ExpandedFullScreenSearchBar(
         state = searchBarState,
         inputField = inputField
@@ -223,26 +269,36 @@ private fun SearchScreen(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            if (isEmpty && pages.loadState.append != LoadState.Loading) {
-                Text(
-                    modifier = Modifier.align(Alignment.Center).safeContentPadding(),
-                    text = stringResource(Res.string.neutral_no_products_found)
-                )
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .consumeWindowInsets(paddingValues)
+                    .fillMaxWidth()
+                    .zIndex(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                subSearchBar()
+
+                AnimatedVisibility(
+                    visible = isLoading
+                ) {
+                    LoadingIndicator()
+                }
             }
 
             LazyColumn(
                 contentPadding = paddingValues
             ) {
-                stickyHeader {
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
+                item {
+                    Spacer(Modifier.height(LocalDensity.current.run { subSearchBarHeight.toDp() }))
+                }
+
+                if (pages.loadState.refresh == LoadState.Loading && isEmpty) {
+                    items(
+                        count = 100,
+                        key = { "skeleton-refresh-$it" }
                     ) {
-                        AnimatedVisibility(
-                            visible = isLoading,
-                            modifier = Modifier.align(Alignment.Center)
-                        ) {
-                            LoadingIndicator()
-                        }
+                        item()(null)
                     }
                 }
 
@@ -252,7 +308,73 @@ private fun SearchScreen(
                 ) {
                     item()(pages[it])
                 }
+
+                if (pages.loadState.append == LoadState.Loading) {
+                    items(
+                        count = 3,
+                        key = { "skeleton-append-$it" }
+                    ) {
+                        item()(null)
+                    }
+                }
             }
         }
     }
+}
+
+@Composable
+private fun DraggableVisibility(
+    modifier: Modifier = Modifier,
+    initialValue: CardState = CardState.VISIBLE,
+    content: @Composable () -> Unit
+) {
+    val anchoredDraggableState = rememberSaveable(
+        initialValue,
+        saver = AnchoredDraggableState.Saver()
+    ) {
+        AnchoredDraggableState(
+            initialValue = initialValue
+        )
+    }
+
+    val density = LocalDensity.current
+
+    BoxWithConstraints {
+        SideEffect {
+            with(density) {
+                val draggableAnchors = DraggableAnchors {
+                    CardState.HIDDEN_END at -maxWidth.toPx()
+                    CardState.VISIBLE at 0f
+                    CardState.HIDDEN_START at maxWidth.toPx()
+                }
+
+                anchoredDraggableState.updateAnchors(draggableAnchors)
+            }
+        }
+
+        AnimatedVisibility(
+            visible = anchoredDraggableState.settledValue == CardState.VISIBLE,
+            modifier = modifier
+                .horizontalDisplayCutoutPadding()
+                .fillMaxWidth()
+                .anchoredDraggable(
+                    state = anchoredDraggableState,
+                    orientation = Orientation.Horizontal
+                )
+                .offset {
+                    IntOffset(
+                        x = anchoredDraggableState.requireOffset().fastRoundToInt(),
+                        y = 0
+                    )
+                }
+        ) {
+            content()
+        }
+    }
+}
+
+private enum class CardState {
+    HIDDEN_START,
+    VISIBLE,
+    HIDDEN_END
 }
