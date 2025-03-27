@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.data
 
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
@@ -19,8 +19,5 @@ interface MeasurementRepository {
 
     suspend fun updateMeasurement(measurementId: Long, weightMeasurement: WeightMeasurement)
 
-    fun observeMeasurements(
-        mealId: Long?,
-        date: LocalDate
-    ): Flow<List<ProductWithMeasurement.Measurement>>
+    fun observeMeasurements(mealId: Long?, date: LocalDate): Flow<List<DiaryEntry>>
 }

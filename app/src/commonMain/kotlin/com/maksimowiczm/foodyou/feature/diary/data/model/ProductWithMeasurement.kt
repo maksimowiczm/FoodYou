@@ -23,15 +23,4 @@ interface ProductWithMeasurement {
         get() = product.nutrients.fats(weight)
 
     fun get(nutrient: Nutrient): Float? = product.nutrients.get(nutrient, weight)
-
-    data class Measurement(
-        override val product: Product,
-        override val measurement: WeightMeasurement,
-        val measurementId: Long
-    ) : ProductWithMeasurement
-
-    data class Suggestion(
-        override val product: Product,
-        override val measurement: WeightMeasurement
-    ) : ProductWithMeasurement
 }

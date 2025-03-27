@@ -70,10 +70,10 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntrySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement.Measurement
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement.Suggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.ui.component.BackHandler
 import com.maksimowiczm.foodyou.ui.component.FloatingActionButtonWithActions
@@ -299,8 +299,8 @@ private fun SearchHome(
                         count = pages.itemCount,
                         key = pages.itemKey {
                             return@itemKey when (it) {
-                                is Measurement -> "${it.product.id} ${it.measurementId}"
-                                is Suggestion -> "${it.product.id}"
+                                is DiaryEntry -> "${it.product.id} ${it.entryId}"
+                                is DiaryEntrySuggestion -> "${it.product.id}"
                                 else -> {
                                     error("Unknown item type $it")
                                 }
@@ -322,15 +322,14 @@ private fun SearchHome(
                             } else {
                                 ProductSearchListItem(
                                     model = target,
-                                    isChecked = target is Measurement,
+                                    isChecked = target is DiaryEntry,
                                     onCheckChange = { newState ->
                                         hapticFeedback.performToggle(newState)
 
                                         when (target) {
-                                            is Measurement ->
-                                                onQuickRemove(target.measurementId)
+                                            is DiaryEntry -> onQuickRemove(target.entryId)
 
-                                            is Suggestion ->
+                                            is DiaryEntrySuggestion ->
                                                 onQuickAdd(target.product.id, target.measurement)
                                         }
                                     },

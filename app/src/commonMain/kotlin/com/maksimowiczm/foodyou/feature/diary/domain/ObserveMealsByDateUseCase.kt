@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.diary.domain
 import com.maksimowiczm.foodyou.ext.sumOf
 import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -55,7 +55,7 @@ class ObserveMealsByDateUseCaseImpl(
 }
 
 private fun com.maksimowiczm.foodyou.feature.diary.data.model.Meal.toUseCaseModel(
-    measurements: List<ProductWithMeasurement.Measurement>
+    measurements: List<DiaryEntry>
 ) = Meal(
     id = id,
     name = name,

@@ -14,11 +14,12 @@ import androidx.paging.map
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntrySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.Product
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement.Measurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
@@ -111,7 +112,7 @@ class DiaryRepository(
             observeDailyGoals()
         ) { products, meals, goals ->
             val mealProductMap = meals
-                .associateWith { emptyList<Measurement>() }
+                .associateWith { emptyList<DiaryEntry>() }
                 .toMutableMap()
 
             products.forEach {
@@ -291,7 +292,7 @@ class DiaryRepository(
         addFoodDao.updateWeightMeasurement(updatedEntity)
     }
 
-    override fun observeMeasurements(mealId: Long?, date: LocalDate): Flow<List<Measurement>> {
+    override fun observeMeasurements(mealId: Long?, date: LocalDate): Flow<List<DiaryEntry>> {
         val epochDay = date.toEpochDays()
 
         return addFoodDao.observeMeasuredProducts(
@@ -432,32 +433,32 @@ private fun ProductSearchEntity.toQueryProduct(): ProductWithMeasurement {
         ?: WeightMeasurement.defaultForProduct(product)
 
     return when (measurementId) {
-        null -> return ProductWithMeasurement.Suggestion(
+        null -> return DiaryEntrySuggestion(
             product = product,
             measurement = weightMeasurement
         )
 
-        else if (todaysMeasurement) -> Measurement(
+        else if (todaysMeasurement) -> DiaryEntry(
             product = product,
             measurement = weightMeasurement,
-            measurementId = measurementId
+            entryId = measurementId
         )
 
-        else -> return ProductWithMeasurement.Suggestion(
+        else -> return DiaryEntrySuggestion(
             product = product,
             measurement = weightMeasurement
         )
     }
 }
 
-private fun ProductWithWeightMeasurementEntity.toMeasurement(): Measurement {
+private fun ProductWithWeightMeasurementEntity.toMeasurement(): DiaryEntry {
     val product = this.product.toDomain()
     val weightMeasurement = this.weightMeasurement.toDomain(product)
 
-    return Measurement(
+    return DiaryEntry(
         product = product,
         measurement = weightMeasurement,
-        measurementId = this.weightMeasurement.id
+        entryId = this.weightMeasurement.id
     )
 }
 

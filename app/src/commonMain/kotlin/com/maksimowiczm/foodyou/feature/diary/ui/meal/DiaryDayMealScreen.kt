@@ -69,6 +69,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryEntry
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.LocalMealSharedTransitionScope
@@ -150,7 +151,7 @@ private fun DiaryDayMealScreen(
     mealHeaderScope: AnimatedVisibilityScope,
     date: LocalDate,
     meal: Meal,
-    products: List<ProductWithMeasurement.Measurement>,
+    products: List<DiaryEntry>,
     deletedEntryChannel: Flow<Long>,
     onProductAdd: () -> Unit,
     onBarcodeScan: () -> Unit,
@@ -213,14 +214,14 @@ private fun DiaryDayMealScreen(
                 model = selectedProduct,
                 onEditEntry = {
                     coroutineScope.launch {
-                        onEditEntry(selectedProduct.measurementId)
+                        onEditEntry(selectedProduct.entryId)
                         modalSheetState.hide()
                         selectedIndex = null
                     }
                 },
                 onDeleteEntry = {
                     coroutineScope.launch {
-                        onDeleteEntry(selectedProduct.measurementId)
+                        onDeleteEntry(selectedProduct.entryId)
                         modalSheetState.hide()
                         selectedIndex = null
                     }
@@ -514,7 +515,7 @@ private fun DiaryDayMealScreen(
                 itemsIndexed(
                     items = products,
                     key = { _, model ->
-                        model.measurementId
+                        model.entryId
                     }
                 ) { i, model ->
                     Column(
