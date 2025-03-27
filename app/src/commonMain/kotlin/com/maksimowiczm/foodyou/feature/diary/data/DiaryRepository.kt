@@ -37,6 +37,7 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightM
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
+import com.maksimowiczm.foodyou.feature.diary.domain.QueryRecipeProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediator
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
@@ -66,7 +67,8 @@ class DiaryRepository(
     AddFoodRepository,
     MeasurementRepository,
     QueryProductsUseCase,
-    ObserveDiaryDayUseCase {
+    ObserveDiaryDayUseCase,
+    QueryRecipeProductsUseCase {
 
     override fun observeDailyGoals(): Flow<DailyGoals> {
         val nutrientGoal = combine(
@@ -342,6 +344,46 @@ class DiaryRepository(
                     mealId = mealId,
                     date = date,
                     query = query
+                )
+            }
+        }.flow.map { pagingData ->
+            pagingData.map { it.toQueryProduct() }
+        }
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun queryProducts(query: String?): Flow<PagingData<ProductWithMeasurement>> {
+        val barcode = query?.takeIf { it.all(Char::isDigit) }
+
+        val localOnly = query == null
+        val remoteMediator = when {
+            localOnly -> null
+            barcode != null -> productRemoteMediatorFactory.createWithBarcode(barcode)
+            else -> productRemoteMediatorFactory.createWithQuery(query)
+        }?.let { ProductSearchRemoteMediatorAdapter(it) }
+
+        // Insert query if it's not a barcode and not empty
+        if (barcode == null && query?.isNotBlank() == true) {
+            ioScope.launch {
+                insertProductQueryWithCurrentTime(query)
+            }
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE
+            ),
+            remoteMediator = remoteMediator
+        ) {
+            if (barcode != null) {
+                addFoodDao.observePagedProductsWithMeasurement(
+                    query = null,
+                    barcode = barcode
+                )
+            } else {
+                addFoodDao.observePagedProductsWithMeasurement(
+                    query = query,
+                    barcode = null
                 )
             }
         }.flow.map { pagingData ->

@@ -99,6 +99,60 @@ interface AddFoodDao {
 
     @Query(
         """
+        WITH 
+        Suggestions AS (
+           SELECT
+                *,
+                0 AS todaysMeasurement
+            FROM WeightMeasurementEntity wm
+            WHERE wm.createdAt = (
+                SELECT MAX(wm2.createdAt) 
+                FROM WeightMeasurementEntity wm2 
+                WHERE wm2.productId = wm.productId
+            )
+            GROUP BY wm.productId
+        )
+        SELECT 
+            p.id AS p_id,
+            p.name AS p_name,
+            p.brand AS p_brand,
+            p.barcode AS p_barcode,
+            p.calories AS p_calories,
+            p.proteins AS p_proteins,
+            p.carbohydrates AS p_carbohydrates,
+            p.sugars AS p_sugars,
+            p.fats AS p_fats,
+            p.saturatedFats AS p_saturatedFats,
+            p.salt AS p_salt,
+            p.sodium AS p_sodium,
+            p.fiber AS p_fiber,
+            p.packageWeight AS p_packageWeight,
+            p.servingWeight AS p_servingWeight,
+            p.weightUnit AS p_weightUnit,
+            p.productSource AS p_productSource,
+            s.id AS m_id,
+            s.mealId AS m_mealId,
+            s.diaryEpochDay AS m_diaryEpochDay,
+            s.productId AS m_productId,
+            s.createdAt AS m_createdAt,
+            s.measurement AS m_measurement,
+            s.quantity AS m_quantity,
+            s.isDeleted AS m_isDeleted,
+            s.todaysMeasurement
+        FROM ProductEntity p
+        LEFT JOIN Suggestions s ON s.productId = p.id
+        WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
+        AND (:barcode IS NULL OR p.barcode = :barcode)
+        ORDER BY p.id, s.id
+        """
+    )
+    fun observePagedProductsWithMeasurement(
+        query: String?,
+        barcode: String?
+    ): PagingSource<Int, ProductSearchEntity>
+
+    @Query(
+        """
         SELECT *
         FROM WeightMeasurementEntity
         WHERE isDeleted = :isDeleted

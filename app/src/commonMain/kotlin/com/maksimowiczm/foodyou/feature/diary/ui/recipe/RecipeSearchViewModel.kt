@@ -1,19 +1,24 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.recipe
 
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.domain.QueryRecipeProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class RecipeSearchViewModel(addFoodRepository: AddFoodRepository) : SearchViewModel() {
+class RecipeSearchViewModel(
+    addFoodRepository: AddFoodRepository,
+    private val queryProducts: QueryRecipeProductsUseCase
+) : SearchViewModel() {
     override val recentQueries: StateFlow<List<ProductQuery>> =
         addFoodRepository.observeProductQueries(
             limit = 20
@@ -31,11 +36,15 @@ class RecipeSearchViewModel(addFoodRepository: AddFoodRepository) : SearchViewMo
         initialValue = null
     )
 
-    override val pages: Flow<PagingData<ProductWithMeasurement>>
-        get() = TODO("Not yet implemented")
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val pages = mutableSearchQuery.flatMapLatest { query ->
+        queryProducts(query)
+    }.cachedIn(viewModelScope)
 
     override fun onSearch(query: String?) {
-        TODO("Not yet implemented")
+        viewModelScope.launch {
+            mutableSearchQuery.emit(query)
+        }
     }
 
     override fun onQuickAdd(productId: Long, measurement: WeightMeasurement) {

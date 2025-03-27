@@ -30,6 +30,7 @@ import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCaseImpl
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
+import com.maksimowiczm.foodyou.feature.diary.domain.QueryRecipeProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.network.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.ui.AddFoodToMealApp
@@ -331,7 +332,8 @@ object DiaryFeature : Feature {
                 AddFoodRepository::class,
                 MeasurementRepository::class,
                 QueryProductsUseCase::class,
-                ObserveDiaryDayUseCase::class
+                ObserveDiaryDayUseCase::class,
+                QueryRecipeProductsUseCase::class
             )
         )
 
