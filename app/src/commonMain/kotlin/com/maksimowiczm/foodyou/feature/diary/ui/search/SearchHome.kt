@@ -90,6 +90,7 @@ fun SearchHome(
     onProductClick: (productId: Long) -> Unit,
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
+    onCreateRecipe: () -> Unit,
     onBarcodeScanner: () -> Unit,
     viewModel: SearchViewModel,
     modifier: Modifier = Modifier,
@@ -113,6 +114,7 @@ fun SearchHome(
         onClearSearch = { viewModel.onSearch(null) },
         onBack = onBack,
         onCreateProduct = onCreateProduct,
+        onCreateRecipe = onCreateRecipe,
         onBarcodeScanner = onBarcodeScanner,
         modifier = modifier,
         lazyListState = lazyListState,
@@ -133,6 +135,7 @@ private fun SearchHome(
     onClearSearch: () -> Unit,
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
+    onCreateRecipe: () -> Unit,
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
@@ -218,6 +221,7 @@ private fun SearchHome(
             expanded = expanded,
             onExpandChange = { expanded = it },
             onCreateProduct = onCreateProduct,
+            onCreateRecipe = onCreateRecipe,
             modifier = Modifier.zIndex(2f)
         )
 
@@ -411,6 +415,7 @@ private fun SearchHomeFloatingActionButton(
     expanded: Boolean,
     onExpandChange: (Boolean) -> Unit,
     onCreateProduct: () -> Unit,
+    onCreateRecipe: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // TODO
@@ -435,7 +440,7 @@ private fun SearchHomeFloatingActionButton(
                 {
                     Surface(
                         onClick = {
-                            // TODO
+                            onCreateRecipe()
                             onExpandChange(false)
                         },
                         modifier = Modifier.semantics { role = Role.Button },

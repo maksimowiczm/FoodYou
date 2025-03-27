@@ -33,6 +33,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.measurement.MeasurementScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.UpdateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeApp
 import com.maksimowiczm.foodyou.feature.diary.ui.search.MealDateSearchViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.search.OpenFoodFactsSearchHint
 import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchHome
@@ -93,6 +94,9 @@ private data object CreateProductDialog
 
 @Serializable
 private data class EditProductDialog(val productId: Long)
+
+@Serializable
+private object CreateRecipe
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -189,6 +193,14 @@ private fun AppNavHost(
                     onProductClick = {
                         navController.navigate(
                             route = CreateMeasurement(it),
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            }
+                        )
+                    },
+                    onCreateRecipe = {
+                        navController.navigate(
+                            route = CreateRecipe,
                             navOptions = navOptions {
                                 launchSingleTop = true
                             }
@@ -414,6 +426,12 @@ private fun AppNavHost(
                     )
                 )
             }
+        }
+
+        crossfadeComposable<CreateRecipe> {
+            CreateRecipeApp(
+                onClose = { navController.popBackStack<CreateRecipe>(inclusive = true) }
+            )
         }
     }
 }

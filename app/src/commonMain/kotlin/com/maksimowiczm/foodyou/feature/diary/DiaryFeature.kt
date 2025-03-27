@@ -56,6 +56,8 @@ import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.flagCdnCo
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeDialogViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.RecipeSearchViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.search.MealDateSearchViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.search.OpenFoodFactsSearchHintViewModel
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
@@ -355,5 +357,8 @@ object DiaryFeature : Feature {
 
         viewModelOf(::CaloriesCardViewModel)
         viewModelOf(::CaloriesScreenViewModel)
+
+        viewModelOf(::CreateRecipeDialogViewModel)
+        viewModelOf(::RecipeSearchViewModel)
     }
 }
