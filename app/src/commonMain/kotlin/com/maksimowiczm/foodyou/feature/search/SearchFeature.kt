@@ -72,8 +72,7 @@ object SearchFeature : Feature {
                     navController.popBackStack<Search>(
                         inclusive = true
                     )
-                },
-                onBarcodeScanner = {}
+                }
             ) {
                 {
                     ListItem(

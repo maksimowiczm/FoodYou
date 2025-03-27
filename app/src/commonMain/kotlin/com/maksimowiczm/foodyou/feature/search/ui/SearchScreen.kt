@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -62,6 +63,9 @@ import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -69,6 +73,7 @@ import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.feature.garbage.ui.search.FoodDatabaseErrorCard
 import com.maksimowiczm.foodyou.feature.search.domain.Product
 import com.maksimowiczm.foodyou.feature.search.domain.ProductQuery
+import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.CoroutineScope
@@ -81,7 +86,6 @@ typealias SearchScreenItemFactory = () -> (@Composable (Product?) -> Unit)
 @Composable
 fun SearchScreen(
     onBack: () -> Unit,
-    onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = koinViewModel(),
     item: SearchScreenItemFactory
@@ -92,16 +96,47 @@ fun SearchScreen(
 
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
 
-    SearchScreen(
-        pages = pages,
-        recentQueries = recentQueries,
-        onSearch = viewModel::onSearch,
-        onClear = { viewModel.onSearch(null) },
-        onBack = onBack,
-        onBarcodeScanner = onBarcodeScanner,
-        modifier = modifier,
-        item = item
-    )
+    val navController = rememberNavController()
+    val textFieldState = rememberTextFieldState()
+
+    // Use NavHost to handle predictive back navigation
+    NavHost(
+        navController = navController,
+        startDestination = "search"
+    ) {
+        crossfadeComposable("search") {
+            SearchScreen(
+                pages = pages,
+                recentQueries = recentQueries,
+                onSearch = viewModel::onSearch,
+                onClear = { viewModel.onSearch(null) },
+                onBack = onBack,
+                onBarcodeScanner = {
+                    navController.navigate(
+                        route = "barcodeScanner",
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                },
+                modifier = modifier,
+                textFieldState = textFieldState,
+                item = item
+            )
+        }
+        crossfadeComposable("barcodeScanner") {
+            CameraBarcodeScannerScreen(
+                onBarcodeScan = {
+                    viewModel.onSearch(it)
+                    textFieldState.setTextAndPlaceCursorAtEnd(it)
+                    navController.popBackStack("barcodeScanner", inclusive = true)
+                },
+                onClose = {
+                    navController.popBackStack("barcodeScanner", inclusive = true)
+                }
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -115,12 +150,12 @@ private fun SearchScreen(
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    textFieldState: TextFieldState = rememberTextFieldState(),
     item: SearchScreenItemFactory
 ) {
     val searchBarState = rememberSearchBarState(
         initialValue = SearchBarValue.Collapsed
     )
-    val textFieldState = rememberTextFieldState()
     val isEmpty by remember(pages.loadState) {
         derivedStateOf { pages.itemCount == 0 }
     }
