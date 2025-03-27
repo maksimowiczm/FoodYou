@@ -69,13 +69,10 @@ private fun AppNavHost(
                 navigationScope = this,
                 mealHeaderScope = outerScope,
                 onProductAdd = {
-
                 },
                 onBarcodeScan = {
-
                 },
                 onEditEntry = {
-
                 }
             )
         }

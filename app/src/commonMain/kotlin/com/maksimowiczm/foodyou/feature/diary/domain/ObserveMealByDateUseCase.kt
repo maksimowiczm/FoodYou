@@ -7,12 +7,7 @@ import kotlinx.datetime.LocalTime
 
 fun interface ObserveMealByDateUseCase {
     data class Product(
-        val name: String,
-        val brand: String?,
-        val calories: Int,
-        val proteins: Int,
-        val carbohydrates: Int,
-        val fats: Int,
+        val productId: Long,
         val weightMeasurement: WeightMeasurement
     )
 
@@ -25,8 +20,5 @@ fun interface ObserveMealByDateUseCase {
         val products: List<Product>
     )
 
-    fun observeMealByDateUseCase(
-        date: LocalDate,
-        mealId: Long
-    ): Flow<Meal>
+    fun observeMealByDateUseCase(date: LocalDate, mealId: Long): Flow<Meal>
 }

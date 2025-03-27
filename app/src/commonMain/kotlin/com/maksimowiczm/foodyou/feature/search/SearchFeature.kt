@@ -6,7 +6,7 @@ import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.search.data.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.feature.search.data.SearchRepository
-import com.maksimowiczm.foodyou.feature.search.domain.ObserveProductQueries
+import com.maksimowiczm.foodyou.feature.search.domain.ObserveProductQueriesUseCase
 import com.maksimowiczm.foodyou.feature.search.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.search.network.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.search.network.ProductRemoteMediatorFactory
@@ -42,7 +42,7 @@ object SearchFeature : Feature {
                 }.binds(
                     arrayOf(
                         QueryProductsUseCase::class,
-                        ObserveProductQueries::class
+                        ObserveProductQueriesUseCase::class
                     )
                 )
 

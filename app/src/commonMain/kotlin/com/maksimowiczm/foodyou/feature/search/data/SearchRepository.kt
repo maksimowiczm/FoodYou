@@ -8,10 +8,11 @@ import androidx.paging.map
 import com.maksimowiczm.foodyou.feature.search.database.SearchDatabase
 import com.maksimowiczm.foodyou.feature.search.database.entity.ProductEntity
 import com.maksimowiczm.foodyou.feature.search.database.entity.ProductQueryEntity
-import com.maksimowiczm.foodyou.feature.search.domain.ObserveProductQueries
-import com.maksimowiczm.foodyou.feature.search.domain.Product
+import com.maksimowiczm.foodyou.feature.search.domain.ObserveProductQueriesUseCase
 import com.maksimowiczm.foodyou.feature.search.domain.ProductQuery
 import com.maksimowiczm.foodyou.feature.search.domain.QueryProductsUseCase
+import com.maksimowiczm.foodyou.feature.search.domain.model.Nutrients
+import com.maksimowiczm.foodyou.feature.search.domain.model.Product
 import com.maksimowiczm.foodyou.feature.search.network.ProductRemoteMediatorFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +29,7 @@ class SearchRepository(
     private val productRemoteMediatorFactory: ProductRemoteMediatorFactory,
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : QueryProductsUseCase,
-    ObserveProductQueries {
+    ObserveProductQueriesUseCase {
     val productDao = searchDatabase.productDao
     val searchDao = searchDatabase.searchDao
 
@@ -95,5 +96,19 @@ class SearchRepository(
 private fun ProductEntity.toQueryProductsUseCaseModel() = Product(
     id = id,
     name = name,
-    brand = brand
+    brand = brand,
+    barcode = barcode,
+    nutrients = Nutrients(
+        calories = nutrients.calories,
+        proteins = nutrients.proteins,
+        carbohydrates = nutrients.carbohydrates,
+        sugars = nutrients.sugars,
+        fats = nutrients.fats,
+        saturatedFats = nutrients.saturatedFats,
+        salt = nutrients.salt,
+        sodium = nutrients.sodium,
+        fiber = nutrients.fiber
+    ),
+    packageWeight = packageWeight,
+    servingWeight = servingWeight
 )

@@ -17,12 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealByDateUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.model.WeightMeasurement
+import com.maksimowiczm.foodyou.feature.search.ui.Product
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.ui.res.stringResourceShort
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
+import kotlin.math.roundToInt
 
 @Composable
 fun ObserveMealByDateUseCase.Product.ListItem(
@@ -31,32 +32,40 @@ fun ObserveMealByDateUseCase.Product.ListItem(
     trailingContent: @Composable (() -> Unit)? = null,
     colors: ListItemColors = ListItemDefaults.colors()
 ) {
-    ListItem(
-        headlineContent = { Text(name) },
-        modifier = modifier.then(
-            if (onClick == null) Modifier else Modifier.clickable { onClick() }
-        ),
-        overlineContent = { brand?.let { Text(it) } },
-        supportingContent = {
-            Column {
-                NutrientsRow(
-                    proteins = proteins,
-                    carbohydrates = carbohydrates,
-                    fats = fats,
-                    modifier = Modifier.fillMaxWidth()
-                )
+    Product(
+        productId
+    ) { product ->
+        if (product == null) {
+            return@Product
+        }
 
-                MeasurementSummary(
-                    measurementString = measurementString,
-                    measurementStringShort = measurementStringShort,
-                    caloriesString = caloriesString,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        },
-        trailingContent = trailingContent,
-        colors = colors
-    )
+        ListItem(
+            headlineContent = { Text(product.name) },
+            modifier = modifier.then(
+                if (onClick == null) Modifier else Modifier.clickable { onClick() }
+            ),
+            overlineContent = { product.brand?.let { Text(it) } },
+            supportingContent = {
+                Column {
+                    NutrientsRow(
+                        proteins = (product.nutrients.proteins * weightMeasurement.weight / 100).roundToInt(),
+                        carbohydrates = (product.nutrients.carbohydrates * weightMeasurement.weight / 100).roundToInt(),
+                        fats = (product.nutrients.fats * weightMeasurement.weight / 100).roundToInt(),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    MeasurementSummary(
+                        measurementString = measurementString,
+                        measurementStringShort = measurementStringShort,
+                        caloriesString = (product.nutrients.calories * weightMeasurement.weight / 100).formatClipZeros(),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            trailingContent = trailingContent,
+            colors = colors
+        )
+    }
 }
 
 @Composable
@@ -123,6 +132,3 @@ val ObserveMealByDateUseCase.Product.measurementString: String
 
         return "$short (${grams.formatClipZeros()} ${stringResource(Res.string.unit_gram_short)})"
     }
-
-val ObserveMealByDateUseCase.Product.caloriesString: String
-    @Composable get() = "$calories " + stringResource(Res.string.unit_kcal)

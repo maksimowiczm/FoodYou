@@ -107,7 +107,6 @@ fun MealScreen(
     when (val meal = meal) {
         null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
         else -> {
-
             MealScreen(
                 navigationScope = navigationScope,
                 mealHeaderScope = mealHeaderScope,
