@@ -53,8 +53,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CreateRecipeDialog(
     onClose: () -> Unit,
     onAddIngredient: () -> Unit,
-    onProductClick: (ProductWithMeasurement) -> Unit,
-    onProductEdit: (productId: Long) -> Unit,
+    onEditIngredient: (RecipeIngredient) -> Unit,
     modifier: Modifier = Modifier,
     createRecipeViewModel: CreateRecipeDialogViewModel = koinViewModel()
 ) {
@@ -134,9 +133,7 @@ fun CreateRecipeDialog(
             ingredientsSection(
                 onAddIngredient = onAddIngredient,
                 ingredients = ingredients,
-                onIngredientClick = {
-                    // TODO
-                }
+                onIngredientClick = onEditIngredient
             )
 
             item {
@@ -158,15 +155,10 @@ fun CreateRecipeDialog(
             }
 
             item {
-//                SummarySection(
-//                    products = products,
-//                    modifier = Modifier.padding(horizontal = 16.dp)
-//                )
-            }
-
-            // Fab padding
-            item {
-                Spacer(modifier = Modifier.height(72.dp))
+                SummarySection(
+                    ingredients = ingredients,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
             }
         }
     }
@@ -241,11 +233,14 @@ private fun LazyListScope.ingredientsSection(
 }
 
 @Composable
-private fun SummarySection(products: List<ProductWithMeasurement>, modifier: Modifier = Modifier) {
-    val weight = remember(products) { products.sumOf { it.measurement.weight } }
-    val proteins = remember(products) { products.sumOf { it.proteins } }
-    val carbohydrates = remember(products) { products.sumOf { it.carbohydrates } }
-    val fats = remember(products) { products.sumOf { it.fats } }
+private fun SummarySection(
+    ingredients: List<ProductWithMeasurement>,
+    modifier: Modifier = Modifier
+) {
+    val weight = remember(ingredients) { ingredients.sumOf { it.measurement.weight } }
+    val proteins = remember(ingredients) { ingredients.sumOf { it.proteins } }
+    val carbohydrates = remember(ingredients) { ingredients.sumOf { it.carbohydrates } }
+    val fats = remember(ingredients) { ingredients.sumOf { it.fats } }
 
     Column(
         modifier = modifier
@@ -271,9 +266,15 @@ private fun SummarySection(products: List<ProductWithMeasurement>, modifier: Mod
         Spacer(Modifier.height(8.dp))
 
         NutrientsList(
-            products = products,
+            products = ingredients,
             incompleteValue = {
                 {
+                    val g = stringResource(Res.string.unit_gram_short)
+                    val value = it.formatClipZeros()
+                    Text(
+                        text = "* $value $g",
+                        color = MaterialTheme.colorScheme.outline
+                    )
                 }
             }
         )
