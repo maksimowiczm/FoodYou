@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.feature.about.AboutSettings
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.language.LanguageFeature
 import com.maksimowiczm.foodyou.feature.language.ui.AndroidTrailingContent
+import com.maksimowiczm.foodyou.feature.search.SearchFeature
 import com.maksimowiczm.foodyou.feature.security.SecurityFeature
 import com.maksimowiczm.foodyou.feature.system.SystemFeature
 import com.maksimowiczm.foodyou.infrastructure.di.initKoin
@@ -22,6 +23,7 @@ class FoodYouApplication :
     KoinComponent {
     fun FeatureManager.setupFeatures() {
         addFeature(
+            SearchFeature,
             SystemFeature,
             CalendarCard,
             SecurityFeature,

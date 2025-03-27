@@ -5,8 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.paging.ExperimentalPagingApi
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.search.data.preferences.OpenFoodFactsPreferences
-import com.maksimowiczm.foodyou.feature.search.database.dao.OpenFoodFactsDao
-import com.maksimowiczm.foodyou.feature.search.database.dao.ProductDao
+import com.maksimowiczm.foodyou.feature.search.database.SearchDatabase
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import kotlinx.coroutines.runBlocking
 
@@ -15,9 +14,11 @@ import kotlinx.coroutines.runBlocking
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediatorFactory(
     private val dataStore: DataStore<Preferences>,
-    private val openFoodFactsDao: OpenFoodFactsDao,
-    private val productDao: ProductDao
+    searchDatabase: SearchDatabase
 ) : ProductRemoteMediatorFactory {
+
+    private val openFoodFactsDao = searchDatabase.openFoodFactsPagingKeyDao
+    private val productDao = searchDatabase.productDao
 
     private val _openFoodFactsNetworkDataSource by lazy {
         OpenFoodFactsNetworkDataSource()
