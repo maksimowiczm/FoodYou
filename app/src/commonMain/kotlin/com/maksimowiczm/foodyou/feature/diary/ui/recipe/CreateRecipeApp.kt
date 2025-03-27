@@ -46,16 +46,6 @@ fun CreateRecipeApp(
             SearchHome(
                 onProductClick = {},
                 onBack = { navController.popBackStack<CreateRecipeSearch>(inclusive = true) },
-                onCreateProduct = {
-                },
-                onCreateRecipe = {
-                    navController.navigate(
-                        route = CreateRecipeDialog,
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
-                },
                 onBarcodeScanner = {},
                 viewModel = searchViewModel,
                 lazyListState = lazyListState,

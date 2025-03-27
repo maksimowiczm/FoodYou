@@ -89,13 +89,12 @@ import org.jetbrains.compose.resources.stringResource
 fun SearchHome(
     onProductClick: (productId: Long) -> Unit,
     onBack: () -> Unit,
-    onCreateProduct: () -> Unit,
-    onCreateRecipe: () -> Unit,
     onBarcodeScanner: () -> Unit,
     viewModel: SearchViewModel,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
-    searchHint: (@Composable () -> Unit)? = null
+    searchHint: (@Composable () -> Unit)? = null,
+    floatingActionButton: (@Composable () -> Unit)? = null
 ) {
     val productsWithMeasurements = viewModel.pages.collectAsLazyPagingItems(
         viewModel.viewModelScope.coroutineContext
@@ -113,12 +112,11 @@ fun SearchHome(
         onSearch = viewModel::onSearch,
         onClearSearch = { viewModel.onSearch(null) },
         onBack = onBack,
-        onCreateProduct = onCreateProduct,
-        onCreateRecipe = onCreateRecipe,
         onBarcodeScanner = onBarcodeScanner,
         modifier = modifier,
         lazyListState = lazyListState,
-        searchHint = searchHint
+        searchHint = searchHint,
+        floatingActionButton = floatingActionButton
     )
 }
 
@@ -134,12 +132,11 @@ private fun SearchHome(
     onSearch: (query: String) -> Unit,
     onClearSearch: () -> Unit,
     onBack: () -> Unit,
-    onCreateProduct: () -> Unit,
-    onCreateRecipe: () -> Unit,
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
-    searchHint: (@Composable () -> Unit)? = null
+    searchHint: (@Composable () -> Unit)? = null,
+    floatingActionButton: (@Composable () -> Unit)? = null
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
@@ -205,41 +202,13 @@ private fun SearchHome(
         shimmerBounds = ShimmerBounds.Window
     )
 
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    BackHandler(
-        enabled = expanded,
-        onBack = { expanded = false }
-    )
-    val scrimAlpha by animateFloatAsState(
-        targetValue = if (expanded) .5f else 0f
-    )
-
     Box(
         modifier = modifier
     ) {
-        SearchHomeFloatingActionButton(
-            expanded = expanded,
-            onExpandChange = { expanded = it },
-            onCreateProduct = onCreateProduct,
-            onCreateRecipe = onCreateRecipe,
-            modifier = Modifier.zIndex(2f)
-        )
-
-        if (expanded) {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .zIndex(1f)
-                    .graphicsLayer {
-                        alpha = scrimAlpha
-                    }
-                    .pointerInput(Unit) {
-                        detectTapGestures {
-                            expanded = false
-                        }
-                    }
-                    .background(Color.Black)
-            )
+        Box(
+            modifier = Modifier.zIndex(1f)
+        ) {
+            floatingActionButton?.invoke()
         }
 
         Scaffold(
@@ -413,13 +382,16 @@ private fun DraggableVisibility(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun SearchHomeFloatingActionButton(
-    expanded: Boolean,
-    onExpandChange: (Boolean) -> Unit,
+fun ExpandableSearchHomeFloatingActionButton(
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val scrimAlpha by animateFloatAsState(
+        targetValue = if (expanded) .5f else 0f
+    )
+
     // TODO
     //  Replace with animatedVisibilityScope.transition.isRunning is working as intended (by me)
     //  with predictive back
@@ -429,98 +401,124 @@ private fun SearchHomeFloatingActionButton(
         showFab = true
     }
 
+    BackHandler(
+        enabled = expanded,
+        onBack = { expanded = false }
+    )
+
     Box(
         modifier = modifier
-            .fillMaxSize()
-            .safeDrawingPadding()
-            .padding(bottom = 16.dp, end = 16.dp),
-        contentAlignment = Alignment.BottomEnd
     ) {
-        FloatingActionButtonWithActions(
-            expanded = expanded,
-            actions = listOf(
-                {
-                    Surface(
-                        onClick = {
-                            onCreateRecipe()
-                            onExpandChange(false)
-                        },
-                        modifier = Modifier.semantics { role = Role.Button },
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.headline_recipe),
-                                style = MaterialTheme.typography.titleSmall
-                            )
-                            Icon(
-                                imageVector = Icons.Default.RamenDining,
-                                contentDescription = null
-                            )
+        if (expanded) {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(1f)
+                    .graphicsLayer {
+                        alpha = scrimAlpha
+                    }
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            expanded = false
                         }
                     }
-                },
-                {
-                    Surface(
-                        onClick = {
-                            onCreateProduct()
-                            onExpandChange(false)
-                        },
-                        modifier = Modifier.semantics { role = Role.Button },
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                    .background(Color.Black)
+            )
+        }
+        Box(
+            modifier = Modifier
+                .zIndex(2f)
+                .fillMaxSize()
+                .safeDrawingPadding()
+                .padding(bottom = 16.dp, end = 16.dp),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            FloatingActionButtonWithActions(
+                expanded = expanded,
+                actions = listOf(
+                    {
+                        Surface(
+                            onClick = {
+                                onCreateRecipe()
+                                expanded = false
+                            },
+                            modifier = Modifier.semantics { role = Role.Button },
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         ) {
-                            Text(
-                                text = stringResource(Res.string.headline_product),
-                                style = MaterialTheme.typography.titleSmall
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.headline_recipe),
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                                Icon(
+                                    imageVector = Icons.Default.RamenDining,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    },
+                    {
+                        Surface(
+                            onClick = {
+                                onCreateProduct()
+                                expanded = false
+                            },
+                            modifier = Modifier.semantics { role = Role.Button },
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.headline_product),
+                                    style = MaterialTheme.typography.titleSmall
 
-                            )
-                            Icon(
-                                imageVector = Icons.Default.LunchDining,
-                                contentDescription = null
-                            )
+                                )
+                                Icon(
+                                    imageVector = Icons.Default.LunchDining,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     }
-                }
-            ),
-            fab = {
-                FloatingActionButton(
-                    onClick = { onExpandChange(!expanded) },
-                    modifier = Modifier.animateFloatingActionButton(
-                        visible = showFab,
-                        alignment = Alignment.BottomEnd
-                    )
-                ) {
-                    val rotation by animateFloatAsState(
-                        targetValue = if (expanded) 45f else 0f
-                    )
+                ),
+                fab = {
+                    FloatingActionButton(
+                        onClick = { expanded = !expanded },
+                        modifier = Modifier.animateFloatingActionButton(
+                            visible = showFab,
+                            alignment = Alignment.BottomEnd
+                        )
+                    ) {
+                        val rotation by animateFloatAsState(
+                            targetValue = if (expanded) 45f else 0f
+                        )
 
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = if (expanded) {
-                            stringResource(Res.string.action_close)
-                        } else {
-                            stringResource(Res.string.action_create_new_product)
-                        },
-                        modifier = Modifier.graphicsLayer {
-                            rotationZ = rotation
-                        }
-                    )
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = if (expanded) {
+                                stringResource(Res.string.action_close)
+                            } else {
+                                stringResource(Res.string.action_create_new_product)
+                            },
+                            modifier = Modifier.graphicsLayer {
+                                rotationZ = rotation
+                            }
+                        )
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }
 

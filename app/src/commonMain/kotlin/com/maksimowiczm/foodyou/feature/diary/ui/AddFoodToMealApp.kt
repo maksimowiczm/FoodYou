@@ -34,6 +34,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.measurement.UpdateMeasurementVi
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeApp
+import com.maksimowiczm.foodyou.feature.diary.ui.search.ExpandableSearchHomeFloatingActionButton
 import com.maksimowiczm.foodyou.feature.diary.ui.search.MealDateSearchViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.search.OpenFoodFactsSearchHint
 import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchHome
@@ -198,14 +199,6 @@ private fun AppNavHost(
                             }
                         )
                     },
-                    onCreateRecipe = {
-                        navController.navigate(
-                            route = CreateRecipe,
-                            navOptions = navOptions {
-                                launchSingleTop = true
-                            }
-                        )
-                    },
                     onBack = {
                         // If stack is empty call outer on back otherwise pop search
                         if (navController.currentBackStack.value.size == 2) {
@@ -213,14 +206,6 @@ private fun AppNavHost(
                         } else {
                             navController.popBackStack()
                         }
-                    },
-                    onCreateProduct = {
-                        navController.navigate(
-                            route = CreateProductDialog,
-                            navOptions = navOptions {
-                                launchSingleTop = true
-                            }
-                        )
                     },
                     onBarcodeScanner = {
                         navController.navigate(
@@ -252,6 +237,26 @@ private fun AppNavHost(
                     searchHint = {
                         OpenFoodFactsSearchHint(
                             onGoToSettings = onGoToSettings
+                        )
+                    },
+                    floatingActionButton = {
+                        ExpandableSearchHomeFloatingActionButton(
+                            onCreateProduct = {
+                                navController.navigate(
+                                    route = CreateProductDialog,
+                                    navOptions = navOptions {
+                                        launchSingleTop = true
+                                    }
+                                )
+                            },
+                            onCreateRecipe = {
+                                navController.navigate(
+                                    route = CreateRecipe,
+                                    navOptions = navOptions {
+                                        launchSingleTop = true
+                                    }
+                                )
+                            }
                         )
                     }
                 )
