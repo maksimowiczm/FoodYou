@@ -8,7 +8,9 @@ import androidx.paging.map
 import com.maksimowiczm.foodyou.feature.search.database.SearchDatabase
 import com.maksimowiczm.foodyou.feature.search.database.entity.ProductEntity
 import com.maksimowiczm.foodyou.feature.search.database.entity.ProductQueryEntity
+import com.maksimowiczm.foodyou.feature.search.domain.ObserveProductQueries
 import com.maksimowiczm.foodyou.feature.search.domain.Product
+import com.maksimowiczm.foodyou.feature.search.domain.ProductQuery
 import com.maksimowiczm.foodyou.feature.search.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.search.network.ProductRemoteMediatorFactory
 import kotlinx.coroutines.CoroutineScope
@@ -17,12 +19,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class SearchRepository(
     searchDatabase: SearchDatabase,
     private val productRemoteMediatorFactory: ProductRemoteMediatorFactory,
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-) : QueryProductsUseCase {
+) : QueryProductsUseCase,
+    ObserveProductQueries {
     val productDao = searchDatabase.productDao
     val searchDao = searchDatabase.searchDao
 
@@ -71,8 +77,17 @@ class SearchRepository(
         )
     }
 
+    override fun observeProductQueries(limit: Int): Flow<List<ProductQuery>> =
+        searchDao.observeProductQueries(limit).map { productQueries ->
+            productQueries.map { productQuery ->
+                ProductQuery(
+                    query = productQuery.query,
+                    date = Instant.fromEpochSeconds(productQuery.date).toLocalDateTime(TimeZone.UTC)
+                )
+            }
+        }
+
     private companion object {
-        const val TAG = "SearchRepository"
         const val PAGE_SIZE = 30
     }
 }

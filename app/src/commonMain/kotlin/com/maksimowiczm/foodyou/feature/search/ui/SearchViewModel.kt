@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.feature.search.domain.ObserveProductQueries
 import com.maksimowiczm.foodyou.feature.search.domain.Product
 import com.maksimowiczm.foodyou.feature.search.domain.QueryProductsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,12 +15,16 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class SearchViewModel(private val queryProductsUseCase: QueryProductsUseCase) : ViewModel() {
+class SearchViewModel(
+    private val queryProductsUseCase: QueryProductsUseCase,
+    observeProductQueries: ObserveProductQueries
+) : ViewModel() {
     private val mutableSearchQuery = MutableSharedFlow<String?>(replay = 1).apply { tryEmit(null) }
-    val searchQuery = mutableSearchQuery.stateIn(
+
+    val recentQueries = observeProductQueries(20).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(30_000L),
-        initialValue = null
+        initialValue = emptyList()
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
