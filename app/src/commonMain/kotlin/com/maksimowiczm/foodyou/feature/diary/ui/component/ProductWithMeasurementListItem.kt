@@ -94,7 +94,7 @@ private fun NutrientsRow(
     }
 }
 
-val ProductWithMeasurement.measurementStringShort: String
+private val ProductWithMeasurement.measurementStringShort: String
     @Composable get() = when (val measurement = measurement) {
         is WeightMeasurement.Package -> stringResource(
             Res.string.x_times_y,
@@ -112,7 +112,7 @@ val ProductWithMeasurement.measurementStringShort: String
             product.weightUnit.stringResourceShort()
     }
 
-val ProductWithMeasurement.measurementString: String
+private val ProductWithMeasurement.measurementString: String
     @Composable get() {
         val short = measurementStringShort
 
@@ -125,5 +125,5 @@ val ProductWithMeasurement.measurementString: String
         return "$short (${grams.formatClipZeros()} ${product.weightUnit.stringResourceShort()})"
     }
 
-val ProductWithMeasurement.caloriesString: String
+private val ProductWithMeasurement.caloriesString: String
     @Composable get() = "${calories.roundToInt()} " + stringResource(Res.string.unit_kcal)
