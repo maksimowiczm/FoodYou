@@ -26,10 +26,10 @@ class MealsSettingsScreenViewModel(
     private val stringFormatRepository: StringFormatRepository,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
-    val sortedMeals = observeMealsUseCase().stateIn(
+    val sortedMeals = observeMealsUseCase.observeMeals().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = runBlocking { observeMealsUseCase().first() }
+        initialValue = runBlocking { observeMealsUseCase.observeMeals().first() }
     )
 
     val useTimeBasedSorting = dataStore

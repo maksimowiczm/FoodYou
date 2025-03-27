@@ -3,17 +3,22 @@ package com.maksimowiczm.foodyou.feature.diary
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navOptions
+import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.SettingsFeature
 import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealByDateUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsUseCase
+import com.maksimowiczm.foodyou.feature.diary.ui.AddFoodToMealApp
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.buildMealsCard
+import com.maksimowiczm.foodyou.feature.diary.ui.mealscreen.MealScreenViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreenViewModel
+import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 import org.koin.core.module.dsl.factoryOf
@@ -26,6 +31,12 @@ object DiaryFeature : Feature {
     override fun buildHomeFeatures(navController: NavController) = listOf(
         buildMealsCard(
             onMealClick = { epochDay, meal ->
+                navController.navigate(
+                    route = Meal(epochDay, meal.id),
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
             },
             onAddClick = { epochDay, meal ->
             }
@@ -55,6 +66,7 @@ object DiaryFeature : Feature {
                     arrayOf(
                         ObserveMealsByDateUseCase::class,
                         ObserveMealsUseCase::class,
+                        ObserveMealByDateUseCase::class,
                         MealRepository::class
                     )
                 )
@@ -62,6 +74,8 @@ object DiaryFeature : Feature {
                 viewModelOf(::MealsCardViewModel)
 
                 viewModelOf(::MealsSettingsScreenViewModel)
+
+                viewModelOf(::MealScreenViewModel)
             }
         )
     }
@@ -76,8 +90,23 @@ object DiaryFeature : Feature {
                 }
             )
         }
+        crossfadeComposable<Meal> {
+            val (epochDay, mealId) = it.toRoute<Meal>()
+
+            AddFoodToMealApp(
+                outerScope = this,
+                outerOnBack = {
+                    navController.popBackStack<Meal>(inclusive = true)
+                },
+                mealId = mealId,
+                epochDay = epochDay
+            )
+        }
     }
 
     @Serializable
     private data object MealsSettings
+
+    @Serializable
+    private data class Meal(val epochDay: Int, val mealId: Long)
 }

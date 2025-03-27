@@ -16,5 +16,4 @@ fun interface ObserveMealsUseCase {
     }
 
     fun observeMeals(): Flow<List<Meal>>
-    operator fun invoke(): Flow<List<Meal>> = observeMeals()
 }

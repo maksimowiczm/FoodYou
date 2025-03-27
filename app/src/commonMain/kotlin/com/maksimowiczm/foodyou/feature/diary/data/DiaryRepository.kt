@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.diary.data
 
 import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealByDateUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsUseCase
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +13,7 @@ import kotlinx.datetime.LocalTime
 class DiaryRepository(diaryDatabase: DiaryDatabase) :
     ObserveMealsByDateUseCase,
     ObserveMealsUseCase,
+    ObserveMealByDateUseCase,
     MealRepository {
     val mealsDao = diaryDatabase.mealsDao
 
@@ -24,6 +26,13 @@ class DiaryRepository(diaryDatabase: DiaryDatabase) :
         mealsDao.observeMeals().map {
             it.map { it.toMeal() }
         }
+
+    override fun observeMealByDateUseCase(
+        date: LocalDate,
+        mealId: Long
+    ): Flow<ObserveMealByDateUseCase.Meal> {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun createMeal(name: String, from: LocalTime, to: LocalTime) {
         mealsDao.insertWithLastRank(

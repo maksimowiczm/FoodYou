@@ -26,7 +26,7 @@ class MealsCardViewModel(
     dateProvider: DateProvider,
     dataStore: DataStore<Preferences>
 ) : ViewModel() {
-    fun observeMealsByDate(date: LocalDate) = observeMealsByDateUseCase(date)
+    fun observeMealsByDate(date: LocalDate) = observeMealsByDateUseCase.observeMealsByDate(date)
 
     val time = dateProvider.observeMinutes().stateIn(
         scope = viewModelScope,

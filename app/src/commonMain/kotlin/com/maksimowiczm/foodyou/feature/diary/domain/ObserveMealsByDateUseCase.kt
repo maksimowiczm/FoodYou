@@ -22,5 +22,4 @@ fun interface ObserveMealsByDateUseCase {
     }
 
     fun observeMealsByDate(date: LocalDate): Flow<List<Meal>>
-    operator fun invoke(date: LocalDate): Flow<List<Meal>> = observeMealsByDate(date)
 }
