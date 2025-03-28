@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.diary.database.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -12,6 +13,11 @@ import androidx.room.PrimaryKey
             childColumns = ["recipeId"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index(value = ["recipeId"]),
+        Index(value = ["mealId"]),
+        Index(value = ["diaryEpochDay"])
     ]
 )
 data class RecipeMeasurementEntity(

@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.diary.database.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 
 @Entity(
@@ -19,6 +20,10 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
             childColumns = ["productId"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index(value = ["recipeId"]),
+        Index(value = ["productId"])
     ]
 )
 data class RecipeIngredientEntity(

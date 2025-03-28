@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "c8c5a485424a9f617e2b6a95501a8999",
+    "identityHash": "1b433fef4370fb2dcf37fc8f33968050",
     "entities": [
       {
         "tableName": "OpenFoodFactsPagingKey",
@@ -403,6 +403,26 @@
             "productId"
           ]
         },
+        "indices": [
+          {
+            "name": "index_RecipeIngredientEntity_recipeId",
+            "unique": false,
+            "columnNames": [
+              "recipeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeIngredientEntity_recipeId` ON `${TABLE_NAME}` (`recipeId`)"
+          },
+          {
+            "name": "index_RecipeIngredientEntity_productId",
+            "unique": false,
+            "columnNames": [
+              "productId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeIngredientEntity_productId` ON `${TABLE_NAME}` (`productId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "RecipeEntity",
@@ -487,6 +507,35 @@
             "id"
           ]
         },
+        "indices": [
+          {
+            "name": "index_RecipeMeasurementEntity_recipeId",
+            "unique": false,
+            "columnNames": [
+              "recipeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeMeasurementEntity_recipeId` ON `${TABLE_NAME}` (`recipeId`)"
+          },
+          {
+            "name": "index_RecipeMeasurementEntity_mealId",
+            "unique": false,
+            "columnNames": [
+              "mealId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeMeasurementEntity_mealId` ON `${TABLE_NAME}` (`mealId`)"
+          },
+          {
+            "name": "index_RecipeMeasurementEntity_diaryEpochDay",
+            "unique": false,
+            "columnNames": [
+              "diaryEpochDay"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeMeasurementEntity_diaryEpochDay` ON `${TABLE_NAME}` (`diaryEpochDay`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "RecipeEntity",
@@ -504,7 +553,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c8c5a485424a9f617e2b6a95501a8999')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1b433fef4370fb2dcf37fc8f33968050')"
     ]
   }
 }
