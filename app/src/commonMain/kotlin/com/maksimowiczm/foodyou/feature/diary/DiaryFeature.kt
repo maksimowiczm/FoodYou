@@ -29,10 +29,13 @@ import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCaseImpl
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveProductQueriesUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.network.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.ui.AddFoodToMealApp
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases.ObserveAddFoodSearchListItemCase
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen.CaloriesScreen
@@ -41,6 +44,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsList
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.DiaryDayMealViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.meal.cases.ObserveMealCase
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.buildMealsCard
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsListItem
@@ -48,6 +52,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScre
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreenViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.UpdateMeasurementViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactshint.OpenFoodFactsSearchHintViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.CountryFlag
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.OpenFoodFactsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.OpenFoodFactsSettingsViewModel
@@ -56,8 +61,6 @@ import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.flagCdnCo
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.search.MealDateSearchViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.search.OpenFoodFactsSearchHintViewModel
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
@@ -329,7 +332,8 @@ object DiaryFeature : Feature {
                 AddFoodRepository::class,
                 MeasurementRepository::class,
                 QueryProductsUseCase::class,
-                ObserveDiaryDayUseCase::class
+                ObserveDiaryDayUseCase::class,
+                ObserveProductQueriesUseCase::class
             )
         )
 
@@ -341,7 +345,6 @@ object DiaryFeature : Feature {
 
         viewModelOf(::MealsSettingsScreenViewModel)
 
-        viewModelOf(::MealDateSearchViewModel)
         viewModelOf(::CreateMeasurementViewModel)
         viewModelOf(::UpdateMeasurementViewModel)
         viewModelOf(::MealsCardViewModel)
@@ -355,5 +358,12 @@ object DiaryFeature : Feature {
 
         viewModelOf(::CaloriesCardViewModel)
         viewModelOf(::CaloriesScreenViewModel)
+
+        // AddFoodSearch
+        factoryOf(::ObserveAddFoodSearchListItemCase)
+        viewModelOf(::AddFoodSearchViewModel)
+
+        // Meal
+        factoryOf(::ObserveMealCase)
     }
 }

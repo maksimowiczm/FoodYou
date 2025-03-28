@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
+import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -98,7 +99,7 @@ class UpdateMeasurementViewModel(
 
         viewModelScope.launch {
             measurementRepository.updateMeasurement(
-                measurementId = measurementId,
+                id = MeasurementId.Product(measurementId),
                 weightMeasurement = weightMeasurement
             )
 

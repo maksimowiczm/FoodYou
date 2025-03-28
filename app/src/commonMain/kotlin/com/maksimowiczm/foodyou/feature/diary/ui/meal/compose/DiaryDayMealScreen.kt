@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.meal
+package com.maksimowiczm.foodyou.feature.diary.ui.meal.compose
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
@@ -69,29 +69,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.ui.LocalMealSharedTransitionScope
 import com.maksimowiczm.foodyou.feature.diary.ui.SearchSharedTransition
-import com.maksimowiczm.foodyou.feature.diary.ui.component.ListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeader
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionSpecs
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionSpecs.overlayClipFromScreenToCard
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsLayout
+import com.maksimowiczm.foodyou.feature.diary.ui.meal.DiaryDayMealViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.meal.model.Meal
+import com.maksimowiczm.foodyou.feature.diary.ui.meal.model.MealFoodListItem
 import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun DiaryDayMealScreen(
@@ -101,38 +101,29 @@ fun DiaryDayMealScreen(
     mealHeaderScope: AnimatedVisibilityScope,
     onProductAdd: () -> Unit,
     onBarcodeScan: () -> Unit,
-    onEditEntry: (measurementId: Long) -> Unit,
+    onEditEntry: (MeasurementId) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: DiaryDayMealViewModel = koinViewModel()
+    viewModel: DiaryDayMealViewModel = koinViewModel(
+        parameters = { parametersOf(mealId, date) }
+    )
 ) {
-    val diaryDay by viewModel.observeDiaryDay(date).collectAsStateWithLifecycle(null)
+    val meal by viewModel.meal.collectAsStateWithLifecycle(null)
 
     @Suppress("NAME_SHADOWING")
-    when (val diaryDay = diaryDay) {
+    when (val meal = meal) {
         null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
         else -> {
-            val meal = remember(diaryDay) {
-                diaryDay.meals.first { it.id == mealId }
-            }
-
-            val products = remember(diaryDay, meal) {
-                diaryDay.mealProductMap[meal] ?: error("No products for meal ${meal.name}")
-            }
-
             DiaryDayMealScreen(
                 navigationScope = navigationScope,
                 mealHeaderScope = mealHeaderScope,
-                date = date,
                 meal = meal,
-                products = products,
+                epochDay = date.toEpochDays(),
                 deletedEntryChannel = viewModel.deleteEvent,
                 onProductAdd = onProductAdd,
                 onBarcodeScan = onBarcodeScan,
                 onEditEntry = onEditEntry,
                 onDeleteEntry = viewModel::onDeleteEntry,
                 onDeleteEntryUndo = viewModel::onDeleteEntryUndo,
-                formatTime = viewModel::formatTime,
-                formatDate = viewModel::formatDate,
                 modifier = modifier
             )
         }
@@ -148,17 +139,14 @@ fun DiaryDayMealScreen(
 private fun DiaryDayMealScreen(
     navigationScope: AnimatedVisibilityScope,
     mealHeaderScope: AnimatedVisibilityScope,
-    date: LocalDate,
     meal: Meal,
-    products: List<ProductWithMeasurement.Measurement>,
-    deletedEntryChannel: Flow<Long>,
+    epochDay: Int,
+    deletedEntryChannel: Flow<MeasurementId>,
     onProductAdd: () -> Unit,
     onBarcodeScan: () -> Unit,
-    formatTime: (LocalTime) -> String,
-    formatDate: (LocalDate) -> String,
-    onEditEntry: (measurementId: Long) -> Unit,
-    onDeleteEntry: (measurementId: Long) -> Unit,
-    onDeleteEntryUndo: (id: Long) -> Unit,
+    onEditEntry: (MeasurementId) -> Unit,
+    onDeleteEntry: (MeasurementId) -> Unit,
+    onDeleteEntryUndo: (MeasurementId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val homeSTS =
@@ -202,7 +190,7 @@ private fun DiaryDayMealScreen(
     var selectedIndex by rememberSaveable { mutableStateOf<Int?>(null) }
     val modalSheetState = rememberModalBottomSheetState()
 
-    val selectedProduct = selectedIndex?.let { products.getOrNull(it) }
+    val selectedProduct = selectedIndex?.let { meal.foods.getOrNull(it) }
 
     if (selectedProduct != null) {
         ModalBottomSheet(
@@ -238,7 +226,7 @@ private fun DiaryDayMealScreen(
                     sharedContentState = rememberSharedContentState(
                         key = MealHeaderTransitionKeys.MealContainer(
                             mealId = meal.id,
-                            epochDay = date.toEpochDays()
+                            epochDay = epochDay
                         )
                     ),
                     animatedVisibilityScope = mealHeaderScope,
@@ -259,7 +247,7 @@ private fun DiaryDayMealScreen(
                 ) {
                     with(mealHeaderScope) {
                         Text(
-                            text = formatDate(date),
+                            text = meal.date,
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.animateEnterExit(
                                 enter = fadeIn(
@@ -282,7 +270,7 @@ private fun DiaryDayMealScreen(
                                 sharedContentState = rememberSharedContentState(
                                     key = MealHeaderTransitionKeys.MealTitle(
                                         mealId = meal.id,
-                                        epochDay = date.toEpochDays()
+                                        epochDay = epochDay
                                     )
                                 ),
                                 animatedVisibilityScope = mealHeaderScope
@@ -296,7 +284,7 @@ private fun DiaryDayMealScreen(
                                 sharedContentState = rememberSharedContentState(
                                     key = MealHeaderTransitionKeys.MealTime(
                                         mealId = meal.id,
-                                        epochDay = date.toEpochDays()
+                                        epochDay = epochDay
                                     )
                                 ),
                                 animatedVisibilityScope = mealHeaderScope
@@ -312,56 +300,55 @@ private fun DiaryDayMealScreen(
                                     )
                                 } else {
                                     Text(
-                                        text = formatTime(meal.from)
+                                        text = meal.from
                                     )
                                     Text(
                                         text = stringResource(Res.string.en_dash)
                                     )
                                     Text(
-                                        text = formatTime(meal.to)
+                                        text = meal.to
                                     )
                                 }
                             }
                         }
                     }
 
-                    val isEmpty = products.isEmpty()
                     val caloriesLabel = @Composable {
                         Text(
-                            text = if (isEmpty) {
+                            text = if (meal.isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.calories.roundToInt() }.toString()
+                                meal.calories.toString()
                             }
                         )
                     }
                     val proteinsLabel = @Composable {
                         Text(
-                            text = if (isEmpty) {
+                            text = if (meal.isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.proteins.roundToInt() }
-                                    .toString() + " " + stringResource(Res.string.unit_gram_short)
+                                meal.proteins.toString() + " " +
+                                    stringResource(Res.string.unit_gram_short)
                             }
                         )
                     }
                     val carbohydratesLabel = @Composable {
                         Text(
-                            text = if (isEmpty) {
+                            text = if (meal.isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.carbohydrates.roundToInt() }
-                                    .toString() + " " + stringResource(Res.string.unit_gram_short)
+                                meal.carbohydrates.toString() + " " +
+                                    stringResource(Res.string.unit_gram_short)
                             }
                         )
                     }
                     val fatsLabel = @Composable {
                         Text(
-                            text = if (isEmpty) {
+                            text = if (meal.isEmpty) {
                                 stringResource(Res.string.em_dash)
                             } else {
-                                products.sumOf { it.fats.roundToInt() }
-                                    .toString() + " " + stringResource(Res.string.unit_gram_short)
+                                meal.fats.toString() + " " +
+                                    stringResource(Res.string.unit_gram_short)
                             }
                         )
                     }
@@ -380,7 +367,7 @@ private fun DiaryDayMealScreen(
                                     sharedContentState = rememberSharedContentState(
                                         key = MealHeaderTransitionKeys.MealNutrients(
                                             mealId = meal.id,
-                                            epochDay = date.toEpochDays()
+                                            epochDay = epochDay
                                         )
                                     ),
                                     animatedVisibilityScope = mealHeaderScope
@@ -488,7 +475,7 @@ private fun DiaryDayMealScreen(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            if (products.isEmpty()) {
+            if (meal.foods.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .matchParentSize()
@@ -512,9 +499,9 @@ private fun DiaryDayMealScreen(
                 contentPadding = paddingValues
             ) {
                 itemsIndexed(
-                    items = products,
+                    items = meal.foods,
                     key = { _, model ->
-                        model.measurementId
+                        model.measurementId.toString()
                     }
                 ) { i, model ->
                     Column(
@@ -524,11 +511,8 @@ private fun DiaryDayMealScreen(
                             HorizontalDivider(Modifier.padding(horizontal = 48.dp))
                         }
 
-                        model.ListItem(
-                            onClick = { selectedIndex = i },
-                            colors = ListItemDefaults.colors(
-                                containerColor = containerColor
-                            )
+                        model.MealFoodListItem(
+                            onClick = { selectedIndex = i }
                         )
                     }
                 }
@@ -550,7 +534,7 @@ private fun DiaryDayMealScreen(
 
 @Composable
 private fun ModalSheetContent(
-    model: ProductWithMeasurement,
+    model: MealFoodListItem,
     onEditEntry: () -> Unit,
     onDeleteEntry: () -> Unit
 ) {
@@ -567,11 +551,7 @@ private fun ModalSheetContent(
     }
 
     Column {
-        model.ListItem(
-            colors = ListItemDefaults.colors(
-                containerColor = Color.Transparent
-            )
-        )
+        model.MealFoodListItem()
         HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
         ListItem(
             headlineContent = {

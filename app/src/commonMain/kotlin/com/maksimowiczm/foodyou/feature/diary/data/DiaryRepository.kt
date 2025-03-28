@@ -15,6 +15,7 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
+import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.Product
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
@@ -35,6 +36,7 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductSearchEntit
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveProductQueriesUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediator
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
@@ -65,7 +67,8 @@ class DiaryRepository(
     AddFoodRepository,
     MeasurementRepository,
     QueryProductsUseCase,
-    ObserveDiaryDayUseCase {
+    ObserveDiaryDayUseCase,
+    ObserveProductQueriesUseCase {
 
     override fun observeDailyGoals(): Flow<DailyGoals> {
         val nutrientGoal = combine(
@@ -239,29 +242,49 @@ class DiaryRepository(
         return addFoodDao.insertWeightMeasurement(entity)
     }
 
-    override suspend fun removeMeasurement(measurementId: Long) {
-        val entity = addFoodDao.observeWeightMeasurement(
-            measurementId = measurementId,
-            isDeleted = false
-        ).first()
+    override suspend fun removeMeasurement(id: MeasurementId) {
+        when (id) {
+            is MeasurementId.Product -> {
+                val entity = addFoodDao.observeWeightMeasurement(
+                    measurementId = id.measurementId,
+                    isDeleted = false
+                ).first()
 
-        if (entity != null) {
-            addFoodDao.deleteWeightMeasurement(entity.id)
+                if (entity != null) {
+                    addFoodDao.deleteWeightMeasurement(entity.id)
+                }
+            }
         }
     }
 
-    override suspend fun restoreMeasurement(measurementId: Long) {
-        val entity = addFoodDao.observeWeightMeasurement(
-            measurementId = measurementId,
-            isDeleted = true
-        ).first()
+    override suspend fun restoreMeasurement(id: MeasurementId) {
+        when (id) {
+            is MeasurementId.Product -> {
+                val entity = addFoodDao.observeWeightMeasurement(
+                    measurementId = id.measurementId,
+                    isDeleted = true
+                ).first()
 
-        if (entity != null) {
-            addFoodDao.restoreWeightMeasurement(entity.id)
+                if (entity != null) {
+                    addFoodDao.restoreWeightMeasurement(entity.id)
+                }
+            }
         }
     }
 
     override suspend fun updateMeasurement(
+        id: MeasurementId,
+        weightMeasurement: WeightMeasurement
+    ) {
+        when (id) {
+            is MeasurementId.Product -> updateProductMeasurement(
+                id.measurementId,
+                weightMeasurement
+            )
+        }
+    }
+
+    private suspend fun updateProductMeasurement(
         measurementId: Long,
         weightMeasurement: WeightMeasurement
     ) {

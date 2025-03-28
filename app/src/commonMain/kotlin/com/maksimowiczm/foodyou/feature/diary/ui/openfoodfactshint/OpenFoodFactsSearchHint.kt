@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.search
+package com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactshint
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

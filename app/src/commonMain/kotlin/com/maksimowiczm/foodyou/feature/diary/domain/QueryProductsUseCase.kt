@@ -11,10 +11,4 @@ fun interface QueryProductsUseCase {
         date: LocalDate,
         query: String?
     ): Flow<PagingData<ProductWithMeasurement>>
-
-    operator fun invoke(
-        mealId: Long,
-        date: LocalDate,
-        query: String?
-    ): Flow<PagingData<ProductWithMeasurement>> = queryProducts(mealId, date, query)
 }

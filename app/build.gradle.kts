@@ -66,7 +66,7 @@ kotlin {
 
     // Leave it here
     // Otherwise IDE won't mark android dependencies as error in common code
-    jvm("desktop")
+    // jvm("desktop")
 
     sourceSets {
         androidMain.dependencies {

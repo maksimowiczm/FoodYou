@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.search
+package com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactshint
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

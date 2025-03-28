@@ -22,7 +22,7 @@ fun MeasurementSummary(
     measurementString: String,
     measurementStringShort: String,
     caloriesString: String,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier
 ) {
     val textStyle = LocalTextStyle.current
     val measurement = @Composable { Text(text = measurementString, maxLines = 1) }

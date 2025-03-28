@@ -11,8 +11,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -26,16 +24,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.feature.diary.ui.barcodescanner.CameraBarcodeScannerScreen
-import com.maksimowiczm.foodyou.feature.diary.ui.meal.DiaryDayMealScreen
+import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearch
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.rememberAddFoodSearchState
+import com.maksimowiczm.foodyou.feature.diary.ui.meal.compose.DiaryDayMealScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.MeasurementScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.UpdateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
-import com.maksimowiczm.foodyou.feature.diary.ui.search.MealDateSearchViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.search.OpenFoodFactsSearchHint
-import com.maksimowiczm.foodyou.feature.diary.ui.search.SearchHome
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import kotlinx.datetime.LocalDate
@@ -64,7 +63,7 @@ fun AddFoodToMealApp(
                 outerOnBack = outerOnBack,
                 mealId = mealId,
                 epochDay = epochDay,
-                onGoToSettings = onGoToSettings,
+                onGoToOpenFoodFactsSettings = onGoToSettings,
                 modifier = modifier,
                 navController = navController,
                 skipToSearchScreen = skipToSearchScreen
@@ -77,16 +76,13 @@ fun AddFoodToMealApp(
 private data object MealHome
 
 @Serializable
-private data object Search
+private data class Search(val startOnBarcodeScanner: Boolean)
 
 @Serializable
 private data class CreateMeasurement(val productId: Long)
 
 @Serializable
 private data class EditMeasurement(val measurementId: Long)
-
-@Serializable
-private data object BarcodeScanner
 
 @Serializable
 private data object CreateProductDialog
@@ -101,18 +97,26 @@ private fun AppNavHost(
     outerOnBack: () -> Unit,
     mealId: Long,
     epochDay: Int,
-    onGoToSettings: () -> Unit,
+    onGoToOpenFoodFactsSettings: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     skipToSearchScreen: Boolean = false
 ) {
     val date = LocalDate.fromEpochDays(epochDay)
-    val searchViewModel = koinViewModel<MealDateSearchViewModel>(
-        parameters = { parametersOf(date, mealId) }
-    )
-    val lazyListState = rememberLazyListState()
 
-    val startDestination: Any = if (skipToSearchScreen) Search else MealHome
+    // Scope search state to whole app
+    val searchState = rememberAddFoodSearchState()
+    val searchViewModel = koinViewModel<AddFoodSearchViewModel>(
+        parameters = { parametersOf(mealId, date) }
+    )
+
+    val startDestination: Any = if (skipToSearchScreen) {
+        Search(
+            startOnBarcodeScanner = false
+        )
+    } else {
+        MealHome
+    }
 
     NavHost(
         navController = navController,
@@ -137,7 +141,9 @@ private fun AppNavHost(
                 mealHeaderScope = outerScope,
                 onProductAdd = {
                     navController.navigate(
-                        route = Search,
+                        route = Search(
+                            startOnBarcodeScanner = false
+                        ),
                         navOptions = navOptions {
                             launchSingleTop = true
                         }
@@ -145,25 +151,23 @@ private fun AppNavHost(
                 },
                 onBarcodeScan = {
                     navController.navigate(
-                        route = Search,
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
-                    navController.navigate(
-                        route = BarcodeScanner,
+                        route = Search(
+                            startOnBarcodeScanner = true
+                        ),
                         navOptions = navOptions {
                             launchSingleTop = true
                         }
                     )
                 },
                 onEditEntry = {
-                    navController.navigate(
-                        route = EditMeasurement(it),
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
+                    when (it) {
+                        is MeasurementId.Product -> navController.navigate(
+                            route = EditMeasurement(it.measurementId),
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            }
+                        )
+                    }
                 }
             )
         }
@@ -181,19 +185,15 @@ private fun AppNavHost(
                 }
             }
         ) {
+            val (startOnBarcodeScanner) = it.toRoute<Search>()
+
             val sharedTransitionScope =
                 LocalMealSharedTransitionScope.current ?: error("No shared transition scope found")
 
             with(sharedTransitionScope) {
-                SearchHome(
-                    onProductClick = {
-                        navController.navigate(
-                            route = CreateMeasurement(it),
-                            navOptions = navOptions {
-                                launchSingleTop = true
-                            }
-                        )
-                    },
+                AddFoodSearch(
+                    mealId = mealId,
+                    date = date,
                     onBack = {
                         // If stack is empty call outer on back otherwise pop search
                         if (navController.currentBackStack.value.size == 2) {
@@ -201,6 +201,14 @@ private fun AppNavHost(
                         } else {
                             navController.popBackStack()
                         }
+                    },
+                    onProductClick = {
+                        navController.navigate(
+                            route = CreateMeasurement(it),
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            }
+                        )
                     },
                     onCreateProduct = {
                         navController.navigate(
@@ -210,13 +218,11 @@ private fun AppNavHost(
                             }
                         )
                     },
-                    onBarcodeScanner = {
-                        navController.navigate(
-                            route = BarcodeScanner,
-                            navOptions = navOptions {
-                                launchSingleTop = true
-                            }
-                        )
+                    onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
+                    initialScreen = if (startOnBarcodeScanner) {
+                        AddFoodSearchScreen.BarcodeScanner
+                    } else {
+                        AddFoodSearchScreen.List
                     },
                     modifier = Modifier
                         .sharedBounds(
@@ -236,34 +242,9 @@ private fun AppNavHost(
                             exit = SearchSharedTransition.screenContentExitTransition
                         ),
                     viewModel = searchViewModel,
-                    lazyListState = lazyListState,
-                    searchHint = {
-                        OpenFoodFactsSearchHint(
-                            onGoToSettings = onGoToSettings
-                        )
-                    }
+                    state = searchState
                 )
             }
-        }
-        crossfadeComposable<BarcodeScanner> {
-            CameraBarcodeScannerScreen(
-                onBarcodeScan = {
-                    searchViewModel.onSearch(it)
-
-                    navController.navigate(
-                        route = Search,
-                        navOptions {
-                            launchSingleTop = true
-
-                            popUpTo<BarcodeScanner> {
-                                inclusive = true
-                            }
-                        }
-                    )
-                },
-                onClose = { navController.popBackStack<BarcodeScanner>(inclusive = true) },
-                modifier = Modifier.fillMaxSize()
-            )
         }
         crossfadeComposable<CreateMeasurement>(
             popEnterTransition = {

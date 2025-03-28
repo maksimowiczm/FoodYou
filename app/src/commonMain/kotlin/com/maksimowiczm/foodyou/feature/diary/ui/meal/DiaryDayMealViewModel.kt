@@ -1,38 +1,36 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.meal
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
-import com.maksimowiczm.foodyou.feature.diary.ui.DiaryDayViewModel
-import com.maksimowiczm.foodyou.feature.system.data.StringFormatRepository
+import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
+import com.maksimowiczm.foodyou.feature.diary.ui.meal.cases.ObserveMealCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 
 class DiaryDayMealViewModel(
-    observeDiaryDayUseCase: ObserveDiaryDayUseCase,
+    observeMealCase: ObserveMealCase,
     private val measurementRepository: MeasurementRepository,
-    private val stringFormatRepository: StringFormatRepository
-) : DiaryDayViewModel(observeDiaryDayUseCase) {
+    mealId: Long,
+    date: LocalDate
+) : ViewModel() {
+    val meal = observeMealCase(mealId, date)
 
-    fun formatTime(time: LocalTime): String = stringFormatRepository.formatTime(time)
-    fun formatDate(date: LocalDate): String = stringFormatRepository.formatDate(date)
-
-    private val deleteChannel = Channel<Long>()
+    private val deleteChannel = Channel<MeasurementId>()
     val deleteEvent = deleteChannel.receiveAsFlow()
 
-    fun onDeleteEntry(entryId: Long) {
+    fun onDeleteEntry(id: MeasurementId) {
         viewModelScope.launch {
-            measurementRepository.removeMeasurement(entryId)
-            deleteChannel.send(entryId)
+            measurementRepository.removeMeasurement(id)
+            deleteChannel.send(id)
         }
     }
 
-    fun onDeleteEntryUndo(entryId: Long) {
+    fun onDeleteEntryUndo(id: MeasurementId) {
         viewModelScope.launch {
-            measurementRepository.restoreMeasurement(entryId)
+            measurementRepository.restoreMeasurement(id)
         }
     }
 }
