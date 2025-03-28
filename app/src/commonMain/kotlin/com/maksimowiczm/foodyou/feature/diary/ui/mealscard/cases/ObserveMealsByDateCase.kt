@@ -1,9 +1,10 @@
-package com.maksimowiczm.foodyou.feature.diary.domain
+package com.maksimowiczm.foodyou.feature.diary.ui.mealscard.cases
 
 import com.maksimowiczm.foodyou.ext.sumOf
 import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
+import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.model.Meal
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -11,34 +12,13 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 
-data class Meal(
-    val id: Long,
-    val name: String,
-    val from: LocalTime,
-    val to: LocalTime,
-    val rank: Int,
-    val calories: Int,
-    val proteins: Int,
-    val carbohydrates: Int,
-    val fats: Int,
-    val isEmpty: Boolean
-) {
-    val isAllDay: Boolean
-        get() = from == to
-}
-
-fun interface ObserveMealsByDateUseCase {
-    operator fun invoke(date: LocalDate): Flow<List<Meal>>
-}
-
-class ObserveMealsByDateUseCaseImpl(
+class ObserveMealsByDateCase(
     private val mealRepository: MealRepository,
     private val measurementRepository: MeasurementRepository
-) : ObserveMealsByDateUseCase {
+) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun invoke(date: LocalDate): Flow<List<Meal>> =
+    operator fun invoke(date: LocalDate): Flow<List<Meal>> =
         mealRepository.observeMeals().flatMapLatest { meals ->
             val flows = meals.map { meal ->
                 measurementRepository
@@ -55,7 +35,7 @@ class ObserveMealsByDateUseCaseImpl(
 }
 
 private fun com.maksimowiczm.foodyou.feature.diary.data.model.Meal.toUseCaseModel(
-    measurements: List<ProductWithMeasurement.Measurement>
+    measurements: List<DiaryMeasuredProduct>
 ) = Meal(
     id = id,
     name = name,

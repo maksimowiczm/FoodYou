@@ -2,35 +2,35 @@ package com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases
 
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryProductSuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
-import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
-import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.model.AddFoodSearchListItem
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 
-class ObserveAddFoodSearchListItemCase(private val queryProductsUseCase: QueryProductsUseCase) {
+class ObserveAddFoodSearchListItemCase(private val searchRepository: SearchRepository) {
     operator fun invoke(
         query: String?,
         mealId: Long,
         date: LocalDate
-    ): Flow<PagingData<AddFoodSearchListItem>> = queryProductsUseCase.queryProducts(
+    ): Flow<PagingData<AddFoodSearchListItem>> = searchRepository.queryProducts(
         mealId = mealId,
         date = date,
         query = query
     ).map { data ->
         data.map { p ->
             val listId = when (p) {
-                is ProductWithMeasurement.Measurement -> "p_${p.measurementId}_${p.product.id}"
-                is ProductWithMeasurement.Suggestion -> "p_${p.product.id}"
+                is DiaryMeasuredProduct -> "p_${p.measurementId}_${p.product.id}"
+                is DiaryProductSuggestion -> "p_${p.product.id}"
             }
 
             val measurementId = when (p) {
-                is ProductWithMeasurement.Measurement -> MeasurementId.Product(p.measurementId)
-                is ProductWithMeasurement.Suggestion -> null
+                is DiaryMeasuredProduct -> p.measurementId
+                is DiaryProductSuggestion -> null
             }
 
             val weight = p.measurement.getWeight(p.product)

@@ -9,7 +9,7 @@ data class DiaryDay(
     /**
      * Map of meals with list of products for each meal.
      */
-    val mealProductMap: Map<Meal, List<ProductWithMeasurement.Measurement>>,
+    val mealProductMap: Map<Meal, List<DiaryMeasuredProduct>>,
 
     /**
      * Daily goals for the day.

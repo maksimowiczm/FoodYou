@@ -20,6 +20,9 @@ sealed interface WeightMeasurement {
         }
     }
 
+    /**
+     * Helper function to get the total weight of the product based on the measurement.
+     */
     fun getWeight(product: Product): Float = when (this) {
         is WeightUnit -> weight
         is Package -> product.packageWeight!! * quantity

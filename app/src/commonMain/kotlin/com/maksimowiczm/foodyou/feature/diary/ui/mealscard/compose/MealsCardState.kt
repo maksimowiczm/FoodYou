@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.mealscard
+package com.maksimowiczm.foodyou.feature.diary.ui.mealscard.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import com.maksimowiczm.foodyou.feature.diary.domain.Meal
+import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.model.Meal
 import com.valentinilk.shimmer.Shimmer
 import kotlinx.datetime.LocalTime
 

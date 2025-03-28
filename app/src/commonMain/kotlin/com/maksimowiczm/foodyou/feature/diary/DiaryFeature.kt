@@ -17,7 +17,7 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.Feature
 import com.maksimowiczm.foodyou.feature.HomeFeature
 import com.maksimowiczm.foodyou.feature.SettingsFeature
-import com.maksimowiczm.foodyou.feature.diary.data.AddFoodRepository
+import com.maksimowiczm.foodyou.feature.diary.data.DiaryDayRepository
 import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepository
 import com.maksimowiczm.foodyou.feature.diary.data.GoalsRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
@@ -25,13 +25,8 @@ import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepositoryImpl
+import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
 import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCase
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCaseImpl
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveProductQueriesUseCase
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveQuantitySuggestionByProductId
-import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.network.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.ui.AddFoodToMealApp
@@ -51,7 +46,8 @@ import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsView
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.DiaryDayMealViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.cases.ObserveMealCase
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.MealsCardViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.buildMealsCard
+import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.cases.ObserveMealsByDateCase
+import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.compose.buildMealsCard
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreenViewModel
@@ -332,16 +328,11 @@ object DiaryFeature : Feature {
             arrayOf(
                 GoalsRepository::class,
                 MealRepository::class,
-                AddFoodRepository::class,
                 MeasurementRepository::class,
-                QueryProductsUseCase::class,
-                ObserveDiaryDayUseCase::class,
-                ObserveProductQueriesUseCase::class,
-                ObserveQuantitySuggestionByProductId::class
+                DiaryDayRepository::class,
+                SearchRepository::class
             )
         )
-
-        factoryOf(::ObserveMealsByDateUseCaseImpl).bind<ObserveMealsByDateUseCase>()
 
         factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
 
@@ -349,7 +340,6 @@ object DiaryFeature : Feature {
 
         viewModelOf(::MealsSettingsScreenViewModel)
 
-        viewModelOf(::MealsCardViewModel)
         viewModelOf(::DiaryDayMealViewModel)
         viewModelOf(::CreateProductViewModel)
         viewModelOf(::UpdateProductViewModel)
@@ -373,5 +363,9 @@ object DiaryFeature : Feature {
         factoryOf(::DeleteProductCase)
         viewModelOf(::CreateMeasurementViewModel)
         viewModelOf(::UpdateMeasurementViewModel)
+
+        // MealsCard
+        factoryOf(::ObserveMealsByDateCase)
+        viewModelOf(::MealsCardViewModel)
     }
 }

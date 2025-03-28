@@ -1,18 +1,11 @@
 package com.maksimowiczm.foodyou.feature.diary.data.model
 
-/**
- * Represents a product with a specific weight measurement
- */
 sealed interface ProductWithMeasurement {
     val product: Product
     val measurement: WeightMeasurement
 
     val weight: Float
-        get() = when (val measurement = measurement) {
-            is WeightMeasurement.WeightUnit -> measurement.weight
-            is WeightMeasurement.Package -> product.packageWeight!! * measurement.quantity
-            is WeightMeasurement.Serving -> product.servingWeight!! * measurement.quantity
-        }
+        get() = measurement.getWeight(product)
 
     val calories: Float
         get() = product.nutrients.calories(weight)
@@ -27,15 +20,4 @@ sealed interface ProductWithMeasurement {
         get() = product.nutrients.fats(weight)
 
     fun get(nutrient: Nutrient): Float? = product.nutrients.get(nutrient, weight)
-
-    data class Measurement(
-        override val product: Product,
-        override val measurement: WeightMeasurement,
-        val measurementId: Long
-    ) : ProductWithMeasurement
-
-    data class Suggestion(
-        override val product: Product,
-        override val measurement: WeightMeasurement
-    ) : ProductWithMeasurement
 }

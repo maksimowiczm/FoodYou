@@ -4,7 +4,6 @@ import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveQuantitySuggestionByProductId
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.model.Product
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +13,7 @@ import kotlinx.coroutines.flow.map
 
 class ObserveProductCase(
     private val productRepository: ProductRepository,
-    private val observeQuantitySuggestionByProductId: ObserveQuantitySuggestionByProductId,
+    private val measurementsRepository: MeasurementRepository,
     private val measurementRepository: MeasurementRepository
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -24,8 +23,8 @@ class ObserveProductCase(
                 return@flatMapLatest flowOf(null)
             }
 
-            observeQuantitySuggestionByProductId
-                .observeQuantitySuggestionByProductId(productId)
+            measurementsRepository
+                .observeMeasurementSuggestionByProductId(productId)
                 .map { suggestions ->
                     val packageSuggestion = suggestions.singleOrNull {
                         it is WeightMeasurement.Package
@@ -69,8 +68,8 @@ class ObserveProductCase(
                 val servingSuggestion = measurement.measurement as? WeightMeasurement.Serving
                 val weightSuggestion = measurement.measurement as? WeightMeasurement.WeightUnit
 
-                observeQuantitySuggestionByProductId
-                    .observeQuantitySuggestionByProductId(measurement.product.id)
+                measurementRepository
+                    .observeMeasurementSuggestionByProductId(measurement.product.id)
                     .map { suggestions ->
                         val packageSuggestion = packageSuggestion
                             ?: suggestions.singleOrNull {

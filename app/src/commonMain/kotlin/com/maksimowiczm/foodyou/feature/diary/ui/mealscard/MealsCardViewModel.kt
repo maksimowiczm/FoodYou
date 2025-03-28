@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.feature.diary.data.preferences.DiaryPreferences
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCase
+import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.cases.ObserveMealsByDateCase
 import com.maksimowiczm.foodyou.feature.system.data.DateProvider
 import com.maksimowiczm.foodyou.feature.system.data.StringFormatRepository
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
@@ -21,12 +21,12 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 class MealsCardViewModel(
-    private val observeMealsByDateUseCase: ObserveMealsByDateUseCase,
+    private val observeMealsByDateCase: ObserveMealsByDateCase,
     private val stringFormatRepository: StringFormatRepository,
     dateProvider: DateProvider,
     dataStore: DataStore<Preferences>
 ) : ViewModel() {
-    fun observeMealsByDate(date: LocalDate) = observeMealsByDateUseCase(date)
+    fun observeMealsByDate(date: LocalDate) = observeMealsByDateCase(date)
 
     val time = dateProvider.observeMinutes().stateIn(
         scope = viewModelScope,

@@ -74,6 +74,7 @@ fun <T, E> rememberFormField(
             )
         },
         restore = {
+            @Suppress("UNCHECKED_CAST")
             FormField(
                 textFieldState = textFieldState,
                 initialValue = it[0] as T,

@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.ext.sumOf
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
 import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrient
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.Res
@@ -32,7 +32,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NutrientsList(
-    products: List<ProductWithMeasurement>,
+    products: List<DiaryMeasuredProduct>,
     incompleteValue: (Float) -> (@Composable () -> Unit),
     modifier: Modifier = Modifier
 ) {
@@ -248,7 +248,7 @@ private sealed interface NutrientSummary {
     value class Incomplete(override val value: Float) : NutrientSummary
 }
 
-private fun List<ProductWithMeasurement>.nutrient(nutrient: Nutrient): NutrientSummary {
+private fun List<DiaryMeasuredProduct>.nutrient(nutrient: Nutrient): NutrientSummary {
     var isComplete = true
 
     val value = sumOf {

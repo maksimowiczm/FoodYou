@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.diary.ui.meal.cases
 
 import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
-import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.model.MealFoodListItem
 import com.maksimowiczm.foodyou.feature.system.data.StringFormatRepository
@@ -29,7 +28,7 @@ class ObserveMealCase(
             measurementRepository.observeMeasurements(mealId, date).map {
                 val foods = it.map {
                     MealFoodListItem(
-                        measurementId = MeasurementId.Product(it.measurementId),
+                        measurementId = it.measurementId,
                         name = it.product.name,
                         brand = it.product.brand,
                         calories = it.calories.roundToInt(),
@@ -48,7 +47,11 @@ class ObserveMealCase(
                     from = stringFormatRepository.formatTime(meal.from),
                     to = stringFormatRepository.formatTime(meal.to),
                     isAllDay = meal.isAllDay,
-                    foods = foods
+                    foods = foods,
+                    calories = it.map { it.calories }.sum().roundToInt(),
+                    proteins = it.map { it.proteins }.sum().roundToInt(),
+                    carbohydrates = it.map { it.carbohydrates }.sum().roundToInt(),
+                    fats = it.map { it.fats }.sum().roundToInt()
                 )
             }
         }

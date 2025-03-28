@@ -7,17 +7,12 @@ data class Meal(
     val from: String,
     val to: String,
     val isAllDay: Boolean,
-    val foods: List<MealFoodListItem>
+    val foods: List<MealFoodListItem>,
+    val calories: Int,
+    val proteins: Int,
+    val carbohydrates: Int,
+    val fats: Int
 ) {
     val isEmpty: Boolean
         get() = foods.isEmpty()
-
-    val calories
-        get() = foods.sumOf { it.calories }
-    val proteins
-        get() = foods.sumOf { it.proteins }
-    val carbohydrates
-        get() = foods.sumOf { it.carbohydrates }
-    val fats
-        get() = foods.sumOf { it.fats }
 }

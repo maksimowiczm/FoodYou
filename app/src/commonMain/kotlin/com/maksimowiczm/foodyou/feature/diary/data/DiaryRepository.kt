@@ -14,12 +14,12 @@ import androidx.paging.map
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryProductSuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
-import com.maksimowiczm.foodyou.feature.diary.data.model.Product
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement.Measurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
@@ -35,10 +35,6 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductSearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveProductQueriesUseCase
-import com.maksimowiczm.foodyou.feature.diary.domain.ObserveQuantitySuggestionByProductId
-import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediator
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
@@ -65,12 +61,9 @@ class DiaryRepository(
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : MealRepository,
     GoalsRepository,
-    AddFoodRepository,
     MeasurementRepository,
-    QueryProductsUseCase,
-    ObserveDiaryDayUseCase,
-    ObserveProductQueriesUseCase,
-    ObserveQuantitySuggestionByProductId {
+    DiaryDayRepository,
+    SearchRepository {
 
     override fun observeDailyGoals(): Flow<DailyGoals> {
         val nutrientGoal = combine(
@@ -116,7 +109,7 @@ class DiaryRepository(
             observeDailyGoals()
         ) { products, meals, goals ->
             val mealProductMap = meals
-                .associateWith { emptyList<Measurement>() }
+                .associateWith { emptyList<DiaryMeasuredProduct>() }
                 .toMutableMap()
 
             products.forEach {
@@ -180,7 +173,7 @@ class DiaryRepository(
         addFoodDao.updateMealsRanks(map)
     }
 
-    override fun observeQuantitySuggestionByProductId(productId: Long) = combine(
+    override fun observeMeasurementSuggestionByProductId(productId: Long) = combine(
         productDao.observeProductById(productId),
         addFoodDao.observeQuantitySuggestionsByProductId(productId)
     ) { product, suggestionList ->
@@ -219,11 +212,6 @@ class DiaryRepository(
     override fun observeProductQueries(limit: Int): Flow<List<ProductQuery>> =
         addFoodDao.observeLatestQueries(limit).map { list ->
             list.map { it.toDomain() }
-        }
-
-    override fun observeProductByMeasurementId(measurementId: Long) =
-        addFoodDao.observeProductByMeasurementId(measurementId).map { entity ->
-            entity?.toMeasurement()
         }
 
     override suspend fun addMeasurement(
@@ -324,7 +312,10 @@ class DiaryRepository(
         addFoodDao.updateWeightMeasurement(updatedEntity)
     }
 
-    override fun observeMeasurements(mealId: Long?, date: LocalDate): Flow<List<Measurement>> {
+    override fun observeMeasurements(
+        mealId: Long?,
+        date: LocalDate
+    ): Flow<List<DiaryMeasuredProduct>> {
         val epochDay = date.toEpochDays()
 
         return addFoodDao.observeMeasuredProducts(
@@ -335,7 +326,7 @@ class DiaryRepository(
         }
     }
 
-    override fun observeMeasurementById(measurementId: MeasurementId): Flow<Measurement?> =
+    override fun observeMeasurementById(measurementId: MeasurementId): Flow<DiaryMeasuredProduct?> =
         when (measurementId) {
             is MeasurementId.Product -> addFoodDao.observeProductByMeasurementId(
                 measurementId = measurementId.measurementId
@@ -468,40 +459,36 @@ private fun ProductSearchEntity.toQueryProduct(): ProductWithMeasurement {
     val product = this.product.toDomain()
     val measurementId = this.weightMeasurement?.id
 
-    val weightMeasurement = this.weightMeasurement?.toDomain(product)
+    val weightMeasurement = this.weightMeasurement?.toDomain()
         ?: WeightMeasurement.defaultForProduct(product)
 
     return when (measurementId) {
-        null -> return ProductWithMeasurement.Suggestion(
+        null -> return DiaryProductSuggestion(
             product = product,
             measurement = weightMeasurement
         )
 
-        else if (todaysMeasurement) -> Measurement(
+        else if (todaysMeasurement) -> DiaryMeasuredProduct(
             product = product,
             measurement = weightMeasurement,
-            measurementId = measurementId
+            measurementId = MeasurementId.Product(measurementId)
         )
 
-        else -> return ProductWithMeasurement.Suggestion(
+        else -> return DiaryProductSuggestion(
             product = product,
             measurement = weightMeasurement
         )
     }
 }
 
-private fun ProductWithWeightMeasurementEntity.toMeasurement(): Measurement {
-    val product = this.product.toDomain()
-    val weightMeasurement = this.weightMeasurement.toDomain(product)
-
-    return Measurement(
-        product = product,
-        measurement = weightMeasurement,
-        measurementId = this.weightMeasurement.id
+private fun ProductWithWeightMeasurementEntity.toMeasurement(): DiaryMeasuredProduct =
+    DiaryMeasuredProduct(
+        product = product.toDomain(),
+        measurement = weightMeasurement.toDomain(),
+        measurementId = MeasurementId.Product(this.weightMeasurement.id)
     )
-}
 
-private fun WeightMeasurementEntity.toDomain(product: Product) = when (this.measurement) {
+private fun WeightMeasurementEntity.toDomain() = when (this.measurement) {
     WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
     WeightMeasurementEnum.Package -> WeightMeasurement.Package(quantity)
     WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
