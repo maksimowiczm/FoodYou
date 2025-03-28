@@ -22,7 +22,7 @@ class WeightMeasurementTypeConverter {
     }
 }
 
-object SQL_CONSTANTS {
+object WeightMeasurementSqlConstants {
     const val WEIGHT_UNIT = 0
     const val PACKAGE = 1
     const val SERVING = 2

@@ -3,9 +3,7 @@ package com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryProductSuggestion
-import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.model.AddFoodSearchListItem
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.Flow
@@ -23,30 +21,38 @@ class ObserveAddFoodSearchListItemCase(private val searchRepository: SearchRepos
         query = query
     ).map { data ->
         data.map { p ->
-            val listId = when (p) {
-                is DiaryMeasuredProduct -> "p_${p.measurementId}_${p.product.id}"
-                is DiaryProductSuggestion -> "p_${p.product.id}"
-            }
+            val weight = when (p.weightMeasurement) {
+                is WeightMeasurement.Package -> {
+                    assert(p.packageWeight != null) {
+                        "Package weight should not be null for package measurement"
+                    }
+                    p.packageWeight!!
+                }
 
-            val measurementId = when (p) {
-                is DiaryMeasuredProduct -> p.measurementId
-                is DiaryProductSuggestion -> null
-            }
+                is WeightMeasurement.Serving -> {
+                    assert(p.servingWeight != null) {
+                        "Serving weight should not be null for serving measurement"
+                    }
+                    p.servingWeight!!
+                }
 
-            val weight = p.measurement.getWeight(p.product)
+                is WeightMeasurement.WeightUnit -> {
+                    p.weightMeasurement.weight
+                }
+            }
 
             AddFoodSearchListItem(
-                id = FoodId.Product(p.product.id),
-                listId = listId,
-                name = p.product.name,
-                brand = p.product.brand,
+                id = p.foodId,
+                listId = p.uniqueId,
+                name = p.name,
+                brand = p.brand,
                 calories = p.calories.roundToInt(),
                 proteins = p.proteins.roundToInt(),
                 carbohydrates = p.carbohydrates.roundToInt(),
                 fats = p.fats.roundToInt(),
-                weightMeasurement = p.measurement,
+                weightMeasurement = p.weightMeasurement,
                 weight = weight,
-                measurementId = measurementId
+                measurementId = p.measurementId
             )
         }
     }

@@ -11,11 +11,9 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryProductSuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
@@ -26,10 +24,8 @@ import com.maksimowiczm.foodyou.feature.diary.data.preferences.DiaryPreferences
 import com.maksimowiczm.foodyou.feature.diary.database.dao.AddFoodDao
 import com.maksimowiczm.foodyou.feature.diary.database.dao.DiarySearchDao
 import com.maksimowiczm.foodyou.feature.diary.database.dao.ProductDao
-import com.maksimowiczm.foodyou.feature.diary.database.entity.DiarySearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductSearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
@@ -249,6 +245,8 @@ class DiaryRepository(
                     addFoodDao.deleteWeightMeasurement(entity.id)
                 }
             }
+
+            is MeasurementId.Recipe -> TODO()
         }
     }
 
@@ -264,6 +262,8 @@ class DiaryRepository(
                     addFoodDao.restoreWeightMeasurement(entity.id)
                 }
             }
+
+            is MeasurementId.Recipe -> TODO()
         }
     }
 
@@ -276,6 +276,8 @@ class DiaryRepository(
                 id.measurementId,
                 weightMeasurement
             )
+
+            is MeasurementId.Recipe -> TODO()
         }
     }
 
@@ -328,6 +330,8 @@ class DiaryRepository(
             is MeasurementId.Product -> addFoodDao.observeProductByMeasurementId(
                 measurementId = measurementId.measurementId
             ).map { it?.toMeasurement() }
+
+            is MeasurementId.Recipe -> TODO()
         }
 
     @OptIn(ExperimentalPagingApi::class)
@@ -335,7 +339,7 @@ class DiaryRepository(
         mealId: Long,
         date: LocalDate,
         query: String?
-    ): Flow<PagingData<ProductWithMeasurement>> {
+    ): Flow<PagingData<DiarySearchModel>> {
         val barcode = query?.takeIf { it.all(Char::isDigit) }
 
         val localOnly = query == null
@@ -361,7 +365,7 @@ class DiaryRepository(
             diarySearchDao.queryDiary(query, mealId, date.toEpochDays())
         }.flow.map { pagingData ->
             pagingData.map {
-                it.toQueryProduct()
+                it.toSearchModel()
             }
         }
     }
@@ -380,62 +384,6 @@ class DiaryRepository(
     companion object {
         private const val TAG = "DiaryRepository"
         private const val PAGE_SIZE = 30
-    }
-}
-
-private fun DiarySearchEntity.toQueryProduct(): ProductWithMeasurement {
-    if(productId == null){
-
-    }
-
-    val product = this.product.toDomain()
-    val measurementId = this.weightMeasurement?.id
-
-    val weightMeasurement = this.weightMeasurement?.toDomain()
-        ?: WeightMeasurement.defaultForProduct(product)
-
-    return when (measurementId) {
-        null -> return DiaryProductSuggestion(
-            product = product,
-            measurement = weightMeasurement
-        )
-
-        else if (todaysMeasurement) -> DiaryMeasuredProduct(
-            product = product,
-            measurement = weightMeasurement,
-            measurementId = MeasurementId.Product(measurementId)
-        )
-
-        else -> return DiaryProductSuggestion(
-            product = product,
-            measurement = weightMeasurement
-        )
-    }
-}
-
-private fun ProductSearchEntity.toQueryProduct(): ProductWithMeasurement {
-    val product = this.product.toDomain()
-    val measurementId = this.weightMeasurement?.id
-
-    val weightMeasurement = this.weightMeasurement?.toDomain()
-        ?: WeightMeasurement.defaultForProduct(product)
-
-    return when (measurementId) {
-        null -> return DiaryProductSuggestion(
-            product = product,
-            measurement = weightMeasurement
-        )
-
-        else if (todaysMeasurement) -> DiaryMeasuredProduct(
-            product = product,
-            measurement = weightMeasurement,
-            measurementId = MeasurementId.Product(measurementId)
-        )
-
-        else -> return DiaryProductSuggestion(
-            product = product,
-            measurement = weightMeasurement
-        )
     }
 }
 

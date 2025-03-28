@@ -61,6 +61,8 @@ class AddFoodSearchViewModel(
                     )
                 }
             }
+
+            is FoodId.Recipe -> TODO()
         }
     }
 
@@ -71,6 +73,8 @@ class AddFoodSearchViewModel(
                     measurementRepository.removeMeasurement(measurementId)
                 }
             }
+
+            is MeasurementId.Recipe -> TODO()
         }
     }
 }

@@ -167,6 +167,8 @@ private fun AppNavHost(
                                 launchSingleTop = true
                             }
                         )
+
+                        is MeasurementId.Recipe -> TODO()
                     }
                 }
             )

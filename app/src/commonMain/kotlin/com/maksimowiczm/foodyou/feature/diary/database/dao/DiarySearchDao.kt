@@ -47,6 +47,9 @@ interface DiarySearchDao {
                 p.proteins AS proteins,
                 p.carbohydrates AS carbohydrates,
                 p.fats AS fats,
+                p.packageWeight AS packageWeight,
+                p.servingWeight AS servingWeight,
+                NULL AS servings,
                 CASE WHEN s.todaysMeasurement = 1 
                     THEN s.measurement 
                     ELSE NULL 
@@ -101,6 +104,9 @@ interface DiarySearchDao {
                 s.totalProteins AS proteins,
                 s.totalCarbohydrates AS carbohydrates,
                 s.totalFats AS fats,
+                s.totalWeight AS packageWeight,
+                NULL AS servingWeight,
+                r.servings AS servings,
                 s.id AS measurementId,
                 s.measurement AS measurement,
                 s.quantity AS quantity

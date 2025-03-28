@@ -14,9 +14,16 @@ data class DiarySearchEntity(
     val proteins: Float,
     val carbohydrates: Float,
     val fats: Float,
+    val packageWeight: Float?,
+
+    // For products
+    val servingWeight: Float?,
+
+    // For recipes
+    val servings: Int?,
 
     // Measurement data
     val measurementId: Long?,
     val measurement: WeightMeasurementEnum,
-    val quantity: Float,
+    val quantity: Float
 )
