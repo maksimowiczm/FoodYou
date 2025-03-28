@@ -24,6 +24,6 @@ data class DiarySearchEntity(
 
     // Measurement data
     val measurementId: Long?,
-    val measurement: WeightMeasurementEnum,
-    val quantity: Float
+    val measurement: WeightMeasurementEnum?,
+    val quantity: Float?
 )

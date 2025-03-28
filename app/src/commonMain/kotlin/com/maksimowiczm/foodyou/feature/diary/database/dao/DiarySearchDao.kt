@@ -51,7 +51,7 @@ interface DiarySearchDao {
                 p.servingWeight AS servingWeight,
                 NULL AS servings,
                 CASE WHEN s.todaysMeasurement = 1 
-                    THEN s.measurement 
+                    THEN s.id
                     ELSE NULL 
                 END AS measurementId,
                 s.measurement AS measurement,

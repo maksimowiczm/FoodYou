@@ -37,6 +37,22 @@ data class DiarySearchModel(
 
 fun DiarySearchEntity.toSearchModel(): DiarySearchModel {
     val weightMeasurement = when (measurement) {
+        null -> {
+            when {
+                servingWeight != null -> WeightMeasurement.Serving(1f)
+                packageWeight != null -> WeightMeasurement.Package(1f)
+                else -> WeightMeasurement.WeightUnit(100f)
+            }
+        }
+
+        else if (quantity == null) -> {
+            when {
+                servingWeight != null -> WeightMeasurement.Serving(1f)
+                packageWeight != null -> WeightMeasurement.Package(1f)
+                else -> WeightMeasurement.WeightUnit(100f)
+            }
+        }
+
         WeightMeasurementEnum.WeightUnit -> {
             WeightMeasurement.WeightUnit(quantity)
         }
