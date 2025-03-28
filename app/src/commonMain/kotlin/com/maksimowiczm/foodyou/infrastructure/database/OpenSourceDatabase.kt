@@ -20,6 +20,7 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.view.RecipeNutritionView
 
 @Database(
     entities = [
@@ -31,6 +32,9 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementE
         RecipeEntity::class,
         RecipeIngredientEntity::class,
         RecipeMeasurementEntity::class
+    ],
+    views = [
+        RecipeNutritionView::class
     ],
     version = OpenSourceDatabase.VERSION,
     autoMigrations = [

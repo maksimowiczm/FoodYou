@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 
 @Entity(
     foreignKeys = [
@@ -29,7 +30,7 @@ data class RecipeMeasurementEntity(
     val recipeId: Long,
 
     val createdAt: Long,
-    val measurement: String,
+    val measurement: WeightMeasurementEnum,
     val quantity: Float,
     val isDeleted: Boolean = false
 )

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "1b433fef4370fb2dcf37fc8f33968050",
+    "identityHash": "e7374b3e045466a3ce30c0c2deb364f4",
     "entities": [
       {
         "tableName": "OpenFoodFactsPagingKey",
@@ -450,7 +450,7 @@
       },
       {
         "tableName": "RecipeMeasurementEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mealId` INTEGER NOT NULL, `diaryEpochDay` INTEGER NOT NULL, `recipeId` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `measurement` TEXT NOT NULL, `quantity` REAL NOT NULL, `isDeleted` INTEGER NOT NULL, FOREIGN KEY(`recipeId`) REFERENCES `RecipeEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mealId` INTEGER NOT NULL, `diaryEpochDay` INTEGER NOT NULL, `recipeId` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, `isDeleted` INTEGER NOT NULL, FOREIGN KEY(`recipeId`) REFERENCES `RecipeEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -485,7 +485,7 @@
           {
             "fieldPath": "measurement",
             "columnName": "measurement",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -551,9 +551,15 @@
         ]
       }
     ],
+    "views": [
+      {
+        "viewName": "RecipeNutritionView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT \n        r.id AS recipeId,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.calories * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.calories * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.calories * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) AS totalCalories,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.proteins * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.proteins * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.proteins * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) AS totalProteins,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.carbohydrates * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.carbohydrates * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.carbohydrates * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) AS totalCarbohydrates,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.fats * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.fats * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.fats * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) AS totalFats\n    FROM RecipeEntity r\n    JOIN RecipeIngredientEntity ri ON r.id = ri.recipeId\n    JOIN ProductEntity p ON ri.productId = p.id\n    GROUP BY r.id, r.name"
+      }
+    ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1b433fef4370fb2dcf37fc8f33968050')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e7374b3e045466a3ce30c0c2deb364f4')"
     ]
   }
 }

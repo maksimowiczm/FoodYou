@@ -384,8 +384,8 @@ class DiaryRepository(
 }
 
 private fun DiarySearchEntity.toQueryProduct(): ProductWithMeasurement {
-    if (product == null) {
-        error("dupa")
+    if(productId == null){
+
     }
 
     val product = this.product.toDomain()

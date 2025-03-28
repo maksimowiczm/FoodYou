@@ -1,19 +1,22 @@
 package com.maksimowiczm.foodyou.feature.diary.database.entity
 
-import androidx.room.Embedded
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 
 data class DiarySearchEntity(
-    @Embedded(prefix = "p_")
-    val product: ProductEntity?,
+    // Identifiers
+    val productId: Long?,
+    val recipeId: Long?,
 
-    @Embedded(prefix = "pm_")
-    val weightMeasurement: WeightMeasurementEntity?,
+    // Search data
+    val name: String,
+    val brand: String?,
+    val calories: Float,
+    val proteins: Float,
+    val carbohydrates: Float,
+    val fats: Float,
 
-    @Embedded(prefix = "r_")
-    val recipeMeasurement: RecipeEntity?,
-
-    @Embedded(prefix = "rm_")
-    val recipe: RecipeMeasurementEntity?,
-
-    val todaysMeasurement: Boolean
+    // Measurement data
+    val measurementId: Long?,
+    val measurement: WeightMeasurementEnum,
+    val quantity: Float,
 )
