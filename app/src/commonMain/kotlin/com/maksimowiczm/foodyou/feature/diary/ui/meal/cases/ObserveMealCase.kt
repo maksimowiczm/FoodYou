@@ -36,7 +36,8 @@ class ObserveMealCase(
                         proteins = it.proteins.roundToInt(),
                         carbohydrates = it.carbohydrates.roundToInt(),
                         fats = it.fats.roundToInt(),
-                        weightMeasurement = it.measurement
+                        weightMeasurement = it.measurement,
+                        weight = it.measurement.getWeight(it.product)
                     )
                 }
 

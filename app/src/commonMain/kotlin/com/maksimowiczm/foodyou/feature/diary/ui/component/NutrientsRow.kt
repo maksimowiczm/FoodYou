@@ -15,12 +15,7 @@ import foodyou.app.generated.resources.unit_gram_short
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun NutrientsRow(
-    proteins: Int,
-    carbohydrates: Int,
-    fats: Int,
-    modifier: Modifier = Modifier
-) {
+fun NutrientsRow(proteins: Int, carbohydrates: Int, fats: Int, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
     CompositionLocalProvider(

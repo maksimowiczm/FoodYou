@@ -30,10 +30,15 @@ import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveMealsByDateUseCaseImpl
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveProductQueriesUseCase
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveQuantitySuggestionByProductId
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.network.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.ui.AddFoodToMealApp
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.CreateMeasurementViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.UpdateMeasurementViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.cases.DeleteProductCase
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.cases.ObserveProductCase
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases.ObserveAddFoodSearchListItemCase
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
@@ -50,8 +55,6 @@ import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.buildMealsCard
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreenViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.measurement.UpdateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactshint.OpenFoodFactsSearchHintViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.CountryFlag
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.OpenFoodFactsSettingsScreen
@@ -333,7 +336,8 @@ object DiaryFeature : Feature {
                 MeasurementRepository::class,
                 QueryProductsUseCase::class,
                 ObserveDiaryDayUseCase::class,
-                ObserveProductQueriesUseCase::class
+                ObserveProductQueriesUseCase::class,
+                ObserveQuantitySuggestionByProductId::class
             )
         )
 
@@ -345,8 +349,6 @@ object DiaryFeature : Feature {
 
         viewModelOf(::MealsSettingsScreenViewModel)
 
-        viewModelOf(::CreateMeasurementViewModel)
-        viewModelOf(::UpdateMeasurementViewModel)
         viewModelOf(::MealsCardViewModel)
         viewModelOf(::DiaryDayMealViewModel)
         viewModelOf(::CreateProductViewModel)
@@ -365,5 +367,11 @@ object DiaryFeature : Feature {
 
         // Meal
         factoryOf(::ObserveMealCase)
+
+        // AddFoodProduct
+        factoryOf(::ObserveProductCase)
+        factoryOf(::DeleteProductCase)
+        viewModelOf(::CreateMeasurementViewModel)
+        viewModelOf(::UpdateMeasurementViewModel)
     }
 }

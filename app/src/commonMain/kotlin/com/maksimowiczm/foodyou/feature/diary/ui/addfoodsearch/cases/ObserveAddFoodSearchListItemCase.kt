@@ -33,6 +33,8 @@ class ObserveAddFoodSearchListItemCase(private val queryProductsUseCase: QueryPr
                 is ProductWithMeasurement.Suggestion -> null
             }
 
+            val weight = p.measurement.getWeight(p.product)
+
             AddFoodSearchListItem(
                 id = FoodId.Product(p.product.id),
                 listId = listId,
@@ -43,6 +45,7 @@ class ObserveAddFoodSearchListItemCase(private val queryProductsUseCase: QueryPr
                 carbohydrates = p.carbohydrates.roundToInt(),
                 fats = p.fats.roundToInt(),
                 weightMeasurement = p.measurement,
+                weight = weight,
                 measurementId = measurementId
             )
         }

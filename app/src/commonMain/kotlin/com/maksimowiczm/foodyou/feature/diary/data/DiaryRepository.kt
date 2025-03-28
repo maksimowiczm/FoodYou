@@ -37,6 +37,7 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightM
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveDiaryDayUseCase
 import com.maksimowiczm.foodyou.feature.diary.domain.ObserveProductQueriesUseCase
+import com.maksimowiczm.foodyou.feature.diary.domain.ObserveQuantitySuggestionByProductId
 import com.maksimowiczm.foodyou.feature.diary.domain.QueryProductsUseCase
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediator
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
@@ -68,7 +69,8 @@ class DiaryRepository(
     MeasurementRepository,
     QueryProductsUseCase,
     ObserveDiaryDayUseCase,
-    ObserveProductQueriesUseCase {
+    ObserveProductQueriesUseCase,
+    ObserveQuantitySuggestionByProductId {
 
     override fun observeDailyGoals(): Flow<DailyGoals> {
         val nutrientGoal = combine(
@@ -200,10 +202,18 @@ class DiaryRepository(
             }
         }
 
-        QuantitySuggestion(
-            product = product.toDomain(),
-            quantitySuggestions = suggestions
-        )
+        suggestions.mapNotNull {
+            when (it.key) {
+                WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(it.value)
+                WeightMeasurementEnum.Package if (product.packageWeight != null) ->
+                    WeightMeasurement.Package(it.value)
+
+                WeightMeasurementEnum.Serving if (product.servingWeight != null) ->
+                    WeightMeasurement.Serving(it.value)
+
+                else -> null
+            }
+        }
     }.filterNotNull()
 
     override fun observeProductQueries(limit: Int): Flow<List<ProductQuery>> =
@@ -324,6 +334,13 @@ class DiaryRepository(
             list.map { it.toMeasurement() }
         }
     }
+
+    override fun observeMeasurementById(measurementId: MeasurementId): Flow<Measurement?> =
+        when (measurementId) {
+            is MeasurementId.Product -> addFoodDao.observeProductByMeasurementId(
+                measurementId = measurementId.measurementId
+            ).map { it?.toMeasurement() }
+        }
 
     @OptIn(ExperimentalPagingApi::class)
     override fun queryProducts(
@@ -485,17 +502,7 @@ private fun ProductWithWeightMeasurementEntity.toMeasurement(): Measurement {
 }
 
 private fun WeightMeasurementEntity.toDomain(product: Product) = when (this.measurement) {
-    WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(
-        weight = quantity
-    )
-
-    WeightMeasurementEnum.Package -> WeightMeasurement.Package(
-        quantity = quantity,
-        packageWeight = product.packageWeight!!
-    )
-
-    WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(
-        quantity = quantity,
-        servingWeight = product.servingWeight!!
-    )
+    WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
+    WeightMeasurementEnum.Package -> WeightMeasurement.Package(quantity)
+    WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
 }

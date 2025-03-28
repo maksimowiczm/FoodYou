@@ -11,5 +11,6 @@ data class MealFoodListItem(
     val proteins: Int,
     val carbohydrates: Int,
     val fats: Int,
+    val weight: Float,
     val weightMeasurement: WeightMeasurement
 )

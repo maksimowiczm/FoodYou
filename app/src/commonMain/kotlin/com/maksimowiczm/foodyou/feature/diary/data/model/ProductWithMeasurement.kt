@@ -8,7 +8,11 @@ sealed interface ProductWithMeasurement {
     val measurement: WeightMeasurement
 
     val weight: Float
-        get() = measurement.weight
+        get() = when (val measurement = measurement) {
+            is WeightMeasurement.WeightUnit -> measurement.weight
+            is WeightMeasurement.Package -> product.packageWeight!! * measurement.quantity
+            is WeightMeasurement.Serving -> product.servingWeight!! * measurement.quantity
+        }
 
     val calories: Float
         get() = product.nutrients.calories(weight)

@@ -24,4 +24,8 @@ interface MeasurementRepository {
         mealId: Long?,
         date: LocalDate
     ): Flow<List<ProductWithMeasurement.Measurement>>
+
+    fun observeMeasurementById(
+        measurementId: MeasurementId
+    ): Flow<ProductWithMeasurement.Measurement?>
 }

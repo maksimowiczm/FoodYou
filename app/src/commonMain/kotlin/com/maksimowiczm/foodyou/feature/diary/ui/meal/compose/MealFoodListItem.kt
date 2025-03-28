@@ -81,7 +81,7 @@ private val MealFoodListItem.measurementString: String
             return short
         }
 
-        val grams = weightMeasurement.weight
+        val grams = weight
 
         return "$short (${grams.formatClipZeros()} ${stringResource(Res.string.unit_gram_short)})"
     }
