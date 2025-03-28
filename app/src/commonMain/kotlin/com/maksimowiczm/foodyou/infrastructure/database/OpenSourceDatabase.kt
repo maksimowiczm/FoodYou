@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.infrastructure.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -15,6 +16,9 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.OpenFoodFactsPagingKey
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
+import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeEntity
+import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeIngredientEntity
+import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
 
 @Database(
@@ -23,9 +27,15 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementE
         ProductEntity::class,
         WeightMeasurementEntity::class,
         ProductQueryEntity::class,
-        MealEntity::class
+        MealEntity::class,
+        RecipeEntity::class,
+        RecipeIngredientEntity::class,
+        RecipeMeasurementEntity::class
     ],
     version = OpenSourceDatabase.VERSION,
+    autoMigrations = [
+        AutoMigration(from = 2, to = 3)
+    ],
     exportSchema = true
 )
 @TypeConverters(
@@ -37,7 +47,7 @@ abstract class OpenSourceDatabase :
     RoomDatabase(),
     DiaryDatabase {
     companion object {
-        const val VERSION = 2
+        const val VERSION = 3
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2
