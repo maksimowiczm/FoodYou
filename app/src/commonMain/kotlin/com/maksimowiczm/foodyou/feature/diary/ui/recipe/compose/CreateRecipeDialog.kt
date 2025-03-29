@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,19 +32,24 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults.measurementString
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults.measurementStringShort
+import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsList
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.Ingredient
+import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
@@ -53,19 +59,30 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CreateRecipeDialog(
     onClose: () -> Unit,
     onCreate: (recipeId: Long) -> Unit,
+    onIncompleteProductClick: (productId: Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreateRecipeViewModel = koinViewModel()
 ) {
     val ingredients by viewModel.ingredients.collectAsStateWithLifecycle()
 
-    CreateRecipeDialog(
-        ingredients = ingredients,
-        onClose = onClose,
-        onIngredientAdd = {
+    when (val ingredients = ingredients) {
+        null -> {
             // TODO
-        },
-        modifier = modifier
-    )
+            return
+        }
+
+        else -> {
+            CreateRecipeDialog(
+                ingredients = ingredients,
+                onClose = onClose,
+                onIngredientAdd = {
+                    // TODO
+                },
+                onIncompleteProductClick = onIncompleteProductClick,
+                modifier = modifier
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,6 +91,7 @@ private fun CreateRecipeDialog(
     ingredients: List<Ingredient>,
     onClose: () -> Unit,
     onIngredientAdd: () -> Unit,
+    onIncompleteProductClick: (productId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -172,6 +190,18 @@ private fun CreateRecipeDialog(
             item {
                 Spacer(Modifier.height(8.dp))
             }
+
+            item {
+                SummarySection(
+                    ingredients = ingredients,
+                    onIncompleteProductClick = onIncompleteProductClick,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+
+            item {
+                Spacer(Modifier.height(8.dp))
+            }
         }
     }
 }
@@ -243,6 +273,102 @@ private fun LazyListScope.ingredientsSection(
                 // TODO
             }
         )
+    }
+}
+
+@Composable
+private fun SummarySection(
+    ingredients: List<Ingredient>,
+    onIncompleteProductClick: (productId: Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val nutrients = remember(ingredients) {
+        ingredients
+            .map { it.product.nutrients }
+            .reduce { acc, nutrients -> acc + nutrients }
+    }
+    val weight = remember(ingredients) {
+        ingredients
+            .map { it.weightMeasurement.getWeight(it.product) }
+            .reduce { acc, weight -> acc + weight }
+    }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = stringResource(
+                Res.string.in_x_weight_unit,
+                weight.formatClipZeros(),
+                stringResource(Res.string.unit_gram_short)
+            ),
+            style = MaterialTheme.typography.labelLarge
+        )
+
+        CaloriesProgressIndicator(
+            proteins = nutrients.proteins,
+            carbohydrates = nutrients.carbohydrates,
+            fats = nutrients.fats,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(16.dp)
+        )
+
+        NutrientsList(
+            nutrients = nutrients,
+            incompleteValue = { value ->
+                {
+                    when (value.value) {
+                        null -> Text(
+                            text = stringResource(Res.string.not_available_short),
+                            color = MaterialTheme.colorScheme.outline
+                        )
+
+                        else -> Text(
+                            text =
+                            "* " + value.value.formatClipZeros() +
+                                stringResource(Res.string.unit_gram_short),
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    }
+                }
+            }
+        )
+
+        val incompleteProducts = ingredients.filter { it.product.nutrients.isComplete.not() }
+
+        if (incompleteProducts.isNotEmpty()) {
+            Text(
+                text = "* " + stringResource(Res.string.description_incomplete_nutrition_data),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.outline
+            )
+
+            Text(
+                text = stringResource(Res.string.headline_incomplete_products),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.outline
+            )
+
+            incompleteProducts.forEach { ingredient ->
+                Text(
+                    text = ingredient.product.name,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.clickable(
+                        interactionSource = remember {
+                            MutableInteractionSource()
+                        },
+                        indication = null,
+                        onClick = {
+                            onIncompleteProductClick(ingredient.product.id.productId)
+                        }
+                    )
+                )
+            }
+        }
     }
 }
 

@@ -24,7 +24,7 @@ class CreateRecipeViewModel(private val observeIngredientsCase: ObserveIngredien
             InternalIngredient(
                 productId = FoodId.Product(3L),
                 weightMeasurement = WeightMeasurement.WeightUnit(200f)
-            ),
+            )
         )
     )
 
@@ -41,7 +41,7 @@ class CreateRecipeViewModel(private val observeIngredientsCase: ObserveIngredien
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = emptyList()
+        initialValue = null
     )
 }
 

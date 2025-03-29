@@ -58,6 +58,7 @@ fun CaloriesProgressIndicator(
 /**
  * Indicator without goal.
  */
+// Somehow padding reduces the height of the indicator. Not sure why.
 @Composable
 fun CaloriesProgressIndicator(
     proteins: Float,

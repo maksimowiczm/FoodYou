@@ -25,6 +25,19 @@ sealed interface NutrientValue {
         }
     }
 
+    operator fun plus(other: NutrientValue): NutrientValue = when (this) {
+        is Complete -> when (other) {
+            is Complete -> Complete(value + other.value)
+            is Incomplete -> Incomplete(value + (other.value ?: 0f))
+        }
+
+        is Incomplete -> when (other) {
+            is Complete -> Incomplete(other.value + (value ?: 0f))
+            is Incomplete if (value == null && other.value == null) -> Incomplete(null)
+            is Incomplete -> Incomplete((value ?: 0f) + (other.value ?: 0f))
+        }
+    }
+
     operator fun times(other: Float): NutrientValue = when (this) {
         is Complete -> Complete(value * other)
         is Incomplete -> Incomplete(value?.times(other))

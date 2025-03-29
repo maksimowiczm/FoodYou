@@ -38,6 +38,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDia
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose.CreateRecipeDialog
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -414,25 +415,33 @@ private fun AppNavHost(
         }
         crossfadeComposable<CreateRecipeDialog>(
             enterTransition = {
-                crossfadeIn() + slideInVertically(
-                    animationSpec = tween(
-                        easing = LinearOutSlowInEasing
-                    ),
-                    initialOffsetY = { it }
-                )
+                if (initialState.destination.hasRoute<EditProductDialog>()) {
+                    crossfadeIn()
+                } else {
+                    crossfadeIn() + slideInVertically(
+                        animationSpec = tween(
+                            easing = LinearOutSlowInEasing
+                        ),
+                        initialOffsetY = { it }
+                    )
+                }
             },
             exitTransition = {
-                slideOutVertically(
-                    animationSpec = tween(
-                        easing = FastOutLinearInEasing
-                    ),
-                    targetOffsetY = { it }
-                ) + scaleOut(
-                    targetScale = 0.8f,
-                    animationSpec = tween(
-                        easing = FastOutLinearInEasing
+                if (targetState.destination.hasRoute<EditProductDialog>()) {
+                    crossfadeOut()
+                } else {
+                    slideOutVertically(
+                        animationSpec = tween(
+                            easing = FastOutLinearInEasing
+                        ),
+                        targetOffsetY = { it }
+                    ) + scaleOut(
+                        targetScale = 0.8f,
+                        animationSpec = tween(
+                            easing = FastOutLinearInEasing
+                        )
                     )
-                )
+                }
             }
         ) {
             Surface(
@@ -445,6 +454,14 @@ private fun AppNavHost(
                     },
                     onCreate = {
                         // TODO
+                    },
+                    onIncompleteProductClick = {
+                        navController.navigate(
+                            route = EditProductDialog(it),
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            }
+                        )
                     }
                 )
             }
