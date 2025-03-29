@@ -262,7 +262,7 @@ object DiaryFeature : Feature {
                 onProductClick = {
                     navController.navigate(
                         route = EditProductDialog(
-                            productId = it.id
+                            productId = it.id.productId
                         ),
                         navOptions = navOptions {
                             launchSingleTop = true

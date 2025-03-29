@@ -1,41 +1,42 @@
 package com.maksimowiczm.foodyou.feature.diary.data.model
 
+import com.maksimowiczm.foodyou.feature.diary.data.Food
 import com.maksimowiczm.foodyou.feature.diary.data.model.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 import com.maksimowiczm.foodyou.feature.diary.network.model.OpenFoodFactsProduct
 
 data class Product(
-    val id: Long,
+    override val id: FoodId.Product,
 
-    val name: String,
-    val brand: String? = null,
+    override val name: String,
+    override val brand: String? = null,
     val barcode: String? = null,
 
-    val nutrients: Nutrients,
+    override val nutrients: Nutrients,
 
     /**
      * Amount of the product in the package in grams.
      */
-    val packageWeight: Float? = null,
+    override val packageWeight: Float? = null,
 
     /**
      * Unit of the product serving in grams.
      */
-    val servingWeight: Float? = null,
+    override val servingWeight: Float? = null,
 
     /**
      * Unit of the product quantity.
      */
-    val weightUnit: WeightUnit,
+    override val weightUnit: WeightUnit,
 
     /**
      * Source of the product data.
      */
     val productSource: ProductSource
-)
+) : Food
 
 fun ProductEntity.toDomain(): Product = Product(
-    id = id,
+    id = FoodId.Product(id),
     name = name,
     brand = brand,
     barcode = barcode,
