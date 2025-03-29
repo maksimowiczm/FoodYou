@@ -39,14 +39,20 @@ class ObserveMealCase(
 
                 val foodItemsFlow = measurements.zip(productFlows) { measurement, productFlow ->
                     productFlow.map { product ->
+                        val weight = measurement.measurement.getWeight(product)
+                        val calories = weight * product.nutrients.calories / 100
+                        val proteins = weight * product.nutrients.proteins / 100
+                        val carbohydrates = weight * product.nutrients.carbohydrates / 100
+                        val fats = weight * product.nutrients.fats / 100
+
                         MealFoodListItem(
                             measurementId = measurement.measurementId,
                             name = product.name,
                             brand = product.brand,
-                            calories = product.nutrients.calories.roundToInt(),
-                            proteins = product.nutrients.proteins.roundToInt(),
-                            carbohydrates = product.nutrients.carbohydrates.roundToInt(),
-                            fats = product.nutrients.fats.roundToInt(),
+                            calories = calories.roundToInt(),
+                            proteins = proteins.roundToInt(),
+                            carbohydrates = carbohydrates.roundToInt(),
+                            fats = fats.roundToInt(),
                             weightMeasurement = measurement.measurement,
                             weight = measurement.measurement.getWeight(product)
                         )

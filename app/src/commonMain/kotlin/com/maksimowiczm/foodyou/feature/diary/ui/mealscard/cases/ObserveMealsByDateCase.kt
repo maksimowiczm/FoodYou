@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.mealscard.cases
 
-import com.maksimowiczm.foodyou.ext.sumOf
 import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
@@ -58,23 +57,43 @@ class ObserveMealsByDateCase(
             )
         }
 
-        val productFlows = measurements.map { it.foodId }
+        val productFlows = measurements
+            .map { it.foodId }
             .filterIsInstance<FoodId.Product>()
             .map { it.productId }
             .map { productRepository.observeProductById(it).filterNotNull() }
 
         return combine(productFlows) { products ->
+            val calories = measurements.zip(products).map { (measurement, product) ->
+                val weight = measurement.measurement.getWeight(product)
+                product.nutrients.calories * weight / 100
+            }.sum()
+
+            val proteins = measurements.zip(products).map { (measurement, product) ->
+                val weight = measurement.measurement.getWeight(product)
+                product.nutrients.proteins * weight / 100
+            }.sum()
+
+            val carbohydrates = measurements.zip(products).map { (measurement, product) ->
+                val weight = measurement.measurement.getWeight(product)
+                product.nutrients.carbohydrates * weight / 100
+            }.sum()
+
+            val fats = measurements.zip(products).map { (measurement, product) ->
+                val weight = measurement.measurement.getWeight(product)
+                product.nutrients.fats * weight / 100
+            }.sum()
+
             Meal(
                 id = id,
                 name = name,
                 from = from,
                 to = to,
                 rank = rank,
-                calories = products.map { it.nutrients.calories }.sumOf { it }.roundToInt(),
-                proteins = products.map { it.nutrients.proteins }.sumOf { it }.roundToInt(),
-                carbohydrates = products.map { it.nutrients.carbohydrates }.sumOf { it }
-                    .roundToInt(),
-                fats = products.map { it.nutrients.fats }.sumOf { it }.roundToInt(),
+                calories = calories.roundToInt(),
+                proteins = proteins.roundToInt(),
+                carbohydrates = carbohydrates.roundToInt(),
+                fats = fats.roundToInt(),
                 isEmpty = false
             )
         }
