@@ -86,4 +86,42 @@ interface SearchDao {
         """
     )
     fun queryFood(query: String?): PagingSource<Int, SearchEntity>
+
+    @Query(
+        """
+        WITH
+        ProductsSuggestions AS (
+           SELECT *
+            FROM WeightMeasurementEntity wm
+            WHERE wm.createdAt = (
+                SELECT MAX(wm2.createdAt) 
+                FROM WeightMeasurementEntity wm2 
+                WHERE wm2.productId = wm.productId
+            )
+            GROUP BY wm.productId
+        )
+        SELECT 
+            p.id AS productId,
+            NULL AS recipeId,
+            p.name AS name,
+            p.brand AS brand,
+            p.calories AS calories,
+            p.proteins AS proteins,
+            p.carbohydrates AS carbohydrates,
+            p.fats AS fats,
+            p.packageWeight AS packageWeight,
+            p.servingWeight AS servingWeight,
+            NULL AS servings,
+            s.measurement AS measurement,
+            s.quantity AS quantity
+        FROM ProductEntity p
+        LEFT JOIN ProductsSuggestions s ON s.productId = p.id
+        WHERE :query IS NULL 
+        OR p.name LIKE '%' || :query || '%' 
+        OR p.brand LIKE '%' || :query || '%'
+        OR p.barcode == :query
+        ORDER BY p.id, s.id
+        """
+    )
+    fun queryProducts(query: String?): PagingSource<Int, SearchEntity>
 }

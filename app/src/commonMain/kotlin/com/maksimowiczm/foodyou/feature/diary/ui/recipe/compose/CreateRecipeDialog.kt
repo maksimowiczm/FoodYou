@@ -63,6 +63,7 @@ import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+@Suppress("ktlint:compose:vm-forwarding-check")
 @Composable
 fun CreateRecipeDialog(
     onClose: () -> Unit,
@@ -101,7 +102,9 @@ fun CreateRecipeDialog(
             }
         }
         composable("search") {
-            IngredientSearch()
+            IngredientSearch(
+                viewModel = viewModel
+            )
         }
     }
 }

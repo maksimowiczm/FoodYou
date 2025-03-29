@@ -63,6 +63,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDia
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.ObserveIngredientsCase
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.ObserveProductsCase
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
@@ -374,5 +375,6 @@ object DiaryFeature : Feature {
         // CreateRecipe
         viewModelOf(::CreateRecipeViewModel)
         factoryOf(::ObserveIngredientsCase)
+        factoryOf(::ObserveProductsCase)
     }
 }

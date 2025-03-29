@@ -171,6 +171,38 @@ class DiaryRepository(
         }
 
     @OptIn(ExperimentalPagingApi::class)
+    override fun queryFood(query: String?): Flow<PagingData<SearchModel>> {
+        val barcode = query?.takeIf { it.all(Char::isDigit) }
+
+        val localOnly = query == null
+        val remoteMediator: RemoteMediator<Int, SearchEntity>? = when {
+            localOnly -> null
+            barcode != null -> productRemoteMediatorFactory.createWithBarcode(barcode)
+            else -> productRemoteMediatorFactory.createWithQuery(query)
+        }
+
+        // Insert query if it's not a barcode and not empty
+        if (barcode == null && query?.isNotBlank() == true) {
+            ioScope.launch {
+                insertProductQueryWithCurrentTime(query)
+            }
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE
+            ),
+            remoteMediator = remoteMediator
+        ) {
+            searchDao.queryFood(query)
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toSearchModel()
+            }
+        }
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
     override fun queryProducts(query: String?): Flow<PagingData<SearchModel>> {
         val barcode = query?.takeIf { it.all(Char::isDigit) }
 

@@ -26,7 +26,7 @@ class ObserveAddFoodSearchListItemCase(
         query: String?,
         mealId: Long,
         date: LocalDate
-    ): Flow<PagingData<AddFoodSearchListItem>> = searchRepository.queryProducts(
+    ): Flow<PagingData<AddFoodSearchListItem>> = searchRepository.queryFood(
         query = query
     ).flatMapLatest { pagingData ->
         measurementRepository.observeMeasurements(

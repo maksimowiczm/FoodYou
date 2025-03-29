@@ -2,19 +2,40 @@ package com.maksimowiczm.foodyou.feature.diary.ui.recipe
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.ObserveIngredientsCase
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.ObserveProductsCase
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.Ingredient
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-class CreateRecipeViewModel(private val observeIngredientsCase: ObserveIngredientsCase) :
-    ViewModel() {
+class CreateRecipeViewModel(
+    private val observeIngredientsCase: ObserveIngredientsCase,
+    private val observeProductsCase: ObserveProductsCase,
+    searchRepository: SearchRepository
+) : ViewModel() {
+
+    private val searchQuery = MutableSharedFlow<String?>(replay = 1).apply { tryEmit(null) }
+
+    val recentQueries = searchRepository.observeProductQueries(20).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(30_000L),
+        initialValue = emptyList()
+    )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pages = searchQuery.flatMapLatest { query ->
+        observeProductsCase(query)
+    }.cachedIn(viewModelScope)
+
     private val _ingredients = MutableStateFlow(
         listOf(
             InternalIngredient(
