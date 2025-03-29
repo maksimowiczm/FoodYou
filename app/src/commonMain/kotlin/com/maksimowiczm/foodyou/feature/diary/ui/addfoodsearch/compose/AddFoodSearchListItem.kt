@@ -25,25 +25,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.model.AddFoodSearchListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummary
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults.measurementString
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults.measurementStringShort
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.ui.component.ToggleButtonDefaults
 import com.maksimowiczm.foodyou.ui.ext.toDp
-import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.product_package
-import foodyou.app.generated.resources.product_serving
-import foodyou.app.generated.resources.unit_gram_short
-import foodyou.app.generated.resources.unit_kcal
-import foodyou.app.generated.resources.x_times_y
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AddFoodSearchListItem.AddFoodSearchListItem(
@@ -75,12 +69,14 @@ fun AddFoodSearchListItem.AddFoodSearchListItem(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                MeasurementSummary(
-                    measurementString = measurementString,
-                    measurementStringShort = measurementStringShort,
-                    caloriesString = caloriesString,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                with(weightMeasurement) {
+                    MeasurementSummary(
+                        measurementString = measurementString(weight),
+                        measurementStringShort = measurementStringShort,
+                        caloriesString = MeasurementSummaryDefaults.caloriesString(calories),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         },
         trailingContent = {
@@ -111,40 +107,6 @@ fun AddFoodSearchListItem.AddFoodSearchListItem(
         )
     )
 }
-
-private val AddFoodSearchListItem.measurementStringShort: String
-    @Composable get() = when (val measurement = weightMeasurement) {
-        is WeightMeasurement.Package -> stringResource(
-            Res.string.x_times_y,
-            measurement.quantity.formatClipZeros(),
-            stringResource(Res.string.product_package)
-        )
-
-        is WeightMeasurement.Serving -> stringResource(
-            Res.string.x_times_y,
-            measurement.quantity.formatClipZeros(),
-            stringResource(Res.string.product_serving)
-        )
-
-        is WeightMeasurement.WeightUnit -> measurement.weight.formatClipZeros(".2f") + " " +
-            stringResource(Res.string.unit_gram_short)
-    }
-
-private val AddFoodSearchListItem.measurementString: String
-    @Composable get() {
-        val short = measurementStringShort
-
-        if (weightMeasurement is WeightMeasurement.WeightUnit) {
-            return short
-        }
-
-        val grams = weight
-
-        return "$short (${grams.formatClipZeros()} ${stringResource(Res.string.unit_gram_short)})"
-    }
-
-private val AddFoodSearchListItem.caloriesString: String
-    @Composable get() = "$calories " + stringResource(Res.string.unit_kcal)
 
 @Composable
 fun AddFoodSearchListItemSkeleton(
