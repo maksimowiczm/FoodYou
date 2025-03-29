@@ -37,7 +37,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -57,7 +56,6 @@ class DiaryRepository(
 
     private val searchDao = database.searchDao
     private val addFoodDao = database.addFoodDao()
-    private val productDao = database.productDao()
 
     override fun observeDailyGoals(): Flow<DailyGoals> {
         val nutrientGoal = combine(
@@ -171,36 +169,6 @@ class DiaryRepository(
         addFoodDao.observeLatestQueries(limit).map { list ->
             list.map { it.toDomain() }
         }
-
-    private suspend fun updateProductMeasurement(
-        measurementId: Long,
-        weightMeasurement: WeightMeasurement
-    ) {
-        val entity = addFoodDao.observeWeightMeasurement(
-            measurementId = measurementId,
-            isDeleted = false
-        ).first()
-
-        if (entity == null) {
-            Logger.w(TAG) {
-                "Measurement not found for ID $measurementId."
-            }
-            return
-        }
-
-        val quantity = when (weightMeasurement) {
-            is WeightMeasurement.WeightUnit -> weightMeasurement.weight
-            is WeightMeasurement.Package -> weightMeasurement.quantity
-            is WeightMeasurement.Serving -> weightMeasurement.quantity
-        }
-
-        val updatedEntity = entity.copy(
-            measurement = weightMeasurement.asEnum(),
-            quantity = quantity
-        )
-
-        addFoodDao.updateWeightMeasurement(updatedEntity)
-    }
 
     @OptIn(ExperimentalPagingApi::class)
     override fun queryProducts(query: String?): Flow<PagingData<SearchModel>> {

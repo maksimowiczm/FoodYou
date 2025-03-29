@@ -12,14 +12,6 @@ sealed interface WeightMeasurement {
         is Serving -> WeightMeasurementEnum.Serving
     }
 
-    companion object {
-        fun defaultForProduct(product: Product) = when {
-            product.servingWeight != null -> Serving(1f)
-            product.packageWeight != null -> Package(1f)
-            else -> WeightUnit(100f)
-        }
-    }
-
     /**
      * Helper function to get the total weight of the product based on the measurement.
      */

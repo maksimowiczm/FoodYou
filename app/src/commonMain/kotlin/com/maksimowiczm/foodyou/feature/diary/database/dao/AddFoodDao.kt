@@ -9,50 +9,12 @@ import androidx.room.Update
 import androidx.room.Upsert
 import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.QuantitySuggestionEntity
 import com.maksimowiczm.foodyou.feature.diary.database.measurement.ProductWithWeightMeasurementEntity
-import com.maksimowiczm.foodyou.feature.diary.database.measurement.WeightMeasurementEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 @Dao
 interface AddFoodDao {
-    @Query(
-        """
-        SELECT *
-        FROM WeightMeasurementEntity
-        WHERE isDeleted = :isDeleted
-        AND id = :measurementId
-        """
-    )
-    fun observeWeightMeasurement(
-        measurementId: Long,
-        isDeleted: Boolean
-    ): Flow<WeightMeasurementEntity?>
-
-    @Insert
-    suspend fun insertWeightMeasurement(weightMeasurement: WeightMeasurementEntity)
-
-    @Update
-    suspend fun updateWeightMeasurement(weightMeasurement: WeightMeasurementEntity)
-
-    @Query(
-        """
-        UPDATE WeightMeasurementEntity
-        SET isDeleted = 1
-        WHERE id = :id
-        """
-    )
-    suspend fun deleteWeightMeasurement(id: Long)
-
-    @Query(
-        """
-        UPDATE WeightMeasurementEntity
-        SET isDeleted = 0
-        WHERE id = :id
-        """
-    )
-    suspend fun restoreWeightMeasurement(id: Long)
 
     @Upsert
     suspend fun upsertProductQuery(productQueryEntity: ProductQueryEntity)
@@ -82,17 +44,6 @@ interface AddFoodDao {
         mealId: Long?,
         epochDay: Int
     ): Flow<List<ProductWithWeightMeasurementEntity>>
-
-    @Query(
-        """
-        SELECT measurement, quantity
-        FROM WeightMeasurementEntity
-        WHERE productId = :productId
-        GROUP BY measurement
-        ORDER BY MAX(createdAt) DESC
-        """
-    )
-    fun observeQuantitySuggestionsByProductId(productId: Long): Flow<List<QuantitySuggestionEntity>>
 
     @Query(
         """
@@ -141,17 +92,4 @@ interface AddFoodDao {
 
     @Delete
     suspend fun deleteMeal(meal: MealEntity)
-
-    @Transaction
-    @Query(
-        """
-        SELECT wm.*
-        FROM ProductEntity p 
-        LEFT JOIN WeightMeasurementEntity wm ON p.id = wm.productId
-        WHERE wm.id = :measurementId
-        """
-    )
-    fun observeProductByMeasurementId(
-        measurementId: Long
-    ): Flow<ProductWithWeightMeasurementEntity?>
 }
