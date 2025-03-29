@@ -28,25 +28,13 @@ class ObserveProductCase(
             measurementsRepository
                 .observeMeasurementSuggestionByFood(FoodId.Product(productId))
                 .map { suggestions ->
-                    val packageSuggestion = suggestions.singleOrNull {
-                        it is WeightMeasurement.Package
-                    } as? WeightMeasurement.Package
-
-                    val servingSuggestion = suggestions.singleOrNull {
-                        it is WeightMeasurement.Serving
-                    } as? WeightMeasurement.Serving
-
-                    val weightSuggestion = suggestions.singleOrNull {
-                        it is WeightMeasurement.WeightUnit
-                    } as? WeightMeasurement.WeightUnit ?: WeightMeasurement.WeightUnit(100f)
-
                     Product(
                         id = product.id,
                         name = product.name,
                         nutrients = product.nutrients,
-                        packageSuggestion = packageSuggestion,
-                        servingSuggestion = servingSuggestion,
-                        weightSuggestions = weightSuggestion,
+                        packageSuggestion = suggestions.packageSuggestion,
+                        servingSuggestion = suggestions.servingSuggestion,
+                        weightSuggestions = suggestions.weightSuggestion,
                         packageWeight = product.packageWeight,
                         servingWeight = product.servingWeight,
                         highlight = null
@@ -83,21 +71,9 @@ class ObserveProductCase(
                         return@combine null
                     }
 
-                    val packageSuggestion = packageSuggestion
-                        ?: suggestions.singleOrNull {
-                            it is WeightMeasurement.Package
-                        } as? WeightMeasurement.Package
-
-                    val servingSuggestion = servingSuggestion
-                        ?: suggestions.singleOrNull {
-                            it is WeightMeasurement.Serving
-                        } as? WeightMeasurement.Serving
-
-                    val weightSuggestion = weightSuggestion
-                        ?: suggestions.singleOrNull {
-                            it is WeightMeasurement.WeightUnit
-                        } as? WeightMeasurement.WeightUnit
-                        ?: WeightMeasurement.WeightUnit(100f)
+                    val packageSuggestion = packageSuggestion ?: suggestions.packageSuggestion
+                    val servingSuggestion = servingSuggestion ?: suggestions.servingSuggestion
+                    val weightSuggestion = weightSuggestion ?: suggestions.weightSuggestion
 
                     Product(
                         id = product.id,

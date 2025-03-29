@@ -240,7 +240,7 @@ private fun CaloriesScreen(
                                     text = product.name,
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.outline,
-                                    textAlign = TextAlign.Companion.Center,
+                                    textAlign = TextAlign.Center,
                                     modifier = Modifier.clickable(
                                         interactionSource = remember {
                                             MutableInteractionSource()

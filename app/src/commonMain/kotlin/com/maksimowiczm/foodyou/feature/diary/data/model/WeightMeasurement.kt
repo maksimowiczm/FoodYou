@@ -15,10 +15,12 @@ sealed interface WeightMeasurement {
     /**
      * Helper function to get the total weight of the product based on the measurement.
      */
-    fun getWeight(product: Product): Float = when (this) {
+    fun getWeight(product: Product): Float = getWeight(product.packageWeight, product.servingWeight)
+
+    fun getWeight(packageWeight: Float?, servingWeight: Float?): Float = when (this) {
         is WeightUnit -> weight
-        is Package -> product.packageWeight!! * quantity
-        is Serving -> product.servingWeight!! * quantity
+        is Package -> packageWeight!! * quantity
+        is Serving -> servingWeight!! * quantity
     }
 }
 

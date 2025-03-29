@@ -17,8 +17,8 @@ class DeleteProductCase(
     suspend operator fun invoke(measurementId: MeasurementId) {
         measurementId as MeasurementId.Product
 
-        val productId = measurementRepository.observeMeasurementById(measurementId)
-            .first()
+        val productId = measurementRepository
+            .observeMeasurementById(measurementId).first()
             ?.foodId as? FoodId.Product
 
         if (productId?.productId != null) {

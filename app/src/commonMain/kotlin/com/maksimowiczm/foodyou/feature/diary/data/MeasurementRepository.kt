@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.diary.data
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
+import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementSuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
@@ -25,5 +26,5 @@ interface MeasurementRepository {
 
     fun observeMeasurementById(measurementId: MeasurementId): Flow<FoodMeasurement?>
 
-    fun observeMeasurementSuggestionByFood(foodId: FoodId): Flow<List<WeightMeasurement>>
+    fun observeMeasurementSuggestionByFood(foodId: FoodId): Flow<MeasurementSuggestion>
 }

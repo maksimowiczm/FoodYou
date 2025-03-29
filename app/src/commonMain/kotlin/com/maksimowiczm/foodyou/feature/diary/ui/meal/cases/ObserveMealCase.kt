@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.meal.cases
 
+import com.maksimowiczm.foodyou.ext.combine
 import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
@@ -10,7 +11,6 @@ import com.maksimowiczm.foodyou.feature.system.data.StringFormatRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -31,13 +31,25 @@ class ObserveMealCase(
             }
 
             measurementRepository.observeMeasurements(mealId, date).flatMapLatest { measurements ->
+                if (measurements.isEmpty()) {
+                    return@flatMapLatest flowOf(
+                        Meal.empty(
+                            id = meal.id,
+                            name = meal.name,
+                            date = stringFormatRepository.formatDate(date),
+                            from = stringFormatRepository.formatTime(meal.from),
+                            to = stringFormatRepository.formatTime(meal.to),
+                            isAllDay = meal.isAllDay
+                        )
+                    )
+                }
+
                 val productFlows = measurements
-                    .map { it.foodId }
-                    .filterIsInstance<FoodId.Product>()
+                    .mapNotNull { it.foodId as? FoodId.Product }
                     .map { it.productId }
                     .map { productRepository.observeProductById(it).filterNotNull() }
 
-                val foodItemsFlow = measurements.zip(productFlows) { measurement, productFlow ->
+                measurements.zip(productFlows) { measurement, productFlow ->
                     productFlow.map { product ->
                         val weight = measurement.measurement.getWeight(product)
                         val calories = weight * product.nutrients.calories / 100
@@ -57,9 +69,7 @@ class ObserveMealCase(
                             weight = measurement.measurement.getWeight(product)
                         )
                     }
-                }
-
-                combine(foodItemsFlow) { foodItems ->
+                }.combine { foodItems ->
                     Meal(
                         id = meal.id,
                         name = meal.name,

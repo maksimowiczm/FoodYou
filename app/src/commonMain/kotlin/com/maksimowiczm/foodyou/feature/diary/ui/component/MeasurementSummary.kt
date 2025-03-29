@@ -53,9 +53,8 @@ fun MeasurementSummary(
 
         if (constraints.maxWidth > measurementWidth + caloriesWidth) {
             val measurementPlaceable =
-                measurement.first().measure(Constraints.Companion.fixedWidth(measurementWidth))
-            val caloriesPlaceable =
-                calories.first().measure(Constraints.Companion.fixedWidth(caloriesWidth))
+                measurement.first().measure(Constraints.fixedWidth(measurementWidth))
+            val caloriesPlaceable = calories.first().measure(Constraints.fixedWidth(caloriesWidth))
 
             val height = max(measurementPlaceable.height, caloriesPlaceable.height)
 
@@ -68,10 +67,8 @@ fun MeasurementSummary(
             }
         } else if (constraints.maxWidth > measurementShortWidth + caloriesWidth) {
             val measurementShortPlaceable =
-                measurementShort.first()
-                    .measure(Constraints.Companion.fixedWidth(measurementShortWidth))
-            val caloriesPlaceable =
-                calories.first().measure(Constraints.Companion.fixedWidth(caloriesWidth))
+                measurementShort.first().measure(Constraints.fixedWidth(measurementShortWidth))
+            val caloriesPlaceable = calories.first().measure(Constraints.fixedWidth(caloriesWidth))
 
             val height = max(measurementShortPlaceable.height, caloriesPlaceable.height)
 
@@ -84,7 +81,7 @@ fun MeasurementSummary(
             }
         } else if (constraints.maxWidth > measurementWidth) {
             val measurementPlaceable =
-                measurement.first().measure(Constraints.Companion.fixedWidth(measurementWidth))
+                measurement.first().measure(Constraints.fixedWidth(measurementWidth))
 
             val height = measurementPlaceable.height
 
@@ -93,8 +90,7 @@ fun MeasurementSummary(
             }
         } else {
             val measurementShortPlaceable =
-                measurementShort.first()
-                    .measure(Constraints.Companion.fixedWidth(measurementShortWidth))
+                measurementShort.first().measure(Constraints.fixedWidth(measurementShortWidth))
 
             val height = measurementShortPlaceable.height
 

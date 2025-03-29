@@ -4,6 +4,7 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
+import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementSuggestion as IMeasurementSuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.diary.data.model.toWeightMeasurement
@@ -92,6 +93,12 @@ class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository
         id: MeasurementId,
         weightMeasurement: WeightMeasurement
     ) {
+        val quantity = when (weightMeasurement) {
+            is WeightMeasurement.WeightUnit -> weightMeasurement.weight
+            is WeightMeasurement.Package -> weightMeasurement.quantity
+            is WeightMeasurement.Serving -> weightMeasurement.quantity
+        }
+
         when (id) {
             is MeasurementId.Product -> {
                 val measurementId = id.measurementId
@@ -102,14 +109,8 @@ class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository
                 )
 
                 if (entity == null) {
-                    Logger.Companion.w(TAG) { "Measurement not found for ID $measurementId." }
+                    Logger.w(TAG) { "Measurement not found for ID $measurementId." }
                     return
-                }
-
-                val quantity = when (weightMeasurement) {
-                    is WeightMeasurement.WeightUnit -> weightMeasurement.weight
-                    is WeightMeasurement.Package -> weightMeasurement.quantity
-                    is WeightMeasurement.Serving -> weightMeasurement.quantity
                 }
 
                 val updatedEntity = entity.copy(
@@ -129,14 +130,8 @@ class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository
                 )
 
                 if (entity == null) {
-                    Logger.Companion.w(TAG) { "Measurement not found for ID $measurementId." }
+                    Logger.w(TAG) { "Measurement not found for ID $measurementId." }
                     return
-                }
-
-                val quantity = when (weightMeasurement) {
-                    is WeightMeasurement.WeightUnit -> weightMeasurement.weight
-                    is WeightMeasurement.Package -> weightMeasurement.quantity
-                    is WeightMeasurement.Serving -> weightMeasurement.quantity
                 }
 
                 val updatedEntity = entity.copy(
@@ -177,16 +172,12 @@ class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository
             }
         }
 
-    override fun observeMeasurementSuggestionByFood(foodId: FoodId): Flow<List<WeightMeasurement>> {
+    override fun observeMeasurementSuggestionByFood(foodId: FoodId): Flow<IMeasurementSuggestion> {
         when (foodId) {
             is FoodId.Product -> {
                 return measurementDao.observeProductMeasurementsByProductId(
                     id = foodId.productId
-                ).map { list ->
-                    list.map { entity ->
-                        entity.toWeightMeasurement()
-                    }
-                }
+                ).map { it.toDomain() }
             }
 
             is FoodId.Recipe -> TODO()
@@ -224,8 +215,18 @@ private fun RecipeMeasurementEntity.toFoodMeasurement(): FoodMeasurement = FoodM
     measurementId = MeasurementId.Recipe(id)
 )
 
-private fun MeasurementSuggestion.toWeightMeasurement() = when (measurement) {
-    WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
-    WeightMeasurementEnum.Package -> WeightMeasurement.Package(quantity)
-    WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
+private fun List<MeasurementSuggestion>.toDomain() = object : IMeasurementSuggestion {
+    override val packageSuggestion: WeightMeasurement.Package?
+        get() = singleOrNull { it.measurement == WeightMeasurementEnum.Package }
+            ?.let { WeightMeasurement.Package(it.quantity) }
+
+    override val servingSuggestion: WeightMeasurement.Serving?
+        get() = singleOrNull { it.measurement == WeightMeasurementEnum.Serving }
+            ?.let { WeightMeasurement.Serving(it.quantity) }
+
+    override val weightSuggestion: WeightMeasurement.WeightUnit
+        get() = singleOrNull { it.measurement == WeightMeasurementEnum.WeightUnit }
+            ?.let { WeightMeasurement.WeightUnit(it.quantity) } ?: WeightMeasurement.WeightUnit(
+            100f
+        )
 }
