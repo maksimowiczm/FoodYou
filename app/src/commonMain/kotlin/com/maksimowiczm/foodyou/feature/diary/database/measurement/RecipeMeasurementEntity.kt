@@ -1,10 +1,11 @@
-package com.maksimowiczm.foodyou.feature.diary.database.entity
+package com.maksimowiczm.foodyou.feature.diary.database.measurement
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
+import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeEntity
 
 @Entity(
     foreignKeys = [

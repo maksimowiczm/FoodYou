@@ -18,8 +18,8 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeIngredientEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeMeasurementEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.measurement.RecipeMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.measurement.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.view.RecipeNutritionView
 
 @Database(

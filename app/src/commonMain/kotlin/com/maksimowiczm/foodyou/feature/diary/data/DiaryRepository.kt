@@ -27,8 +27,8 @@ import com.maksimowiczm.foodyou.feature.diary.data.preferences.DiaryPreferences
 import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.measurement.ProductWithWeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.measurement.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.search.SearchEntity
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe

@@ -9,9 +9,9 @@ import androidx.room.Update
 import androidx.room.Upsert
 import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.QuantitySuggestionEntity
-import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.measurement.ProductWithWeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.measurement.WeightMeasurementEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
