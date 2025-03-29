@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -37,6 +38,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -69,6 +72,7 @@ fun CreateRecipeDialog(
     navController: NavHostController = rememberNavController()
 ) {
     val ingredients by viewModel.ingredients.collectAsStateWithLifecycle()
+    val formState = rememberCreateRecipeDialogState()
 
     NavHost(
         navController = navController,
@@ -83,6 +87,7 @@ fun CreateRecipeDialog(
 
                 else -> {
                     CreateRecipeDialog(
+                        state = formState,
                         ingredients = ingredients,
                         onClose = onClose,
                         onIngredientAdd = {
@@ -103,6 +108,7 @@ fun CreateRecipeDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateRecipeDialog(
+    state: CreateRecipeDialogState,
     ingredients: List<Ingredient>,
     onClose: () -> Unit,
     onIngredientAdd: () -> Unit,
@@ -159,6 +165,7 @@ private fun CreateRecipeDialog(
 
             item {
                 GeneralSection(
+                    state = state,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
@@ -169,7 +176,7 @@ private fun CreateRecipeDialog(
 
             item {
                 Text(
-                    text = "Ingredients",
+                    text = stringResource(Res.string.headline_ingredients),
                     modifier = Modifier.padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary
@@ -222,27 +229,34 @@ private fun CreateRecipeDialog(
 }
 
 @Composable
-private fun GeneralSection(modifier: Modifier = Modifier) {
+private fun GeneralSection(state: CreateRecipeDialogState, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         TextField(
-            value = "",
-            onValueChange = {},
+            state = state.nameTextFieldState.textFieldState,
+            isError = state.nameTextFieldState.error != null,
             label = { Text(stringResource(Res.string.product_name)) },
             supportingText = {
                 Text("* " + stringResource(Res.string.neutral_required))
-            }
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            )
         )
 
         TextField(
-            value = "",
-            onValueChange = {},
+            state = state.servingsTextFieldState.textFieldState,
+            isError = state.servingsTextFieldState.error != null,
             label = { Text(stringResource(Res.string.recipe_servings)) },
             supportingText = {
                 Text(stringResource(Res.string.description_recipe_servings))
-            }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            )
         )
     }
 }
@@ -346,8 +360,8 @@ private fun SummarySection(
 
                         else -> Text(
                             text =
-                                "* " + value.value.formatClipZeros() +
-                                        stringResource(Res.string.unit_gram_short),
+                            "* " + value.value.formatClipZeros() +
+                                stringResource(Res.string.unit_gram_short),
                             color = MaterialTheme.colorScheme.outline
                         )
                     }
