@@ -40,6 +40,10 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults
@@ -61,26 +65,37 @@ fun CreateRecipeDialog(
     onCreate: (recipeId: Long) -> Unit,
     onIncompleteProductClick: (productId: Long) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CreateRecipeViewModel = koinViewModel()
+    viewModel: CreateRecipeViewModel = koinViewModel(),
+    navController: NavHostController = rememberNavController()
 ) {
     val ingredients by viewModel.ingredients.collectAsStateWithLifecycle()
 
-    when (val ingredients = ingredients) {
-        null -> {
-            // TODO
-            return
-        }
-
-        else -> {
-            CreateRecipeDialog(
-                ingredients = ingredients,
-                onClose = onClose,
-                onIngredientAdd = {
+    NavHost(
+        navController = navController,
+        startDestination = "create_recipe"
+    ) {
+        composable("create_recipe") {
+            when (val ingredients = ingredients) {
+                null -> {
                     // TODO
-                },
-                onIncompleteProductClick = onIncompleteProductClick,
-                modifier = modifier
-            )
+                    return@composable
+                }
+
+                else -> {
+                    CreateRecipeDialog(
+                        ingredients = ingredients,
+                        onClose = onClose,
+                        onIngredientAdd = {
+                            navController.navigate("search")
+                        },
+                        onIncompleteProductClick = onIncompleteProductClick,
+                        modifier = modifier
+                    )
+                }
+            }
+        }
+        composable("search") {
+            IngredientSearch()
         }
     }
 }
@@ -166,7 +181,7 @@ private fun CreateRecipeDialog(
             }
 
             ingredientsSection(
-                onAddIngredient = {},
+                onAddIngredient = onIngredientAdd,
                 ingredients = ingredients,
                 onIngredientClick = {
                     // TODO
@@ -250,7 +265,7 @@ private fun LazyListScope.ingredientsSection(
                 modifier = Modifier.clearAndSetSemantics { },
                 colors = IconButtonDefaults.filledIconButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(
@@ -261,7 +276,11 @@ private fun LazyListScope.ingredientsSection(
 
             Spacer(Modifier.width(8.dp))
 
-            Text("Add ingredient")
+            Text(
+                text = stringResource(Res.string.action_add_ingredient),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 
