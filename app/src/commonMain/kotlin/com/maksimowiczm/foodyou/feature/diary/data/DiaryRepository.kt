@@ -16,7 +16,6 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
-import com.maksimowiczm.foodyou.feature.diary.data.model.QuantitySuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.SearchModel
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
@@ -38,7 +37,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -54,7 +52,6 @@ class DiaryRepository(
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : MealRepository,
     GoalsRepository,
-    MeasurementRepository,
     DiaryDayRepository,
     SearchRepository {
 
@@ -170,120 +167,10 @@ class DiaryRepository(
         addFoodDao.updateMealsRanks(map)
     }
 
-    override fun observeMeasurementSuggestionByProductId(productId: Long) = combine(
-        productDao.observeProductById(productId),
-        addFoodDao.observeQuantitySuggestionsByProductId(productId)
-    ) { product, suggestionList ->
-        if (product == null) {
-            Logger.w(TAG) {
-                "Product not found for ID $productId. Skipping quantity suggestion."
-            }
-            return@combine null
-        }
-
-        val suggestions = suggestionList
-            .associate { it.measurement to it.quantity }
-            .toMutableMap()
-
-        val default = QuantitySuggestion.defaultSuggestion
-        WeightMeasurementEnum.entries.forEach {
-            if (!suggestions.containsKey(it)) {
-                suggestions[it] = default[it] ?: error("Default suggestion not found for $it")
-            }
-        }
-
-        suggestions.mapNotNull {
-            when (it.key) {
-                WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(it.value)
-                WeightMeasurementEnum.Package if (product.packageWeight != null) ->
-                    WeightMeasurement.Package(it.value)
-
-                WeightMeasurementEnum.Serving if (product.servingWeight != null) ->
-                    WeightMeasurement.Serving(it.value)
-
-                else -> null
-            }
-        }
-    }.filterNotNull()
-
     override fun observeProductQueries(limit: Int): Flow<List<ProductQuery>> =
         addFoodDao.observeLatestQueries(limit).map { list ->
             list.map { it.toDomain() }
         }
-
-    override suspend fun addMeasurement(
-        date: LocalDate,
-        mealId: Long,
-        productId: Long,
-        weightMeasurement: WeightMeasurement
-    ) {
-        val quantity = when (weightMeasurement) {
-            is WeightMeasurement.WeightUnit -> weightMeasurement.weight
-            is WeightMeasurement.Package -> weightMeasurement.quantity
-            is WeightMeasurement.Serving -> weightMeasurement.quantity
-        }
-
-        val epochSeconds = Clock.System.now().epochSeconds
-
-        val entity = WeightMeasurementEntity(
-            mealId = mealId,
-            diaryEpochDay = date.toEpochDays(),
-            productId = productId,
-            measurement = weightMeasurement.asEnum(),
-            quantity = quantity,
-            createdAt = epochSeconds
-        )
-
-        return addFoodDao.insertWeightMeasurement(entity)
-    }
-
-    override suspend fun removeMeasurement(id: MeasurementId) {
-        when (id) {
-            is MeasurementId.Product -> {
-                val entity = addFoodDao.observeWeightMeasurement(
-                    measurementId = id.measurementId,
-                    isDeleted = false
-                ).first()
-
-                if (entity != null) {
-                    addFoodDao.deleteWeightMeasurement(entity.id)
-                }
-            }
-
-            is MeasurementId.Recipe -> TODO()
-        }
-    }
-
-    override suspend fun restoreMeasurement(id: MeasurementId) {
-        when (id) {
-            is MeasurementId.Product -> {
-                val entity = addFoodDao.observeWeightMeasurement(
-                    measurementId = id.measurementId,
-                    isDeleted = true
-                ).first()
-
-                if (entity != null) {
-                    addFoodDao.restoreWeightMeasurement(entity.id)
-                }
-            }
-
-            is MeasurementId.Recipe -> TODO()
-        }
-    }
-
-    override suspend fun updateMeasurement(
-        id: MeasurementId,
-        weightMeasurement: WeightMeasurement
-    ) {
-        when (id) {
-            is MeasurementId.Product -> updateProductMeasurement(
-                id.measurementId,
-                weightMeasurement
-            )
-
-            is MeasurementId.Recipe -> TODO()
-        }
-    }
 
     private suspend fun updateProductMeasurement(
         measurementId: Long,
@@ -314,29 +201,6 @@ class DiaryRepository(
 
         addFoodDao.updateWeightMeasurement(updatedEntity)
     }
-
-    override fun observeMeasurements(
-        mealId: Long?,
-        date: LocalDate
-    ): Flow<List<DiaryMeasuredProduct>> {
-        val epochDay = date.toEpochDays()
-
-        return addFoodDao.observeMeasuredProducts(
-            mealId = mealId,
-            epochDay = epochDay
-        ).map { list ->
-            list.map { it.toMeasurement() }
-        }
-    }
-
-    override fun observeMeasurementById(measurementId: MeasurementId): Flow<DiaryMeasuredProduct?> =
-        when (measurementId) {
-            is MeasurementId.Product -> addFoodDao.observeProductByMeasurementId(
-                measurementId = measurementId.measurementId
-            ).map { it?.toMeasurement() }
-
-            is MeasurementId.Recipe -> TODO()
-        }
 
     @OptIn(ExperimentalPagingApi::class)
     override fun queryProducts(query: String?): Flow<PagingData<SearchModel>> {
