@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.createrecipe.compose
+package com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,24 +36,39 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.diary.ui.createrecipe.CreateRecipeViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.createrecipe.model.Ingredient
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.Ingredient
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateRecipeDialog(
     onClose: () -> Unit,
-    onAddIngredient: () -> Unit,
-    onProductClick: (productId: Long) -> Unit,
-    onProductEdit: (productId: Long) -> Unit,
+    onCreate: (recipeId: Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreateRecipeViewModel = koinViewModel()
 ) {
     val ingredients by viewModel.ingredients.collectAsStateWithLifecycle()
 
+    CreateRecipeDialog(
+        ingredients = ingredients,
+        onClose = onClose,
+        onIngredientAdd = {
+            // TODO
+        },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CreateRecipeDialog(
+    ingredients: List<Ingredient>,
+    onClose: () -> Unit,
+    onIngredientAdd: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val topBar = @Composable {
         TopAppBar(
@@ -126,7 +141,7 @@ fun CreateRecipeDialog(
             }
 
             ingredientsSection(
-                onAddIngredient = onAddIngredient,
+                onAddIngredient = {},
                 ingredients = ingredients,
                 onIngredientClick = {
                     // TODO

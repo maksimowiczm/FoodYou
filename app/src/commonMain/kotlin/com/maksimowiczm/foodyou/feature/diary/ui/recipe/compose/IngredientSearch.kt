@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.createrecipe.compose
+package com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose
 
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable

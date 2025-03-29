@@ -32,7 +32,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchView
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearch
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.rememberAddFoodSearchState
-import com.maksimowiczm.foodyou.feature.diary.ui.createrecipe.compose.CreateRecipeDialog
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose.CreateRecipeDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.compose.DiaryDayMealScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
@@ -440,14 +440,10 @@ private fun AppNavHost(
                 shape = MaterialTheme.shapes.medium
             ) {
                 CreateRecipeDialog(
-                    onClose = { navController.popBackStack<CreateRecipeDialog>(inclusive = true) },
-                    onAddIngredient = {
-                        // TODO
+                    onClose = {
+                        navController.popBackStack<CreateRecipeDialog>(inclusive = true)
                     },
-                    onProductClick = {
-                        // TODO
-                    },
-                    onProductEdit = { id ->
+                    onCreate = {
                         // TODO
                     }
                 )
