@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.data.model
 
 data class SearchModel(
-    val uniqueId: String,
     val foodId: FoodId,
     val name: String,
     val brand: String?,
@@ -11,5 +10,5 @@ data class SearchModel(
     val fats: Float,
     val packageWeight: Float?,
     val servingWeight: Float?,
-    val weightMeasurement: WeightMeasurement
+    val measurement: WeightMeasurement
 )

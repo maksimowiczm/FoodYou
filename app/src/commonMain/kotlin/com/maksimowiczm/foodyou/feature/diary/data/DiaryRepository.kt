@@ -12,7 +12,6 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiarySearchModel
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
@@ -30,7 +29,6 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
-import com.maksimowiczm.foodyou.feature.diary.database.search.DiarySearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.search.SearchEntity
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
@@ -341,42 +339,6 @@ class DiaryRepository(
         }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun queryProducts(
-        mealId: Long,
-        date: LocalDate,
-        query: String?
-    ): Flow<PagingData<DiarySearchModel>> {
-        val barcode = query?.takeIf { it.all(Char::isDigit) }
-
-        val localOnly = query == null
-        val remoteMediator: RemoteMediator<Int, DiarySearchEntity>? = when {
-            localOnly -> null
-            barcode != null -> productRemoteMediatorFactory.createWithBarcode(barcode)
-            else -> productRemoteMediatorFactory.createWithQuery(query)
-        }
-
-        // Insert query if it's not a barcode and not empty
-        if (barcode == null && query?.isNotBlank() == true) {
-            ioScope.launch {
-                insertProductQueryWithCurrentTime(query)
-            }
-        }
-
-        return Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE
-            ),
-            remoteMediator = remoteMediator
-        ) {
-            searchDao.queryDiary(query, mealId, date.toEpochDays())
-        }.flow.map { pagingData ->
-            pagingData.map {
-                it.toDiarySearchModel()
-            }
-        }
-    }
-
-    @OptIn(ExperimentalPagingApi::class)
     override fun queryProducts(query: String?): Flow<PagingData<SearchModel>> {
         val barcode = query?.takeIf { it.all(Char::isDigit) }
 
@@ -438,82 +400,9 @@ private fun WeightMeasurementEntity.toDomain() = when (this.measurement) {
     WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
 }
 
-private fun DiarySearchEntity.toDiarySearchModel(): DiarySearchModel {
-    val weightMeasurement = when {
-        measurement == null || quantity == null -> {
-            when {
-                servingWeight != null -> WeightMeasurement.Serving(1f)
-                packageWeight != null -> WeightMeasurement.Package(1f)
-                else -> WeightMeasurement.WeightUnit(100f)
-            }
-        }
-
-        else -> when (measurement) {
-            WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
-            WeightMeasurementEnum.Package -> {
-                assert(packageWeight != null) {
-                    "Package weight should not be null for package measurement"
-                }
-                WeightMeasurement.Package(quantity)
-            }
-
-            WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
-        }
-    }
-
-    return if (productId != null) {
-        if (weightMeasurement is WeightMeasurement.Serving) {
-            assert(servingWeight != null) {
-                "Serving weight should not be null for serving measurement"
-            }
-        }
-
-        DiarySearchModel(
-            uniqueId = "p_${productId}_$measurementId",
-            foodId = FoodId.Product(productId),
-            measurementId = measurementId?.let { MeasurementId.Product(measurementId) },
-            name = name,
-            brand = brand,
-            calories = calories,
-            proteins = proteins,
-            carbohydrates = carbohydrates,
-            fats = fats,
-            packageWeight = packageWeight,
-            servingWeight = servingWeight,
-            weightMeasurement = weightMeasurement
-        )
-    } else if (recipeId != null) {
-        if (packageWeight == null) {
-            error("Package weight should not be null for recipe measurement")
-        }
-        if (servings == null) {
-            error("Servings should not be null for recipe measurement")
-        }
-
-        val servingWeight = packageWeight / servings
-
-        DiarySearchModel(
-            uniqueId = "r_${recipeId}_$measurementId",
-            foodId = FoodId.Recipe(recipeId),
-            measurementId = measurementId?.let { MeasurementId.Recipe(measurementId) },
-            name = name,
-            brand = brand,
-            calories = calories,
-            proteins = proteins,
-            carbohydrates = carbohydrates,
-            fats = fats,
-            packageWeight = packageWeight,
-            servingWeight = servingWeight,
-            weightMeasurement = weightMeasurement
-        )
-    } else {
-        error("Database corruption for search entity: $this")
-    }
-}
-
 private fun SearchEntity.toSearchModel(): SearchModel {
     val weightMeasurement = when {
-        measurement == null || quantity == null -> {
+        this@toSearchModel.measurement == null || quantity == null -> {
             when {
                 servingWeight != null -> WeightMeasurement.Serving(1f)
                 packageWeight != null -> WeightMeasurement.Package(1f)
@@ -521,7 +410,7 @@ private fun SearchEntity.toSearchModel(): SearchModel {
             }
         }
 
-        else -> when (measurement) {
+        else -> when (this@toSearchModel.measurement) {
             WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
             WeightMeasurementEnum.Package -> {
                 assert(packageWeight != null) {
@@ -542,7 +431,6 @@ private fun SearchEntity.toSearchModel(): SearchModel {
         }
 
         SearchModel(
-            uniqueId = "p_$productId",
             foodId = FoodId.Product(productId),
             name = name,
             brand = brand,
@@ -552,7 +440,7 @@ private fun SearchEntity.toSearchModel(): SearchModel {
             fats = fats,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
-            weightMeasurement = weightMeasurement
+            measurement = weightMeasurement
         )
     } else if (recipeId != null) {
         if (packageWeight == null) {
@@ -565,7 +453,6 @@ private fun SearchEntity.toSearchModel(): SearchModel {
         val servingWeight = packageWeight / servings
 
         SearchModel(
-            uniqueId = "r_$recipeId",
             foodId = FoodId.Recipe(recipeId),
             name = name,
             brand = brand,
@@ -575,7 +462,7 @@ private fun SearchEntity.toSearchModel(): SearchModel {
             fats = fats,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
-            weightMeasurement = weightMeasurement
+            measurement = weightMeasurement
         )
     } else {
         error("Database corruption for search entity: $this")
