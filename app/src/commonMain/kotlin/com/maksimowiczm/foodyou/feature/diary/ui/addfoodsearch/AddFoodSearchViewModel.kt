@@ -56,7 +56,7 @@ class AddFoodSearchViewModel(
                     measurementRepository.addMeasurement(
                         mealId = mealId,
                         date = date,
-                        productId = item.id.productId,
+                        foodId = item.id,
                         weightMeasurement = item.weightMeasurement
                     )
                 }

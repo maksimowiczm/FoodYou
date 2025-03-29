@@ -4,8 +4,8 @@ import androidx.paging.PagingData
 import androidx.paging.flatMap
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.SearchModel
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.model.AddFoodSearchListItem
@@ -38,88 +38,35 @@ class ObserveAddFoodSearchListItemCase(
             }
         }
     }
-}
 
-private fun List<DiaryMeasuredProduct>.handle(
-    searchModel: SearchModel
-): List<AddFoodSearchListItem> {
-    val mid = filter {
-        when (searchModel.foodId) {
-            is FoodId.Product -> it.product.id == searchModel.foodId.productId
-            is FoodId.Recipe -> TODO()
-        }
-    }
+    private fun List<FoodMeasurement>.handle(
+        searchModel: SearchModel
+    ): List<AddFoodSearchListItem> {
+        val mid = filter { it.foodId == searchModel.foodId }
 
-    return if (mid.isEmpty()) {
-        val listId = when (searchModel.foodId) {
-            is FoodId.Product -> "p_${searchModel.foodId.productId}"
-            is FoodId.Recipe -> "r_${searchModel.foodId.recipeId}"
-        }
-
-        val weight = when (searchModel.measurement) {
-            is WeightMeasurement.Package -> {
-                assert(searchModel.packageWeight != null) {
-                    "Package weight should not be null for package measurement"
-                }
-                searchModel.packageWeight!! * searchModel.measurement.quantity
-            }
-
-            is WeightMeasurement.Serving -> {
-                assert(searchModel.servingWeight != null) {
-                    "Serving weight should not be null for serving measurement"
-                }
-                searchModel.servingWeight!! * searchModel.measurement.quantity
-            }
-
-            is WeightMeasurement.WeightUnit -> {
-                searchModel.measurement.weight
-            }
-        }
-
-        val calories = searchModel.calories * weight / 100f
-        val proteins = searchModel.proteins * weight / 100f
-        val carbohydrates = searchModel.carbohydrates * weight / 100f
-        val fats = searchModel.fats * weight / 100f
-
-        listOf(
-            AddFoodSearchListItem(
-                id = searchModel.foodId,
-                listId = listId,
-                name = searchModel.name,
-                brand = searchModel.brand,
-                calories = calories.roundToInt(),
-                proteins = proteins.roundToInt(),
-                carbohydrates = carbohydrates.roundToInt(),
-                fats = fats.roundToInt(),
-                weightMeasurement = searchModel.measurement,
-                weight = weight,
-                measurementId = null
-            )
-        )
-    } else {
-        mid.map { m ->
+        return if (mid.isEmpty()) {
             val listId = when (searchModel.foodId) {
-                is FoodId.Product -> "p_${searchModel.foodId.productId}_${m.measurementId}"
-                is FoodId.Recipe -> "r_${searchModel.foodId.recipeId}_${m.measurementId}"
+                is FoodId.Product -> "p_${searchModel.foodId.productId}"
+                is FoodId.Recipe -> "r_${searchModel.foodId.recipeId}"
             }
 
-            val weight = when (m.measurement) {
+            val weight = when (searchModel.measurement) {
                 is WeightMeasurement.Package -> {
                     assert(searchModel.packageWeight != null) {
                         "Package weight should not be null for package measurement"
                     }
-                    searchModel.packageWeight!! * m.measurement.quantity
+                    searchModel.packageWeight!! * searchModel.measurement.quantity
                 }
 
                 is WeightMeasurement.Serving -> {
                     assert(searchModel.servingWeight != null) {
                         "Serving weight should not be null for serving measurement"
                     }
-                    searchModel.servingWeight!! * m.measurement.quantity
+                    searchModel.servingWeight!! * searchModel.measurement.quantity
                 }
 
                 is WeightMeasurement.WeightUnit -> {
-                    m.measurement.weight
+                    searchModel.measurement.weight
                 }
             }
 
@@ -128,19 +75,67 @@ private fun List<DiaryMeasuredProduct>.handle(
             val carbohydrates = searchModel.carbohydrates * weight / 100f
             val fats = searchModel.fats * weight / 100f
 
-            AddFoodSearchListItem(
-                id = searchModel.foodId,
-                listId = listId,
-                name = searchModel.name,
-                brand = searchModel.brand,
-                calories = calories.roundToInt(),
-                proteins = proteins.roundToInt(),
-                carbohydrates = carbohydrates.roundToInt(),
-                fats = fats.roundToInt(),
-                weightMeasurement = m.measurement,
-                weight = weight,
-                measurementId = m.measurementId
+            listOf(
+                AddFoodSearchListItem(
+                    id = searchModel.foodId,
+                    listId = listId,
+                    name = searchModel.name,
+                    brand = searchModel.brand,
+                    calories = calories.roundToInt(),
+                    proteins = proteins.roundToInt(),
+                    carbohydrates = carbohydrates.roundToInt(),
+                    fats = fats.roundToInt(),
+                    weightMeasurement = searchModel.measurement,
+                    weight = weight,
+                    measurementId = null
+                )
             )
+        } else {
+            mid.map { m ->
+                val listId = when (searchModel.foodId) {
+                    is FoodId.Product -> "p_${searchModel.foodId.productId}_${m.measurementId}"
+                    is FoodId.Recipe -> "r_${searchModel.foodId.recipeId}_${m.measurementId}"
+                }
+
+                val weight = when (m.measurement) {
+                    is WeightMeasurement.Package -> {
+                        assert(searchModel.packageWeight != null) {
+                            "Package weight should not be null for package measurement"
+                        }
+                        searchModel.packageWeight!! * m.measurement.quantity
+                    }
+
+                    is WeightMeasurement.Serving -> {
+                        assert(searchModel.servingWeight != null) {
+                            "Serving weight should not be null for serving measurement"
+                        }
+                        searchModel.servingWeight!! * m.measurement.quantity
+                    }
+
+                    is WeightMeasurement.WeightUnit -> {
+                        m.measurement.weight
+                    }
+                }
+
+                val calories = searchModel.calories * weight / 100f
+                val proteins = searchModel.proteins * weight / 100f
+                val carbohydrates = searchModel.carbohydrates * weight / 100f
+                val fats = searchModel.fats * weight / 100f
+
+                AddFoodSearchListItem(
+                    id = searchModel.foodId,
+                    listId = listId,
+                    name = searchModel.name,
+                    brand = searchModel.brand,
+                    calories = calories.roundToInt(),
+                    proteins = proteins.roundToInt(),
+                    carbohydrates = carbohydrates.roundToInt(),
+                    fats = fats.roundToInt(),
+                    weightMeasurement = m.measurement,
+                    weight = weight,
+                    measurementId = m.measurementId
+                )
+            }
         }
     }
 }

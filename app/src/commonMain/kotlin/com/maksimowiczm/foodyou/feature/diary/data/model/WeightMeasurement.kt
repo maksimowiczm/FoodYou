@@ -29,3 +29,9 @@ sealed interface WeightMeasurement {
         is Serving -> product.servingWeight!! * quantity
     }
 }
+
+fun WeightMeasurementEnum.toWeightMeasurement(quantity: Float): WeightMeasurement = when (this) {
+    WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
+    WeightMeasurementEnum.Package -> WeightMeasurement.Package(quantity)
+    WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
+}

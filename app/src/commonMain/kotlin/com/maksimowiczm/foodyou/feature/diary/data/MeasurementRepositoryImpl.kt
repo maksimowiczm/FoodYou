@@ -5,10 +5,13 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.toWeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
+import com.maksimowiczm.foodyou.feature.diary.database.measurement.CombinedMeasurement
 import com.maksimowiczm.foodyou.feature.diary.database.measurement.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.measurement.WeightMeasurementEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
@@ -143,9 +146,15 @@ class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository
         }
     }
 
-    override fun observeMeasurements(mealId: Long?, date: LocalDate): Flow<List<FoodMeasurement>> {
-        TODO("Not yet implemented")
-    }
+    override fun observeMeasurements(mealId: Long?, date: LocalDate): Flow<List<FoodMeasurement>> =
+        measurementDao.observeMeasurements(
+            mealId = mealId,
+            epochDay = date.toEpochDays()
+        ).map { list ->
+            list.map {
+                it.toFoodMeasurement()
+            }
+        }
 
     override fun observeMeasurementById(measurementId: MeasurementId): Flow<FoodMeasurement?> {
         TODO("Not yet implemented")
@@ -158,4 +167,18 @@ class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository
     companion object {
         private const val TAG = "MeasurementRepositoryImpl"
     }
+}
+
+private fun CombinedMeasurement.toFoodMeasurement(): FoodMeasurement {
+    val foodId = when {
+        productId != null -> FoodId.Product(productId)
+        recipeId != null -> FoodId.Recipe(recipeId)
+        else -> error("Invalid food ID for $this")
+    }
+
+    return FoodMeasurement(
+        foodId = foodId,
+        measurement = measurement.toWeightMeasurement(quantity),
+        measurementId = MeasurementId.Product(measurementId)
+    )
 }
