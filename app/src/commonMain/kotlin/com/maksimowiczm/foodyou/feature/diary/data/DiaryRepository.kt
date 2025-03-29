@@ -11,10 +11,13 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiarySearchModel
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.data.model.QuantitySuggestion
+import com.maksimowiczm.foodyou.feature.diary.data.model.SearchModel
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.diary.data.model.defaultGoals
@@ -24,6 +27,7 @@ import com.maksimowiczm.foodyou.feature.diary.data.preferences.DiaryPreferences
 import com.maksimowiczm.foodyou.feature.diary.database.dao.AddFoodDao
 import com.maksimowiczm.foodyou.feature.diary.database.dao.DiarySearchDao
 import com.maksimowiczm.foodyou.feature.diary.database.dao.ProductDao
+import com.maksimowiczm.foodyou.feature.diary.database.entity.DiarySearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
@@ -365,9 +369,13 @@ class DiaryRepository(
             diarySearchDao.queryDiary(query, mealId, date.toEpochDays())
         }.flow.map { pagingData ->
             pagingData.map {
-                it.toSearchModel()
+                it.toDiarySearchModel()
             }
         }
+    }
+
+    override fun queryProducts(query: String?): Flow<PagingData<DiarySearchModel>> {
+        TODO("Not yet implemented")
     }
 
     private suspend fun insertProductQueryWithCurrentTime(query: String) {
@@ -398,4 +406,148 @@ private fun WeightMeasurementEntity.toDomain() = when (this.measurement) {
     WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
     WeightMeasurementEnum.Package -> WeightMeasurement.Package(quantity)
     WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
+}
+
+private fun DiarySearchEntity.toDiarySearchModel(): DiarySearchModel {
+    val weightMeasurement = when {
+        measurement == null || quantity == null -> {
+            when {
+                servingWeight != null -> WeightMeasurement.Serving(1f)
+                packageWeight != null -> WeightMeasurement.Package(1f)
+                else -> WeightMeasurement.WeightUnit(100f)
+            }
+        }
+
+        else -> when (measurement) {
+            WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
+            WeightMeasurementEnum.Package -> {
+                assert(packageWeight != null) {
+                    "Package weight should not be null for package measurement"
+                }
+                WeightMeasurement.Package(quantity)
+            }
+
+            WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
+        }
+    }
+
+    return if (productId != null) {
+        if (weightMeasurement is WeightMeasurement.Serving) {
+            assert(servingWeight != null) {
+                "Serving weight should not be null for serving measurement"
+            }
+        }
+
+        DiarySearchModel(
+            uniqueId = "p_${productId}_$measurementId",
+            foodId = FoodId.Product(productId),
+            measurementId = measurementId?.let { MeasurementId.Product(measurementId) },
+            name = name,
+            brand = brand,
+            calories = calories,
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            fats = fats,
+            packageWeight = packageWeight,
+            servingWeight = servingWeight,
+            weightMeasurement = weightMeasurement
+        )
+    } else if (recipeId != null) {
+        if (packageWeight == null) {
+            error("Package weight should not be null for recipe measurement")
+        }
+        if (servings == null) {
+            error("Servings should not be null for recipe measurement")
+        }
+
+        val servingWeight = packageWeight / servings
+
+        DiarySearchModel(
+            uniqueId = "r_${recipeId}_$measurementId",
+            foodId = FoodId.Recipe(recipeId),
+            measurementId = measurementId?.let { MeasurementId.Recipe(measurementId) },
+            name = name,
+            brand = brand,
+            calories = calories,
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            fats = fats,
+            packageWeight = packageWeight,
+            servingWeight = servingWeight,
+            weightMeasurement = weightMeasurement
+        )
+    } else {
+        error("Database corruption for search entity: $this")
+    }
+}
+
+private fun DiarySearchEntity.toSearchModel(): SearchModel {
+    val weightMeasurement = when {
+        measurement == null || quantity == null -> {
+            when {
+                servingWeight != null -> WeightMeasurement.Serving(1f)
+                packageWeight != null -> WeightMeasurement.Package(1f)
+                else -> WeightMeasurement.WeightUnit(100f)
+            }
+        }
+
+        else -> when (measurement) {
+            WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
+            WeightMeasurementEnum.Package -> {
+                assert(packageWeight != null) {
+                    "Package weight should not be null for package measurement"
+                }
+                WeightMeasurement.Package(quantity)
+            }
+
+            WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
+        }
+    }
+
+    return if (productId != null) {
+        if (weightMeasurement is WeightMeasurement.Serving) {
+            assert(servingWeight != null) {
+                "Serving weight should not be null for serving measurement"
+            }
+        }
+
+        SearchModel(
+            uniqueId = "p_$productId",
+            foodId = FoodId.Product(productId),
+            name = name,
+            brand = brand,
+            calories = calories,
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            fats = fats,
+            packageWeight = packageWeight,
+            servingWeight = servingWeight,
+            weightMeasurement = weightMeasurement
+        )
+    } else if (recipeId != null) {
+        if (packageWeight == null) {
+            error("Package weight should not be null for recipe measurement")
+        }
+        if (servings == null) {
+            error("Servings should not be null for recipe measurement")
+        }
+
+        val servingWeight = packageWeight / servings
+
+        SearchModel(
+            uniqueId = "r_$recipeId",
+            foodId = FoodId.Recipe(recipeId),
+            name = name,
+            brand = brand,
+            calories = calories,
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            fats = fats,
+            packageWeight = packageWeight,
+            servingWeight = servingWeight,
+            weightMeasurement = weightMeasurement
+        )
+    } else {
+        error("Database corruption for search entity: $this")
+    }
 }

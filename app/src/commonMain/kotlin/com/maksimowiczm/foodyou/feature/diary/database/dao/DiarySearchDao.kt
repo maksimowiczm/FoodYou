@@ -7,6 +7,9 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.DiarySearchEntity
 
 @Dao
 interface DiarySearchDao {
+    /**
+     * Combine product and recipe search results into a single list
+     */
     @Query(
         """
         WITH
