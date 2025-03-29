@@ -8,23 +8,19 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.toEntity
 import com.maksimowiczm.foodyou.feature.diary.database.dao.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.feature.diary.database.dao.ProductDao
 import com.maksimowiczm.foodyou.feature.diary.database.entity.OpenFoodFactsPagingKey
-import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 
 @OptIn(ExperimentalPagingApi::class)
-internal class OpenFoodFactsRemoteMediator(
+internal class OpenFoodFactsRemoteMediator<T : Any>(
     private val isBarcode: Boolean,
     private val query: String,
     private val country: String,
     private val openFoodFactsDao: OpenFoodFactsDao,
     private val productDao: ProductDao,
     private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource
-) : ProductRemoteMediator() {
+) : ProductRemoteMediator<T>() {
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
 
-    override suspend fun load(
-        loadType: LoadType,
-        state: PagingState<Int, ProductEntity>
-    ): MediatorResult {
+    override suspend fun load(loadType: LoadType, state: PagingState<Int, T>): MediatorResult {
         try {
             val page = when (loadType) {
                 LoadType.REFRESH -> {

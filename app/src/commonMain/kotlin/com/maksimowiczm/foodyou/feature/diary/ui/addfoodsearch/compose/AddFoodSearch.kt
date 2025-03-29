@@ -21,12 +21,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -46,16 +42,13 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.SearchBarState
 import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopSearchBar
 import androidx.compose.material3.animateFloatingActionButton
-import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -83,7 +76,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
@@ -109,38 +101,6 @@ import org.koin.core.parameter.parametersOf
 enum class AddFoodSearchScreen(val route: String) {
     List("list"),
     BarcodeScanner("barcodeScanner")
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Stable
-class AddFoodSearchState(
-    val textFieldState: TextFieldState,
-    val searchBarState: SearchBarState,
-    val lazyListState: LazyListState
-)
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun rememberAddFoodSearchState(): AddFoodSearchState {
-    val textFieldState = rememberTextFieldState()
-    val searchBarState = rememberSearchBarState(
-        initialValue = SearchBarValue.Collapsed
-    )
-    val lazyListState = rememberLazyListState()
-
-    return remember(
-        textFieldState,
-        searchBarState,
-        lazyListState
-    ) {
-        Logger.d { "rememberAddFoodSearchState" }
-
-        AddFoodSearchState(
-            textFieldState = textFieldState,
-            searchBarState = searchBarState,
-            lazyListState = lazyListState
-        )
-    }
 }
 
 @Composable
@@ -495,6 +455,7 @@ private fun SearchScreen(
                                 onClick = {
                                     when (target.id) {
                                         is FoodId.Product -> onProductClick(target.id.productId)
+                                        is FoodId.Recipe -> TODO()
                                     }
                                 },
                                 onToggle = {

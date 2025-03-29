@@ -3,40 +3,32 @@ package com.maksimowiczm.foodyou.feature.diary.database.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 
 @Entity(
+    primaryKeys = ["recipeId", "productId"],
     foreignKeys = [
+        ForeignKey(
+            entity = RecipeEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["recipeId"],
+            onDelete = ForeignKey.CASCADE
+        ),
         ForeignKey(
             entity = ProductEntity::class,
             parentColumns = ["id"],
             childColumns = ["productId"],
             onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = MealEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["mealId"],
-            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [
-        Index(value = ["productId"]),
-        Index(value = ["isDeleted"]),
-        Index(value = ["mealId"])
+        Index(value = ["recipeId"]),
+        Index(value = ["productId"])
     ]
 )
-data class WeightMeasurementEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-
-    val mealId: Long,
-    val diaryEpochDay: Int,
+data class RecipeIngredientEntity(
+    val recipeId: Long,
     val productId: Long,
-
-    val createdAt: Long,
     val measurement: WeightMeasurementEnum,
-    val quantity: Float,
-    val isDeleted: Boolean = false
+    val quantity: Float
 )

@@ -295,18 +295,16 @@ private fun DiaryDayMealScreen(
                                 LocalTextStyle provides MaterialTheme.typography.bodyLarge
                             ) {
                                 if (meal.isAllDay) {
-                                    Text(
-                                        text = stringResource(Res.string.headline_all_day)
-                                    )
+                                    Text(stringResource(Res.string.headline_all_day))
                                 } else {
                                     Text(
-                                        text = meal.from
-                                    )
-                                    Text(
-                                        text = stringResource(Res.string.en_dash)
-                                    )
-                                    Text(
-                                        text = meal.to
+                                        buildString {
+                                            append(meal.from)
+                                            append(" ")
+                                            append(stringResource(Res.string.en_dash))
+                                            append(" ")
+                                            append(meal.to)
+                                        }
                                     )
                                 }
                             }

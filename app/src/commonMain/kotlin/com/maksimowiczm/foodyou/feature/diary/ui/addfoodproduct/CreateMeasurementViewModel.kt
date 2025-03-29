@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct
 
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.cases.DeleteProductCase
@@ -45,7 +46,7 @@ class CreateMeasurementViewModel(
             measurementRepository.addMeasurement(
                 date = date,
                 mealId = mealId,
-                productId = productId,
+                foodId = FoodId.Product(productId),
                 weightMeasurement = weightMeasurement
             )
             _done.value = true
