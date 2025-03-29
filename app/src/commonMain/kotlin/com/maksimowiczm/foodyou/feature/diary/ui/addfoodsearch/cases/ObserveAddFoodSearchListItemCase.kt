@@ -4,9 +4,12 @@ import androidx.paging.PagingData
 import androidx.paging.flatMap
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
+import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
+import com.maksimowiczm.foodyou.feature.diary.data.model.SearchModel
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.model.AddFoodSearchListItem
+import kotlin.collections.map
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -31,107 +34,113 @@ class ObserveAddFoodSearchListItemCase(
             date = date
         ).map {
             pagingData.flatMap { p ->
-                val mid = it.filter {
-                    when (p.foodId) {
-                        is FoodId.Product -> it.product.id == p.foodId.productId
-                        is FoodId.Recipe -> TODO()
+                it.handle(p)
+            }
+        }
+    }
+}
+
+private fun List<DiaryMeasuredProduct>.handle(
+    searchModel: SearchModel
+): List<AddFoodSearchListItem> {
+    val mid = filter {
+        when (searchModel.foodId) {
+            is FoodId.Product -> it.product.id == searchModel.foodId.productId
+            is FoodId.Recipe -> TODO()
+        }
+    }
+
+    return if (mid.isEmpty()) {
+        val listId = when (searchModel.foodId) {
+            is FoodId.Product -> "p_${searchModel.foodId.productId}"
+            is FoodId.Recipe -> "r_${searchModel.foodId.recipeId}"
+        }
+
+        val weight = when (searchModel.measurement) {
+            is WeightMeasurement.Package -> {
+                assert(searchModel.packageWeight != null) {
+                    "Package weight should not be null for package measurement"
+                }
+                searchModel.packageWeight!! * searchModel.measurement.quantity
+            }
+
+            is WeightMeasurement.Serving -> {
+                assert(searchModel.servingWeight != null) {
+                    "Serving weight should not be null for serving measurement"
+                }
+                searchModel.servingWeight!! * searchModel.measurement.quantity
+            }
+
+            is WeightMeasurement.WeightUnit -> {
+                searchModel.measurement.weight
+            }
+        }
+
+        val calories = searchModel.calories * weight / 100f
+        val proteins = searchModel.proteins * weight / 100f
+        val carbohydrates = searchModel.carbohydrates * weight / 100f
+        val fats = searchModel.fats * weight / 100f
+
+        listOf(
+            AddFoodSearchListItem(
+                id = searchModel.foodId,
+                listId = listId,
+                name = searchModel.name,
+                brand = searchModel.brand,
+                calories = calories.roundToInt(),
+                proteins = proteins.roundToInt(),
+                carbohydrates = carbohydrates.roundToInt(),
+                fats = fats.roundToInt(),
+                weightMeasurement = searchModel.measurement,
+                weight = weight,
+                measurementId = null
+            )
+        )
+    } else {
+        mid.map { m ->
+            val listId = when (searchModel.foodId) {
+                is FoodId.Product -> "p_${searchModel.foodId.productId}_${m.measurementId}"
+                is FoodId.Recipe -> "r_${searchModel.foodId.recipeId}_${m.measurementId}"
+            }
+
+            val weight = when (m.measurement) {
+                is WeightMeasurement.Package -> {
+                    assert(searchModel.packageWeight != null) {
+                        "Package weight should not be null for package measurement"
                     }
+                    searchModel.packageWeight!! * m.measurement.quantity
                 }
 
-                if (mid.isEmpty()) {
-                    val listId = when (p.foodId) {
-                        is FoodId.Product -> "p_${p.foodId.productId}"
-                        is FoodId.Recipe -> "r_${p.foodId.recipeId}"
+                is WeightMeasurement.Serving -> {
+                    assert(searchModel.servingWeight != null) {
+                        "Serving weight should not be null for serving measurement"
                     }
+                    searchModel.servingWeight!! * m.measurement.quantity
+                }
 
-                    val weight = when (p.measurement) {
-                        is WeightMeasurement.Package -> {
-                            assert(p.packageWeight != null) {
-                                "Package weight should not be null for package measurement"
-                            }
-                            p.packageWeight!! * p.measurement.quantity
-                        }
-
-                        is WeightMeasurement.Serving -> {
-                            assert(p.servingWeight != null) {
-                                "Serving weight should not be null for serving measurement"
-                            }
-                            p.servingWeight!! * p.measurement.quantity
-                        }
-
-                        is WeightMeasurement.WeightUnit -> {
-                            p.measurement.weight
-                        }
-                    }
-
-                    val calories = p.calories * weight / 100f
-                    val proteins = p.proteins * weight / 100f
-                    val carbohydrates = p.carbohydrates * weight / 100f
-                    val fats = p.fats * weight / 100f
-
-                    listOf(
-                        AddFoodSearchListItem(
-                            id = p.foodId,
-                            listId = listId,
-                            name = p.name,
-                            brand = p.brand,
-                            calories = calories.roundToInt(),
-                            proteins = proteins.roundToInt(),
-                            carbohydrates = carbohydrates.roundToInt(),
-                            fats = fats.roundToInt(),
-                            weightMeasurement = p.measurement,
-                            weight = weight,
-                            measurementId = null
-                        )
-                    )
-                } else {
-                    mid.map { m ->
-                        val listId = when (p.foodId) {
-                            is FoodId.Product -> "p_${p.foodId.productId}_${m.measurementId}"
-                            is FoodId.Recipe -> "r_${p.foodId.recipeId}_${m.measurementId}"
-                        }
-
-                        val weight = when (m.measurement) {
-                            is WeightMeasurement.Package -> {
-                                assert(p.packageWeight != null) {
-                                    "Package weight should not be null for package measurement"
-                                }
-                                p.packageWeight!! * m.measurement.quantity
-                            }
-
-                            is WeightMeasurement.Serving -> {
-                                assert(p.servingWeight != null) {
-                                    "Serving weight should not be null for serving measurement"
-                                }
-                                p.servingWeight!! * m.measurement.quantity
-                            }
-
-                            is WeightMeasurement.WeightUnit -> {
-                                m.measurement.weight
-                            }
-                        }
-
-                        val calories = p.calories * weight / 100f
-                        val proteins = p.proteins * weight / 100f
-                        val carbohydrates = p.carbohydrates * weight / 100f
-                        val fats = p.fats * weight / 100f
-
-                        AddFoodSearchListItem(
-                            id = p.foodId,
-                            listId = listId,
-                            name = p.name,
-                            brand = p.brand,
-                            calories = calories.roundToInt(),
-                            proteins = proteins.roundToInt(),
-                            carbohydrates = carbohydrates.roundToInt(),
-                            fats = fats.roundToInt(),
-                            weightMeasurement = m.measurement,
-                            weight = weight,
-                            measurementId = m.measurementId
-                        )
-                    }
+                is WeightMeasurement.WeightUnit -> {
+                    m.measurement.weight
                 }
             }
+
+            val calories = searchModel.calories * weight / 100f
+            val proteins = searchModel.proteins * weight / 100f
+            val carbohydrates = searchModel.carbohydrates * weight / 100f
+            val fats = searchModel.fats * weight / 100f
+
+            AddFoodSearchListItem(
+                id = searchModel.foodId,
+                listId = listId,
+                name = searchModel.name,
+                brand = searchModel.brand,
+                calories = calories.roundToInt(),
+                proteins = proteins.roundToInt(),
+                carbohydrates = carbohydrates.roundToInt(),
+                fats = fats.roundToInt(),
+                weightMeasurement = m.measurement,
+                weight = weight,
+                measurementId = m.measurementId
+            )
         }
     }
 }

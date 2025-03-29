@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.data.model
 
+import com.maksimowiczm.foodyou.feature.diary.data.model.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 import com.maksimowiczm.foodyou.feature.diary.network.model.OpenFoodFactsProduct
 
@@ -42,12 +43,12 @@ fun ProductEntity.toDomain(): Product = Product(
         calories = calories,
         proteins = proteins,
         carbohydrates = carbohydrates,
-        sugars = sugars,
+        sugars = sugars.toNutrientValue(),
         fats = fats,
-        saturatedFats = saturatedFats,
-        salt = salt,
-        sodium = sodium,
-        fiber = fiber
+        saturatedFats = saturatedFats.toNutrientValue(),
+        salt = salt.toNutrientValue(),
+        sodium = sodium.toNutrientValue(),
+        fiber = fiber.toNutrientValue()
     ),
     packageWeight = packageWeight,
     servingWeight = servingWeight,

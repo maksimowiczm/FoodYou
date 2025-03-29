@@ -67,6 +67,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.feature.diary.data.model.NutrientValue
 import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrients
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
@@ -531,9 +532,11 @@ private fun AddProductScreen(
                     is WeightMeasurement.Package -> {
                         measurement.quantity * product.packageWeight!!
                     }
+
                     is WeightMeasurement.Serving -> {
                         measurement.quantity * product.servingWeight!!
                     }
+
                     is WeightMeasurement.WeightUnit -> {
                         measurement.weight
                     }
@@ -590,23 +593,27 @@ private fun NutrientsList(nutrients: Nutrients, weight: Float, modifier: Modifie
     val nutrientsPalette = LocalNutrientsPalette.current
 
     @Composable
-    fun Item(label: String, value: Float?) {
+    fun Item(label: String, value: NutrientValue) {
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.titleMedium
         ) {
             NutrientListItem(
                 label = { Text(label) },
                 value = {
-                    if (value == null) {
-                        Text(
-                            text = stringResource(Res.string.not_available_short),
-                            color = MaterialTheme.colorScheme.outline
-                        )
-                    } else {
-                        val g = stringResource(Res.string.unit_gram_short)
-                        Text(
-                            "${value.formatClipZeros()} $g"
-                        )
+                    when (value) {
+                        is NutrientValue.Complete -> {
+                            val g = stringResource(Res.string.unit_gram_short)
+                            Text(
+                                "${value.value.formatClipZeros()} $g"
+                            )
+                        }
+
+                        is NutrientValue.Incomplete -> {
+                            Text(
+                                text = stringResource(Res.string.not_available_short),
+                                color = MaterialTheme.colorScheme.outline
+                            )
+                        }
                     }
                 },
                 modifier = Modifier.padding(vertical = 8.dp)
@@ -671,7 +678,7 @@ private fun NutrientsList(nutrients: Nutrients, weight: Float, modifier: Modifie
 
         Item(
             label = stringResource(Res.string.nutriment_sugars),
-            value = nutrients.sugars?.times(weight)?.div(100)
+            value = nutrients.sugars * weight / 100f
         )
 
         HorizontalDivider(Modifier.padding(horizontal = 48.dp))
@@ -693,28 +700,28 @@ private fun NutrientsList(nutrients: Nutrients, weight: Float, modifier: Modifie
 
         Item(
             label = stringResource(Res.string.nutriment_saturated_fats),
-            value = nutrients.saturatedFats?.times(weight)?.div(100)
+            value = nutrients.saturatedFats * weight / 100f
         )
 
         HorizontalDivider(Modifier.padding(horizontal = 48.dp))
 
         Item(
             label = stringResource(Res.string.nutriment_salt),
-            value = nutrients.salt?.times(weight)?.div(100)
+            value = nutrients.salt * weight / 100f
         )
 
         HorizontalDivider(Modifier.padding(horizontal = 48.dp))
 
         Item(
             label = stringResource(Res.string.nutriment_sodium),
-            value = nutrients.sodium?.times(weight)?.div(100)
+            value = nutrients.sodium * weight / 100f
         )
 
         HorizontalDivider(Modifier.padding(horizontal = 48.dp))
 
         Item(
             label = stringResource(Res.string.nutriment_fiber),
-            value = nutrients.fiber?.times(weight)?.div(100)
+            value = nutrients.fiber * weight / 100f
         )
     }
 }

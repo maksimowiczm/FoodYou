@@ -150,7 +150,7 @@ fun rememberProductFormState(product: Product?): ProductFormState {
     )
 
     val sugars = rememberFormFieldWithTextFieldValue(
-        initialValue = product?.nutrients?.sugars,
+        initialValue = product?.nutrients?.sugars?.value,
         parser = nullableFloatParser(
             onNan = { ProductFormError.NotANumber }
         ),
@@ -169,7 +169,7 @@ fun rememberProductFormState(product: Product?): ProductFormState {
     }
 
     val saturatedFats = rememberFormFieldWithTextFieldValue(
-        initialValue = product?.nutrients?.saturatedFats,
+        initialValue = product?.nutrients?.saturatedFats?.value,
         parser = nullableFloatParser(
             onNan = { ProductFormError.NotANumber }
         ),
@@ -188,7 +188,7 @@ fun rememberProductFormState(product: Product?): ProductFormState {
     }
 
     val salt = rememberFormFieldWithTextFieldValue(
-        initialValue = product?.nutrients?.salt,
+        initialValue = product?.nutrients?.salt?.value,
         parser = nullableFloatParser(
             onNan = { ProductFormError.NotANumber }
         ),
@@ -207,7 +207,7 @@ fun rememberProductFormState(product: Product?): ProductFormState {
     }
 
     val sodium = rememberFormFieldWithTextFieldValue(
-        initialValue = product?.nutrients?.sodium,
+        initialValue = product?.nutrients?.sodium?.value,
         parser = nullableFloatParser(
             onNan = { ProductFormError.NotANumber }
         ),
@@ -226,7 +226,7 @@ fun rememberProductFormState(product: Product?): ProductFormState {
     }
 
     val fiber = rememberFormFieldWithTextFieldValue(
-        initialValue = product?.nutrients?.fiber,
+        initialValue = product?.nutrients?.fiber?.value,
         parser = nullableFloatParser(
             onNan = { ProductFormError.NotANumber }
         ),

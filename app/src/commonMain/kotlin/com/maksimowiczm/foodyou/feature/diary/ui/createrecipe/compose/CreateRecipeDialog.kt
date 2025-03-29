@@ -36,7 +36,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.createrecipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.createrecipe.model.Ingredient
 import foodyou.app.generated.resources.*
@@ -48,7 +47,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CreateRecipeDialog(
     onClose: () -> Unit,
     onAddIngredient: () -> Unit,
-    onProductClick: (ProductWithMeasurement) -> Unit,
+    onProductClick: (productId: Long) -> Unit,
     onProductEdit: (productId: Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreateRecipeViewModel = koinViewModel()
