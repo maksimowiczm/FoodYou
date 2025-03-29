@@ -112,7 +112,7 @@ private fun CreateRecipeDialog(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val topBar = @Composable {
         TopAppBar(
-            title = { Text("Create Recipe") },
+            title = { Text(stringResource(Res.string.headline_create_recipe)) },
             navigationIcon = {
                 IconButton(
                     onClick = onClose
@@ -195,7 +195,7 @@ private fun CreateRecipeDialog(
 
             item {
                 Text(
-                    text = "Summary",
+                    text = stringResource(Res.string.headline_summary),
                     modifier = Modifier.padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary
@@ -239,9 +239,9 @@ private fun GeneralSection(modifier: Modifier = Modifier) {
         TextField(
             value = "",
             onValueChange = {},
-            label = { Text("Servings") },
+            label = { Text(stringResource(Res.string.recipe_servings)) },
             supportingText = {
-                Text("How many servings does this recipe make?")
+                Text(stringResource(Res.string.description_recipe_servings))
             }
         )
     }
@@ -346,8 +346,8 @@ private fun SummarySection(
 
                         else -> Text(
                             text =
-                            "* " + value.value.formatClipZeros() +
-                                stringResource(Res.string.unit_gram_short),
+                                "* " + value.value.formatClipZeros() +
+                                        stringResource(Res.string.unit_gram_short),
                             color = MaterialTheme.colorScheme.outline
                         )
                     }

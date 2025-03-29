@@ -35,7 +35,9 @@
     <string name="headline_time_based_ordering">Time-based ordering</string>
     <string name="headline_incomplete_products">Incomplete products</string>
     <string name="headline_product">Product</string>
+    <string name="headline_create_recipe">Create recipe</string>
     <string name="headline_recipe">Recipe</string>
+    <string name="headline_summary">Summary</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
@@ -65,6 +67,9 @@
     <string name="product_brand">Brand</string>
     <string name="product_weight_unit">Weight unit</string>
     <string name="product_barcode">Barcode</string>
+
+    <string name="recipe_servings">Servings</string>
+    <string name="description_recipe_servings">How many servings does this recipe make</string>
 
     <string name="nutriment_proteins">Proteins</string>
     <string name="nutriment_proteins_short">P</string>
