@@ -36,8 +36,8 @@ data class DiarySearchModel(
 )
 
 fun DiarySearchEntity.toSearchModel(): DiarySearchModel {
-    val weightMeasurement = when (measurement) {
-        null -> {
+    val weightMeasurement = when {
+        measurement == null || quantity == null -> {
             when {
                 servingWeight != null -> WeightMeasurement.Serving(1f)
                 packageWeight != null -> WeightMeasurement.Package(1f)
@@ -45,27 +45,16 @@ fun DiarySearchEntity.toSearchModel(): DiarySearchModel {
             }
         }
 
-        else if (quantity == null) -> {
-            when {
-                servingWeight != null -> WeightMeasurement.Serving(1f)
-                packageWeight != null -> WeightMeasurement.Package(1f)
-                else -> WeightMeasurement.WeightUnit(100f)
+        else -> when (measurement) {
+            WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
+            WeightMeasurementEnum.Package -> {
+                assert(packageWeight != null) {
+                    "Package weight should not be null for package measurement"
+                }
+                WeightMeasurement.Package(quantity)
             }
-        }
 
-        WeightMeasurementEnum.WeightUnit -> {
-            WeightMeasurement.WeightUnit(quantity)
-        }
-
-        WeightMeasurementEnum.Package -> {
-            assert(packageWeight != null) {
-                "Package weight should not be null for package measurement"
-            }
-            WeightMeasurement.Package(quantity)
-        }
-
-        WeightMeasurementEnum.Serving -> {
-            WeightMeasurement.Serving(quantity)
+            WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
         }
     }
 
@@ -91,6 +80,15 @@ fun DiarySearchEntity.toSearchModel(): DiarySearchModel {
             weightMeasurement = weightMeasurement
         )
     } else if (recipeId != null) {
+        if (packageWeight == null) {
+            error("Package weight should not be null for recipe measurement")
+        }
+        if (servings == null) {
+            error("Servings should not be null for recipe measurement")
+        }
+
+        val servingWeight = packageWeight / servings
+
         DiarySearchModel(
             uniqueId = "r_${recipeId}_$measurementId",
             foodId = FoodId.Recipe(recipeId),
@@ -106,6 +104,6 @@ fun DiarySearchEntity.toSearchModel(): DiarySearchModel {
             weightMeasurement = weightMeasurement
         )
     } else {
-        error("Invalid DiarySearchEntity: $this")
+        error("Database corruption for search entity: $this")
     }
 }

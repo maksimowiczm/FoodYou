@@ -41,15 +41,20 @@ class ObserveAddFoodSearchListItemCase(private val searchRepository: SearchRepos
                 }
             }
 
+            val calories = p.calories * weight / 100f
+            val proteins = p.proteins * weight / 100f
+            val carbohydrates = p.carbohydrates * weight / 100f
+            val fats = p.fats * weight / 100f
+
             AddFoodSearchListItem(
                 id = p.foodId,
                 listId = p.uniqueId,
                 name = p.name,
                 brand = p.brand,
-                calories = p.calories.roundToInt(),
-                proteins = p.proteins.roundToInt(),
-                carbohydrates = p.carbohydrates.roundToInt(),
-                fats = p.fats.roundToInt(),
+                calories = calories.roundToInt(),
+                proteins = proteins.roundToInt(),
+                carbohydrates = carbohydrates.roundToInt(),
+                fats = fats.roundToInt(),
                 weightMeasurement = p.weightMeasurement,
                 weight = weight,
                 measurementId = p.measurementId
