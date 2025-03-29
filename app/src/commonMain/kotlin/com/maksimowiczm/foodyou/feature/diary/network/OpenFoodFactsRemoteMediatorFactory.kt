@@ -7,7 +7,7 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.preferences.OpenFoodFactsPreferences
 import com.maksimowiczm.foodyou.feature.diary.database.dao.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.feature.diary.database.dao.ProductDao
-import com.maksimowiczm.foodyou.feature.diary.database.entity.DiarySearchEntity
+import com.maksimowiczm.foodyou.feature.diary.database.search.DiarySearchEntity
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import kotlinx.coroutines.runBlocking
 

@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.diary.network
 
 import androidx.paging.ExperimentalPagingApi
-import com.maksimowiczm.foodyou.feature.diary.database.entity.DiarySearchEntity
+import com.maksimowiczm.foodyou.feature.diary.database.search.DiarySearchEntity
 
 @OptIn(ExperimentalPagingApi::class)
 interface ProductRemoteMediatorFactory {

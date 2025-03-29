@@ -320,9 +320,7 @@ object DiaryFeature : Feature {
 
         factory {
             DiaryRepository(
-                diarySearchDao = get(),
-                addFoodDao = get(),
-                productDao = get(),
+                database = get(),
                 productRemoteMediatorFactory = get(),
                 dataStore = get()
             )
@@ -349,7 +347,6 @@ object DiaryFeature : Feature {
         factory { get<DiaryDatabase>().addFoodDao() }
         factory { get<DiaryDatabase>().productDao() }
         factory { get<DiaryDatabase>().openFoodFactsDao() }
-        factory { get<DiaryDatabase>().diarySearchDao }
 
         viewModelOf(::CaloriesCardViewModel)
         viewModelOf(::CaloriesScreenViewModel)

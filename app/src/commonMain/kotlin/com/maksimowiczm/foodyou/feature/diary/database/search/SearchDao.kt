@@ -1,14 +1,15 @@
-package com.maksimowiczm.foodyou.feature.diary.database.dao
+package com.maksimowiczm.foodyou.feature.diary.database.search
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
-import com.maksimowiczm.foodyou.feature.diary.database.entity.DiarySearchEntity
+import com.maksimowiczm.foodyou.feature.diary.database.search.DiarySearchEntity
 
 @Dao
-interface DiarySearchDao {
+interface SearchDao {
     /**
-     * Combine product and recipe search results into a single list
+     * Combine product and recipe search results into a single list of DiarySearchEntity. Where
+     * food that was added today (mealId and epochDay) is flagged with todaysMeasurement = 1.
      */
     @Query(
         """

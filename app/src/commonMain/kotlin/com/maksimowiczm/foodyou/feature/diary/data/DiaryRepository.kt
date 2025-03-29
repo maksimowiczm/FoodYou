@@ -24,14 +24,15 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.defaultGoals
 import com.maksimowiczm.foodyou.feature.diary.data.model.toDomain
 import com.maksimowiczm.foodyou.feature.diary.data.model.toEntity
 import com.maksimowiczm.foodyou.feature.diary.data.preferences.DiaryPreferences
+import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.feature.diary.database.dao.AddFoodDao
-import com.maksimowiczm.foodyou.feature.diary.database.dao.DiarySearchDao
 import com.maksimowiczm.foodyou.feature.diary.database.dao.ProductDao
-import com.maksimowiczm.foodyou.feature.diary.database.entity.DiarySearchEntity
+import com.maksimowiczm.foodyou.feature.diary.database.search.DiarySearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.search.SearchDao
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
@@ -50,9 +51,7 @@ import kotlinx.datetime.LocalTime
 
 // TODO Make it not a god class
 class DiaryRepository(
-    private val diarySearchDao: DiarySearchDao,
-    private val addFoodDao: AddFoodDao,
-    private val productDao: ProductDao,
+    database: DiaryDatabase,
     private val productRemoteMediatorFactory: ProductRemoteMediatorFactory,
     private val dataStore: DataStore<Preferences>,
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
@@ -61,6 +60,10 @@ class DiaryRepository(
     MeasurementRepository,
     DiaryDayRepository,
     SearchRepository {
+
+    private val searchDao = database.searchDao
+    private val addFoodDao = database.addFoodDao()
+    private val productDao = database.productDao()
 
     override fun observeDailyGoals(): Flow<DailyGoals> {
         val nutrientGoal = combine(
@@ -366,7 +369,7 @@ class DiaryRepository(
             ),
             remoteMediator = remoteMediator
         ) {
-            diarySearchDao.queryDiary(query, mealId, date.toEpochDays())
+            searchDao.queryDiary(query, mealId, date.toEpochDays())
         }.flow.map { pagingData ->
             pagingData.map {
                 it.toDiarySearchModel()
