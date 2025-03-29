@@ -103,6 +103,9 @@ fun CreateRecipeDialog(
         }
         composable("search") {
             IngredientSearch(
+                onBack = {
+                    navController.popBackStack(route = "search", inclusive = true)
+                },
                 viewModel = viewModel
             )
         }

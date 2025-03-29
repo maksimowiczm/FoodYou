@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class CreateRecipeViewModel(
     private val observeIngredientsCase: ObserveIngredientsCase,
@@ -64,6 +65,12 @@ class CreateRecipeViewModel(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = null
     )
+
+    fun onSearch(query: String?) {
+        viewModelScope.launch {
+            searchQuery.emit(query)
+        }
+    }
 }
 
 private data class InternalIngredient(
