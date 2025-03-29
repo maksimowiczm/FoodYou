@@ -304,9 +304,7 @@ private fun LazyListScope.ingredientsSection(
         items = ingredients
     ) { model ->
         model.ListItem(
-            onClick = {
-                // TODO
-            }
+            onClick = { onIngredientClick(model) }
         )
     }
 }
