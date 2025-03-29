@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.diary.database.dao
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
