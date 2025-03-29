@@ -100,7 +100,7 @@ interface MeasurementDao {
             FROM WeightMeasurementEntity wm
             WHERE diaryEpochDay = :epochDay
             AND (:mealId IS NULL OR wm.mealId = :mealId)
-            AND wm.isDeleted = 0
+            AND wm.isDeleted = :isDeleted
         ),
         RecipeMeasurement AS (
             SELECT
@@ -116,11 +116,47 @@ interface MeasurementDao {
             FROM RecipeMeasurementEntity rm
             WHERE diaryEpochDay = :epochDay
             AND (:mealId IS NULL OR rm.mealId = :mealId)
-            AND rm.isDeleted = 0
+            AND rm.isDeleted = :isDeleted
         )
         SELECT * FROM ProductMeasurement
         UNION SELECT * FROM RecipeMeasurement
         """
     )
-    fun observeMeasurements(mealId: Long?, epochDay: Int): Flow<List<CombinedMeasurement>>
+    fun observeMeasurements(
+        mealId: Long?,
+        epochDay: Int,
+        isDeleted: Boolean
+    ): Flow<List<CombinedMeasurement>>
+
+    @Query(
+        """
+        SELECT *
+        FROM WeightMeasurementEntity
+        WHERE id = :id
+        AND isDeleted = :isDeleted
+        """
+    )
+    fun observeProductMeasurement(id: Long, isDeleted: Boolean): Flow<WeightMeasurementEntity?>
+
+    @Query(
+        """
+        SELECT *
+        FROM RecipeMeasurementEntity
+        WHERE id = :id
+        AND isDeleted = :isDeleted
+        """
+    )
+    fun observeRecipeMeasurement(id: Long, isDeleted: Boolean): Flow<RecipeMeasurementEntity?>
+
+    @Query(
+        """
+        SELECT *
+        FROM WeightMeasurementEntity wm
+        WHERE productId = :id
+        GROUP BY wm.measurement
+        ORDER BY wm.createdAt DESC
+        LIMIT 3
+        """
+    )
+    fun observeProductMeasurementsByProductId(id: Long): Flow<List<WeightMeasurementEntity>>
 }

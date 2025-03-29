@@ -149,19 +149,45 @@ class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository
     override fun observeMeasurements(mealId: Long?, date: LocalDate): Flow<List<FoodMeasurement>> =
         measurementDao.observeMeasurements(
             mealId = mealId,
-            epochDay = date.toEpochDays()
+            epochDay = date.toEpochDays(),
+            isDeleted = false
         ).map { list ->
             list.map {
                 it.toFoodMeasurement()
             }
         }
 
-    override fun observeMeasurementById(measurementId: MeasurementId): Flow<FoodMeasurement?> {
-        TODO("Not yet implemented")
-    }
+    override fun observeMeasurementById(measurementId: MeasurementId): Flow<FoodMeasurement?> =
+        when (measurementId) {
+            is MeasurementId.Product -> measurementDao.observeProductMeasurement(
+                id = measurementId.measurementId,
+                isDeleted = false
+            ).map { entity ->
+                entity?.toFoodMeasurement()
+            }
+
+            is MeasurementId.Recipe -> measurementDao.observeRecipeMeasurement(
+                id = measurementId.measurementId,
+                isDeleted = false
+            ).map { entity ->
+                entity?.toFoodMeasurement()
+            }
+        }
 
     override fun observeMeasurementSuggestionByFood(foodId: FoodId): Flow<List<WeightMeasurement>> {
-        TODO("Not yet implemented")
+        when (foodId) {
+            is FoodId.Product -> {
+                return measurementDao.observeProductMeasurementsByProductId(
+                    id = foodId.productId
+                ).map { list ->
+                    list.map { entity ->
+                        entity.toFoodMeasurement().measurement
+                    }
+                }
+            }
+
+            is FoodId.Recipe -> TODO()
+        }
     }
 
     companion object {
@@ -182,3 +208,15 @@ private fun CombinedMeasurement.toFoodMeasurement(): FoodMeasurement {
         measurementId = MeasurementId.Product(measurementId)
     )
 }
+
+private fun WeightMeasurementEntity.toFoodMeasurement(): FoodMeasurement = FoodMeasurement(
+    foodId = FoodId.Product(productId),
+    measurement = measurement.toWeightMeasurement(quantity),
+    measurementId = MeasurementId.Product(id)
+)
+
+private fun RecipeMeasurementEntity.toFoodMeasurement(): FoodMeasurement = FoodMeasurement(
+    foodId = FoodId.Recipe(recipeId),
+    measurement = measurement.toWeightMeasurement(quantity),
+    measurementId = MeasurementId.Recipe(id)
+)
