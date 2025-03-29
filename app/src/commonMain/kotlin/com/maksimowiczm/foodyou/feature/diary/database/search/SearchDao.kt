@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.feature.diary.database.search
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
-import com.maksimowiczm.foodyou.feature.diary.database.search.DiarySearchEntity
 
 @Dao
 interface SearchDao {

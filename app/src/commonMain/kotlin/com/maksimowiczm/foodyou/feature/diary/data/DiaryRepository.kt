@@ -25,14 +25,11 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.toDomain
 import com.maksimowiczm.foodyou.feature.diary.data.model.toEntity
 import com.maksimowiczm.foodyou.feature.diary.data.preferences.DiaryPreferences
 import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
-import com.maksimowiczm.foodyou.feature.diary.database.dao.AddFoodDao
-import com.maksimowiczm.foodyou.feature.diary.database.dao.ProductDao
-import com.maksimowiczm.foodyou.feature.diary.database.search.DiarySearchEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.MealEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
-import com.maksimowiczm.foodyou.feature.diary.database.search.SearchDao
+import com.maksimowiczm.foodyou.feature.diary.database.search.DiarySearchEntity
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
@@ -52,7 +49,7 @@ import kotlinx.datetime.LocalTime
 // TODO Make it not a god class
 class DiaryRepository(
     database: DiaryDatabase,
-    private val productRemoteMediatorFactory: ProductRemoteMediatorFactory,
+    private val productRemoteMediatorFactory: ProductRemoteMediatorFactory<DiarySearchEntity>,
     private val dataStore: DataStore<Preferences>,
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : MealRepository,

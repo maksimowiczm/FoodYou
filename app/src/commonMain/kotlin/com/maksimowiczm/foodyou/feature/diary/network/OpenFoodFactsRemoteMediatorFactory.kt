@@ -7,7 +7,6 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.preferences.OpenFoodFactsPreferences
 import com.maksimowiczm.foodyou.feature.diary.database.dao.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.feature.diary.database.dao.ProductDao
-import com.maksimowiczm.foodyou.feature.diary.database.search.DiarySearchEntity
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import kotlinx.coroutines.runBlocking
 
@@ -40,7 +39,7 @@ class OpenFoodFactsRemoteMediatorFactory(
     private val countryCode
         get() = runBlocking { dataStore.get(OpenFoodFactsPreferences.countryCode) }
 
-    override fun createWithQuery(query: String?): ProductRemoteMediator<DiarySearchEntity>? {
+    override fun <T : Any> createWithQuery(query: String?): ProductRemoteMediator<T>? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
 
         val country = countryCode
@@ -64,7 +63,7 @@ class OpenFoodFactsRemoteMediatorFactory(
         )
     }
 
-    override fun createWithBarcode(barcode: String): ProductRemoteMediator<DiarySearchEntity>? {
+    override fun <T : Any> createWithBarcode(barcode: String): ProductRemoteMediator<T>? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
 
         val country = countryCode
