@@ -212,6 +212,8 @@ private fun AppNavHost(
                             }
                         )
                     },
+                    onRecipeClick = {
+                    },
                     onCreateProduct = {
                         navController.navigate(
                             route = CreateProductDialog,
@@ -220,7 +222,8 @@ private fun AppNavHost(
                             }
                         )
                     },
-                    onCreateRecipe = {},
+                    onCreateRecipe = {
+                    },
                     onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
                     initialScreen = if (startOnBarcodeScanner) {
                         AddFoodSearchScreen.BarcodeScanner

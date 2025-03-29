@@ -126,6 +126,7 @@ fun AddFoodSearch(
     date: LocalDate,
     onBack: () -> Unit,
     onProductClick: (Long) -> Unit,
+    onRecipeClick: (Long) -> Unit,
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
     onGoToOpenFoodFactsSettings: () -> Unit,
@@ -156,6 +157,7 @@ fun AddFoodSearch(
                 onQuickAdd = viewModel::onQuickAdd,
                 onQuickRemove = viewModel::onQuickRemove,
                 onProductClick = onProductClick,
+                onRecipeClick = onRecipeClick,
                 onCreateProduct = onCreateProduct,
                 onCreateRecipe = onCreateRecipe,
                 recentQueries = recentQueries,
@@ -213,6 +215,7 @@ private fun SearchScreen(
     onQuickAdd: (AddFoodSearchListItem) -> Unit,
     onQuickRemove: (MeasurementId) -> Unit,
     onProductClick: (Long) -> Unit,
+    onRecipeClick: (Long) -> Unit,
     onCreateProduct: () -> Unit,
     onCreateRecipe: () -> Unit,
     recentQueries: List<ProductQuery>,
@@ -493,7 +496,7 @@ private fun SearchScreen(
                                     onClick = {
                                         when (target.id) {
                                             is FoodId.Product -> onProductClick(target.id.productId)
-                                            is FoodId.Recipe -> TODO()
+                                            is FoodId.Recipe -> onRecipeClick(target.id.recipeId)
                                         }
                                     },
                                     onToggle = {
