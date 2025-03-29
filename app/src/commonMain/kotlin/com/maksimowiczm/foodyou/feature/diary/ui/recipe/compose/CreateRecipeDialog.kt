@@ -277,7 +277,7 @@ private fun LazyListScope.ingredientsSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             FilledIconButton(
-                onClick = {},
+                onClick = onAddIngredient,
                 modifier = Modifier.clearAndSetSemantics { },
                 colors = IconButtonDefaults.filledIconButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
