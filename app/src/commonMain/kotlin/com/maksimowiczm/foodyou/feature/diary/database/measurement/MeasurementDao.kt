@@ -4,6 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.maksimowiczm.foodyou.feature.diary.database.converter.WeightMeasurementSqlConstants.PACKAGE
+import com.maksimowiczm.foodyou.feature.diary.database.converter.WeightMeasurementSqlConstants.SERVING
+import com.maksimowiczm.foodyou.feature.diary.database.converter.WeightMeasurementSqlConstants.WEIGHT_UNIT
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -150,13 +153,62 @@ interface MeasurementDao {
 
     @Query(
         """
-        SELECT *
-        FROM WeightMeasurementEntity wm
-        WHERE productId = :id
-        GROUP BY wm.measurement
-        ORDER BY wm.createdAt DESC
-        LIMIT 3
+        WITH Latest AS (
+            SELECT
+                wm.measurement AS measurement,
+                wm.quantity AS quantity,
+                ROW_NUMBER() OVER (PARTITION BY wm.measurement ORDER BY wm.createdAt DESC) as rn
+            FROM WeightMeasurementEntity wm
+            WHERE productId = :id
+        ),
+        DefaultValues AS (
+            SELECT
+                $PACKAGE AS measurement,
+                1 AS quantity
+            FROM ProductEntity p
+            WHERE p.id = :id AND p.packageWeight IS NOT NULL
+            UNION ALL
+            SELECT
+                $SERVING AS measurement,
+                1 AS quantity
+            FROM ProductEntity p
+            WHERE p.id = :id AND p.servingWeight IS NOT NULL
+            UNION ALL
+            SELECT
+                $WEIGHT_UNIT AS measurement,
+                100.0 AS quantity
+        ),
+        CombinedValues AS (
+            SELECT
+                measurement,
+                quantity,
+                'latest' AS source
+            FROM Latest
+            WHERE rn = 1
+            UNION ALL
+            SELECT
+                d.measurement,
+                d.quantity,
+                'default' AS source
+            FROM DefaultValues d
+            WHERE NOT EXISTS (
+                SELECT 1 
+                FROM Latest l 
+                WHERE l.measurement = d.measurement AND l.rn = 1
+            )
+        )
+        SELECT 
+            measurement,
+            quantity,
+            source
+        FROM CombinedValues
+        ORDER BY 
+            CASE source 
+                WHEN 'latest' THEN 1 
+                WHEN 'default' THEN 2 
+                ELSE 3 
+            END
         """
     )
-    fun observeProductMeasurementsByProductId(id: Long): Flow<List<WeightMeasurementEntity>>
+    fun observeProductMeasurementsByProductId(id: Long): Flow<List<MeasurementSuggestion>>
 }

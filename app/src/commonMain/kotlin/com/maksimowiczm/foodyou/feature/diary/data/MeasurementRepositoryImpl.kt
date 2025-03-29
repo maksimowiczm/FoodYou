@@ -5,9 +5,12 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.diary.data.model.toWeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.feature.diary.database.measurement.CombinedMeasurement
+import com.maksimowiczm.foodyou.feature.diary.database.measurement.MeasurementDao
+import com.maksimowiczm.foodyou.feature.diary.database.measurement.MeasurementSuggestion
 import com.maksimowiczm.foodyou.feature.diary.database.measurement.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.measurement.WeightMeasurementEntity
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +19,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
 class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository {
-    val measurementDao = database.measurementDao
+    val measurementDao: MeasurementDao = database.measurementDao
 
     override suspend fun addMeasurement(
         date: LocalDate,
@@ -181,7 +184,7 @@ class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository
                     id = foodId.productId
                 ).map { list ->
                     list.map { entity ->
-                        entity.toFoodMeasurement().measurement
+                        entity.toWeightMeasurement()
                     }
                 }
             }
@@ -220,3 +223,9 @@ private fun RecipeMeasurementEntity.toFoodMeasurement(): FoodMeasurement = FoodM
     measurement = measurement.toWeightMeasurement(quantity),
     measurementId = MeasurementId.Recipe(id)
 )
+
+private fun MeasurementSuggestion.toWeightMeasurement() = when (measurement) {
+    WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
+    WeightMeasurementEnum.Package -> WeightMeasurement.Package(quantity)
+    WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
+}
