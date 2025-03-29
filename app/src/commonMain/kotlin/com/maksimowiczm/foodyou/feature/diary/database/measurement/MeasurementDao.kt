@@ -151,6 +151,8 @@ interface MeasurementDao {
     )
     fun observeRecipeMeasurement(id: Long, isDeleted: Boolean): Flow<RecipeMeasurementEntity?>
 
+    /*
+    Window function are not supported on android < 30
     @Query(
         """
         WITH Latest AS (
@@ -192,15 +194,62 @@ interface MeasurementDao {
                 'default' AS source
             FROM DefaultValues d
             WHERE NOT EXISTS (
-                SELECT 1 
-                FROM Latest l 
+                SELECT 1
+                FROM Latest l
                 WHERE l.measurement = d.measurement AND l.rn = 1
             )
         )
-        SELECT 
+        SELECT
             measurement,
             quantity,
             source
+        FROM CombinedValues
+        ORDER BY
+            CASE source
+                WHEN 'latest' THEN 1
+                WHEN 'default' THEN 2
+                ELSE 3
+            END
+        """
+    )
+     */
+    @Query(
+        """
+        WITH Latest AS (
+            SELECT wm.measurement, wm.quantity
+            FROM WeightMeasurementEntity wm
+            WHERE wm.productId = :id
+            AND wm.createdAt = (
+                SELECT MAX(wm2.createdAt)
+                FROM WeightMeasurementEntity wm2
+                WHERE wm2.measurement = wm.measurement
+                AND wm2.productId = :id
+            )
+        ),
+        DefaultValues AS (
+            SELECT $PACKAGE AS measurement, 1 AS quantity
+            FROM ProductEntity p
+            WHERE p.id = :id AND p.packageWeight IS NOT NULL
+            UNION ALL
+            SELECT $SERVING AS measurement, 1 AS quantity
+            FROM ProductEntity p
+            WHERE p.id = :id AND p.servingWeight IS NOT NULL
+            UNION ALL
+            SELECT $WEIGHT_UNIT AS measurement, 100.0 AS quantity
+        ),
+        CombinedValues AS (
+            SELECT l.measurement, l.quantity, 'latest' AS source
+            FROM Latest l
+            UNION ALL
+            SELECT d.measurement, d.quantity, 'default' AS source
+            FROM DefaultValues d
+            WHERE NOT EXISTS (
+                SELECT 1 
+                FROM Latest l 
+                WHERE l.measurement = d.measurement
+            )
+        )
+        SELECT measurement, quantity, source
         FROM CombinedValues
         ORDER BY 
             CASE source 
