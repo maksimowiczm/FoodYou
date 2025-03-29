@@ -32,6 +32,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchView
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearch
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.rememberAddFoodSearchState
+import com.maksimowiczm.foodyou.feature.diary.ui.createrecipe.compose.CreateRecipeDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.compose.DiaryDayMealScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
@@ -89,6 +90,9 @@ private data object CreateProductDialog
 
 @Serializable
 private data class EditProductDialog(val productId: Long)
+
+@Serializable
+private data object CreateRecipeDialog
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -223,6 +227,12 @@ private fun AppNavHost(
                         )
                     },
                     onCreateRecipe = {
+                        navController.navigate(
+                            route = CreateRecipeDialog,
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            }
+                        )
                     },
                     onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
                     initialScreen = if (startOnBarcodeScanner) {
@@ -399,6 +409,47 @@ private fun AppNavHost(
                     viewModel = koinViewModel(
                         parameters = { parametersOf(productId) }
                     )
+                )
+            }
+        }
+        crossfadeComposable<CreateRecipeDialog>(
+            enterTransition = {
+                crossfadeIn() + slideInVertically(
+                    animationSpec = tween(
+                        easing = LinearOutSlowInEasing
+                    ),
+                    initialOffsetY = { it }
+                )
+            },
+            exitTransition = {
+                slideOutVertically(
+                    animationSpec = tween(
+                        easing = FastOutLinearInEasing
+                    ),
+                    targetOffsetY = { it }
+                ) + scaleOut(
+                    targetScale = 0.8f,
+                    animationSpec = tween(
+                        easing = FastOutLinearInEasing
+                    )
+                )
+            }
+        ) {
+            Surface(
+                shadowElevation = 6.dp,
+                shape = MaterialTheme.shapes.medium
+            ) {
+                CreateRecipeDialog(
+                    onClose = { navController.popBackStack<CreateRecipeDialog>(inclusive = true) },
+                    onAddIngredient = {
+                        // TODO
+                    },
+                    onProductClick = {
+                        // TODO
+                    },
+                    onProductEdit = { id ->
+                        // TODO
+                    }
                 )
             }
         }

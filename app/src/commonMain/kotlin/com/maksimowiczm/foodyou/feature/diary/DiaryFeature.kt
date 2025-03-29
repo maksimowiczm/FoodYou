@@ -40,6 +40,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen.CaloriesScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen.CaloriesScreenViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.createrecipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsViewModel
@@ -369,5 +370,8 @@ object DiaryFeature : Feature {
         // MealsCard
         factoryOf(::ObserveMealsByDateCase)
         viewModelOf(::MealsCardViewModel)
+
+        // CreateRecipe
+        viewModelOf(::CreateRecipeViewModel)
     }
 }
