@@ -61,7 +61,10 @@ interface SearchDao {
                 s.quantity AS quantity
             FROM ProductEntity p
             LEFT JOIN ProductsSuggestions s ON s.productId = p.id
-            WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
+            WHERE :query IS NULL 
+            OR p.name LIKE '%' || :query || '%' 
+            OR p.brand LIKE '%' || :query || '%'
+            OR p.barcode == :query
             ORDER BY p.id, s.id
         ),
         RecipeTodayMeasurements AS (
@@ -161,7 +164,10 @@ interface SearchDao {
                 s.quantity AS quantity
             FROM ProductEntity p
             LEFT JOIN ProductsSuggestions s ON s.productId = p.id
-            WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
+            WHERE :query IS NULL 
+            OR p.name LIKE '%' || :query || '%' 
+            OR p.brand LIKE '%' || :query || '%'
+            OR p.barcode == :query
             ORDER BY p.id, s.id
         ),
         RecipeSuggestions AS (
