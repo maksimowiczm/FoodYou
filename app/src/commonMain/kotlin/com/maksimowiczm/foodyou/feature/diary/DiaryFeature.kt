@@ -41,7 +41,6 @@ import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCardViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen.CaloriesScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen.CaloriesScreenViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.GoalsSettingsViewModel
@@ -62,6 +61,8 @@ import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.flagCdnCo
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.ObserveIngredientsCase
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
@@ -372,5 +373,6 @@ object DiaryFeature : Feature {
 
         // CreateRecipe
         viewModelOf(::CreateRecipeViewModel)
+        factoryOf(::ObserveIngredientsCase)
     }
 }

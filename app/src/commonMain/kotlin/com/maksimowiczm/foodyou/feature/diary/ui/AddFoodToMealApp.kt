@@ -32,10 +32,10 @@ import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchView
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearch
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.rememberAddFoodSearchState
-import com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose.CreateRecipeDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.compose.DiaryDayMealScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose.CreateRecipeDialog
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import kotlinx.datetime.LocalDate

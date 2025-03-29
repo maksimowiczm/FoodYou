@@ -21,6 +21,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,9 +37,15 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummary
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults.measurementString
+import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults.measurementStringShort
+import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.Ingredient
 import foodyou.app.generated.resources.*
+import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -67,7 +74,7 @@ private fun CreateRecipeDialog(
     ingredients: List<Ingredient>,
     onClose: () -> Unit,
     onIngredientAdd: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val topBar = @Composable {
@@ -231,8 +238,45 @@ private fun LazyListScope.ingredientsSection(
     items(
         items = ingredients
     ) { model ->
-//        model.ListItem(
-//            onClick = { onIngredientClick(model.id) }
-//        )
+        model.ListItem(
+            onClick = {
+                // TODO
+            }
+        )
     }
+}
+
+@Composable
+private fun Ingredient.ListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val weight = weightMeasurement.getWeight(product)
+    val proteins = product.nutrients.proteins * weight / 100
+    val carbohydrates = product.nutrients.carbohydrates * weight / 100
+    val fats = product.nutrients.fats * weight / 100
+
+    ListItem(
+        headlineContent = { Text(product.name) },
+        modifier = modifier.clickable { onClick() },
+        overlineContent = { product.brand?.let { Text(it) } },
+        supportingContent = {
+            Column {
+                NutrientsRow(
+                    proteins = proteins.roundToInt(),
+                    carbohydrates = carbohydrates.roundToInt(),
+                    fats = fats.roundToInt(),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                with(weightMeasurement) {
+                    MeasurementSummary(
+                        measurementString = measurementString(weight),
+                        measurementStringShort = measurementStringShort,
+                        caloriesString = MeasurementSummaryDefaults.caloriesString(
+                            calories.roundToInt()
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        }
+    )
 }
