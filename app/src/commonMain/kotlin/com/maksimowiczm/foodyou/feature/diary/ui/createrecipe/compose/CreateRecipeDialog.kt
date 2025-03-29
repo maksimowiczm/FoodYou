@@ -51,9 +51,9 @@ fun CreateRecipeDialog(
     onProductClick: (ProductWithMeasurement) -> Unit,
     onProductEdit: (productId: Long) -> Unit,
     modifier: Modifier = Modifier,
-    createRecipeViewModel: CreateRecipeViewModel = koinViewModel()
+    viewModel: CreateRecipeViewModel = koinViewModel()
 ) {
-    val ingredients by createRecipeViewModel.ingredients.collectAsStateWithLifecycle()
+    val ingredients by viewModel.ingredients.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val topBar = @Composable {
