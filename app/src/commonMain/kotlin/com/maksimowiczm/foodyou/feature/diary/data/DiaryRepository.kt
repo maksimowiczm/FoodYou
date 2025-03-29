@@ -6,6 +6,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.RemoteMediator
 import androidx.paging.map
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
@@ -30,6 +31,7 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductQueryEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductWithWeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.entity.WeightMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.search.DiarySearchEntity
+import com.maksimowiczm.foodyou.feature.diary.database.search.SearchEntity
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
@@ -49,7 +51,7 @@ import kotlinx.datetime.LocalTime
 // TODO Make it not a god class
 class DiaryRepository(
     database: DiaryDatabase,
-    private val productRemoteMediatorFactory: ProductRemoteMediatorFactory<DiarySearchEntity>,
+    private val productRemoteMediatorFactory: ProductRemoteMediatorFactory,
     private val dataStore: DataStore<Preferences>,
     private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : MealRepository,
@@ -347,7 +349,7 @@ class DiaryRepository(
         val barcode = query?.takeIf { it.all(Char::isDigit) }
 
         val localOnly = query == null
-        val remoteMediator = when {
+        val remoteMediator: RemoteMediator<Int, DiarySearchEntity>? = when {
             localOnly -> null
             barcode != null -> productRemoteMediatorFactory.createWithBarcode(barcode)
             else -> productRemoteMediatorFactory.createWithQuery(query)
@@ -374,8 +376,36 @@ class DiaryRepository(
         }
     }
 
-    override fun queryProducts(query: String?): Flow<PagingData<DiarySearchModel>> {
-        TODO("Not yet implemented")
+    @OptIn(ExperimentalPagingApi::class)
+    override fun queryProducts(query: String?): Flow<PagingData<SearchModel>> {
+        val barcode = query?.takeIf { it.all(Char::isDigit) }
+
+        val localOnly = query == null
+        val remoteMediator: RemoteMediator<Int, SearchEntity>? = when {
+            localOnly -> null
+            barcode != null -> productRemoteMediatorFactory.createWithBarcode(barcode)
+            else -> productRemoteMediatorFactory.createWithQuery(query)
+        }
+
+        // Insert query if it's not a barcode and not empty
+        if (barcode == null && query?.isNotBlank() == true) {
+            ioScope.launch {
+                insertProductQueryWithCurrentTime(query)
+            }
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE
+            ),
+            remoteMediator = remoteMediator
+        ) {
+            searchDao.queryFood(query)
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toSearchModel()
+            }
+        }
     }
 
     private suspend fun insertProductQueryWithCurrentTime(query: String) {
@@ -481,7 +511,7 @@ private fun DiarySearchEntity.toDiarySearchModel(): DiarySearchModel {
     }
 }
 
-private fun DiarySearchEntity.toSearchModel(): SearchModel {
+private fun SearchEntity.toSearchModel(): SearchModel {
     val weightMeasurement = when {
         measurement == null || quantity == null -> {
             when {

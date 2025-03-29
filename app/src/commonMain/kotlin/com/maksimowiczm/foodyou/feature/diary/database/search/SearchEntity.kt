@@ -2,11 +2,10 @@ package com.maksimowiczm.foodyou.feature.diary.database.search
 
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 
-data class DiarySearchEntity(
+data class SearchEntity(
     // Identifiers
     val productId: Long?,
     val recipeId: Long?,
-    val measurementId: Long?,
 
     // Search data
     val name: String,
