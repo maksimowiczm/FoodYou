@@ -249,7 +249,7 @@ interface MeasurementDao {
                 WHERE l.measurement = d.measurement
             )
         )
-        SELECT measurement, quantity, source
+        SELECT measurement, quantity
         FROM CombinedValues
         ORDER BY 
             CASE source 
