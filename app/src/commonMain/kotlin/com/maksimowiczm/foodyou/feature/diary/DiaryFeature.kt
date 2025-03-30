@@ -26,6 +26,8 @@ import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepositoryImpl
 import com.maksimowiczm.foodyou.feature.diary.data.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepositoryImpl
+import com.maksimowiczm.foodyou.feature.diary.data.RecipeRepository
+import com.maksimowiczm.foodyou.feature.diary.data.RecipeRepositoryImpl
 import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
 import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.feature.diary.network.OpenFoodFactsRemoteMediatorFactory
@@ -339,6 +341,8 @@ object DiaryFeature : Feature {
         factoryOf(::MeasurementRepositoryImpl).bind<MeasurementRepository>()
 
         factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
+
+        factoryOf(::RecipeRepositoryImpl).bind<RecipeRepository>()
 
         viewModelOf(::GoalsSettingsViewModel)
 

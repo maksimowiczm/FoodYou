@@ -44,35 +44,33 @@ fun WeightChips(
 }
 
 @Composable
-fun rememberWeightChipsState(
-    food: Food,
-    extraFilter: WeightMeasurement? = null
-): WeightChipsState = rememberSaveable(
-    food,
-    extraFilter,
-    saver = Saver(
-        save = {
-            arrayListOf<Any>(
-                it.selectedFilterIndex
-            )
-        },
-        restore = {
-            WeightChipsState(
-                packageSuggestion = food.packageSuggestion,
-                servingSuggestion = food.servingSuggestion,
-                extraFilter = extraFilter,
-                initialSelectedFilterIndex = it[0] as Int
-            )
-        }
-    )
-) {
-    WeightChipsState(
-        packageSuggestion = food.packageSuggestion,
-        servingSuggestion = food.servingSuggestion,
-        extraFilter = extraFilter,
-        initialSelectedFilterIndex = 0
-    )
-}
+fun rememberWeightChipsState(food: Food, extraFilter: WeightMeasurement? = null): WeightChipsState =
+    rememberSaveable(
+        food,
+        extraFilter,
+        saver = Saver(
+            save = {
+                arrayListOf<Any>(
+                    it.selectedFilterIndex
+                )
+            },
+            restore = {
+                WeightChipsState(
+                    packageSuggestion = food.packageSuggestion,
+                    servingSuggestion = food.servingSuggestion,
+                    extraFilter = extraFilter,
+                    initialSelectedFilterIndex = it[0] as Int
+                )
+            }
+        )
+    ) {
+        WeightChipsState(
+            packageSuggestion = food.packageSuggestion,
+            servingSuggestion = food.servingSuggestion,
+            extraFilter = extraFilter,
+            initialSelectedFilterIndex = 0
+        )
+    }
 
 @Stable
 class WeightChipsState(
