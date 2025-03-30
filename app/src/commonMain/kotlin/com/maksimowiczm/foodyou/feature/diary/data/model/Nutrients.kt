@@ -35,3 +35,18 @@ data class Nutrients(
         fiber = this.fiber + other.fiber
     )
 }
+
+fun Iterable<Nutrients>.sum(): Nutrients = fold(
+    initial = Nutrients(
+        calories = 0f,
+        proteins = 0f,
+        carbohydrates = 0f,
+        sugars = NutrientValue.Complete(0f),
+        fats = 0f,
+        saturatedFats = NutrientValue.Complete(0f),
+        salt = NutrientValue.Complete(0f),
+        sodium = NutrientValue.Complete(0f),
+        fiber = NutrientValue.Complete(0f)
+    ),
+    operation = Nutrients::plus
+)

@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
-import com.maksimowiczm.foodyou.feature.diary.database.entity.RecipeEntity
+import com.maksimowiczm.foodyou.feature.diary.database.recipe.RecipeEntity
 
 @Entity(
     foreignKeys = [

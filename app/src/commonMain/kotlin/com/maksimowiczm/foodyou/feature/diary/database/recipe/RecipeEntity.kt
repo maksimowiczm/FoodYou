@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.database.entity
+package com.maksimowiczm.foodyou.feature.diary.database.recipe
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
