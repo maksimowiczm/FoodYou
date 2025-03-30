@@ -226,7 +226,7 @@ class DiaryRepository(
             ),
             remoteMediator = remoteMediator
         ) {
-            searchDao.queryFood(query)
+            searchDao.queryProducts(query)
         }.flow.map { pagingData ->
             pagingData.map {
                 it.toSearchModel()
@@ -310,11 +310,8 @@ private fun SearchEntity.toSearchModel(): SearchModel {
         if (packageWeight == null) {
             error("Package weight should not be null for recipe measurement")
         }
-        if (servings == null) {
-            error("Servings should not be null for recipe measurement")
-        }
 
-        val servingWeight = packageWeight / servings
+        val servingWeight = servings?.let { packageWeight / it }
 
         SearchModel(
             foodId = FoodId.Recipe(recipeId),

@@ -55,29 +55,24 @@ interface SearchDao {
             )
             GROUP BY rm.recipeId
         ),
-        RecipieSuggestionsWithNutrition AS (
-            SELECT * 
-            FROM RecipeSuggestions
-            LEFT JOIN RecipeNutritionView r 
-            ON r.recipeId = RecipeSuggestions.recipeId
-        ),
         Recipes AS (
             SELECT 
                 NULL AS productId,
                 r.id AS recipeId,
                 r.name AS name,
                 NULL AS brand,
-                s.totalCalories AS calories,
-                s.totalProteins AS proteins,
-                s.totalCarbohydrates AS carbohydrates,
-                s.totalFats AS fats,
-                s.totalWeight AS packageWeight,
+                n.totalCalories AS calories,
+                n.totalProteins AS proteins,
+                n.totalCarbohydrates AS carbohydrates,
+                n.totalFats AS fats,
+                n.totalWeight AS packageWeight,
                 NULL AS servingWeight,
                 r.servings AS servings,
                 s.measurement AS measurement,
                 s.quantity AS quantity
             FROM RecipeEntity r
-            LEFT JOIN RecipieSuggestionsWithNutrition s ON s.recipeId = r.id
+            LEFT JOIN RecipeSuggestions s ON s.recipeId = r.id
+            LEFT JOIN RecipeNutritionView n ON n.recipeId = r.id
             WHERE (:query IS NULL OR r.name LIKE '%' || :query || '%')
             ORDER BY r.id, s.id
         )

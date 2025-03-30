@@ -3,11 +3,11 @@ package com.maksimowiczm.foodyou.feature.diary.database.recipe
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 
 @Entity(
-    primaryKeys = ["recipeId", "productId"],
     foreignKeys = [
         ForeignKey(
             entity = RecipeEntity::class,
@@ -28,6 +28,8 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
     ]
 )
 data class RecipeIngredientEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val recipeId: Long,
     val productId: Long,
     val measurement: WeightMeasurementEnum,

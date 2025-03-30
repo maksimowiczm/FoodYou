@@ -3,7 +3,9 @@ package com.maksimowiczm.foodyou.feature.diary.ui.recipe
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.feature.diary.data.RecipeRepository
 import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.MeasuredIngredient
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.ObserveIngredientsCase
@@ -22,7 +24,8 @@ import kotlinx.coroutines.launch
 class CreateRecipeViewModel(
     private val observeIngredientsCase: ObserveIngredientsCase,
     private val observeProductsCase: ObserveProductsCase,
-    searchRepository: SearchRepository
+    searchRepository: SearchRepository,
+    private val recipeRepository: RecipeRepository
 ) : ViewModel() {
 
     val recentQueries = searchRepository.observeProductQueries(20).stateIn(
@@ -80,4 +83,13 @@ class CreateRecipeViewModel(
             searchQuery.emit(query)
         }
     }
+
+    suspend fun onCreate(name: String, servings: Int?): FoodId.Recipe =
+        recipeRepository.createRecipe(
+            name = name,
+            servings = servings,
+            ingredients = _ingredients.value.map {
+                it.productId to it.weightMeasurement
+            }
+        )
 }
