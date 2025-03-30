@@ -1,99 +1,61 @@
 package com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.NorthWest
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.ExpandedFullScreenSearchBar
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.SearchBarState
-import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopSearchBar
-import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchListItemSkeleton
 import com.maksimowiczm.foodyou.feature.diary.ui.barcodescanner.CameraBarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.component.FoodDatabaseErrorCard
+import com.maksimowiczm.foodyou.feature.diary.ui.component.ProductSearchBarSuggestions
+import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactshint.OpenFoodFactsSearchHint
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.IngredientSearch
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_clear
-import foodyou.app.generated.resources.action_go_back
-import foodyou.app.generated.resources.action_insert_suggested_search
-import foodyou.app.generated.resources.action_scan_barcode
-import foodyou.app.generated.resources.action_search
+import foodyou.app.generated.resources.action_add_food
+import foodyou.app.generated.resources.neutral_no_products_found
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Stable
-class SearchState(
-    val textFieldState: TextFieldState,
-    val searchBarState: SearchBarState,
-    val lazyListState: LazyListState
-)
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun rememberSearchState(): SearchState {
-    val textFieldState = rememberTextFieldState()
-    val searchBarState = rememberSearchBarState(
-        initialValue = SearchBarValue.Collapsed
-    )
-    val lazyListState = rememberLazyListState()
-
-    return remember(
-        textFieldState,
-        searchBarState,
-        lazyListState
-    ) {
-        SearchState(
-            textFieldState = textFieldState,
-            searchBarState = searchBarState,
-            lazyListState = lazyListState
-        )
-    }
-}
+private const val SEARCH_SCREEN = "search"
+private const val BARCODE_SCANNER_SCREEN = "barcodeScanner"
 
 @Composable
 fun IngredientSearch(
     onBack: () -> Unit,
+    onGoToOpenFoodFactsSettings: () -> Unit,
     viewModel: CreateRecipeViewModel,
     modifier: Modifier = Modifier,
-    state: SearchState = rememberSearchState()
+    state: IngredientSearchState = rememberIngredientSearchState()
 ) {
     val pages = viewModel.pages.collectAsLazyPagingItems(
         viewModel.viewModelScope.coroutineContext
@@ -106,9 +68,9 @@ fun IngredientSearch(
     // Use NavHost to handle predictive back navigation
     NavHost(
         navController = navController,
-        startDestination = "search"
+        startDestination = SEARCH_SCREEN
     ) {
-        crossfadeComposable("search") {
+        crossfadeComposable(SEARCH_SCREEN) {
             IngredientSearch(
                 state = state,
                 pages = pages,
@@ -116,41 +78,26 @@ fun IngredientSearch(
                 onSearch = viewModel::onSearch,
                 onBarcodeScanner = {
                     navController.navigate(
-                        route = AddFoodSearchScreen.BarcodeScanner.route,
+                        route = BARCODE_SCANNER_SCREEN,
                         navOptions = navOptions {
                             launchSingleTop = true
                         }
                     )
                 },
                 onBack = onBack,
+                onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
                 modifier = modifier
             )
         }
-        crossfadeComposable(AddFoodSearchScreen.BarcodeScanner.route) {
+        crossfadeComposable(BARCODE_SCANNER_SCREEN) {
             CameraBarcodeScannerScreen(
                 onBarcodeScan = {
                     viewModel.onSearch(it)
                     state.textFieldState.setTextAndPlaceCursorAtEnd(it)
-                    navController.popBackStack(
-                        AddFoodSearchScreen.BarcodeScanner.route,
-                        inclusive = true
-                    )
+                    navController.popBackStack(BARCODE_SCANNER_SCREEN, inclusive = true)
                 },
                 onClose = {
-                    navController.navigate(
-                        route = AddFoodSearchScreen.List.route,
-                        navOptions = navOptions {
-                            launchSingleTop = true
-
-                            popUpTo(AddFoodSearchScreen.BarcodeScanner.route) {
-                                inclusive = true
-                            }
-                        }
-                    )
-                    navController.popBackStack(
-                        AddFoodSearchScreen.BarcodeScanner.route,
-                        inclusive = true
-                    )
+                    navController.popBackStack(BARCODE_SCANNER_SCREEN, inclusive = true)
                 }
             )
         }
@@ -160,140 +107,128 @@ fun IngredientSearch(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun IngredientSearch(
-    state: SearchState,
+    state: IngredientSearchState,
     pages: LazyPagingItems<IngredientSearch>,
     recentQueries: List<ProductQuery>,
     onSearch: (String?) -> Unit,
     onBarcodeScanner: () -> Unit,
     onBack: () -> Unit,
+    onGoToOpenFoodFactsSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
-
-    val inputField = @Composable {
-        SearchBarDefaults.InputField(
-            textFieldState = state.textFieldState,
-            searchBarState = state.searchBarState,
-            onSearch = {
-                onSearch(it)
-                coroutineScope.launch {
-                    state.searchBarState.animateToCollapsed()
-                }
-            },
-            placeholder = { Text(stringResource(Res.string.action_search)) },
-            leadingIcon = {
-                IconButton(
-                    onClick = {
-                        if (state.searchBarState.currentValue == SearchBarValue.Expanded) {
-                            coroutineScope.launch {
-                                state.searchBarState.animateToCollapsed()
-                            }
-                        } else {
-                            onBack()
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(Res.string.action_go_back)
-                    )
-                }
-            },
-            trailingIcon = {
-                Row {
-                    if (state.textFieldState.text.isNotEmpty()) {
-                        IconButton(
-                            onClick = {
-                                state.textFieldState.clearText()
-                                onSearch(null)
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = stringResource(Res.string.action_clear)
-                            )
-                        }
-                    }
-
-                    IconButton(
-                        onClick = onBarcodeScanner
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.QrCodeScanner,
-                            contentDescription = stringResource(Res.string.action_scan_barcode)
-                        )
-                    }
-                }
-            }
-        )
+    val isEmpty by remember(pages.loadState) {
+        derivedStateOf { pages.itemCount == 0 }
     }
+    val shimmer = rememberShimmer(
+        shimmerBounds = ShimmerBounds.Window
+    )
 
-    ExpandedFullScreenSearchBar(
-        state = state.searchBarState,
-        inputField = inputField
-    ) {
-        LazyColumn {
-            items(recentQueries) { (query) ->
-                ListItem(
-                    modifier = Modifier.clickable {
-                        onSearch(query)
-                        state.textFieldState.setTextAndPlaceCursorAtEnd(query)
-                        coroutineScope.launch {
-                            state.searchBarState.animateToCollapsed()
-                        }
-                    },
-                    headlineContent = {
-                        Text(query)
-                    },
-                    colors = ListItemDefaults.colors(
-                        containerColor = Color.Transparent
-                    ),
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.Default.Schedule,
-                            contentDescription = stringResource(Res.string.action_search)
-                        )
-                    },
-                    trailingContent = {
-                        IconButton(
-                            onClick = {
-                                state.textFieldState.setTextAndPlaceCursorAtEnd(query)
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.NorthWest,
-                                contentDescription = stringResource(
-                                    Res.string.action_insert_suggested_search
-                                )
-                            )
-                        }
-                    }
+    com.maksimowiczm.foodyou.feature.diary.ui.component.SearchScreen(
+        pages = pages,
+        onSearch = onSearch,
+        onClear = { onSearch(null) },
+        onBack = onBack,
+        onBarcodeScanner = onBarcodeScanner,
+        modifier = modifier,
+        textFieldState = state.textFieldState,
+        searchBarState = state.searchBarState,
+        coroutineScope = coroutineScope,
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    // TODO
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(Res.string.action_add_food)
                 )
             }
-        }
-    }
-
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            TopSearchBar(
-                state = state.searchBarState,
-                inputField = inputField
+        },
+        hintCard = {
+            OpenFoodFactsSearchHint(
+                onGoToSettings = onGoToOpenFoodFactsSettings,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        },
+        errorCard = {
+            FoodDatabaseErrorCard(
+                onRetry = pages::retry,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        },
+        fullScreenSearchBarContent = {
+            ProductSearchBarSuggestions(
+                recentQueries = recentQueries,
+                onSearch = {
+                    onSearch(it.query)
+                    state.textFieldState.setTextAndPlaceCursorAtEnd(it.query)
+                    coroutineScope.launch {
+                        state.searchBarState.animateToCollapsed()
+                    }
+                },
+                onFill = {
+                    state.textFieldState.setTextAndPlaceCursorAtEnd(it.query)
+                }
             )
         }
     ) { paddingValues ->
+        if (isEmpty && pages.loadState.append != LoadState.Loading) {
+            Text(
+                text = stringResource(Res.string.neutral_no_products_found),
+                modifier = Modifier
+                    .safeContentPadding()
+                    .align(Alignment.Center)
+            )
+        }
+
         LazyColumn(
+            state = state.lazyListState,
             contentPadding = paddingValues
         ) {
+            if (pages.loadState.refresh == LoadState.Loading && isEmpty) {
+                items(
+                    count = 100,
+                    key = { "skeleton-refresh-$it" }
+                ) {
+                    AddFoodSearchListItemSkeleton(shimmer = shimmer)
+                }
+            }
+
             items(
                 count = pages.itemCount
             ) {
-                val item = pages[it]
-                if (item != null) {
-                    Text(
-                        text = item.toString()
+                Crossfade(
+                    targetState = pages[it],
+                    // Do only placement animation
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = null,
+                        fadeOutSpec = null
                     )
+                ) { target ->
+                    if (target == null) {
+                        AddFoodSearchListItemSkeleton(shimmer = shimmer)
+                    } else {
+                        Text(target.toString())
+                    }
                 }
+            }
+
+            if (pages.loadState.append == LoadState.Loading) {
+                items(
+                    count = 3,
+                    key = { "skeleton-append-$it" }
+                ) {
+                    AddFoodSearchListItemSkeleton(shimmer = shimmer)
+                }
+            }
+
+            // FAB spacer
+            item {
+                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(56.dp))
+                Spacer(Modifier.height(16.dp))
             }
         }
     }

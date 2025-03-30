@@ -63,12 +63,16 @@ import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+private const val CREATE_RECIPE_SCREEN = "create_recipe"
+private const val SEARCH_SCREEN = "search"
+
 @Suppress("ktlint:compose:vm-forwarding-check")
 @Composable
 fun CreateRecipeDialog(
     onClose: () -> Unit,
     onCreate: (recipeId: Long) -> Unit,
     onIncompleteProductClick: (productId: Long) -> Unit,
+    onGoToOpenFoodFactsSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreateRecipeViewModel = koinViewModel(),
     navController: NavHostController = rememberNavController()
@@ -76,11 +80,12 @@ fun CreateRecipeDialog(
     val ingredients by viewModel.ingredients.collectAsStateWithLifecycle()
     val formState = rememberCreateRecipeDialogState()
 
+    // Use NavHost to handle predictive back navigation
     NavHost(
         navController = navController,
-        startDestination = "create_recipe"
+        startDestination = CREATE_RECIPE_SCREEN
     ) {
-        composable("create_recipe") {
+        composable(CREATE_RECIPE_SCREEN) {
             when (val ingredients = ingredients) {
                 null -> {
                     // TODO
@@ -93,7 +98,7 @@ fun CreateRecipeDialog(
                         ingredients = ingredients,
                         onClose = onClose,
                         onIngredientAdd = {
-                            navController.navigate("search")
+                            navController.navigate(SEARCH_SCREEN)
                         },
                         onIncompleteProductClick = onIncompleteProductClick,
                         modifier = modifier
@@ -101,11 +106,12 @@ fun CreateRecipeDialog(
                 }
             }
         }
-        composable("search") {
+        composable(SEARCH_SCREEN) {
             IngredientSearch(
                 onBack = {
-                    navController.popBackStack(route = "search", inclusive = true)
+                    navController.popBackStack(route = SEARCH_SCREEN, inclusive = true)
                 },
+                onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
                 viewModel = viewModel
             )
         }

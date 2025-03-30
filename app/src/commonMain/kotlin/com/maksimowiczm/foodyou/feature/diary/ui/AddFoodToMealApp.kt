@@ -462,7 +462,8 @@ private fun AppNavHost(
                                 launchSingleTop = true
                             }
                         )
-                    }
+                    },
+                    onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings
                 )
             }
         }
