@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.data.model
 
+import com.maksimowiczm.foodyou.feature.diary.data.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 import com.maksimowiczm.foodyou.feature.diary.network.model.OpenFoodFactsProduct
 
@@ -73,7 +74,6 @@ internal fun OpenFoodFactsProduct.toEntity(): ProductEntity? {
     val weightUnit = packageQuantityUnit ?: WeightUnit.Gram
 
     if (listOf(
-            nutrients.energy100g,
             nutrients.proteins100g,
             nutrients.carbohydrates100g,
             nutrients.fat100g,
@@ -83,11 +83,17 @@ internal fun OpenFoodFactsProduct.toEntity(): ProductEntity? {
         return null
     }
 
+    val energy100g = nutrients.energy100g ?: NutrientsHelper.calculateCalories(
+        proteins = nutrients.proteins100g!!,
+        carbohydrates = nutrients.carbohydrates100g!!,
+        fats = nutrients.fat100g!!
+    )
+
     return ProductEntity(
         name = productName,
         brand = brands,
         barcode = code,
-        calories = nutrients.energy100g!!,
+        calories = energy100g,
         proteins = nutrients.proteins100g!!,
         carbohydrates = nutrients.carbohydrates100g!!,
         sugars = nutrients.sugars100g,
