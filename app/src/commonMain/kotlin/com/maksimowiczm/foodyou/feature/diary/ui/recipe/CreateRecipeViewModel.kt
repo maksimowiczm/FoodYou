@@ -36,6 +36,11 @@ class CreateRecipeViewModel(
         _ingredients.value = _ingredients.value + ingredient
     }
 
+    fun onEditIngredient(ingredient: MeasuredIngredient) {
+        _ingredients.value =
+            _ingredients.value.map { if (it.productId == ingredient.productId) ingredient else it }
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val ingredients = _ingredients.flatMapLatest { ingredients ->
         observeIngredientsCase(ingredients.map { it.productId }).map { products ->

@@ -64,12 +64,13 @@ import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateFoodProductMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.EditFoodProductMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.measurementGraph
-import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
+import com.maksimowiczm.foodyou.feature.diary.ui.product.CreateProduct
+import com.maksimowiczm.foodyou.feature.diary.ui.product.EditProduct
+import com.maksimowiczm.foodyou.feature.diary.ui.product.productGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.MeasuredIngredient
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.Ingredient
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
-import com.maksimowiczm.foodyou.navigation.fullScreenDialogComposable
 import com.maksimowiczm.foodyou.ui.component.BackHandler
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
@@ -119,7 +120,7 @@ fun CreateRecipeDialog(
                 },
                 onCreateProduct = {
                     navController.navigate(
-                        route = CREATE_PRODUCT_SCREEN,
+                        route = CreateProduct,
                         navOptions = navOptions {
                             launchSingleTop = true
                         }
@@ -137,17 +138,19 @@ fun CreateRecipeDialog(
                 viewModel = viewModel
             )
         }
-        fullScreenDialogComposable(CREATE_PRODUCT_SCREEN) {
-            CreateProductDialog(
-                onClose = {
-                    navController.popBackStack(route = CREATE_PRODUCT_SCREEN, inclusive = true)
-                },
-                onSuccess = {
-                    // TODO
-                    // Redirect to add product to recipe
-                }
-            )
-        }
+        productGraph(
+            onCreateClose = { navController.popBackStack<CreateProduct>(inclusive = true) },
+            onCreateSuccess = {
+                navController.navigate(
+                    route = CreateFoodProductMeasurement(it),
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            },
+            onEditClose = { navController.popBackStack<EditProduct>(inclusive = true) },
+            onEditSuccess = { navController.popBackStack<EditProduct>(inclusive = true) }
+        )
         measurementGraph(
             onCreate = { foodId, weightMeasurement ->
                 viewModel.onAddIngredient(
@@ -175,7 +178,16 @@ fun CreateRecipeDialog(
                 navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
             },
             onEditFood = {
-                // TODO
+                when (it) {
+                    is FoodId.Product -> navController.navigate(
+                        route = EditProduct(it.productId),
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+
+                    is FoodId.Recipe -> TODO()
+                }
             },
             onDeleteFood = {
                 // TODO
