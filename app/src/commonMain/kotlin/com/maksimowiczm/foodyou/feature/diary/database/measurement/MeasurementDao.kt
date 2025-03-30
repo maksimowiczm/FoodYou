@@ -260,4 +260,19 @@ interface MeasurementDao {
         """
     )
     fun observeProductMeasurementsByProductId(id: Long): Flow<List<MeasurementSuggestion>>
+
+    @Query(
+        """
+        SELECT rm.measurement, rm.quantity
+        FROM RecipeMeasurementEntity rm
+        WHERE rm.recipeId = :id
+        AND rm.createdAt = (
+            SELECT MAX(wm2.createdAt)
+            FROM WeightMeasurementEntity wm2
+            WHERE wm2.measurement = rm.measurement
+            AND wm2.productId = :id
+        )
+        """
+    )
+    fun observeRecipeMeasurementsByRecipeId(id: Long): Flow<List<MeasurementSuggestion>>
 }

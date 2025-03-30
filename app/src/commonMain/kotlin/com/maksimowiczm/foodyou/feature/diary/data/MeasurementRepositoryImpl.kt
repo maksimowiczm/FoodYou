@@ -14,13 +14,17 @@ import com.maksimowiczm.foodyou.feature.diary.database.measurement.MeasurementDa
 import com.maksimowiczm.foodyou.feature.diary.database.measurement.MeasurementSuggestion
 import com.maksimowiczm.foodyou.feature.diary.database.measurement.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.feature.diary.database.measurement.WeightMeasurementEntity
+import com.maksimowiczm.foodyou.feature.diary.database.recipe.RecipeDao
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
 class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository {
     val measurementDao: MeasurementDao = database.measurementDao
+    val recipeDao: RecipeDao = database.recipeDao
 
     override suspend fun addMeasurement(
         date: LocalDate,
@@ -172,17 +176,41 @@ class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository
             }
         }
 
-    override fun observeMeasurementSuggestionByFood(foodId: FoodId): Flow<IMeasurementSuggestion> {
+    override fun observeMeasurementSuggestionByFood(foodId: FoodId): Flow<IMeasurementSuggestion> =
         when (foodId) {
             is FoodId.Product -> {
-                return measurementDao.observeProductMeasurementsByProductId(
+                measurementDao.observeProductMeasurementsByProductId(
                     id = foodId.productId
                 ).map { it.toDomain() }
             }
 
-            is FoodId.Recipe -> TODO()
+            is FoodId.Recipe -> {
+                combine(
+                    measurementDao.observeRecipeMeasurementsByRecipeId(id = foodId.recipeId),
+                    recipeDao.observeRecipeById(foodId.recipeId).filterNotNull()
+                ) { suggestions, recipe ->
+                    val suggestions = suggestions.associateBy { it.measurement }.toMutableMap()
+
+                    if (suggestions[WeightMeasurementEnum.Package] == null) {
+                        suggestions[WeightMeasurementEnum.Package] = MeasurementSuggestion(
+                            measurement = WeightMeasurementEnum.Package,
+                            quantity = 1f
+                        )
+                    }
+
+                    if (suggestions[WeightMeasurementEnum.Serving] == null &&
+                        recipe.recipe.servings != null
+                    ) {
+                        suggestions[WeightMeasurementEnum.Serving] = MeasurementSuggestion(
+                            measurement = WeightMeasurementEnum.Serving,
+                            quantity = 1f
+                        )
+                    }
+
+                    suggestions.values.toList().toDomain()
+                }
+            }
         }
-    }
 
     companion object {
         private const val TAG = "MeasurementRepositoryImpl"

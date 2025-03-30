@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.diary.ui.measurement.cases
 
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
+import com.maksimowiczm.foodyou.feature.diary.data.RecipeRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementSuggestion
@@ -10,40 +11,54 @@ import com.maksimowiczm.foodyou.feature.diary.ui.measurement.model.Food
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class ObserveProductCase(
     private val productRepository: ProductRepository,
-    private val measurementsRepository: MeasurementRepository,
-    private val measurementRepository: MeasurementRepository
+    private val measurementRepository: MeasurementRepository,
+    private val recipeRepository: RecipeRepository
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(foodId: FoodId): Flow<Food?> {
-        // TODO
+    operator fun invoke(foodId: FoodId): Flow<Food?> = when (foodId) {
+        is FoodId.Recipe -> recipeRepository.observeRecipeById(foodId.recipeId)
+            .filterNotNull()
+            .flatMapLatest { recipe ->
 
-        foodId as? FoodId.Product ?: return flowOf(null)
-
-        return productRepository.observeProductById(foodId.productId).flatMapLatest { product ->
-            if (product == null) {
-                return@flatMapLatest flowOf(null)
+                measurementRepository
+                    .observeMeasurementSuggestionByFood(foodId)
+                    .map { suggestions ->
+                        Food(
+                            id = recipe.id,
+                            name = recipe.name,
+                            nutrients = recipe.nutrients,
+                            suggestion = suggestions,
+                            packageWeight = recipe.packageWeight,
+                            servingWeight = recipe.servingWeight,
+                            highlight = null
+                        )
+                    }
             }
 
-            measurementsRepository
-                .observeMeasurementSuggestionByFood(foodId)
-                .map { suggestions ->
-                    Food(
-                        id = product.id,
-                        name = product.name,
-                        nutrients = product.nutrients,
-                        suggestion = suggestions,
-                        packageWeight = product.packageWeight,
-                        servingWeight = product.servingWeight,
-                        highlight = null
-                    )
-                }
-        }
+        is FoodId.Product -> productRepository.observeProductById(foodId.productId)
+            .filterNotNull()
+            .flatMapLatest { product ->
+                measurementRepository
+                    .observeMeasurementSuggestionByFood(foodId)
+                    .map { suggestions ->
+                        Food(
+                            id = product.id,
+                            name = product.name,
+                            nutrients = product.nutrients,
+                            suggestion = suggestions,
+                            packageWeight = product.packageWeight,
+                            servingWeight = product.servingWeight,
+                            highlight = null
+                        )
+                    }
+            }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

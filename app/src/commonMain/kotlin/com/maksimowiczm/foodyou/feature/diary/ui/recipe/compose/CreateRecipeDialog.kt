@@ -49,6 +49,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -62,8 +63,8 @@ import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDef
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults.measurementStringShort
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsList
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsRow
-import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateFoodProductMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.measurement.EditFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.EditProductMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.compose.MeasurementFormScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.product.CreateProduct
@@ -78,6 +79,7 @@ import com.maksimowiczm.foodyou.ui.component.BackHandler
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -89,7 +91,7 @@ private const val EDIT_INGREDIENT_SCREEN = "edit_ingredient"
 @Composable
 fun CreateRecipeDialog(
     onClose: () -> Unit,
-    onCreate: (recipeId: Long) -> Unit,
+    onCreate: (FoodId.Recipe) -> Unit,
     onIncompleteProductClick: (productId: Long) -> Unit,
     onGoToOpenFoodFactsSettings: () -> Unit,
     modifier: Modifier = Modifier,
@@ -119,6 +121,16 @@ fun CreateRecipeDialog(
                     editIngredientIndex = ingredients.indexOf(ingredient)
                     navController.navigate(EDIT_INGREDIENT_SCREEN)
                 },
+                onCreate = {
+                    viewModel.viewModelScope.launch {
+                        val id = viewModel.onCreate(
+                            name = formState.nameTextFieldState.value,
+                            servings = formState.servingsTextFieldState.value
+                        )
+
+                        onCreate(id)
+                    }
+                },
                 modifier = modifier
             )
         }
@@ -138,7 +150,7 @@ fun CreateRecipeDialog(
                 onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
                 onProductClick = {
                     navController.navigate(
-                        route = CreateFoodProductMeasurement(it.productId),
+                        route = CreateProductMeasurement(it.productId),
                         navOptions {
                             launchSingleTop = true
                         }
@@ -184,7 +196,7 @@ fun CreateRecipeDialog(
             onCreateClose = { navController.popBackStack<CreateProduct>(inclusive = true) },
             onCreateSuccess = {
                 navController.navigate(
-                    route = CreateFoodProductMeasurement(it),
+                    route = CreateProductMeasurement(it),
                     navOptions = navOptions {
                         launchSingleTop = true
                     }
@@ -211,13 +223,13 @@ fun CreateRecipeDialog(
                 )
             },
             onCreateBack = {
-                navController.popBackStack<CreateFoodProductMeasurement>(inclusive = true)
+                navController.popBackStack<CreateProductMeasurement>(inclusive = true)
             },
             onEdit = { measurementId, weightMeasurement ->
                 // TODO
             },
             onEditBack = {
-                navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
+                navController.popBackStack<EditProductMeasurement>(inclusive = true)
             },
             onEditFood = {
                 when (it) {
@@ -247,6 +259,7 @@ private fun CreateRecipeDialog(
     onIngredientAdd: () -> Unit,
     onIncompleteProductClick: (productId: Long) -> Unit,
     onIngredientClick: (Ingredient) -> Unit,
+    onCreate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
@@ -289,10 +302,17 @@ private fun CreateRecipeDialog(
                 }
             },
             actions = {
+                val enabled = remember(
+                    state.nameTextFieldState.textFieldState.text,
+                    ingredients
+                ) {
+                    state.nameTextFieldState.textFieldState.text.isNotBlank() &&
+                        ingredients.isNotEmpty()
+                }
+
                 TextButton(
-                    onClick = {
-                        // TODO
-                    }
+                    onClick = onCreate,
+                    enabled = enabled
                 ) {
                     Text(stringResource(Res.string.action_create))
                 }

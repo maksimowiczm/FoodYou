@@ -26,8 +26,9 @@ import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSe
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.rememberAddFoodSearchState
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.compose.DiaryDayMealScreen
-import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateFoodProductMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.measurement.EditFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateRecipeMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.EditProductMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.diary.ui.product.EditProduct
@@ -153,13 +154,18 @@ private fun AppNavHost(
                 onEditEntry = {
                     when (it) {
                         is MeasurementId.Product -> navController.navigate(
-                            route = EditFoodProductMeasurement(it.measurementId),
+                            route = EditProductMeasurement(it.measurementId),
                             navOptions = navOptions {
                                 launchSingleTop = true
                             }
                         )
 
-                        is MeasurementId.Recipe -> TODO()
+                        is MeasurementId.Recipe -> navController.navigate(
+                            route = EditProductMeasurement(it.measurementId),
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            }
+                        )
                     }
                 }
             )
@@ -197,13 +203,19 @@ private fun AppNavHost(
                     },
                     onProductClick = {
                         navController.navigate(
-                            route = CreateFoodProductMeasurement(it),
+                            route = CreateProductMeasurement(it),
                             navOptions = navOptions {
                                 launchSingleTop = true
                             }
                         )
                     },
                     onRecipeClick = {
+                        navController.navigate(
+                            route = CreateRecipeMeasurement(it),
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            }
+                        )
                     },
                     onCreateProduct = {
                         navController.navigate(
@@ -252,7 +264,7 @@ private fun AppNavHost(
 
         measurementGraph(
             onCreateBack = {
-                navController.popBackStack<CreateFoodProductMeasurement>(inclusive = true)
+                navController.popBackStack<CreateProductMeasurement>(inclusive = true)
             },
             onCreate = { food, measurement ->
                 // TODO
@@ -262,11 +274,11 @@ private fun AppNavHost(
                         foodId = food,
                         weightMeasurement = measurement
                     )
-                    navController.popBackStack<CreateFoodProductMeasurement>(inclusive = true)
+                    navController.popBackStack<CreateProductMeasurement>(inclusive = true)
                 }
             },
             onEditBack = {
-                navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
+                navController.popBackStack<EditProductMeasurement>(inclusive = true)
             },
             onEditFood = { foodId ->
                 when (foodId) {
@@ -288,11 +300,11 @@ private fun AppNavHost(
                         measurementId = measurementId,
                         weightMeasurement = measurement
                     )
-                    navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
+                    navController.popBackStack<EditProductMeasurement>(inclusive = true)
                 }
             },
             onDeleteFood = {
-                navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
+                navController.popBackStack<EditProductMeasurement>(inclusive = true)
                 searchViewModel.onDeleteFood(it)
             }
         )
@@ -301,7 +313,7 @@ private fun AppNavHost(
             onCreateClose = { navController.popBackStack<CreateProduct>(inclusive = true) },
             onCreateSuccess = { productId ->
                 navController.navigate(
-                    route = CreateFoodProductMeasurement(productId),
+                    route = CreateProductMeasurement(productId),
                     navOptions = navOptions {
                         launchSingleTop = true
 
@@ -325,7 +337,15 @@ private fun AppNavHost(
                         navController.popBackStack<CreateRecipeDialog>(inclusive = true)
                     },
                     onCreate = {
-                        // TODO
+                        navController.navigate(
+                            route = CreateRecipeMeasurement(it.recipeId),
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                                popUpTo<Search> {
+                                    inclusive = false
+                                }
+                            }
+                        )
                     },
                     onIncompleteProductClick = {
                         navController.navigate(

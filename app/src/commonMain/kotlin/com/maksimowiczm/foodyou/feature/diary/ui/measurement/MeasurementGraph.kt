@@ -10,10 +10,16 @@ import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CreateFoodProductMeasurement(val productId: Long)
+data class CreateProductMeasurement(val productId: Long)
 
 @Serializable
-data class EditFoodProductMeasurement(val productMeasurementId: Long)
+data class CreateRecipeMeasurement(val productId: Long)
+
+@Serializable
+data class EditProductMeasurement(val productMeasurementId: Long)
+
+@Serializable
+data class EditRecipeMeasurement(val recipeMeasurementId: Long)
 
 fun NavGraphBuilder.measurementGraph(
     onCreateBack: () -> Unit,
@@ -23,8 +29,8 @@ fun NavGraphBuilder.measurementGraph(
     onEditFood: (FoodId) -> Unit,
     onDeleteFood: (FoodId) -> Unit
 ) {
-    crossfadeComposable<CreateFoodProductMeasurement> {
-        val (productId) = it.toRoute<CreateFoodProductMeasurement>()
+    crossfadeComposable<CreateProductMeasurement> {
+        val (productId) = it.toRoute<CreateProductMeasurement>()
 
         MeasurementFormScreen(
             foodId = FoodId.Product(productId),
@@ -34,8 +40,19 @@ fun NavGraphBuilder.measurementGraph(
             onConfirm = { onCreate(FoodId.Product(productId), it) }
         )
     }
-    crossfadeComposable<EditFoodProductMeasurement> {
-        val (measurementId) = it.toRoute<EditFoodProductMeasurement>()
+    crossfadeComposable<CreateRecipeMeasurement> {
+        val (recipeId) = it.toRoute<CreateRecipeMeasurement>()
+
+        MeasurementFormScreen(
+            foodId = FoodId.Recipe(recipeId),
+            onEditFood = onEditFood,
+            onDeleteFood = onDeleteFood,
+            onBack = onCreateBack,
+            onConfirm = { onCreate(FoodId.Recipe(recipeId), it) }
+        )
+    }
+    crossfadeComposable<EditProductMeasurement> {
+        val (measurementId) = it.toRoute<EditProductMeasurement>()
 
         MeasurementFormScreen(
             measurementId = MeasurementId.Product(measurementId),
@@ -43,6 +60,17 @@ fun NavGraphBuilder.measurementGraph(
             onDeleteFood = onDeleteFood,
             onBack = onEditBack,
             onConfirm = { onEdit(MeasurementId.Product(measurementId), it) }
+        )
+    }
+    crossfadeComposable<EditRecipeMeasurement> {
+        val (measurementId) = it.toRoute<EditRecipeMeasurement>()
+
+        MeasurementFormScreen(
+            measurementId = MeasurementId.Recipe(measurementId),
+            onEditFood = onEditFood,
+            onDeleteFood = onDeleteFood,
+            onBack = onEditBack,
+            onConfirm = { onEdit(MeasurementId.Recipe(measurementId), it) }
         )
     }
 }

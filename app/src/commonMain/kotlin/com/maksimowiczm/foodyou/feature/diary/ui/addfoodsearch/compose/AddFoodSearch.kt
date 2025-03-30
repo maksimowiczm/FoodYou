@@ -320,7 +320,7 @@ private fun SearchScreen(
                                 onClick = {
                                     when (target.id) {
                                         is FoodId.Product -> onProductClick(target.id.productId)
-                                        is FoodId.Recipe -> TODO()
+                                        is FoodId.Recipe -> onRecipeClick(target.id.recipeId)
                                     }
                                 },
                                 onToggle = {
