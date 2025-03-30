@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesProgressIndicator
@@ -59,6 +58,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.Ingredient
+import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.fullScreenDialogComposable
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
@@ -89,11 +89,11 @@ fun CreateRecipeDialog(
         navController = navController,
         startDestination = CREATE_RECIPE_SCREEN
     ) {
-        composable(CREATE_RECIPE_SCREEN) {
+        crossfadeComposable(CREATE_RECIPE_SCREEN) {
             when (val ingredients = ingredients) {
                 null -> {
                     // TODO
-                    return@composable
+                    return@crossfadeComposable
                 }
 
                 else -> {
@@ -110,7 +110,7 @@ fun CreateRecipeDialog(
                 }
             }
         }
-        composable(SEARCH_SCREEN) {
+        crossfadeComposable(SEARCH_SCREEN) {
             IngredientSearch(
                 onBack = {
                     navController.popBackStack(route = SEARCH_SCREEN, inclusive = true)

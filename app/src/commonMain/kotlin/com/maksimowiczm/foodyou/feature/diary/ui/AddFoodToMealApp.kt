@@ -3,14 +3,9 @@ package com.maksimowiczm.foodyou.feature.diary.ui
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -37,8 +32,8 @@ import com.maksimowiczm.foodyou.feature.diary.ui.product.EditProduct
 import com.maksimowiczm.foodyou.feature.diary.ui.product.productGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose.CreateRecipeDialog
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.navigation.fullScreenDialogComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
-import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -289,37 +284,7 @@ private fun AppNavHost(
             onEditSuccess = { navController.popBackStack<EditProduct>(inclusive = true) }
         )
 
-        crossfadeComposable<CreateRecipeDialog>(
-            enterTransition = {
-                if (initialState.destination.hasRoute<EditProduct>()) {
-                    crossfadeIn()
-                } else {
-                    crossfadeIn() + slideInVertically(
-                        animationSpec = tween(
-                            easing = LinearOutSlowInEasing
-                        ),
-                        initialOffsetY = { it }
-                    )
-                }
-            },
-            exitTransition = {
-                if (targetState.destination.hasRoute<EditProduct>()) {
-                    crossfadeOut()
-                } else {
-                    slideOutVertically(
-                        animationSpec = tween(
-                            easing = FastOutLinearInEasing
-                        ),
-                        targetOffsetY = { it }
-                    ) + scaleOut(
-                        targetScale = 0.8f,
-                        animationSpec = tween(
-                            easing = FastOutLinearInEasing
-                        )
-                    )
-                }
-            }
-        ) {
+        fullScreenDialogComposable<CreateRecipeDialog> {
             Surface(
                 shadowElevation = 6.dp,
                 shape = MaterialTheme.shapes.medium
