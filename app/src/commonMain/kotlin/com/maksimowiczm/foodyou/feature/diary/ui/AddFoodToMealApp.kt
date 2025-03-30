@@ -10,6 +10,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
@@ -25,6 +30,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchView
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearch
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.rememberAddFoodSearchState
+import com.maksimowiczm.foodyou.feature.diary.ui.component.DeleteProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.compose.DiaryDayMealScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateProductMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateRecipeMeasurement
@@ -109,6 +115,53 @@ private fun AppNavHost(
         )
     } else {
         MealHome
+    }
+
+    var deleteFoodId by rememberSaveable(
+        stateSaver = Saver(
+            save = {
+                val id = when (it) {
+                    is FoodId.Product -> it.productId
+                    is FoodId.Recipe -> it.recipeId
+                    null -> -1
+                }
+                val enum = when (it) {
+                    is FoodId.Product -> 0L
+                    is FoodId.Recipe -> 1
+                    null -> -1
+                }
+
+                arrayOf<Long>(id, enum)
+            },
+            restore = {
+                val id = it[0]
+                val enum = it[1]
+                when (enum) {
+                    0L -> FoodId.Product(id)
+                    1L -> FoodId.Recipe(id)
+                    else -> null
+                }
+            }
+        )
+    ) {
+        mutableStateOf<FoodId?>(null)
+    }
+    val handleDelete = { foodId: FoodId ->
+        searchViewModel.onDeleteFood(foodId = foodId)
+        deleteFoodId = null
+        navController.popBackStack<EditProductMeasurement>(inclusive = true)
+        navController.popBackStack<EditRecipeMeasurement>(inclusive = true)
+        navController.popBackStack<CreateProductMeasurement>(inclusive = true)
+        navController.popBackStack<CreateRecipeMeasurement>(inclusive = true)
+    }
+    when (val foodId = deleteFoodId) {
+        is FoodId.Recipe,
+        is FoodId.Product -> DeleteProductDialog(
+            onDismissRequest = { deleteFoodId = null },
+            onDelete = { handleDelete(foodId) }
+        )
+
+        null -> Unit
     }
 
     NavHost(
@@ -309,8 +362,7 @@ private fun AppNavHost(
                 }
             },
             onDeleteFood = {
-                navController.popBackStack<EditProductMeasurement>(inclusive = true)
-                searchViewModel.onDeleteFood(it)
+                deleteFoodId = it
             }
         )
 

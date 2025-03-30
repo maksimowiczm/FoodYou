@@ -34,6 +34,7 @@ import com.maksimowiczm.foodyou.feature.diary.network.OpenFoodFactsRemoteMediato
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.ui.AddFoodToMealApp
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases.DeleteFoodCase
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases.ObserveAddFoodSearchListItemCase
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCardViewModel
@@ -365,6 +366,7 @@ object DiaryFeature : Feature {
 
         // Measurement
         factoryOf(::ObserveProductCase)
+        factoryOf(::DeleteFoodCase)
 
         // MealsCard
         factoryOf(::ObserveMealsByDateCase)

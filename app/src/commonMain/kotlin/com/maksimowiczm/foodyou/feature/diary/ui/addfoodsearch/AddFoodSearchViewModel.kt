@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases.DeleteFoodCase
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases.ObserveAddFoodSearchListItemCase
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.model.AddFoodSearchListItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,6 +23,7 @@ import kotlinx.datetime.LocalDate
 
 class AddFoodSearchViewModel(
     private val observeUseCase: ObserveAddFoodSearchListItemCase,
+    private val deleteFoodCase: DeleteFoodCase,
     searchRepository: SearchRepository,
     private val measurementRepository: MeasurementRepository,
     private val mealId: Long,
@@ -87,6 +89,8 @@ class AddFoodSearchViewModel(
     }
 
     fun onDeleteFood(foodId: FoodId) {
-        // TODO
+        viewModelScope.launch {
+            deleteFoodCase(foodId)
+        }
     }
 }
