@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -34,6 +35,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose.CreateRecipeDial
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.fullScreenDialogComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -248,10 +250,19 @@ private fun AppNavHost(
         }
 
         measurementGraph(
-            mealId = mealId,
-            date = date,
             onCreateBack = {
                 navController.popBackStack<CreateFoodProductMeasurement>(inclusive = true)
+            },
+            onCreate = { food, measurement ->
+                // TODO
+                // I may not have a brain gentlemen but I have an idea
+                searchViewModel.viewModelScope.launch {
+                    searchViewModel.onCreateMeasurement(
+                        foodId = food,
+                        weightMeasurement = measurement
+                    )
+                    navController.popBackStack<CreateFoodProductMeasurement>(inclusive = true)
+                }
             },
             onEditBack = {
                 navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
@@ -263,6 +274,17 @@ private fun AppNavHost(
                         launchSingleTop = true
                     }
                 )
+            },
+            onEdit = { measurementId, measurement ->
+                // TODO
+                // I may not have a brain gentlemen but I have an idea
+                searchViewModel.viewModelScope.launch {
+                    searchViewModel.onUpdateMeasurement(
+                        measurementId = measurementId,
+                        weightMeasurement = measurement
+                    )
+                    navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
+                }
             }
         )
 

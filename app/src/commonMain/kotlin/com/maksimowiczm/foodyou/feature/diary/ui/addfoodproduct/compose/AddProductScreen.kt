@@ -87,18 +87,11 @@ import org.jetbrains.compose.resources.stringResource
 fun AddProductScreen(
     onBack: () -> Unit,
     onEditProduct: (productId: Long) -> Unit,
+    onConfirm: (weightMeasurement: WeightMeasurement) -> Unit,
     viewModel: MeasurementViewModel,
     modifier: Modifier = Modifier
 ) {
-    val isDone by viewModel.done.collectAsStateWithLifecycle()
-    LaunchedEffect(isDone, onBack) {
-        if (isDone) {
-            onBack()
-        }
-    }
-
     val product by viewModel.product.collectAsStateWithLifecycle(null)
-    val highlight by viewModel.processing.collectAsStateWithLifecycle()
     val hapticFeedback = LocalHapticFeedback.current
 
     when (val product = product) {
@@ -111,10 +104,10 @@ fun AddProductScreen(
             onDeleteProduct = viewModel::onDelete,
             onConfirm = { weightMeasurement ->
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                viewModel.onConfirm(weightMeasurement)
+                onConfirm(weightMeasurement)
             },
             product = product,
-            highlight = highlight ?: product.highlight,
+            highlight = product.highlight,
             modifier = modifier
         )
     }

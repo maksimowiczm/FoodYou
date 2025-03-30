@@ -2,10 +2,11 @@ package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.compose.AddProductScreen
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
-import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -17,10 +18,10 @@ data class CreateFoodProductMeasurement(val productId: Long)
 data class EditFoodProductMeasurement(val productMeasurementId: Long)
 
 fun NavGraphBuilder.measurementGraph(
-    mealId: Long,
-    date: LocalDate,
     onCreateBack: () -> Unit,
+    onCreate: (FoodId, WeightMeasurement) -> Unit,
     onEditBack: () -> Unit,
+    onEdit: (MeasurementId, WeightMeasurement) -> Unit,
     onEditProduct: (productId: Long) -> Unit
 ) {
     crossfadeComposable<CreateFoodProductMeasurement> {
@@ -29,8 +30,11 @@ fun NavGraphBuilder.measurementGraph(
         AddProductScreen(
             onBack = onCreateBack,
             onEditProduct = onEditProduct,
+            onConfirm = {
+                onCreate(FoodId.Product(productId), it)
+            },
             viewModel = koinViewModel<CreateMeasurementViewModel>(
-                parameters = { parametersOf(productId, mealId, date) }
+                parameters = { parametersOf(productId) }
             )
         )
     }
@@ -40,6 +44,9 @@ fun NavGraphBuilder.measurementGraph(
         AddProductScreen(
             onBack = onEditBack,
             onEditProduct = onEditProduct,
+            onConfirm = {
+                onEdit(MeasurementId.Product(measurementId), it)
+            },
             viewModel = koinViewModel<UpdateMeasurementViewModel>(
                 parameters = { parametersOf(MeasurementId.Product(measurementId)) }
             )

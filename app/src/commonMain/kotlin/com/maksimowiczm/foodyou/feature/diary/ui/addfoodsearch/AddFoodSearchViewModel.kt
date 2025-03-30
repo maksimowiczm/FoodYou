@@ -6,7 +6,9 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases.ObserveAddFoodSearchListItemCase
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.model.AddFoodSearchListItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -63,5 +65,24 @@ class AddFoodSearchViewModel(
         viewModelScope.launch {
             measurementRepository.removeMeasurement(measurementId)
         }
+    }
+
+    suspend fun onCreateMeasurement(foodId: FoodId, weightMeasurement: WeightMeasurement) {
+        measurementRepository.addMeasurement(
+            mealId = mealId,
+            date = date,
+            foodId = foodId,
+            weightMeasurement = weightMeasurement
+        )
+    }
+
+    suspend fun onUpdateMeasurement(
+        measurementId: MeasurementId,
+        weightMeasurement: WeightMeasurement
+    ) {
+        measurementRepository.updateMeasurement(
+            id = measurementId,
+            weightMeasurement = weightMeasurement
+        )
     }
 }
