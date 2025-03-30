@@ -74,15 +74,11 @@ class ObserveProductCase(
                         return@combine null
                     }
 
-                    val packageSuggestion = packageSuggestion ?: suggestion.packageSuggestion
-                    val servingSuggestion = servingSuggestion ?: suggestion.servingSuggestion
-                    val weightSuggestion = weightSuggestion ?: suggestion.weightSuggestion
-
-                    val suggestion = object : MeasurementSuggestion {
-                        override val packageSuggestion = packageSuggestion
-                        override val servingSuggestion = servingSuggestion
-                        override val weightSuggestion = weightSuggestion
-                    }
+                    val suggestion = MeasurementSuggestion(
+                        packageSuggestion = packageSuggestion ?: suggestion.packageSuggestion,
+                        servingSuggestion = servingSuggestion ?: suggestion.servingSuggestion,
+                        weightSuggestion = weightSuggestion ?: suggestion.weightSuggestion
+                    )
 
                     Food(
                         id = product.id,

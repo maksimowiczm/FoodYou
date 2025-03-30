@@ -215,18 +215,12 @@ private fun RecipeMeasurementEntity.toFoodMeasurement(): FoodMeasurement = FoodM
     measurementId = MeasurementId.Recipe(id)
 )
 
-private fun List<MeasurementSuggestion>.toDomain() = object : IMeasurementSuggestion {
-    override val packageSuggestion: WeightMeasurement.Package?
-        get() = singleOrNull { it.measurement == WeightMeasurementEnum.Package }
-            ?.let { WeightMeasurement.Package(it.quantity) }
-
-    override val servingSuggestion: WeightMeasurement.Serving?
-        get() = singleOrNull { it.measurement == WeightMeasurementEnum.Serving }
-            ?.let { WeightMeasurement.Serving(it.quantity) }
-
-    override val weightSuggestion: WeightMeasurement.WeightUnit
-        get() = singleOrNull { it.measurement == WeightMeasurementEnum.WeightUnit }
-            ?.let { WeightMeasurement.WeightUnit(it.quantity) } ?: WeightMeasurement.WeightUnit(
-            100f
-        )
-}
+private fun List<MeasurementSuggestion>.toDomain() = IMeasurementSuggestion(
+    packageSuggestion = singleOrNull { it.measurement == WeightMeasurementEnum.Package }
+        ?.let { WeightMeasurement.Package(it.quantity) },
+    servingSuggestion = singleOrNull { it.measurement == WeightMeasurementEnum.Serving }
+        ?.let { WeightMeasurement.Serving(it.quantity) },
+    weightSuggestion = singleOrNull { it.measurement == WeightMeasurementEnum.WeightUnit }
+        ?.let { WeightMeasurement.WeightUnit(it.quantity) }
+        ?: WeightMeasurement.WeightUnit(100f)
+)

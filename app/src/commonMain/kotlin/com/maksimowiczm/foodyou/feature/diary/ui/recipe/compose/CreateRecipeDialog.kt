@@ -35,6 +35,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -63,6 +64,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsList
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateFoodProductMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.EditFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.compose.MeasurementFormScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.diary.ui.product.EditProduct
@@ -71,6 +73,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.MeasuredIngredient
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.Ingredient
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.navigation.fullScreenDialogComposable
 import com.maksimowiczm.foodyou.ui.component.BackHandler
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
@@ -80,7 +83,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 private const val CREATE_RECIPE_SCREEN = "create_recipe"
 private const val SEARCH_SCREEN = "search"
-private const val CREATE_PRODUCT_SCREEN = "create_product"
+private const val EDIT_INGREDIENT_SCREEN = "edit_ingredient"
 
 @Suppress("ktlint:compose:vm-forwarding-check")
 @Composable
@@ -96,6 +99,8 @@ fun CreateRecipeDialog(
     val ingredients by viewModel.ingredients.collectAsStateWithLifecycle()
     val formState = rememberCreateRecipeDialogState()
 
+    var editIngredientIndex by rememberSaveable { mutableIntStateOf(-1) }
+
     // Use NavHost to handle predictive back navigation
     NavHost(
         navController = navController,
@@ -110,6 +115,10 @@ fun CreateRecipeDialog(
                     navController.navigate(SEARCH_SCREEN)
                 },
                 onIncompleteProductClick = onIncompleteProductClick,
+                onIngredientClick = { ingredient ->
+                    editIngredientIndex = ingredients.indexOf(ingredient)
+                    navController.navigate(EDIT_INGREDIENT_SCREEN)
+                },
                 modifier = modifier
             )
         }
@@ -136,6 +145,39 @@ fun CreateRecipeDialog(
                     )
                 },
                 viewModel = viewModel
+            )
+        }
+        fullScreenDialogComposable(EDIT_INGREDIENT_SCREEN) {
+            val ingredient = if (editIngredientIndex != -1) {
+                ingredients[editIngredientIndex]
+            } else {
+                return@fullScreenDialogComposable
+            }
+
+            MeasurementFormScreen(
+                foodId = ingredient.product.id,
+                highlight = ingredient.weightMeasurement,
+                onEditFood = {
+                    navController.navigate(
+                        route = EditProduct(ingredient.product.id.productId),
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                },
+                onDeleteFood = {
+                    // TODO
+                },
+                onBack = {
+                    navController.popBackStack(route = EDIT_INGREDIENT_SCREEN, inclusive = true)
+                },
+                onConfirm = { weightMeasurement ->
+                    viewModel.onEditIngredient(
+                        index = editIngredientIndex,
+                        measurement = weightMeasurement
+                    )
+                    navController.popBackStack(route = EDIT_INGREDIENT_SCREEN, inclusive = true)
+                }
             )
         }
         productGraph(
@@ -204,6 +246,7 @@ private fun CreateRecipeDialog(
     onClose: () -> Unit,
     onIngredientAdd: () -> Unit,
     onIncompleteProductClick: (productId: Long) -> Unit,
+    onIngredientClick: (Ingredient) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
@@ -306,9 +349,7 @@ private fun CreateRecipeDialog(
             ingredientsSection(
                 onAddIngredient = onIngredientAdd,
                 ingredients = ingredients,
-                onIngredientClick = {
-                    // TODO
-                }
+                onIngredientClick = onIngredientClick
             )
 
             if (ingredients.isNotEmpty()) {

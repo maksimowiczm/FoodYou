@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.MeasuredIngredient
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.ObserveIngredientsCase
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.ObserveProductsCase
@@ -36,9 +37,14 @@ class CreateRecipeViewModel(
         _ingredients.value = _ingredients.value + ingredient
     }
 
-    fun onEditIngredient(ingredient: MeasuredIngredient) {
-        _ingredients.value =
-            _ingredients.value.map { if (it.productId == ingredient.productId) ingredient else it }
+    fun onEditIngredient(index: Int, measurement: WeightMeasurement) {
+        _ingredients.value = _ingredients.value.mapIndexed { i, ingredient ->
+            if (i == index) {
+                ingredient.copy(weightMeasurement = measurement)
+            } else {
+                ingredient
+            }
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

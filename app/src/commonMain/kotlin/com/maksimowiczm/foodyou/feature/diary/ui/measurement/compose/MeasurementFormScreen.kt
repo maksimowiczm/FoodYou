@@ -18,13 +18,13 @@ fun MeasurementFormScreen(
     onDeleteFood: (FoodId) -> Unit,
     onBack: () -> Unit,
     onConfirm: (WeightMeasurement) -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     observeProductCase: ObserveProductCase = koinInject()
 ) {
     val foodState = observeProductCase(foodId).collectAsStateWithLifecycle(null)
 
     when (val food = foodState.value) {
-        null -> Surface(Modifier.Companion.fillMaxSize()) {}
+        null -> Surface(Modifier.fillMaxSize()) {}
         else -> MeasurementForm(
             name = food.name,
             nutrients = food.nutrients,
@@ -40,6 +40,50 @@ fun MeasurementFormScreen(
             onBack = onBack,
             modifier = modifier
         )
+    }
+}
+
+@Composable
+fun MeasurementFormScreen(
+    foodId: FoodId,
+    highlight: WeightMeasurement,
+    onEditFood: (FoodId) -> Unit,
+    onDeleteFood: (FoodId) -> Unit,
+    onBack: () -> Unit,
+    onConfirm: (WeightMeasurement) -> Unit,
+    modifier: Modifier = Modifier,
+    observeProductCase: ObserveProductCase = koinInject()
+) {
+    val foodState = observeProductCase(foodId).collectAsStateWithLifecycle(null)
+
+    when (val food = foodState.value) {
+        null -> Surface(Modifier.fillMaxSize()) {}
+        else -> {
+            val suggestion = food.suggestion.copy(
+                packageSuggestion = highlight as? WeightMeasurement.Package
+                    ?: food.suggestion.packageSuggestion,
+                servingSuggestion = highlight as? WeightMeasurement.Serving
+                    ?: food.suggestion.servingSuggestion,
+                weightSuggestion = highlight as? WeightMeasurement.WeightUnit
+                    ?: food.suggestion.weightSuggestion
+            )
+
+            MeasurementForm(
+                name = food.name,
+                nutrients = food.nutrients,
+                packageWeight = food.packageWeight,
+                servingWeight = food.servingWeight,
+                state = rememberMeasurementFormState(
+                    suggestion = suggestion,
+                    highlight = highlight.asEnum()
+                ),
+                onEdit = { onEditFood(food.id) },
+                onDelete = { onDeleteFood(food.id) },
+                onConfirm = onConfirm,
+                onBack = onBack,
+                modifier = modifier
+            )
+        }
     }
 }
 
