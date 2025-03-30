@@ -54,7 +54,7 @@ class OpenFoodFactsSettingsViewModel(
         }
     }
 
-    fun onUseWholeWorld(enabled: Boolean) {
+    fun onGlobalDatabase(enabled: Boolean) {
         if (enabled) {
             viewModelScope.launch {
                 settingsRepository.setOpenFoodFactsCountry(null)

@@ -70,7 +70,7 @@ fun OpenFoodFactsSettingsScreen(
         settings = settings,
         onToggle = viewModel::onOpenFoodFactsToggle,
         onCountrySelect = viewModel::onOpenFoodFactsCountrySelected,
-        onWholeWorldSelect = viewModel::onUseWholeWorld,
+        onGlobalDatabase = viewModel::onGlobalDatabase,
         onCacheClear = viewModel::onCacheClear,
         onBack = onBack,
         modifier = modifier
@@ -83,7 +83,7 @@ private fun OpenFoodFactsSettingsScreen(
     settings: OpenFoodFactsSettings,
     onToggle: (Boolean) -> Unit,
     onCountrySelect: (Country?) -> Unit,
-    onWholeWorldSelect: (Boolean) -> Unit,
+    onGlobalDatabase: (Boolean) -> Unit,
     onCacheClear: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
@@ -161,7 +161,7 @@ private fun OpenFoodFactsSettingsScreen(
                 if (settings is OpenFoodFactsSettings.Enabled) {
                     OpenFoodFactsContent(
                         onCountrySelect = onCountrySelect,
-                        onWholeWorldSelect = onWholeWorldSelect,
+                        onGlobalDatabase = onGlobalDatabase,
                         settings = settings,
                         onCacheClear = onCacheClear
                     )
@@ -254,7 +254,7 @@ private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
 @Composable
 private fun OpenFoodFactsContent(
     onCountrySelect: (Country) -> Unit,
-    onWholeWorldSelect: (Boolean) -> Unit,
+    onGlobalDatabase: (Boolean) -> Unit,
     settings: OpenFoodFactsSettings.Enabled,
     onCacheClear: () -> Unit,
     modifier: Modifier = Modifier,
@@ -277,39 +277,6 @@ private fun OpenFoodFactsContent(
     Column(
         modifier = modifier
     ) {
-        ListItem(
-            modifier = Modifier
-                .requiredHeightIn(min = 64.dp)
-                .clickable { onWholeWorldSelect(settings.country != null) },
-            headlineContent = {
-                Text(stringResource(Res.string.headline_use_whole_world_database))
-            },
-            trailingContent = {
-                Switch(
-                    checked = settings.country == null,
-                    onCheckedChange = onWholeWorldSelect
-                )
-            }
-        )
-        Card(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = null
-                )
-
-                Text(
-                    text = stringResource(Res.string.description_use_whole_world_database),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Justify
-                )
-            }
-        }
         ListItem(
             modifier = Modifier
                 .requiredHeightIn(min = 64.dp)
@@ -338,6 +305,39 @@ private fun OpenFoodFactsContent(
                         modifier = Modifier.width(52.dp)
                     )
                 }
+            }
+        )
+        Card(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null
+                )
+
+                Text(
+                    text = stringResource(Res.string.description_use_global_database),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Justify
+                )
+            }
+        }
+        ListItem(
+            modifier = Modifier
+                .requiredHeightIn(min = 64.dp)
+                .clickable { onGlobalDatabase(settings.country != null) },
+            headlineContent = {
+                Text(stringResource(Res.string.headline_use_global_database))
+            },
+            trailingContent = {
+                Switch(
+                    checked = settings.country == null,
+                    onCheckedChange = onGlobalDatabase
+                )
             }
         )
         HorizontalDivider()

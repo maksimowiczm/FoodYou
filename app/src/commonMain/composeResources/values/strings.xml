@@ -35,7 +35,7 @@
     <string name="headline_time_based_ordering">Time-based ordering</string>
     <string name="headline_incomplete_products">Incomplete products</string>
     <string name="headline_filter_foods_by_country">Filter foods by country</string>
-    <string name="headline_use_whole_world_database">Use whole world database</string>
+    <string name="headline_use_global_database">Use global database</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
@@ -179,7 +179,7 @@
     <string name="description_time_based_meals_sorting">When enabled, meals that are currently happening will be displayed first</string>
     <string name="description_action_include_all_day_meals">All-day meals will be included in the current meal list</string>
     <string name="description_incomplete_nutrition_data">Some of the used products lack this value; therefore, the displayed value might not be accurate</string>
-    <string name="description_use_whole_world_database">If you have any issues with database errors you can try to filter foods by country. This will limit the number of products in the database and may help with performance.</string>
+    <string name="description_use_global_database">It is recommended to use a food database from your country. You can enable the global database, but it may contain a large number of products and could bloat your database.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
