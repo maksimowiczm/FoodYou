@@ -32,11 +32,11 @@ import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSe
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.rememberAddFoodSearchState
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.compose.DiaryDayMealScreen
-import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
-import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
+import com.maksimowiczm.foodyou.feature.diary.ui.product.CreateProduct
+import com.maksimowiczm.foodyou.feature.diary.ui.product.EditProduct
+import com.maksimowiczm.foodyou.feature.diary.ui.product.productGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose.CreateRecipeDialog
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
-import com.maksimowiczm.foodyou.navigation.fullScreenDialogComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
 import kotlinx.datetime.LocalDate
@@ -85,12 +85,6 @@ private data class CreateFoodProductMeasurement(val productId: Long)
 
 @Serializable
 private data class EditFoodProductMeasurement(val productMeasurementId: Long)
-
-@Serializable
-private data object CreateProductDialog
-
-@Serializable
-private data class EditProductDialog(val productId: Long)
 
 @Serializable
 private data object CreateRecipeDialog
@@ -181,7 +175,7 @@ private fun AppNavHost(
         crossfadeComposable<Search>(
             popEnterTransition = {
                 // Delay fade in to mimic scrim effect on dialog close
-                if (initialState.destination.hasRoute<CreateProductDialog>()) {
+                if (initialState.destination.hasRoute<CreateProduct>()) {
                     fadeIn(
                         tween(
                             delayMillis = 50
@@ -221,7 +215,7 @@ private fun AppNavHost(
                     },
                     onCreateProduct = {
                         navController.navigate(
-                            route = CreateProductDialog,
+                            route = CreateProduct,
                             navOptions = navOptions {
                                 launchSingleTop = true
                             }
@@ -266,7 +260,7 @@ private fun AppNavHost(
         crossfadeComposable<CreateFoodProductMeasurement>(
             popEnterTransition = {
                 // Delay fade in to mimic scrim effect on dialog close
-                if (initialState.destination.hasRoute<EditProductDialog>()) {
+                if (initialState.destination.hasRoute<EditProduct>()) {
                     fadeIn(
                         tween(
                             delayMillis = 50
@@ -285,7 +279,7 @@ private fun AppNavHost(
                 },
                 onEditProduct = { id ->
                     navController.navigate(
-                        route = EditProductDialog(id),
+                        route = EditProduct(id),
                         navOptions = navOptions {
                             launchSingleTop = true
                         }
@@ -299,7 +293,7 @@ private fun AppNavHost(
         crossfadeComposable<EditFoodProductMeasurement>(
             popEnterTransition = {
                 // Delay fade in to simulate scrim effect on dialog close
-                if (initialState.destination.hasRoute<EditProductDialog>()) {
+                if (initialState.destination.hasRoute<EditProduct>()) {
                     fadeIn(
                         tween(
                             delayMillis = 50
@@ -318,7 +312,7 @@ private fun AppNavHost(
                 },
                 onEditProduct = { id ->
                     navController.navigate(
-                        route = EditProductDialog(id),
+                        route = EditProduct(id),
                         navOptions = navOptions {
                             launchSingleTop = true
                         }
@@ -329,49 +323,28 @@ private fun AppNavHost(
                 )
             )
         }
-        // Slide beyond the screen on enter and exit
-        fullScreenDialogComposable<CreateProductDialog> {
-            Surface(
-                shadowElevation = 6.dp,
-                shape = MaterialTheme.shapes.medium
-            ) {
-                CreateProductDialog(
-                    onClose = { navController.popBackStack<CreateProductDialog>(inclusive = true) },
-                    onSuccess = { productId ->
-                        navController.navigate(
-                            route = CreateFoodProductMeasurement(productId),
-                            navOptions = navOptions {
-                                launchSingleTop = true
 
-                                popUpTo<Search> {
-                                    inclusive = false
-                                }
-                            }
-                        )
+        productGraph(
+            onCreateClose = { navController.popBackStack<CreateProduct>(inclusive = true) },
+            onCreateSuccess = { productId ->
+                navController.navigate(
+                    route = CreateFoodProductMeasurement(productId),
+                    navOptions = navOptions {
+                        launchSingleTop = true
+
+                        popUpTo<Search> {
+                            inclusive = false
+                        }
                     }
                 )
-            }
-        }
-        // Slide beyond the screen on enter and exit
-        fullScreenDialogComposable<EditProductDialog> {
-            val (productId) = it.toRoute<EditProductDialog>()
+            },
+            onEditClose = { navController.popBackStack<EditProduct>(inclusive = true) },
+            onEditSuccess = { navController.popBackStack<EditProduct>(inclusive = true) }
+        )
 
-            Surface(
-                shadowElevation = 6.dp,
-                shape = MaterialTheme.shapes.medium
-            ) {
-                UpdateProductDialog(
-                    onClose = { navController.popBackStack<EditProductDialog>(inclusive = true) },
-                    onSuccess = { navController.popBackStack<EditProductDialog>(inclusive = true) },
-                    viewModel = koinViewModel(
-                        parameters = { parametersOf(productId) }
-                    )
-                )
-            }
-        }
         crossfadeComposable<CreateRecipeDialog>(
             enterTransition = {
-                if (initialState.destination.hasRoute<EditProductDialog>()) {
+                if (initialState.destination.hasRoute<EditProduct>()) {
                     crossfadeIn()
                 } else {
                     crossfadeIn() + slideInVertically(
@@ -383,7 +356,7 @@ private fun AppNavHost(
                 }
             },
             exitTransition = {
-                if (targetState.destination.hasRoute<EditProductDialog>()) {
+                if (targetState.destination.hasRoute<EditProduct>()) {
                     crossfadeOut()
                 } else {
                     slideOutVertically(
@@ -413,7 +386,7 @@ private fun AppNavHost(
                     },
                     onIncompleteProductClick = {
                         navController.navigate(
-                            route = EditProductDialog(it),
+                            route = EditProduct(it),
                             navOptions = navOptions {
                                 launchSingleTop = true
                             }
