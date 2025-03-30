@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class OpenFoodFactsProductV2(
     @SerialName("product_name")
-    override val productName: String,
+    override val productName: String? = null,
     @SerialName("brands")
     override val brands: String? = null,
     @SerialName("code")
@@ -16,7 +16,7 @@ internal data class OpenFoodFactsProductV2(
     @SerialName("image_url")
     override val imageUrl: String? = null,
     @SerialName("nutriments")
-    override val nutrients: OpenFoodFactsNutrients,
+    override val nutrients: OpenFoodFactsNutrients? = null,
     @SerialName("product_quantity")
     val packageQuantityString: String? = null,
     @SerialName("product_quantity_unit")

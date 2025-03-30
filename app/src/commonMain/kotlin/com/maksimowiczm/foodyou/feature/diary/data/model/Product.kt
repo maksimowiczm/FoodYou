@@ -60,6 +60,9 @@ fun ProductEntity.toDomain(): Product = Product(
  * Converts an [OpenFoodFactsProduct] to a [Product]. Returns null if the conversion is not possible.
  */
 internal fun OpenFoodFactsProduct.toEntity(): ProductEntity? {
+    val nutrients = nutrients ?: return null
+    val productName = productName ?: return null
+
     val packageQuantityUnit = packageQuantityUnit?.toWeightUnit()
     val servingQuantityUnit = servingQuantityUnit?.toWeightUnit()
 
