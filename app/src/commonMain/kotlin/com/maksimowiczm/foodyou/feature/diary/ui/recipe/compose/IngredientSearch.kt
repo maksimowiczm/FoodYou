@@ -147,7 +147,7 @@ private fun IngredientSearch(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(Res.string.action_add_ingredients))
+                    Text(stringResource(Res.string.action_add_ingredient))
                 },
                 navigationIcon = {
                     IconButton(
