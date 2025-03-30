@@ -24,9 +24,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.CreateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.UpdateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.compose.AddProductScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.CreateFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.EditFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearch
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
@@ -79,12 +79,6 @@ private data object MealHome
 
 @Serializable
 private data class Search(val startOnBarcodeScanner: Boolean)
-
-@Serializable
-private data class CreateFoodProductMeasurement(val productId: Long)
-
-@Serializable
-private data class EditFoodProductMeasurement(val productMeasurementId: Long)
 
 @Serializable
 private data object CreateRecipeDialog
@@ -257,72 +251,25 @@ private fun AppNavHost(
                 )
             }
         }
-        crossfadeComposable<CreateFoodProductMeasurement>(
-            popEnterTransition = {
-                // Delay fade in to mimic scrim effect on dialog close
-                if (initialState.destination.hasRoute<EditProduct>()) {
-                    fadeIn(
-                        tween(
-                            delayMillis = 50
-                        )
-                    )
-                } else {
-                    crossfadeIn()
-                }
-            }
-        ) {
-            val (productId) = it.toRoute<CreateFoodProductMeasurement>()
 
-            AddProductScreen(
-                onBack = {
-                    navController.popBackStack<CreateFoodProductMeasurement>(inclusive = true)
-                },
-                onEditProduct = { id ->
-                    navController.navigate(
-                        route = EditProduct(id),
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
-                },
-                viewModel = koinViewModel<CreateMeasurementViewModel>(
-                    parameters = { parametersOf(productId, mealId, date) }
+        measurementGraph(
+            mealId = mealId,
+            date = date,
+            onCreateBack = {
+                navController.popBackStack<CreateFoodProductMeasurement>(inclusive = true)
+            },
+            onEditBack = {
+                navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
+            },
+            onEditProduct = { productId ->
+                navController.navigate(
+                    route = EditProduct(productId),
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
                 )
-            )
-        }
-        crossfadeComposable<EditFoodProductMeasurement>(
-            popEnterTransition = {
-                // Delay fade in to simulate scrim effect on dialog close
-                if (initialState.destination.hasRoute<EditProduct>()) {
-                    fadeIn(
-                        tween(
-                            delayMillis = 50
-                        )
-                    )
-                } else {
-                    crossfadeIn()
-                }
             }
-        ) {
-            val (measurementId) = it.toRoute<EditFoodProductMeasurement>()
-
-            AddProductScreen(
-                onBack = {
-                    navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
-                },
-                onEditProduct = { id ->
-                    navController.navigate(
-                        route = EditProduct(id),
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
-                },
-                viewModel = koinViewModel<UpdateMeasurementViewModel>(
-                    parameters = { parametersOf(MeasurementId.Product(measurementId)) }
-                )
-            )
-        }
+        )
 
         productGraph(
             onCreateClose = { navController.popBackStack<CreateProduct>(inclusive = true) },
