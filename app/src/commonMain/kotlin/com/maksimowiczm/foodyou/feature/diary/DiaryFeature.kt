@@ -50,9 +50,6 @@ import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.compose.buildMealsCar
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreenViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.measurement.UpdateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.measurement.cases.DeleteProductCase
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.cases.ObserveProductCase
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactshint.OpenFoodFactsSearchHintViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.CountryFlag
@@ -366,11 +363,8 @@ object DiaryFeature : Feature {
         // Meal
         factoryOf(::ObserveMealCase)
 
-        // AddFoodProduct
+        // Measurement
         factoryOf(::ObserveProductCase)
-        factoryOf(::DeleteProductCase)
-        viewModelOf(::CreateMeasurementViewModel)
-        viewModelOf(::UpdateMeasurementViewModel)
 
         // MealsCard
         factoryOf(::ObserveMealsByDateCase)
