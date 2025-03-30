@@ -1,11 +1,12 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.cases
+package com.maksimowiczm.foodyou.feature.diary.ui.measurement.cases
 
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
+import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementSuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.model.Food
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.model.Food
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -36,9 +37,7 @@ class ObserveProductCase(
                         id = product.id,
                         name = product.name,
                         nutrients = product.nutrients,
-                        packageSuggestion = suggestions.packageSuggestion,
-                        servingSuggestion = suggestions.servingSuggestion,
-                        weightSuggestions = suggestions.weightSuggestion,
+                        suggestion = suggestions,
                         packageWeight = product.packageWeight,
                         servingWeight = product.servingWeight,
                         highlight = null
@@ -70,22 +69,26 @@ class ObserveProductCase(
                 combine(
                     measurementRepository.observeMeasurementSuggestionByFood(measurement.foodId),
                     productRepository.observeProductById(foodId.productId)
-                ) { suggestions, product ->
+                ) { suggestion, product ->
                     if (product == null) {
                         return@combine null
                     }
 
-                    val packageSuggestion = packageSuggestion ?: suggestions.packageSuggestion
-                    val servingSuggestion = servingSuggestion ?: suggestions.servingSuggestion
-                    val weightSuggestion = weightSuggestion ?: suggestions.weightSuggestion
+                    val packageSuggestion = packageSuggestion ?: suggestion.packageSuggestion
+                    val servingSuggestion = servingSuggestion ?: suggestion.servingSuggestion
+                    val weightSuggestion = weightSuggestion ?: suggestion.weightSuggestion
+
+                    val suggestion = object : MeasurementSuggestion {
+                        override val packageSuggestion = packageSuggestion
+                        override val servingSuggestion = servingSuggestion
+                        override val weightSuggestion = weightSuggestion
+                    }
 
                     Food(
                         id = product.id,
                         name = product.name,
                         nutrients = product.nutrients,
-                        packageSuggestion = packageSuggestion,
-                        servingSuggestion = servingSuggestion,
-                        weightSuggestions = weightSuggestion,
+                        suggestion = suggestion,
                         packageWeight = product.packageWeight,
                         servingWeight = product.servingWeight,
                         highlight = measurement.measurement.asEnum()

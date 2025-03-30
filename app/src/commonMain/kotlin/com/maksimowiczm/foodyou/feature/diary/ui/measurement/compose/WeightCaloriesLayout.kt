@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.compose
+package com.maksimowiczm.foodyou.feature.diary.ui.measurement.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

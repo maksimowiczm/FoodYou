@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.cases
+package com.maksimowiczm.foodyou.feature.diary.ui.measurement.cases
 
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository

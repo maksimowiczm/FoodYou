@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.compose
+package com.maksimowiczm.foodyou.feature.diary.ui.measurement.compose
 
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
@@ -10,6 +10,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementSuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
@@ -24,13 +25,12 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 @Composable
-fun rememberAddProductState(
-    packageSuggestion: WeightMeasurement.Package?,
-    servingSuggestion: WeightMeasurement.Serving?,
-    weightSuggestion: WeightMeasurement.WeightUnit,
+fun rememberMeasurementFormState(
+    suggestion: MeasurementSuggestion,
+    highlight: WeightMeasurementEnum? = null,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
-): AddProductState {
-    val packagee = packageSuggestion?.let { measurement ->
+): MeasurementFormState {
+    val packagee = suggestion.packageSuggestion?.let { measurement ->
         rememberFormField(
             initialValue = measurement.quantity,
             parser = { str ->
@@ -48,7 +48,7 @@ fun rememberAddProductState(
         )
     }
 
-    val serving = servingSuggestion?.let { measurement ->
+    val serving = suggestion.servingSuggestion?.let { measurement ->
         rememberFormField(
             initialValue = measurement.quantity,
             parser = { str ->
@@ -67,7 +67,7 @@ fun rememberAddProductState(
     }
 
     val weight = rememberFormField(
-        initialValue = weightSuggestion.weight,
+        initialValue = suggestion.weightSuggestion.weight,
         parser = { str ->
             val f = str.toFloatOrNull()
 
@@ -78,7 +78,7 @@ fun rememberAddProductState(
             }
         },
         textFieldState = rememberTextFieldState(
-            initialText = weightSuggestion.weight.formatClipZeros()
+            initialText = suggestion.weightSuggestion.weight.formatClipZeros()
         )
     )
 
@@ -86,6 +86,7 @@ fun rememberAddProductState(
         packagee,
         serving,
         weight,
+        highlight,
         saver = Saver(
             save = {
                 val latestMeasurement = it.latestWeightMeasurement
@@ -106,34 +107,39 @@ fun rememberAddProductState(
                     WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(it[1] as Float)
                 }
 
-                AddProductState(
+                MeasurementFormState(
                     packageField = packagee,
                     servingField = serving,
                     weightField = weight,
                     coroutineScope = coroutineScope,
+                    initialHighlight = highlight,
                     initialMeasurement = measurement
                 )
             }
         )
     ) {
-        AddProductState(
+        MeasurementFormState(
             packageField = packagee,
             servingField = serving,
             weightField = weight,
             coroutineScope = coroutineScope,
+            initialHighlight = highlight,
             initialMeasurement = WeightMeasurement.WeightUnit(100f)
         )
     }
 }
 
 @Stable
-class AddProductState(
+class MeasurementFormState(
     val packageField: FormField<Float, Unit>?,
     val servingField: FormField<Float, Unit>?,
     val weightField: FormField<Float, Unit>,
     coroutineScope: CoroutineScope,
+    initialHighlight: WeightMeasurementEnum?,
     initialMeasurement: WeightMeasurement
 ) {
+    var highlight by mutableStateOf(initialHighlight)
+
     var latestWeightMeasurement by mutableStateOf(initialMeasurement)
         private set
 

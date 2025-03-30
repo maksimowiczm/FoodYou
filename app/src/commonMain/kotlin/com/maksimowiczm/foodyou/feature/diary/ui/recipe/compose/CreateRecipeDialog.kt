@@ -54,9 +54,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.sum
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.CreateFoodProductMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.EditFoodProductMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults
@@ -64,6 +61,9 @@ import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDef
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults.measurementStringShort
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsList
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsRow
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.EditFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.MeasuredIngredient
@@ -175,6 +175,9 @@ fun CreateRecipeDialog(
                 navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
             },
             onEditFood = {
+                // TODO
+            },
+            onDeleteFood = {
                 // TODO
             }
         )

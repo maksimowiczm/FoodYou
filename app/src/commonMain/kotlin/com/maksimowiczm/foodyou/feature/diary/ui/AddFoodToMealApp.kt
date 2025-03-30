@@ -21,14 +21,14 @@ import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.CreateFoodProductMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.EditFoodProductMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearch
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.rememberAddFoodSearchState
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.compose.DiaryDayMealScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.EditFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.diary.ui.product.EditProduct
 import com.maksimowiczm.foodyou.feature.diary.ui.product.productGraph
@@ -290,6 +290,10 @@ private fun AppNavHost(
                     )
                     navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
                 }
+            },
+            onDeleteFood = {
+                navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
+                searchViewModel.onDeleteFood(it)
             }
         )
 

@@ -33,10 +33,6 @@ import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
 import com.maksimowiczm.foodyou.feature.diary.network.OpenFoodFactsRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.network.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.diary.ui.AddFoodToMealApp
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.CreateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.UpdateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.cases.DeleteProductCase
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.cases.ObserveProductCase
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases.ObserveAddFoodSearchListItemCase
 import com.maksimowiczm.foodyou.feature.diary.ui.caloriescard.CaloriesCard
@@ -54,6 +50,10 @@ import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.compose.buildMealsCar
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.mealssettings.MealsSettingsScreenViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateMeasurementViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.UpdateMeasurementViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.cases.DeleteProductCase
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.cases.ObserveProductCase
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactshint.OpenFoodFactsSearchHintViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.CountryFlag
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings.OpenFoodFactsSettingsScreen

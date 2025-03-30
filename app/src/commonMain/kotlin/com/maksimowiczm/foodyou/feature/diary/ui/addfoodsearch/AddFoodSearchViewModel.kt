@@ -85,4 +85,8 @@ class AddFoodSearchViewModel(
             weightMeasurement = weightMeasurement
         )
     }
+
+    fun onDeleteFood(foodId: FoodId) {
+        // TODO
+    }
 }

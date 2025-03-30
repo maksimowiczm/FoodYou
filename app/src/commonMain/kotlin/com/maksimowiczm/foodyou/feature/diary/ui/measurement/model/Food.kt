@@ -1,8 +1,8 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.model
+package com.maksimowiczm.foodyou.feature.diary.ui.measurement.model
 
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
+import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementSuggestion
 import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrients
-import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 
 data class Food(
@@ -11,8 +11,6 @@ data class Food(
     val nutrients: Nutrients,
     val packageWeight: Float?,
     val servingWeight: Float?,
-    val packageSuggestion: WeightMeasurement.Package?,
-    val servingSuggestion: WeightMeasurement.Serving?,
-    val weightSuggestions: WeightMeasurement.WeightUnit,
+    val suggestion: MeasurementSuggestion,
     val highlight: WeightMeasurementEnum?
 )
