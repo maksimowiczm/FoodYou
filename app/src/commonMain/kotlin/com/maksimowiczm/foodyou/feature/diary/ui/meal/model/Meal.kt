@@ -15,27 +15,4 @@ data class Meal(
 ) {
     val isEmpty: Boolean
         get() = foods.isEmpty()
-
-    companion object {
-        fun empty(
-            id: Long,
-            name: String,
-            date: String,
-            from: String,
-            to: String,
-            isAllDay: Boolean
-        ) = Meal(
-            id = id,
-            name = name,
-            date = date,
-            from = from,
-            to = to,
-            isAllDay = isAllDay,
-            foods = emptyList(),
-            calories = 0,
-            proteins = 0,
-            carbohydrates = 0,
-            fats = 0
-        )
-    }
 }

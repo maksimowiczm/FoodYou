@@ -12,7 +12,7 @@ interface ProductRemoteMediatorFactory {
      *
      * @return A new instance of [ProductRemoteMediator].
      */
-    fun <T : Any> createWithQuery(query: String?): ProductRemoteMediator<T>?
+    fun createWithQuery(query: String?): ProductRemoteMediator?
 
     /**
      * Create a new instance of [ProductRemoteMediator]. If factory can't create a new instance, it
@@ -22,5 +22,5 @@ interface ProductRemoteMediatorFactory {
      *
      * @return A new instance of [ProductRemoteMediator].
      */
-    fun <T : Any> createWithBarcode(barcode: String): ProductRemoteMediator<T>?
+    fun createWithBarcode(barcode: String): ProductRemoteMediator?
 }

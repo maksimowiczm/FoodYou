@@ -56,6 +56,7 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.absoluteValue
+import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -101,6 +102,7 @@ fun MealsCard(
             time = time,
             shimmer = homeState.shimmer
         ),
+        formatTime = viewModel::formatTime,
         onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
         onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
         animatedVisibilityScope = animatedVisibilityScope,
@@ -113,6 +115,7 @@ fun MealsCard(
 @Composable
 private fun MealsCard(
     state: MealsCardState,
+    formatTime: (LocalTime) -> String,
     onMealClick: (Meal) -> Unit,
     onAddClick: (Meal) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -163,6 +166,7 @@ private fun MealsCard(
                         totalProteins = meal.proteins,
                         totalCarbohydrates = meal.carbohydrates,
                         totalFats = meal.fats,
+                        formatTime = formatTime,
                         onMealClick = { onMealClick(meal) },
                         onAddClick = { onAddClick(meal) }
                     )
@@ -249,6 +253,7 @@ fun SharedTransitionScope.MealCard(
     totalProteins: Int,
     totalCarbohydrates: Int,
     totalFats: Int,
+    formatTime: (LocalTime) -> String,
     onMealClick: () -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -304,16 +309,18 @@ fun SharedTransitionScope.MealCard(
                     LocalTextStyle provides MaterialTheme.typography.labelLarge
                 ) {
                     if (meal.isAllDay) {
-                        Text(stringResource(Res.string.headline_all_day))
+                        Text(
+                            text = stringResource(Res.string.headline_all_day)
+                        )
                     } else {
                         Text(
-                            buildString {
-                                append(meal.fromString)
-                                append(" ")
-                                append(stringResource(Res.string.en_dash))
-                                append(" ")
-                                append(meal.toString)
-                            }
+                            text = formatTime(meal.from)
+                        )
+                        Text(
+                            text = stringResource(Res.string.en_dash)
+                        )
+                        Text(
+                            text = formatTime(meal.to)
                         )
                     }
                 }

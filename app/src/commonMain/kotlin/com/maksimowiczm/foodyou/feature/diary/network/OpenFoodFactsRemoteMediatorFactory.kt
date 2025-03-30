@@ -39,7 +39,7 @@ class OpenFoodFactsRemoteMediatorFactory(
     private val countryCode
         get() = runBlocking { dataStore.get(OpenFoodFactsPreferences.countryCode) }
 
-    override fun <T : Any> createWithQuery(query: String?): ProductRemoteMediator<T>? {
+    override fun createWithQuery(query: String?): ProductRemoteMediator? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
 
         val country = countryCode
@@ -63,7 +63,7 @@ class OpenFoodFactsRemoteMediatorFactory(
         )
     }
 
-    override fun <T : Any> createWithBarcode(barcode: String): ProductRemoteMediator<T>? {
+    override fun createWithBarcode(barcode: String): ProductRemoteMediator? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
 
         val country = countryCode

@@ -22,7 +22,6 @@ import com.maksimowiczm.foodyou.feature.diary.data.DiaryRepository
 import com.maksimowiczm.foodyou.feature.diary.data.GoalsRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
-import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepositoryImpl
 import com.maksimowiczm.foodyou.feature.diary.data.OpenFoodFactsSettingsRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepositoryImpl
@@ -320,7 +319,8 @@ object DiaryFeature : Feature {
 
         factory {
             DiaryRepository(
-                database = get(),
+                addFoodDao = get(),
+                productDao = get(),
                 productRemoteMediatorFactory = get(),
                 dataStore = get()
             )
@@ -328,12 +328,11 @@ object DiaryFeature : Feature {
             arrayOf(
                 GoalsRepository::class,
                 MealRepository::class,
+                MeasurementRepository::class,
                 DiaryDayRepository::class,
                 SearchRepository::class
             )
         )
-
-        factoryOf(::MeasurementRepositoryImpl).bind<MeasurementRepository>()
 
         factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
 

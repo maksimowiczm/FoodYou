@@ -1,8 +1,7 @@
-package com.maksimowiczm.foodyou.feature.diary.database.measurement
+package com.maksimowiczm.foodyou.feature.diary.database.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 
 data class ProductWithWeightMeasurementEntity(
     @Embedded

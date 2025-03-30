@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.cases
 
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
-import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import kotlinx.coroutines.flow.first
 
@@ -17,12 +16,11 @@ class DeleteProductCase(
     suspend operator fun invoke(measurementId: MeasurementId) {
         measurementId as MeasurementId.Product
 
-        val productId = measurementRepository
-            .observeMeasurementById(measurementId).first()
-            ?.foodId as? FoodId.Product
+        val productId =
+            measurementRepository.observeMeasurementById(measurementId).first()?.product?.id
 
-        if (productId?.productId != null) {
-            productRepository.deleteProduct(productId.productId)
+        if (productId != null) {
+            productRepository.deleteProduct(productId)
         }
     }
 }
