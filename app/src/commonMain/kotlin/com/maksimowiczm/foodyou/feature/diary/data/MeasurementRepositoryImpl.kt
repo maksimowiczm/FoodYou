@@ -227,7 +227,10 @@ private fun CombinedMeasurement.toFoodMeasurement(): FoodMeasurement {
     return FoodMeasurement(
         foodId = foodId,
         measurement = measurement.toWeightMeasurement(quantity),
-        measurementId = MeasurementId.Product(measurementId)
+        measurementId = when (foodId) {
+            is FoodId.Product -> MeasurementId.Product(measurementId)
+            is FoodId.Recipe -> MeasurementId.Recipe(measurementId)
+        }
     )
 }
 
