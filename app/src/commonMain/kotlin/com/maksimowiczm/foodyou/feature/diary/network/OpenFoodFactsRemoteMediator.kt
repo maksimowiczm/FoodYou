@@ -78,7 +78,7 @@ internal class OpenFoodFactsRemoteMediator(
             val fetchedCount =
                 ((response.page - 1) * response.pageSize).coerceAtLeast(0) + response.products.size
 
-            openFoodFactsDao.updatePagingKey(
+            openFoodFactsDao.upsertPagingKey(
                 OpenFoodFactsPagingKey(
                     queryString = query,
                     country = country,
