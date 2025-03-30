@@ -34,7 +34,9 @@ inline fun <reified T : Any> NavGraphBuilder.fullScreenDialogComposable(
         FullScreenDialogComposableDefaults.exitTransition()
     },
     noinline popEnterTransition:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = enterTransition,
+    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = {
+        FullScreenDialogComposableDefaults.popEnterTransition()
+    },
     noinline popExitTransition:
     (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = exitTransition,
     noinline sizeTransform:
@@ -67,7 +69,9 @@ fun NavGraphBuilder.fullScreenDialogComposable(
         FullScreenDialogComposableDefaults.exitTransition()
     },
     popEnterTransition:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = enterTransition,
+    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = {
+        FullScreenDialogComposableDefaults.popEnterTransition()
+    },
     popExitTransition:
     (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = exitTransition,
     sizeTransform:
@@ -109,4 +113,5 @@ object FullScreenDialogComposableDefaults {
             )
         )
     }
+    val popEnterTransition = { crossfadeIn() }
 }
