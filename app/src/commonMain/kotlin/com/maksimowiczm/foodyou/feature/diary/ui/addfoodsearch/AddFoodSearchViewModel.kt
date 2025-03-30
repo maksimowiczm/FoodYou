@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.cases.ObserveAddFoodSearchListItemCase
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.model.AddFoodSearchListItem
@@ -49,19 +50,27 @@ class AddFoodSearchViewModel(
     }
 
     fun onQuickAdd(item: AddFoodSearchListItem) {
-        viewModelScope.launch {
-            measurementRepository.addMeasurement(
-                mealId = mealId,
-                date = date,
-                foodId = item.id,
-                weightMeasurement = item.weightMeasurement
-            )
+        when (item.id) {
+            is FoodId.Product -> {
+                viewModelScope.launch {
+                    measurementRepository.addMeasurement(
+                        mealId = mealId,
+                        date = date,
+                        productId = item.id.productId,
+                        weightMeasurement = item.weightMeasurement
+                    )
+                }
+            }
         }
     }
 
     fun onQuickRemove(measurementId: MeasurementId) {
-        viewModelScope.launch {
-            measurementRepository.removeMeasurement(measurementId)
+        when (measurementId) {
+            is MeasurementId.Product -> {
+                viewModelScope.launch {
+                    measurementRepository.removeMeasurement(measurementId)
+                }
+            }
         }
     }
 }

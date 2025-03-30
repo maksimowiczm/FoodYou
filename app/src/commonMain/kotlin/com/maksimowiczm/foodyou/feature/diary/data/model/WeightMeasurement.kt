@@ -12,20 +12,20 @@ sealed interface WeightMeasurement {
         is Serving -> WeightMeasurementEnum.Serving
     }
 
+    companion object {
+        fun defaultForProduct(product: Product) = when {
+            product.servingWeight != null -> Serving(1f)
+            product.packageWeight != null -> Package(1f)
+            else -> WeightUnit(100f)
+        }
+    }
+
     /**
      * Helper function to get the total weight of the product based on the measurement.
      */
-    fun getWeight(product: Product): Float = getWeight(product.packageWeight, product.servingWeight)
-
-    fun getWeight(packageWeight: Float?, servingWeight: Float?): Float = when (this) {
+    fun getWeight(product: Product): Float = when (this) {
         is WeightUnit -> weight
-        is Package -> packageWeight!! * quantity
-        is Serving -> servingWeight!! * quantity
+        is Package -> product.packageWeight!! * quantity
+        is Serving -> product.servingWeight!! * quantity
     }
-}
-
-fun WeightMeasurementEnum.toWeightMeasurement(quantity: Float): WeightMeasurement = when (this) {
-    WeightMeasurementEnum.WeightUnit -> WeightMeasurement.WeightUnit(quantity)
-    WeightMeasurementEnum.Package -> WeightMeasurement.Package(quantity)
-    WeightMeasurementEnum.Serving -> WeightMeasurement.Serving(quantity)
 }

@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.diary.data.model.Product
-import com.maksimowiczm.foodyou.feature.diary.data.model.nutrientValues
 import com.maksimowiczm.foodyou.feature.diary.ui.CaloriesIndicatorTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesIndicator
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MealsFilter
@@ -46,7 +45,6 @@ import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.description_incomplete_nutrition_data
 import foodyou.app.generated.resources.headline_incomplete_products
-import foodyou.app.generated.resources.not_available_short
 import foodyou.app.generated.resources.unit_gram_short
 import kotlin.math.roundToInt
 import kotlinx.datetime.LocalDate
@@ -171,28 +169,18 @@ private fun CaloriesScreen(
                 }
 
                 item {
-                    val nutrients = diaryDay.meals
-                        .filter { it in meals }
-                        .flatMap { diaryDay.mealProductMap[it] ?: emptyList() }
-                        .nutrientValues()
-
                     NutrientsList(
-                        nutrients = nutrients,
+                        products = diaryDay.meals
+                            .filter { it in meals }
+                            .flatMap { diaryDay.mealProductMap[it] ?: emptyList() },
                         incompleteValue = {
                             {
                                 val g = stringResource(Res.string.unit_gram_short)
-                                val value = it.value?.formatClipZeros()
-                                if (value != null) {
-                                    Text(
-                                        text = "* $value $g",
-                                        color = MaterialTheme.colorScheme.outline
-                                    )
-                                } else {
-                                    Text(
-                                        text = stringResource(Res.string.not_available_short),
-                                        color = MaterialTheme.colorScheme.outline
-                                    )
-                                }
+                                val value = it.formatClipZeros()
+                                Text(
+                                    text = "* $value $g",
+                                    color = MaterialTheme.colorScheme.outline
+                                )
                             }
                         },
                         modifier = Modifier.padding(horizontal = 16.dp)
@@ -240,7 +228,7 @@ private fun CaloriesScreen(
                                     text = product.name,
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.outline,
-                                    textAlign = TextAlign.Center,
+                                    textAlign = TextAlign.Companion.Center,
                                     modifier = Modifier.clickable(
                                         interactionSource = remember {
                                             MutableInteractionSource()

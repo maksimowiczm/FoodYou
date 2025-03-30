@@ -19,7 +19,7 @@ class LocalTimeInput(initialValue: LocalTime) {
     companion object {
         val Saver = Saver<LocalTimeInput, Int>(
             save = { it.value.toSecondOfDay() },
-            restore = { LocalTimeInput(LocalTime.fromSecondOfDay(it)) }
+            restore = { LocalTimeInput(LocalTime.Companion.fromSecondOfDay(it)) }
         )
     }
 }

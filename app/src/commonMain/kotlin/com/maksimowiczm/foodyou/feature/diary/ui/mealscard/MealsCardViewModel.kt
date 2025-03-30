@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.feature.diary.data.preferences.DiaryPreferences
 import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.cases.ObserveMealsByDateCase
 import com.maksimowiczm.foodyou.feature.system.data.DateProvider
+import com.maksimowiczm.foodyou.feature.system.data.StringFormatRepository
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,11 +16,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 class MealsCardViewModel(
     private val observeMealsByDateCase: ObserveMealsByDateCase,
+    private val stringFormatRepository: StringFormatRepository,
     dateProvider: DateProvider,
     dataStore: DataStore<Preferences>
 ) : ViewModel() {
@@ -50,4 +53,6 @@ class MealsCardViewModel(
                 dataStore.get(DiaryPreferences.includeAllDayMeals) ?: false
             }
         )
+
+    fun formatTime(time: LocalTime): String = stringFormatRepository.formatTime(time)
 }
