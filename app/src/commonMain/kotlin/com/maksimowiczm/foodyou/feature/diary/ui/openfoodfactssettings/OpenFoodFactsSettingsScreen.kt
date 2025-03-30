@@ -6,12 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.systemBars
@@ -23,15 +19,14 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -45,6 +40,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -56,7 +52,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.system.data.model.Country
-import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.delay
@@ -75,6 +70,7 @@ fun OpenFoodFactsSettingsScreen(
         settings = settings,
         onToggle = viewModel::onOpenFoodFactsToggle,
         onCountrySelect = viewModel::onOpenFoodFactsCountrySelected,
+        onWholeWorldSelect = viewModel::onUseWholeWorld,
         onCacheClear = viewModel::onCacheClear,
         onBack = onBack,
         modifier = modifier
@@ -86,7 +82,8 @@ fun OpenFoodFactsSettingsScreen(
 private fun OpenFoodFactsSettingsScreen(
     settings: OpenFoodFactsSettings,
     onToggle: (Boolean) -> Unit,
-    onCountrySelect: (Country) -> Unit,
+    onCountrySelect: (Country?) -> Unit,
+    onWholeWorldSelect: (Boolean) -> Unit,
     onCacheClear: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
@@ -94,10 +91,6 @@ private fun OpenFoodFactsSettingsScreen(
     val enabled = settings is OpenFoodFactsSettings.Enabled
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
-    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
-        .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
     Scaffold(
         modifier = modifier,
@@ -118,19 +111,18 @@ private fun OpenFoodFactsSettingsScreen(
                 },
                 scrollBehavior = scrollBehavior
             )
-        },
-        contentWindowInsets = contentWindowInsets
+        }
     ) { paddingValues ->
         LazyColumn(
-            contentPadding = paddingValues
+            contentPadding = paddingValues,
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             item {
                 Text(
                     text = stringResource(Res.string.headline_open_food_facts),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp, horizontal = 16.dp)
-                        .horizontalDisplayCutoutPadding(),
+                        .padding(vertical = 8.dp, horizontal = 16.dp),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge
                 )
@@ -141,7 +133,6 @@ private fun OpenFoodFactsSettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .horizontalDisplayCutoutPadding()
                 )
             }
 
@@ -156,9 +147,7 @@ private fun OpenFoodFactsSettingsScreen(
                             text = stringResource(Res.string.action_use_open_food_facts)
                         )
                     },
-                    modifier = Modifier
-                        .clickable { onToggle(!enabled) }
-                        .horizontalDisplayCutoutPadding(),
+                    modifier = Modifier.clickable { onToggle(!enabled) },
                     trailingContent = {
                         Switch(
                             checked = enabled,
@@ -172,6 +161,7 @@ private fun OpenFoodFactsSettingsScreen(
                 if (settings is OpenFoodFactsSettings.Enabled) {
                     OpenFoodFactsContent(
                         onCountrySelect = onCountrySelect,
+                        onWholeWorldSelect = onWholeWorldSelect,
                         settings = settings,
                         onCacheClear = onCacheClear
                     )
@@ -188,24 +178,27 @@ private fun OpenFoodFactsSettingsScreen(
 @Composable
 private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
     val linkColor = MaterialTheme.colorScheme.tertiary
+    val bodyMedium = MaterialTheme.typography.bodyMedium
 
     val annotatedString = buildAnnotatedString {
-        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-            append(stringResource(Res.string.headline_open_food_facts))
-        }
-        append(" " + stringResource(Res.string.description_open_food_facts))
-        withLink(
-            LinkAnnotation.Url(
-                url = stringResource(Res.string.link_open_food_facts),
-                styles = TextLinkStyles(
-                    style = SpanStyle(
-                        color = linkColor,
-                        fontWeight = FontWeight.Bold
+        withStyle(style = bodyMedium.toSpanStyle()) {
+            withStyle(style = bodyMedium.copy(fontWeight = FontWeight.Bold).toSpanStyle()) {
+                append(stringResource(Res.string.headline_open_food_facts))
+            }
+            append(" " + stringResource(Res.string.description_open_food_facts))
+            withLink(
+                LinkAnnotation.Url(
+                    url = stringResource(Res.string.link_open_food_facts),
+                    styles = TextLinkStyles(
+                        style = SpanStyle(
+                            color = linkColor,
+                            fontWeight = FontWeight.Bold
+                        )
                     )
                 )
-            )
-        ) {
-            append(" " + stringResource(Res.string.action_read_more))
+            ) {
+                append(" " + stringResource(Res.string.action_read_more))
+            }
         }
     }
 
@@ -219,12 +212,8 @@ private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.bodyMedium
         )
 
-        ElevatedCard(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.elevatedCardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            )
+        Card(
+            modifier = Modifier.fillMaxWidth()
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -265,6 +254,7 @@ private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
 @Composable
 private fun OpenFoodFactsContent(
     onCountrySelect: (Country) -> Unit,
+    onWholeWorldSelect: (Boolean) -> Unit,
     settings: OpenFoodFactsSettings.Enabled,
     onCacheClear: () -> Unit,
     modifier: Modifier = Modifier,
@@ -290,26 +280,67 @@ private fun OpenFoodFactsContent(
         ListItem(
             modifier = Modifier
                 .requiredHeightIn(min = 64.dp)
-                .clickable { showCountryPicker = true }
-                .horizontalDisplayCutoutPadding(),
+                .clickable { onWholeWorldSelect(settings.country != null) },
+            headlineContent = {
+                Text(stringResource(Res.string.headline_use_whole_world_database))
+            },
+            trailingContent = {
+                Switch(
+                    checked = settings.country == null,
+                    onCheckedChange = onWholeWorldSelect
+                )
+            }
+        )
+        Card(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null
+                )
+
+                Text(
+                    text = stringResource(Res.string.description_use_whole_world_database),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Justify
+                )
+            }
+        }
+        ListItem(
+            modifier = Modifier
+                .requiredHeightIn(min = 64.dp)
+                .clickable { showCountryPicker = true },
             headlineContent = {
                 Text(
                     text = stringResource(Res.string.action_select_country)
                 )
             },
             supportingContent = {
-                Text(
-                    text = settings.country.name,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                if (settings.country == null) {
+                    Text(
+                        text = stringResource(Res.string.headline_filter_foods_by_country)
+                    )
+                } else {
+                    Text(
+                        text = settings.country.name,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             },
             trailingContent = {
-                countryFlag(
-                    country = settings.country,
-                    modifier = Modifier.width(52.dp)
-                )
+                if (settings.country != null) {
+                    countryFlag(
+                        country = settings.country,
+                        modifier = Modifier.width(52.dp)
+                    )
+                }
             }
         )
+        HorizontalDivider()
         ClearCacheItem(
             onCacheClear = onCacheClear,
             modifier = Modifier.requiredHeightIn(min = 64.dp)
@@ -337,9 +368,7 @@ private fun ClearCacheItem(onCacheClear: () -> Unit, modifier: Modifier = Modifi
                 text = stringResource(Res.string.headline_clear_cache)
             )
         },
-        modifier = modifier
-            .clickable { showDialog = true }
-            .horizontalDisplayCutoutPadding(),
+        modifier = modifier.clickable { showDialog = true },
         supportingContent = {
             Text(
                 text = stringResource(Res.string.description_open_food_facts_clear_query_cache)

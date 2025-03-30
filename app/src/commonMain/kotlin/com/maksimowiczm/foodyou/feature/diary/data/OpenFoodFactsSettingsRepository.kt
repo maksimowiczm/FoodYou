@@ -6,9 +6,9 @@ import com.maksimowiczm.foodyou.feature.diary.data.preferences.OpenFoodFactsPref
 import com.maksimowiczm.foodyou.feature.diary.database.dao.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.feature.system.data.SystemInfoRepository
 import com.maksimowiczm.foodyou.feature.system.data.model.Country
-import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
+import com.maksimowiczm.foodyou.infrastructure.datastore.setNull
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
@@ -45,12 +45,8 @@ class OpenFoodFactsSettingsRepository(
     }
 
     suspend fun enableOpenFoodFacts() {
-        val country = dataStore.get(OpenFoodFactsPreferences.countryCode)
-            ?: systemInfoRepository.defaultCountry.code
-
         dataStore.set(
-            OpenFoodFactsPreferences.isEnabled to true,
-            OpenFoodFactsPreferences.countryCode to country
+            OpenFoodFactsPreferences.isEnabled to true
         )
     }
 
@@ -61,8 +57,12 @@ class OpenFoodFactsSettingsRepository(
         )
     }
 
-    suspend fun setOpenFoodFactsCountry(country: Country) {
-        dataStore.set(OpenFoodFactsPreferences.countryCode to country.code)
+    suspend fun setOpenFoodFactsCountry(country: Country?) {
+        if (country == null) {
+            dataStore.setNull(OpenFoodFactsPreferences.countryCode)
+        } else {
+            dataStore.set(OpenFoodFactsPreferences.countryCode to country.code)
+        }
     }
 
     suspend fun clearCache() {
