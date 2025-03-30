@@ -48,6 +48,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults
@@ -55,8 +56,10 @@ import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDef
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults.measurementStringShort
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsList
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsRow
+import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.Ingredient
+import com.maksimowiczm.foodyou.navigation.fullScreenDialogComposable
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
@@ -65,6 +68,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 private const val CREATE_RECIPE_SCREEN = "create_recipe"
 private const val SEARCH_SCREEN = "search"
+private const val CREATE_PRODUCT_SCREEN = "create_product"
 
 @Suppress("ktlint:compose:vm-forwarding-check")
 @Composable
@@ -111,8 +115,27 @@ fun CreateRecipeDialog(
                 onBack = {
                     navController.popBackStack(route = SEARCH_SCREEN, inclusive = true)
                 },
+                onCreateProduct = {
+                    navController.navigate(
+                        route = CREATE_PRODUCT_SCREEN,
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                },
                 onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
                 viewModel = viewModel
+            )
+        }
+        fullScreenDialogComposable(CREATE_PRODUCT_SCREEN) {
+            CreateProductDialog(
+                onClose = {
+                    navController.popBackStack(route = CREATE_PRODUCT_SCREEN, inclusive = true)
+                },
+                onSuccess = {
+                    // TODO
+                    // Redirect to add product to recipe
+                }
             )
         }
     }

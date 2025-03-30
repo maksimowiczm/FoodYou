@@ -55,6 +55,7 @@ private const val BARCODE_SCANNER_SCREEN = "barcodeScanner"
 fun IngredientSearch(
     onBack: () -> Unit,
     onGoToOpenFoodFactsSettings: () -> Unit,
+    onCreateProduct: () -> Unit,
     viewModel: CreateRecipeViewModel,
     modifier: Modifier = Modifier,
     state: IngredientSearchState = rememberIngredientSearchState()
@@ -88,6 +89,7 @@ fun IngredientSearch(
                 },
                 onBack = onBack,
                 onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
+                onCreateProduct = onCreateProduct,
                 modifier = modifier
             )
         }
@@ -116,6 +118,7 @@ private fun IngredientSearch(
     onBarcodeScanner: () -> Unit,
     onBack: () -> Unit,
     onGoToOpenFoodFactsSettings: () -> Unit,
+    onCreateProduct: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -138,9 +141,7 @@ private fun IngredientSearch(
         coroutineScope = coroutineScope,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    // TODO
-                }
+                onClick = onCreateProduct
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
