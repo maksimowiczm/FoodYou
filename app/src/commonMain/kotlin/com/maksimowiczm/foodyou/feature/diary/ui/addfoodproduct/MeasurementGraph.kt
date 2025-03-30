@@ -22,14 +22,14 @@ fun NavGraphBuilder.measurementGraph(
     onCreate: (FoodId, WeightMeasurement) -> Unit,
     onEditBack: () -> Unit,
     onEdit: (MeasurementId, WeightMeasurement) -> Unit,
-    onEditProduct: (productId: Long) -> Unit
+    onEditFood: (FoodId) -> Unit
 ) {
     crossfadeComposable<CreateFoodProductMeasurement> {
         val (productId) = it.toRoute<CreateFoodProductMeasurement>()
 
         AddProductScreen(
             onBack = onCreateBack,
-            onEditProduct = onEditProduct,
+            onEditFood = onEditFood,
             onConfirm = {
                 onCreate(FoodId.Product(productId), it)
             },
@@ -43,7 +43,7 @@ fun NavGraphBuilder.measurementGraph(
 
         AddProductScreen(
             onBack = onEditBack,
-            onEditProduct = onEditProduct,
+            onEditFood = onEditFood,
             onConfirm = {
                 onEdit(MeasurementId.Product(measurementId), it)
             },

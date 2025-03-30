@@ -33,7 +33,7 @@ class ObserveProductCase(
                 .observeMeasurementSuggestionByFood(foodId)
                 .map { suggestions ->
                     Food(
-                        id = product.id.productId,
+                        id = product.id,
                         name = product.name,
                         nutrients = product.nutrients,
                         packageSuggestion = suggestions.packageSuggestion,
@@ -80,7 +80,7 @@ class ObserveProductCase(
                     val weightSuggestion = weightSuggestion ?: suggestions.weightSuggestion
 
                     Food(
-                        id = product.id.productId,
+                        id = product.id,
                         name = product.name,
                         nutrients = product.nutrients,
                         packageSuggestion = packageSuggestion,

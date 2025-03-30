@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.CreateFoodProductMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.EditFoodProductMeasurement
@@ -267,13 +268,17 @@ private fun AppNavHost(
             onEditBack = {
                 navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
             },
-            onEditProduct = { productId ->
-                navController.navigate(
-                    route = EditProduct(productId),
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    }
-                )
+            onEditFood = { foodId ->
+                when (foodId) {
+                    is FoodId.Product -> navController.navigate(
+                        route = EditProduct(foodId.productId),
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+
+                    is FoodId.Recipe -> TODO()
+                }
             },
             onEdit = { measurementId, measurement ->
                 // TODO

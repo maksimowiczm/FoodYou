@@ -67,6 +67,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.NutrientValue
 import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrients
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
@@ -86,7 +87,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun AddProductScreen(
     onBack: () -> Unit,
-    onEditProduct: (productId: Long) -> Unit,
+    onEditFood: (FoodId) -> Unit,
     onConfirm: (weightMeasurement: WeightMeasurement) -> Unit,
     viewModel: MeasurementViewModel,
     modifier: Modifier = Modifier
@@ -98,9 +99,7 @@ fun AddProductScreen(
         null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
         else -> AddProductScreen(
             onBack = onBack,
-            onEditProduct = {
-                onEditProduct(food.id)
-            },
+            onEditProduct = { onEditFood(food.id) },
             onDeleteProduct = viewModel::onDelete,
             onConfirm = { weightMeasurement ->
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
