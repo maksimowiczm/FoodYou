@@ -34,7 +34,7 @@ fun NavGraphBuilder.measurementGraph(
                 onCreate(FoodId.Product(productId), it)
             },
             viewModel = koinViewModel<CreateMeasurementViewModel>(
-                parameters = { parametersOf(productId) }
+                parameters = { parametersOf(FoodId.Product(productId)) }
             )
         )
     }
