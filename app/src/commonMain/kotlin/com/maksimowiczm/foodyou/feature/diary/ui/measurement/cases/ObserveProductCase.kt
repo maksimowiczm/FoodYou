@@ -26,7 +26,6 @@ class ObserveProductCase(
         is FoodId.Recipe -> recipeRepository.observeRecipeById(foodId.recipeId)
             .filterNotNull()
             .flatMapLatest { recipe ->
-
                 measurementRepository
                     .observeMeasurementSuggestionByFood(foodId)
                     .map { suggestions ->
@@ -63,8 +62,6 @@ class ObserveProductCase(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(measurementId: MeasurementId): Flow<Food?> {
-        measurementId as MeasurementId.Product
-
         return measurementRepository
             .observeMeasurementById(measurementId)
             .flatMapLatest { measurement ->
@@ -72,18 +69,18 @@ class ObserveProductCase(
                     return@flatMapLatest flowOf(null)
                 }
 
-                val foodId = measurement.foodId as? FoodId.Product
-                if (foodId == null) {
-                    return@flatMapLatest flowOf(null)
-                }
-
                 val packageSuggestion = measurement.measurement as? WeightMeasurement.Package
                 val servingSuggestion = measurement.measurement as? WeightMeasurement.Serving
                 val weightSuggestion = measurement.measurement as? WeightMeasurement.WeightUnit
 
+                val foodFlow = when (val foodId = measurement.foodId) {
+                    is FoodId.Recipe -> recipeRepository.observeRecipeById(foodId.recipeId)
+                    is FoodId.Product -> productRepository.observeProductById(foodId.productId)
+                }
+
                 combine(
                     measurementRepository.observeMeasurementSuggestionByFood(measurement.foodId),
-                    productRepository.observeProductById(foodId.productId)
+                    foodFlow
                 ) { suggestion, product ->
                     if (product == null) {
                         return@combine null

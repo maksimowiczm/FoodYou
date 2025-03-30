@@ -29,6 +29,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.meal.compose.DiaryDayMealScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateProductMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.CreateRecipeMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.EditProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.measurement.EditRecipeMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.measurement.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.diary.ui.product.EditProduct
@@ -161,7 +162,7 @@ private fun AppNavHost(
                         )
 
                         is MeasurementId.Recipe -> navController.navigate(
-                            route = EditProductMeasurement(it.measurementId),
+                            route = EditRecipeMeasurement(it.measurementId),
                             navOptions = navOptions {
                                 launchSingleTop = true
                             }
@@ -265,6 +266,7 @@ private fun AppNavHost(
         measurementGraph(
             onCreateBack = {
                 navController.popBackStack<CreateProductMeasurement>(inclusive = true)
+                navController.popBackStack<CreateRecipeMeasurement>(inclusive = true)
             },
             onCreate = { food, measurement ->
                 // TODO
@@ -275,10 +277,12 @@ private fun AppNavHost(
                         weightMeasurement = measurement
                     )
                     navController.popBackStack<CreateProductMeasurement>(inclusive = true)
+                    navController.popBackStack<CreateRecipeMeasurement>(inclusive = true)
                 }
             },
             onEditBack = {
                 navController.popBackStack<EditProductMeasurement>(inclusive = true)
+                navController.popBackStack<EditRecipeMeasurement>(inclusive = true)
             },
             onEditFood = { foodId ->
                 when (foodId) {
@@ -301,6 +305,7 @@ private fun AppNavHost(
                         weightMeasurement = measurement
                     )
                     navController.popBackStack<EditProductMeasurement>(inclusive = true)
+                    navController.popBackStack<EditRecipeMeasurement>(inclusive = true)
                 }
             },
             onDeleteFood = {
