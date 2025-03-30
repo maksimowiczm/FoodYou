@@ -3,38 +3,30 @@ package com.maksimowiczm.foodyou.feature.diary.ui
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.CreateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.UpdateMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.compose.AddProductScreen
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.CreateFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.EditFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.AddFoodSearchViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearch
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.rememberAddFoodSearchState
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.compose.DiaryDayMealScreen
-import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
-import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
+import com.maksimowiczm.foodyou.feature.diary.ui.product.CreateProduct
+import com.maksimowiczm.foodyou.feature.diary.ui.product.EditProduct
+import com.maksimowiczm.foodyou.feature.diary.ui.product.productGraph
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import kotlinx.datetime.LocalDate
@@ -77,18 +69,6 @@ private data object MealHome
 
 @Serializable
 private data class Search(val startOnBarcodeScanner: Boolean)
-
-@Serializable
-private data class CreateFoodProductMeasurement(val productId: Long)
-
-@Serializable
-private data class EditFoodProductMeasurement(val productMeasurementId: Long)
-
-@Serializable
-private data object CreateProductDialog
-
-@Serializable
-private data class EditProductDialog(val productId: Long)
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -176,7 +156,7 @@ private fun AppNavHost(
         crossfadeComposable<Search>(
             popEnterTransition = {
                 // Delay fade in to mimic scrim effect on dialog close
-                if (initialState.destination.hasRoute<CreateProductDialog>()) {
+                if (initialState.destination.hasRoute<CreateProduct>()) {
                     fadeIn(
                         tween(
                             delayMillis = 50
@@ -214,7 +194,7 @@ private fun AppNavHost(
                     },
                     onCreateProduct = {
                         navController.navigate(
-                            route = CreateProductDialog,
+                            route = CreateProduct,
                             navOptions = navOptions {
                                 launchSingleTop = true
                             }
@@ -248,155 +228,42 @@ private fun AppNavHost(
                 )
             }
         }
-        crossfadeComposable<CreateFoodProductMeasurement>(
-            popEnterTransition = {
-                // Delay fade in to mimic scrim effect on dialog close
-                if (initialState.destination.hasRoute<EditProductDialog>()) {
-                    fadeIn(
-                        tween(
-                            delayMillis = 50
-                        )
-                    )
-                } else {
-                    crossfadeIn()
-                }
-            }
-        ) {
-            val (productId) = it.toRoute<CreateFoodProductMeasurement>()
 
-            AddProductScreen(
-                onBack = {
-                    navController.popBackStack<CreateFoodProductMeasurement>(inclusive = true)
-                },
-                onEditProduct = { id ->
-                    navController.navigate(
-                        route = EditProductDialog(id),
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
-                },
-                viewModel = koinViewModel<CreateMeasurementViewModel>(
-                    parameters = { parametersOf(productId, mealId, date) }
-                )
-            )
-        }
-        crossfadeComposable<EditFoodProductMeasurement>(
-            popEnterTransition = {
-                // Delay fade in to simulate scrim effect on dialog close
-                if (initialState.destination.hasRoute<EditProductDialog>()) {
-                    fadeIn(
-                        tween(
-                            delayMillis = 50
-                        )
-                    )
-                } else {
-                    crossfadeIn()
-                }
-            }
-        ) {
-            val (measurementId) = it.toRoute<EditFoodProductMeasurement>()
-
-            AddProductScreen(
-                onBack = {
-                    navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
-                },
-                onEditProduct = { id ->
-                    navController.navigate(
-                        route = EditProductDialog(id),
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        }
-                    )
-                },
-                viewModel = koinViewModel<UpdateMeasurementViewModel>(
-                    parameters = { parametersOf(MeasurementId.Product(measurementId)) }
-                )
-            )
-        }
-        // Slide beyond the screen on enter and exit
-        composable<CreateProductDialog>(
-            enterTransition = {
-                crossfadeIn() + slideInVertically(
-                    animationSpec = tween(
-                        easing = LinearOutSlowInEasing
-                    ),
-                    initialOffsetY = { it }
-                )
+        measurementGraph(
+            mealId = mealId,
+            date = date,
+            onCreateBack = {
+                navController.popBackStack<CreateFoodProductMeasurement>(inclusive = true)
             },
-            exitTransition = {
-                slideOutVertically(
-                    animationSpec = tween(
-                        easing = FastOutLinearInEasing
-                    ),
-                    targetOffsetY = { it }
-                ) + scaleOut(
-                    targetScale = 0.8f,
-                    animationSpec = tween(
-                        easing = FastOutLinearInEasing
-                    )
-                )
-            }
-        ) {
-            Surface(
-                shadowElevation = 6.dp,
-                shape = MaterialTheme.shapes.medium
-            ) {
-                CreateProductDialog(
-                    onClose = { navController.popBackStack<CreateProductDialog>(inclusive = true) },
-                    onSuccess = { productId ->
-                        navController.navigate(
-                            route = CreateFoodProductMeasurement(productId),
-                            navOptions = navOptions {
-                                launchSingleTop = true
-
-                                popUpTo<Search> {
-                                    inclusive = false
-                                }
-                            }
-                        )
+            onEditBack = {
+                navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
+            },
+            onEditProduct = { productId ->
+                navController.navigate(
+                    route = EditProduct(productId),
+                    navOptions = navOptions {
+                        launchSingleTop = true
                     }
                 )
             }
-        }
-        // Slide beyond the screen on enter and exit
-        composable<EditProductDialog>(
-            enterTransition = {
-                crossfadeIn() + slideInVertically(
-                    animationSpec = tween(
-                        easing = LinearOutSlowInEasing
-                    ),
-                    initialOffsetY = { it }
+        )
+
+        productGraph(
+            onCreateClose = { navController.popBackStack<CreateProduct>(inclusive = true) },
+            onCreateSuccess = { productId ->
+                navController.navigate(
+                    route = CreateFoodProductMeasurement(productId),
+                    navOptions = navOptions {
+                        launchSingleTop = true
+
+                        popUpTo<Search> {
+                            inclusive = false
+                        }
+                    }
                 )
             },
-            exitTransition = {
-                slideOutVertically(
-                    animationSpec = tween(
-                        easing = FastOutLinearInEasing
-                    ),
-                    targetOffsetY = { it }
-                ) + scaleOut(
-                    targetScale = 0.8f,
-                    animationSpec = tween(
-                        easing = FastOutLinearInEasing
-                    )
-                )
-            }
-        ) {
-            val (productId) = it.toRoute<EditProductDialog>()
-
-            Surface(
-                shadowElevation = 6.dp,
-                shape = MaterialTheme.shapes.medium
-            ) {
-                UpdateProductDialog(
-                    onClose = { navController.popBackStack<EditProductDialog>(inclusive = true) },
-                    onSuccess = { navController.popBackStack<EditProductDialog>(inclusive = true) },
-                    viewModel = koinViewModel(
-                        parameters = { parametersOf(productId) }
-                    )
-                )
-            }
-        }
+            onEditClose = { navController.popBackStack<EditProduct>(inclusive = true) },
+            onEditSuccess = { navController.popBackStack<EditProduct>(inclusive = true) }
+        )
     }
 }
