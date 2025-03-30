@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.navigation.toRoute
@@ -37,6 +36,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDia
 import com.maksimowiczm.foodyou.feature.diary.ui.product.update.UpdateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.compose.CreateRecipeDialog
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.navigation.fullScreenDialogComposable
 import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.ui.motion.crossfadeOut
 import kotlinx.datetime.LocalDate
@@ -330,29 +330,7 @@ private fun AppNavHost(
             )
         }
         // Slide beyond the screen on enter and exit
-        composable<CreateProductDialog>(
-            enterTransition = {
-                crossfadeIn() + slideInVertically(
-                    animationSpec = tween(
-                        easing = LinearOutSlowInEasing
-                    ),
-                    initialOffsetY = { it }
-                )
-            },
-            exitTransition = {
-                slideOutVertically(
-                    animationSpec = tween(
-                        easing = FastOutLinearInEasing
-                    ),
-                    targetOffsetY = { it }
-                ) + scaleOut(
-                    targetScale = 0.8f,
-                    animationSpec = tween(
-                        easing = FastOutLinearInEasing
-                    )
-                )
-            }
-        ) {
+        fullScreenDialogComposable<CreateProductDialog> {
             Surface(
                 shadowElevation = 6.dp,
                 shape = MaterialTheme.shapes.medium
@@ -375,29 +353,7 @@ private fun AppNavHost(
             }
         }
         // Slide beyond the screen on enter and exit
-        composable<EditProductDialog>(
-            enterTransition = {
-                crossfadeIn() + slideInVertically(
-                    animationSpec = tween(
-                        easing = LinearOutSlowInEasing
-                    ),
-                    initialOffsetY = { it }
-                )
-            },
-            exitTransition = {
-                slideOutVertically(
-                    animationSpec = tween(
-                        easing = FastOutLinearInEasing
-                    ),
-                    targetOffsetY = { it }
-                ) + scaleOut(
-                    targetScale = 0.8f,
-                    animationSpec = tween(
-                        easing = FastOutLinearInEasing
-                    )
-                )
-            }
-        ) {
+        fullScreenDialogComposable<EditProductDialog> {
             val (productId) = it.toRoute<EditProductDialog>()
 
             Surface(
