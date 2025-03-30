@@ -72,7 +72,7 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrients
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.MeasurementViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.model.Product
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.model.Food
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientListItem
 import com.maksimowiczm.foodyou.ui.res.formatClipZeros
@@ -91,23 +91,23 @@ fun AddProductScreen(
     viewModel: MeasurementViewModel,
     modifier: Modifier = Modifier
 ) {
-    val product by viewModel.product.collectAsStateWithLifecycle(null)
+    val food by viewModel.food.collectAsStateWithLifecycle(null)
     val hapticFeedback = LocalHapticFeedback.current
 
-    when (val product = product) {
+    when (val food = food) {
         null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
         else -> AddProductScreen(
             onBack = onBack,
             onEditProduct = {
-                onEditProduct(product.id)
+                onEditProduct(food.id)
             },
             onDeleteProduct = viewModel::onDelete,
             onConfirm = { weightMeasurement ->
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                 onConfirm(weightMeasurement)
             },
-            product = product,
-            highlight = product.highlight,
+            food = food,
+            highlight = food.highlight,
             modifier = modifier
         )
     }
@@ -120,17 +120,17 @@ private fun AddProductScreen(
     onEditProduct: () -> Unit,
     onDeleteProduct: () -> Unit,
     onConfirm: (weightMeasurement: WeightMeasurement) -> Unit,
-    product: Product,
+    food: Food,
     highlight: WeightMeasurementEnum?,
     modifier: Modifier = Modifier
 ) {
     val formState = rememberAddProductState(
-        packageSuggestion = product.packageSuggestion,
-        servingSuggestion = product.servingSuggestion,
-        weightSuggestion = product.weightSuggestions
+        packageSuggestion = food.packageSuggestion,
+        servingSuggestion = food.servingSuggestion,
+        weightSuggestion = food.weightSuggestions
     )
     val chipsState = rememberWeightChipsState(
-        product = product,
+        food = food,
         extraFilter = formState.latestWeightMeasurement
     )
 
@@ -175,7 +175,7 @@ private fun AddProductScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = product.name,
+                        text = food.name,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.graphicsLayer { alpha = headlineAlpha }
@@ -205,7 +205,7 @@ private fun AddProductScreen(
         ) {
             item {
                 Text(
-                    text = product.name,
+                    text = food.name,
                     style = MaterialTheme.typography.headlineLarge,
                     modifier = Modifier
                         .padding(16.dp)
@@ -220,7 +220,7 @@ private fun AddProductScreen(
 
             item {
                 val field = formState.packageField ?: return@item
-                val measurement = product.packageSuggestion ?: return@item
+                val measurement = food.packageSuggestion ?: return@item
 
                 val contentColor = contentColor(WeightMeasurementEnum.Package)
                 val containerColor = containerColor(WeightMeasurementEnum.Package)
@@ -268,7 +268,7 @@ private fun AddProductScreen(
 
                     WeightCaloriesLayout(
                         weight = {
-                            val weight = (field.value * product.packageWeight!!).roundToInt()
+                            val weight = (field.value * food.packageWeight!!).roundToInt()
                             val g = stringResource(Res.string.unit_gram_short)
                             Text(
                                 text = "$weight $g",
@@ -277,8 +277,8 @@ private fun AddProductScreen(
                             )
                         },
                         calories = {
-                            val weight = field.value * product.packageWeight!!
-                            val calories = (weight * product.nutrients.calories / 100).roundToInt()
+                            val weight = field.value * food.packageWeight!!
+                            val calories = (weight * food.nutrients.calories / 100).roundToInt()
                             val kcal = stringResource(Res.string.unit_kcal)
                             Text(
                                 text = "$calories $kcal",
@@ -309,7 +309,7 @@ private fun AddProductScreen(
 
             item {
                 val field = formState.servingField ?: return@item
-                val measurement = product.servingSuggestion ?: return@item
+                val measurement = food.servingSuggestion ?: return@item
                 val contentColor = contentColor(WeightMeasurementEnum.Serving)
                 val containerColor = containerColor(WeightMeasurementEnum.Serving)
 
@@ -356,7 +356,7 @@ private fun AddProductScreen(
 
                     WeightCaloriesLayout(
                         weight = {
-                            val weight = (field.value * product.servingWeight!!).roundToInt()
+                            val weight = (field.value * food.servingWeight!!).roundToInt()
                             val g = stringResource(Res.string.unit_gram_short)
                             Text(
                                 text = "$weight $g",
@@ -365,8 +365,8 @@ private fun AddProductScreen(
                             )
                         },
                         calories = {
-                            val weight = field.value * product.servingWeight!!
-                            val calories = (weight * product.nutrients.calories / 100).roundToInt()
+                            val weight = field.value * food.servingWeight!!
+                            val calories = (weight * food.nutrients.calories / 100).roundToInt()
                             val kcal = stringResource(Res.string.unit_kcal)
                             Text(
                                 text = "$calories $kcal",
@@ -443,7 +443,7 @@ private fun AddProductScreen(
                         )
                     )
 
-                    val calories = (field.value * product.nutrients.calories / 100).roundToInt()
+                    val calories = (field.value * food.nutrients.calories / 100).roundToInt()
                     val kcal = stringResource(Res.string.unit_kcal)
                     Text(
                         text = "$calories $kcal",
@@ -506,9 +506,9 @@ private fun AddProductScreen(
 
             item {
                 CaloriesProgressIndicator(
-                    proteins = product.nutrients.proteins,
-                    carbohydrates = product.nutrients.carbohydrates,
-                    fats = product.nutrients.fats,
+                    proteins = food.nutrients.proteins,
+                    carbohydrates = food.nutrients.carbohydrates,
+                    fats = food.nutrients.fats,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(16.dp)
@@ -523,11 +523,11 @@ private fun AddProductScreen(
             item {
                 val weight = when (val measurement = chipsState.selectedFilter) {
                     is WeightMeasurement.Package -> {
-                        measurement.quantity * product.packageWeight!!
+                        measurement.quantity * food.packageWeight!!
                     }
 
                     is WeightMeasurement.Serving -> {
-                        measurement.quantity * product.servingWeight!!
+                        measurement.quantity * food.servingWeight!!
                     }
 
                     is WeightMeasurement.WeightUnit -> {
@@ -536,7 +536,7 @@ private fun AddProductScreen(
                 }
 
                 NutrientsList(
-                    nutrients = product.nutrients,
+                    nutrients = food.nutrients,
                     weight = weight,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )

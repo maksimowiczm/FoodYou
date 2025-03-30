@@ -10,8 +10,8 @@ class DeleteProductCase(
     private val productRepository: ProductRepository,
     private val measurementRepository: MeasurementRepository
 ) {
-    suspend operator fun invoke(productId: Long) {
-        productRepository.deleteProduct(productId)
+    suspend operator fun invoke(foodId: FoodId) {
+        // TODO
     }
 
     suspend operator fun invoke(measurementId: MeasurementId) {

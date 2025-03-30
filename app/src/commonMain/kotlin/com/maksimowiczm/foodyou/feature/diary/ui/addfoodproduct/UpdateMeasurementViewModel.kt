@@ -12,7 +12,7 @@ class UpdateMeasurementViewModel(
     private val measurementId: MeasurementId
 ) : MeasurementViewModel() {
 
-    override val product = observeProductCase(measurementId)
+    override val food = observeProductCase(measurementId)
 
     override fun onDelete() {
         viewModelScope.launch {

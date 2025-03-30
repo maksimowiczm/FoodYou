@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.model.Product
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.model.Food
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -19,16 +19,20 @@ class ObserveProductCase(
     private val measurementRepository: MeasurementRepository
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(productId: Long): Flow<Product?> {
-        return productRepository.observeProductById(productId).flatMapLatest { product ->
+    operator fun invoke(foodId: FoodId): Flow<Food?> {
+        // TODO
+
+        foodId as? FoodId.Product ?: return flowOf(null)
+
+        return productRepository.observeProductById(foodId.productId).flatMapLatest { product ->
             if (product == null) {
                 return@flatMapLatest flowOf(null)
             }
 
             measurementsRepository
-                .observeMeasurementSuggestionByFood(FoodId.Product(productId))
+                .observeMeasurementSuggestionByFood(foodId)
                 .map { suggestions ->
-                    Product(
+                    Food(
                         id = product.id.productId,
                         name = product.name,
                         nutrients = product.nutrients,
@@ -44,7 +48,7 @@ class ObserveProductCase(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(measurementId: MeasurementId): Flow<Product?> {
+    operator fun invoke(measurementId: MeasurementId): Flow<Food?> {
         measurementId as MeasurementId.Product
 
         return measurementRepository
@@ -75,7 +79,7 @@ class ObserveProductCase(
                     val servingSuggestion = servingSuggestion ?: suggestions.servingSuggestion
                     val weightSuggestion = weightSuggestion ?: suggestions.weightSuggestion
 
-                    Product(
+                    Food(
                         id = product.id.productId,
                         name = product.name,
                         nutrients = product.nutrients,

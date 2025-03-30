@@ -17,7 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.model.Product
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.model.Food
 import com.maksimowiczm.foodyou.feature.diary.ui.res.stringResource
 
 @Composable
@@ -45,10 +45,10 @@ fun WeightChips(
 
 @Composable
 fun rememberWeightChipsState(
-    product: Product,
+    food: Food,
     extraFilter: WeightMeasurement? = null
 ): WeightChipsState = rememberSaveable(
-    product,
+    food,
     extraFilter,
     saver = Saver(
         save = {
@@ -58,8 +58,8 @@ fun rememberWeightChipsState(
         },
         restore = {
             WeightChipsState(
-                packageSuggestion = product.packageSuggestion,
-                servingSuggestion = product.servingSuggestion,
+                packageSuggestion = food.packageSuggestion,
+                servingSuggestion = food.servingSuggestion,
                 extraFilter = extraFilter,
                 initialSelectedFilterIndex = it[0] as Int
             )
@@ -67,8 +67,8 @@ fun rememberWeightChipsState(
     )
 ) {
     WeightChipsState(
-        packageSuggestion = product.packageSuggestion,
-        servingSuggestion = product.servingSuggestion,
+        packageSuggestion = food.packageSuggestion,
+        servingSuggestion = food.servingSuggestion,
         extraFilter = extraFilter,
         initialSelectedFilterIndex = 0
     )

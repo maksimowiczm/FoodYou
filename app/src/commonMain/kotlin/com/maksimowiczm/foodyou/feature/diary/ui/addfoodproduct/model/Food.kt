@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrients
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurementEnum
 
-data class Product(
+data class Food(
     val id: Long,
     val name: String,
     val nutrients: Nutrients,
