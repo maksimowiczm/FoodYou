@@ -84,20 +84,20 @@ private const val FIELDS = "" +
     ",product_quantity_unit"
 
 private class RetrofitOpenFoodFactsNetworkApi(private val client: HttpClient) {
-    suspend fun getProduct(code: String, countries: String): HttpResponse =
+    suspend fun getProduct(code: String, countries: String?): HttpResponse =
         client.get("api/v2/product/$code") {
-            parameter("countries", countries)
+            countries?.let { parameter("countries", countries) }
             parameter("fields", FIELDS)
         }
 
     suspend fun queryProducts(
         query: String,
-        countries: String,
+        countries: String?,
         page: Int?,
         pageSize: Int
     ): HttpResponse = client.get("cgi/search.pl?search_simple=1&json=1") {
         parameter("search_terms", query)
-        parameter("countries", countries)
+        countries?.let { parameter("countries", countries) }
         parameter("page", page)
         parameter("page_size", pageSize)
         parameter("fields", FIELDS)
