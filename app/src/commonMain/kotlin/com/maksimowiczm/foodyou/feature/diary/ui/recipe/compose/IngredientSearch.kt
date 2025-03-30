@@ -30,10 +30,12 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodsearch.compose.AddFoodSearchListItemSkeleton
 import com.maksimowiczm.foodyou.feature.diary.ui.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.component.FoodDatabaseErrorCard
 import com.maksimowiczm.foodyou.feature.diary.ui.component.ProductSearchBarSuggestions
+import com.maksimowiczm.foodyou.feature.diary.ui.component.SearchModelListItem
+import com.maksimowiczm.foodyou.feature.diary.ui.component.SearchModelListItemSkeleton
+import com.maksimowiczm.foodyou.feature.diary.ui.component.SearchScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactshint.OpenFoodFactsSearchHint
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.IngredientSearch
@@ -124,7 +126,7 @@ private fun IngredientSearch(
         shimmerBounds = ShimmerBounds.Window
     )
 
-    com.maksimowiczm.foodyou.feature.diary.ui.component.SearchScreen(
+    SearchScreen(
         pages = pages,
         onSearch = onSearch,
         onClear = { onSearch(null) },
@@ -192,7 +194,7 @@ private fun IngredientSearch(
                     count = 100,
                     key = { "skeleton-refresh-$it" }
                 ) {
-                    AddFoodSearchListItemSkeleton(shimmer = shimmer)
+                    SearchModelListItemSkeleton(shimmer = shimmer)
                 }
             }
 
@@ -208,9 +210,34 @@ private fun IngredientSearch(
                     )
                 ) { target ->
                     if (target == null) {
-                        AddFoodSearchListItemSkeleton(shimmer = shimmer)
+                        SearchModelListItemSkeleton(shimmer = shimmer)
                     } else {
-                        Text(target.toString())
+                        SearchModelListItem(
+                            name = target.name,
+                            brand = target.brand,
+                            calories = target.calories,
+                            proteins = target.proteins,
+                            carbohydrates = target.carbohydrates,
+                            fats = target.fats,
+                            weight = target.weightMeasurement.getWeight(
+                                target.packageWeight,
+                                target.servingWeight
+                            ),
+                            measurement = target.weightMeasurement,
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = null,
+                                fadeOutSpec = null
+                            ),
+                            onClick = {
+                                // TODO
+                            },
+                            trailingContent = {
+                                if (target.selected) {
+                                    // TODO
+                                    Text("TODO")
+                                }
+                            }
+                        )
                     }
                 }
             }
@@ -220,7 +247,7 @@ private fun IngredientSearch(
                     count = 3,
                     key = { "skeleton-append-$it" }
                 ) {
-                    AddFoodSearchListItemSkeleton(shimmer = shimmer)
+                    SearchModelListItemSkeleton(shimmer = shimmer)
                 }
             }
 
