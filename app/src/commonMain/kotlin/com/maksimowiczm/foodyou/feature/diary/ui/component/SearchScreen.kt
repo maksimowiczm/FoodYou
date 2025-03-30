@@ -12,11 +12,14 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
@@ -26,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarState
 import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.TopSearchBar
@@ -60,16 +64,17 @@ fun SearchScreen(
     pages: LazyPagingItems<*>,
     onSearch: (String) -> Unit,
     onClear: () -> Unit,
-    onBack: () -> Unit,
+    onBack: (() -> Unit)?,
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     textFieldState: TextFieldState = rememberTextFieldState(),
     searchBarState: SearchBarState = rememberSearchBarState(SearchBarValue.Collapsed),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    topBar: (@Composable () -> Unit)? = null,
+    floatingActionButton: @Composable () -> Unit = {},
     fullScreenSearchBarContent: @Composable () -> Unit = {},
     errorCard: (@Composable () -> Unit)? = null,
     hintCard: (@Composable () -> Unit)? = null,
-    floatingActionButton: @Composable () -> Unit = {},
     content: @Composable BoxScope.(PaddingValues) -> Unit
 ) {
     val isLoading by remember(pages.loadState) {
@@ -118,13 +123,15 @@ fun SearchScreen(
                     searchBarState.animateToCollapsed()
                 }
             },
-            onBack = {
-                if (searchBarState.currentValue == SearchBarValue.Expanded) {
-                    coroutineScope.launch {
-                        searchBarState.animateToCollapsed()
+            onBack = onBack?.let {
+                {
+                    if (searchBarState.currentValue == SearchBarValue.Expanded) {
+                        coroutineScope.launch {
+                            searchBarState.animateToCollapsed()
+                        }
+                    } else {
+                        onBack()
                     }
-                } else {
-                    onBack()
                 }
             },
             onClear = {
@@ -145,10 +152,23 @@ fun SearchScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopSearchBar(
-                state = searchBarState,
-                inputField = inputField
-            )
+            when (topBar) {
+                null -> TopSearchBar(
+                    state = searchBarState,
+                    inputField = inputField
+                )
+
+                else -> Column {
+                    topBar()
+
+                    val topInsets = SearchBarDefaults.windowInsets.only(WindowInsetsSides.Top)
+                    TopSearchBar(
+                        state = searchBarState,
+                        inputField = inputField,
+                        windowInsets = SearchBarDefaults.windowInsets.exclude(topInsets)
+                    )
+                }
+            }
         },
         floatingActionButton = floatingActionButton
     ) { paddingValues ->

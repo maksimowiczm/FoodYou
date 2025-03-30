@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -20,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
@@ -42,9 +47,8 @@ import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.IngredientSearch
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_add_food
-import foodyou.app.generated.resources.neutral_no_products_found
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -128,17 +132,36 @@ private fun IngredientSearch(
     val shimmer = rememberShimmer(
         shimmerBounds = ShimmerBounds.Window
     )
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     SearchScreen(
         pages = pages,
         onSearch = onSearch,
         onClear = { onSearch(null) },
-        onBack = onBack,
+        onBack = null,
         onBarcodeScanner = onBarcodeScanner,
         modifier = modifier,
         textFieldState = state.textFieldState,
         searchBarState = state.searchBarState,
         coroutineScope = coroutineScope,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(stringResource(Res.string.action_add_ingredients))
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onBack
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(Res.string.action_go_back)
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onCreateProduct
@@ -148,18 +171,6 @@ private fun IngredientSearch(
                     contentDescription = stringResource(Res.string.action_add_food)
                 )
             }
-        },
-        hintCard = {
-            OpenFoodFactsSearchHint(
-                onGoToSettings = onGoToOpenFoodFactsSettings,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-        },
-        errorCard = {
-            FoodDatabaseErrorCard(
-                onRetry = pages::retry,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
         },
         fullScreenSearchBarContent = {
             ProductSearchBarSuggestions(
@@ -175,6 +186,18 @@ private fun IngredientSearch(
                     state.textFieldState.setTextAndPlaceCursorAtEnd(it.query)
                 }
             )
+        },
+        errorCard = {
+            FoodDatabaseErrorCard(
+                onRetry = pages::retry,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        },
+        hintCard = {
+            OpenFoodFactsSearchHint(
+                onGoToSettings = onGoToOpenFoodFactsSettings,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
         }
     ) { paddingValues ->
         if (isEmpty && pages.loadState.append != LoadState.Loading) {
@@ -188,7 +211,8 @@ private fun IngredientSearch(
 
         LazyColumn(
             state = state.lazyListState,
-            contentPadding = paddingValues
+            contentPadding = paddingValues,
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             if (pages.loadState.refresh == LoadState.Loading && isEmpty) {
                 items(

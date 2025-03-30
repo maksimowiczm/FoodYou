@@ -23,7 +23,7 @@ fun ProductSearchBarInputField(
     textFieldState: TextFieldState,
     searchBarState: SearchBarState,
     onSearch: (String) -> Unit,
-    onBack: () -> Unit,
+    onBack: (() -> Unit)?,
     onClear: () -> Unit,
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
@@ -34,14 +34,16 @@ fun ProductSearchBarInputField(
         onSearch = onSearch,
         modifier = modifier,
         placeholder = { Text(stringResource(Res.string.action_search)) },
-        leadingIcon = {
-            IconButton(
-                onClick = onBack
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(Res.string.action_go_back)
-                )
+        leadingIcon = onBack?.let {
+            {
+                IconButton(
+                    onClick = onBack
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(Res.string.action_go_back)
+                    )
+                }
             }
         },
         trailingIcon = {
