@@ -48,6 +48,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
+import com.maksimowiczm.foodyou.feature.diary.data.model.sum
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.CreateFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.EditFoodProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.feature.diary.ui.component.MeasurementSummaryDefaults
@@ -57,6 +62,7 @@ import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsList
 import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.feature.diary.ui.product.create.CreateProductDialog
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.CreateRecipeViewModel
+import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.MeasuredIngredient
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.model.Ingredient
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.navigation.fullScreenDialogComposable
@@ -90,25 +96,16 @@ fun CreateRecipeDialog(
         startDestination = CREATE_RECIPE_SCREEN
     ) {
         crossfadeComposable(CREATE_RECIPE_SCREEN) {
-            when (val ingredients = ingredients) {
-                null -> {
-                    // TODO
-                    return@crossfadeComposable
-                }
-
-                else -> {
-                    CreateRecipeDialog(
-                        state = formState,
-                        ingredients = ingredients,
-                        onClose = onClose,
-                        onIngredientAdd = {
-                            navController.navigate(SEARCH_SCREEN)
-                        },
-                        onIncompleteProductClick = onIncompleteProductClick,
-                        modifier = modifier
-                    )
-                }
-            }
+            CreateRecipeDialog(
+                state = formState,
+                ingredients = ingredients,
+                onClose = onClose,
+                onIngredientAdd = {
+                    navController.navigate(SEARCH_SCREEN)
+                },
+                onIncompleteProductClick = onIncompleteProductClick,
+                modifier = modifier
+            )
         }
         crossfadeComposable(SEARCH_SCREEN) {
             IngredientSearch(
@@ -124,6 +121,14 @@ fun CreateRecipeDialog(
                     )
                 },
                 onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
+                onProductClick = {
+                    navController.navigate(
+                        route = CreateFoodProductMeasurement(it.productId),
+                        navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                },
                 viewModel = viewModel
             )
         }
@@ -138,6 +143,36 @@ fun CreateRecipeDialog(
                 }
             )
         }
+        measurementGraph(
+            onCreate = { foodId, weightMeasurement ->
+                viewModel.onAddIngredient(
+                    MeasuredIngredient(
+                        productId = foodId as FoodId.Product,
+                        weightMeasurement = weightMeasurement
+                    )
+                )
+                navController.navigate(
+                    route = CREATE_RECIPE_SCREEN,
+                    navOptions = navOptions {
+                        popUpTo(CREATE_RECIPE_SCREEN) {
+                            inclusive = true
+                        }
+                    }
+                )
+            },
+            onCreateBack = {
+                navController.popBackStack<CreateFoodProductMeasurement>(inclusive = true)
+            },
+            onEdit = { measurementId, weightMeasurement ->
+                // TODO
+            },
+            onEditBack = {
+                navController.popBackStack<EditFoodProductMeasurement>(inclusive = true)
+            },
+            onEditFood = {
+                // TODO
+            }
+        )
     }
 }
 
@@ -231,30 +266,32 @@ private fun CreateRecipeDialog(
                 }
             )
 
-            item {
-                HorizontalDivider()
-                Spacer(Modifier.height(8.dp))
-            }
+            if (ingredients.isNotEmpty()) {
+                item {
+                    HorizontalDivider()
+                    Spacer(Modifier.height(8.dp))
+                }
 
-            item {
-                Text(
-                    text = stringResource(Res.string.headline_summary),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
+                item {
+                    Text(
+                        text = stringResource(Res.string.headline_summary),
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
 
-            item {
-                Spacer(Modifier.height(8.dp))
-            }
+                item {
+                    Spacer(Modifier.height(8.dp))
+                }
 
-            item {
-                SummarySection(
-                    ingredients = ingredients,
-                    onIncompleteProductClick = onIncompleteProductClick,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
+                item {
+                    SummarySection(
+                        ingredients = ingredients,
+                        onIncompleteProductClick = onIncompleteProductClick,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
             }
 
             item {
@@ -351,14 +388,10 @@ private fun SummarySection(
     modifier: Modifier = Modifier
 ) {
     val nutrients = remember(ingredients) {
-        ingredients
-            .map { it.product.nutrients }
-            .reduce { acc, nutrients -> acc + nutrients }
+        ingredients.map { it.product.nutrients }.sum()
     }
     val weight = remember(ingredients) {
-        ingredients
-            .map { it.weightMeasurement.getWeight(it.product) }
-            .reduce { acc, weight -> acc + weight }
+        ingredients.map { it.weightMeasurement.getWeight(it.product) }.sum()
     }
 
     Column(

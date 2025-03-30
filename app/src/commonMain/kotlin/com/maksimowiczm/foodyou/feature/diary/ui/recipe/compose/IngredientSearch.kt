@@ -34,6 +34,7 @@ import androidx.navigation.navOptions
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.data.model.ProductQuery
 import com.maksimowiczm.foodyou.feature.diary.ui.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.diary.ui.component.FoodDatabaseErrorCard
@@ -60,6 +61,7 @@ fun IngredientSearch(
     onBack: () -> Unit,
     onGoToOpenFoodFactsSettings: () -> Unit,
     onCreateProduct: () -> Unit,
+    onProductClick: (FoodId.Product) -> Unit,
     viewModel: CreateRecipeViewModel,
     modifier: Modifier = Modifier,
     state: IngredientSearchState = rememberIngredientSearchState()
@@ -94,6 +96,7 @@ fun IngredientSearch(
                 onBack = onBack,
                 onGoToOpenFoodFactsSettings = onGoToOpenFoodFactsSettings,
                 onCreateProduct = onCreateProduct,
+                onProductClick = onProductClick,
                 modifier = modifier
             )
         }
@@ -123,6 +126,7 @@ private fun IngredientSearch(
     onBack: () -> Unit,
     onGoToOpenFoodFactsSettings: () -> Unit,
     onCreateProduct: () -> Unit,
+    onProductClick: (FoodId.Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -254,7 +258,7 @@ private fun IngredientSearch(
                                 fadeOutSpec = null
                             ),
                             onClick = {
-                                // TODO
+                                onProductClick(target.productId)
                             },
                             trailingContent = {
                                 if (target.selected) {

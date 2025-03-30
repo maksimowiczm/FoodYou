@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.feature.diary.data.SearchRepository
-import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
-import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.MeasuredIngredient
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.ObserveIngredientsCase
 import com.maksimowiczm.foodyou.feature.diary.ui.recipe.cases.ObserveProductsCase
@@ -32,18 +30,11 @@ class CreateRecipeViewModel(
         initialValue = emptyList()
     )
 
-    private val _ingredients = MutableStateFlow(
-        listOf(
-            MeasuredIngredient(
-                productId = FoodId.Product(2L),
-                weightMeasurement = WeightMeasurement.WeightUnit(100f)
-            ),
-            MeasuredIngredient(
-                productId = FoodId.Product(3L),
-                weightMeasurement = WeightMeasurement.WeightUnit(200f)
-            )
-        )
-    )
+    private val _ingredients = MutableStateFlow(emptyList<MeasuredIngredient>())
+
+    fun onAddIngredient(ingredient: MeasuredIngredient) {
+        _ingredients.value = _ingredients.value + ingredient
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val ingredients = _ingredients.flatMapLatest { ingredients ->
@@ -58,7 +49,7 @@ class CreateRecipeViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
+        initialValue = emptyList()
     )
 
     private val searchQuery = MutableSharedFlow<String?>(replay = 1).apply { tryEmit(null) }
