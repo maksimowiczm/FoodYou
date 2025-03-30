@@ -41,10 +41,10 @@ internal class OpenFoodFactsNetworkDataSource {
 
     private val networkApi = RetrofitOpenFoodFactsNetworkApi(client)
 
-    suspend fun getProduct(code: String, country: String): OpenFoodFactsProduct? {
+    suspend fun getProduct(code: String, country: String?): OpenFoodFactsProduct? {
         val response = networkApi.getProduct(
             code = code,
-            countries = country.lowercase()
+            countries = country?.lowercase()
         )
 
         if (response.status == HttpStatusCode.NotFound) {
@@ -57,12 +57,12 @@ internal class OpenFoodFactsNetworkDataSource {
 
     suspend fun queryProducts(
         query: String,
-        country: String,
+        country: String?,
         page: Int?,
         pageSize: Int
     ): OpenFoodPageResponse = networkApi.queryProducts(
         query = query,
-        countries = country.lowercase(),
+        countries = country?.lowercase(),
         page = page,
         pageSize = pageSize
     ).body<OpenFoodFactsPageResponseV1>()

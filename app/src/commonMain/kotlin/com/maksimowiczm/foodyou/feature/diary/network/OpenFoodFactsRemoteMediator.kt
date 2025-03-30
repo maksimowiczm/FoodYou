@@ -14,7 +14,7 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 internal class OpenFoodFactsRemoteMediator(
     private val isBarcode: Boolean,
     private val query: String,
-    private val country: String,
+    private val country: String?,
     private val openFoodFactsDao: OpenFoodFactsDao,
     private val productDao: ProductDao,
     private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource

@@ -42,12 +42,6 @@ class OpenFoodFactsRemoteMediatorFactory(
     override fun createWithQuery(query: String?): ProductRemoteMediator? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
 
-        val country = countryCode
-        if (country == null) {
-            Logger.e(TAG) { "Country code is not set" }
-            return null
-        }
-
         if (query == null) {
             Logger.d(TAG) { "Empty query is not supported" }
             return null
@@ -56,7 +50,7 @@ class OpenFoodFactsRemoteMediatorFactory(
         return OpenFoodFactsRemoteMediator(
             isBarcode = false,
             query = query,
-            country = country,
+            country = countryCode,
             openFoodFactsDao = openFoodFactsDao,
             productDao = productDao,
             openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource
@@ -66,16 +60,10 @@ class OpenFoodFactsRemoteMediatorFactory(
     override fun createWithBarcode(barcode: String): ProductRemoteMediator? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
 
-        val country = countryCode
-        if (country == null) {
-            Logger.e(TAG) { "Country code is not set" }
-            return null
-        }
-
         return OpenFoodFactsRemoteMediator(
             isBarcode = true,
             query = barcode,
-            country = country,
+            country = countryCode,
             openFoodFactsDao = openFoodFactsDao,
             productDao = productDao,
             openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource
