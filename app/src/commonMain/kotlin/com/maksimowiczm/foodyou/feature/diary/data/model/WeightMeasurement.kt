@@ -17,6 +17,8 @@ sealed interface WeightMeasurement {
      */
     fun getWeight(product: Product): Float = getWeight(product.packageWeight, product.servingWeight)
 
+    fun getWeight(recipe: Recipe): Float = getWeight(recipe.packageWeight, recipe.servingWeight)
+
     fun getWeight(packageWeight: Float?, servingWeight: Float?): Float = when (this) {
         is WeightUnit -> weight
         is Package -> packageWeight!! * quantity

@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.ext.combine
 import com.maksimowiczm.foodyou.feature.diary.data.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.data.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
+import com.maksimowiczm.foodyou.feature.diary.data.RecipeRepository
 import com.maksimowiczm.foodyou.feature.diary.data.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.model.Meal
 import com.maksimowiczm.foodyou.feature.diary.ui.meal.model.MealFoodListItem
@@ -21,7 +22,8 @@ class ObserveMealCase(
     private val stringFormatRepository: StringFormatRepository,
     private val measurementRepository: MeasurementRepository,
     private val mealRepository: MealRepository,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val recipeRepository: RecipeRepository
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(mealId: Long, date: LocalDate): Flow<Meal?> {
@@ -44,32 +46,49 @@ class ObserveMealCase(
                     )
                 }
 
-                val productFlows = measurements
-                    .mapNotNull { it.foodId as? FoodId.Product }
-                    .map { it.productId }
-                    .map { productRepository.observeProductById(it).filterNotNull() }
+                val foodItems = measurements.map { measurement ->
+                    when (measurement.foodId) {
+                        is FoodId.Product ->
+                            productRepository
+                                .observeProductById(measurement.foodId.productId)
+                                .filterNotNull()
+                                .map {
+                                    val weight = measurement.measurement.getWeight(it)
+                                    MealFoodListItem(
+                                        measurementId = measurement.measurementId,
+                                        name = it.name,
+                                        brand = it.brand,
+                                        calories = it.nutrients.calories.roundToInt(),
+                                        proteins = it.nutrients.proteins.roundToInt(),
+                                        carbohydrates = it.nutrients.carbohydrates.roundToInt(),
+                                        fats = it.nutrients.fats.roundToInt(),
+                                        weight = weight,
+                                        weightMeasurement = measurement.measurement
+                                    )
+                                }
 
-                measurements.zip(productFlows) { measurement, productFlow ->
-                    productFlow.map { product ->
-                        val weight = measurement.measurement.getWeight(product)
-                        val calories = weight * product.nutrients.calories / 100
-                        val proteins = weight * product.nutrients.proteins / 100
-                        val carbohydrates = weight * product.nutrients.carbohydrates / 100
-                        val fats = weight * product.nutrients.fats / 100
-
-                        MealFoodListItem(
-                            measurementId = measurement.measurementId,
-                            name = product.name,
-                            brand = product.brand,
-                            calories = calories.roundToInt(),
-                            proteins = proteins.roundToInt(),
-                            carbohydrates = carbohydrates.roundToInt(),
-                            fats = fats.roundToInt(),
-                            weightMeasurement = measurement.measurement,
-                            weight = measurement.measurement.getWeight(product)
-                        )
+                        is FoodId.Recipe ->
+                            recipeRepository
+                                .observeRecipeById(measurement.foodId.recipeId)
+                                .filterNotNull()
+                                .map {
+                                    val weight = measurement.measurement.getWeight(it)
+                                    MealFoodListItem(
+                                        measurementId = measurement.measurementId,
+                                        name = it.name,
+                                        brand = it.brand,
+                                        calories = it.nutrients.calories.roundToInt(),
+                                        proteins = it.nutrients.proteins.roundToInt(),
+                                        carbohydrates = it.nutrients.carbohydrates.roundToInt(),
+                                        fats = it.nutrients.fats.roundToInt(),
+                                        weight = weight,
+                                        weightMeasurement = measurement.measurement
+                                    )
+                                }
                     }
-                }.combine { foodItems ->
+                }
+
+                foodItems.combine { foodItems ->
                     Meal(
                         id = meal.id,
                         name = meal.name,
