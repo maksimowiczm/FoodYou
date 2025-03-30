@@ -7,7 +7,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Constraints
+import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
+import com.maksimowiczm.foodyou.ui.res.formatClipZeros
+import foodyou.app.generated.resources.*
 import kotlin.math.max
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * A composable that displays a summary of a measurement and its calories. It will try to fit the
@@ -99,4 +103,40 @@ fun MeasurementSummary(
             }
         }
     }
+}
+
+object MeasurementSummaryDefaults {
+    val WeightMeasurement.measurementStringShort: String
+        @Composable get() = when (this) {
+            is WeightMeasurement.Package -> stringResource(
+                Res.string.x_times_y,
+                quantity.formatClipZeros(),
+                stringResource(Res.string.product_package)
+            )
+
+            is WeightMeasurement.Serving -> stringResource(
+                Res.string.x_times_y,
+                quantity.formatClipZeros(),
+                stringResource(Res.string.product_serving)
+            )
+
+            is WeightMeasurement.WeightUnit -> weight.formatClipZeros(".2f") + " " +
+                stringResource(Res.string.unit_gram_short)
+        }
+
+    @Composable
+    fun WeightMeasurement.measurementString(weight: Float): String {
+        val short = measurementStringShort
+
+        if (this is WeightMeasurement.WeightUnit) {
+            return short
+        }
+
+        val grams = weight
+
+        return "$short (${grams.formatClipZeros()} ${stringResource(Res.string.unit_gram_short)})"
+    }
+
+    @Composable
+    fun caloriesString(calories: Int): String = "$calories " + stringResource(Res.string.unit_kcal)
 }
