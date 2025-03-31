@@ -2,21 +2,24 @@ package com.maksimowiczm.foodyou.feature.diary.network.model.v2
 
 import com.maksimowiczm.foodyou.feature.diary.network.model.OpenFoodFactsNutrients
 import com.maksimowiczm.foodyou.feature.diary.network.model.OpenFoodFactsProduct
+import kotlin.Float
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.JsonTransformingSerializer
 import kotlinx.serialization.serializer
-import kotlin.Float
 
-object FloatSerializer : JsonTransformingSerializer<Float>(serializer()) {
+private object FloatSerializer : JsonTransformingSerializer<Float>(serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement =
-        (if (element is JsonPrimitive && element.isString) JsonPrimitive(element.content.toFloatOrNull()) else element)
+        if (element is JsonPrimitive && element.isString) {
+            JsonPrimitive(element.content.toFloatOrNull())
+        } else {
+            element
+        }
 }
 
-
-@Serializable()
+@Serializable
 internal data class OpenFoodFactsProductV2(
     @SerialName("product_name")
     override val productName: String,
