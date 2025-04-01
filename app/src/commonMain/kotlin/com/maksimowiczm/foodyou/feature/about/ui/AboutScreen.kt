@@ -5,15 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.displayCutoutPadding
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -29,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -45,10 +39,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.ui.AboutIcons8
 import com.maksimowiczm.foodyou.ui.component.CardButton
-import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -97,10 +89,6 @@ private fun AboutScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
-        .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -110,8 +98,7 @@ private fun AboutScreen(
                 },
                 scrollBehavior = scrollBehavior
             )
-        },
-        contentWindowInsets = contentWindowInsets
+        }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -144,9 +131,7 @@ private fun AboutScreen(
 
             item {
                 Text(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .horizontalDisplayCutoutPadding(),
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     text = stringResource(Res.string.headline_miscellaneous),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge
@@ -182,9 +167,7 @@ private fun ShareYourThoughtsItem(
     onBugReport: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier.displayCutoutPadding()
-    ) {
+    Column {
         Text(
             text = stringResource(Res.string.headline_share_your_thoughts),
             style = MaterialTheme.typography.labelLarge,
@@ -252,9 +235,7 @@ private fun ShowSomeLoveItem(
     onGithubStarClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier.displayCutoutPadding()
-    ) {
+    Column {
         Text(
             text = stringResource(Res.string.headline_show_some_love),
             style = MaterialTheme.typography.labelLarge,
@@ -308,9 +289,7 @@ private fun ShowSomeLoveItem(
 @Composable
 private fun ReadmeListItem(onReadme: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
-        modifier = modifier
-            .clickable { onReadme() }
-            .horizontalDisplayCutoutPadding(),
+        modifier = modifier.clickable { onReadme() },
         headlineContent = {
             Text(stringResource(Res.string.headline_readme))
         },
@@ -329,7 +308,6 @@ private fun ReadmeListItem(onReadme: () -> Unit, modifier: Modifier = Modifier) 
 @Composable
 private fun VersionListItem(modifier: Modifier = Modifier) {
     ListItem(
-        modifier = modifier.horizontalDisplayCutoutPadding(),
         headlineContent = {
             Text(stringResource(Res.string.headline_version))
         },

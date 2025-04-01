@@ -6,12 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.systemBars
@@ -31,7 +27,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -56,9 +51,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.system.data.model.Country
-import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -95,10 +88,6 @@ private fun OpenFoodFactsSettingsScreen(
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-        .exclude(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
-        .exclude(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -118,8 +107,7 @@ private fun OpenFoodFactsSettingsScreen(
                 },
                 scrollBehavior = scrollBehavior
             )
-        },
-        contentWindowInsets = contentWindowInsets
+        }
     ) { paddingValues ->
         LazyColumn(
             contentPadding = paddingValues
@@ -129,8 +117,7 @@ private fun OpenFoodFactsSettingsScreen(
                     text = stringResource(Res.string.headline_open_food_facts),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp, horizontal = 16.dp)
-                        .horizontalDisplayCutoutPadding(),
+                        .padding(vertical = 8.dp, horizontal = 16.dp),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge
                 )
@@ -141,7 +128,6 @@ private fun OpenFoodFactsSettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .horizontalDisplayCutoutPadding()
                 )
             }
 
@@ -156,9 +142,7 @@ private fun OpenFoodFactsSettingsScreen(
                             text = stringResource(Res.string.action_use_open_food_facts)
                         )
                     },
-                    modifier = Modifier
-                        .clickable { onToggle(!enabled) }
-                        .horizontalDisplayCutoutPadding(),
+                    modifier = Modifier.clickable { onToggle(!enabled) },
                     trailingContent = {
                         Switch(
                             checked = enabled,
@@ -290,8 +274,7 @@ private fun OpenFoodFactsContent(
         ListItem(
             modifier = Modifier
                 .requiredHeightIn(min = 64.dp)
-                .clickable { showCountryPicker = true }
-                .horizontalDisplayCutoutPadding(),
+                .clickable { showCountryPicker = true },
             headlineContent = {
                 Text(
                     text = stringResource(Res.string.action_select_country)
@@ -337,9 +320,7 @@ private fun ClearCacheItem(onCacheClear: () -> Unit, modifier: Modifier = Modifi
                 text = stringResource(Res.string.headline_clear_cache)
             )
         },
-        modifier = modifier
-            .clickable { showDialog = true }
-            .horizontalDisplayCutoutPadding(),
+        modifier = modifier.clickable { showDialog = true },
         supportingContent = {
             Text(
                 text = stringResource(Res.string.description_open_food_facts_clear_query_cache)
