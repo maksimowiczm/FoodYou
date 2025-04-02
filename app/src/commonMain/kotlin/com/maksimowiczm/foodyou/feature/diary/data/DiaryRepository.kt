@@ -339,19 +339,40 @@ class DiaryRepository(
         date: LocalDate,
         query: String?
     ): Flow<PagingData<ProductWithMeasurement>> {
-        val barcode = query?.takeIf { it.all(Char::isDigit) }
+        // Handle different query formats
+        val (effectiveQuery, extractedBarcode) = when {
+            query == null -> null to null
+            query.all(Char::isDigit) -> null to query
+            query.contains("openfoodfacts.org/product/") -> {
+                // Extract barcode from product URL
+                val regex = "openfoodfacts\\.org/product/(\\d+)".toRegex()
+                val barcode = regex.find(query)?.groupValues?.getOrNull(1)
+                null to barcode
+            }
 
+            query.contains("openfoodfacts.org/cgi/search.pl") -> {
+                // Extract search terms from search URL
+                val regex = "search_terms=([^&]+)".toRegex()
+                val searchTerms = regex.find(query)?.groupValues?.getOrNull(1)?.replace("+", " ")
+                searchTerms to null
+            }
+
+            else -> query to null
+        }
+
+        val barcode = extractedBarcode
+        val searchQuery = effectiveQuery ?: query
         val localOnly = query == null
         val remoteMediator = when {
             localOnly -> null
             barcode != null -> productRemoteMediatorFactory.createWithBarcode(barcode)
-            else -> productRemoteMediatorFactory.createWithQuery(query)
+            else -> productRemoteMediatorFactory.createWithQuery(searchQuery)
         }?.let { ProductSearchRemoteMediatorAdapter(it) }
 
         // Insert query if it's not a barcode and not empty
-        if (barcode == null && query?.isNotBlank() == true) {
+        if (barcode == null && searchQuery?.isNotBlank() == true) {
             ioScope.launch {
-                insertProductQueryWithCurrentTime(query)
+                insertProductQueryWithCurrentTime(searchQuery)
             }
         }
 
@@ -371,7 +392,7 @@ class DiaryRepository(
                 addFoodDao.observePagedProductsWithMeasurementByQuery(
                     mealId = mealId,
                     date = date,
-                    query = query
+                    query = query?.split(" ")
                 )
             }
         }.flow.map { pagingData ->
@@ -399,11 +420,13 @@ class DiaryRepository(
 private fun AddFoodDao.observePagedProductsWithMeasurementByQuery(
     mealId: Long,
     date: LocalDate,
-    query: String?
+    query: List<String>?
 ) = observePagedProductsWithMeasurement(
     mealId = mealId,
     epochDay = date.toEpochDays(),
-    query = query,
+    query1 = query?.getOrNull(0),
+    query2 = query?.getOrNull(1),
+    query3 = query?.drop(2)?.joinToString(" "),
     barcode = null
 )
 
@@ -414,7 +437,9 @@ private fun AddFoodDao.observePagedProductsWithMeasurementByBarcode(
 ) = observePagedProductsWithMeasurement(
     mealId = mealId,
     epochDay = date.toEpochDays(),
-    query = null,
+    query1 = null,
+    query2 = null,
+    query3 = null,
     barcode = barcode
 )
 
