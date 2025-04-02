@@ -47,6 +47,11 @@ class OpenFoodFactsRemoteMediatorFactory(
             return null
         }
 
+        val country = countryCode
+        if (country == null) {
+            Logger.w(TAG) { "Country code is not set" }
+        }
+
         return OpenFoodFactsRemoteMediator(
             isBarcode = false,
             query = query,
@@ -59,6 +64,11 @@ class OpenFoodFactsRemoteMediatorFactory(
 
     override fun createWithBarcode(barcode: String): ProductRemoteMediator? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
+
+        val country = countryCode
+        if (country == null) {
+            Logger.w(TAG) { "Country code is not set" }
+        }
 
         return OpenFoodFactsRemoteMediator(
             isBarcode = true,
