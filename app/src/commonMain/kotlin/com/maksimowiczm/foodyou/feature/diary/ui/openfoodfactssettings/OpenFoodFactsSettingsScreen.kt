@@ -72,6 +72,7 @@ fun OpenFoodFactsSettingsScreen(
         onToggle = viewModel::onOpenFoodFactsToggle,
         onCountrySelect = viewModel::onOpenFoodFactsCountrySelected,
         onGlobalDatabase = viewModel::onGlobalDatabase,
+        onDeleteUnusedProducts = viewModel::onDeleteUnusedProducts,
         onCacheClear = viewModel::onCacheClear,
         onBack = onBack,
         modifier = modifier
@@ -85,6 +86,7 @@ private fun OpenFoodFactsSettingsScreen(
     onToggle: (Boolean) -> Unit,
     onCountrySelect: (Country?) -> Unit,
     onGlobalDatabase: (Boolean) -> Unit,
+    onDeleteUnusedProducts: () -> Unit,
     onCacheClear: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
@@ -164,6 +166,7 @@ private fun OpenFoodFactsSettingsScreen(
                         onCountrySelect = onCountrySelect,
                         onGlobalDatabase = onGlobalDatabase,
                         settings = settings,
+                        onDeleteUnusedProducts = onDeleteUnusedProducts,
                         onCacheClear = onCacheClear
                     )
                 }
@@ -276,6 +279,7 @@ private fun OpenFoodFactsContent(
     onCountrySelect: (Country) -> Unit,
     onGlobalDatabase: (Boolean) -> Unit,
     settings: OpenFoodFactsSettings.Enabled,
+    onDeleteUnusedProducts: () -> Unit,
     onCacheClear: () -> Unit,
     modifier: Modifier = Modifier,
     countryFlag: CountryFlag = koinInject()
@@ -361,6 +365,10 @@ private fun OpenFoodFactsContent(
             }
         )
         HorizontalDivider()
+        DeleteUnusedProducts(
+            onDelete = onDeleteUnusedProducts,
+            modifier = Modifier.requiredHeightIn(min = 64.dp)
+        )
         ClearCacheItem(
             onCacheClear = onCacheClear,
             modifier = Modifier.requiredHeightIn(min = 64.dp)
@@ -449,6 +457,68 @@ private fun ClearCacheDialog(onDismissRequest: () -> Unit, onConfirm: () -> Unit
                     text = stringResource(Res.string.action_cancel)
                 )
             }
+        }
+    )
+}
+
+@Composable
+private fun DeleteUnusedProducts(onDelete: () -> Unit, modifier: Modifier = Modifier) {
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = null
+                )
+            },
+            title = {
+                Text(
+                    text = stringResource(Res.string.action_delete_unused_products)
+                )
+            },
+            text = {
+                Text(
+                    stringResource(Res.string.description_delete_unused_open_food_facts_products)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onDelete()
+                        showDialog = false
+                    }
+                ) {
+                    Text(
+                        text = stringResource(Res.string.action_delete)
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDialog = false }
+                ) {
+                    Text(
+                        text = stringResource(Res.string.action_cancel)
+                    )
+                }
+            }
+        )
+    }
+
+    ListItem(
+        headlineContent = {
+            Text(
+                text = stringResource(Res.string.action_delete_unused_products)
+            )
+        },
+        modifier = modifier.clickable { showDialog = true },
+        supportingContent = {
+            Text(
+                stringResource(Res.string.description_delete_unused_open_food_facts_products_short)
+            )
         }
     )
 }

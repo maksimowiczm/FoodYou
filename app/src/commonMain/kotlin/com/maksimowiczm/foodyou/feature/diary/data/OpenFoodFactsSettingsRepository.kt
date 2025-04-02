@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.diary.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductSource
 import com.maksimowiczm.foodyou.feature.diary.data.preferences.OpenFoodFactsPreferences
 import com.maksimowiczm.foodyou.feature.diary.database.dao.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.feature.system.data.SystemInfoRepository
@@ -73,6 +72,5 @@ class OpenFoodFactsSettingsRepository(
 
     suspend fun clearCache() {
         openFoodFactsDao.clearPagingKeys()
-        openFoodFactsDao.deleteUnusedProducts(ProductSource.OpenFoodFacts)
     }
 }
