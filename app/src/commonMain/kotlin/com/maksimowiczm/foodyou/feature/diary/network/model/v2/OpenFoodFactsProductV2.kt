@@ -2,8 +2,22 @@ package com.maksimowiczm.foodyou.feature.diary.network.model.v2
 
 import com.maksimowiczm.foodyou.feature.diary.network.model.OpenFoodFactsNutrients
 import com.maksimowiczm.foodyou.feature.diary.network.model.OpenFoodFactsProduct
+import kotlin.Float
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.JsonTransformingSerializer
+import kotlinx.serialization.serializer
+
+private object FloatSerializer : JsonTransformingSerializer<Float>(serializer()) {
+    override fun transformDeserialize(element: JsonElement): JsonElement =
+        if (element is JsonPrimitive && element.isString) {
+            JsonPrimitive(element.content.toFloatOrNull())
+        } else {
+            element
+        }
+}
 
 @Serializable
 internal data class OpenFoodFactsProductV2(
@@ -17,17 +31,14 @@ internal data class OpenFoodFactsProductV2(
     override val imageUrl: String? = null,
     @SerialName("nutriments")
     override val nutrients: OpenFoodFactsNutrients? = null,
+    @Serializable(with = FloatSerializer::class)
     @SerialName("product_quantity")
-    val packageQuantityString: String? = null,
+    override val packageQuantity: Float? = null,
     @SerialName("product_quantity_unit")
     override val packageQuantityUnit: String? = null,
+    @Serializable(with = FloatSerializer::class)
     @SerialName("serving_quantity")
-    val servingQuantityString: String? = null,
+    override val servingQuantity: Float? = null,
     @SerialName("serving_quantity_unit")
     override val servingQuantityUnit: String? = null
-) : OpenFoodFactsProduct {
-    override val packageQuantity: Float?
-        get() = packageQuantityString?.toFloatOrNull()
-    override val servingQuantity: Float?
-        get() = servingQuantityString?.toFloatOrNull()
-}
+) : OpenFoodFactsProduct

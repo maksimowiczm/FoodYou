@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.feature.system.data.model.Country
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject

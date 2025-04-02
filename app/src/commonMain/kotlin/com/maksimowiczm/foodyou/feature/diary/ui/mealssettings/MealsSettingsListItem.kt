@@ -8,7 +8,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
@@ -19,9 +18,7 @@ fun MealsSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
         headlineContent = {
             Text(stringResource(Res.string.headline_meals))
         },
-        modifier = modifier
-            .clickable { onClick() }
-            .horizontalDisplayCutoutPadding(),
+        modifier = modifier.clickable { onClick() },
         supportingContent = {
             Text(stringResource(Res.string.neutral_set_your_meal_schedule))
         },

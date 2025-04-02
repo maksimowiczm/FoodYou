@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.maksimowiczm.foodyou.feature.SettingsFeature
-import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
@@ -24,9 +23,7 @@ fun buildAboutSettingsListItem(onClick: () -> Unit) = SettingsFeature { modifier
 @Composable
 private fun AboutSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
-        modifier = modifier
-            .clickable { onClick() }
-            .horizontalDisplayCutoutPadding(),
+        modifier = modifier.clickable { onClick() },
         headlineContent = {
             Text(
                 text = stringResource(Res.string.headline_about)

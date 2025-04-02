@@ -94,7 +94,6 @@ import com.maksimowiczm.foodyou.feature.diary.ui.component.FoodDatabaseErrorCard
 import com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactshint.OpenFoodFactsSearchHint
 import com.maksimowiczm.foodyou.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.ui.ext.performToggle
-import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -565,7 +564,6 @@ private fun DraggableVisibility(
         AnimatedVisibility(
             visible = anchoredDraggableState.settledValue == CardState.VISIBLE,
             modifier = modifier
-                .horizontalDisplayCutoutPadding()
                 .fillMaxWidth()
                 .anchoredDraggable(
                     state = anchoredDraggableState,
