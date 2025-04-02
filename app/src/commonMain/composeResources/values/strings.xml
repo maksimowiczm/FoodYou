@@ -179,7 +179,7 @@
     <string name="description_time_based_meals_sorting">When enabled, meals that are currently happening will be displayed first</string>
     <string name="description_action_include_all_day_meals">All-day meals will be included in the current meal list</string>
     <string name="description_incomplete_nutrition_data">Some of the used products lack this value; therefore, the displayed value might not be accurate</string>
-    <string name="description_use_global_database">It is recommended to use a food database from your country. You can enable the global database, but it may contain a large number of products and could bloat your database.</string>
+    <string name="description_use_global_database">It is recommended to use a food database from your country. You can enable the global database, but it may contain a large number of products and could significantly increase your database size.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
