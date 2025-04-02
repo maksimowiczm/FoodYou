@@ -60,6 +60,8 @@ fun ProductEntity.toDomain(): Product = Product(
  * Converts an [OpenFoodFactsProduct] to a [Product]. Returns null if the conversion is not possible.
  */
 internal fun OpenFoodFactsProduct.toEntity(): ProductEntity? {
+    // 1. Validate all required fields
+
     val nutrients = nutrients ?: return null
     val productName = productName ?: return null
 
@@ -76,20 +78,21 @@ internal fun OpenFoodFactsProduct.toEntity(): ProductEntity? {
 
     val weightUnit = packageQuantityUnit ?: WeightUnit.Gram
 
-    if (listOf(
-            nutrients.proteins100g,
-            nutrients.carbohydrates100g,
-            nutrients.fat100g,
-            code
-        ).any { it == null }
+    if (
+        nutrients.proteins100g == null ||
+        nutrients.carbohydrates100g == null ||
+        nutrients.fat100g == null ||
+        code == null
     ) {
         return null
     }
 
+    // 2. Sometimes food doesn't have energy100g but it is trivial to calculate it from other values
+    // (proteins, carbohydrates, fats)
     val energy100g = nutrients.energy100g ?: NutrientsHelper.calculateCalories(
-        proteins = nutrients.proteins100g!!,
-        carbohydrates = nutrients.carbohydrates100g!!,
-        fats = nutrients.fat100g!!
+        proteins = nutrients.proteins100g,
+        carbohydrates = nutrients.carbohydrates100g,
+        fats = nutrients.fat100g
     )
 
     return ProductEntity(
@@ -97,10 +100,10 @@ internal fun OpenFoodFactsProduct.toEntity(): ProductEntity? {
         brand = brands,
         barcode = code,
         calories = energy100g,
-        proteins = nutrients.proteins100g!!,
-        carbohydrates = nutrients.carbohydrates100g!!,
+        proteins = nutrients.proteins100g,
+        carbohydrates = nutrients.carbohydrates100g,
         sugars = nutrients.sugars100g,
-        fats = nutrients.fat100g!!,
+        fats = nutrients.fat100g,
         saturatedFats = nutrients.saturatedFat100g,
         salt = nutrients.salt100g,
         sodium = nutrients.sodium100g,
