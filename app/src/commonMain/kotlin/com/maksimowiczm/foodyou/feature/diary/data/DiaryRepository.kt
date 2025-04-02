@@ -426,7 +426,7 @@ private fun AddFoodDao.observePagedProductsWithMeasurementByQuery(
     epochDay = date.toEpochDays(),
     query1 = query?.getOrNull(0),
     query2 = query?.getOrNull(1),
-    query3 = query?.getOrNull(2),
+    query3 = query?.drop(2)?.joinToString(" "),
     barcode = null
 )
 
