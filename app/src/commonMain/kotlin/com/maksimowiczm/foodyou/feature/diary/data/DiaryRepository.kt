@@ -339,19 +339,38 @@ class DiaryRepository(
         date: LocalDate,
         query: String?
     ): Flow<PagingData<ProductWithMeasurement>> {
-        val barcode = query?.takeIf { it.all(Char::isDigit) }
+        // Handle different query formats
+        val (effectiveQuery, extractedBarcode) = when {
+            query == null -> null to null
+            query.all(Char::isDigit) -> null to query
+            query.contains("openfoodfacts.org/product/") -> {
+                // Extract barcode from product URL
+                val regex = "openfoodfacts\\.org/product/(\\d+)".toRegex()
+                val barcode = regex.find(query)?.groupValues?.getOrNull(1)
+                null to barcode
+            }
+            query.contains("openfoodfacts.org/cgi/search.pl") -> {
+                // Extract search terms from search URL
+                val regex = "search_terms=([^&]+)".toRegex()
+                val searchTerms = regex.find(query)?.groupValues?.getOrNull(1)?.replace("+", " ")
+                searchTerms to null
+            }
+            else -> query to null
+        }
 
+        val barcode = extractedBarcode
+        val searchQuery = effectiveQuery ?: query
         val localOnly = query == null
         val remoteMediator = when {
             localOnly -> null
             barcode != null -> productRemoteMediatorFactory.createWithBarcode(barcode)
-            else -> productRemoteMediatorFactory.createWithQuery(query)
+            else -> productRemoteMediatorFactory.createWithQuery(searchQuery)
         }?.let { ProductSearchRemoteMediatorAdapter(it) }
 
         // Insert query if it's not a barcode and not empty
-        if (barcode == null && query?.isNotBlank() == true) {
+        if (barcode == null && searchQuery?.isNotBlank() == true) {
             ioScope.launch {
-                insertProductQueryWithCurrentTime(query)
+                insertProductQueryWithCurrentTime(searchQuery)
             }
         }
 
