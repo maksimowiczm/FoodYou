@@ -122,4 +122,8 @@ class ProductRepositoryImpl(private val productDao: ProductDao) : ProductReposit
 
         return Ok(Unit)
     }
+
+    override suspend fun deleteUnusedOpenFoodFactsProducts() {
+        productDao.deleteUnusedProducts(ProductSource.OpenFoodFacts)
+    }
 }

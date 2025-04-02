@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.feature.diary.data.OpenFoodFactsSettingsRepository
+import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.system.data.SystemInfoRepository
 import com.maksimowiczm.foodyou.feature.system.data.model.Country
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,7 +15,8 @@ import kotlinx.coroutines.runBlocking
 
 class OpenFoodFactsSettingsViewModel(
     private val settingsRepository: OpenFoodFactsSettingsRepository,
-    private val systemInfoRepository: SystemInfoRepository
+    private val systemInfoRepository: SystemInfoRepository,
+    private val productRepository: ProductRepository
 ) : ViewModel() {
     val openFoodFactsSettings = observeOpenFoodFactsSettings().stateIn(
         scope = viewModelScope,
@@ -63,6 +65,12 @@ class OpenFoodFactsSettingsViewModel(
             viewModelScope.launch {
                 settingsRepository.setOpenFoodFactsCountry(systemInfoRepository.defaultCountry)
             }
+        }
+    }
+
+    fun onDeleteUnusedProducts() {
+        viewModelScope.launch {
+            productRepository.deleteUnusedOpenFoodFactsProducts()
         }
     }
 

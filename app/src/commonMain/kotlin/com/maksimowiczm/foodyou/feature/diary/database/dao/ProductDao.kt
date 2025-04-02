@@ -76,4 +76,18 @@ interface ProductDao {
 
     @Delete
     suspend fun deleteProduct(product: ProductEntity)
+
+    @Query(
+        """
+        DELETE FROM ProductEntity 
+        WHERE id IN (
+            SELECT p.id 
+            FROM ProductEntity p
+            LEFT JOIN WeightMeasurementEntity m ON m.productId = p.id 
+            WHERE m.productId IS NULL 
+            AND p.productSource = :source
+        )
+        """
+    )
+    suspend fun deleteUnusedProducts(source: ProductSource)
 }
