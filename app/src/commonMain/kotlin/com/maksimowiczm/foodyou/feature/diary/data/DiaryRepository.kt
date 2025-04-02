@@ -349,12 +349,14 @@ class DiaryRepository(
                 val barcode = regex.find(query)?.groupValues?.getOrNull(1)
                 null to barcode
             }
+
             query.contains("openfoodfacts.org/cgi/search.pl") -> {
                 // Extract search terms from search URL
                 val regex = "search_terms=([^&]+)".toRegex()
                 val searchTerms = regex.find(query)?.groupValues?.getOrNull(1)?.replace("+", " ")
                 searchTerms to null
             }
+
             else -> query to null
         }
 
@@ -390,7 +392,7 @@ class DiaryRepository(
                 addFoodDao.observePagedProductsWithMeasurementByQuery(
                     mealId = mealId,
                     date = date,
-                    query = query
+                    query = query?.split(" ")
                 )
             }
         }.flow.map { pagingData ->
@@ -418,11 +420,13 @@ class DiaryRepository(
 private fun AddFoodDao.observePagedProductsWithMeasurementByQuery(
     mealId: Long,
     date: LocalDate,
-    query: String?
+    query: List<String>?
 ) = observePagedProductsWithMeasurement(
     mealId = mealId,
     epochDay = date.toEpochDays(),
-    query = query,
+    query1 = query?.getOrNull(0),
+    query2 = query?.getOrNull(1),
+    query3 = query?.getOrNull(2),
     barcode = null
 )
 
@@ -433,7 +437,9 @@ private fun AddFoodDao.observePagedProductsWithMeasurementByBarcode(
 ) = observePagedProductsWithMeasurement(
     mealId = mealId,
     epochDay = date.toEpochDays(),
-    query = null,
+    query1 = null,
+    query2 = null,
+    query3 = null,
     barcode = barcode
 )
 

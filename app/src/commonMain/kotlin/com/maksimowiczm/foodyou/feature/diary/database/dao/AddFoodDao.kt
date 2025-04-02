@@ -85,15 +85,21 @@ interface AddFoodDao {
             s.todaysMeasurement
         FROM ProductEntity p
         LEFT JOIN Suggestions s ON s.productId = p.id
-        WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
-        AND (:barcode IS NULL OR p.barcode = :barcode)
+        WHERE (:barcode IS NULL OR p.barcode = :barcode) 
+        AND (
+            :query1 IS NULL OR p.name LIKE '%' || :query1 || '%' OR p.brand LIKE '%' || :query1 || '%'
+            OR :query2 IS NULL OR p.name LIKE '%' || :query2 || '%' OR p.brand LIKE '%' || :query2 || '%'
+            OR :query3 IS NULL OR p.name LIKE '%' || :query3 || '%' OR p.brand LIKE '%' || :query3 || '%'
+        )
         ORDER BY p.id, s.id
         """
     )
     fun observePagedProductsWithMeasurement(
         mealId: Long,
         epochDay: Int,
-        query: String?,
+        query1: String?,
+        query2: String?,
+        query3: String?,
         barcode: String?
     ): PagingSource<Int, ProductSearchEntity>
 
