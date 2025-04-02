@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.feature.system.data.model.Country
 import com.maksimowiczm.foodyou.infrastructure.datastore.get
 import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.infrastructure.datastore.set
+import com.maksimowiczm.foodyou.infrastructure.datastore.setNull
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
@@ -61,8 +62,12 @@ class OpenFoodFactsSettingsRepository(
         )
     }
 
-    suspend fun setOpenFoodFactsCountry(country: Country) {
-        dataStore.set(OpenFoodFactsPreferences.countryCode to country.code)
+    suspend fun setOpenFoodFactsCountry(country: Country?) {
+        if (country == null) {
+            dataStore.setNull(OpenFoodFactsPreferences.countryCode)
+        } else {
+            dataStore.set(OpenFoodFactsPreferences.countryCode to country.code)
+        }
     }
 
     suspend fun clearCache() {

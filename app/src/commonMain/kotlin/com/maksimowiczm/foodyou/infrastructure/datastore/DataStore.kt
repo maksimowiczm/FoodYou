@@ -24,3 +24,9 @@ suspend fun DataStore<Preferences>.set(vararg pairs: Preferences.Pair<*>) {
         preferences.putAll(*pairs)
     }
 }
+
+suspend fun DataStore<Preferences>.setNull(key: Preferences.Key<*>) {
+    edit { preferences ->
+        preferences.remove(key)
+    }
+}
