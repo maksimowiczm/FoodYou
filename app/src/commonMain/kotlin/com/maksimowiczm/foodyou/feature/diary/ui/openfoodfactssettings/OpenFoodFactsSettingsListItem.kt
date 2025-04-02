@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.maksimowiczm.foodyou.feature.SettingsFeature
-import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
@@ -29,9 +28,7 @@ private fun OpenFoodFactsSettingsListItem(onClick: () -> Unit, modifier: Modifie
                 text = stringResource(Res.string.headline_remote_food_database)
             )
         },
-        modifier = modifier
-            .clickable(onClick = onClick)
-            .horizontalDisplayCutoutPadding(),
+        modifier = modifier.clickable(onClick = onClick),
         leadingContent = {
             Icon(
                 imageVector = Icons.Outlined.CloudDownload,

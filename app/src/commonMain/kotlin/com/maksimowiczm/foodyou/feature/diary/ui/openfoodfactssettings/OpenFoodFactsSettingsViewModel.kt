@@ -28,7 +28,7 @@ class OpenFoodFactsSettingsViewModel(
         settingsRepository.observeOpenFoodFactsEnabled(),
         settingsRepository.observeOpenFoodFactsCountry()
     ) { enabled, country ->
-        if (enabled && country != null) {
+        if (enabled) {
             OpenFoodFactsSettings.Enabled(
                 country = country,
                 availableCountries = systemInfoRepository.countries
@@ -48,9 +48,21 @@ class OpenFoodFactsSettingsViewModel(
         }
     }
 
-    fun onOpenFoodFactsCountrySelected(country: Country) {
+    fun onOpenFoodFactsCountrySelected(country: Country?) {
         viewModelScope.launch {
             settingsRepository.setOpenFoodFactsCountry(country)
+        }
+    }
+
+    fun onGlobalDatabase(enabled: Boolean) {
+        if (enabled) {
+            viewModelScope.launch {
+                settingsRepository.setOpenFoodFactsCountry(null)
+            }
+        } else {
+            viewModelScope.launch {
+                settingsRepository.setOpenFoodFactsCountry(systemInfoRepository.defaultCountry)
+            }
         }
     }
 
@@ -63,6 +75,6 @@ class OpenFoodFactsSettingsViewModel(
 
 sealed interface OpenFoodFactsSettings {
     data object Disabled : OpenFoodFactsSettings
-    data class Enabled(val country: Country, val availableCountries: List<Country>) :
+    data class Enabled(val country: Country?, val availableCountries: List<Country>) :
         OpenFoodFactsSettings
 }

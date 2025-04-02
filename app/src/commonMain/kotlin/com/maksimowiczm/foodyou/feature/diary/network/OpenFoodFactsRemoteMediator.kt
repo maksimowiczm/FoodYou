@@ -14,7 +14,7 @@ import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
 internal class OpenFoodFactsRemoteMediator(
     private val isBarcode: Boolean,
     private val query: String,
-    private val country: String,
+    private val country: String?,
     private val openFoodFactsDao: OpenFoodFactsDao,
     private val productDao: ProductDao,
     private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource
@@ -53,7 +53,7 @@ internal class OpenFoodFactsRemoteMediator(
                 LoadType.APPEND -> {
                     val pagingKey = openFoodFactsDao.getPagingKey(
                         query = query,
-                        country = country
+                        country = country ?: "WORLD"
                     )
 
                     if (pagingKey != null && pagingKey.totalCount == pagingKey.fetchedCount) {
@@ -81,7 +81,7 @@ internal class OpenFoodFactsRemoteMediator(
             openFoodFactsDao.upsertPagingKey(
                 OpenFoodFactsPagingKey(
                     queryString = query,
-                    country = country,
+                    country = country ?: "WORLD",
                     fetchedCount = fetchedCount,
                     totalCount = response.count
                 )

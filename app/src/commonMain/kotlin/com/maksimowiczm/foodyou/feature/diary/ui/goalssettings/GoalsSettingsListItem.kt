@@ -8,7 +8,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.ui.modifier.horizontalDisplayCutoutPadding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
@@ -21,9 +20,7 @@ fun GoalsSettingsListItem(onGoalsClick: () -> Unit, modifier: Modifier = Modifie
                 text = stringResource(Res.string.headline_daily_goals)
             )
         },
-        modifier = modifier
-            .clickable(onClick = onGoalsClick)
-            .horizontalDisplayCutoutPadding(),
+        modifier = modifier.clickable(onClick = onGoalsClick),
         leadingContent = {
             Icon(
                 imageVector = Icons.Outlined.Flag,
