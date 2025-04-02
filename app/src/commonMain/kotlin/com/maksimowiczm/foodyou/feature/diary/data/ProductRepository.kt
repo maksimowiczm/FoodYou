@@ -59,5 +59,5 @@ interface ProductRepository {
 
     suspend fun deleteProduct(id: Long): Result<Unit, ProductDeletionError>
 
-    suspend fun deleteUnusedRemoteProducts()
+    suspend fun deleteUnusedOpenFoodFactsProducts()
 }

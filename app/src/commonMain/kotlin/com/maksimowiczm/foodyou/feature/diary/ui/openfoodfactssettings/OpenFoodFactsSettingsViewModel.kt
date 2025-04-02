@@ -70,7 +70,7 @@ class OpenFoodFactsSettingsViewModel(
 
     fun onDeleteUnusedProducts() {
         viewModelScope.launch {
-            productRepository.deleteUnusedRemoteProducts()
+            productRepository.deleteUnusedOpenFoodFactsProducts()
         }
     }
 
