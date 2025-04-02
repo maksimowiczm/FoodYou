@@ -37,10 +37,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -176,37 +178,12 @@ private fun OpenFoodFactsSettingsScreen(
 
 @Composable
 private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
-    val linkColor = MaterialTheme.colorScheme.tertiary
-    val bodyMedium = MaterialTheme.typography.bodyMedium
-
-    val annotatedString = buildAnnotatedString {
-        withStyle(style = bodyMedium.toSpanStyle()) {
-            withStyle(style = bodyMedium.copy(fontWeight = FontWeight.Bold).toSpanStyle()) {
-                append(stringResource(Res.string.headline_open_food_facts))
-            }
-            append(" " + stringResource(Res.string.description_open_food_facts))
-            withLink(
-                LinkAnnotation.Url(
-                    url = stringResource(Res.string.link_open_food_facts),
-                    styles = TextLinkStyles(
-                        style = SpanStyle(
-                            color = linkColor,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                )
-            ) {
-                append(" " + stringResource(Res.string.action_read_more))
-            }
-        }
-    }
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = annotatedString,
+            text = rememberDescriptionString(),
             textAlign = TextAlign.Justify,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -223,28 +200,72 @@ private fun OpenFoodFactsDescription(modifier: Modifier = Modifier) {
                     contentDescription = null
                 )
 
-                val disclaimer = buildAnnotatedString {
-                    append(stringResource(Res.string.open_food_facts_disclaimer))
-                    withLink(
-                        LinkAnnotation.Url(
-                            url = stringResource(Res.string.link_open_food_facts_terms_of_use),
-                            styles = TextLinkStyles(
-                                style = SpanStyle(
-                                    color = linkColor,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                        )
-                    ) {
-                        append(" " + stringResource(Res.string.action_see_terms_of_use))
-                    }
-                }
-
                 Text(
-                    text = disclaimer,
+                    text = rememberDisclaimerString(),
                     textAlign = TextAlign.Justify,
                     style = MaterialTheme.typography.bodyMedium
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun rememberDescriptionString(): AnnotatedString {
+    val bodyMedium = MaterialTheme.typography.bodyMedium
+    val headline = stringResource(Res.string.headline_open_food_facts)
+    val description = stringResource(Res.string.description_open_food_facts)
+    val link = stringResource(Res.string.link_open_food_facts)
+    val linkColor = MaterialTheme.colorScheme.tertiary
+    val readMore = stringResource(Res.string.action_read_more)
+
+    return remember {
+        buildAnnotatedString {
+            withStyle(bodyMedium.toSpanStyle()) {
+                withStyle(bodyMedium.copy(fontWeight = FontWeight.Bold).toSpanStyle()) {
+                    append(headline)
+                }
+                append(" $description")
+                withLink(
+                    LinkAnnotation.Url(
+                        url = link,
+                        styles = TextLinkStyles(
+                            style = SpanStyle(
+                                color = linkColor,
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                    )
+                ) {
+                    append(" $readMore")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun rememberDisclaimerString(): AnnotatedString {
+    val disclaimer = stringResource(Res.string.open_food_facts_disclaimer)
+    val termsOfUse = stringResource(Res.string.link_open_food_facts_terms_of_use)
+    val termsOfUseText = stringResource(Res.string.action_see_terms_of_use)
+    val linkColor = MaterialTheme.colorScheme.tertiary
+
+    return remember {
+        buildAnnotatedString {
+            append(disclaimer)
+            withLink(
+                LinkAnnotation.Url(
+                    url = termsOfUse,
+                    styles = TextLinkStyles(
+                        style = SpanStyle(
+                            color = linkColor,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                )
+            ) {
+                append(" $termsOfUseText")
             }
         }
     }
