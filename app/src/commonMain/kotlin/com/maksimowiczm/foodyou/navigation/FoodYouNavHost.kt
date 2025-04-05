@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.maksimowiczm.foodyou.feature.about.About
+import com.maksimowiczm.foodyou.feature.about.aboutGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.Settings
@@ -25,7 +27,13 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
         settingsGraph(
             onBack = {
                 navController.popBackStack<Settings>(inclusive = true)
+            },
+            onAbout = {
+                navController.navigate(About) {
+                    launchSingleTop = true
+                }
             }
         )
+        aboutGraph()
     }
 }

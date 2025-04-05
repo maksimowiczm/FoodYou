@@ -8,6 +8,16 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.gmazzo.buildconfig)
+}
+
+buildConfig {
+    packageName("com.maksimowiczm.foodyou")
+    className("BuildConfig")
+
+    val versionName = libs.versions.version.name.get()
+
+    buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
 }
 
 kotlin {

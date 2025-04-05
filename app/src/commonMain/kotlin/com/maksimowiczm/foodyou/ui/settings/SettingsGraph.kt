@@ -7,10 +7,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object Settings
 
-fun NavGraphBuilder.settingsGraph(onBack: () -> Unit) {
+fun NavGraphBuilder.settingsGraph(onBack: () -> Unit, onAbout: () -> Unit) {
     composable<Settings> {
         SettingsScreen(
-            onBack = onBack
+            onBack = onBack,
+            onAbout = onAbout
         )
     }
 }

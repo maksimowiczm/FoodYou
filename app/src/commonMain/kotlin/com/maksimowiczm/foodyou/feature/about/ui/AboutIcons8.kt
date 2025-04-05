@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui
+package com.maksimowiczm.foodyou.feature.about.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
