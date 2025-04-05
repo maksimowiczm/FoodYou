@@ -29,3 +29,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "FoodYou"
 include(":app1")
+include(":app")
