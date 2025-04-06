@@ -75,6 +75,9 @@ kotlin {
 
             // Logger
             implementation(libs.kermit)
+
+            // Shimmer
+            implementation(libs.compose.shimmer)
         }
 
         commonTest.dependencies {

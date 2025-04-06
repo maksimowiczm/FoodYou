@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +24,6 @@ import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -45,13 +45,17 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.HomeState
+import androidx.lifecycle.repeatOnLifecycle
 import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
+import com.maksimowiczm.foodyou.ui.home.HomeState
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
@@ -76,13 +80,18 @@ fun CalendarCard(
         selectedDate = homeState.selectedDate
     )
 
-    LaunchedEffect(calendarState.selectedDate) {
-        homeState.selectDate(calendarState.selectedDate)
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(calendarState) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            snapshotFlow { calendarState.selectedDate }.drop(1).collectLatest {
+                homeState.selectDate(it)
+            }
+        }
     }
 
     CalendarCard(
         calendarState = calendarState,
-        formatMonthYear = viewModel::formatMonthYear,
+        formatMonthYear = remember(viewModel) { viewModel::formatMonthYear },
         modifier = modifier
     )
 }
@@ -104,19 +113,17 @@ private fun CalendarCard(
     }
 
     FoodYouHomeCard(
+        onClick = { showDatePicker = true },
         modifier = modifier
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                // Icon button adds enough padding top
-                .padding(bottom = 8.dp, top = 4.dp)
+            modifier = Modifier.fillMaxWidth().padding(
+                top = 16.dp,
+                bottom = 8.dp
+            )
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    // Icon button adds enough padding end
-                    .padding(start = 16.dp, end = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -126,17 +133,12 @@ private fun CalendarCard(
                     )
                 )
 
-                IconButton(
-                    onClick = {
-                        showDatePicker = true
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CalendarMonth,
-                        contentDescription = stringResource(Res.string.action_show_calendar)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.CalendarMonth,
+                    contentDescription = stringResource(Res.string.action_show_calendar)
+                )
             }
+            Spacer(Modifier.height(8.dp))
             Box(
                 modifier = Modifier.fillMaxWidth()
             ) {

@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.calendar.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.feature.system.data.DateProvider
-import com.maksimowiczm.foodyou.feature.system.data.StringFormatRepository
+import com.maksimowiczm.foodyou.core.data.DateProvider
+import com.maksimowiczm.foodyou.core.data.StringFormatRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.Clock

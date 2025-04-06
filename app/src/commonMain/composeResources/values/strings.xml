@@ -24,4 +24,9 @@
     <string name="description_share_your_thoughts">If you have any feedback, feature requests, or bug reports, please let me know! I'd love to hear from you.</string>
     <string name="description_about_setting">Learn more about the app</string>
 
+    <string name="action_show_calendar">Show calendar</string>
+    <string name="positive_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_go_to_today">Go to today</string>
+
 </resources>

@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.ui.home
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -12,6 +13,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.feature.calendar.ui.CalendarCard
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -19,6 +22,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun HomeScreen(onSettings: () -> Unit, modifier: Modifier = Modifier) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val homeState = rememberHomeState()
 
     Scaffold(
         modifier = modifier,
@@ -43,6 +47,12 @@ fun HomeScreen(onSettings: () -> Unit, modifier: Modifier = Modifier) {
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues
         ) {
+            item {
+                CalendarCard(
+                    homeState = homeState,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
         }
     }
 }

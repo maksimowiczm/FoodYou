@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.core.coreModule
 import com.maksimowiczm.foodyou.feature.about.aboutModule
+import com.maksimowiczm.foodyou.feature.calendar.calendarModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
@@ -14,6 +15,7 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     )
 
     modules(
-        aboutModule
+        aboutModule,
+        calendarModule
     )
 }
