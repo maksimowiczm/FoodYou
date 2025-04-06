@@ -37,4 +37,7 @@
     <string name="headline_authors">Authors</string>
     <string name="neutral_help_translating_the_app">Help translate the app</string>
 
+    <string name="headline_secure_screen">Secure screen</string>
+    <string name="action_prevent_screen_capture" description="Screen capture = screenshot, screen recording, screen mirroring">Prevent screen capture</string>
+
 </resources>
