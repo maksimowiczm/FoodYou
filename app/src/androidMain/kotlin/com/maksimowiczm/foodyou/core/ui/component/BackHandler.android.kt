@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.component
+package com.maksimowiczm.foodyou.core.ui.component
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable

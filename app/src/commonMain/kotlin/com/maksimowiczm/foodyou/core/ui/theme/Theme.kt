@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.theme
+package com.maksimowiczm.foodyou.core.ui.theme
 
 import androidx.compose.runtime.Composable
 
