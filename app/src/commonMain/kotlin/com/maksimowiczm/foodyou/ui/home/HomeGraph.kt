@@ -1,14 +1,14 @@
 package com.maksimowiczm.foodyou.ui.home
 
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object Home
 
 fun NavGraphBuilder.homeGraph(onSettings: () -> Unit) {
-    composable<Home> {
+    crossfadeComposable<Home> {
         HomeScreen(
             onSettings = onSettings
         )

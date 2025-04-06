@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.language
 
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.language.ui.LanguageScreen
 import kotlinx.serialization.Serializable
 
@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data object Language
 
 fun NavGraphBuilder.languageGraph(onBack: () -> Unit) {
-    composable<Language> {
+    forwardBackwardComposable<Language> {
         LanguageScreen(
             onBack = onBack
         )
