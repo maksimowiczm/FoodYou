@@ -26,6 +26,12 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
                 navController.navigate(Settings) {
                     launchSingleTop = true
                 }
+            },
+            onMealCardClick = { epochDay, mealId ->
+                // TODO
+            },
+            onMealCardAddClick = { epochDay, mealId ->
+                // TODO
             }
         )
         settingsGraph(

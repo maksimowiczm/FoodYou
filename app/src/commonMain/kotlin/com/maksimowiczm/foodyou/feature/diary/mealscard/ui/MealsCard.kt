@@ -1,11 +1,13 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.mealscard.compose
+package com.maksimowiczm.foodyou.feature.diary.mealscard.ui
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,13 +27,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,20 +39,20 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.HomeFeature
-import com.maksimowiczm.foodyou.feature.HomeState
-import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeader
-import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionKeys
-import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionSpecs
-import com.maksimowiczm.foodyou.feature.diary.ui.component.MealHeaderTransitionSpecs.overlayClipFromCardToScreen
-import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsLayout
-import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.MealsCardViewModel
-import com.maksimowiczm.foodyou.feature.diary.ui.mealscard.model.Meal
-import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
-import com.maksimowiczm.foodyou.ui.ext.toDp
-import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.ext.toDp
+import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
+import com.maksimowiczm.foodyou.core.ui.home.HomeState
+import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.feature.diary.mealscard.MealCardTransitionSpecs
+import com.maksimowiczm.foodyou.feature.diary.mealscard.MealCardTransitionSpecs.overlayClipFromCardToScreen
+import com.maksimowiczm.foodyou.feature.diary.mealscard.MealHeaderTransitionKeys
+import com.maksimowiczm.foodyou.feature.diary.mealscard.domain.Meal
+import com.maksimowiczm.foodyou.feature.diary.ui.MealHeader
+import com.maksimowiczm.foodyou.feature.diary.ui.NutrientsLayout
 import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.absoluteValue
@@ -60,78 +60,55 @@ import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-fun buildMealsCard(
-    onMealClick: (epochDay: Int, meal: Meal) -> Unit,
-    onAddClick: (epochDay: Int, meal: Meal) -> Unit
-) = HomeFeature(
-    applyPadding = false
-) { animatedVisibilityScope, modifier, homeState ->
-    MealsCard(
-        animatedVisibilityScope = animatedVisibilityScope,
-        homeState = homeState,
-        onMealClick = onMealClick,
-        onAddClick = onAddClick,
-        modifier = modifier
-    )
-}
-
 @Composable
-fun MealsCard(
+internal fun MealsCard(
     animatedVisibilityScope: AnimatedVisibilityScope,
     homeState: HomeState,
-    onMealClick: (epochDay: Int, meal: Meal) -> Unit,
-    onAddClick: (epochDay: Int, meal: Meal) -> Unit,
+    onMealClick: (epochDay: Int, mealId: Long) -> Unit,
+    onAddClick: (epochDay: Int, mealId: Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MealsCardViewModel = koinViewModel()
 ) {
-    val meals by viewModel
-        .observeMealsByDate(homeState.selectedDate)
-        .collectAsStateWithLifecycle(null)
-
-    val time by viewModel.time.collectAsStateWithLifecycle()
-
-    val useTimeBasedSorting by viewModel.useTimeBasedSorting.collectAsStateWithLifecycle()
-
-    val includeAllDayMeals by viewModel.includeAllDayMeals.collectAsStateWithLifecycle()
+    val meals by viewModel.meals.collectAsStateWithLifecycle()
 
     MealsCard(
-        state = rememberMealsCardState(
-            timeBasedSorting = useTimeBasedSorting,
-            includeAllDayMeals = includeAllDayMeals,
-            meals = meals,
-            time = time,
-            shimmer = homeState.shimmer
-        ),
-        formatTime = viewModel::formatTime,
+        meals = meals,
+        formatTime = remember(viewModel) { viewModel::formatTime },
         onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
         onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
         animatedVisibilityScope = animatedVisibilityScope,
         epochDay = homeState.selectedDate.toEpochDays(),
-        modifier = modifier
+        modifier = modifier,
+        shimmer = homeState.shimmer
     )
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalAnimationApi::class)
 @Composable
 private fun MealsCard(
-    state: MealsCardState,
+    meals: List<Meal>?,
     formatTime: (LocalTime) -> String,
-    onMealClick: (Meal) -> Unit,
-    onAddClick: (Meal) -> Unit,
+    onMealClick: (mealId: Long) -> Unit,
+    onAddClick: (mealId: Long) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     epochDay: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberShimmer(
+        shimmerBounds = ShimmerBounds.Window
+    )
 ) {
     // Must be same as meals count or more but since we don't have meals count yet set it to some
     // extreme value. If it is less than actual meals count pager will scroll back to the
     // last item which is annoying for the user.
     // Let's assume that user won't use more than 20 meals
     val pagerState = rememberPagerState(
-        pageCount = { state.meals?.size ?: 20 }
+        pageCount = { meals?.size ?: 20 }
     )
 
     val sharedTransitionScope =
         LocalHomeSharedTransitionScope.current ?: error("SharedTransitionScope not found")
+
+    val transition = updateTransition(meals)
 
     with(sharedTransitionScope) {
         HorizontalPager(
@@ -144,10 +121,10 @@ private fun MealsCard(
         ) { page ->
             val pageOffset = pagerState.currentPage - page + pagerState.currentPageOffsetFraction
             val fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
-            val meal = state.availableMeals?.getOrNull(page)
+            val meal = meals?.getOrNull(page)
 
-            Crossfade(
-                targetState = state.meals != null,
+            transition.Crossfade(
+                contentKey = { it != null },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 2.dp)
@@ -156,7 +133,7 @@ private fun MealsCard(
                         scaleY = lerp(0.9f, 1f, fraction)
                     )
             ) {
-                if (it && meal != null && state.meals != null) {
+                if (it != null && meal != null) {
                     MealCard(
                         animatedVisibilityScope = animatedVisibilityScope,
                         epochDay = epochDay,
@@ -167,12 +144,12 @@ private fun MealsCard(
                         totalCarbohydrates = meal.carbohydrates,
                         totalFats = meal.fats,
                         formatTime = formatTime,
-                        onMealClick = { onMealClick(meal) },
-                        onAddClick = { onAddClick(meal) }
+                        onMealClick = { onMealClick(meal.id) },
+                        onAddClick = { onAddClick(meal.id) }
                     )
                 } else {
                     MealCardSkeleton(
-                        shimmerInstance = state.shimmer
+                        shimmer = shimmer
                     )
                 }
             }
@@ -181,12 +158,12 @@ private fun MealsCard(
 }
 
 @Composable
-fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
+private fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
     val headline = @Composable {
         Column {
             Box(
                 modifier = Modifier
-                    .shimmer(shimmerInstance)
+                    .shimmer(shimmer)
                     .size(140.dp, MaterialTheme.typography.headlineMedium.toDp() - 4.dp)
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
@@ -197,7 +174,7 @@ fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
     val time = @Composable {
         Box(
             modifier = Modifier
-                .shimmer(shimmerInstance)
+                .shimmer(shimmer)
                 .size(60.dp, MaterialTheme.typography.labelLarge.toDp())
                 .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colorScheme.surfaceContainerHighest)
@@ -210,7 +187,7 @@ fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
         ) {
             Box(
                 modifier = Modifier
-                    .shimmer(shimmerInstance)
+                    .shimmer(shimmer)
                     .size(120.dp, MaterialTheme.typography.labelMedium.toDp() * 2)
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
@@ -220,7 +197,7 @@ fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
 
             FilledIconButton(
                 onClick = {},
-                modifier = Modifier.shimmer(shimmerInstance),
+                modifier = Modifier.shimmer(shimmer),
                 colors = IconButtonDefaults.filledIconButtonColors(
                     disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
                 ),
@@ -244,7 +221,7 @@ fun MealCardSkeleton(shimmerInstance: Shimmer, modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.MealCard(
+private fun SharedTransitionScope.MealCard(
     animatedVisibilityScope: AnimatedVisibilityScope,
     epochDay: Int,
     meal: Meal,
@@ -268,8 +245,8 @@ fun SharedTransitionScope.MealCard(
                 )
             ),
             animatedVisibilityScope = animatedVisibilityScope,
-            enter = MealHeaderTransitionSpecs.containerEnterTransition,
-            exit = MealHeaderTransitionSpecs.containerExitTransition,
+            enter = MealCardTransitionSpecs.containerEnterTransition,
+            exit = MealCardTransitionSpecs.containerExitTransition,
             resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
             clipInOverlayDuringTransition = OverlayClip(
                 animatedVisibilityScope.overlayClipFromCardToScreen()
@@ -279,7 +256,6 @@ fun SharedTransitionScope.MealCard(
         val headline = @Composable {
             Text(
                 text = meal.name,
-                style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.sharedBounds(
                     sharedContentState = rememberSharedContentState(
                         key = MealHeaderTransitionKeys.MealTitle(
@@ -304,25 +280,24 @@ fun SharedTransitionScope.MealCard(
                     animatedVisibilityScope = animatedVisibilityScope
                 )
             ) {
-                CompositionLocalProvider(
-                    LocalContentColor provides MaterialTheme.colorScheme.outline,
-                    LocalTextStyle provides MaterialTheme.typography.labelLarge
-                ) {
-                    if (meal.isAllDay) {
-                        Text(
-                            text = stringResource(Res.string.headline_all_day)
-                        )
-                    } else {
-                        Text(
-                            text = formatTime(meal.from)
-                        )
-                        Text(
-                            text = stringResource(Res.string.en_dash)
-                        )
-                        Text(
-                            text = formatTime(meal.to)
-                        )
-                    }
+                if (meal.isAllDay) {
+                    Text(
+                        text = stringResource(Res.string.headline_all_day),
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                } else {
+                    val enDash = stringResource(Res.string.en_dash)
+
+                    Text(
+                        text = remember(enDash, meal, formatTime) {
+                            buildString {
+                                append(formatTime(meal.from))
+                                append(enDash)
+                                append(formatTime(meal.to))
+                            }
+                        },
+                        color = MaterialTheme.colorScheme.outline
+                    )
                 }
             }
         }

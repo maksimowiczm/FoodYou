@@ -5,13 +5,13 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.core.data.StringFormatRepository
+import com.maksimowiczm.foodyou.core.ext.get
+import com.maksimowiczm.foodyou.core.ext.observe
+import com.maksimowiczm.foodyou.core.ext.set
 import com.maksimowiczm.foodyou.feature.diary.data.DiaryPreferences
 import com.maksimowiczm.foodyou.feature.diary.data.meal.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.mealssettings.domain.Meal
 import com.maksimowiczm.foodyou.feature.diary.mealssettings.domain.ObserveMealsUseCase
-import com.maksimowiczm.foodyou.infrastructure.datastore.get
-import com.maksimowiczm.foodyou.infrastructure.datastore.observe
-import com.maksimowiczm.foodyou.infrastructure.datastore.set
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn

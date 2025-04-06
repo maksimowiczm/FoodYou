@@ -49,8 +49,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.ui.home.HomeState
+import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
+import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.flow.collectLatest

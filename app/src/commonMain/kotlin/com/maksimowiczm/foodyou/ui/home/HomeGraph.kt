@@ -7,10 +7,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object Home
 
-fun NavGraphBuilder.homeGraph(onSettings: () -> Unit) {
+fun NavGraphBuilder.homeGraph(
+    onSettings: () -> Unit,
+    onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit
+) {
     crossfadeComposable<Home> {
         HomeScreen(
-            onSettings = onSettings
+            animatedVisibilityScope = this,
+            onSettings = onSettings,
+            onMealCardClick = onMealCardClick,
+            onMealCardAddClick = onMealCardAddClick
         )
     }
 }

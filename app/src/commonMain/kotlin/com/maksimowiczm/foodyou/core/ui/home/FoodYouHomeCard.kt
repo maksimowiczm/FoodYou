@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.home
+package com.maksimowiczm.foodyou.core.ui.home
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.Card

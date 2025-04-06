@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.home
+package com.maksimowiczm.foodyou.core.ui.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
