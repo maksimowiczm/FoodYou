@@ -29,4 +29,12 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_go_to_today">Go to today</string>
 
+    <string name="link_translate" translatable="false">https://crowdin.com/project/food-you</string>
+    <string name="headline_language">Language</string>
+    <string name="headline_system">System</string>
+    <string name="headline_system_language_settings">System language settings</string>
+    <string name="action_translate">Translate</string>
+    <string name="headline_authors">Authors</string>
+    <string name="neutral_help_translating_the_app">Help translate the app</string>
+
 </resources>

@@ -14,13 +14,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.maksimowiczm.foodyou.feature.about.ui.AboutSettingsListItem
+import com.maksimowiczm.foodyou.feature.language.ui.LanguageSettingsListItem
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onBack: () -> Unit, onAbout: () -> Unit, modifier: Modifier = Modifier) {
+fun SettingsScreen(
+    onBack: () -> Unit,
+    onAbout: () -> Unit,
+    onLanguage: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
@@ -46,6 +52,11 @@ fun SettingsScreen(onBack: () -> Unit, onAbout: () -> Unit, modifier: Modifier =
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues
         ) {
+            item {
+                LanguageSettingsListItem(
+                    onClick = onLanguage
+                )
+            }
             item {
                 AboutSettingsListItem(
                     onClick = onAbout

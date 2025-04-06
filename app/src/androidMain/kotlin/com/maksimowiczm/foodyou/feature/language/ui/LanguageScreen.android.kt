@@ -1,5 +1,10 @@
 package com.maksimowiczm.foodyou.feature.language.ui
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,19 +34,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.feature.language.languages
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
+import kotlin.collections.component1
+import kotlin.collections.component2
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LanguageScreen(
+actual fun LanguageScreen(onBack: () -> Unit, modifier: Modifier) {
+    LanguageScreen(
+        onBack = onBack,
+        modifier = modifier,
+        viewModel = koinViewModel()
+    )
+}
+
+@Composable
+private fun LanguageScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LanguageViewModel = koinViewModel(),
-    trailingContent: @Composable (Modifier) -> Unit
+    viewModel: LanguageViewModel = koinViewModel()
 ) {
     val uriHandler = LocalUriHandler.current
     val translateLink = stringResource(Res.string.link_translate)
@@ -50,8 +68,7 @@ fun LanguageScreen(
         selectedTag = remember { viewModel.tag },
         onLanguageSelect = viewModel::onLanguageSelect,
         onHelpTranslate = { uriHandler.openUri(translateLink) },
-        modifier = modifier,
-        trailingContent = trailingContent
+        modifier = modifier
     )
 }
 
@@ -62,8 +79,7 @@ private fun LanguageScreen(
     selectedTag: String,
     onLanguageSelect: (tag: String?) -> Unit,
     onHelpTranslate: () -> Unit,
-    modifier: Modifier = Modifier,
-    trailingContent: @Composable (Modifier) -> Unit
+    modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -176,7 +192,39 @@ private fun LanguageScreen(
             }
 
             item {
-                trailingContent(Modifier)
+                val context = LocalContext.current
+                val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
+                        val uri = Uri.fromParts("package", context.packageName, null)
+                        data = uri
+                    }
+                } else {
+                    Intent()
+                }
+
+                val isSystemLocaleSettingsAvailable =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        context.packageManager
+                            .queryIntentActivities(intent, PackageManager.MATCH_ALL)
+                            .isNotEmpty()
+                    } else {
+                        false
+                    }
+
+                if (isSystemLocaleSettingsAvailable) {
+                    ListItem(
+                        headlineContent = {
+                            Text(stringResource(Res.string.headline_system_language_settings))
+                        },
+                        modifier = Modifier.clickable { context.startActivity(intent) },
+                        trailingContent = {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = null
+                            )
+                        }
+                    )
+                }
             }
         }
     }

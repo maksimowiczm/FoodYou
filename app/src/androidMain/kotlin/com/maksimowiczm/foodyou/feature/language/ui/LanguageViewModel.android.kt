@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.language.ui
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
+import com.maksimowiczm.foodyou.core.data.SystemInfoRepository
 import java.util.Locale
 
 actual class LanguageViewModel(private val androidSystemInfoRepository: SystemInfoRepository) :
@@ -10,7 +11,7 @@ actual class LanguageViewModel(private val androidSystemInfoRepository: SystemIn
     private val locale: Locale
         get() = androidSystemInfoRepository.defaultLocale
 
-    actual val tag: String
+    val tag: String
         get() = locale.toLanguageTag()
 
     actual val languageName: String
@@ -25,7 +26,7 @@ actual class LanguageViewModel(private val androidSystemInfoRepository: SystemIn
      * @param tag The language tag to set the application locale to. If null, the locale will be set
      * to the default locale.
      */
-    actual fun onLanguageSelect(tag: String?) {
+    fun onLanguageSelect(tag: String?) {
         if (tag == null) {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
         } else {

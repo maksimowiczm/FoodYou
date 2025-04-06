@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
+import com.maksimowiczm.foodyou.feature.language.Language
+import com.maksimowiczm.foodyou.feature.language.languageGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.Settings
@@ -32,8 +34,18 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
                 navController.navigate(About) {
                     launchSingleTop = true
                 }
+            },
+            onLanguage = {
+                navController.navigate(Language) {
+                    launchSingleTop = true
+                }
             }
         )
         aboutGraph()
+        languageGraph(
+            onBack = {
+                navController.popBackStack<Language>(inclusive = true)
+            }
+        )
     }
 }
