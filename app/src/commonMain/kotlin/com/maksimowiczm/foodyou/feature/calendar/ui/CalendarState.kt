@@ -29,7 +29,7 @@ import kotlinx.datetime.until
 private const val DIARY_DAYS_COUNT = 50_000
 
 @Composable
-fun rememberCalendarState(
+internal fun rememberCalendarState(
     namesOfDayOfWeek: List<String>,
     zeroDay: LocalDate = LocalDate.fromEpochDays(0),
     referenceDate: LocalDate = Clock.System.now()
@@ -61,7 +61,7 @@ fun rememberCalendarState(
 }
 
 @Stable
-class CalendarState(
+internal class CalendarState(
     private val coroutineScope: CoroutineScope,
     val namesOfDayOfWeek: List<String>,
     val lazyListCount: Int,

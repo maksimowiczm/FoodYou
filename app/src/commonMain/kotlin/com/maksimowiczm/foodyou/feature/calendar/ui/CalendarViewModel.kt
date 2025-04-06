@@ -11,7 +11,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-class CalendarViewModel(
+internal class CalendarViewModel(
     private val stringFormatRepository: StringFormatRepository,
     dateProvider: DateProvider
 ) : ViewModel() {

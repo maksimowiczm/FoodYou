@@ -40,7 +40,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AboutScreen(
+internal fun AboutScreen(
     modifier: Modifier = Modifier,
     viewModel: AboutSettingsViewModel = koinViewModel()
 ) {

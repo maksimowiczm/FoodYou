@@ -13,7 +13,7 @@ import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AboutSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun AboutSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         modifier = modifier.clickable { onClick() },
         headlineContent = {

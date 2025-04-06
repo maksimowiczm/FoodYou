@@ -46,7 +46,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-actual fun LanguageScreen(onBack: () -> Unit, modifier: Modifier) {
+internal actual fun LanguageScreen(onBack: () -> Unit, modifier: Modifier) {
     LanguageScreen(
         onBack = onBack,
         modifier = modifier,

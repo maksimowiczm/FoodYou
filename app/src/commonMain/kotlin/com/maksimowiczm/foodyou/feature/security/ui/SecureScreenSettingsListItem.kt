@@ -23,7 +23,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun SecureScreenSettingsListItem(
+internal fun SecureScreenSettingsListItem(
     modifier: Modifier = Modifier,
     // It is just one boolean flag, lets not bother with a ViewModel for this
     dataStore: DataStore<Preferences> = koinInject()

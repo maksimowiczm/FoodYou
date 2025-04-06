@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class AboutSettingsViewModel(private val dataStore: DataStore<Preferences>) : ViewModel() {
+internal class AboutSettingsViewModel(private val dataStore: DataStore<Preferences>) : ViewModel() {
     val githubStar = dataStore
         .observe(AboutPreferences.githubStarClicked)
         .map { it ?: false }

@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.calendar.ui.CalendarCard
+import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

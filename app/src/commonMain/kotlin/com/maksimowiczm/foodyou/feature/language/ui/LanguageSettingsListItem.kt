@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LanguageSettingsListItem(
+internal fun LanguageSettingsListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LanguageViewModel = koinViewModel()

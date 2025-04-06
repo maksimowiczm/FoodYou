@@ -20,7 +20,7 @@ import org.jetbrains.compose.resources.stringResource
  * State at 27.02.2025
  */
 @Composable
-fun AboutIcons8(onOpenIcons8: () -> Unit, modifier: Modifier = Modifier) {
+internal fun AboutIcons8(onOpenIcons8: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = {
             Text(stringResource(Res.string.headline_launcher_icon_by_icons8))

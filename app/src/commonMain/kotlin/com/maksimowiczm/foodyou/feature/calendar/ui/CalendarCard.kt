@@ -67,7 +67,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun CalendarCard(
+internal fun CalendarCard(
     homeState: HomeState,
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel = koinViewModel()
@@ -329,7 +329,7 @@ private fun DatePickerRowItem(
 }
 
 @Immutable
-data class CalendarCardColors(
+private data class CalendarCardColors(
     val containerColor: Color,
     val contentColor: Color,
     val selectedDateContainerColor: Color,
@@ -338,7 +338,7 @@ data class CalendarCardColors(
     val referenceDateContentColor: Color
 )
 
-object CalendarCardDefaults {
+private object CalendarCardDefaults {
     @Composable
     fun colors(
         containerColor: Color = CardDefaults.elevatedCardColors().containerColor,
