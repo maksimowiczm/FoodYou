@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
 import com.maksimowiczm.foodyou.feature.diary.MealsSettings
+import com.maksimowiczm.foodyou.feature.diary.OpenFoodFactsSettings
 import com.maksimowiczm.foodyou.feature.diary.diaryGraph
 import com.maksimowiczm.foodyou.feature.language.Language
 import com.maksimowiczm.foodyou.feature.language.languageGraph
@@ -38,6 +39,11 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
             onBack = {
                 navController.popBackStack<Settings>(inclusive = true)
             },
+            onOpenFoodFactsSettings = {
+                navController.navigate(OpenFoodFactsSettings) {
+                    launchSingleTop = true
+                }
+            },
             onMealsSettings = {
                 navController.navigate(MealsSettings) {
                     launchSingleTop = true
@@ -63,6 +69,9 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
         diaryGraph(
             onMealsSettingsBack = {
                 navController.popBackStack<MealsSettings>(inclusive = true)
+            },
+            onOpenFoodFactsSettingsBack = {
+                navController.popBackStack<OpenFoodFactsSettings>(inclusive = true)
             }
         )
     }

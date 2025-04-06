@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings
+package com.maksimowiczm.foodyou.feature.diary.openfoodfactssettings.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.feature.diary.data.OpenFoodFactsSettingsRepository
-import com.maksimowiczm.foodyou.feature.diary.data.ProductRepository
-import com.maksimowiczm.foodyou.feature.system.data.SystemInfoRepository
-import com.maksimowiczm.foodyou.feature.system.data.model.Country
+import com.maksimowiczm.foodyou.core.data.Country
+import com.maksimowiczm.foodyou.core.data.SystemInfoRepository
+import com.maksimowiczm.foodyou.feature.diary.data.food.ProductRepository
+import com.maksimowiczm.foodyou.feature.diary.openfoodfactssettings.data.OpenFoodFactsSettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class OpenFoodFactsSettingsViewModel(
+internal class OpenFoodFactsSettingsViewModel(
     private val settingsRepository: OpenFoodFactsSettingsRepository,
     private val systemInfoRepository: SystemInfoRepository,
     private val productRepository: ProductRepository
@@ -81,7 +81,7 @@ class OpenFoodFactsSettingsViewModel(
     }
 }
 
-sealed interface OpenFoodFactsSettings {
+internal sealed interface OpenFoodFactsSettings {
     data object Disabled : OpenFoodFactsSettings
     data class Enabled(val country: Country?, val availableCountries: List<Country>) :
         OpenFoodFactsSettings

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "f6fb6957f471cbe07ab0c11ada42d31a",
+    "identityHash": "ff8f4db7668db9a0fbfaef9f05161fd3",
     "entities": [
       {
         "tableName": "MealEntity",
@@ -57,11 +57,147 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "ProductEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `productSource` INTEGER NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbohydrates` REAL NOT NULL, `sugars` REAL, `fats` REAL NOT NULL, `saturatedFats` REAL, `salt` REAL, `sodium` REAL, `fiber` REAL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "brand",
+            "columnName": "brand",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "barcode",
+            "columnName": "barcode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "packageWeight",
+            "columnName": "packageWeight",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "servingWeight",
+            "columnName": "servingWeight",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "productSource",
+            "columnName": "productSource",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.calories",
+            "columnName": "calories",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.proteins",
+            "columnName": "proteins",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.carbohydrates",
+            "columnName": "carbohydrates",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.sugars",
+            "columnName": "sugars",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.fats",
+            "columnName": "fats",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.saturatedFats",
+            "columnName": "saturatedFats",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.salt",
+            "columnName": "salt",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.sodium",
+            "columnName": "sodium",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.fiber",
+            "columnName": "fiber",
+            "affinity": "REAL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "OpenFoodFactsPagingKey",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`queryString` TEXT NOT NULL, `country` TEXT NOT NULL, `fetchedCount` INTEGER NOT NULL, `totalCount` INTEGER NOT NULL, PRIMARY KEY(`queryString`, `country`))",
+        "fields": [
+          {
+            "fieldPath": "queryString",
+            "columnName": "queryString",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fetchedCount",
+            "columnName": "fetchedCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalCount",
+            "columnName": "totalCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "queryString",
+            "country"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f6fb6957f471cbe07ab0c11ada42d31a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ff8f4db7668db9a0fbfaef9f05161fd3')"
     ]
   }
 }

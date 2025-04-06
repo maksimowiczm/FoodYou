@@ -1,7 +1,6 @@
-package com.maksimowiczm.foodyou.feature.diary.database.converter
+package com.maksimowiczm.foodyou.feature.diary.database.product
 
 import androidx.room.TypeConverter
-import com.maksimowiczm.foodyou.feature.diary.data.model.ProductSource
 
 @Suppress("unused")
 class ProductSourceConverter {

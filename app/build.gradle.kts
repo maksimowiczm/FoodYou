@@ -20,6 +20,33 @@ buildConfig {
     val versionName = libs.versions.version.name.get()
 
     buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
+
+    // -- OPEN FOOD FACTS --
+    // https://openfoodfacts.github.io/openfoodfacts-server/api/#authentication
+    // Sorry no email 😭
+    // https://pub.dev/packages/openfoodfacts#migrating-from-2xx-to-3xx-breaking-changes
+    // https://pub.dev/packages/openfoodfacts#setup-optional
+    buildConfigField(
+        "String",
+        "OPEN_FOOD_FACTS_USER_AGENT",
+        "\"FoodYou/$versionName-opensource (https://github.com/maksimowiczm/FoodYou)\""
+    )
+
+    sourceSets.getByName("main") {
+        buildConfigField(
+            "String",
+            "OPEN_FOOD_FACTS_URL",
+            "\"https://world.openfoodfacts.org/\""
+        )
+    }
+
+    sourceSets.getByName("test") {
+        buildConfigField(
+            "String",
+            "OPEN_FOOD_FACTS_URL",
+            "\"https://world.openfoodfacts.net/\""
+        )
+    }
 }
 
 kotlin {
@@ -48,6 +75,12 @@ kotlin {
             // Koin
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+
+            // Ktor
+            implementation(libs.ktor.client.okhttp)
+
+            // Coil
+            implementation(libs.coil.network.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -90,6 +123,14 @@ kotlin {
 
             // Reorderable list
             implementation(libs.reorderable)
+
+            // Ktor
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.serialization.kotlinx.json)
+
+            // Coil
+            implementation(libs.coil.compose)
         }
 
         commonTest.dependencies {

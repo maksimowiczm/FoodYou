@@ -9,6 +9,7 @@ data object Settings
 
 fun NavGraphBuilder.settingsGraph(
     onBack: () -> Unit,
+    onOpenFoodFactsSettings: () -> Unit,
     onMealsSettings: () -> Unit,
     onAbout: () -> Unit,
     onLanguage: () -> Unit
@@ -16,6 +17,7 @@ fun NavGraphBuilder.settingsGraph(
     forwardBackwardComposable<Settings> {
         SettingsScreen(
             onBack = onBack,
+            onOpenFoodFactsSettings = onOpenFoodFactsSettings,
             onMealsSettings = onMealsSettings,
             onAbout = onAbout,
             onLanguage = onLanguage

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import java.util.Locale
 
-class SystemInfoRepository(private val context: Context) {
+actual class SystemInfoRepository(private val context: Context) {
     val defaultLocale: Locale
         get() {
             val compat = AppCompatDelegate.getApplicationLocales().get(0)
@@ -21,5 +21,19 @@ class SystemInfoRepository(private val context: Context) {
             val fallback = Locale.getDefault()
 
             return fallback
+        }
+
+    actual val defaultCountry: Country
+        get() = Country(
+            name = defaultLocale.displayCountry,
+            code = defaultLocale.country
+        )
+
+    actual val countries: List<Country>
+        get() = Locale.getISOCountries().map {
+            Country(
+                name = Locale("", it).displayCountry,
+                code = it
+            )
         }
 }

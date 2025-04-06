@@ -1,9 +1,9 @@
-package com.maksimowiczm.foodyou.feature.diary.data.preferences
+package com.maksimowiczm.foodyou.feature.diary.data
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
-object OpenFoodFactsPreferences {
+internal object OpenFoodFactsPreferences {
     val isEnabled = booleanPreferencesKey("open_food_facts_enabled")
 
     /**

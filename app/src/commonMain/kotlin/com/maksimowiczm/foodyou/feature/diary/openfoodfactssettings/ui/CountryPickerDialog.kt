@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings
+package com.maksimowiczm.foodyou.feature.diary.openfoodfactssettings.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,15 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.maksimowiczm.foodyou.feature.system.data.model.Country
+import com.maksimowiczm.foodyou.core.data.Country
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Suppress("ktlint:compose:modifier-missing-check")
 @Composable
-fun CountryPickerDialog(
+internal fun CountryPickerDialog(
     availableCountries: List<Country>,
-    countryFlag: CountryFlag,
     onCountrySelect: (Country) -> Unit,
     onDismissRequest: () -> Unit,
     headline: @Composable () -> Unit = {
@@ -108,7 +107,7 @@ fun CountryPickerDialog(
                                 text = country.name
                             )
 
-                            countryFlag(
+                            CountryFlag(
                                 country = country,
                                 modifier = Modifier.width(52.dp)
                             )

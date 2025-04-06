@@ -4,20 +4,23 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.paging.ExperimentalPagingApi
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.feature.diary.data.preferences.OpenFoodFactsPreferences
-import com.maksimowiczm.foodyou.feature.diary.database.dao.OpenFoodFactsDao
-import com.maksimowiczm.foodyou.feature.diary.database.dao.ProductDao
-import com.maksimowiczm.foodyou.infrastructure.datastore.get
+import com.maksimowiczm.foodyou.core.ext.get
+import com.maksimowiczm.foodyou.feature.diary.data.OpenFoodFactsPreferences
+import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
+import com.maksimowiczm.foodyou.feature.diary.database.openfoodfacts.OpenFoodFactsDao
+import com.maksimowiczm.foodyou.feature.diary.database.product.ProductDao
 import kotlinx.coroutines.runBlocking
 
 // Should be used as singleton to avoid creating multiple instances of
 // OpenFoodFactsNetworkDataSource because it wraps retrofit client.
 @OptIn(ExperimentalPagingApi::class)
-class OpenFoodFactsRemoteMediatorFactory(
+internal class OpenFoodFactsRemoteMediatorFactory(
     private val dataStore: DataStore<Preferences>,
-    private val openFoodFactsDao: OpenFoodFactsDao,
-    private val productDao: ProductDao
+    diaryDatabase: DiaryDatabase
 ) : ProductRemoteMediatorFactory {
+
+    private val openFoodFactsDao: OpenFoodFactsDao = diaryDatabase.openFoodFactsDao
+    private val productDao: ProductDao = diaryDatabase.productDao
 
     private val _openFoodFactsNetworkDataSource by lazy {
         OpenFoodFactsNetworkDataSource()
@@ -39,7 +42,7 @@ class OpenFoodFactsRemoteMediatorFactory(
     private val countryCode
         get() = runBlocking { dataStore.get(OpenFoodFactsPreferences.countryCode) }
 
-    override fun createWithQuery(query: String?): ProductRemoteMediator? {
+    override fun <T : Any> createWithQuery(query: String?): ProductRemoteMediator<T>? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
 
         if (query == null) {
@@ -62,7 +65,7 @@ class OpenFoodFactsRemoteMediatorFactory(
         )
     }
 
-    override fun createWithBarcode(barcode: String): ProductRemoteMediator? {
+    override fun <T : Any> createWithBarcode(barcode: String): ProductRemoteMediator<T>? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
 
         val country = countryCode

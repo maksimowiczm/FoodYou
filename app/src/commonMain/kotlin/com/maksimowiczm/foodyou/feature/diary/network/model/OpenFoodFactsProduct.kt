@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.network.model
 
-interface OpenFoodFactsProduct {
+internal interface OpenFoodFactsProduct {
     val productName: String?
     val brands: String?
     val code: String?

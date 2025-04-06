@@ -1,23 +1,26 @@
-package com.maksimowiczm.foodyou.feature.diary.data
+package com.maksimowiczm.foodyou.feature.diary.openfoodfactssettings.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.maksimowiczm.foodyou.feature.diary.data.preferences.OpenFoodFactsPreferences
-import com.maksimowiczm.foodyou.feature.diary.database.dao.OpenFoodFactsDao
-import com.maksimowiczm.foodyou.feature.system.data.SystemInfoRepository
-import com.maksimowiczm.foodyou.feature.system.data.model.Country
-import com.maksimowiczm.foodyou.infrastructure.datastore.get
-import com.maksimowiczm.foodyou.infrastructure.datastore.observe
-import com.maksimowiczm.foodyou.infrastructure.datastore.set
-import com.maksimowiczm.foodyou.infrastructure.datastore.setNull
+import com.maksimowiczm.foodyou.core.data.Country
+import com.maksimowiczm.foodyou.core.data.SystemInfoRepository
+import com.maksimowiczm.foodyou.core.ext.get
+import com.maksimowiczm.foodyou.core.ext.observe
+import com.maksimowiczm.foodyou.core.ext.set
+import com.maksimowiczm.foodyou.core.ext.setNull
+import com.maksimowiczm.foodyou.feature.diary.data.OpenFoodFactsPreferences
+import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
+import com.maksimowiczm.foodyou.feature.diary.database.openfoodfacts.OpenFoodFactsDao
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
-class OpenFoodFactsSettingsRepository(
+internal class OpenFoodFactsSettingsRepository(
     private val dataStore: DataStore<Preferences>,
     private val systemInfoRepository: SystemInfoRepository,
-    private val openFoodFactsDao: OpenFoodFactsDao
+    database: DiaryDatabase
 ) {
+    private val openFoodFactsDao: OpenFoodFactsDao = database.openFoodFactsDao
+
     fun observeOpenFoodFactsEnabled() = dataStore
         .observe(OpenFoodFactsPreferences.isEnabled)
         .map { it ?: false }

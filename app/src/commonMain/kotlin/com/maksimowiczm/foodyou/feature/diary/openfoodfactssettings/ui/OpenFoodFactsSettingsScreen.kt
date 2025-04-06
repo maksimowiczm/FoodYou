@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings
+package com.maksimowiczm.foodyou.feature.diary.openfoodfactssettings.ui
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -53,14 +53,14 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.system.data.model.Country
+import com.maksimowiczm.foodyou.core.data.Country
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun OpenFoodFactsSettingsScreen(
+internal fun OpenFoodFactsSettingsScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: OpenFoodFactsSettingsViewModel = koinInject()
@@ -69,11 +69,11 @@ fun OpenFoodFactsSettingsScreen(
 
     OpenFoodFactsSettingsScreen(
         settings = settings,
-        onToggle = viewModel::onOpenFoodFactsToggle,
-        onCountrySelect = viewModel::onOpenFoodFactsCountrySelected,
-        onGlobalDatabase = viewModel::onGlobalDatabase,
-        onDeleteUnusedProducts = viewModel::onDeleteUnusedProducts,
-        onCacheClear = viewModel::onCacheClear,
+        onToggle = remember(viewModel) { viewModel::onOpenFoodFactsToggle },
+        onCountrySelect = remember(viewModel) { viewModel::onOpenFoodFactsCountrySelected },
+        onGlobalDatabase = remember(viewModel) { viewModel::onGlobalDatabase },
+        onDeleteUnusedProducts = remember(viewModel) { viewModel::onDeleteUnusedProducts },
+        onCacheClear = remember(viewModel) { viewModel::onCacheClear },
         onBack = onBack,
         modifier = modifier
     )
@@ -281,8 +281,7 @@ private fun OpenFoodFactsContent(
     settings: OpenFoodFactsSettings.Enabled,
     onDeleteUnusedProducts: () -> Unit,
     onCacheClear: () -> Unit,
-    modifier: Modifier = Modifier,
-    countryFlag: CountryFlag = koinInject()
+    modifier: Modifier = Modifier
 ) {
     var showCountryPicker by rememberSaveable { mutableStateOf(false) }
 
@@ -290,7 +289,6 @@ private fun OpenFoodFactsContent(
         CountryPickerDialog(
             onDismissRequest = { showCountryPicker = false },
             availableCountries = settings.availableCountries,
-            countryFlag = countryFlag,
             onCountrySelect = { country ->
                 onCountrySelect(country)
                 showCountryPicker = false
@@ -324,7 +322,7 @@ private fun OpenFoodFactsContent(
             },
             trailingContent = {
                 if (settings.country != null) {
-                    countryFlag(
+                    CountryFlag(
                         country = settings.country,
                         modifier = Modifier.width(52.dp)
                     )

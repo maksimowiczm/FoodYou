@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OpenFoodFactsNutrients(
+internal data class OpenFoodFactsNutrients(
     @SerialName("carbohydrates_100g")
     val carbohydrates100g: Float? = null,
     @SerialName("energy-kcal_100g")

@@ -4,27 +4,28 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.feature.diary.data.model.toEntity
-import com.maksimowiczm.foodyou.feature.diary.database.dao.OpenFoodFactsDao
-import com.maksimowiczm.foodyou.feature.diary.database.dao.ProductDao
-import com.maksimowiczm.foodyou.feature.diary.database.entity.OpenFoodFactsPagingKey
-import com.maksimowiczm.foodyou.feature.diary.database.entity.ProductEntity
+import com.maksimowiczm.foodyou.core.data.NutrientsHelper
+import com.maksimowiczm.foodyou.feature.diary.database.core.Nutrients
+import com.maksimowiczm.foodyou.feature.diary.database.openfoodfacts.OpenFoodFactsDao
+import com.maksimowiczm.foodyou.feature.diary.database.openfoodfacts.OpenFoodFactsPagingKey
+import com.maksimowiczm.foodyou.feature.diary.database.product.ProductDao
+import com.maksimowiczm.foodyou.feature.diary.database.product.ProductEntity
+import com.maksimowiczm.foodyou.feature.diary.database.product.ProductSource
+import com.maksimowiczm.foodyou.feature.diary.network.model.OpenFoodFactsNutrients
+import com.maksimowiczm.foodyou.feature.diary.network.model.OpenFoodFactsProduct
 
 @OptIn(ExperimentalPagingApi::class)
-internal class OpenFoodFactsRemoteMediator(
+internal class OpenFoodFactsRemoteMediator<T : Any>(
     private val isBarcode: Boolean,
     private val query: String,
     private val country: String?,
     private val openFoodFactsDao: OpenFoodFactsDao,
     private val productDao: ProductDao,
     private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource
-) : ProductRemoteMediator() {
+) : ProductRemoteMediator<T>() {
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
 
-    override suspend fun load(
-        loadType: LoadType,
-        state: PagingState<Int, ProductEntity>
-    ): MediatorResult {
+    override suspend fun load(loadType: LoadType, state: PagingState<Int, T>): MediatorResult {
         try {
             val page = when (loadType) {
                 LoadType.REFRESH -> {
@@ -44,7 +45,7 @@ internal class OpenFoodFactsRemoteMediator(
                     )?.toEntity()
 
                     if (product != null) {
-                        productDao.upsertUniqueProducts(listOf(product))
+                        productDao.insertOpenFoodFactsProducts(listOf(product))
                     }
 
                     return MediatorResult.Success(endOfPaginationReached = true)
@@ -97,7 +98,7 @@ internal class OpenFoodFactsRemoteMediator(
                 }
             }
 
-            productDao.upsertUniqueProducts(products.filterNotNull())
+            productDao.insertOpenFoodFactsProducts(products.filterNotNull())
 
             val skipped = products.count { it == null }
 
@@ -116,4 +117,68 @@ internal class OpenFoodFactsRemoteMediator(
         // Feeling good about this page size might adjust later
         private const val PAGE_SIZE = 50
     }
+}
+
+/**
+ * Converts an [OpenFoodFactsProduct] to a [ProductEntity]. Returns null if the conversion is not possible.
+ */
+private fun OpenFoodFactsProduct.toEntity(): ProductEntity? {
+    val nutrients = nutrients ?: return null
+    val productName = productName ?: return null
+
+    val packageWeight = when {
+        packageQuantityUnit != "g" || packageQuantityUnit != "ml" -> null
+        else -> packageQuantity
+    }
+
+    val servingWeight = when {
+        servingQuantityUnit != "g" || servingQuantityUnit != "ml" -> null
+        else -> servingQuantity
+    }
+
+    if (
+        packageQuantityUnit != null &&
+        servingQuantityUnit != null &&
+        packageQuantityUnit != servingQuantityUnit
+    ) {
+        return null
+    }
+
+    return ProductEntity(
+        name = productName,
+        brand = brands,
+        barcode = code,
+        nutrients = nutrients.toEntity() ?: return null,
+        packageWeight = packageWeight,
+        servingWeight = servingWeight,
+        productSource = ProductSource.OpenFoodFacts
+    )
+}
+
+private fun OpenFoodFactsNutrients.toEntity(): Nutrients? {
+    if (
+        proteins100g == null ||
+        carbohydrates100g == null ||
+        fat100g == null
+    ) {
+        return null
+    }
+
+    val energy100g = energy100g ?: NutrientsHelper.calculateCalories(
+        proteins = proteins100g,
+        carbohydrates = carbohydrates100g,
+        fats = fat100g
+    )
+
+    return Nutrients(
+        calories = energy100g,
+        proteins = proteins100g,
+        carbohydrates = carbohydrates100g,
+        sugars = sugars100g,
+        fats = fat100g,
+        saturatedFats = saturatedFat100g,
+        salt = salt100g,
+        sodium = sodium100g,
+        fiber = fiber100g
+    )
 }

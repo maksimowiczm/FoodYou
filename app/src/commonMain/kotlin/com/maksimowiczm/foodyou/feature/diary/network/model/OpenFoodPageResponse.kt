@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.network.model
 
-interface OpenFoodPageResponse {
+internal interface OpenFoodPageResponse {
     val count: Int
     val page: Int
     val pageSize: Int

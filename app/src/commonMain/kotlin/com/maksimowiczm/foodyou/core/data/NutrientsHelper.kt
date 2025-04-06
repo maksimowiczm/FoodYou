@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.data
+package com.maksimowiczm.foodyou.core.data
 
 object NutrientsHelper {
     const val PROTEINS = 4

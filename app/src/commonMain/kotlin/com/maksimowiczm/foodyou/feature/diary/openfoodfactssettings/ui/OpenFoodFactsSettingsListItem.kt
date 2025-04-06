@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.openfoodfactssettings
+package com.maksimowiczm.foodyou.feature.diary.openfoodfactssettings.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
@@ -8,20 +8,12 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.feature.SettingsFeature
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
-fun buildOpenFoodFactsSettingsListItem(onClick: () -> Unit) = SettingsFeature { modifier ->
-    OpenFoodFactsSettingsListItem(
-        onClick = onClick,
-        modifier = modifier
-    )
-}
-
 @Composable
-private fun OpenFoodFactsSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun OpenFoodFactsSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = {
             Text(
