@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
+import com.maksimowiczm.foodyou.feature.diary.mealssettings.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.feature.security.SecureScreenSettingsListItem
 import foodyou.app.generated.resources.*
@@ -24,6 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onMealsSettings: () -> Unit,
     onAbout: () -> Unit,
     onLanguage: () -> Unit,
     modifier: Modifier = Modifier
@@ -53,6 +55,11 @@ fun SettingsScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues
         ) {
+            item {
+                MealsSettingsListItem(
+                    onClick = onMealsSettings
+                )
+            }
             item {
                 SecureScreenSettingsListItem()
             }

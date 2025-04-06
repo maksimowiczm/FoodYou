@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.room)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.gmazzo.buildconfig)
 }
@@ -73,11 +75,21 @@ kotlin {
             // Datastore
             implementation(libs.androidx.datastore.preferences)
 
+            // Room
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.room.paging)
+
+            // Paging
+            implementation(libs.androidx.paging.runtime)
+
             // Logger
             implementation(libs.kermit)
 
             // Shimmer
             implementation(libs.compose.shimmer)
+
+            // Reorderable list
+            implementation(libs.reorderable)
         }
 
         commonTest.dependencies {
@@ -126,7 +138,15 @@ android {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
+    listOf("kspAndroid").forEach {
+        add(it, libs.androidx.room.compiler)
+    }
+
     debugImplementation(compose.uiTooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     androidTestImplementation(libs.androidx.test.core.ktx)
