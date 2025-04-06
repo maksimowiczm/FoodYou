@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.system.data
+package com.maksimowiczm.foodyou.core.data
 
 import android.content.Context
 import android.text.format.DateFormat

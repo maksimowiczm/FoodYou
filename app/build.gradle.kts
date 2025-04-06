@@ -72,6 +72,9 @@ kotlin {
 
             // Datastore
             implementation(libs.androidx.datastore.preferences)
+
+            // Logger
+            implementation(libs.kermit)
         }
 
         commonTest.dependencies {

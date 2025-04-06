@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.system.data
+package com.maksimowiczm.foodyou.core.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate

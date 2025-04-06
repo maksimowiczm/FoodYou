@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.system.data
+package com.maksimowiczm.foodyou.core.data
 
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.delay

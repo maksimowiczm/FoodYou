@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.feature.language.ui
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
-import com.maksimowiczm.foodyou.feature.system.data.SystemInfoRepository
 import java.util.Locale
 
 actual class LanguageViewModel(private val androidSystemInfoRepository: SystemInfoRepository) :
