@@ -4,8 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.core.data.DateProvider
 import com.maksimowiczm.foodyou.core.ext.observe
-import com.maksimowiczm.foodyou.feature.diary.data.DiaryPreferences
-import com.maksimowiczm.foodyou.feature.diary.data.meal.MealRepository
+import com.maksimowiczm.foodyou.feature.diary.core.data.DiaryPreferences
+import com.maksimowiczm.foodyou.feature.diary.core.data.meal.MealRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

@@ -8,8 +8,8 @@ import com.maksimowiczm.foodyou.core.data.StringFormatRepository
 import com.maksimowiczm.foodyou.core.ext.get
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
-import com.maksimowiczm.foodyou.feature.diary.data.DiaryPreferences
-import com.maksimowiczm.foodyou.feature.diary.data.meal.MealRepository
+import com.maksimowiczm.foodyou.feature.diary.core.data.DiaryPreferences
+import com.maksimowiczm.foodyou.feature.diary.core.data.meal.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.mealssettings.domain.Meal
 import com.maksimowiczm.foodyou.feature.diary.mealssettings.domain.ObserveMealsUseCase
 import kotlinx.coroutines.flow.SharingStarted

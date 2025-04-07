@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.core.data.Country
 import com.maksimowiczm.foodyou.core.data.SystemInfoRepository
-import com.maksimowiczm.foodyou.feature.diary.data.food.ProductRepository
-import com.maksimowiczm.foodyou.feature.diary.openfoodfactssettings.data.OpenFoodFactsSettingsRepository
+import com.maksimowiczm.foodyou.feature.diary.core.data.OpenFoodFactsSettingsRepository
+import com.maksimowiczm.foodyou.feature.diary.core.data.food.ProductRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first

@@ -3,12 +3,12 @@ package com.maksimowiczm.foodyou.infrastructure.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
-import com.maksimowiczm.foodyou.feature.diary.database.meal.InitializeMealsCallback
-import com.maksimowiczm.foodyou.feature.diary.database.meal.MealEntity
-import com.maksimowiczm.foodyou.feature.diary.database.openfoodfacts.OpenFoodFactsPagingKey
-import com.maksimowiczm.foodyou.feature.diary.database.product.ProductEntity
-import com.maksimowiczm.foodyou.feature.diary.database.product.ProductSourceConverter
+import com.maksimowiczm.foodyou.feature.diary.core.database.DiaryDatabase
+import com.maksimowiczm.foodyou.feature.diary.core.database.meal.InitializeMealsCallback
+import com.maksimowiczm.foodyou.feature.diary.core.database.meal.MealEntity
+import com.maksimowiczm.foodyou.feature.diary.core.database.openfoodfacts.OpenFoodFactsPagingKey
+import com.maksimowiczm.foodyou.feature.diary.core.database.product.ProductEntity
+import com.maksimowiczm.foodyou.feature.diary.core.database.product.ProductSourceConverter
 
 @Database(
     entities = [

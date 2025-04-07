@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.maksimowiczm.foodyou.feature.diary.database.DiaryDatabase
-import com.maksimowiczm.foodyou.feature.diary.database.meal.InitializeMealsCallback
+import com.maksimowiczm.foodyou.feature.diary.core.database.DiaryDatabase
+import com.maksimowiczm.foodyou.feature.diary.core.database.meal.InitializeMealsCallback
 import com.maksimowiczm.foodyou.infrastructure.database.OpenSourceDatabase
 import com.maksimowiczm.foodyou.infrastructure.database.OpenSourceDatabase.Companion.buildDatabase
 import org.koin.android.ext.koin.androidContext

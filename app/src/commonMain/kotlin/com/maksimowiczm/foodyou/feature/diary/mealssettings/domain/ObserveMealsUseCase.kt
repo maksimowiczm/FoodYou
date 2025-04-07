@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.mealssettings.domain
 
-import com.maksimowiczm.foodyou.feature.diary.data.meal.MealRepository
+import com.maksimowiczm.foodyou.feature.diary.core.data.meal.MealRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime

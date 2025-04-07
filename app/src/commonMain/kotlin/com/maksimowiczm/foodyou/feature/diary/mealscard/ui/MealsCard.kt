@@ -44,12 +44,12 @@ import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.feature.diary.core.ui.MealHeader
+import com.maksimowiczm.foodyou.feature.diary.core.ui.NutrientsLayout
 import com.maksimowiczm.foodyou.feature.diary.mealscard.MealCardTransitionSpecs
 import com.maksimowiczm.foodyou.feature.diary.mealscard.MealCardTransitionSpecs.overlayClipFromCardToScreen
 import com.maksimowiczm.foodyou.feature.diary.mealscard.MealHeaderTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.mealscard.domain.Meal
-import com.maksimowiczm.foodyou.feature.diary.ui.MealHeader
-import com.maksimowiczm.foodyou.feature.diary.ui.NutrientsLayout
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
