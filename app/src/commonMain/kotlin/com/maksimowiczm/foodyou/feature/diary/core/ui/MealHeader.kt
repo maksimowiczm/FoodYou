@@ -21,7 +21,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun MealHeader(
+fun MealHeader(
     headline: @Composable () -> Unit,
     time: @Composable () -> Unit,
     modifier: Modifier = Modifier,

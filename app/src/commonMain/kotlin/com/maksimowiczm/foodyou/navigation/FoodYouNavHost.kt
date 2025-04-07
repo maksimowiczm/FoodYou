@@ -6,9 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
+import com.maksimowiczm.foodyou.feature.diary.addfood.AddFoodSearchFood
 import com.maksimowiczm.foodyou.feature.diary.diaryGraph
 import com.maksimowiczm.foodyou.feature.diary.mealssettings.MealsSettings
-import com.maksimowiczm.foodyou.feature.diary.openfoodfactssettings.OpenFoodFactsSettings
+import com.maksimowiczm.foodyou.feature.diary.openfoodfacts.OpenFoodFactsSettings
 import com.maksimowiczm.foodyou.feature.language.Language
 import com.maksimowiczm.foodyou.feature.language.languageGraph
 import com.maksimowiczm.foodyou.ui.home.Home
@@ -32,7 +33,14 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
                 // TODO
             },
             onMealCardAddClick = { epochDay, mealId ->
-                // TODO
+                navController.navigate(
+                    AddFoodSearchFood(
+                        mealId = mealId,
+                        epochDay = epochDay
+                    )
+                ) {
+                    launchSingleTop = true
+                }
             }
         )
         settingsGraph(
@@ -67,8 +75,16 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
             }
         )
         diaryGraph(
+            onAddFoodSearchBack = {
+                navController.popBackStack<AddFoodSearchFood>(inclusive = true)
+            },
             onMealsSettingsBack = {
                 navController.popBackStack<MealsSettings>(inclusive = true)
+            },
+            onOpenFoodFactsSettings = {
+                navController.navigate(OpenFoodFactsSettings) {
+                    launchSingleTop = true
+                }
             },
             onOpenFoodFactsSettingsBack = {
                 navController.popBackStack<OpenFoodFactsSettings>(inclusive = true)

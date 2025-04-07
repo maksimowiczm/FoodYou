@@ -72,6 +72,11 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
 
+            implementation(libs.accompanist.permissions)
+
+            // Zxing
+            implementation(libs.zxing.android.embedded)
+
             // Koin
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
@@ -175,7 +180,7 @@ android {
 
     buildFeatures {
         compose = true
-//        viewBinding = true
+        viewBinding = true
     }
 }
 

@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
 import com.maksimowiczm.foodyou.feature.diary.mealssettings.MealsSettingsListItem
-import com.maksimowiczm.foodyou.feature.diary.openfoodfactssettings.OpenFoodFactsSettingsListItem
+import com.maksimowiczm.foodyou.feature.diary.openfoodfacts.OpenFoodFactsSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.feature.security.SecureScreenSettingsListItem
 import foodyou.app.generated.resources.*

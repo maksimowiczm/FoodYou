@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime
 
-internal interface MealRepository {
+interface MealRepository {
     fun observeMeals(): Flow<List<Meal>>
 
     suspend fun createMeal(name: String, from: LocalTime, to: LocalTime)

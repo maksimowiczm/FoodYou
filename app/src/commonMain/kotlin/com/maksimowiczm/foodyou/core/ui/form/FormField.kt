@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.ui.form
 
+@Deprecated("dont do that")
 interface FormField<T, E> {
     val value: T
     val error: E?

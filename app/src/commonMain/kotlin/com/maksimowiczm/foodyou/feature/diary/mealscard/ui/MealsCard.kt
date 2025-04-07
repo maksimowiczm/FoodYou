@@ -69,7 +69,7 @@ internal fun MealsCard(
     modifier: Modifier = Modifier,
     viewModel: MealsCardViewModel = koinViewModel()
 ) {
-    val meals by viewModel.meals.collectAsStateWithLifecycle()
+    val meals by viewModel.observeMeals(homeState.selectedDate).collectAsStateWithLifecycle(null)
 
     MealsCard(
         meals = meals,
@@ -292,7 +292,9 @@ private fun SharedTransitionScope.MealCard(
                         text = remember(enDash, meal, formatTime) {
                             buildString {
                                 append(formatTime(meal.from))
+                                append(" ")
                                 append(enDash)
+                                append(" ")
                                 append(formatTime(meal.to))
                             }
                         },

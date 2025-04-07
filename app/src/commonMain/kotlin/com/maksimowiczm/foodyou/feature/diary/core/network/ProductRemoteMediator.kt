@@ -12,4 +12,4 @@ import androidx.paging.RemoteMediator
 // entities which will allow for searching for products together with recipes and other entities
 // (all in one paging source).
 @OptIn(ExperimentalPagingApi::class)
-internal typealias ProductRemoteMediator<T> = RemoteMediator<Int, T>
+typealias ProductRemoteMediator<T> = RemoteMediator<Int, T>

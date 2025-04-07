@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.diary.core.network
 import androidx.paging.ExperimentalPagingApi
 
 @OptIn(ExperimentalPagingApi::class)
-internal interface ProductRemoteMediatorFactory {
+interface ProductRemoteMediatorFactory {
     /**
      * Create a new instance of [ProductRemoteMediator]. If factory can't create a new instance, it
      * should return null.

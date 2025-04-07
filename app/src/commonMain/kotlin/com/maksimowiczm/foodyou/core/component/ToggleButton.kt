@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ToggleButton(
     checked: Boolean,
-    onCheckChange: (Boolean) -> Unit,
+    onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     colors: ToggleButtonColors = ToggleButtonDefaults.colors(),
     indication: Indication? = null,
@@ -47,7 +47,7 @@ fun ToggleButton(
                     interactionSource = interactionSource,
                     indication = null,
                     onClick = {
-                        onCheckChange(!checked)
+                        onCheckedChange(!checked)
                     }
                 ),
             contentAlignment = Alignment.Center

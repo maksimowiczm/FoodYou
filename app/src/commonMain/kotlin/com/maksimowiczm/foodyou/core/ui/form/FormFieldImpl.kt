@@ -9,6 +9,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 
+@Deprecated("dont do that")
 @Composable
 fun <T, E> rememberFormField(
     initialValue: T,
@@ -50,6 +51,7 @@ fun <T, E> rememberFormField(
     )
 }
 
+@Deprecated("dont do that")
 @Stable
 class FormFieldImpl<T, E>(
     initialFormFieldValue: FormFieldValue<T, E>,

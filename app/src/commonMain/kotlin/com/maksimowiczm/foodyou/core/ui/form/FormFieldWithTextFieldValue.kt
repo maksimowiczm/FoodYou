@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 
 fun <T : Any?> emptyNullFormatter(value: T) = value?.toString() ?: ""
 
+@Deprecated("dont do that")
 @Composable
 fun <T, E> rememberFormFieldWithTextFieldValue(
     initialValue: T,
@@ -71,6 +72,7 @@ fun <T, E> rememberFormFieldWithTextFieldValue(
  * @param formatter the formatter to format the raw value to the text field value
  * @see FormField
  */
+@Deprecated("dont do that")
 @Stable
 class FormFieldWithTextFieldValue<T, E>(
     initialTextFieldValue: MutableState<TextFieldValue>,

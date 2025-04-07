@@ -3,14 +3,19 @@ package com.maksimowiczm.foodyou.feature.diary.mealscard.domain
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.core.data.DateProvider
+import com.maksimowiczm.foodyou.core.ext.combine
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.feature.diary.core.data.DiaryPreferences
+import com.maksimowiczm.foodyou.feature.diary.core.data.food.sum
 import com.maksimowiczm.foodyou.feature.diary.core.data.meal.MealRepository
+import com.maksimowiczm.foodyou.feature.diary.core.data.measurement.MeasurementRepository
+import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
 internal data class Meal(
@@ -33,31 +38,51 @@ internal data class Meal(
  * Use case for observing meals in meals card.
  */
 internal interface ObserveMealsUseCase {
-    operator fun invoke(): Flow<List<Meal>>
+    operator fun invoke(date: LocalDate): Flow<List<Meal>>
 }
 
 internal class ObserveMealsUseCaseImpl(
     private val mealRepository: MealRepository,
+    private val measurementRepository: MeasurementRepository,
     private val dataStore: DataStore<Preferences>,
     private val dateProvider: DateProvider
 ) : ObserveMealsUseCase {
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun invoke() = mealRepository.observeMeals().map { list ->
-        list.map {
-            Meal(
-                id = it.id,
-                from = it.from,
-                to = it.to,
-                name = it.name,
-                rank = it.rank,
-                // TODO
-                calories = 0,
-                proteins = 0,
-                carbohydrates = 0,
-                fats = 0,
-                isEmpty = false
-            )
-        }
+    override fun invoke(date: LocalDate) = mealRepository.observeMeals().flatMapLatest { list ->
+        list.map { meal ->
+            measurementRepository.observeMeasurements(date, meal.id).map { measurements ->
+
+                val calories = measurements.mapNotNull {
+                    val weight = it.weight ?: return@mapNotNull null
+                    it.food.nutrients.calories * weight / 100f
+                }.sum()
+                val proteins = measurements.mapNotNull {
+                    val weight = it.weight ?: return@mapNotNull null
+                    it.food.nutrients.proteins * weight / 100f
+                }.sum()
+                val carbohydrates = measurements.mapNotNull {
+                    val weight = it.weight ?: return@mapNotNull null
+                    it.food.nutrients.carbohydrates * weight / 100f
+                }.sum()
+                val fats = measurements.mapNotNull {
+                    val weight = it.weight ?: return@mapNotNull null
+                    it.food.nutrients.fats * weight / 100f
+                }.sum()
+
+                Meal(
+                    id = meal.id,
+                    from = meal.from,
+                    to = meal.to,
+                    name = meal.name,
+                    rank = meal.rank,
+                    calories = calories.value.roundToInt(),
+                    proteins = proteins.value.roundToInt(),
+                    carbohydrates = carbohydrates.value.roundToInt(),
+                    fats = fats.value.roundToInt(),
+                    isEmpty = measurements.isEmpty()
+                )
+            }
+        }.combine { it }
     }.flatMapLatest { meals ->
         combine(
             dataStore.observe(DiaryPreferences.includeAllDayMeals).map { it ?: false },

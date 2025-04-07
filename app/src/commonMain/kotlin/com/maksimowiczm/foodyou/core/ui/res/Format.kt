@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.core.ui.res
 
 import java.util.Locale
 
-fun Float.formatClipZeros(format: String = "%.3f", locale: Locale = Locale.ENGLISH) =
+fun Float.formatClipZeros(format: String = "%.2f", locale: Locale = Locale.ENGLISH) =
     if (this % 1 == 0f) {
         this.toInt().toString()
     } else {
