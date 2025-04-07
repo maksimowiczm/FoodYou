@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -27,6 +28,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -36,16 +38,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.component.ToggleButton
-import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.diary.addfood.core.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.feature.diary.addfood.core.ui.MeasurementSummary
 import com.maksimowiczm.foodyou.feature.diary.addfood.core.ui.NutrientsRow
@@ -66,95 +64,54 @@ import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
-
-private const val SEARCH_ROUTE = "search"
-private const val BARCODE_ROUTE = "barcode_scanner"
 
 @Composable
-internal fun SearchFoodScreen(
-    mealId: Long,
-    date: LocalDate,
+fun SearchFoodScreen(
     onBack: () -> Unit,
     onProductAdd: () -> Unit,
     onOpenFoodFactsSettings: () -> Unit,
     onFoodClick: (FoodId) -> Unit,
-    modifier: Modifier = Modifier
+    onBarcodeScanner: () -> Unit,
+    viewModel: SearchFoodViewModel,
+    modifier: Modifier = Modifier,
+    state: SearchFoodScreenState = rememberSearchFoodScreenState()
 ) {
-    val navController = rememberNavController()
-
-    val state = rememberSearchFoodScreenState()
-    val viewModel = koinViewModel<SearchFoodViewModel>(
-        parameters = { parametersOf(mealId, date) }
-    )
-
     val pages = viewModel.pages.collectAsLazyPagingItems()
-
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
 
-    NavHost(
-        navController = navController,
-        startDestination = SEARCH_ROUTE,
-        modifier = modifier
-    ) {
-        crossfadeComposable(SEARCH_ROUTE) {
-            SearchFoodScreen(
-                pages = pages,
-                recentQueries = recentQueries,
-                onBack = onBack,
-                onSearch = remember(viewModel) { viewModel::onSearch },
-                onSearchClear = remember(viewModel) { { viewModel.onSearch(null) } },
-                onBarcodeScanner = {
-                    navController.navigate(BARCODE_ROUTE) {
-                        launchSingleTop = true
-                    }
-                },
-                onProductAdd = onProductAdd,
-                onOpenFoodFactsSettings = onOpenFoodFactsSettings,
-                onFoodClick = onFoodClick,
-                onFoodToggle = remember(viewModel) {
-                    { state, food ->
-                        when (state) {
-                            true -> viewModel.onQuickAdd(food)
-                            false -> viewModel.onQuickRemove(food)
-                        }
-                    }
-                },
-                state = state
-            )
-        }
-        crossfadeComposable(BARCODE_ROUTE) {
-            CameraBarcodeScannerScreen(
-                onClose = {
-                    navController.navigate(SEARCH_ROUTE) {
-                        popUpTo(BARCODE_ROUTE) {
-                            inclusive = true
-                        }
-                        popUpTo(SEARCH_ROUTE) {
-                            inclusive = true
-                        }
-                    }
-                },
-                onBarcodeScan = {
-                    state.textFieldState.setTextAndPlaceCursorAtEnd(it)
-                    viewModel.onSearch(it)
-
-                    navController.navigate(SEARCH_ROUTE) {
-                        popUpTo(BARCODE_ROUTE) {
-                            inclusive = true
-                        }
-                        popUpTo(SEARCH_ROUTE) {
-                            inclusive = true
-                        }
-                    }
-                }
-            )
+    LaunchedEffect(viewModel) {
+        viewModel.searchQuery.collectLatest {
+            when (it) {
+                null -> state.textFieldState.clearText()
+                else -> state.textFieldState.setTextAndPlaceCursorAtEnd(it)
+            }
         }
     }
+
+    SearchFoodScreen(
+        pages = pages,
+        recentQueries = recentQueries,
+        onBack = onBack,
+        onSearch = remember(viewModel) { viewModel::onSearch },
+        onSearchClear = remember(viewModel) { { viewModel.onSearch(null) } },
+        onBarcodeScanner = onBarcodeScanner,
+        onProductAdd = onProductAdd,
+        onOpenFoodFactsSettings = onOpenFoodFactsSettings,
+        onFoodClick = onFoodClick,
+        onFoodToggle = remember(viewModel) {
+            { state, food ->
+                when (state) {
+                    true -> viewModel.onQuickAdd(food)
+                    false -> viewModel.onQuickRemove(food)
+                }
+            }
+        },
+        modifier = modifier,
+        state = state
+    )
 }
 
 @OptIn(

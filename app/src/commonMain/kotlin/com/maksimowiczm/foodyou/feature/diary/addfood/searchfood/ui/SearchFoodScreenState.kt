@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 
 @OptIn(ExperimentalMaterial3Api::class)
-internal class SearchFoodScreenState(
+class SearchFoodScreenState(
     val textFieldState: TextFieldState,
     val searchBarState: SearchBarState,
     val lazyListState: LazyListState
@@ -20,7 +20,7 @@ internal class SearchFoodScreenState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun rememberSearchFoodScreenState(): SearchFoodScreenState {
+fun rememberSearchFoodScreenState(): SearchFoodScreenState {
     val textFieldState = rememberTextFieldState()
     val searchBarState = rememberSearchBarState(
         initialValue = SearchBarValue.Collapsed

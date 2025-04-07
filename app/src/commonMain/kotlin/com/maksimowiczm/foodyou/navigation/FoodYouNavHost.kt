@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
+import com.maksimowiczm.foodyou.feature.diary.addfood.AddFoodMeal
 import com.maksimowiczm.foodyou.feature.diary.addfood.AddFoodSearchFood
 import com.maksimowiczm.foodyou.feature.diary.diaryGraph
 import com.maksimowiczm.foodyou.feature.diary.mealssettings.MealsSettings
@@ -30,7 +31,14 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
                 }
             },
             onMealCardClick = { epochDay, mealId ->
-                // TODO
+                navController.navigate(
+                    AddFoodMeal(
+                        mealId = mealId,
+                        epochDay = epochDay
+                    )
+                ) {
+                    launchSingleTop = true
+                }
             },
             onMealCardAddClick = { epochDay, mealId ->
                 navController.navigate(
@@ -75,9 +83,6 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
             }
         )
         diaryGraph(
-            onAddFoodSearchBack = {
-                navController.popBackStack<AddFoodSearchFood>(inclusive = true)
-            },
             onMealsSettingsBack = {
                 navController.popBackStack<MealsSettings>(inclusive = true)
             },

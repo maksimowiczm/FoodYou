@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 
 @Immutable
-internal data class SearchFoodItem(
+data class SearchFoodItem(
     val food: Food,
     val measurement: Measurement,
     val measurementId: MeasurementId?,
@@ -46,7 +46,7 @@ internal data class SearchFoodItem(
         }
 }
 
-internal interface ObserveSearchFoodUseCase {
+fun interface ObserveSearchFoodUseCase {
     suspend operator fun invoke(
         query: String?,
         mealId: Long,

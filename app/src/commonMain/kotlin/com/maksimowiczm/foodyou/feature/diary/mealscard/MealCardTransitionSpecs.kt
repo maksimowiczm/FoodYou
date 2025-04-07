@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCardDefaults
 
-object MealHeaderTransitionKeys {
+object MealCardTransitionKeys {
     data class MealContainer(val mealId: Long, val epochDay: Int)
 
     data class MealTitle(val mealId: Long, val epochDay: Int)

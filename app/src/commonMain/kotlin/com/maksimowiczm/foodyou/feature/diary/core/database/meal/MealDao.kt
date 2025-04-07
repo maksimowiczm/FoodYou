@@ -14,6 +14,9 @@ abstract class MealDao {
     abstract fun observeMeals(): Flow<List<MealEntity>>
 
     @Query("SELECT * FROM MealEntity WHERE id = :id")
+    abstract fun observeMeal(id: Long): Flow<MealEntity?>
+
+    @Query("SELECT * FROM MealEntity WHERE id = :id")
     abstract suspend fun getMealById(id: Long): MealEntity?
 
     @Insert

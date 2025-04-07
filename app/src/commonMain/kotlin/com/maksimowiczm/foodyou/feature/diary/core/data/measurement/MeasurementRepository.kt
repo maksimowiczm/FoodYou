@@ -33,6 +33,8 @@ interface MeasurementRepository {
     )
 
     suspend fun removeMeasurement(measurementId: MeasurementId)
+
+    suspend fun restoreMeasurement(measurementId: MeasurementId)
 }
 
 internal class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementRepository {
@@ -97,6 +99,14 @@ internal class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementR
             is MeasurementId.Product -> {
                 val entity = measurementDao.getProductMeasurement(measurementId.id) ?: return
                 measurementDao.deleteProductMeasurement(entity.id)
+            }
+        }
+    }
+
+    override suspend fun restoreMeasurement(measurementId: MeasurementId) {
+        when (measurementId) {
+            is MeasurementId.Product -> {
+                measurementDao.restoreProductMeasurement(measurementId.id)
             }
         }
     }

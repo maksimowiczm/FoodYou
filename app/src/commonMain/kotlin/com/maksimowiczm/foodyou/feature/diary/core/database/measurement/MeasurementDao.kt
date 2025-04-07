@@ -31,6 +31,15 @@ abstract class MeasurementDao {
 
     @Query(
         """
+        UPDATE ProductMeasurementEntity
+        SET isDeleted = 0
+        WHERE id = :id
+        """
+    )
+    abstract suspend fun restoreProductMeasurement(id: Long)
+
+    @Query(
+        """
         SELECT
             p.id AS productId,
             p.name AS name,

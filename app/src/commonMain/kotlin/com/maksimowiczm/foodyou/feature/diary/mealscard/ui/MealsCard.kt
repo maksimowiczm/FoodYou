@@ -46,9 +46,9 @@ import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.feature.diary.core.ui.MealHeader
 import com.maksimowiczm.foodyou.feature.diary.core.ui.NutrientsLayout
+import com.maksimowiczm.foodyou.feature.diary.mealscard.MealCardTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.mealscard.MealCardTransitionSpecs
 import com.maksimowiczm.foodyou.feature.diary.mealscard.MealCardTransitionSpecs.overlayClipFromCardToScreen
-import com.maksimowiczm.foodyou.feature.diary.mealscard.MealHeaderTransitionKeys
 import com.maksimowiczm.foodyou.feature.diary.mealscard.domain.Meal
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
@@ -239,7 +239,7 @@ private fun SharedTransitionScope.MealCard(
         onClick = onMealClick,
         modifier = modifier.sharedBounds(
             sharedContentState = rememberSharedContentState(
-                key = MealHeaderTransitionKeys.MealContainer(
+                key = MealCardTransitionKeys.MealContainer(
                     mealId = meal.id,
                     epochDay = epochDay
                 )
@@ -256,9 +256,9 @@ private fun SharedTransitionScope.MealCard(
         val headline = @Composable {
             Text(
                 text = meal.name,
-                modifier = Modifier.sharedBounds(
+                modifier = Modifier.sharedElement(
                     sharedContentState = rememberSharedContentState(
-                        key = MealHeaderTransitionKeys.MealTitle(
+                        key = MealCardTransitionKeys.MealTitle(
                             mealId = meal.id,
                             epochDay = epochDay
                         )
@@ -270,9 +270,9 @@ private fun SharedTransitionScope.MealCard(
         val time = @Composable {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.sharedBounds(
+                modifier = Modifier.sharedElement(
                     sharedContentState = rememberSharedContentState(
-                        key = MealHeaderTransitionKeys.MealTime(
+                        key = MealCardTransitionKeys.MealTime(
                             mealId = meal.id,
                             epochDay = epochDay
                         )
@@ -378,9 +378,9 @@ private fun SharedTransitionScope.MealCard(
                             proteinsLabel = proteinsLabel,
                             carbohydratesLabel = carbohydratesLabel,
                             fatsLabel = fatsLabel,
-                            modifier = Modifier.sharedBounds(
+                            modifier = Modifier.sharedElement(
                                 sharedContentState = rememberSharedContentState(
-                                    key = MealHeaderTransitionKeys.MealNutrients(
+                                    key = MealCardTransitionKeys.MealNutrients(
                                         mealId = meal.id,
                                         epochDay = epochDay
                                     )

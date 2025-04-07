@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.feature.diary.core.data.search.SearchQuery
 import com.maksimowiczm.foodyou.feature.diary.core.data.search.SearchRepository
 import kotlinx.coroutines.flow.Flow
 
-internal fun interface ObserveRecentQueriesUseCase {
+fun interface ObserveRecentQueriesUseCase {
     operator fun invoke(limit: Int): Flow<List<SearchQuery>>
 }
 

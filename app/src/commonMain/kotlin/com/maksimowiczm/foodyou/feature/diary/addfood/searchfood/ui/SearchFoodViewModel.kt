@@ -11,11 +11,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
-internal class SearchFoodViewModel(
+class SearchFoodViewModel(
     private val mealId: Long,
     private val date: LocalDate,
     private val measurementRepository: MeasurementRepository,
@@ -23,6 +24,12 @@ internal class SearchFoodViewModel(
     observeSearchFoodUseCase: ObserveSearchFoodUseCase
 ) : ViewModel() {
     private val mutableSearchQuery = MutableSharedFlow<String?>(replay = 1).apply { tryEmit(null) }
+
+    val searchQuery = mutableSearchQuery.shareIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(30_000L),
+        replay = 1
+    )
 
     val recentQueries = observeRecentQueriesUseCase(20).stateIn(
         scope = viewModelScope,

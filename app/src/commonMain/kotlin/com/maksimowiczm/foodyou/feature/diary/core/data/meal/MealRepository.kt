@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime
 
 interface MealRepository {
+
+    fun observeMeal(id: Long): Flow<Meal?>
+
     fun observeMeals(): Flow<List<Meal>>
 
     suspend fun createMeal(name: String, from: LocalTime, to: LocalTime)
@@ -26,6 +29,18 @@ interface MealRepository {
 
 internal class MealRepositoryImpl(database: DiaryDatabase) : MealRepository {
     private val mealDao: MealDao = database.mealDao
+
+    override fun observeMeal(id: Long): Flow<Meal?> = mealDao.observeMeal(id).map { entity ->
+        entity?.let {
+            Meal(
+                id = it.id,
+                name = it.name,
+                from = LocalTime(it.fromHour, it.fromMinute),
+                to = LocalTime(it.toHour, it.toMinute),
+                rank = it.rank
+            )
+        }
+    }
 
     override fun observeMeals(): Flow<List<Meal>> = mealDao.observeMeals().map { list ->
         list.map { entity ->
