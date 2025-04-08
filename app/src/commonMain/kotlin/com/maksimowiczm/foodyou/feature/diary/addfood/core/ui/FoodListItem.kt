@@ -19,6 +19,8 @@ import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 
+// TODO
+//  Update skeleton to match the design
 @Composable
 fun FoodListItemSkeleton(
     shimmer: Shimmer,

@@ -83,6 +83,10 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
             }
         )
         diaryGraph(
+            onAddFoodBack = {
+                navController.popBackStack<AddFoodSearchFood>(inclusive = true)
+                navController.popBackStack<AddFoodMeal>(inclusive = true)
+            },
             onMealsSettingsBack = {
                 navController.popBackStack<MealsSettings>(inclusive = true)
             },

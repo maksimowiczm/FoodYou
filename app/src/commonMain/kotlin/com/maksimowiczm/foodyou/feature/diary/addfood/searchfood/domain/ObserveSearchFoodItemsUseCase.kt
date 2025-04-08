@@ -29,21 +29,8 @@ data class SearchFoodItem(
     val isSelected: Boolean
         get() = measurementId != null
 
-    /**
-     * Weight in grams. If weight is null then measurement is invalid. (e.g. 1 x package while
-     * product has no package weight)
-     */
     val weight: Float?
-        get() = when (measurement) {
-            is Measurement.Gram -> measurement.value
-            is Measurement.Package -> when (food) {
-                is Product -> food.packageWeight?.let { measurement.weight(food.packageWeight) }
-            }
-
-            is Measurement.Serving -> when (food) {
-                is Product -> food.servingWeight?.let { measurement.weight(food.servingWeight) }
-            }
-        }
+        get() = measurement.weight(food)
 }
 
 fun interface ObserveSearchFoodUseCase {
@@ -88,13 +75,7 @@ internal class ObserveSearchFoodUseCaseImpl(
         val ids = measurements.filter { it.food.id == food.id }
 
         return if (ids.isEmpty()) {
-            val measurement = measurementRepository.getSuggestion(food.id) ?: when (food) {
-                is Product -> when {
-                    food.servingWeight != null -> Measurement.Serving(1f)
-                    food.packageWeight != null -> Measurement.Package(1f)
-                    else -> Measurement.Gram(100f)
-                }
-            }
+            val measurement = measurementRepository.getSuggestion(food.id)
 
             listOf(
                 SearchFoodItem(

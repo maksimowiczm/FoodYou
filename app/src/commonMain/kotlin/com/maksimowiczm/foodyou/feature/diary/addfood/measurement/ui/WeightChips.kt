@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.compose
+package com.maksimowiczm.foodyou.feature.diary.addfood.measurement.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,12 +16,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.diary.data.model.WeightMeasurement
-import com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.model.Product
-import com.maksimowiczm.foodyou.feature.diary.ui.res.stringResource
+import com.maksimowiczm.foodyou.feature.diary.core.data.food.Food
+import com.maksimowiczm.foodyou.feature.diary.core.data.measurement.Measurement
+import com.maksimowiczm.foodyou.feature.diary.core.ui.stringResource
 
 @Composable
-fun WeightChips(
+internal fun WeightChips(
     state: WeightChipsState,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
@@ -35,20 +35,18 @@ fun WeightChips(
             FilterChip(
                 selected = i == state.selectedFilterIndex,
                 onClick = { state.selectedFilterIndex = i },
-                label = {
-                    Text(suggestion.stringResource())
-                }
+                label = { Text(suggestion.stringResource()) }
             )
         }
     }
 }
 
 @Composable
-fun rememberWeightChipsState(
-    product: Product,
-    extraFilter: WeightMeasurement? = null
+internal fun rememberWeightChipsState(
+    food: Food,
+    extraFilter: Measurement? = null
 ): WeightChipsState = rememberSaveable(
-    product,
+    food,
     extraFilter,
     saver = Saver(
         save = {
@@ -58,8 +56,8 @@ fun rememberWeightChipsState(
         },
         restore = {
             WeightChipsState(
-                packageSuggestion = product.packageSuggestion,
-                servingSuggestion = product.servingSuggestion,
+                packageSuggestion = food.packageWeight?.let { Measurement.Package(1f) },
+                servingSuggestion = food.servingWeight?.let { Measurement.Serving(1f) },
                 extraFilter = extraFilter,
                 initialSelectedFilterIndex = it[0] as Int
             )
@@ -67,34 +65,26 @@ fun rememberWeightChipsState(
     )
 ) {
     WeightChipsState(
-        packageSuggestion = product.packageSuggestion,
-        servingSuggestion = product.servingSuggestion,
+        packageSuggestion = food.packageWeight?.let { Measurement.Package(1f) },
+        servingSuggestion = food.servingWeight?.let { Measurement.Serving(1f) },
         extraFilter = extraFilter,
         initialSelectedFilterIndex = 0
     )
 }
 
 @Stable
-class WeightChipsState(
-    packageSuggestion: WeightMeasurement.Package?,
-    servingSuggestion: WeightMeasurement.Serving?,
-    extraFilter: WeightMeasurement?,
+internal class WeightChipsState(
+    packageSuggestion: Measurement.Package?,
+    servingSuggestion: Measurement.Serving?,
+    extraFilter: Measurement?,
     initialSelectedFilterIndex: Int
 ) {
-    val filterOptions: List<WeightMeasurement> = (
-        listOfNotNull(
-            extraFilter,
-            WeightMeasurement.WeightUnit(
-                weight = 100f
-            ),
-            packageSuggestion?.copy(
-                quantity = 1f
-            ),
-            servingSuggestion?.copy(
-                quantity = 1f
-            )
-        )
-        ).distinct()
+    val filterOptions: List<Measurement> = listOfNotNull(
+        extraFilter,
+        Measurement.Gram(100f),
+        packageSuggestion?.let { Measurement.Package(1f) },
+        servingSuggestion?.let { Measurement.Serving(1f) }
+    ).distinct()
 
     var selectedFilterIndex: Int by mutableIntStateOf(initialSelectedFilterIndex)
 

@@ -692,7 +692,7 @@ private val MealFood.measurementStringShort: String
             )
 
             is Measurement.Gram -> "${value.formatClipZeros()} " +
-                    stringResource(Res.string.unit_gram_short)
+                stringResource(Res.string.unit_gram_short)
         }
     }
 

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.component
+package com.maksimowiczm.foodyou.feature.diary.addfood.core.ui
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.defaultMinSize
@@ -8,9 +8,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicator
-import com.maksimowiczm.foodyou.ui.component.MultiColorProgressIndicatorItem
-import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.core.component.MultiColorProgressIndicator
+import com.maksimowiczm.foodyou.core.component.MultiColorProgressIndicatorItem
+import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import kotlin.math.max
 
 /**
@@ -58,6 +58,7 @@ fun CaloriesProgressIndicator(
 /**
  * Indicator without goal.
  */
+// Somehow padding reduces the height of the indicator. Not sure why.
 @Composable
 fun CaloriesProgressIndicator(
     proteins: Float,

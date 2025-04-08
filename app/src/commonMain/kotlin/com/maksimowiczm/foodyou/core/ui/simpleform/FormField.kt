@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.compose
+package com.maksimowiczm.foodyou.core.ui.simpleform
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -47,11 +47,6 @@ class FormField<T, E>(
             }
         }
     }
-}
-
-sealed interface ParseResult<T, E> {
-    data class Success<T, E>(val value: T) : ParseResult<T, E>
-    data class Failure<T, E>(val error: E) : ParseResult<T, E>
 }
 
 @Composable

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.addfoodproduct.compose
+package com.maksimowiczm.foodyou.feature.diary.addfood.measurement.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,7 +8,7 @@ import kotlin.collections.component2
 import kotlin.math.max
 
 @Composable
-fun WeightCaloriesLayout(
+internal fun WeightCaloriesLayout(
     weight: @Composable () -> Unit,
     calories: @Composable () -> Unit,
     modifier: Modifier = Modifier

@@ -17,6 +17,6 @@ data class Product(
     override val brand: String?,
     override val nutrients: Nutrients,
     val barcode: String?,
-    val packageWeight: PortionWeight.Package?,
-    val servingWeight: PortionWeight.Serving?
+    override val packageWeight: PortionWeight.Package?,
+    override val servingWeight: PortionWeight.Serving?
 ) : Food

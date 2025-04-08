@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.diary.addfood.meal.domain
 
 import com.maksimowiczm.foodyou.core.ext.sumOf
 import com.maksimowiczm.foodyou.feature.diary.core.data.food.Food
-import com.maksimowiczm.foodyou.feature.diary.core.data.food.Product
 import com.maksimowiczm.foodyou.feature.diary.core.data.meal.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.core.data.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.diary.core.data.measurement.MeasurementId
@@ -59,16 +58,7 @@ internal data class MealFood(
     val food: Food
 ) {
     val weight: Float?
-        get() = when (measurement) {
-            is Measurement.Gram -> measurement.value
-            is Measurement.Package -> when (food) {
-                is Product -> food.packageWeight?.let { measurement.weight(food.packageWeight) }
-            }
-
-            is Measurement.Serving -> when (food) {
-                is Product -> food.servingWeight?.let { measurement.weight(food.servingWeight) }
-            }
-        }
+        get() = measurement.weight(food)
 }
 
 internal fun interface ObserveMealUseCase {

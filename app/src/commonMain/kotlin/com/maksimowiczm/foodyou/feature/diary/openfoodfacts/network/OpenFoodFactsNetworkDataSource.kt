@@ -28,6 +28,8 @@ internal class OpenFoodFactsNetworkDataSource {
 
         install(HttpTimeout) {
             requestTimeoutMillis = TIMEOUT
+            connectTimeoutMillis = TIMEOUT
+            socketTimeoutMillis = TIMEOUT
         }
 
         install(ContentNegotiation) {
@@ -69,7 +71,7 @@ internal class OpenFoodFactsNetworkDataSource {
 
     private companion object {
         private const val TAG = "OpenFoodFactsNetworkDataSource"
-        private const val TIMEOUT = 10_000L
+        private const val TIMEOUT = 30_000L
     }
 }
 

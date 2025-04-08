@@ -6,16 +6,22 @@ import androidx.room.TypeConverter
 class MeasurementTypeConverter {
     @TypeConverter
     fun fromWeightMeasurementType(measurement: Measurement) = when (measurement) {
-        Measurement.Gram -> 0
-        Measurement.Package -> 1
-        Measurement.Serving -> 2
+        Measurement.Gram -> MeasurementSQLConstants.GRAM
+        Measurement.Package -> MeasurementSQLConstants.PACKAGE
+        Measurement.Serving -> MeasurementSQLConstants.SERVING
     }
 
     @TypeConverter
     fun toWeightMeasurementType(weightMeasurementType: Int) = when (weightMeasurementType) {
-        0 -> Measurement.Gram
-        1 -> Measurement.Package
-        2 -> Measurement.Serving
+        MeasurementSQLConstants.GRAM -> Measurement.Gram
+        MeasurementSQLConstants.PACKAGE -> Measurement.Package
+        MeasurementSQLConstants.SERVING -> Measurement.Serving
         else -> throw IllegalArgumentException("WeightMeasurementType not found")
     }
+}
+
+object MeasurementSQLConstants {
+    const val GRAM = 0
+    const val PACKAGE = 1
+    const val SERVING = 2
 }

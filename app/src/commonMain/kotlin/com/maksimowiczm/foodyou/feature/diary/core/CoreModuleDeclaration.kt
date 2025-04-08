@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.feature.diary.core
 
+import com.maksimowiczm.foodyou.feature.diary.core.data.food.FoodRepository
+import com.maksimowiczm.foodyou.feature.diary.core.data.food.FoodRepositoryImpl
 import com.maksimowiczm.foodyou.feature.diary.core.data.food.ProductRepository
 import com.maksimowiczm.foodyou.feature.diary.core.data.meal.MealRepository
 import com.maksimowiczm.foodyou.feature.diary.core.data.meal.MealRepositoryImpl
@@ -22,6 +24,8 @@ val coreModuleDeclaration: ModuleDeclaration = {
     }.bind<SearchRepository>()
 
     factoryOf(::MeasurementRepositoryImpl).bind<MeasurementRepository>()
+
+    factoryOf(::FoodRepositoryImpl).bind<FoodRepository>()
 
     // TODO real implementation
     factory {

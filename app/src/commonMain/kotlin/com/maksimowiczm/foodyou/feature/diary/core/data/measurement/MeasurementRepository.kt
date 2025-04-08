@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.diary.core.data.measurement
 
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.diary.core.data.food.FoodId
 import com.maksimowiczm.foodyou.feature.diary.core.data.food.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.feature.diary.core.data.food.Nutrients
@@ -19,11 +20,19 @@ import kotlinx.datetime.LocalDate
 interface MeasurementRepository {
     fun observeMeasurements(date: LocalDate, mealId: Long): Flow<List<FoodWithMeasurement>>
 
+    fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?>
+
     /**
      * Get suggestion for the measurement depending on previous measurements. If there are no
-     * previous measurements then return null.
+     * previous measurements then return default suggestion.
      */
-    suspend fun getSuggestion(foodId: FoodId): Measurement?
+    suspend fun getSuggestion(foodId: FoodId): Measurement
+
+    /**
+     * Get suggestions for the measurement depending on previous measurements. If there are no
+     * previous measurements then return default suggestions.
+     */
+    suspend fun getSuggestions(foodId: FoodId): List<Measurement>
 
     suspend fun addMeasurement(
         date: LocalDate,
@@ -31,6 +40,8 @@ interface MeasurementRepository {
         foodId: FoodId,
         measurement: Measurement
     )
+
+    suspend fun updateMeasurement(measurementId: MeasurementId, measurement: Measurement)
 
     suspend fun removeMeasurement(measurementId: MeasurementId)
 
@@ -50,11 +61,24 @@ internal class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementR
         list.map { it.toFoodWithMeasurement() }
     }
 
-    override suspend fun getSuggestion(foodId: FoodId): Measurement? = when (foodId) {
+    override fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?> =
+        when (measurementId) {
+            is MeasurementId.Product -> measurementDao.observeMeasurement(measurementId.id)
+        }.map { it?.toFoodWithMeasurement() }
+
+    override suspend fun getSuggestion(foodId: FoodId): Measurement = when (foodId) {
         is FoodId.Product -> {
             measurementDao
                 .getProductMeasurementSuggestion(foodId.id)
-                ?.toMeasurement()
+                .toMeasurement()
+        }
+    }
+
+    override suspend fun getSuggestions(foodId: FoodId): List<Measurement> = when (foodId) {
+        is FoodId.Product -> {
+            measurementDao
+                .getProductMeasurementSuggestions(foodId.id)
+                .map { it.toMeasurement() }
         }
     }
 
@@ -94,6 +118,38 @@ internal class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementR
         }
     }
 
+    override suspend fun updateMeasurement(measurementId: MeasurementId, measurement: Measurement) {
+        val type = when (measurement) {
+            is Measurement.Gram -> MeasurementEntity.Gram
+            is Measurement.Package -> MeasurementEntity.Package
+            is Measurement.Serving -> MeasurementEntity.Serving
+        }
+
+        val quantity = when (measurement) {
+            is Measurement.Gram -> measurement.value
+            is Measurement.Package -> measurement.quantity
+            is Measurement.Serving -> measurement.quantity
+        }
+
+        when (measurementId) {
+            is MeasurementId.Product -> {
+                val entity = measurementDao
+                    .getProductMeasurement(measurementId.id)
+                    ?.copy(
+                        measurement = type,
+                        quantity = quantity
+                    )
+
+                if (entity == null) {
+                    Logger.w(TAG) { "Attempted to update a measurement that does not exist" }
+                    return
+                }
+
+                measurementDao.updateProductMeasurement(entity)
+            }
+        }
+    }
+
     override suspend fun removeMeasurement(measurementId: MeasurementId) {
         when (measurementId) {
             is MeasurementId.Product -> {
@@ -109,6 +165,10 @@ internal class MeasurementRepositoryImpl(database: DiaryDatabase) : MeasurementR
                 measurementDao.restoreProductMeasurement(measurementId.id)
             }
         }
+    }
+
+    private companion object {
+        const val TAG = "MeasurementRepositoryImpl"
     }
 }
 

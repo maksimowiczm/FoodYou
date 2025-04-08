@@ -14,9 +14,14 @@ import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScree
 import com.maksimowiczm.foodyou.feature.diary.addfood.core.ui.LocalAddFoodSharedTransitionScope
 import com.maksimowiczm.foodyou.feature.diary.addfood.core.ui.SearchSharedTransition
 import com.maksimowiczm.foodyou.feature.diary.addfood.meal.MealScreen
+import com.maksimowiczm.foodyou.feature.diary.addfood.measurement.MeasureProduct
+import com.maksimowiczm.foodyou.feature.diary.addfood.measurement.UpdateProductMeasurement
+import com.maksimowiczm.foodyou.feature.diary.addfood.measurement.measurementGraph
 import com.maksimowiczm.foodyou.feature.diary.addfood.searchfood.ui.SearchFoodScreen
 import com.maksimowiczm.foodyou.feature.diary.addfood.searchfood.ui.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.diary.addfood.searchfood.ui.rememberSearchFoodScreenState
+import com.maksimowiczm.foodyou.feature.diary.core.data.food.FoodId
+import com.maksimowiczm.foodyou.feature.diary.core.data.measurement.MeasurementId
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -26,6 +31,7 @@ import org.koin.core.parameter.parametersOf
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun AddFoodApp(
+    outerOnBack: () -> Unit,
     outerAnimatedScope: AnimatedContentScope,
     onOpenFoodFactsSettings: () -> Unit,
     mealId: Long,
@@ -38,6 +44,7 @@ internal fun AddFoodApp(
             LocalAddFoodSharedTransitionScope provides this
         ) {
             AddFoodNavHost(
+                outerOnBack = outerOnBack,
                 outerAnimatedScope = outerAnimatedScope,
                 onOpenFoodFactsSettings = onOpenFoodFactsSettings,
                 mealId = mealId,
@@ -53,6 +60,7 @@ internal fun AddFoodApp(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun AddFoodNavHost(
+    outerOnBack: () -> Unit,
     outerAnimatedScope: AnimatedContentScope,
     onOpenFoodFactsSettings: () -> Unit,
     mealId: Long,
@@ -78,13 +86,26 @@ private fun AddFoodNavHost(
 
             with(sts) {
                 SearchFoodScreen(
-                    onBack = { navController.popBackStack<SearchFood>(inclusive = true) },
+                    onBack = {
+                        // If stack is empty call outer on back otherwise pop search
+                        if (navController.currentBackStack.value.size == 2) {
+                            outerOnBack()
+                        } else {
+                            navController.popBackStack<SearchFood>(inclusive = true)
+                        }
+                    },
                     onProductAdd = {
                         // TODO
                     },
                     onOpenFoodFactsSettings = onOpenFoodFactsSettings,
                     onFoodClick = {
-                        // TODO
+                        val route = when (it) {
+                            is FoodId.Product -> MeasureProduct(it.id)
+                        }
+
+                        navController.navigate(route) {
+                            launchSingleTop = true
+                        }
                     },
                     onBarcodeScanner = {
                         navController.navigate(SearchFoodBarcodeScanner) {
@@ -159,10 +180,34 @@ private fun AddFoodNavHost(
                     }
                 },
                 onEditEntry = {
-                    // TODO
+                    when (it) {
+                        is MeasurementId.Product ->
+                            navController.navigate(UpdateProductMeasurement(it.id)) {
+                                launchSingleTop = true
+                            }
+                    }
                 }
             )
         }
+        measurementGraph(
+            date = date,
+            mealId = mealId,
+            onCreateProductMeasurementBack = {
+                navController.popBackStack<MeasureProduct>(inclusive = true)
+            },
+            onCreateProductMeasurement = {
+                navController.popBackStack<MeasureProduct>(inclusive = true)
+            },
+            onEditFood = {
+                // TODO
+            },
+            onUpdateProductMeasurement = {
+                navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
+            },
+            onUpdateProductMeasurementBack = {
+                navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
+            }
+        )
     }
 }
 

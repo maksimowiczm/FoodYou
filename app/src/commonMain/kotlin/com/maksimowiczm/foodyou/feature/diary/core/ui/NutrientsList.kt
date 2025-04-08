@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.component
+package com.maksimowiczm.foodyou.feature.diary.core.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,16 +7,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.ext.sumOf
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryMeasuredProduct
-import com.maksimowiczm.foodyou.feature.diary.data.model.Nutrient
-import com.maksimowiczm.foodyou.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.feature.diary.core.data.food.NutrientValue
+import com.maksimowiczm.foodyou.feature.diary.core.data.food.Nutrients
 import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.not_available_short
 import foodyou.app.generated.resources.nutriment_carbohydrates
 import foodyou.app.generated.resources.nutriment_fats
 import foodyou.app.generated.resources.nutriment_fiber
@@ -32,9 +33,11 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NutrientsList(
-    products: List<DiaryMeasuredProduct>,
-    incompleteValue: (Float) -> (@Composable () -> Unit),
-    modifier: Modifier = Modifier
+    nutrients: Nutrients,
+    modifier: Modifier = Modifier,
+    incompleteValue: (
+        NutrientValue.Incomplete
+    ) -> (@Composable () -> Unit) = NutrientsListDefaults::incompleteValue
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
@@ -48,7 +51,7 @@ fun NutrientsList(
                 )
             },
             value = {
-                val value = products.sumOf { it.calories }.formatClipZeros()
+                val value = nutrients.calories.value.formatClipZeros()
                 val kcal = stringResource(Res.string.unit_kcal)
                 Text(text = "$value $kcal")
             },
@@ -65,7 +68,7 @@ fun NutrientsList(
                 )
             },
             value = {
-                val value = products.sumOf { it.proteins }.formatClipZeros()
+                val value = nutrients.proteins.value.formatClipZeros()
                 val g = stringResource(Res.string.unit_gram_short)
                 Text(text = "$value $g")
             },
@@ -82,7 +85,7 @@ fun NutrientsList(
                 )
             },
             value = {
-                val value = products.sumOf { it.carbohydrates }.formatClipZeros()
+                val value = nutrients.carbohydrates.value.formatClipZeros()
                 val g = stringResource(Res.string.unit_gram_short)
                 Text(text = "$value $g")
             },
@@ -98,11 +101,11 @@ fun NutrientsList(
                 )
             },
             value = {
-                val summary = products.nutrient(Nutrient.Sugars)
+                val summary = nutrients.sugars
 
                 when (summary) {
-                    is NutrientSummary.Incomplete -> incompleteValue(summary.value)()
-                    is NutrientSummary.Complete -> {
+                    is NutrientValue.Incomplete -> incompleteValue(summary)()
+                    is NutrientValue.Complete -> {
                         val g = stringResource(Res.string.unit_gram_short)
                         val value = summary.value.formatClipZeros()
                         Text("$value $g")
@@ -122,7 +125,7 @@ fun NutrientsList(
                 )
             },
             value = {
-                val value = products.sumOf { it.fats }.formatClipZeros()
+                val value = nutrients.fats.value.formatClipZeros()
                 val g = stringResource(Res.string.unit_gram_short)
                 Text(text = "$value $g")
             },
@@ -138,10 +141,10 @@ fun NutrientsList(
                 )
             },
             value = {
-                val summary = products.nutrient(Nutrient.SaturatedFats)
+                val summary = nutrients.saturatedFats
                 when (summary) {
-                    is NutrientSummary.Incomplete -> incompleteValue(summary.value)()
-                    is NutrientSummary.Complete -> {
+                    is NutrientValue.Incomplete -> incompleteValue(summary)()
+                    is NutrientValue.Complete -> {
                         val g = stringResource(Res.string.unit_gram_short)
                         val value = summary.value.formatClipZeros()
                         Text("$value $g")
@@ -160,10 +163,10 @@ fun NutrientsList(
                 )
             },
             value = {
-                val summary = products.nutrient(Nutrient.Salt)
+                val summary = nutrients.salt
                 when (summary) {
-                    is NutrientSummary.Incomplete -> incompleteValue(summary.value)()
-                    is NutrientSummary.Complete -> {
+                    is NutrientValue.Incomplete -> incompleteValue(summary)()
+                    is NutrientValue.Complete -> {
                         val g = stringResource(Res.string.unit_gram_short)
                         val value = summary.value.formatClipZeros()
                         Text("$value $g")
@@ -182,10 +185,10 @@ fun NutrientsList(
                 )
             },
             value = {
-                val summary = products.nutrient(Nutrient.Fiber)
+                val summary = nutrients.fiber
                 when (summary) {
-                    is NutrientSummary.Incomplete -> incompleteValue(summary.value)()
-                    is NutrientSummary.Complete -> {
+                    is NutrientValue.Incomplete -> incompleteValue(summary)()
+                    is NutrientValue.Complete -> {
                         val g = stringResource(Res.string.unit_gram_short)
                         val value = summary.value.formatClipZeros()
                         Text("$value $g")
@@ -204,10 +207,10 @@ fun NutrientsList(
                 )
             },
             value = {
-                val summary = products.nutrient(Nutrient.Sodium)
+                val summary = nutrients.sodium
                 when (summary) {
-                    is NutrientSummary.Incomplete -> incompleteValue(summary.value)()
-                    is NutrientSummary.Complete -> {
+                    is NutrientValue.Incomplete -> incompleteValue(summary)()
+                    is NutrientValue.Complete -> {
                         val g = stringResource(Res.string.unit_gram_short)
                         val value = summary.value.formatClipZeros()
                         Text("$value $g")
@@ -220,7 +223,7 @@ fun NutrientsList(
 }
 
 @Composable
-fun NutrientListItem(
+private fun NutrientListItem(
     label: @Composable () -> Unit,
     value: @Composable () -> Unit,
     modifier: Modifier = Modifier
@@ -238,32 +241,20 @@ fun NutrientListItem(
     }
 }
 
-private sealed interface NutrientSummary {
-    val value: Float
+object NutrientsListDefaults {
+    val incompletePrefix: String
+        @Composable get() = "*"
 
-    @JvmInline
-    value class Complete(override val value: Float) : NutrientSummary
+    fun incompleteValue(value: NutrientValue.Incomplete): @Composable () -> Unit = {
+        val value = value.value?.formatClipZeros()
 
-    @JvmInline
-    value class Incomplete(override val value: Float) : NutrientSummary
-}
+        val str = value?.let {
+            "$incompletePrefix $it ${stringResource(Res.string.unit_gram_short)}"
+        } ?: stringResource(Res.string.not_available_short)
 
-private fun List<DiaryMeasuredProduct>.nutrient(nutrient: Nutrient): NutrientSummary {
-    var isComplete = true
-
-    val value = sumOf {
-        it.product.nutrients
-            .get(nutrient, it.weight)
-            .also {
-                if (it == null) {
-                    isComplete = false
-                }
-            } ?: 0f
-    }
-
-    return if (isComplete) {
-        NutrientSummary.Complete(value)
-    } else {
-        NutrientSummary.Incomplete(value)
+        Text(
+            text = str,
+            color = MaterialTheme.colorScheme.outline
+        )
     }
 }

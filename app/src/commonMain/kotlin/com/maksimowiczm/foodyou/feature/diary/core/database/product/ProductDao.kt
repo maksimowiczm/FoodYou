@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class ProductDao {
@@ -54,4 +55,21 @@ abstract class ProductDao {
 
         upsertProducts(productsWithIds)
     }
+
+    @Query(
+        """
+        SELECT *
+        FROM productentity 
+        WHERE id = :id
+        """
+    )
+    abstract fun observeProduct(id: Long): Flow<ProductEntity?>
+
+    @Query(
+        """
+        DELETE FROM productentity  
+        WHERE id = :id
+        """
+    )
+    abstract suspend fun deleteProduct(id: Long)
 }

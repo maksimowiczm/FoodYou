@@ -31,4 +31,28 @@ data class Nutrients(
         sodium = this.sodium + other.sodium,
         fiber = this.fiber + other.fiber
     )
+
+    operator fun times(multiplier: Float): Nutrients = Nutrients(
+        calories = this.calories * multiplier,
+        proteins = this.proteins * multiplier,
+        carbohydrates = this.carbohydrates * multiplier,
+        sugars = this.sugars * multiplier,
+        fats = this.fats * multiplier,
+        saturatedFats = this.saturatedFats * multiplier,
+        salt = this.salt * multiplier,
+        sodium = this.sodium * multiplier,
+        fiber = this.fiber * multiplier
+    )
+
+    operator fun div(divisor: Float): Nutrients = Nutrients(
+        calories = this.calories / divisor,
+        proteins = this.proteins / divisor,
+        carbohydrates = this.carbohydrates / divisor,
+        sugars = this.sugars / divisor,
+        fats = this.fats / divisor,
+        saturatedFats = this.saturatedFats / divisor,
+        salt = this.salt / divisor,
+        sodium = this.sodium / divisor,
+        fiber = this.fiber / divisor
+    )
 }
