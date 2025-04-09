@@ -17,7 +17,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
-import com.maksimowiczm.foodyou.feature.diary.mealscard.MealsCard
+import com.maksimowiczm.foodyou.feature.meal.MealsCard
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

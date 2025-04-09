@@ -2,9 +2,12 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.core.coreModule
 import com.maksimowiczm.foodyou.feature.about.aboutModule
+import com.maksimowiczm.foodyou.feature.addfood.addFoodModule
 import com.maksimowiczm.foodyou.feature.calendar.calendarModule
-import com.maksimowiczm.foodyou.feature.diary.diaryModule
 import com.maksimowiczm.foodyou.feature.language.languageModule
+import com.maksimowiczm.foodyou.feature.meal.mealModule
+import com.maksimowiczm.foodyou.feature.measurement.measurementModule
+import com.maksimowiczm.foodyou.feature.openfoodfacts.openFoodFactsSettingsModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
@@ -12,15 +15,18 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     config?.invoke(this)
 
     modules(
-        dataStoreModule,
+        coreModule,
         databaseModule,
-        coreModule
+        dataStoreModule
     )
 
     modules(
         aboutModule,
+        addFoodModule,
         calendarModule,
         languageModule,
-        diaryModule
+        mealModule,
+        measurementModule,
+        openFoodFactsSettingsModule
     )
 }

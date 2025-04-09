@@ -6,13 +6,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
-import com.maksimowiczm.foodyou.feature.diary.addfood.AddFoodMeal
-import com.maksimowiczm.foodyou.feature.diary.addfood.AddFoodSearchFood
-import com.maksimowiczm.foodyou.feature.diary.diaryGraph
-import com.maksimowiczm.foodyou.feature.diary.mealssettings.MealsSettings
-import com.maksimowiczm.foodyou.feature.diary.openfoodfacts.OpenFoodFactsSettings
+import com.maksimowiczm.foodyou.feature.addfood.AddFoodMeal
+import com.maksimowiczm.foodyou.feature.addfood.AddFoodSearchFood
+import com.maksimowiczm.foodyou.feature.addfood.addFoodGraph
 import com.maksimowiczm.foodyou.feature.language.Language
 import com.maksimowiczm.foodyou.feature.language.languageGraph
+import com.maksimowiczm.foodyou.feature.meal.MealsSettings
+import com.maksimowiczm.foodyou.feature.meal.mealGraph
+import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsSettings
+import com.maksimowiczm.foodyou.feature.openfoodfacts.openFoodFactsGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.Settings
@@ -77,24 +79,28 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
             }
         )
         aboutGraph()
-        languageGraph(
+        addFoodGraph(
             onBack = {
-                navController.popBackStack<Language>(inclusive = true)
-            }
-        )
-        diaryGraph(
-            onAddFoodBack = {
                 navController.popBackStack<AddFoodSearchFood>(inclusive = true)
                 navController.popBackStack<AddFoodMeal>(inclusive = true)
-            },
-            onMealsSettingsBack = {
-                navController.popBackStack<MealsSettings>(inclusive = true)
             },
             onOpenFoodFactsSettings = {
                 navController.navigate(OpenFoodFactsSettings) {
                     launchSingleTop = true
                 }
-            },
+            }
+        )
+        languageGraph(
+            onBack = {
+                navController.popBackStack<Language>(inclusive = true)
+            }
+        )
+        mealGraph(
+            onMealsSettingsBack = {
+                navController.popBackStack<MealsSettings>(inclusive = true)
+            }
+        )
+        openFoodFactsGraph(
             onOpenFoodFactsSettingsBack = {
                 navController.popBackStack<OpenFoodFactsSettings>(inclusive = true)
             }

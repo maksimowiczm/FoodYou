@@ -123,7 +123,7 @@
     <string name="action_use_time_based_ordering">Use time-based ordering</string>
     <string name="action_include_all_day_meals">Include all-day meals</string>
     <string name="action_delete_unused_products">Delete unused products</string>
-    <string name="action_details" description="Show details">Details</string>
+    <string name="action_error_details" description="Show error details">Details</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>

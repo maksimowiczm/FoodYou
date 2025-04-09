@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.ui.settings
 
 import androidx.navigation.NavGraphBuilder
-import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,7 +14,7 @@ fun NavGraphBuilder.settingsGraph(
     onAbout: () -> Unit,
     onLanguage: () -> Unit
 ) {
-    forwardBackwardComposable<Settings> {
+    crossfadeComposable<Settings> {
         SettingsScreen(
             onBack = onBack,
             onOpenFoodFactsSettings = onOpenFoodFactsSettings,

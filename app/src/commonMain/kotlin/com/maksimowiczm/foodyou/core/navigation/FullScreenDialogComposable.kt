@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -99,7 +100,12 @@ object FullScreenDialogComposableDefaults {
     val exitTransition = {
         slideOutVertically(
             animationSpec = tween(
-                easing = FastOutLinearInEasing
+                easing = CubicBezierEasing(
+                    a = .4f,
+                    b = 1f,
+                    c = .6f,
+                    d = 0f
+                )
             ),
             targetOffsetY = { it }
         ) + scaleOut(
