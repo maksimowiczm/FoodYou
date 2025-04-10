@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">FoodYou</string>
+    <string name="app_name" translatable="false">Food You</string>
 
     <string name="en_dash" translatable="false">–</string>
     <string name="em_dash" translatable="false">—</string>
@@ -7,7 +7,6 @@
 
     <string name="headline_create_product">Create product</string>
     <string name="headline_settings">Settings</string>
-    <string name="headline_diary">Diary</string>
     <string name="headline_calories_goal">Calorie goal</string>
     <string name="headline_daily_goals">Daily goals</string>
     <string name="headline_product_serving_and_packaging">Serving and packaging</string>
@@ -40,18 +39,15 @@
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
 
-    <string name="in_x_times_y">In %1$s x %2$s</string>
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
     <string name="weight">Weight</string>
     <string name="unit_calories">Calories</string>
     <string name="unit_kcal">kcal</string>
     <string name="unit_gram_short" translatable="false">g</string>
-    <string name="in_x_weight_unit">In %1$s %2$s</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
         <item quantity="other">grams</item>
     </plurals>
-    <string name="unit_milliliter_short" translatable="false">ml</string>
     <plurals name="unit_milliliter">
         <item quantity="one">milliliter</item>
         <item quantity="other">milliliters</item>
@@ -63,7 +59,6 @@
     <string name="product_serving">Serving</string>
     <string name="product_name">Name</string>
     <string name="product_brand">Brand</string>
-    <string name="product_weight_unit">Weight unit</string>
     <string name="product_barcode">Barcode</string>
 
     <string name="nutriment_proteins">Proteins</string>
@@ -85,7 +80,6 @@
     <string name="action_go_back">Go back</string>
     <string name="action_retry">Retry</string>
     <string name="action_tap_to_allow_access">Tap to allow access</string>
-    <string name="action_create_new_product">Create new product</string>
     <string name="action_create">Create</string>
     <string name="action_clear">Clear</string>
     <string name="action_cancel">Cancel</string>
@@ -150,7 +144,6 @@
     <string name="question_discard_changes">Discard changes?</string>
 
     <string name="error_this_field_is_required">This field is required</string>
-    <string name="error_this_field_cannot_be_empty">This field cannot be empty</string>
     <string name="error_invalid_number">Invalid number</string>
     <string name="error_value_cannot_be_negative">Value cannot be negative</string>
     <string name="error_value_must_be_positive">Value must be positive</string>

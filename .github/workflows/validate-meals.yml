@@ -1,0 +1,31 @@
+name: Validate Meals XML
+
+on:
+  push:
+    paths:
+      - 'app/src/androidTest/res/meals-schema.xsd'
+      - 'app/src/androidTest/res/test-meals.bash'
+      - 'app/src/androidMain/res/xml*/meals.xml'
+      - '.github/workflows/validate-meals.yml'
+  pull_request:
+    paths:
+      - 'app/src/androidTest/res/meals-schema.xsd'
+      - 'app/src/androidTest/res/test-meals.bash'
+      - 'app/src/androidMain/res/xml*/meals.xml'
+      - '.github/workflows/validate-meals.yml'
+
+jobs:
+  validate-meals:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install xmllint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
+
+      - name: Validate meals.xml
+        run: |
+          ./app/src/androidTest/res/test-meals.bash
