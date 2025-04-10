@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.calories
+package com.maksimowiczm.foodyou.feature.goals.ui.calories
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,10 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.diary.data.model.WeightUnit
-import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
-import com.maksimowiczm.foodyou.ui.res.stringResourceShort
-import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
+import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -76,7 +74,7 @@ private fun FormFieldWithTextFieldValue<Float, GoalsFormInputError>.FloatTextFie
 }
 
 @Composable
-fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier) {
+internal fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
     Column(
@@ -99,7 +97,7 @@ fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier
             ) {
                 state.proteinsGrams.TextField(
                     modifier = Modifier.weight(1f),
-                    suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
+                    suffix = { Text(stringResource(Res.string.unit_gram_short)) }
                 )
                 state.proteinsPercentage.FloatTextField(
                     modifier = Modifier.weight(1f),
@@ -119,7 +117,7 @@ fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier
             ) {
                 state.carbohydratesGrams.TextField(
                     modifier = Modifier.weight(1f),
-                    suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
+                    suffix = { Text(stringResource(Res.string.unit_gram_short)) }
                 )
                 state.carbohydratesPercentage.FloatTextField(
                     modifier = Modifier.weight(1f),
@@ -139,7 +137,7 @@ fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier
             ) {
                 state.fatsGrams.TextField(
                     modifier = Modifier.weight(1f),
-                    suffix = { Text(WeightUnit.Gram.stringResourceShort()) }
+                    suffix = { Text(stringResource(Res.string.unit_gram_short)) }
                 )
                 state.fatsPercentage.FloatTextField(
                     modifier = Modifier.weight(1f),

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.calories
+package com.maksimowiczm.foodyou.feature.goals.ui.calories
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -7,14 +7,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
-import com.maksimowiczm.foodyou.feature.diary.data.NutrientsHelper
-import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
-import com.maksimowiczm.foodyou.ui.form.FormFieldWithTextFieldValue
-import com.maksimowiczm.foodyou.ui.form.between
-import com.maksimowiczm.foodyou.ui.form.floatParser
-import com.maksimowiczm.foodyou.ui.form.intParser
-import com.maksimowiczm.foodyou.ui.form.nonNegative
-import com.maksimowiczm.foodyou.ui.form.rememberFormFieldWithTextFieldValue
+import com.maksimowiczm.foodyou.core.model.DailyGoals
+import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
+import com.maksimowiczm.foodyou.core.ui.form.between
+import com.maksimowiczm.foodyou.core.ui.form.floatParser
+import com.maksimowiczm.foodyou.core.ui.form.intParser
+import com.maksimowiczm.foodyou.core.ui.form.nonNegative
+import com.maksimowiczm.foodyou.core.ui.form.rememberFormFieldWithTextFieldValue
+import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import foodyou.app.generated.resources.*
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState {
+internal fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState {
     val calories = rememberFormFieldWithTextFieldValue(
         initialValue = dailyGoals.calories,
         parser = intParser(
@@ -142,7 +142,7 @@ fun rememberCaloriesFoalFormState(dailyGoals: DailyGoals): CaloriesGoalFormState
     }
 }
 
-enum class GoalsFormInputError {
+internal enum class GoalsFormInputError {
     Required,
     InvalidNumber,
     MustBeInteger,
@@ -162,7 +162,7 @@ enum class GoalsFormInputError {
     }
 }
 
-enum class GoalsFormError {
+internal enum class GoalsFormError {
     PercentageMustSumUpTo100
     ;
 
@@ -172,7 +172,7 @@ enum class GoalsFormError {
     }
 }
 
-enum class Editing {
+internal enum class Editing {
     None,
     Calories,
     Percentage,
@@ -180,7 +180,7 @@ enum class Editing {
 }
 
 @Stable
-class CaloriesGoalFormState(
+internal class CaloriesGoalFormState(
     val calories: FormFieldWithTextFieldValue<Int, GoalsFormInputError>,
     val proteinsPercentage: FormFieldWithTextFieldValue<Float, GoalsFormInputError>,
     val proteinsGrams: FormFieldWithTextFieldValue<Int, GoalsFormInputError>,

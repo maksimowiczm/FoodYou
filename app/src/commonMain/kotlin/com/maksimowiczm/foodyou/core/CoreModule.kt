@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.core
 
 import com.maksimowiczm.foodyou.core.repository.FoodRepository
 import com.maksimowiczm.foodyou.core.repository.FoodRepositoryImpl
+import com.maksimowiczm.foodyou.core.repository.GoalsRepository
+import com.maksimowiczm.foodyou.core.repository.GoalsRepositoryImpl
 import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.repository.MeasurementRepositoryImpl
 import com.maksimowiczm.foodyou.core.repository.SearchRepository
@@ -29,6 +31,7 @@ val coreModule = module {
     }.bind<SearchRepository>()
 
     factoryOf(::MeasurementRepositoryImpl).bind<MeasurementRepository>()
+    factoryOf(::GoalsRepositoryImpl).bind<GoalsRepository>()
 
     // Util
     single { DateProviderImpl() }.bind<DateProvider>()

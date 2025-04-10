@@ -1,6 +1,6 @@
-package com.maksimowiczm.foodyou.feature.diary.data.model
+package com.maksimowiczm.foodyou.core.model
 
-import com.maksimowiczm.foodyou.feature.diary.data.NutrientsHelper
+import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 
 data class DailyGoals(
     val calories: Int,

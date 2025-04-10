@@ -11,6 +11,7 @@ fun NavGraphBuilder.settingsGraph(
     onBack: () -> Unit,
     onOpenFoodFactsSettings: () -> Unit,
     onMealsSettings: () -> Unit,
+    onGoalsSettings: () -> Unit,
     onAbout: () -> Unit,
     onLanguage: () -> Unit
 ) {
@@ -19,6 +20,7 @@ fun NavGraphBuilder.settingsGraph(
             onBack = onBack,
             onOpenFoodFactsSettings = onOpenFoodFactsSettings,
             onMealsSettings = onMealsSettings,
+            onGoalsSettings = onGoalsSettings,
             onAbout = onAbout,
             onLanguage = onLanguage
         )

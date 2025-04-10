@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.goalssettings.calories
+package com.maksimowiczm.foodyou.feature.goals.ui.calories
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,12 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.diary.data.model.DailyGoals
+import com.maksimowiczm.foodyou.core.model.DailyGoals
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun CaloriesGoal(goals: DailyGoals, onSave: (DailyGoals) -> Unit, modifier: Modifier = Modifier) {
+internal fun CaloriesGoal(
+    goals: DailyGoals,
+    onSave: (DailyGoals) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val state = rememberCaloriesFoalFormState(goals)
 
     Column(

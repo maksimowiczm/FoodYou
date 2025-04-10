@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.goalssettings
+package com.maksimowiczm.foodyou.feature.goals.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
@@ -13,14 +13,14 @@ import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun GoalsSettingsListItem(onGoalsClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun GoalsSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = {
             Text(
                 text = stringResource(Res.string.headline_daily_goals)
             )
         },
-        modifier = modifier.clickable(onClick = onGoalsClick),
+        modifier = modifier.clickable(onClick = onClick),
         leadingContent = {
             Icon(
                 imageVector = Icons.Outlined.Flag,

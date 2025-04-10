@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
+import com.maksimowiczm.foodyou.feature.goals.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.feature.meal.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsSettingsListItem
@@ -28,6 +29,7 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onOpenFoodFactsSettings: () -> Unit,
     onMealsSettings: () -> Unit,
+    onGoalsSettings: () -> Unit,
     onAbout: () -> Unit,
     onLanguage: () -> Unit,
     modifier: Modifier = Modifier
@@ -65,6 +67,11 @@ fun SettingsScreen(
             item {
                 MealsSettingsListItem(
                     onClick = onMealsSettings
+                )
+            }
+            item {
+                GoalsSettingsListItem(
+                    onClick = onGoalsSettings
                 )
             }
             item {

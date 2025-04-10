@@ -9,6 +9,8 @@ import com.maksimowiczm.foodyou.feature.about.aboutGraph
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodMeal
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodSearchFood
 import com.maksimowiczm.foodyou.feature.addfood.addFoodGraph
+import com.maksimowiczm.foodyou.feature.goals.GoalsSettings
+import com.maksimowiczm.foodyou.feature.goals.goalsGraph
 import com.maksimowiczm.foodyou.feature.language.Language
 import com.maksimowiczm.foodyou.feature.language.languageGraph
 import com.maksimowiczm.foodyou.feature.meal.MealsSettings
@@ -67,6 +69,11 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
                     launchSingleTop = true
                 }
             },
+            onGoalsSettings = {
+                navController.navigate(GoalsSettings) {
+                    launchSingleTop = true
+                }
+            },
             onAbout = {
                 navController.navigate(About) {
                     launchSingleTop = true
@@ -88,6 +95,11 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
                 navController.navigate(OpenFoodFactsSettings) {
                     launchSingleTop = true
                 }
+            }
+        )
+        goalsGraph(
+            onGoalsSettingsBack = {
+                navController.popBackStack<GoalsSettings>(inclusive = true)
             }
         )
         languageGraph(
