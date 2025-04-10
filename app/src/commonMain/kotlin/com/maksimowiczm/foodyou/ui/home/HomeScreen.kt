@@ -17,6 +17,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
+import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
 import com.maksimowiczm.foodyou.feature.meal.MealsCard
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -28,6 +29,7 @@ fun HomeScreen(
     onSettings: () -> Unit,
     onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
+    onCaloriesCardClick: (epochDay: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -69,6 +71,15 @@ fun HomeScreen(
                     homeState = homeState,
                     onMealClick = onMealCardClick,
                     onAddClick = onMealCardAddClick
+                )
+            }
+
+            item {
+                CaloriesCard(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    homeState = homeState,
+                    onClick = onCaloriesCardClick,
+                    modifier = Modifier.padding(8.dp)
                 )
             }
         }

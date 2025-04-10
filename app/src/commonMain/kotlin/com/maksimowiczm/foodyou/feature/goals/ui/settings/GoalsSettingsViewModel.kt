@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui
+package com.maksimowiczm.foodyou.feature.goals.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

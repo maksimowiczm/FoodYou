@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.caloriescard
+package com.maksimowiczm.foodyou.feature.goals.ui.card
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
@@ -9,28 +9,29 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.HomeState
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
-import com.maksimowiczm.foodyou.feature.diary.ui.CaloriesIndicatorTransitionKeys
-import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesIndicator
-import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesIndicatorLegend
-import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesIndicatorSkeleton
-import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientIndicatorLegendSkeleton
-import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
-import com.maksimowiczm.foodyou.ui.home.FoodYouHomeCard
+import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
+import com.maksimowiczm.foodyou.core.ui.home.HomeState
+import com.maksimowiczm.foodyou.feature.goals.model.DiaryDay
+import com.maksimowiczm.foodyou.feature.goals.ui.CaloriesIndicatorTransitionKeys
+import com.maksimowiczm.foodyou.feature.goals.ui.component.CaloriesIndicator
+import com.maksimowiczm.foodyou.feature.goals.ui.component.CaloriesIndicatorLegend
+import com.maksimowiczm.foodyou.feature.goals.ui.component.CaloriesIndicatorSkeleton
+import com.maksimowiczm.foodyou.feature.goals.ui.component.NutrientIndicatorLegendSkeleton
 import com.valentinilk.shimmer.Shimmer
 import kotlin.math.roundToInt
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun CaloriesCard(
+internal fun CaloriesCard(
     animatedVisibilityScope: AnimatedVisibilityScope,
     homeState: HomeState,
-    onClick: () -> Unit,
+    onClick: (epochDay: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CaloriesCardViewModel = koinViewModel()
 ) {
@@ -41,6 +42,10 @@ fun CaloriesCard(
 
     val homeSTS =
         LocalHomeSharedTransitionScope.current ?: error("No HomeSharedTransitionScope provided")
+
+    val onClick = remember(homeState, onClick) {
+        { onClick(diaryDay?.date?.toEpochDays() ?: homeState.selectedDate.toEpochDays()) }
+    }
 
     Crossfade(
         // Update only when null state changes
@@ -83,11 +88,11 @@ private fun SharedTransitionScope.CaloriesCard(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             CaloriesIndicator(
-                calories = diaryDay.totalCalories.roundToInt(),
+                calories = diaryDay.totalCalories,
                 caloriesGoal = diaryDay.dailyGoals.calories,
-                proteins = diaryDay.totalProteins.roundToInt(),
-                carbohydrates = diaryDay.totalCarbohydrates.roundToInt(),
-                fats = diaryDay.totalFats.roundToInt(),
+                proteins = diaryDay.totalProteins,
+                carbohydrates = diaryDay.totalCarbohydrates,
+                fats = diaryDay.totalFats,
                 modifier = Modifier.sharedElement(
                     sharedContentState = rememberSharedContentState(
                         key = CaloriesIndicatorTransitionKeys.CaloriesIndicator(
@@ -99,11 +104,11 @@ private fun SharedTransitionScope.CaloriesCard(
             )
 
             CaloriesIndicatorLegend(
-                proteins = diaryDay.totalProteins.roundToInt(),
+                proteins = diaryDay.totalProteins,
                 proteinsGoal = diaryDay.dailyGoals.proteinsAsGrams.roundToInt(),
-                carbohydrates = diaryDay.totalCarbohydrates.roundToInt(),
+                carbohydrates = diaryDay.totalCarbohydrates,
                 carbohydratesGoal = diaryDay.dailyGoals.carbohydratesAsGrams.roundToInt(),
-                fats = diaryDay.totalFats.roundToInt(),
+                fats = diaryDay.totalFats,
                 fatsGoal = diaryDay.dailyGoals.fatsAsGrams.roundToInt()
             )
         }

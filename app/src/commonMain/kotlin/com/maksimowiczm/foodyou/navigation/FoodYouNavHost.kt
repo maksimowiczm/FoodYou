@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.feature.about.aboutGraph
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodMeal
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodSearchFood
 import com.maksimowiczm.foodyou.feature.addfood.addFoodGraph
+import com.maksimowiczm.foodyou.feature.goals.GoalsScreen
 import com.maksimowiczm.foodyou.feature.goals.GoalsSettings
 import com.maksimowiczm.foodyou.feature.goals.goalsGraph
 import com.maksimowiczm.foodyou.feature.language.Language
@@ -50,6 +51,13 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
                         mealId = mealId,
                         epochDay = epochDay
                     )
+                ) {
+                    launchSingleTop = true
+                }
+            },
+            onCaloriesCardClick = { epochDay ->
+                navController.navigate(
+                    GoalsScreen(epochDay)
                 ) {
                     launchSingleTop = true
                 }

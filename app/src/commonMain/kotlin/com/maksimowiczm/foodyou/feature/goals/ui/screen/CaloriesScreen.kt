@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.caloriesscreen
+package com.maksimowiczm.foodyou.feature.goals.ui.screen
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -33,29 +33,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.diary.data.model.DiaryDay
-import com.maksimowiczm.foodyou.feature.diary.data.model.Product
-import com.maksimowiczm.foodyou.feature.diary.ui.CaloriesIndicatorTransitionKeys
-import com.maksimowiczm.foodyou.feature.diary.ui.component.CaloriesIndicator
-import com.maksimowiczm.foodyou.feature.diary.ui.component.MealsFilter
-import com.maksimowiczm.foodyou.feature.diary.ui.component.NutrientsList
-import com.maksimowiczm.foodyou.feature.diary.ui.component.rememberMealsFilterState
-import com.maksimowiczm.foodyou.ui.LocalHomeSharedTransitionScope
-import com.maksimowiczm.foodyou.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.core.model.FoodId
+import com.maksimowiczm.foodyou.core.model.sum
+import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
+import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.feature.goals.model.DiaryDay
+import com.maksimowiczm.foodyou.feature.goals.ui.CaloriesIndicatorTransitionKeys
+import com.maksimowiczm.foodyou.feature.goals.ui.component.CaloriesIndicator
+import com.maksimowiczm.foodyou.feature.goals.ui.component.MealsFilter
+import com.maksimowiczm.foodyou.feature.goals.ui.component.rememberMealsFilterState
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.description_incomplete_nutrition_data
 import foodyou.app.generated.resources.headline_incomplete_products
 import foodyou.app.generated.resources.unit_gram_short
-import kotlin.math.roundToInt
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun CaloriesScreen(
+internal fun CaloriesScreen(
     date: LocalDate,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    onProductClick: (Product) -> Unit,
+    onFoodClick: (FoodId) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CaloriesScreenViewModel = koinViewModel()
 ) {
@@ -66,7 +66,7 @@ fun CaloriesScreen(
             diaryDay = diaryDay!!,
             formatDate = viewModel::formatDate,
             animatedVisibilityScope = animatedVisibilityScope,
-            onProductClick = onProductClick,
+            onFoodClick = onFoodClick,
             modifier = modifier
         )
     } else {
@@ -81,18 +81,14 @@ fun CaloriesScreen(
 private fun CaloriesScreen(
     diaryDay: DiaryDay,
     formatDate: (LocalDate) -> String,
-    onProductClick: (Product) -> Unit,
+    onFoodClick: (FoodId) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
     val filterState = rememberMealsFilterState(diaryDay.meals.toSet())
     val meals by remember(filterState.selectedMeals) {
         derivedStateOf {
-            if (filterState.selectedMeals.isEmpty()) {
-                diaryDay.meals
-            } else {
-                diaryDay.meals.filter { it.id in filterState.selectedMeals }
-            }
+            diaryDay.meals.filter { it.id in filterState.selectedMeals }
         }
     }
 
@@ -131,11 +127,11 @@ private fun CaloriesScreen(
                     Spacer(Modifier.height(16.dp))
 
                     CaloriesIndicator(
-                        calories = diaryDay.totalCalories.roundToInt(),
+                        calories = diaryDay.totalCalories,
                         caloriesGoal = diaryDay.dailyGoals.calories,
-                        proteins = diaryDay.totalProteins.roundToInt(),
-                        carbohydrates = diaryDay.totalCarbohydrates.roundToInt(),
-                        fats = diaryDay.totalFats.roundToInt(),
+                        proteins = diaryDay.totalProteins,
+                        carbohydrates = diaryDay.totalCarbohydrates,
+                        fats = diaryDay.totalFats,
                         modifier = Modifier.sharedElement(
                             sharedContentState = rememberSharedContentState(
                                 key = CaloriesIndicatorTransitionKeys.CaloriesIndicator(
@@ -170,13 +166,15 @@ private fun CaloriesScreen(
 
                 item {
                     NutrientsList(
-                        products = diaryDay.meals
+                        nutrients = diaryDay.meals
                             .filter { it in meals }
-                            .flatMap { diaryDay.mealProductMap[it] ?: emptyList() },
+                            .flatMap { diaryDay.foods[it] ?: emptyList() }
+                            .map { it.nutrients }
+                            .sum(),
                         incompleteValue = {
                             {
                                 val g = stringResource(Res.string.unit_gram_short)
-                                val value = it.formatClipZeros()
+                                val value = it.value?.formatClipZeros() ?: "0"
                                 Text(
                                     text = "* $value $g",
                                     color = MaterialTheme.colorScheme.outline
@@ -188,12 +186,11 @@ private fun CaloriesScreen(
                 }
 
                 item {
-                    val products = diaryDay.meals
+                    val foods = diaryDay.meals
                         .filter { it in meals }
-                        .flatMap { diaryDay.mealProductMap[it] ?: emptyList() }
+                        .flatMap { diaryDay.foods[it] ?: emptyList() }
 
-                    val anyProductIncomplete = products
-                        .any { !it.product.nutrients.isComplete }
+                    val anyProductIncomplete = foods.any { !it.nutrients.isComplete }
 
                     // Display incomplete products
                     if (anyProductIncomplete) {
@@ -218,14 +215,13 @@ private fun CaloriesScreen(
                                 color = MaterialTheme.colorScheme.outline
                             )
 
-                            val products = products
-                                .map { it.product }
+                            val foods = foods
                                 .distinct()
                                 .filter { !it.nutrients.isComplete }
 
-                            products.forEach { product ->
+                            foods.forEach { food ->
                                 Text(
-                                    text = product.name,
+                                    text = food.name,
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.outline,
                                     textAlign = TextAlign.Companion.Center,
@@ -235,7 +231,7 @@ private fun CaloriesScreen(
                                         },
                                         indication = null,
                                         onClick = {
-                                            onProductClick(product)
+                                            onFoodClick(food.foodId)
                                         }
                                     )
                                 )

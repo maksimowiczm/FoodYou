@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "afd3ec7185e3b6d9bfdc8c1787aa5916",
+    "identityHash": "d602eda04ab241883a2638f35cee1608",
     "entities": [
       {
         "tableName": "MealEntity",
@@ -332,9 +332,15 @@
         }
       }
     ],
+    "views": [
+      {
+        "viewName": "DiaryDayView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT\n        diaryEpochDay AS epochDay,\n        pm.mealId AS mealId,\n        m.name AS mealName,\n        pm.productId AS productId,\n        p.name AS foodName,\n        p.calories AS calories,\n        p.proteins AS proteins,\n        p.carbohydrates AS carbohydrates,\n        p.sugars AS sugars,\n        p.fats AS fats,\n        p.saturatedFats AS saturatedFats,\n        p.salt AS salt,\n        p.sodium AS sodium,\n        p.fiber AS fiber,\n        p.packageWeight AS packageWeight,\n        p.servingWeight AS servingWeight,\n        pm.id AS measurementId,\n        pm.measurement AS measurement,\n        pm.quantity AS quantity\n    FROM ProductMeasurementEntity pm\n    JOIN ProductEntity p ON pm.productId = p.id\n    JOIN MealEntity m ON pm.mealId = m.id\n    WHERE pm.isDeleted = 0"
+      }
+    ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'afd3ec7185e3b6d9bfdc8c1787aa5916')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd602eda04ab241883a2638f35cee1608')"
     ]
   }
 }

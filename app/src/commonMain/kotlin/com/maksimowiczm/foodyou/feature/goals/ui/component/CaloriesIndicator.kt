@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.component
+package com.maksimowiczm.foodyou.feature.goals.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,11 +21,12 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.diary.data.NutrientsHelper
-import com.maksimowiczm.foodyou.feature.diary.ui.ValueStatus
-import com.maksimowiczm.foodyou.feature.diary.ui.asValueStatus
-import com.maksimowiczm.foodyou.ui.ext.toDp
-import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
+import com.maksimowiczm.foodyou.core.ui.ext.toDp
+import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.core.util.NutrientsHelper
+import com.maksimowiczm.foodyou.feature.goals.ui.ValueStatus
+import com.maksimowiczm.foodyou.feature.goals.ui.asValueStatus
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
@@ -34,7 +35,7 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun CaloriesIndicator(
+internal fun CaloriesIndicator(
     calories: Int,
     caloriesGoal: Int,
     proteins: Int,
@@ -75,7 +76,7 @@ fun CaloriesIndicator(
 }
 
 @Composable
-fun CaloriesIndicatorSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
+internal fun CaloriesIndicatorSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)

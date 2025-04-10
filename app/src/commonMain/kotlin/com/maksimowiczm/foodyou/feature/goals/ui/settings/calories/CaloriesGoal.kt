@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui.calories
+package com.maksimowiczm.foodyou.feature.goals.ui.settings.calories
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

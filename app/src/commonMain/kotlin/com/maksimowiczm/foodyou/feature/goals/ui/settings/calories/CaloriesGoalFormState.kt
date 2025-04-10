@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui.calories
+package com.maksimowiczm.foodyou.feature.goals.ui.settings.calories
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable

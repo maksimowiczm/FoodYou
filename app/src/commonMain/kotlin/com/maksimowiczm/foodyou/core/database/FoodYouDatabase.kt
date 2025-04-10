@@ -19,6 +19,8 @@ import com.maksimowiczm.foodyou.core.database.entity.OpenFoodFactsPagingKeyEntit
 import com.maksimowiczm.foodyou.core.database.entity.ProductEntity
 import com.maksimowiczm.foodyou.core.database.entity.ProductMeasurementEntity
 import com.maksimowiczm.foodyou.core.database.entity.SearchQueryEntity
+import com.maksimowiczm.foodyou.feature.goals.database.DiaryDayDao
+import com.maksimowiczm.foodyou.feature.goals.database.DiaryDayView
 
 @Database(
     entities = [
@@ -27,6 +29,9 @@ import com.maksimowiczm.foodyou.core.database.entity.SearchQueryEntity
         ProductMeasurementEntity::class,
         OpenFoodFactsPagingKeyEntity::class,
         SearchQueryEntity::class
+    ],
+    views = [
+        DiaryDayView::class // This will break if the view is moved to separate gradle module
     ],
     version = FoodYouDatabase.VERSION,
     exportSchema = true
@@ -41,6 +46,9 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val openFoodFactsDao: OpenFoodFactsDao
     abstract val productDao: ProductDao
     abstract val searchDao: SearchDao
+
+    // This will break if the view is moved to separate gradle module
+    abstract val diaryDayDao: DiaryDayDao
 
     companion object {
         const val VERSION = 3

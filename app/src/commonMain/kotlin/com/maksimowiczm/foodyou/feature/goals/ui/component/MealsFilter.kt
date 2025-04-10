@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.component
+package com.maksimowiczm.foodyou.feature.goals.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
@@ -22,11 +22,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.diary.data.model.Meal
-import com.maksimowiczm.foodyou.ui.modifier.animatePlacement
+import com.maksimowiczm.foodyou.core.ui.modifier.animatePlacement
+import com.maksimowiczm.foodyou.feature.goals.model.Meal
 
 @Composable
-fun MealsFilter(state: MealsFilterState, modifier: Modifier = Modifier) {
+internal fun MealsFilter(state: MealsFilterState, modifier: Modifier = Modifier) {
     FlowRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -64,7 +64,7 @@ fun MealsFilter(state: MealsFilterState, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun rememberMealsFilterState(meals: Set<Meal>): MealsFilterState = rememberSaveable(
+internal fun rememberMealsFilterState(meals: Set<Meal>): MealsFilterState = rememberSaveable(
     saver = Saver<MealsFilterState, List<Long>>(
         save = {
             it.selectedMeals.toList()
@@ -79,12 +79,12 @@ fun rememberMealsFilterState(meals: Set<Meal>): MealsFilterState = rememberSavea
 ) {
     MealsFilterState(
         meals = meals,
-        initialSelectedMeals = emptyList()
+        initialSelectedMeals = meals.map { it.id }
     )
 }
 
 @Stable
-class MealsFilterState(val meals: Set<Meal>, initialSelectedMeals: List<Long>) {
+internal class MealsFilterState(val meals: Set<Meal>, initialSelectedMeals: List<Long>) {
     var selectedMeals by mutableStateOf(initialSelectedMeals)
         private set
 
@@ -97,7 +97,7 @@ class MealsFilterState(val meals: Set<Meal>, initialSelectedMeals: List<Long>) {
     }
 }
 
-object MealsFilterTestTags {
+internal object MealsFilterTestTags {
     data class MealChip(val meal: Meal)
     data class MealChipIcon(val meal: Meal)
 }

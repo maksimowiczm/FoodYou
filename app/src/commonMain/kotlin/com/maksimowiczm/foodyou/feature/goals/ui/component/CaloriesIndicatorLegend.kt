@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.diary.ui.component
+package com.maksimowiczm.foodyou.feature.goals.ui.component
 
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.Canvas
@@ -24,21 +24,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.diary.ui.ValueStatus
-import com.maksimowiczm.foodyou.feature.diary.ui.asValueStatus
-import com.maksimowiczm.foodyou.ui.ext.toDp
-import com.maksimowiczm.foodyou.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.core.ui.ext.toDp
+import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.feature.goals.ui.ValueStatus
+import com.maksimowiczm.foodyou.feature.goals.ui.asValueStatus
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 /**
  * Legend for the calories indicator. Suffix "g" is added to the values.
  */
 @Composable
-fun CaloriesIndicatorLegend(
+internal fun CaloriesIndicatorLegend(
     proteins: Int,
     proteinsGoal: Int,
     carbohydrates: Int,
@@ -77,7 +76,7 @@ fun CaloriesIndicatorLegend(
 }
 
 @Composable
-fun NutrientIndicatorLegendSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
+internal fun NutrientIndicatorLegendSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
