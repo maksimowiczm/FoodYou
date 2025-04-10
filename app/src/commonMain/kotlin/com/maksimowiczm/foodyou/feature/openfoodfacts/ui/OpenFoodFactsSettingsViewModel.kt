@@ -2,10 +2,10 @@ package com.maksimowiczm.foodyou.feature.openfoodfacts.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.repository.ProductRepository
 import com.maksimowiczm.foodyou.core.util.Country
 import com.maksimowiczm.foodyou.core.util.SystemDetails
 import com.maksimowiczm.foodyou.feature.openfoodfacts.data.OpenFoodFactsSettingsRepository
+import com.maksimowiczm.foodyou.feature.openfoodfacts.data.ProductRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first

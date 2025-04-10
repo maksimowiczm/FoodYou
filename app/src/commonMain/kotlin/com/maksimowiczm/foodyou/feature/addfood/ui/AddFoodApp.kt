@@ -21,6 +21,9 @@ import com.maksimowiczm.foodyou.feature.meal.MealScreen
 import com.maksimowiczm.foodyou.feature.measurement.MeasureProduct
 import com.maksimowiczm.foodyou.feature.measurement.UpdateProductMeasurement
 import com.maksimowiczm.foodyou.feature.measurement.measurementGraph
+import com.maksimowiczm.foodyou.feature.product.CreateProduct
+import com.maksimowiczm.foodyou.feature.product.UpdateProduct
+import com.maksimowiczm.foodyou.feature.product.productGraph
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -94,7 +97,9 @@ private fun AddFoodNavHost(
                         }
                     },
                     onProductAdd = {
-                        // TODO
+                        navController.navigate(CreateProduct) {
+                            launchSingleTop = true
+                        }
                     },
                     onOpenFoodFactsSettings = onOpenFoodFactsSettings,
                     onFoodClick = {
@@ -198,13 +203,37 @@ private fun AddFoodNavHost(
                 navController.popBackStack<MeasureProduct>(inclusive = true)
             },
             onEditFood = {
-                // TODO
+                when (it) {
+                    is FoodId.Product -> navController.navigate(UpdateProduct(it.id)) {
+                        launchSingleTop = true
+                    }
+                }
             },
             onUpdateProductMeasurement = {
                 navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
             },
             onUpdateProductMeasurementBack = {
                 navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
+            }
+        )
+        productGraph(
+            onCreateProduct = {
+                navController.navigate(MeasureProduct(it)) {
+                    launchSingleTop = true
+
+                    popUpTo<SearchFood> {
+                        inclusive = false
+                    }
+                }
+            },
+            onCreateClose = {
+                navController.popBackStack<CreateProduct>(inclusive = true)
+            },
+            onUpdateProduct = {
+                navController.popBackStack<UpdateProduct>(inclusive = true)
+            },
+            onUpdateClose = {
+                navController.popBackStack<UpdateProduct>(inclusive = true)
             }
         )
     }

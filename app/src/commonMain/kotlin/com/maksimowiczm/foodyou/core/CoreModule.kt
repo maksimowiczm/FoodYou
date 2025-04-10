@@ -4,7 +4,6 @@ import com.maksimowiczm.foodyou.core.repository.FoodRepository
 import com.maksimowiczm.foodyou.core.repository.FoodRepositoryImpl
 import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.repository.MeasurementRepositoryImpl
-import com.maksimowiczm.foodyou.core.repository.ProductRepository
 import com.maksimowiczm.foodyou.core.repository.SearchRepository
 import com.maksimowiczm.foodyou.core.repository.SearchRepositoryImpl
 import com.maksimowiczm.foodyou.core.util.DateProvider
@@ -21,13 +20,6 @@ expect fun Module.dateFormatter()
 val coreModule = module {
     // Repository
     factoryOf(::FoodRepositoryImpl).bind<FoodRepository>()
-
-    // TODO real implementation
-    factory {
-        object : ProductRepository {
-            override fun deleteUnusedOpenFoodFactsProducts() = Unit
-        } as ProductRepository
-    }
 
     factory {
         SearchRepositoryImpl(

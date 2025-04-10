@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.core.database.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -14,6 +13,9 @@ abstract class ProductDao {
 
     @Upsert
     protected abstract suspend fun upsertProducts(products: List<ProductEntity>)
+
+    @Upsert
+    abstract suspend fun upsertProduct(product: ProductEntity): Long
 
     @Query(
         """
@@ -33,7 +35,6 @@ abstract class ProductDao {
     ): Int?
 
     @Transaction
-    @Insert
     open suspend fun insertOpenFoodFactsProducts(products: List<ProductEntity>) {
         val ids = products
             .filter { it.productSource == ProductSource.OpenFoodFacts }
@@ -74,4 +75,18 @@ abstract class ProductDao {
         """
     )
     abstract suspend fun deleteProduct(id: Long)
+
+    @Query(
+        """
+        DELETE FROM ProductEntity 
+        WHERE id IN (
+            SELECT p.id 
+            FROM ProductEntity p
+            LEFT JOIN ProductMeasurementEntity m ON m.productId = p.id 
+            WHERE m.productId IS NULL 
+            AND p.productSource = :source
+        )
+        """
+    )
+    abstract suspend fun deleteUnusedProducts(source: ProductSource)
 }

@@ -78,7 +78,10 @@ actual fun CameraBarcodeScannerScreen(
     if (requestInSettings && !permissionState.status.isGranted) {
         RedirectToSettingsAlertDialog(
             onDismissRequest = { requestInSettings = false },
-            onConfirm = { redirectToSettings(context) }
+            onConfirm = {
+                redirectToSettings(context)
+                requestInSettings = false
+            }
         )
     }
 
