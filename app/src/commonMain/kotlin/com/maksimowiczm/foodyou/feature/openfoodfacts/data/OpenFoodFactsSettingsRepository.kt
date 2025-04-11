@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.openfoodfacts.data
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.dao.OpenFoodFactsDao
+import com.maksimowiczm.foodyou.core.database.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.core.ext.get
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set

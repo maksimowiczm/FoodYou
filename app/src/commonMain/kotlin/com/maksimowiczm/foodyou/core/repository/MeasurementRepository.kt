@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.core.repository
 
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.dao.MeasurementDao
-import com.maksimowiczm.foodyou.core.database.entity.Measurement as MeasurementEntity
-import com.maksimowiczm.foodyou.core.database.entity.ProductMeasurementEntity
-import com.maksimowiczm.foodyou.core.database.virtualentity.FoodMeasurementVirtualEntity
-import com.maksimowiczm.foodyou.core.database.virtualentity.SuggestionVirtualEntity
+import com.maksimowiczm.foodyou.core.database.measurement.FoodMeasurementVirtualEntity
+import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
+import com.maksimowiczm.foodyou.core.database.measurement.MeasurementDao
+import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementEntity
+import com.maksimowiczm.foodyou.core.database.measurement.SuggestionVirtualEntity
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement

@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.feature.product.data
 
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.dao.ProductDao
-import com.maksimowiczm.foodyou.core.database.embedded.NutrientsEmbedded
-import com.maksimowiczm.foodyou.core.database.entity.ProductEntity
-import com.maksimowiczm.foodyou.core.database.entity.ProductSource
+import com.maksimowiczm.foodyou.core.database.core.NutrientsEmbedded
+import com.maksimowiczm.foodyou.core.database.product.ProductDao
+import com.maksimowiczm.foodyou.core.database.product.ProductEntity
+import com.maksimowiczm.foodyou.core.database.product.ProductSource
 import com.maksimowiczm.foodyou.core.mapper.ProductMapper
 import com.maksimowiczm.foodyou.core.model.Product
 import kotlinx.coroutines.flow.first

@@ -4,7 +4,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase.Companion.buildDatabase
-import com.maksimowiczm.foodyou.core.database.callback.InitializeMealsCallback
+import com.maksimowiczm.foodyou.core.database.meal.InitializeMealsCallback
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

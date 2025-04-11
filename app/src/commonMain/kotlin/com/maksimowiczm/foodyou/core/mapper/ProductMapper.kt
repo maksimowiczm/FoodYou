@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.core.mapper
 
-import com.maksimowiczm.foodyou.core.database.entity.ProductEntity
+import com.maksimowiczm.foodyou.core.database.product.ProductEntity
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.core.model.Nutrients

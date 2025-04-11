@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.openfoodfacts.data
 
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.entity.ProductSource
+import com.maksimowiczm.foodyou.core.database.product.ProductSource
 
 internal class ProductRepository(database: FoodYouDatabase) {
     private val productDao = database.productDao

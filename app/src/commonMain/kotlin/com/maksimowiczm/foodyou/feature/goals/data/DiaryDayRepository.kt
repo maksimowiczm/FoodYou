@@ -1,15 +1,15 @@
 package com.maksimowiczm.foodyou.feature.goals.data
 
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.entity.Measurement as MeasurementEntity
+import com.maksimowiczm.foodyou.core.database.goals.DiaryDayDao
+import com.maksimowiczm.foodyou.core.database.goals.DiaryDayView
+import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.core.model.Nutrients
 import com.maksimowiczm.foodyou.core.model.PortionWeight
 import com.maksimowiczm.foodyou.core.repository.GoalsRepository
-import com.maksimowiczm.foodyou.feature.goals.database.DiaryDayDao
-import com.maksimowiczm.foodyou.feature.goals.database.DiaryDayView
 import com.maksimowiczm.foodyou.feature.goals.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.goals.model.Food
 import com.maksimowiczm.foodyou.feature.goals.model.Meal

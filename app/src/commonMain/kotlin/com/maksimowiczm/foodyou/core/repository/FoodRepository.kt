@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.core.repository
 
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.dao.ProductDao
-import com.maksimowiczm.foodyou.core.database.entity.ProductEntity
+import com.maksimowiczm.foodyou.core.database.product.ProductDao
+import com.maksimowiczm.foodyou.core.database.product.ProductEntity
 import com.maksimowiczm.foodyou.core.model.Food
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.NutrientValue.Companion.toNutrientValue

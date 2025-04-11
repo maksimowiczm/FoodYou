@@ -7,9 +7,9 @@ import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
 import androidx.paging.map
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.dao.SearchDao
-import com.maksimowiczm.foodyou.core.database.entity.SearchQueryEntity
-import com.maksimowiczm.foodyou.core.database.virtualentity.FoodSearchVirtualEntity
+import com.maksimowiczm.foodyou.core.database.search.FoodSearchVirtualEntity
+import com.maksimowiczm.foodyou.core.database.search.SearchDao
+import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
 import com.maksimowiczm.foodyou.core.model.Food
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.NutrientValue.Companion.toNutrientValue

@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.feature.meal.data
 
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.dao.MealDao
-import com.maksimowiczm.foodyou.core.database.entity.MealEntity
+import com.maksimowiczm.foodyou.core.database.meal.MealDao
+import com.maksimowiczm.foodyou.core.database.meal.MealEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime
