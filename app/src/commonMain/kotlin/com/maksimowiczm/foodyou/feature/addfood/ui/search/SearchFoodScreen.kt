@@ -2,23 +2,31 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.LunchDining
+import androidx.compose.material.icons.filled.RamenDining
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
@@ -26,17 +34,26 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
@@ -46,6 +63,7 @@ import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.SearchQuery
+import com.maksimowiczm.foodyou.core.ui.component.FloatingActionButtonWithActions
 import com.maksimowiczm.foodyou.core.ui.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.core.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsRow
@@ -72,6 +90,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun SearchFoodScreen(
     onBack: () -> Unit,
     onProductAdd: () -> Unit,
+    onRecipeAdd: () -> Unit,
     onOpenFoodFactsSettings: () -> Unit,
     onFoodClick: (FoodId) -> Unit,
     onBarcodeScanner: () -> Unit,
@@ -101,6 +120,7 @@ internal fun SearchFoodScreen(
         onSearchClear = remember(viewModel) { { viewModel.onSearch(null) } },
         onBarcodeScanner = onBarcodeScanner,
         onProductAdd = onProductAdd,
+        onRecipeAdd = onRecipeAdd,
         onOpenFoodFactsSettings = onOpenFoodFactsSettings,
         onFoodClick = onFoodClick,
         onFoodToggle = remember(viewModel) {
@@ -130,6 +150,7 @@ private fun SearchFoodScreen(
     onSearchClear: () -> Unit,
     onBarcodeScanner: () -> Unit,
     onProductAdd: () -> Unit,
+    onRecipeAdd: () -> Unit,
     onOpenFoodFactsSettings: () -> Unit,
     onFoodClick: (FoodId) -> Unit,
     onFoodToggle: (Boolean, SearchFoodItem) -> Unit,
@@ -145,20 +166,96 @@ private fun SearchFoodScreen(
     val showEmptyLabel by remember(pages.loadState) {
         derivedStateOf {
             isEmpty &&
-                pages.loadState.append !is LoadState.Loading &&
-                pages.loadState.refresh !is LoadState.Loading
+                    pages.loadState.append !is LoadState.Loading &&
+                    pages.loadState.refresh !is LoadState.Loading
         }
     }
 
+    var fabExpanded by rememberSaveable { mutableStateOf(false) }
+    val scrimAlpha by animateFloatAsState(
+        targetValue = if (fabExpanded) .5f else 0f
+    )
+
     val fab = @Composable {
-        FloatingActionButton(
-            onClick = onProductAdd
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = stringResource(Res.string.action_add_food)
-            )
-        }
+        FloatingActionButtonWithActions(
+            expanded = fabExpanded,
+            actions = listOf(
+                {
+                    Surface(
+                        onClick = {
+                            onRecipeAdd()
+                            fabExpanded = false
+                        },
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.headline_recipe),
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                            Icon(
+                                imageVector = Icons.Default.RamenDining,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                },
+                {
+                    Surface(
+                        onClick = {
+                            fabExpanded = false
+                            onProductAdd()
+                        },
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.headline_product),
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                            Icon(
+                                imageVector = Icons.Default.LunchDining,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }
+            ),
+            fab = {
+                FloatingActionButton(
+                    onClick = { fabExpanded = !fabExpanded },
+                ) {
+                    val rotation by animateFloatAsState(
+                        targetValue = if (fabExpanded) 45f else 0f
+                    )
+
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = if (fabExpanded) {
+                            stringResource(Res.string.action_close)
+                        } else {
+                            stringResource(Res.string.action_create_new_product)
+                        },
+                        modifier = Modifier.graphicsLayer {
+                            rotationZ = rotation
+                        }
+                    )
+                }
+            },
+            modifier = Modifier.zIndex(2f)
+        )
     }
 
     val fullScreenContent = @Composable {
@@ -178,9 +275,28 @@ private fun SearchFoodScreen(
         )
     }
 
-    Box(
+    Scaffold(
+        floatingActionButton = fab,
         modifier = modifier
     ) {
+
+        if (fabExpanded) {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(1f)
+                    .graphicsLayer {
+                        alpha = scrimAlpha
+                    }
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            fabExpanded = false
+                        }
+                    }
+                    .background(MaterialTheme.colorScheme.scrim)
+            )
+        }
+
         SearchScreen(
             pages = pages,
             onSearch = onSearch,
@@ -191,7 +307,7 @@ private fun SearchFoodScreen(
             searchBarState = state.searchBarState,
             coroutineScope = coroutineScope,
             topBar = null,
-            floatingActionButton = fab,
+            floatingActionButton = {},
             fullScreenSearchBarContent = fullScreenContent,
             errorCard = {
                 val error by remember(pages.loadState) {
@@ -387,7 +503,7 @@ private val SearchFoodItem.measurementStringShort: String
             )
 
             is Measurement.Gram -> "${value.formatClipZeros()} " +
-                stringResource(Res.string.unit_gram_short)
+                    stringResource(Res.string.unit_gram_short)
         }
     }
 
@@ -399,9 +515,11 @@ private val SearchFoodItem.measurementString: String?
         return when (measurement) {
             is Measurement.Gram -> short
             is Measurement.Package,
-            is Measurement.Serving -> "$short ($weight ${stringResource(
-                Res.string.unit_gram_short
-            )})"
+            is Measurement.Serving -> "$short ($weight ${
+                stringResource(
+                    Res.string.unit_gram_short
+                )
+            })"
         }
     }
 

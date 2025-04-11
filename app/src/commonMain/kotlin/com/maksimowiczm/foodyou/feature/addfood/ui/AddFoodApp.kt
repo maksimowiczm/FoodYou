@@ -28,6 +28,8 @@ import com.maksimowiczm.foodyou.feature.meal.MealScreen
 import com.maksimowiczm.foodyou.feature.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.product.UpdateProduct
 import com.maksimowiczm.foodyou.feature.product.productGraph
+import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
+import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -102,6 +104,11 @@ private fun AddFoodNavHost(
                     },
                     onProductAdd = {
                         navController.navigate(CreateProduct) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onRecipeAdd = {
+                        navController.navigate(CreateRecipe) {
                             launchSingleTop = true
                         }
                     },
@@ -275,6 +282,7 @@ private fun AddFoodNavHost(
                 navController.popBackStack<UpdateProduct>(inclusive = true)
             }
         )
+        recipeGraph()
     }
 }
 
