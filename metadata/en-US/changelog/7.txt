@@ -1,0 +1,10 @@
+New Features
+- Open Food Facts global search
+- delete unused Open Food Facts products
+- remote database error details
+
+Changes
+- calorie summary won't display empty meals in the filter chips
+
+Fixed bugs
+- product form won't crash anymore when requesting next field on "fats" field if field "sugars" was hidden
