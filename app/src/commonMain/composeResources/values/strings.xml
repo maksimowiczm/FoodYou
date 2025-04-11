@@ -35,6 +35,8 @@
     <string name="headline_incomplete_products">Incomplete products</string>
     <string name="headline_filter_foods_by_country">Filter foods by country</string>
     <string name="headline_use_global_database">Use global database</string>
+    <string name="headline_product">Product</string>
+    <string name="headline_recipe">Recipe</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
