@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.ext.observe
+import com.maksimowiczm.foodyou.core.ext.set
 import com.maksimowiczm.foodyou.feature.security.data.SecurityPreferences
-import com.maksimowiczm.foodyou.infrastructure.datastore.observe
-import com.maksimowiczm.foodyou.infrastructure.datastore.set
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.runBlocking
@@ -23,7 +23,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun SecureScreenSettingsListItem(
+internal fun SecureScreenSettingsListItem(
     modifier: Modifier = Modifier,
     // It is just one boolean flag, lets not bother with a ViewModel for this
     dataStore: DataStore<Preferences> = koinInject()

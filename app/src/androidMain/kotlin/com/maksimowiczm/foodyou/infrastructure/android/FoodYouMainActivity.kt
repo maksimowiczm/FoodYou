@@ -8,18 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.lifecycleScope
-import com.maksimowiczm.foodyou.feature.FeatureManager
+import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.feature.security.data.SecurityPreferences
-import com.maksimowiczm.foodyou.infrastructure.datastore.observe
 import com.maksimowiczm.foodyou.ui.FoodYouApp
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 
 class FoodYouMainActivity : AppCompatActivity() {
-    val featureManager: FeatureManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +27,7 @@ class FoodYouMainActivity : AppCompatActivity() {
 
         enableEdgeToEdge()
         setContent {
-            FoodYouApp(
-                features = featureManager.get()
-            )
+            FoodYouApp()
         }
     }
 

@@ -1,12 +1,8 @@
 package com.maksimowiczm.foodyou.ui.home
 
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,7 +16,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.HomeFeature
+import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
+import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
+import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
+import com.maksimowiczm.foodyou.feature.meal.MealsCard
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -28,25 +27,25 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun HomeScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
-    homeFeatures: List<HomeFeature>,
-    onSettingsClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    state: HomeState = rememberHomeState()
+    onSettings: () -> Unit,
+    onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
+    onCaloriesCardClick: (epochDay: Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val homeState = rememberHomeState()
 
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = stringResource(Res.string.headline_diary)
-                    )
+                    Text(stringResource(Res.string.app_name))
                 },
                 actions = {
                     IconButton(
-                        onClick = onSettingsClick
+                        onClick = onSettings
                     ) {
                         Icon(
                             imageVector = Icons.Default.Settings,
@@ -57,35 +56,34 @@ fun HomeScreen(
                 scrollBehavior = scrollBehavior
             )
         }
-    ) { innerPadding ->
+    ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = innerPadding
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues
         ) {
-            itemsIndexed(
-                items = homeFeatures
-            ) { i, feature ->
-                feature.card(
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    modifier = if (feature.applyPadding) {
-                        Modifier.padding(
-                            horizontal = 8.dp
-                        )
-                    } else {
-                        Modifier
-                    },
-                    homeState = state
+            item {
+                CalendarCard(
+                    homeState = homeState,
+                    modifier = Modifier.padding(8.dp)
                 )
-
-                if (i < homeFeatures.size - 1) {
-                    Spacer(Modifier.height(8.dp))
-                }
             }
 
             item {
-                Spacer(Modifier.height(8.dp))
+                MealsCard(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    homeState = homeState,
+                    onMealClick = onMealCardClick,
+                    onAddClick = onMealCardAddClick
+                )
+            }
+
+            item {
+                CaloriesCard(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    homeState = homeState,
+                    onClick = onCaloriesCardClick,
+                    modifier = Modifier.padding(8.dp)
+                )
             }
         }
     }

@@ -66,7 +66,7 @@ kotlin {
 
     // Leave it here
     // Otherwise IDE won't mark android dependencies as error in common code
-    // jvm("desktop")
+    jvm("desktop")
 
     sourceSets {
         androidMain.dependencies {
@@ -83,6 +83,9 @@ kotlin {
 
             // Ktor
             implementation(libs.ktor.client.okhttp)
+
+            // Coil
+            implementation(libs.coil.network.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -94,27 +97,18 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
+            implementation(libs.navigation.compose)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
+            // Koin
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
-            implementation(libs.kotlin.result)
-
+            // Kotlinx
             implementation(libs.kotlinx.serialization.json)
-
-            implementation(libs.navigation.compose)
-
             implementation(libs.kotlinx.datetime)
-
-            // Shimmer
-            implementation(libs.compose.shimmer)
-
-            // Coil
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network.okhttp)
 
             // Datastore
             implementation(libs.androidx.datastore.preferences)
@@ -123,18 +117,28 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)
 
-            // Ktor
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.serialization.kotlinx.json)
-
+            // Paging
             implementation(libs.androidx.paging.runtime)
 
             // Logger
             implementation(libs.kermit)
 
+            // Shimmer
+            implementation(libs.compose.shimmer)
+
             // Reorderable list
             implementation(libs.reorderable)
+
+            // Ktor
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.serialization.kotlinx.json)
+
+            // Coil
+            implementation(libs.coil.compose)
+
+            // KMP utils
+            implementation(libs.kmputils.inputforms)
         }
 
         commonTest.dependencies {
@@ -188,11 +192,11 @@ room {
 }
 
 dependencies {
-    debugImplementation(compose.uiTooling)
     listOf("kspAndroid").forEach {
         add(it, libs.androidx.room.compiler)
     }
 
+    debugImplementation(compose.uiTooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     androidTestImplementation(libs.androidx.test.core.ktx)
 }

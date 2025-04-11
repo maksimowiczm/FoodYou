@@ -5,23 +5,21 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import com.maksimowiczm.foodyou.feature.Feature
+import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
 
 @Suppress("ktlint:compose:modifier-missing-check")
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun FoodYouApp(features: List<Feature>) {
+fun FoodYouApp() {
     FoodYouTheme {
         Surface {
             SharedTransitionLayout {
                 CompositionLocalProvider(
                     LocalHomeSharedTransitionScope provides this
                 ) {
-                    FoodYouNavHost(
-                        features = features
-                    )
+                    FoodYouNavHost()
                 }
             }
         }

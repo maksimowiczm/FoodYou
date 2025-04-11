@@ -1,13 +1,6 @@
 package com.maksimowiczm.foodyou.ui.settings
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,18 +13,28 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.maksimowiczm.foodyou.feature.SettingsFeature
+import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
+import com.maksimowiczm.foodyou.feature.goals.GoalsSettingsListItem
+import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
+import com.maksimowiczm.foodyou.feature.meal.MealsSettingsListItem
+import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsSettingsListItem
+import com.maksimowiczm.foodyou.feature.security.SecureScreenSettingsListItem
 import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    settingsFeatures: List<SettingsFeature>,
     onBack: () -> Unit,
+    onOpenFoodFactsSettings: () -> Unit,
+    onMealsSettings: () -> Unit,
+    onGoalsSettings: () -> Unit,
+    onAbout: () -> Unit,
+    onLanguage: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
         modifier = modifier,
@@ -48,22 +51,41 @@ fun SettingsScreen(
                         )
                     }
                 },
-                scrollBehavior = topAppBarScrollBehavior
+                scrollBehavior = scrollBehavior
             )
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
-                .consumeWindowInsets(paddingValues)
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues
         ) {
-            items(settingsFeatures) { feature ->
-                feature.SettingsListItem(Modifier)
-            }
-
             item {
-                Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
+                OpenFoodFactsSettingsListItem(
+                    onClick = onOpenFoodFactsSettings
+                )
+            }
+            item {
+                MealsSettingsListItem(
+                    onClick = onMealsSettings
+                )
+            }
+            item {
+                GoalsSettingsListItem(
+                    onClick = onGoalsSettings
+                )
+            }
+            item {
+                SecureScreenSettingsListItem()
+            }
+            item {
+                LanguageSettingsListItem(
+                    onClick = onLanguage
+                )
+            }
+            item {
+                AboutSettingsListItem(
+                    onClick = onAbout
+                )
             }
         }
     }

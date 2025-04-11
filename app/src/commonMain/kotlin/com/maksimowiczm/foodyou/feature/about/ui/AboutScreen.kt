@@ -4,15 +4,10 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
@@ -29,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -37,16 +33,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.BuildConfig
-import com.maksimowiczm.foodyou.ui.AboutIcons8
-import com.maksimowiczm.foodyou.ui.component.CardButton
-import com.maksimowiczm.foodyou.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.core.ui.component.CardButton
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AboutScreen(
+internal fun AboutScreen(
     modifier: Modifier = Modifier,
     viewModel: AboutSettingsViewModel = koinViewModel()
 ) {
@@ -61,16 +55,24 @@ fun AboutScreen(
     val icons8Link = stringResource(Res.string.link_icons8)
 
     AboutScreen(
-        onRequestFeature = {
-            uriHandler.openUri(requestFeatureLink)
+        onRequestFeature = remember(uriHandler, requestFeatureLink) {
+            { uriHandler.openUri(requestFeatureLink) }
         },
-        onBugReport = { uriHandler.openUri(bugReportLink) },
-        onReadme = { uriHandler.openUri(readmeLink) },
-        onIcons8 = { uriHandler.openUri(icons8Link) },
+        onBugReport = remember(uriHandler, bugReportLink) {
+            { uriHandler.openUri(bugReportLink) }
+        },
+        onReadme = remember(uriHandler, readmeLink) {
+            { uriHandler.openUri(readmeLink) }
+        },
+        onIcons8 = remember(uriHandler, icons8Link) {
+            { uriHandler.openUri(icons8Link) }
+        },
         githubStarClicked = githubStarClicked,
-        onGithubStarClick = {
-            viewModel.onGithubStarClick()
-            uriHandler.openUri(githubStarLink)
+        onGithubStarClick = remember(viewModel, uriHandler, githubStarLink) {
+            {
+                viewModel.onGithubStarClick()
+                uriHandler.openUri(githubStarLink)
+            }
         },
         modifier = modifier
     )
@@ -93,24 +95,20 @@ private fun AboutScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = {
-                    Text(stringResource(Res.string.headline_about))
-                },
+                title = { Text(stringResource(Res.string.headline_about)) },
                 scrollBehavior = scrollBehavior
             )
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .consumeWindowInsets(paddingValues)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues
         ) {
             item {
                 ShareYourThoughtsItem(
                     onRequestFeature = onRequestFeature,
-                    onBugReport = onBugReport
+                    onBugReport = onBugReport,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
 
@@ -121,7 +119,8 @@ private fun AboutScreen(
             item {
                 ShowSomeLoveItem(
                     githubStarClicked = githubStarClicked,
-                    onGithubStarClick = onGithubStarClick
+                    onGithubStarClick = onGithubStarClick,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
 
@@ -131,8 +130,8 @@ private fun AboutScreen(
 
             item {
                 Text(
-                    modifier = Modifier.padding(horizontal = 16.dp),
                     text = stringResource(Res.string.headline_miscellaneous),
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge
                 )
@@ -153,10 +152,6 @@ private fun AboutScreen(
             item {
                 VersionListItem()
             }
-
-            item {
-                Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
-            }
         }
     }
 }
@@ -167,28 +162,25 @@ private fun ShareYourThoughtsItem(
     onBugReport: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             text = stringResource(Res.string.headline_share_your_thoughts),
-            style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            style = MaterialTheme.typography.labelLarge
         )
 
         Text(
             text = stringResource(Res.string.description_share_your_thoughts),
-            textAlign = TextAlign.Justify,
-            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            textAlign = TextAlign.Justify,
+            style = MaterialTheme.typography.bodyMedium
         )
 
         Spacer(Modifier.height(8.dp))
 
         CardButton(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
             leadingIcon = {
                 Icon(
                     modifier = Modifier.size(24.dp),
@@ -202,15 +194,13 @@ private fun ShareYourThoughtsItem(
                     style = MaterialTheme.typography.titleMedium
                 )
             },
-            onClick = onRequestFeature
+            onClick = onRequestFeature,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(Modifier.height(8.dp))
 
         CardButton(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
             leadingIcon = {
                 Icon(
                     modifier = Modifier.size(24.dp),
@@ -224,7 +214,8 @@ private fun ShareYourThoughtsItem(
                     style = MaterialTheme.typography.titleMedium
                 )
             },
-            onClick = onBugReport
+            onClick = onBugReport,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -235,28 +226,25 @@ private fun ShowSomeLoveItem(
     onGithubStarClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             text = stringResource(Res.string.headline_show_some_love),
-            style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            style = MaterialTheme.typography.labelLarge
         )
 
         Text(
             text = stringResource(Res.string.description_show_some_love),
-            textAlign = TextAlign.Justify,
-            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            textAlign = TextAlign.Justify,
+            style = MaterialTheme.typography.bodyMedium
         )
 
         Spacer(Modifier.height(8.dp))
 
         CardButton(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
             leadingIcon = {
                 AnimatedContent(
                     targetState = githubStarClicked
@@ -281,7 +269,8 @@ private fun ShowSomeLoveItem(
                     style = MaterialTheme.typography.titleMedium
                 )
             },
-            onClick = onGithubStarClick
+            onClick = onGithubStarClick,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -289,10 +278,10 @@ private fun ShowSomeLoveItem(
 @Composable
 private fun ReadmeListItem(onReadme: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
-        modifier = modifier.clickable { onReadme() },
         headlineContent = {
             Text(stringResource(Res.string.headline_readme))
         },
+        modifier = modifier.clickable { onReadme() },
         supportingContent = {
             Text(stringResource(Res.string.description_README_setting))
         },
@@ -311,6 +300,7 @@ private fun VersionListItem(modifier: Modifier = Modifier) {
         headlineContent = {
             Text(stringResource(Res.string.headline_version))
         },
+        modifier = modifier,
         leadingContent = {
             Icon(
                 imageVector = Icons.Outlined.Info,
@@ -321,18 +311,4 @@ private fun VersionListItem(modifier: Modifier = Modifier) {
             Text(text = BuildConfig.VERSION_NAME)
         }
     )
-}
-
-@Composable
-private fun AboutScreenPreview() {
-    FoodYouTheme {
-        AboutScreen(
-            onRequestFeature = {},
-            onBugReport = {},
-            onReadme = {},
-            onIcons8 = {},
-            githubStarClicked = true,
-            onGithubStarClick = {}
-        )
-    }
 }
