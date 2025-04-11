@@ -1,3 +1,9 @@
+database
+- -- recipe entity
+- -- recipe ingredient entity
+- recipe measurement (food measurement)
+- recipe search virtual entity
+
 recipes feature
 - recipe add screen
 - recipe update screen

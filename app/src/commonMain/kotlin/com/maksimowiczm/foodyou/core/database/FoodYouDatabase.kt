@@ -20,6 +20,8 @@ import com.maksimowiczm.foodyou.core.database.openfoodfacts.OpenFoodFactsPagingK
 import com.maksimowiczm.foodyou.core.database.product.ProductDao
 import com.maksimowiczm.foodyou.core.database.product.ProductEntity
 import com.maksimowiczm.foodyou.core.database.product.ProductSourceConverter
+import com.maksimowiczm.foodyou.core.database.recipe.RecipeEntity
+import com.maksimowiczm.foodyou.core.database.recipe.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.core.database.search.MeasuredFoodView
 import com.maksimowiczm.foodyou.core.database.search.MeasurementSuggestionView
 import com.maksimowiczm.foodyou.core.database.search.SearchDao
@@ -31,7 +33,9 @@ import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
         ProductEntity::class,
         ProductMeasurementEntity::class,
         OpenFoodFactsPagingKeyEntity::class,
-        SearchQueryEntity::class
+        SearchQueryEntity::class,
+        RecipeEntity::class,
+        RecipeIngredientEntity::class
     ],
     views = [
         DiaryDayView::class,
@@ -42,7 +46,8 @@ import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 3, to = 4),
-        AutoMigration(from = 4, to = 5)
+        AutoMigration(from = 4, to = 5),
+        AutoMigration(from = 5, to = 6)
     ]
 )
 @TypeConverters(
@@ -58,7 +63,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val diaryDayDao: DiaryDayDao
 
     companion object {
-        const val VERSION = 5
+        const val VERSION = 6
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,
