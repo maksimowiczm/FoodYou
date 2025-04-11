@@ -9,10 +9,7 @@ import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import kotlinx.serialization.Serializable
 
 @Composable
-internal fun RecipeApp(
-    onBack: () -> Unit ,
-    modifier: Modifier = Modifier,
-) {
+internal fun RecipeApp(onBack: () -> Unit, modifier: Modifier = Modifier) {
     RecipeNavHost(
         onBack = onBack,
         modifier = modifier
@@ -27,7 +24,7 @@ private fun RecipeNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = CreateRecipe,
+        startDestination = CreateRecipe
     ) {
         crossfadeComposable<CreateRecipe> {
             CreateRecipeScreen(
@@ -38,7 +35,7 @@ private fun RecipeNavHost(
                         navController.popBackStack<CreateRecipe>(inclusive = true)
                     }
                 },
-                modifier = modifier,
+                modifier = modifier
             )
         }
     }
