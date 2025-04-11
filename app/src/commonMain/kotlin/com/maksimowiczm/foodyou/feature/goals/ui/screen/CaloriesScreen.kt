@@ -216,7 +216,7 @@ private fun CaloriesScreen(
                             )
 
                             val foods = foods
-                                .distinct()
+                                .distinctBy { it.foodId }
                                 .filter { !it.nutrients.isComplete }
 
                             foods.forEach { food ->
