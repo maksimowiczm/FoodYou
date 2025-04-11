@@ -27,12 +27,6 @@ interface MeasurementRepository {
     fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?>
 
     /**
-     * Get suggestion for the measurement depending on previous measurements. If there are no
-     * previous measurements then return default suggestion.
-     */
-    suspend fun getSuggestion(foodId: FoodId): Measurement
-
-    /**
      * Get suggestions for the measurement depending on previous measurements. If there are no
      * previous measurements then return default suggestions.
      */
@@ -69,14 +63,6 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
         when (measurementId) {
             is MeasurementId.Product -> measurementDao.observeMeasurement(measurementId.id)
         }.map { it?.toFoodWithMeasurement() }
-
-    override suspend fun getSuggestion(foodId: FoodId): Measurement = when (foodId) {
-        is FoodId.Product -> {
-            measurementDao
-                .getProductMeasurementSuggestion(foodId.id)
-                .toMeasurement()
-        }
-    }
 
     override suspend fun getSuggestions(foodId: FoodId): List<Measurement> = when (foodId) {
         is FoodId.Product -> {

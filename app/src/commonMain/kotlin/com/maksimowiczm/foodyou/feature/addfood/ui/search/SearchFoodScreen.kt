@@ -38,20 +38,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.model.SearchQuery
 import com.maksimowiczm.foodyou.core.ui.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.core.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.feature.addfood.domain.SearchFoodItem
+import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.ProductSearchBarSuggestions
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.SearchScreen
 import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsErrorCard
@@ -79,7 +79,9 @@ internal fun SearchFoodScreen(
     modifier: Modifier = Modifier,
     state: SearchFoodScreenState = rememberSearchFoodScreenState()
 ) {
-    val pages = viewModel.pages.collectAsLazyPagingItems()
+    val pages = viewModel.pages.collectAsLazyPagingItems(
+        viewModel.viewModelScope.coroutineContext
+    )
     val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
@@ -252,7 +254,7 @@ private fun SearchFoodScreen(
                             else -> item.ListItem(
                                 onToggle = { onFoodToggle(it, item) },
                                 modifier = Modifier.clickable {
-                                    onFoodClick(item.food.id)
+                                    onFoodClick(item.foodId)
                                 }
                             )
                         }
@@ -302,15 +304,14 @@ private fun SearchFoodItem.ListItem(onToggle: (Boolean) -> Unit, modifier: Modif
     }
 
     ListItem(
-        headlineContent = { Text(food.name) },
+        headlineContent = { Text(name) },
         modifier = modifier,
-        overlineContent = food.brand?.let { { Text(it) } },
+        overlineContent = brand?.let { { Text(it) } },
         supportingContent = {
             Column {
-                val proteins = (food.nutrients.proteins.value * weight / 100f).roundToInt()
-                val carbohydrates =
-                    (food.nutrients.carbohydrates.value * weight / 100f).roundToInt()
-                val fats = (food.nutrients.fats.value * weight / 100f).roundToInt()
+                val proteins = (proteins * weight / 100f).roundToInt()
+                val carbohydrates = (carbohydrates * weight / 100f).roundToInt()
+                val fats = (fats * weight / 100f).roundToInt()
 
                 NutrientsRow(
                     proteins = proteins,
@@ -395,19 +396,18 @@ private val SearchFoodItem.measurementString: String?
         val short = measurementStringShort
         val weight = weight?.formatClipZeros() ?: return null
 
-        return when (food) {
-            is Product -> when (measurement) {
-                is Measurement.Gram -> short
-                is Measurement.Package,
-                is Measurement.Serving ->
-                    "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
-            }
+        return when (measurement) {
+            is Measurement.Gram -> short
+            is Measurement.Package,
+            is Measurement.Serving -> "$short ($weight ${stringResource(
+                Res.string.unit_gram_short
+            )})"
         }
     }
 
 private val SearchFoodItem.caloriesString: String?
     @Composable get() = weight?.let {
-        val value = (it * food.nutrients.calories.value / 100).roundToInt()
+        val value = (it * calories / 100).roundToInt()
         "$value " + stringResource(Res.string.unit_kcal)
     }
 

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.repository
+package com.maksimowiczm.foodyou.feature.addfood.data
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
@@ -7,16 +7,16 @@ import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
 import androidx.paging.map
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
+import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.core.database.search.FoodSearchVirtualEntity
-import com.maksimowiczm.foodyou.core.database.search.SearchDao
 import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
-import com.maksimowiczm.foodyou.core.model.Food
 import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.core.model.Nutrients
+import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.model.MeasurementId
 import com.maksimowiczm.foodyou.core.model.PortionWeight
-import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.model.SearchQuery
+import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediatorFactory
+import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,24 +26,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-interface SearchRepository {
-    fun observeRecentQueries(limit: Int): Flow<List<SearchQuery>>
-
-    fun queryFood(query: String?): Flow<PagingData<Food>>
-}
-
-internal class SearchRepositoryImpl(
+internal class SearchRepository(
     database: FoodYouDatabase,
     private val remoteMediatorFactory: ProductRemoteMediatorFactory,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : SearchRepository {
-    private val searchDao: SearchDao = database.searchDao
+) {
+    val searchDao = database.searchDao
     private val ioScope = CoroutineScope(ioDispatcher + SupervisorJob())
 
-    override fun observeRecentQueries(limit: Int): Flow<List<SearchQuery>> =
+    fun observeRecentQueries(limit: Int): Flow<List<SearchQuery>> =
         searchDao.observeRecentQueries(limit).map { list ->
             list.map {
                 val date = Instant
@@ -58,7 +53,7 @@ internal class SearchRepositoryImpl(
         }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun queryFood(query: String?): Flow<PagingData<Food>> {
+    fun queryFood(query: String?, mealId: Long, date: LocalDate): Flow<PagingData<SearchFoodItem>> {
         // Handle different query formats
         val (effectiveQuery, extractedBarcode) = when {
             query == null -> null to null
@@ -103,7 +98,11 @@ internal class SearchRepositoryImpl(
             remoteMediator = remoteMediator
         ) {
             if (barcode != null) {
-                searchDao.queryFoodByBarcode(barcode)
+                searchDao.queryFoodByBarcode(
+                    barcode = barcode,
+                    mealId = mealId,
+                    epochDay = date.toEpochDays()
+                )
             } else {
                 val queryList = searchQuery
                     ?.split(" ")
@@ -114,16 +113,18 @@ internal class SearchRepositoryImpl(
 
                 val (query1, query2, query3, query4, query5) = queryList + List(5) { null }
 
-                searchDao.queryFoodByText(
+                searchDao.queryFood(
                     query1 = query1,
                     query2 = query2,
                     query3 = query3,
                     query4 = query4,
-                    query5 = query5
+                    query5 = query5,
+                    mealId = mealId,
+                    epochDay = date.toEpochDays()
                 )
             }
         }.flow.map { data ->
-            data.map { it.toFood() }
+            data.map { it.toSearchFoodItem() }
         }
     }
 
@@ -139,22 +140,41 @@ internal class SearchRepositoryImpl(
     }
 }
 
-private fun FoodSearchVirtualEntity.toFood(): Food = Product(
-    id = FoodId.Product(productId),
-    name = name,
-    brand = brand,
-    barcode = null,
-    nutrients = Nutrients(
-        calories = nutrients.calories.toNutrientValue(),
-        proteins = nutrients.proteins.toNutrientValue(),
-        carbohydrates = nutrients.carbohydrates.toNutrientValue(),
-        sugars = nutrients.sugars.toNutrientValue(),
-        fats = nutrients.fats.toNutrientValue(),
-        saturatedFats = nutrients.saturatedFats.toNutrientValue(),
-        salt = nutrients.salt.toNutrientValue(),
-        sodium = nutrients.sodium.toNutrientValue(),
-        fiber = nutrients.fiber.toNutrientValue()
-    ),
-    packageWeight = packageWeight?.let { PortionWeight.Package(it) },
-    servingWeight = servingWeight?.let { PortionWeight.Serving(it) }
-)
+private fun FoodSearchVirtualEntity.toSearchFoodItem(): SearchFoodItem {
+    val foodId = FoodId.Product(productId)
+    val measurementId = measurementId?.let { MeasurementId.Product(measurementId) }
+
+    return SearchFoodItem(
+        foodId = foodId,
+        name = name,
+        brand = brand,
+        calories = calories,
+        proteins = proteins,
+        carbohydrates = carbohydrates,
+        fats = fats,
+        packageWeight = packageWeight?.let { PortionWeight.Package(it) },
+        servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
+        measurementId = measurementId,
+        measurement = toMeasurement(),
+        uniqueId = foodId.uniqueId(measurementId)
+    )
+}
+
+private fun FoodSearchVirtualEntity.toMeasurement(): Measurement = when (measurement) {
+    MeasurementEntity.Gram -> Measurement.Gram(quantity)
+    MeasurementEntity.Package -> Measurement.Package(quantity)
+    MeasurementEntity.Serving -> Measurement.Serving(quantity)
+}
+
+private fun FoodId.uniqueId(measurementId: MeasurementId?): String {
+    val measurementId = measurementId?.let {
+        when (it) {
+            is MeasurementId.Product -> it.id
+        }
+    }
+
+    return when (this) {
+        is FoodId.Product if (measurementId != null) -> "p_${id}_$measurementId"
+        is FoodId.Product -> "p_$id"
+    }
+}
