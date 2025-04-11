@@ -8,9 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-internal fun CreateRecipeScreen(
-    modifier: Modifier = Modifier
-) {
+internal fun CreateRecipeScreen(modifier: Modifier = Modifier) {
     CreateRecipeScreen(
         arg = Unit,
         modifier = modifier
@@ -19,9 +17,6 @@ internal fun CreateRecipeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateRecipeScreen(
-    arg: Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun CreateRecipeScreen(arg: Unit, modifier: Modifier = Modifier) {
     Surface { Spacer(Modifier.fillMaxSize()) }
 }
