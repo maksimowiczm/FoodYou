@@ -5,19 +5,23 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.core.navigation.fullScreenDialogComposable
-import com.maksimowiczm.foodyou.feature.recipe.ui.CreateRecipeScreen
+import com.maksimowiczm.foodyou.feature.recipe.ui.RecipeApp
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object CreateRecipe
 
-fun NavGraphBuilder.recipeGraph() {
+fun NavGraphBuilder.recipeGraph(
+    onCreateClose: () -> Unit,
+) {
     fullScreenDialogComposable<CreateRecipe> {
         Surface(
             shadowElevation = 6.dp,
             shape = MaterialTheme.shapes.medium
         ) {
-            CreateRecipeScreen()
+            RecipeApp(
+                onBack = onCreateClose
+            )
         }
     }
 }

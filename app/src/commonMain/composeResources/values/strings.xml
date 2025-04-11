@@ -37,6 +37,7 @@
     <string name="headline_use_global_database">Use global database</string>
     <string name="headline_product">Product</string>
     <string name="headline_recipe">Recipe</string>
+    <string name="headline_create_recipe">Create recipe</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
@@ -144,6 +145,7 @@
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>
+    <string name="question_discard_recipe">Discard recipe?</string>
 
     <string name="error_this_field_is_required">This field is required</string>
     <string name="error_invalid_number">Invalid number</string>
