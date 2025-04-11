@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.feature.language.languageModule
 import com.maksimowiczm.foodyou.feature.meal.mealModule
 import com.maksimowiczm.foodyou.feature.openfoodfacts.openFoodFactsSettingsModule
 import com.maksimowiczm.foodyou.feature.product.productModule
+import com.maksimowiczm.foodyou.feature.recipe.recipeModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
@@ -31,6 +32,7 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         languageModule,
         mealModule,
         openFoodFactsSettingsModule,
-        productModule
+        productModule,
+        recipeModule
     )
 }
