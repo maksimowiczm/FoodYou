@@ -161,6 +161,9 @@ android {
         versionCode = libs.versions.android.versionCode.get().toInt()
         versionName = libs.versions.version.name.get()
 
+        manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher"
+        manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -174,6 +177,20 @@ android {
 
             // Test minified version with debug signing config
             // signingConfig = signingConfigs.getByName("debug")
+        }
+        create("preview") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".preview"
+            versionNameSuffix = "-preview"
+
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+
+            manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher_preview"
+            manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round_preview"
         }
     }
     compileOptions {

@@ -18,3 +18,4 @@ local.properties
 *.keystore
 *.kdbx
 release.sh
+preview.sh
