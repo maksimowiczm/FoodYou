@@ -51,7 +51,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -166,8 +165,8 @@ private fun SearchFoodScreen(
     val showEmptyLabel by remember(pages.loadState) {
         derivedStateOf {
             isEmpty &&
-                    pages.loadState.append !is LoadState.Loading &&
-                    pages.loadState.refresh !is LoadState.Loading
+                pages.loadState.append !is LoadState.Loading &&
+                pages.loadState.refresh !is LoadState.Loading
         }
     }
 
@@ -235,7 +234,7 @@ private fun SearchFoodScreen(
             ),
             fab = {
                 FloatingActionButton(
-                    onClick = { fabExpanded = !fabExpanded },
+                    onClick = { fabExpanded = !fabExpanded }
                 ) {
                     val rotation by animateFloatAsState(
                         targetValue = if (fabExpanded) 45f else 0f
@@ -279,7 +278,6 @@ private fun SearchFoodScreen(
         floatingActionButton = fab,
         modifier = modifier
     ) {
-
         if (fabExpanded) {
             Spacer(
                 modifier = Modifier
@@ -503,7 +501,7 @@ private val SearchFoodItem.measurementStringShort: String
             )
 
             is Measurement.Gram -> "${value.formatClipZeros()} " +
-                    stringResource(Res.string.unit_gram_short)
+                stringResource(Res.string.unit_gram_short)
         }
     }
 
@@ -515,11 +513,12 @@ private val SearchFoodItem.measurementString: String?
         return when (measurement) {
             is Measurement.Gram -> short
             is Measurement.Package,
-            is Measurement.Serving -> "$short ($weight ${
-                stringResource(
-                    Res.string.unit_gram_short
-                )
-            })"
+            is Measurement.Serving ->
+                "$short ($weight ${
+                    stringResource(
+                        Res.string.unit_gram_short
+                    )
+                })"
         }
     }
 
