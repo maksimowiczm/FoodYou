@@ -3,24 +3,28 @@ package com.maksimowiczm.foodyou.feature.addfood.ui
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.MeasurementId
+import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.feature.addfood.SearchSharedTransition
+import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.CreateMeasurementScreen
+import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.UpdateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.rememberSearchFoodScreenState
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.meal.MealScreen
-import com.maksimowiczm.foodyou.feature.measurement.MeasureProduct
-import com.maksimowiczm.foodyou.feature.measurement.UpdateProductMeasurement
-import com.maksimowiczm.foodyou.feature.measurement.measurementGraph
 import com.maksimowiczm.foodyou.feature.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.product.UpdateProduct
 import com.maksimowiczm.foodyou.feature.product.productGraph
@@ -193,29 +197,64 @@ private fun AddFoodNavHost(
                 }
             )
         }
-        measurementGraph(
-            date = date,
-            mealId = mealId,
-            onCreateProductMeasurementBack = {
-                navController.popBackStack<MeasureProduct>(inclusive = true)
-            },
-            onCreateProductMeasurement = {
-                navController.popBackStack<MeasureProduct>(inclusive = true)
-            },
-            onEditFood = {
-                when (it) {
-                    is FoodId.Product -> navController.navigate(UpdateProduct(it.id)) {
+        crossfadeComposable<MeasureProduct>(
+            popEnterTransition = {
+                if (initialState.destination.hasRoute<UpdateProduct>()) {
+                    fadeIn(snap())
+                } else {
+                    CrossFadeComposableDefaults.enterTransition()
+                }
+            }
+        ) {
+            val (productId) = it.toRoute<MeasureProduct>()
+
+            val foodId = FoodId.Product(productId)
+
+            CreateMeasurementScreen(
+                mealId = mealId,
+                date = date,
+                foodId = foodId,
+                onBack = {
+                    navController.popBackStack<MeasureProduct>(inclusive = true)
+                },
+                onDelete = {
+                    navController.popBackStack<MeasureProduct>(inclusive = true)
+                },
+                onEdit = {
+                    navController.navigate(UpdateProduct(productId)) {
                         launchSingleTop = true
                     }
                 }
-            },
-            onUpdateProductMeasurement = {
-                navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
-            },
-            onUpdateProductMeasurementBack = {
-                navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
+            )
+        }
+        crossfadeComposable<UpdateProductMeasurement>(
+            popEnterTransition = {
+                if (initialState.destination.hasRoute<UpdateProduct>()) {
+                    fadeIn(snap())
+                } else {
+                    CrossFadeComposableDefaults.enterTransition()
+                }
             }
-        )
+        ) {
+            val (id) = it.toRoute<UpdateProductMeasurement>()
+
+            val measurementId = MeasurementId.Product(id)
+
+            UpdateMeasurementScreen(
+                measurementId = measurementId,
+                onBack = {
+                    navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
+                },
+                onDelete = {
+                    navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
+                },
+                onEdit = {
+                    navController.navigate(UpdateProduct(id)) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
         productGraph(
             onCreateProduct = {
                 navController.navigate(MeasureProduct(it)) {
@@ -247,3 +286,9 @@ private data object SearchFoodBarcodeScanner
 
 @Serializable
 private data object Meal
+
+@Serializable
+private data class MeasureProduct(val productId: Long)
+
+@Serializable
+private data class UpdateProductMeasurement(val measurementId: Long)

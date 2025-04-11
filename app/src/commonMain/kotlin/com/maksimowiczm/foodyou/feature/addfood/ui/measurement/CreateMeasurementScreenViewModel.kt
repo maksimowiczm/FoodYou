@@ -1,12 +1,13 @@
-package com.maksimowiczm.foodyou.feature.measurement.ui
+package com.maksimowiczm.foodyou.feature.addfood.ui.measurement
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.repository.FoodRepository
 import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
-import com.maksimowiczm.foodyou.feature.measurement.domain.ObserveMeasurableFoodUseCase
+import com.maksimowiczm.foodyou.feature.addfood.domain.ObserveMeasurableFoodUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
@@ -26,20 +27,20 @@ internal class CreateMeasurementScreenViewModel(
     observeMeasurableFoodUseCase: ObserveMeasurableFoodUseCase,
     private val measurementRepository: MeasurementRepository,
     private val foodRepository: FoodRepository
-) : MeasurementScreenViewModel() {
-    override val food = observeMeasurableFoodUseCase(foodId).stateIn(
+) : ViewModel() {
+    val food = observeMeasurableFoodUseCase(foodId).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = null
     )
 
     private val _selectedMeasurement = MutableStateFlow<Measurement?>(null)
-    override val selectedMeasurement = _selectedMeasurement.asStateFlow()
+    val selectedMeasurement = _selectedMeasurement.asStateFlow()
 
     private val _eventBus = MutableSharedFlow<MeasurementScreenEvent>()
-    override val eventBus = _eventBus.asSharedFlow()
+    val eventBus = _eventBus.asSharedFlow()
 
-    override fun onConfirm(measurement: Measurement) {
+    fun onConfirm(measurement: Measurement) {
         viewModelScope.launch {
             if (_selectedMeasurement.value != null) {
                 Logger.w(TAG) {
@@ -69,7 +70,7 @@ internal class CreateMeasurementScreenViewModel(
         }
     }
 
-    override fun onDeleteFood(foodId: FoodId) {
+    fun onDeleteFood(foodId: FoodId) {
         viewModelScope.launch {
             foodRepository.deleteFood(foodId)
 

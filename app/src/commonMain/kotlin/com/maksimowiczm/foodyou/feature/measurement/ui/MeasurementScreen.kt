@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
@@ -27,7 +26,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -40,7 +38,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -52,15 +49,10 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
-import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
-import com.maksimowiczm.foodyou.feature.measurement.domain.MeasurableFood
+import com.maksimowiczm.foodyou.feature.measurement.MeasurableFood
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -70,52 +62,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import org.jetbrains.compose.resources.stringResource
 
-@Composable
-internal fun MeasurementScreen(
-    viewModel: MeasurementScreenViewModel,
-    onBack: () -> Unit,
-    onCreateMeasurement: () -> Unit,
-    onEditFood: (FoodId) -> Unit,
-    onDeleteFood: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val food by viewModel.food.collectAsStateWithLifecycle()
-    val selectedMeasurement by viewModel.selectedMeasurement.collectAsStateWithLifecycle()
-
-    val onCreateMeasurement by rememberUpdatedState(onCreateMeasurement)
-    val onDeleteFood by rememberUpdatedState(onDeleteFood)
-
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(viewModel) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.eventBus.collectLatest { event ->
-                when (event) {
-                    MeasurementScreenEvent.Closed -> onCreateMeasurement()
-                    MeasurementScreenEvent.FoodDeleted -> onDeleteFood()
-                }
-            }
-        }
-    }
-
-    // TODO shimmer
-    when (val food = food) {
-        null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
-        else -> MeasurementScreen(
-            food = food,
-            selectedMeasurement = food.selected ?: selectedMeasurement,
-            onBack = onBack,
-            onMeasurement = remember(viewModel) { viewModel::onConfirm },
-            onEditFood = remember(food, onEditFood) { { onEditFood(food.food.id) } },
-            onDeleteFood = remember(viewModel, food) { { viewModel.onDeleteFood(food.food.id) } },
-            modifier = modifier
-        )
-    }
-}
-
 // TODO this probably need some refactoring. Too much bloat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MeasurementScreen(
+internal fun MeasurementScreen(
     food: MeasurableFood,
     selectedMeasurement: Measurement?,
     onBack: () -> Unit,

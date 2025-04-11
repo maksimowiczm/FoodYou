@@ -1,24 +1,16 @@
-package com.maksimowiczm.foodyou.feature.measurement.domain
+package com.maksimowiczm.foodyou.feature.addfood.domain
 
-import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.core.model.Food
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.MeasurementId
 import com.maksimowiczm.foodyou.core.repository.FoodRepository
 import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
+import com.maksimowiczm.foodyou.feature.measurement.MeasurableFood
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 
-@Immutable
-internal data class MeasurableFood(
-    val food: Food,
-    val suggestions: List<Measurement>,
-    val selected: Measurement? = null
-)
-
-internal interface ObserveMeasurableFoodUseCase {
+interface ObserveMeasurableFoodUseCase {
     operator fun invoke(foodId: FoodId): Flow<MeasurableFood>
     operator fun invoke(measurementId: MeasurementId): Flow<MeasurableFood>
 }

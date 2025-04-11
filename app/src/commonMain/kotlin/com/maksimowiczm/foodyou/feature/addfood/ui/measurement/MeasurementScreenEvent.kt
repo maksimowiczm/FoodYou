@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.measurement.ui
+package com.maksimowiczm.foodyou.feature.addfood.ui.measurement
 
 internal sealed interface MeasurementScreenEvent {
     data object Closed : MeasurementScreenEvent

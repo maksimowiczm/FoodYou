@@ -12,7 +12,7 @@ import foodyou.app.generated.resources.x_times_y
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun Measurement.stringResource() = when (this) {
+internal fun Measurement.stringResource() = when (this) {
     is Measurement.Package -> stringResource(
         Res.string.x_times_y,
         quantity.formatClipZeros(),
@@ -30,7 +30,7 @@ fun Measurement.stringResource() = when (this) {
     }
 }
 
-val Measurement.Companion.Saver: Saver<Measurement?, ArrayList<Any>>
+internal val Measurement.Companion.Saver: Saver<Measurement?, ArrayList<Any>>
     get() = Saver(
         save = {
             val id = when (it) {
