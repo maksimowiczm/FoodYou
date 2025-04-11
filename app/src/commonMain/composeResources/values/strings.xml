@@ -178,6 +178,7 @@
     <string name="description_use_global_database">It is recommended to use a food database from your country. You can enable the global database, but it may contain a large number of products and could significantly increase your database size.</string>
     <string name="description_delete_unused_open_food_facts_products_short">Delete unused Open Food Facts products</string>
     <string name="description_delete_unused_open_food_facts_products">Open Food Facts products that are not used in your diary will be deleted. Products that you have added manually or edited will not be deleted. You won't be able to search for deleted products again unless you clear the Open Food Facts cache. However, you will still be able to find deleted products using a barcode.</string>
+    <string name="description_translation_warning">Translations are created by volunteers. They may not be perfect and some translations may be missing. If you notice any mistakes don't hesitate to help improving them.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>

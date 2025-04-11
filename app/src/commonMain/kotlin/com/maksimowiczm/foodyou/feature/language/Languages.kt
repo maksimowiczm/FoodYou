@@ -11,6 +11,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 
+private val me = Author(
+    name = "Mateusz Maksimowicz",
+    link = "https://github.com/maksimowiczm"
+)
+
 val languages = mapOf(
     // If you'd like to be credited for your translations, please add your name here.
     // "language name (Country)" to Translation(
@@ -25,11 +30,7 @@ val languages = mapOf(
     // ),
     "English (United States)" to Translation(
         tag = "en-US",
-        authorsStrings = listOf(
-            Author(
-                name = "Mateusz Maksimowicz"
-            )
-        )
+        authorsStrings = listOf(me)
     ),
     "Dansk (Danmark)" to Translation(
         tag = "da-DK",
@@ -39,17 +40,13 @@ val languages = mapOf(
         tag = "de-DE",
         authorsStrings = emptyList()
     ),
-    "italiano (Italia)" to Translation(
+    "Italiano (Italia)" to Translation(
         tag = "it-IT",
         authorsStrings = emptyList()
     ),
-    "polski (Polska)" to Translation(
+    "Polski (Polska)" to Translation(
         tag = "pl-PL",
-        authorsStrings = listOf(
-            Author(
-                name = "Mateusz Maksimowicz"
-            )
-        )
+        authorsStrings = listOf(me)
     ),
     "Türkçe (Türkiye)" to Translation(
         tag = "tr-TR",
