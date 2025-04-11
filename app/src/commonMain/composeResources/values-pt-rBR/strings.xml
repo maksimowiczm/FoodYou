@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">N/A</string>
+    <string name="headline_create_product">Criação de produto</string>
+    <string name="headline_settings">Configurações</string>
+    <string name="headline_calories_goal">Meta de calorias</string>
+    <string name="headline_daily_goals">Metas diárias</string>
+    <string name="headline_product_serving_and_packaging">Serviço e embalagem</string>
+    <string name="headline_general">Geral</string>
+    <string name="headline_macronutrients">Macronutrientes</string>
+    <string name="headline_nutrients">Nutrientes</string>
+    <string name="headline_meals">Refeições</string>
+    <string name="headline_delete_product">Excluir produto</string>
+    <string name="headline_edit_product">Editar produto</string>
+    <string name="headline_permission_required">Permissão necessária</string>
+    <string name="headline_language">Idioma</string>
+    <string name="headline_authors">Autores</string>
+    <string name="headline_system">Sistema</string>
+    <string name="headline_system_language_settings">Configurações de idioma do sistema</string>
+    <string name="headline_secure_screen">Tela segura</string>
+    <string name="headline_about">Sobre</string>
+    <string name="headline_miscellaneous">Diversos</string>
+    <string name="headline_version">Versão</string>
+    <string name="headline_share_your_thoughts">Compartilhe suas ideias</string>
+    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Demonstre seu amor</string>
+    <string name="headline_clear_cache">Limpar cache</string>
+    <string name="headline_all_day" description="All-day (meal)">O dia todo</string>
+    <string name="headline_time_based_ordering">Ordenação por tempo</string>
+    <string name="headline_incomplete_products">Produtos incompletos</string>
+    <string name="headline_remote_food_database">Banco de dados remoto de alimentos</string>
+    <string name="open_food_facts_disclaimer">O Open Food Facts é um projeto voltado para a comunidade. Os dados podem estar incompletos, desatualizados ou imprecisos. Este aplicativo não é responsável pela validade das informações. Por favor, verifique antes de usar.</string>
+    <string name="weight">Peso</string>
+    <string name="unit_calories">Calorias</string>
+    <string name="unit_kcal">kcal</string>
+    <plurals name="unit_gram">
+        <item quantity="one">grama</item>
+        <item quantity="other">gramas</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">mililitro</item>
+        <item quantity="other">mililitros</item>
+    </plurals>
+    <string name="product_package_weight">Peso da embalagem</string>
+    <string name="product_package">Embalagem</string>
+    <string name="product_serving_weight">Peso da porção</string>
+    <string name="product_serving">Porção</string>
+    <string name="product_name">Nome</string>
+    <string name="product_brand">Marca</string>
+    <string name="product_barcode">Código de barras</string>
+    <string name="nutriment_proteins">Proteínas</string>
+    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_carbohydrates">Carboidratos</string>
+    <string name="nutriment_carbohydrates_short">C</string>
+    <string name="nutriment_sugars">Açúcares</string>
+    <string name="nutriment_fats">Gorduras</string>
+    <string name="nutriment_fats_short">G</string>
+    <string name="nutriment_saturated_fats">Gorduras saturadas</string>
+    <string name="nutriment_salt">Sal</string>
+    <string name="nutriment_sodium">Sódio</string>
+    <string name="nutriment_fiber">Fibra</string>
+    <string name="action_show_remaining_fields">Mostrar campos restantes</string>
+    <string name="action_search">Pesquisar</string>
+    <string name="action_scan_barcode">Escanear código de barras</string>
+    <string name="action_add">Adicionar</string>
+    <string name="action_go_back">Voltar</string>
+    <string name="action_retry">Repetir</string>
+    <string name="action_tap_to_allow_access">Conectar para permitir acesso</string>
+    <string name="action_create">Criar</string>
+    <string name="action_clear">Limpar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_go_to_settings">Ir para as configurações</string>
+    <string name="action_save">Salvar</string>
+    <string name="action_delete">Excluir</string>
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_add_meal">Adicionar refeição</string>
+    <string name="action_edit">Editar</string>
+    <string name="action_insert_suggested_search">Inserir pesquisa sugerida</string>
+    <string name="action_edit_entry">Editar entrada</string>
+    <string name="action_delete_entry">Excluir entrada</string>
+    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Adicionar alimentos</string>
+    <string name="action_undo">Desfazer</string>
+    <string name="action_close">Fechar</string>
+    <string name="action_discard">Descartar</string>
+    <string name="action_enable">Ativar</string>
+    <string name="action_don_t_show_again">Não mostrar novamente</string>
+    <string name="action_translate">Traduzir</string>
+    <string name="action_enable_camera_flash">Ativar o flash da câmera</string>
+    <string name="action_disable_camera_flash">Desativar o flash da câmera</string>
+    <string name="action_prevent_screen_capture">Impedir a captura de tela</string>
+    <string name="action_go_to_today">Ir para hoje</string>
+    <string name="action_read_more">Ler mais</string>
+    <string name="action_select_country">Selecionar país</string>
+    <string name="action_use_open_food_facts">Usar o Open Food Facts</string>
+    <string name="action_see_terms_of_use">Ver os termos de uso</string>
+    <string name="action_bug_report_on_github">Reportar erros no GitHub</string>
+    <string name="action_feature_request_on_github">Solicitar recurso no GitHub</string>
+    <string name="action_leave_a_star_on_github">Deixar uma estrela no GitHub</string>
+    <string name="action_show_calendar">Mostrar calendário</string>
+    <string name="action_reorder">Reordenar</string>
+    <string name="action_move_up" description="reorder list item up">Mover para cima</string>
+    <string name="action_move_down" description="reorder list item down">Mover para baixo</string>
+    <string name="action_use_time_based_ordering">Ordenar por tempo</string>
+    <string name="action_include_all_day_meals">Incluir refeições do dia todo</string>
+    <string name="neutral_barcode_scanner_camera_request">Permitir acesso à sua câmera para escanear códigos de barras</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Você deve permitir o acesso para digitalizar códigos de barras</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">A permissão da câmera é obrigatória para ler códigos de barras. Permita isso nas configurações do aplicativo.</string>
+    <string name="neutral_no_products_found">Nenhum produto encontrado</string>
+    <string name="neutral_food_database_load_error">Não foi possível fazer o download de produtos do banco de dados remoto de alimentos. Você ainda pode visualizar os produtos baixados anteriormente.</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">%1$d caloria restante</item>
+        <item quantity="other">%1$d calorias restantes</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Defina suas metas diárias</string>
+    <string name="neutral_all_values_per_x">Todos os valores por %1$s</string>
+    <string name="neutral_set_your_meal_schedule">Defina sua programação de refeições</string>
+    <string name="neutral_permanently_delete_meal">Excluir permanentemente a refeição?</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">A refeição será excluída permanentemente. Todos os dados relacionados a essa refeição serão perdidos.</string>
+    <string name="neutral_required">Obrigatório</string>
+    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">As calorias são calculadas automaticamente com base nos macronutrientes</string>
+    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Parece que esta refeição está vazia. Adicione algum alimento para monitorar suas calorias.</string>
+    <string name="neutral_entry_deleted">Entrada excluída</string>
+    <string name="neutral_help_translating_the_app">Ajude a traduzir o aplicativo</string>
+    <string name="neutral_manage_food_database">Gerencie seu banco de dados de alimentos</string>
+    <string name="question_discard_product">Descartar o produto?</string>
+    <string name="question_discard_changes">Descartar alterações?</string>
+    <string name="error_this_field_is_required">Este campo é obrigatório</string>
+    <string name="error_invalid_number">Número inválido</string>
+    <string name="error_value_cannot_be_negative">O valor não pode ser negativo</string>
+    <string name="error_value_must_be_less_than">O valor deve ser menor que %1$s</string>
+    <string name="error_value_must_be_integer">O valor deve ser um número inteiro</string>
+    <string name="error_sum_of_percentages_must_be_100">A soma das porcentagens deve ser 100</string>
+    <string name="error_value_cannot_exceed_100">O valor não pode exceder 100</string>
+    <string name="positive_goal_reached">Meta alcançada</string>
+    <string name="positive_ok">OK</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">Excedido em %1$d caloria</item>
+        <item quantity="other">Excedido em %1$d calorias</item>
+    </plurals>
+    <string name="description_calories_goal">Defina sua meta de ingestão diária de calorias. Isso o ajudará a acompanhar seu progresso e a se manter no caminho certo.</string>
+    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">O produto será excluído permanentemente. Essa ação não pode ser desfeita. Todas as entradas do diário relacionadas a esse produto serão excluídas.</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Essa entrada será excluída de seu diário. Você pode adicioná-la novamente a qualquer momento.</string>
+    <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">Ative o Open Food Facts nas configurações para acessar informações detalhadas sobre os produtos</string>
+    <string name="description_open_food_facts">é um banco de dados colaborativo, gratuito e aberto de produtos alimentícios de todo o mundo.</string>
+    <string name="description_README_setting">Veja o README do projeto no GitHub</string>
+    <string name="description_about_setting">Saiba mais sobre o aplicativo</string>
+    <string name="description_show_some_love">Se você achar este projeto útil, considere dar uma estrela a ele no GitHub! Isso ajuda outras pessoas a descobri-lo e mantém o desenvolvimento em andamento.</string>
+    <string name="description_share_your_thoughts">Se você tiver algum feedback, solicitação de recursos ou relatório de bugs, entre em contato comigo! Gostaria muito de ouvir sua opinião.</string>
+    <string name="description_open_food_facts_clear_query_cache">Limpar o cache de consulta do Open Food Facts</string>
+    <string name="description_time_based_meals_sorting">Quando ativado, as refeições que estão acontecendo no momento serão exibidas primeiro</string>
+    <string name="description_action_include_all_day_meals">As refeições do dia todo serão incluídas na lista de refeições atual</string>
+    <string name="description_incomplete_nutrition_data">Alguns dos produtos usados não têm esse valor; portanto, o valor exibido pode não ser exato</string>
+    <string name="headline_launcher_icon_by_icons8">Ícone da aplicação por Icons8</string>
+    <string name="neutral_see_other_awesome_icons_here">Veja outros ícones incríveis aqui</string>
+    <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
+    <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
+</resources>
