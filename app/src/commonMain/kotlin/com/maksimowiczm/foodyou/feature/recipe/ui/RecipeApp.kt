@@ -9,8 +9,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.measurement.MeasurementScreen
+import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -66,6 +70,9 @@ private fun RecipeNavHost(
                         launchSingleTop = true
                     }
                 },
+                onProductClick = {
+                    navController.navigate(MeasureIngredient(it))
+                },
                 onBack = {
                     navController.popBackStack<AddIngredient>(inclusive = true)
                 }
@@ -82,6 +89,44 @@ private fun RecipeNavHost(
                 }
             )
         }
+        crossfadeComposable<MeasureIngredient> {
+            val (productId) = it.toRoute<MeasureIngredient>()
+
+            val food by viewModel.observeMeasurableFood(productId).collectAsStateWithLifecycle(null)
+
+            when (val food = food) {
+                null -> Unit
+                else -> MeasurementScreen(
+                    food = food,
+                    selectedMeasurement = null,
+                    onBack = {
+                        navController.popBackStack<MeasureIngredient>(inclusive = true)
+                    },
+                    onMeasurement = {
+                        viewModel.onAddIngredient(
+                            Ingredient(
+                                product = food.food as Product,
+                                measurement = it
+                            )
+                        )
+                        navController.navigate(CreateRecipe) {
+                            popUpTo(CreateRecipe) {
+                                inclusive = false
+                            }
+
+                            launchSingleTop = true
+                        }
+                    },
+                    onEditFood = {
+                        // TODO
+                    },
+                    onDeleteFood = {
+                        viewModel.onProductDelete(productId)
+                        navController.popBackStack<MeasureIngredient>(inclusive = true)
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -93,3 +138,6 @@ private data object AddIngredient
 
 @Serializable
 private data object BarcodeScanner
+
+@Serializable
+private data class MeasureIngredient(val productId: Long)

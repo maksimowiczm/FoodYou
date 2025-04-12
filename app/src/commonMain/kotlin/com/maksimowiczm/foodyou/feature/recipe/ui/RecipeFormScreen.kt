@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -68,12 +69,15 @@ internal fun RecipeFormScreen(
 
     // TODO
     val handleClose = {
-        onClose()
+        if (state.isModified) {
+            showDiscardDialog = true
+        } else {
+            onClose()
+        }
     }
 
     BackHandler(
-        // TODO
-        enabled = true
+        enabled = state.isModified
     ) {
         showDiscardDialog = true
     }
@@ -95,8 +99,7 @@ internal fun RecipeFormScreen(
             actions = {
                 TextButton(
                     onClick = onCreate,
-                    // TODO
-                    enabled = false
+                    enabled = state.isValid
                 ) {
                     Text(stringResource(Res.string.action_create))
                 }
@@ -207,6 +210,12 @@ internal fun RecipeFormScreen(
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
+            }
+
+            items(
+                items = state.ingredients
+            ) {
+                it.ListItem()
             }
         }
     }

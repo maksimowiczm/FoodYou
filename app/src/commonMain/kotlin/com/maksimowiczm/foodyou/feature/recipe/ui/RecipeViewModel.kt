@@ -3,7 +3,11 @@ package com.maksimowiczm.foodyou.feature.recipe.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.core.model.FoodId
+import com.maksimowiczm.foodyou.core.repository.FoodRepository
+import com.maksimowiczm.foodyou.feature.measurement.ObserveMeasurableFoodUseCase
 import com.maksimowiczm.foodyou.feature.recipe.data.RecipeRepository
+import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,11 +15,16 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import pro.respawn.kmmutils.inputforms.Form
 import pro.respawn.kmmutils.inputforms.ValidationStrategy
 import pro.respawn.kmmutils.inputforms.default.Rules
 
-internal class RecipeViewModel(private val recipeRepository: RecipeRepository) : ViewModel() {
+internal class RecipeViewModel(
+    private val foodRepository: FoodRepository,
+    private val recipeRepository: RecipeRepository,
+    private val observeMeasurableFoodUseCase: ObserveMeasurableFoodUseCase
+) : ViewModel() {
     private val _state = MutableStateFlow<RecipeState>(RecipeState())
     val state = _state.asStateFlow()
 
@@ -30,6 +39,17 @@ internal class RecipeViewModel(private val recipeRepository: RecipeRepository) :
     val pages = _searchQuery.flatMapLatest { query ->
         recipeRepository.queryProducts(query)
     }.cachedIn(viewModelScope)
+
+    fun observeMeasurableFood(productId: Long) =
+        observeMeasurableFoodUseCase(FoodId.Product(productId))
+
+    fun onAddIngredient(ingredient: Ingredient) {
+        _state.update {
+            it.copy(
+                ingredients = it.ingredients + ingredient
+            )
+        }
+    }
 
     private val nameForm = Form(
         strategy = ValidationStrategy.LazyEval,
@@ -54,6 +74,12 @@ internal class RecipeViewModel(private val recipeRepository: RecipeRepository) :
             it.copy(
                 servings = servingsForm(servings)
             )
+        }
+    }
+
+    fun onProductDelete(productId: Long) {
+        viewModelScope.launch {
+            foodRepository.deleteFood(FoodId.Product(productId))
         }
     }
 
