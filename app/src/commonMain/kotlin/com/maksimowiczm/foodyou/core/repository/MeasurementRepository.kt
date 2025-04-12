@@ -62,7 +62,8 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
 
     override fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?> =
         when (measurementId) {
-            is MeasurementId.Product -> measurementDao.observeMeasurement(measurementId.id)
+            is MeasurementId.Product -> measurementDao.observeProductMeasurement(measurementId.id)
+            is MeasurementId.Recipe -> TODO()
         }.map { it?.toFoodWithMeasurement() }
 
     override suspend fun getSuggestions(foodId: FoodId): List<Measurement> = when (foodId) {
@@ -148,6 +149,22 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
 
                 measurementDao.updateProductMeasurement(entity)
             }
+
+            is MeasurementId.Recipe -> {
+                val entity = measurementDao
+                    .getRecipeMeasurement(measurementId.id)
+                    ?.copy(
+                        measurement = type,
+                        quantity = quantity
+                    )
+
+                if (entity == null) {
+                    Logger.w(TAG) { "Attempted to update a measurement that does not exist" }
+                    return
+                }
+
+                measurementDao.updateRecipeMeasurement(entity)
+            }
         }
     }
 
@@ -157,6 +174,11 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                 val entity = measurementDao.getProductMeasurement(measurementId.id) ?: return
                 measurementDao.deleteProductMeasurement(entity.id)
             }
+
+            is MeasurementId.Recipe -> {
+                val entity = measurementDao.getRecipeMeasurement(measurementId.id) ?: return
+                measurementDao.deleteRecipeMeasurement(entity.id)
+            }
         }
     }
 
@@ -164,6 +186,10 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
         when (measurementId) {
             is MeasurementId.Product -> {
                 measurementDao.restoreProductMeasurement(measurementId.id)
+            }
+
+            is MeasurementId.Recipe -> {
+                measurementDao.restoreRecipeMeasurement(measurementId.id)
             }
         }
     }

@@ -212,12 +212,17 @@ private fun AddFoodNavHost(
                     }
                 },
                 onEditEntry = {
-                    when (it) {
-                        is MeasurementId.Product ->
-                            navController.navigate(UpdateProductMeasurement(it.id)) {
-                                launchSingleTop = true
-                            }
+                    val route = when (it) {
+                        is MeasurementId.Product -> MeasureFood(
+                            productId = it.id
+                        )
+
+                        is MeasurementId.Recipe -> MeasureFood(
+                            recipeId = it.id
+                        )
                     }
+
+                    navController.navigate(route) { launchSingleTop = true }
                 }
             )
         }
@@ -270,9 +275,13 @@ private fun AddFoodNavHost(
                 }
             }
         ) {
-            val (id) = it.toRoute<UpdateProductMeasurement>()
+            val (productMeasurement, recipeMeasurement) = it.toRoute<UpdateProductMeasurement>()
 
-            val measurementId = MeasurementId.Product(id)
+            val measurementId = when {
+                productMeasurement != null -> MeasurementId.Product(productMeasurement)
+                recipeMeasurement != null -> MeasurementId.Recipe(recipeMeasurement)
+                else -> error("Either productMeasurement or recipeMeasurement must be provided")
+            }
 
             UpdateMeasurementScreen(
                 measurementId = measurementId,
@@ -283,8 +292,16 @@ private fun AddFoodNavHost(
                     navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
                 },
                 onEdit = {
-                    navController.navigate(UpdateProduct(id)) {
-                        launchSingleTop = true
+                    when (measurementId) {
+                        is MeasurementId.Product ->
+                            navController.navigate(UpdateProduct(measurementId.id)) {
+                                launchSingleTop = true
+                            }
+
+                        is MeasurementId.Recipe ->
+                            navController.navigate(UpdateRecipe(measurementId.id)) {
+                                launchSingleTop = true
+                            }
                     }
                 }
             )
@@ -342,7 +359,16 @@ private data object SearchFoodBarcodeScanner
 private data object Meal
 
 @Serializable
-private data class UpdateProductMeasurement(val measurementId: Long)
+private data class UpdateProductMeasurement(
+    val productMeasurementId: Long? = null,
+    val recipeMeasurementId: Long? = null
+) {
+    init {
+        if (productMeasurementId == null && recipeMeasurementId == null) {
+            error("Either productMeasurementId or recipeMeasurementId must be provided")
+        }
+    }
+}
 
 @Serializable
 private data class MeasureFood(val productId: Long? = null, val recipeId: Long? = null) {

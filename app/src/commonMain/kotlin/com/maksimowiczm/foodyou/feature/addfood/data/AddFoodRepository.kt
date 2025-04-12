@@ -178,6 +178,7 @@ private fun FoodId.uniqueId(measurementId: MeasurementId?): String {
     val measurementId = measurementId?.let {
         when (it) {
             is MeasurementId.Product -> it.id
+            is MeasurementId.Recipe -> it.id
         }
     }
 

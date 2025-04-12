@@ -4,11 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.maksimowiczm.foodyou.core.database.measurement.FoodMeasurementVirtualEntity
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstants.GRAM
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstants.PACKAGE
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstants.SERVING
-import com.maksimowiczm.foodyou.core.database.measurement.SuggestionVirtualEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -22,6 +20,9 @@ abstract class MeasurementDao {
     @Update
     abstract suspend fun updateProductMeasurement(entity: ProductMeasurementEntity)
 
+    @Update
+    abstract suspend fun updateRecipeMeasurement(entity: RecipeMeasurementEntity)
+
     @Query(
         """
         SELECT *
@@ -34,6 +35,16 @@ abstract class MeasurementDao {
 
     @Query(
         """
+        SELECT *
+        FROM RecipeMeasurementEntity
+        WHERE id = :id
+        AND isDeleted = 0
+        """
+    )
+    abstract suspend fun getRecipeMeasurement(id: Long): RecipeMeasurementEntity?
+
+    @Query(
+        """
         UPDATE ProductMeasurementEntity
         SET isDeleted = 1
         WHERE id = :id
@@ -43,12 +54,30 @@ abstract class MeasurementDao {
 
     @Query(
         """
+        UPDATE RecipeMeasurementEntity
+        SET isDeleted = 1
+        WHERE id = :id
+        """
+    )
+    abstract suspend fun deleteRecipeMeasurement(id: Long)
+
+    @Query(
+        """
         UPDATE ProductMeasurementEntity
         SET isDeleted = 0
         WHERE id = :id
         """
     )
     abstract suspend fun restoreProductMeasurement(id: Long)
+
+    @Query(
+        """
+        UPDATE RecipeMeasurementEntity
+        SET isDeleted = 0
+        WHERE id = :id
+        """
+    )
+    abstract suspend fun restoreRecipeMeasurement(id: Long)
 
     @Query(
         """
@@ -109,7 +138,9 @@ abstract class MeasurementDao {
         AND m.isDeleted = 0
         """
     )
-    abstract fun observeMeasurement(measurementId: Long): Flow<FoodMeasurementVirtualEntity?>
+    abstract fun observeProductMeasurement(measurementId: Long): Flow<FoodMeasurementVirtualEntity?>
+
+//    abstract fun observeRecipeMeasurement(measurementId: Long): Flow<FoodMeasurementVirtualEntity?>
 
     @Query(
         """
