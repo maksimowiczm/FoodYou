@@ -14,6 +14,8 @@ import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.feature.product.UpdateProduct
 import com.maksimowiczm.foodyou.feature.product.productGraph
+import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
+import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -58,13 +60,13 @@ private fun CaloriesNavHost(
                 animatedVisibilityScope = outerAnimatedScope,
                 onFoodClick = {
                     when (it) {
-                        is FoodId.Product -> {
-                            navController.navigate(UpdateProduct(it.id)) {
-                                launchSingleTop = true
-                            }
+                        is FoodId.Product -> navController.navigate(UpdateProduct(it.id)) {
+                            launchSingleTop = true
                         }
 
-                        is FoodId.Recipe -> TODO()
+                        is FoodId.Recipe -> navController.navigate(it.id) {
+                            launchSingleTop = true
+                        }
                     }
                 }
             )
@@ -78,6 +80,12 @@ private fun CaloriesNavHost(
             onUpdateClose = {
                 navController.popBackStack<UpdateProduct>(inclusive = true)
             }
+        )
+        recipeGraph(
+            onCreateClose = {},
+            onCreate = {},
+            onUpdateClose = { navController.popBackStack<UpdateRecipe>(inclusive = true) },
+            onUpdate = { navController.popBackStack<UpdateRecipe>(inclusive = true) }
         )
     }
 }
