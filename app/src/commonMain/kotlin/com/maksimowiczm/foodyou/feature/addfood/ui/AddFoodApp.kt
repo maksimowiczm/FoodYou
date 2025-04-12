@@ -88,7 +88,17 @@ private fun AddFoodNavHost(
         startDestination = if (skipToSearch) SearchFood else Meal,
         modifier = modifier
     ) {
-        crossfadeComposable<SearchFood> {
+        crossfadeComposable<SearchFood>(
+            popEnterTransition = {
+                if (initialState.destination.hasRoute<CreateProduct>() ||
+                    initialState.destination.hasRoute<CreateRecipe>()
+                ) {
+                    fadeIn(snap())
+                } else {
+                    CrossFadeComposableDefaults.enterTransition()
+                }
+            }
+        ) {
             val sts = LocalAddFoodSharedTransitionScope.current
                 ?: error("No add food shared transition scope")
 

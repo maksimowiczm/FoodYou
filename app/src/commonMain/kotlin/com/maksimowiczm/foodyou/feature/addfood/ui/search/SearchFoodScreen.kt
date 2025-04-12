@@ -246,7 +246,7 @@ private fun SearchFoodScreen(
                         contentDescription = if (fabExpanded) {
                             stringResource(Res.string.action_close)
                         } else {
-                            stringResource(Res.string.action_create_new_product)
+                            stringResource(Res.string.action_create)
                         },
                         modifier = Modifier.graphicsLayer {
                             rotationZ = rotation
