@@ -6,8 +6,6 @@ import androidx.compose.animation.core.AnimationConstants.DefaultDurationMillis
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.asPaddingValues
@@ -30,12 +28,13 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.sum
 import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
+import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.goals.model.DiaryDay
@@ -44,8 +43,6 @@ import com.maksimowiczm.foodyou.feature.goals.ui.component.CaloriesIndicator
 import com.maksimowiczm.foodyou.feature.goals.ui.component.MealsFilter
 import com.maksimowiczm.foodyou.feature.goals.ui.component.rememberMealsFilterState
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.description_incomplete_nutrition_data
-import foodyou.app.generated.resources.headline_incomplete_products
 import foodyou.app.generated.resources.unit_gram_short
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
@@ -194,49 +191,19 @@ private fun CaloriesScreen(
 
                     // Display incomplete products
                     if (anyProductIncomplete) {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                        ) {
-                            Text(
-                                text =
-                                "*" +
-                                    stringResource(
-                                        Res.string.description_incomplete_nutrition_data
-                                    ),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.outline
-                            )
-
-                            Spacer(Modifier.height(8.dp))
-
-                            Text(
-                                text = stringResource(Res.string.headline_incomplete_products),
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.outline
-                            )
-
-                            val foods = foods
+                        IncompleteFoodsList(
+                            foods = foods
                                 .distinctBy { it.foodId }
                                 .filter { !it.nutrients.isComplete }
-
-                            foods.forEach { food ->
-                                Text(
-                                    text = food.name,
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.outline,
-                                    textAlign = TextAlign.Companion.Center,
-                                    modifier = Modifier.clickable(
-                                        interactionSource = remember {
-                                            MutableInteractionSource()
-                                        },
-                                        indication = null,
-                                        onClick = {
-                                            onFoodClick(food.foodId)
-                                        }
+                                .map {
+                                    IncompleteFoodData(
+                                        foodId = it.foodId,
+                                        name = it.name
                                     )
-                                )
-                            }
-                        }
+                                },
+                            onFoodClick = onFoodClick,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
                     }
                 }
             }
