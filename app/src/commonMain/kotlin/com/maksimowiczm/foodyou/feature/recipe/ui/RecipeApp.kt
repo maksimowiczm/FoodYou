@@ -4,8 +4,10 @@ import androidx.compose.animation.core.snap
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -22,13 +24,19 @@ import com.maksimowiczm.foodyou.feature.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.product.UpdateProduct
 import com.maksimowiczm.foodyou.feature.product.productGraph
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun RecipeApp(onBack: () -> Unit, modifier: Modifier = Modifier) {
+internal fun RecipeApp(
+    onBack: () -> Unit,
+    onCreate: (Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
     RecipeNavHost(
         onBack = onBack,
+        onCreate = onCreate,
         modifier = modifier
     )
 }
@@ -36,6 +44,7 @@ internal fun RecipeApp(onBack: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 private fun RecipeNavHost(
     onBack: () -> Unit,
+    onCreate: (Long) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -43,6 +52,17 @@ private fun RecipeNavHost(
     val recipeState by viewModel.state.collectAsStateWithLifecycle()
     val ingredients by viewModel.ingredients.collectAsStateWithLifecycle()
     val searchListState = rememberLazyListState()
+
+    val onCreate by rememberUpdatedState(onCreate)
+    LaunchedEffect(viewModel) {
+        viewModel.createState.collectLatest {
+            when (it) {
+                is CreateState.Created -> onCreate(it.recipeId)
+                CreateState.CreatingRecipe,
+                CreateState.Nothing -> Unit
+            }
+        }
+    }
 
     NavHost(
         navController = navController,

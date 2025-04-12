@@ -11,14 +11,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object CreateRecipe
 
-fun NavGraphBuilder.recipeGraph(onCreateClose: () -> Unit) {
+fun NavGraphBuilder.recipeGraph(onCreateClose: () -> Unit, onCreate: (recipeId: Long) -> Unit) {
     fullScreenDialogComposable<CreateRecipe> {
         Surface(
             shadowElevation = 6.dp,
             shape = MaterialTheme.shapes.medium
         ) {
             RecipeApp(
-                onBack = onCreateClose
+                onBack = onCreateClose,
+                onCreate = onCreate
             )
         }
     }

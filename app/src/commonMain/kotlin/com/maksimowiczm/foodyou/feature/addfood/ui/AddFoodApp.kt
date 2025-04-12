@@ -295,6 +295,9 @@ private fun AddFoodNavHost(
         recipeGraph(
             onCreateClose = {
                 navController.popBackStack<CreateRecipe>(inclusive = true)
+            },
+            onCreate = {
+                // TODO
             }
         )
     }

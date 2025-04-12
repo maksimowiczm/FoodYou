@@ -33,6 +33,10 @@ internal class RecipeRepository(
     }.flow.map {
         it.map { it.toIngredient() }
     }
+
+    fun createRecipe(name: String, servings: Int, ingredients: List<Ingredient>): Long {
+        TODO()
+    }
 }
 
 private fun IngredientVirtualEntity.toIngredient(): Ingredient {

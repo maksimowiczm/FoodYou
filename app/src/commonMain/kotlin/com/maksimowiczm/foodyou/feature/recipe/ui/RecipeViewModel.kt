@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import pro.respawn.kmmutils.inputforms.Form
 import pro.respawn.kmmutils.inputforms.ValidationStrategy
 import pro.respawn.kmmutils.inputforms.default.Rules
+import pro.respawn.kmmutils.inputforms.dsl.isValid
 
 private data class IngredientInternal(val measurement: Measurement, val productId: FoodId.Product)
 
@@ -147,6 +148,26 @@ internal class RecipeViewModel(
         }
     }
 
+    private val _createState = MutableStateFlow<CreateState>(CreateState.Nothing)
+    val createState = _createState.asStateFlow()
+
     fun onCreate() {
+        if (_createState.value is CreateState.CreatingRecipe) return
+
+        val state = state.value
+        val ingredientsState = ingredients.value
+
+        val name = state.name.takeIf { it.isValid }?.value ?: return
+        val servings = state.servings.takeIf { it.isValid }?.value?.toIntOrNull() ?: return
+
+        viewModelScope.launch {
+            _createState.value = CreateState.CreatingRecipe
+            val id = recipeRepository.createRecipe(
+                name = name,
+                servings = servings,
+                ingredients = ingredientsState
+            )
+            _createState.value = CreateState.Created(id)
+        }
     }
 }
