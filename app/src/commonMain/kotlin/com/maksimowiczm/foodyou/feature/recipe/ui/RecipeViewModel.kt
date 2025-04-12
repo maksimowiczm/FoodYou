@@ -8,8 +8,8 @@ import pro.respawn.kmmutils.inputforms.Form
 import pro.respawn.kmmutils.inputforms.ValidationStrategy
 import pro.respawn.kmmutils.inputforms.default.Rules
 
-internal class CreateRecipeViewModel : ViewModel() {
-    private val _state = MutableStateFlow<CreateRecipeFormState>(CreateRecipeFormState())
+internal class RecipeViewModel : ViewModel() {
+    private val _state = MutableStateFlow<RecipeState>(RecipeState())
     val state = _state.asStateFlow()
 
     private val nameForm = Form(
