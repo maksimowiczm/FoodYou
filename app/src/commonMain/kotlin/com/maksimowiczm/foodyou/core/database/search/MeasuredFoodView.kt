@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.Measurement
     """
     SELECT
         p.id AS productId,
+        NULL AS recipeId,
         pm.diaryEpochDay AS epochDay,
         pm.mealId AS mealId,
         p.name AS name,
@@ -28,7 +29,8 @@ import com.maksimowiczm.foodyou.core.database.measurement.Measurement
 )
 data class MeasuredFoodView(
     // Identity
-    val productId: Long,
+    val productId: Long?,
+    val recipeId: Long?,
     val epochDay: Int,
     val mealId: Long,
 

@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.Measurement
     """
     SELECT
         p.id AS productId,
+        NULL AS recipeId,
         p.name AS name,
         p.brand AS brand,
         p.barcode AS barcode,
@@ -44,7 +45,8 @@ import com.maksimowiczm.foodyou.core.database.measurement.Measurement
 )
 data class MeasurementSuggestionView(
     // Identity
-    val productId: Long,
+    val productId: Long?,
+    val recipeId: Long?,
 
     // Food
     val name: String,

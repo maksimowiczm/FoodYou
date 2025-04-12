@@ -42,7 +42,9 @@ abstract class RecipeDao {
     protected abstract suspend fun insertRecipe(recipeEntity: RecipeEntity): Long
 
     @Insert
-    protected abstract suspend fun insertRecipeIngredient(recipeIngredientEntity: RecipeIngredientEntity): Long
+    protected abstract suspend fun insertRecipeIngredient(
+        recipeIngredientEntity: RecipeIngredientEntity
+    ): Long
 
     @Transaction
     open suspend fun insertRecipeWithIngredients(

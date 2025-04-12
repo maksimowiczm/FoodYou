@@ -50,6 +50,7 @@ abstract class SearchDao {
         UNION
         SELECT
             s.productId AS productId,
+            s.recipeId AS recipeId,
             :epochDay AS epochDay,
             :mealId AS mealId,
             s.name AS name,
@@ -101,6 +102,7 @@ abstract class SearchDao {
         UNION
         SELECT
             s.productId AS productId,
+            NULL AS recipeId,
             :epochDay AS epochDay,
             :mealId AS mealId,
             s.name AS name,

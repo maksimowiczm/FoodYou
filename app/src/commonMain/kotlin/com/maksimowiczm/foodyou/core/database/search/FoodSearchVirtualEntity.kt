@@ -4,7 +4,8 @@ import com.maksimowiczm.foodyou.core.database.measurement.Measurement
 
 data class FoodSearchVirtualEntity(
     // Identity
-    val productId: Long,
+    val productId: Long?,
+    val recipeId: Long?,
     val epochDay: Int,
     val mealId: Long,
 
