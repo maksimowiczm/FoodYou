@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementDao
 import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.SuggestionVirtualEntity
+import com.maksimowiczm.foodyou.core.model.FlatRecipe
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
@@ -238,12 +239,22 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                 RecipeWithMeasurement(
                     measurementId = MeasurementId.Recipe(measurementId),
                     measurement = measurement,
-                    recipe = Recipe(
+                    recipe = FlatRecipe(
                         id = FoodId.Recipe(recipeId),
                         name = name,
-                        servings = servings,
-                        // TODO idk
-                        ingredients = emptyList()
+                        nutrients = Nutrients(
+                            calories = nutrients.calories.toNutrientValue(),
+                            proteins = nutrients.proteins.toNutrientValue(),
+                            carbohydrates = nutrients.carbohydrates.toNutrientValue(),
+                            sugars = nutrients.sugars.toNutrientValue(),
+                            fats = nutrients.fats.toNutrientValue(),
+                            saturatedFats = nutrients.saturatedFats.toNutrientValue(),
+                            salt = nutrients.salt.toNutrientValue(),
+                            sodium = nutrients.sodium.toNutrientValue(),
+                            fiber = nutrients.fiber.toNutrientValue()
+                        ),
+                        packageWeight = packageWeight?.let { PortionWeight.Package(it) },
+                        servingWeight = servingWeight?.let { PortionWeight.Serving(it) }
                     )
                 )
             }
