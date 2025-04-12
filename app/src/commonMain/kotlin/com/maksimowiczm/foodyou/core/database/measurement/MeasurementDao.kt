@@ -81,84 +81,12 @@ abstract class MeasurementDao {
 
     @Query(
         """
-        WITH Product AS (
-            SELECT
-                p.id AS productId,
-                NULL AS recipeId,
-                p.name AS name,
-                p.brand AS brand,
-                p.packageWeight AS packageWeight,
-                p.servingWeight AS servingWeight,
-                NULL AS servings,
-                p.calories AS calories,
-                p.proteins AS proteins,
-                p.carbohydrates AS carbohydrates,
-                p.sugars AS sugars,
-                p.fats AS fats,
-                p.saturatedFats AS saturatedFats,
-                p.salt AS salt,
-                p.sodium AS sodium,
-                p.fiber AS fiber,
-                m.id AS measurementId,
-                m.measurement AS measurement,
-                m.quantity AS quantity
-            FROM ProductMeasurementEntity m
-            LEFT JOIN ProductEntity p ON p.id = m.productId
-            WHERE diaryEpochDay = :epochDay
-            AND mealId = :mealId
-            AND isDeleted = 0
-            ORDER BY m.createdAt DESC 
-        ),
-        Recipe AS (
-            SELECT
-                NULL AS productId,
-                r.id AS recipeId,
-                r.name AS name,
-                NULL AS brand,
-                rw.totalWeight AS packageWeight,
-                rw.servingWeight AS servingWeight,
-                r.servings AS servings,
-                rn.calories AS calories,
-                rn.proteins AS proteins,
-                rn.carbohydrates AS carbohydrates,
-                rn.sugars AS sugars,
-                rn.fats AS fats,
-                rn.saturatedFats AS saturatedFats,
-                rn.salt AS salt,
-                rn.sodium AS sodium,
-                rn.fiber AS fiber,
-                m.id AS measurementId,
-                m.measurement AS measurement,
-                m.quantity AS quantity
-            FROM RecipeEntity r
-            LEFT JOIN RecipeNutritionView rn ON rn.recipeId = r.id
-            LEFT JOIN RecipeWeightView rw ON rw.recipeId = r.id
-            LEFT JOIN RecipeMeasurementEntity m ON m.recipeId = r.id
-            WHERE m.epochDay = :epochDay
-            AND m.mealId = :mealId
-            AND m.isDeleted = 0
-            ORDER BY m.createdAt DESC
-        )
-        SELECT * FROM Product
-        UNION ALL
-        SELECT * FROM Recipe
-        """
-    )
-    abstract fun observeMeasurements(
-        epochDay: Int,
-        mealId: Long
-    ): Flow<List<FoodMeasurementVirtualEntity>>
-
-    @Query(
-        """
         SELECT
             p.id AS productId,
-            NULL AS recipeId,
             p.name AS name,
             p.brand AS brand,
             p.packageWeight AS packageWeight,
             p.servingWeight AS servingWeight,
-            NULL AS servings,
             p.calories AS calories,
             p.proteins AS proteins,
             p.carbohydrates AS carbohydrates,
@@ -170,46 +98,79 @@ abstract class MeasurementDao {
             p.fiber AS fiber,
             m.id AS measurementId,
             m.measurement AS measurement,
-            m.quantity AS quantity
+            m.quantity AS quantity,
+            m.createdAt AS createdAt
+        FROM ProductMeasurementEntity m
+        LEFT JOIN ProductEntity p ON p.id = m.productId
+        WHERE diaryEpochDay = :epochDay
+        AND mealId = :mealId
+        AND isDeleted = 0
+        ORDER BY m.createdAt DESC 
+        """
+    )
+    abstract fun observeProductMeasurements(
+        epochDay: Int,
+        mealId: Long
+    ): Flow<List<ProductMeasurementVirtualEntity>>
+
+    @Query(
+        """
+        SELECT r.*
+        FROM RecipeEntity r
+        LEFT JOIN RecipeMeasurementEntity m ON r.id = m.recipeId
+        WHERE m.epochDay = :epochDay
+        AND m.mealId = :mealId
+        AND m.isDeleted = 0
+        """
+    )
+    abstract fun observeRecipeMeasurements(
+        epochDay: Int,
+        mealId: Long
+    ): Flow<List<RecipeMeasurementVirtualEntity>>
+
+    @Query(
+        """
+        SELECT r.*
+        FROM RecipeEntity r
+        LEFT JOIN RecipeMeasurementEntity m ON r.id = m.recipeId
+        WHERE m.id = :measurementId
+        AND m.isDeleted = 0
+        """
+    )
+    abstract fun observeRecipeMeasurement(
+        measurementId: Long
+    ): Flow<RecipeMeasurementVirtualEntity?>
+
+    @Query(
+        """
+        SELECT
+            p.id AS productId,
+            p.name AS name,
+            p.brand AS brand,
+            p.packageWeight AS packageWeight,
+            p.servingWeight AS servingWeight,
+            p.calories AS calories,
+            p.proteins AS proteins,
+            p.carbohydrates AS carbohydrates,
+            p.sugars AS sugars,
+            p.fats AS fats,
+            p.saturatedFats AS saturatedFats,
+            p.salt AS salt,
+            p.sodium AS sodium,
+            p.fiber AS fiber,
+            m.id AS measurementId,
+            m.measurement AS measurement,
+            m.quantity AS quantity,
+            m.createdAt AS createdAt
         FROM ProductMeasurementEntity m
         LEFT JOIN ProductEntity p ON p.id = m.productId
         WHERE m.id = :measurementId
         AND m.isDeleted = 0
         """
     )
-    abstract fun observeProductMeasurement(measurementId: Long): Flow<FoodMeasurementVirtualEntity?>
-
-    @Query(
-        """
-        SELECT
-            NULL AS productId,
-            r.id AS recipeId,
-            r.name AS name,
-            NULL AS brand,
-            rw.totalWeight AS packageWeight,
-            rw.servingWeight AS servingWeight,
-            r.servings AS servings,
-            rn.calories AS calories,
-            rn.proteins AS proteins,
-            rn.carbohydrates AS carbohydrates,
-            rn.sugars AS sugars,
-            rn.fats AS fats,
-            rn.saturatedFats AS saturatedFats,
-            rn.salt AS salt,
-            rn.sodium AS sodium,
-            rn.fiber AS fiber,
-            m.id AS measurementId,
-            m.measurement AS measurement,
-            m.quantity AS quantity
-        FROM RecipeMeasurementEntity m
-        LEFT JOIN RecipeEntity r ON r.id = m.recipeId
-        LEFT JOIN RecipeNutritionView rn ON rn.recipeId = r.id
-        LEFT JOIN RecipeWeightView rw ON rw.recipeId = r.id
-        WHERE m.id = :measurementId
-        AND m.isDeleted = 0
-        """
-    )
-    abstract fun observeRecipeMeasurement(measurementId: Long): Flow<FoodMeasurementVirtualEntity?>
+    abstract fun observeProductMeasurement(
+        measurementId: Long
+    ): Flow<ProductMeasurementVirtualEntity?>
 
     @Query(
         """

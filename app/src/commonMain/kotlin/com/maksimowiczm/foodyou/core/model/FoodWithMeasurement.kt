@@ -1,8 +1,11 @@
 package com.maksimowiczm.foodyou.core.model
 
+import kotlinx.datetime.LocalDateTime
+
 sealed interface FoodWithMeasurement {
     val measurementId: MeasurementId
     val measurement: Measurement
+    val measurementDate: LocalDateTime
     val food: Food
 
     /**
