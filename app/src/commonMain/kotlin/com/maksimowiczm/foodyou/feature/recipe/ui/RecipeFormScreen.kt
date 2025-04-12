@@ -88,9 +88,11 @@ internal fun RecipeFormScreen(
             onConfirm = onClose
         )
     }
+    val isModified = state.isModified || ingredients.isNotEmpty()
+    val isValid = state.isValid && ingredients.isNotEmpty()
 
     val handleClose = {
-        if (state.isModified) {
+        if (isModified) {
             showDiscardDialog = true
         } else {
             onClose()
@@ -98,7 +100,7 @@ internal fun RecipeFormScreen(
     }
 
     BackHandler(
-        enabled = state.isModified
+        enabled = isModified
     ) {
         showDiscardDialog = true
     }
@@ -120,7 +122,7 @@ internal fun RecipeFormScreen(
             actions = {
                 TextButton(
                     onClick = onCreate,
-                    enabled = state.isValid
+                    enabled = isValid
                 ) {
                     Text(stringResource(Res.string.action_create))
                 }
