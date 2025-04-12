@@ -65,6 +65,9 @@ private fun RecipeNavHost(
                     navController.navigate(BarcodeScanner) {
                         launchSingleTop = true
                     }
+                },
+                onBack = {
+                    navController.popBackStack<AddIngredient>(inclusive = true)
                 }
             )
         }

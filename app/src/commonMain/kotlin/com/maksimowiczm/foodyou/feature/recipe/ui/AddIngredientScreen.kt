@@ -30,6 +30,7 @@ internal fun AddIngredientScreen(
     viewModel: RecipeViewModel,
     listState: LazyListState,
     onBarcodeScanner: () -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pages = viewModel.pages.collectAsLazyPagingItems(
@@ -52,7 +53,10 @@ internal fun AddIngredientScreen(
         onBarcodeScanner = onBarcodeScanner,
         modifier = modifier,
         listState = listState,
-        textFieldState = textFieldState
+        textFieldState = textFieldState,
+        onSearch = remember(viewModel) { viewModel::onSearch },
+        onClear = remember(viewModel) { { viewModel.onSearch(null) } },
+        onBack = onBack
     )
 }
 
@@ -63,15 +67,18 @@ private fun AddIngredientScreen(
     onBarcodeScanner: () -> Unit,
     listState: LazyListState,
     textFieldState: TextFieldState,
+    onSearch: (String) -> Unit,
+    onClear: () -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val searchBarState = rememberSearchBarState()
 
     SearchScreen(
         pages = pages,
-        onSearch = {},
-        onClear = {},
-        onBack = {},
+        onSearch = onSearch,
+        onClear = onClear,
+        onBack = onBack,
         onBarcodeScanner = onBarcodeScanner,
         textFieldState = textFieldState,
         searchBarState = searchBarState,
@@ -91,8 +98,7 @@ private fun AddIngredientScreen(
                 )
             }
         },
-        hintCard = {
-        },
+        hintCard = {},
         modifier = modifier
     ) { paddingValues ->
         LazyColumn(
@@ -106,23 +112,3 @@ private fun AddIngredientScreen(
         }
     }
 }
-
-private val LazyPagingItems<Ingredient>.throwable: Throwable?
-    get() {
-        when (val state = loadState.refresh) {
-            is LoadState.Error -> return state.error
-            else -> null
-        }
-
-        when (val state = loadState.append) {
-            is LoadState.Error -> return state.error
-            else -> null
-        }
-
-        when (val state = loadState.prepend) {
-            is LoadState.Error -> return state.error
-            else -> null
-        }
-
-        return null
-    }
