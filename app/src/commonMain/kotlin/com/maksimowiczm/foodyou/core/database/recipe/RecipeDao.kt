@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -62,6 +63,25 @@ abstract class RecipeDao {
         }
 
         return recipeId
+    }
+
+    @Update
+    protected abstract suspend fun updateRecipe(recipeEntity: RecipeEntity)
+
+    @Update
+    protected abstract suspend fun updateRecipeIngredient(
+        recipeIngredientEntity: RecipeIngredientEntity
+    )
+
+    @Transaction
+    open suspend fun updateRecipeWithIngredients(
+        recipeEntity: RecipeEntity,
+        recipeIngredientEntities: List<RecipeIngredientEntity>
+    ) {
+        updateRecipe(recipeEntity)
+        recipeIngredientEntities.forEach {
+            updateRecipeIngredient(it)
+        }
     }
 
     @Transaction

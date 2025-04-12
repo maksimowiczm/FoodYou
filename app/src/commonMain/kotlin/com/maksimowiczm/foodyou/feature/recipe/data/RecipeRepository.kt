@@ -100,6 +100,38 @@ internal class RecipeRepository(
             recipeIngredientEntities = recipeIngredientEntities
         )
     }
+
+    suspend fun updateRecipe(id: Long, name: String, servings: Int, ingredients: List<Ingredient>) {
+        val recipeEntity = RecipeEntity(
+            id = id,
+            name = name,
+            servings = servings
+        )
+
+        val recipeIngredientEntities = ingredients.map { ingredient ->
+            val quantity = when (ingredient.measurement) {
+                is Measurement.Gram -> ingredient.measurement.value
+                is Measurement.Package -> ingredient.measurement.quantity
+                is Measurement.Serving -> ingredient.measurement.quantity
+            }
+
+            RecipeIngredientEntity(
+                recipeId = 0L,
+                productId = ingredient.product.id.id,
+                measurement = when (ingredient.measurement) {
+                    is Measurement.Gram -> MeasurementEntity.Gram
+                    is Measurement.Package -> MeasurementEntity.Package
+                    is Measurement.Serving -> MeasurementEntity.Serving
+                },
+                quantity = quantity
+            )
+        }
+
+        return recipeDao.updateRecipeWithIngredients(
+            recipeEntity = recipeEntity,
+            recipeIngredientEntities = recipeIngredientEntities
+        )
+    }
 }
 
 private fun IngredientVirtualEntity.toIngredient(): Ingredient {

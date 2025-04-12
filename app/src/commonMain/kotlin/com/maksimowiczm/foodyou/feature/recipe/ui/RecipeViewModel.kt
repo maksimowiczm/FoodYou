@@ -184,11 +184,22 @@ internal class RecipeViewModel(
 
         viewModelScope.launch {
             _createState.value = CreateState.CreatingRecipe
-            val id = recipeRepository.createRecipe(
-                name = name,
-                servings = servings,
-                ingredients = ingredientsState
-            )
+            val id = if (recipeId != -1L) {
+                recipeRepository.updateRecipe(
+                    id = recipeId,
+                    name = name,
+                    servings = servings,
+                    ingredients = ingredientsState
+                )
+
+                recipeId
+            } else {
+                recipeRepository.createRecipe(
+                    name = name,
+                    servings = servings,
+                    ingredients = ingredientsState
+                )
+            }
             _createState.value = CreateState.Created(id)
         }
     }
