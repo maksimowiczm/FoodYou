@@ -12,7 +12,7 @@ internal data class RecipeState(
     val ingredients: List<Ingredient> = emptyList()
 ) {
     val isModified: Boolean
-        get() = !name.isEmpty && !servings.isEmpty && ingredients.isNotEmpty()
+        get() = !name.isEmpty || !servings.isEmpty || ingredients.isNotEmpty()
 
     val isValid: Boolean
         get() = name.isValid && servings.isValid && ingredients.isNotEmpty()
