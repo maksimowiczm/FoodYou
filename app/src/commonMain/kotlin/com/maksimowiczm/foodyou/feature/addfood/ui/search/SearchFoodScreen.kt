@@ -67,6 +67,7 @@ import com.maksimowiczm.foodyou.core.ui.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.core.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
+import com.maksimowiczm.foodyou.core.ui.ext.throwable
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.ProductSearchBarSuggestions
@@ -526,24 +527,4 @@ private val SearchFoodItem.caloriesString: String?
     @Composable get() = weight?.let {
         val value = (it * calories / 100).roundToInt()
         "$value " + stringResource(Res.string.unit_kcal)
-    }
-
-private val LazyPagingItems<SearchFoodItem>.throwable: Throwable?
-    get() {
-        when (val state = loadState.refresh) {
-            is LoadState.Error -> return state.error
-            else -> null
-        }
-
-        when (val state = loadState.append) {
-            is LoadState.Error -> return state.error
-            else -> null
-        }
-
-        when (val state = loadState.prepend) {
-            is LoadState.Error -> return state.error
-            else -> null
-        }
-
-        return null
     }

@@ -17,9 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.maksimowiczm.foodyou.core.ui.ext.throwable
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.SearchScreen
 import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsErrorCard
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
