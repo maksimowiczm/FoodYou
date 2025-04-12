@@ -70,6 +70,7 @@ import pro.respawn.kmmutils.inputforms.dsl.isValid
 @Composable
 internal fun RecipeFormScreen(
     state: RecipeState,
+    ingredients: List<Ingredient>,
     onNameChange: (String) -> Unit,
     onServingsChange: (String) -> Unit,
     onAddIngredient: () -> Unit,
@@ -131,7 +132,7 @@ internal fun RecipeFormScreen(
     val coroutineScope = rememberCoroutineScope()
     var selectedIngredientIndex by rememberSaveable { mutableStateOf(-1) }
     if (selectedIngredientIndex != -1) {
-        val item = state.ingredients.getOrNull(selectedIngredientIndex)
+        val item = ingredients.getOrNull(selectedIngredientIndex)
 
         LaunchedEffect(item) {
             if (item == null) {
@@ -302,14 +303,14 @@ internal fun RecipeFormScreen(
                 }
             }
 
-            items(state.ingredients) {
+            items(ingredients) {
                 it.ListItem(
                     modifier = Modifier
-                        .clickable { selectedIngredientIndex = state.ingredients.indexOf(it) }
+                        .clickable { selectedIngredientIndex = ingredients.indexOf(it) }
                 )
             }
 
-            if (state.ingredients.isNotEmpty()) {
+            if (ingredients.isNotEmpty()) {
                 item {
                     HorizontalDivider(Modifier.padding(bottom = 8.dp))
                 }
@@ -324,12 +325,11 @@ internal fun RecipeFormScreen(
                 }
 
                 item {
-                    val nutrients = state.ingredients.map {
+                    val nutrients = ingredients.map {
                         it.product.nutrients
                     }.sum()
 
-                    val anyProductIncomplete =
-                        state.ingredients.any { !it.product.nutrients.isComplete }
+                    val anyProductIncomplete = ingredients.any { !it.product.nutrients.isComplete }
 
                     Column {
                         CaloriesProgressIndicator(
@@ -351,7 +351,7 @@ internal fun RecipeFormScreen(
 
                         if (anyProductIncomplete) {
                             IncompleteFoodsList(
-                                foods = state.ingredients
+                                foods = ingredients
                                     .distinctBy { it.product.id }
                                     .map {
                                         IncompleteFoodData(

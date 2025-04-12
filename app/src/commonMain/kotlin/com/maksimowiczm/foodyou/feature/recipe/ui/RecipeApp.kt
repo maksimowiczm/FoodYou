@@ -41,6 +41,7 @@ private fun RecipeNavHost(
 ) {
     val viewModel = koinViewModel<RecipeViewModel>()
     val recipeState by viewModel.state.collectAsStateWithLifecycle()
+    val ingredients by viewModel.ingredients.collectAsStateWithLifecycle()
     val searchListState = rememberLazyListState()
 
     NavHost(
@@ -50,6 +51,7 @@ private fun RecipeNavHost(
         crossfadeComposable<CreateRecipe> {
             RecipeFormScreen(
                 state = recipeState,
+                ingredients = ingredients,
                 onNameChange = remember(viewModel) { viewModel::onNameChange },
                 onServingsChange = remember(viewModel) { viewModel::onServingsChange },
                 onAddIngredient = {
@@ -71,7 +73,7 @@ private fun RecipeNavHost(
                     }
                 },
                 onEditIngredient = {
-                    val index = recipeState.ingredients.indexOf(it)
+                    val index = ingredients.indexOf(it)
 
                     navController.navigate(UpdateIngredientMeasurement(index)) {
                         launchSingleTop = true
@@ -165,8 +167,7 @@ private fun RecipeNavHost(
         crossfadeComposable<UpdateIngredientMeasurement> {
             val (index) = it.toRoute<UpdateIngredientMeasurement>()
 
-            val ingredient = recipeState.ingredients.getOrNull(index)
-                ?: return@crossfadeComposable
+            val ingredient = ingredients.getOrNull(index) ?: return@crossfadeComposable
 
             UpdateIngredientMeasurementScreen(
                 ingredient = ingredient,
