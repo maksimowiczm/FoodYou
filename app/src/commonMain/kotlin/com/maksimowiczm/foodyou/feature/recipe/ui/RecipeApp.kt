@@ -65,6 +65,11 @@ private fun RecipeNavHost(
                     }
                 },
                 onCreate = remember(viewModel) { viewModel::onCreate },
+                onEditProduct = {
+                    navController.navigate(UpdateProduct(it)) {
+                        launchSingleTop = true
+                    }
+                },
                 modifier = modifier
             )
         }

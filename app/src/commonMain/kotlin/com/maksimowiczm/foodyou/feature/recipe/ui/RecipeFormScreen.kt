@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.recipe.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,7 +44,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.model.FoodId
+import com.maksimowiczm.foodyou.core.model.sum
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
+import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
+import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
+import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
+import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import pro.respawn.kmmutils.inputforms.dsl.isValid
@@ -55,6 +62,7 @@ internal fun RecipeFormScreen(
     onNameChange: (String) -> Unit,
     onServingsChange: (String) -> Unit,
     onAddIngredient: () -> Unit,
+    onEditProduct: (Long) -> Unit,
     onClose: () -> Unit,
     onCreate: () -> Unit,
     modifier: Modifier = Modifier
@@ -216,6 +224,65 @@ internal fun RecipeFormScreen(
                 items = state.ingredients
             ) {
                 it.ListItem()
+            }
+
+            item {
+                HorizontalDivider(Modifier.padding(vertical = 8.dp))
+            }
+
+            item {
+                Text(
+                    text = stringResource(Res.string.headline_summary),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            item {
+                val nutrients = state.ingredients.map {
+                    it.product.nutrients
+                }.sum()
+
+                val anyProductIncomplete =
+                    state.ingredients.any { !it.product.nutrients.isComplete }
+
+                Column {
+                    CaloriesProgressIndicator(
+                        proteins = nutrients.proteins.value,
+                        carbohydrates = nutrients.carbohydrates.value,
+                        fats = nutrients.fats.value,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(32.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+
+                    NutrientsList(
+                        nutrients = nutrients,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+
+                    if (anyProductIncomplete) {
+                        IncompleteFoodsList(
+                            foods = state.ingredients
+                                .distinctBy { it.product.id }
+                                .map {
+                                    IncompleteFoodData(
+                                        foodId = it.product.id,
+                                        name = it.product.name
+                                    )
+                                },
+                            onFoodClick = {
+                                it as FoodId.Product
+                                onEditProduct(it.id)
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+                    }
+                }
             }
         }
     }
