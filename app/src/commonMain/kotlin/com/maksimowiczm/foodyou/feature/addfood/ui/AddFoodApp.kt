@@ -126,6 +126,7 @@ private fun AddFoodNavHost(
                     onFoodClick = {
                         val route = when (it) {
                             is FoodId.Product -> MeasureProduct(it.id)
+                            is FoodId.Recipe -> TODO()
                         }
 
                         navController.navigate(route) {

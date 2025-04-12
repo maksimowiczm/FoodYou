@@ -23,11 +23,13 @@ internal class FoodRepositoryImpl(database: FoodYouDatabase) : FoodRepository {
 
     override fun observeFood(id: FoodId): Flow<Food?> = when (id) {
         is FoodId.Product -> productDao.observeProduct(id.id).map { it?.toFood() }
+        is FoodId.Recipe -> TODO()
     }
 
     override suspend fun deleteFood(id: FoodId) {
         when (id) {
             is FoodId.Product -> productDao.deleteProduct(id.id)
+            is FoodId.Recipe -> TODO()
         }
     }
 }

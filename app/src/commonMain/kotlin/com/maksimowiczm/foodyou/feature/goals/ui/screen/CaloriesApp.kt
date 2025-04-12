@@ -63,6 +63,8 @@ private fun CaloriesNavHost(
                                 launchSingleTop = true
                             }
                         }
+
+                        is FoodId.Recipe -> TODO()
                     }
                 }
             )

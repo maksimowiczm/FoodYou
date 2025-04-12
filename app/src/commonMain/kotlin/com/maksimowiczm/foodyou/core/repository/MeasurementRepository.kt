@@ -70,6 +70,8 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                 .getProductMeasurementSuggestions(foodId.id)
                 .map { it.toMeasurement() }
         }
+
+        is FoodId.Recipe -> TODO()
     }
 
     override suspend fun addMeasurement(
@@ -105,6 +107,8 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
 
                 measurementDao.addProductMeasurement(entity)
             }
+
+            is FoodId.Recipe -> TODO()
         }
     }
 

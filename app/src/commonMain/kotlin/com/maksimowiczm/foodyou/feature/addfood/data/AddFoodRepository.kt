@@ -143,7 +143,28 @@ private fun FoodSearchVirtualEntity.toSearchFoodItem(): SearchFoodItem {
                 uniqueId = foodId.uniqueId(measurementId)
             )
         }
-        else -> TODO()
+
+        recipeId != null -> {
+            val foodId = FoodId.Recipe(recipeId)
+            val measurementId = measurementId?.let { MeasurementId.Product(measurementId) }
+
+            return SearchFoodItem(
+                foodId = foodId,
+                name = name,
+                brand = brand,
+                calories = calories,
+                proteins = proteins,
+                carbohydrates = carbohydrates,
+                fats = fats,
+                packageWeight = packageWeight?.let { PortionWeight.Package(it) },
+                servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
+                measurementId = measurementId,
+                measurement = toMeasurement(),
+                uniqueId = foodId.uniqueId(measurementId)
+            )
+        }
+
+        else -> error("Data inconsistency: productId and recipeId are null")
     }
 }
 
@@ -163,5 +184,7 @@ private fun FoodId.uniqueId(measurementId: MeasurementId?): String {
     return when (this) {
         is FoodId.Product if (measurementId != null) -> "p_${id}_$measurementId"
         is FoodId.Product -> "p_$id"
+        is FoodId.Recipe if (measurementId != null) -> "r_${id}_$measurementId"
+        is FoodId.Recipe -> "r_$id"
     }
 }
