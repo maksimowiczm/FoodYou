@@ -327,9 +327,9 @@ internal fun RecipeFormScreen(
                 }
 
                 item {
-                    val nutrients = ingredients.mapNotNull { ingredient ->
-                        ingredient.weight?.let { ingredient.product.nutrients * it / 100f }
-                    }.sum()
+                    val nutrients = ingredients
+                        .map { it.product.nutrients * (it.weight ?: 0f) / 100f }
+                        .sum()
 
                     val anyProductIncomplete = ingredients.any { !it.product.nutrients.isComplete }
 

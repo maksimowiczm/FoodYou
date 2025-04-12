@@ -194,4 +194,60 @@ abstract class MeasurementDao {
     abstract suspend fun getProductMeasurementSuggestions(
         productId: Long
     ): List<SuggestionVirtualEntity>
+
+    @Query(
+        """
+        WITH LatestMeasurements AS (
+            SELECT DISTINCT m1.quantity, m1.measurement
+            FROM RecipeMeasurementEntity m1
+            JOIN (
+                SELECT m2.measurement, MAX(m2.createdAt) AS maxCreatedAt
+                FROM RecipeMeasurementEntity m2
+                WHERE m2.recipeId = :recipeId
+                GROUP BY m2.measurement
+                LIMIT 3
+            ) latest ON m1.measurement = latest.measurement AND m1.createdAt = latest.maxCreatedAt
+            WHERE m1.recipeId = :recipeId
+            GROUP BY m1.measurement
+        ),
+        Defaults AS (
+            SELECT
+                r.id AS recipeId,
+                $SERVING AS measurement,
+                1 AS quantity
+            FROM RecipeEntity r
+            WHERE r.id = :recipeId
+            UNION ALL
+            SELECT
+                r.id AS recipeId,
+                $PACKAGE AS measurement,
+                1 AS quantity
+            FROM RecipeEntity r
+            WHERE r.id = :recipeId
+            UNION ALL
+            SELECT
+                r.id AS recipeId,
+                $GRAM AS measurement,
+                100 AS quantity
+            FROM RecipeEntity r
+            WHERE r.id = :recipeId
+        )
+        SELECT DISTINCT
+            m.quantity, 
+            m.measurement
+        FROM LatestMeasurements m
+        UNION ALL
+        SELECT
+            d.quantity, 
+            d.measurement
+        FROM Defaults d
+        WHERE NOT EXISTS (
+            SELECT 1 FROM LatestMeasurements lm WHERE lm.measurement = d.measurement
+        )
+        ORDER BY measurement DESC
+        """
+    )
+    abstract suspend fun getRecipeMeasurementSuggestions(
+        recipeId: Long
+    ): List<SuggestionVirtualEntity>
 }

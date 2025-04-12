@@ -125,8 +125,13 @@ private fun AddFoodNavHost(
                     onOpenFoodFactsSettings = onOpenFoodFactsSettings,
                     onFoodClick = {
                         val route = when (it) {
-                            is FoodId.Product -> MeasureProduct(it.id)
-                            is FoodId.Recipe -> TODO()
+                            is FoodId.Product -> MeasureFood(
+                                productId = it.id
+                            )
+
+                            is FoodId.Recipe -> MeasureFood(
+                                recipeId = it.id
+                            )
                         }
 
                         navController.navigate(route) {
@@ -215,7 +220,7 @@ private fun AddFoodNavHost(
                 }
             )
         }
-        crossfadeComposable<MeasureProduct>(
+        crossfadeComposable<MeasureFood>(
             popEnterTransition = {
                 if (initialState.destination.hasRoute<UpdateProduct>()) {
                     fadeIn(snap())
@@ -224,23 +229,31 @@ private fun AddFoodNavHost(
                 }
             }
         ) {
-            val (productId) = it.toRoute<MeasureProduct>()
+            val (productId, recipeId) = it.toRoute<MeasureFood>()
 
-            val foodId = FoodId.Product(productId)
+            val foodId = when {
+                productId != null -> FoodId.Product(productId)
+                recipeId != null -> FoodId.Recipe(recipeId)
+                else -> error("Either productId or recipeId must be provided")
+            }
 
             CreateMeasurementScreen(
                 mealId = mealId,
                 date = date,
                 foodId = foodId,
                 onBack = {
-                    navController.popBackStack<MeasureProduct>(inclusive = true)
+                    navController.popBackStack<MeasureFood>(inclusive = true)
                 },
                 onDelete = {
-                    navController.popBackStack<MeasureProduct>(inclusive = true)
+                    navController.popBackStack<MeasureFood>(inclusive = true)
                 },
                 onEdit = {
-                    navController.navigate(UpdateProduct(productId)) {
-                        launchSingleTop = true
+                    when (foodId) {
+                        is FoodId.Product -> navController.navigate(UpdateProduct(foodId.id)) {
+                            launchSingleTop = true
+                        }
+
+                        is FoodId.Recipe -> TODO()
                     }
                 }
             )
@@ -275,7 +288,7 @@ private fun AddFoodNavHost(
         }
         productGraph(
             onCreateProduct = {
-                navController.navigate(MeasureProduct(it)) {
+                navController.navigate(MeasureFood(productId = it)) {
                     launchSingleTop = true
 
                     popUpTo<SearchFood> {
@@ -314,7 +327,13 @@ private data object SearchFoodBarcodeScanner
 private data object Meal
 
 @Serializable
-private data class MeasureProduct(val productId: Long)
+private data class UpdateProductMeasurement(val measurementId: Long)
 
 @Serializable
-private data class UpdateProductMeasurement(val measurementId: Long)
+private data class MeasureFood(val productId: Long? = null, val recipeId: Long? = null) {
+    init {
+        if (productId == null && recipeId == null) {
+            error("Either productId or recipeId must be provided")
+        }
+    }
+}

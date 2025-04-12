@@ -65,14 +65,9 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
         }.map { it?.toFoodWithMeasurement() }
 
     override suspend fun getSuggestions(foodId: FoodId): List<Measurement> = when (foodId) {
-        is FoodId.Product -> {
-            measurementDao
-                .getProductMeasurementSuggestions(foodId.id)
-                .map { it.toMeasurement() }
-        }
-
-        is FoodId.Recipe -> TODO()
-    }
+        is FoodId.Product -> measurementDao.getProductMeasurementSuggestions(foodId.id)
+        is FoodId.Recipe -> measurementDao.getRecipeMeasurementSuggestions(foodId.id)
+    }.map { it.toMeasurement() }
 
     override suspend fun addMeasurement(
         date: LocalDate,
