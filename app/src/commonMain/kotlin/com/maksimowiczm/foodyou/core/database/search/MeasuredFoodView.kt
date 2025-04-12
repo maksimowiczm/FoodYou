@@ -36,10 +36,10 @@ import com.maksimowiczm.foodyou.core.database.measurement.Measurement
             r.name AS name,
             NULL AS brand,
             NULL AS barcode,
-            rn.totalCalories AS calories,
-            rn.totalProteins AS proteins,
-            rn.totalCarbohydrates AS carbohydrates,
-            rn.totalFats AS fats,
+            rn.totalCalories / rw.totalWeight * 100 AS calories,
+            rn.totalProteins / rw.totalWeight * 100 AS proteins,
+            rn.totalCarbohydrates / rw.totalWeight * 100 AS carbohydrates,
+            rn.totalFats / rw.totalWeight * 100 AS fats,
             rw.totalWeight AS packageWeight,
             rw.servingWeight AS servingWeight,
             rm.id AS measurementId,
@@ -63,14 +63,16 @@ data class MeasuredFoodView(
     val epochDay: Int,
     val mealId: Long,
 
-    // Food
+    // Food data
     val name: String,
     val brand: String?,
     val barcode: String?,
+    // Nutrition per 100g
     val calories: Float,
     val proteins: Float,
     val carbohydrates: Float,
     val fats: Float,
+    // Weight
     val packageWeight: Float?,
     val servingWeight: Float?,
 
