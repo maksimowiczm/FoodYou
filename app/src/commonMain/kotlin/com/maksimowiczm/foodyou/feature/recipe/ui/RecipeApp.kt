@@ -215,7 +215,7 @@ private fun RecipeNavHost(
                 },
                 onDeleteFood = {
                     navController.popBackStack<UpdateIngredientMeasurement>(inclusive = true)
-                    viewModel.onRemoveIngredient(ingredient)
+                    viewModel.onRemoveIngredient(index)
                     viewModel.onProductDelete(ingredient.product.id.id)
                 },
                 viewModel = viewModel

@@ -75,7 +75,7 @@ internal fun RecipeFormScreen(
     onServingsChange: (String) -> Unit,
     onAddIngredient: () -> Unit,
     onEditIngredient: (Ingredient) -> Unit,
-    onRemoveIngredient: (Ingredient) -> Unit,
+    onRemoveIngredient: (index: Int) -> Unit,
     onEditProduct: (Long) -> Unit,
     onClose: () -> Unit,
     onCreate: () -> Unit,
@@ -183,7 +183,7 @@ internal fun RecipeFormScreen(
                 },
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
-                        onRemoveIngredient(item)
+                        onRemoveIngredient(selectedIngredientIndex)
                         sheetState.hide()
                         selectedIngredientIndex = -1
                     }
