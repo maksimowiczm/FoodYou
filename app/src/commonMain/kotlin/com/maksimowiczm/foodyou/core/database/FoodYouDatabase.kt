@@ -15,6 +15,7 @@ import com.maksimowiczm.foodyou.core.database.meal.MealEntity
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementDao
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementTypeConverter
 import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementEntity
+import com.maksimowiczm.foodyou.core.database.measurement.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.core.database.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.core.database.openfoodfacts.OpenFoodFactsPagingKeyEntity
 import com.maksimowiczm.foodyou.core.database.product.ProductDao
@@ -23,6 +24,8 @@ import com.maksimowiczm.foodyou.core.database.product.ProductSourceConverter
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeDao
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeIngredientEntity
+import com.maksimowiczm.foodyou.core.database.recipe.RecipeNutritionView
+import com.maksimowiczm.foodyou.core.database.recipe.RecipeWeightView
 import com.maksimowiczm.foodyou.core.database.search.MeasuredFoodView
 import com.maksimowiczm.foodyou.core.database.search.MeasurementSuggestionView
 import com.maksimowiczm.foodyou.core.database.search.SearchDao
@@ -36,19 +39,27 @@ import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
         OpenFoodFactsPagingKeyEntity::class,
         SearchQueryEntity::class,
         RecipeEntity::class,
-        RecipeIngredientEntity::class
+        RecipeIngredientEntity::class,
+        RecipeMeasurementEntity::class
     ],
     views = [
         DiaryDayView::class,
         MeasuredFoodView::class,
-        MeasurementSuggestionView::class
+        MeasurementSuggestionView::class,
+        RecipeNutritionView::class,
+        RecipeWeightView::class
     ],
     version = FoodYouDatabase.VERSION,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
-        AutoMigration(from = 5, to = 6)
+        AutoMigration(from = 5, to = 6),
+        AutoMigration(from = 6, to = 7),
+        AutoMigration(from = 7, to = 8),
+        AutoMigration(from = 8, to = 9),
+        AutoMigration(from = 9, to = 10),
+        AutoMigration(from = 10, to = 11)
     ]
 )
 @TypeConverters(
@@ -65,7 +76,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val recipeDao: RecipeDao
 
     companion object {
-        const val VERSION = 6
+        const val VERSION = 11
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,
