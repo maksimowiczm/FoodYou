@@ -75,7 +75,6 @@ internal fun RecipeFormScreen(
         )
     }
 
-    // TODO
     val handleClose = {
         if (state.isModified) {
             showDiscardDialog = true
@@ -226,61 +225,63 @@ internal fun RecipeFormScreen(
                 it.ListItem()
             }
 
-            item {
-                HorizontalDivider(Modifier.padding(vertical = 8.dp))
-            }
+            if (state.ingredients.isNotEmpty()) {
+                item {
+                    HorizontalDivider(Modifier.padding(bottom = 8.dp))
+                }
 
-            item {
-                Text(
-                    text = stringResource(Res.string.headline_summary),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            item {
-                val nutrients = state.ingredients.map {
-                    it.product.nutrients
-                }.sum()
-
-                val anyProductIncomplete =
-                    state.ingredients.any { !it.product.nutrients.isComplete }
-
-                Column {
-                    CaloriesProgressIndicator(
-                        proteins = nutrients.proteins.value,
-                        carbohydrates = nutrients.carbohydrates.value,
-                        fats = nutrients.fats.value,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(32.dp)
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                item {
+                    Text(
+                        text = stringResource(Res.string.headline_summary),
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
                     )
+                }
 
-                    NutrientsList(
-                        nutrients = nutrients,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
+                item {
+                    val nutrients = state.ingredients.map {
+                        it.product.nutrients
+                    }.sum()
 
-                    if (anyProductIncomplete) {
-                        IncompleteFoodsList(
-                            foods = state.ingredients
-                                .distinctBy { it.product.id }
-                                .map {
-                                    IncompleteFoodData(
-                                        foodId = it.product.id,
-                                        name = it.product.name
-                                    )
-                                },
-                            onFoodClick = {
-                                it as FoodId.Product
-                                onEditProduct(it.id)
-                            },
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    val anyProductIncomplete =
+                        state.ingredients.any { !it.product.nutrients.isComplete }
+
+                    Column {
+                        CaloriesProgressIndicator(
+                            proteins = nutrients.proteins.value,
+                            carbohydrates = nutrients.carbohydrates.value,
+                            fats = nutrients.fats.value,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(32.dp)
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
                         )
+
+                        NutrientsList(
+                            nutrients = nutrients,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                        )
+
+                        if (anyProductIncomplete) {
+                            IncompleteFoodsList(
+                                foods = state.ingredients
+                                    .distinctBy { it.product.id }
+                                    .map {
+                                        IncompleteFoodData(
+                                            foodId = it.product.id,
+                                            name = it.product.name
+                                        )
+                                    },
+                                onFoodClick = {
+                                    it as FoodId.Product
+                                    onEditProduct(it.id)
+                                },
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            )
+                        }
                     }
                 }
             }
