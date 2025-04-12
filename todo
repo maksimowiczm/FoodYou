@@ -5,11 +5,11 @@ database
 - recipe search virtual entity
 
 recipes feature
-- recipe add screen
+- -- recipe add screen
 - recipe update screen
-- add ingredient (product) to recipe search screen
-- measure ingredient (product) screen
-- update ingredient (product) screen
+- -- add ingredient (product) to recipe search screen
+- -- measure ingredient (product) screen
+- -- update ingredient (product) screen
 
 addfood feature
 - -- add create recipe button
