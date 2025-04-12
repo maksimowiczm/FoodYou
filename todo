@@ -1,17 +1,20 @@
 database
 - -- recipe entity
 - -- recipe ingredient entity
-- recipe measurement (food measurement)
-- recipe search virtual entity
+- -- recipe measurement (food measurement)
+- -- recipe search virtual entity
 
 recipes feature
 - -- recipe add screen
-- recipe update screen
+- -- recipe update screen
 - -- add ingredient (product) to recipe search screen
 - -- measure ingredient (product) screen
 - -- update ingredient (product) screen
 
 addfood feature
 - -- add create recipe button
-- add recipes to search screen
-- add recipes to measurement
+- -- add recipes to search screen
+- -- add recipes to measurement
+
+polishing
+- recipe form top bar title
