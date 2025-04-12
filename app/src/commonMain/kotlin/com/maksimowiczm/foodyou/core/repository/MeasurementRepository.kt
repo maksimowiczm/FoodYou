@@ -18,7 +18,6 @@ import com.maksimowiczm.foodyou.core.model.Nutrients
 import com.maksimowiczm.foodyou.core.model.PortionWeight
 import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.model.ProductWithMeasurement
-import com.maksimowiczm.foodyou.core.model.Recipe
 import com.maksimowiczm.foodyou.core.model.RecipeWithMeasurement
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

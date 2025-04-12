@@ -341,15 +341,6 @@ private fun SearchFoodScreen(
                 contentPadding = paddingValues,
                 state = state.lazyListState
             ) {
-                if (!showEmptyLabel && pages.loadState.refresh == LoadState.Loading) {
-                    items(
-                        count = 100,
-                        key = { "skeleton-refresh-$it" }
-                    ) {
-                        ListItemSkeleton(shimmer)
-                    }
-                }
-
                 items(
                     count = pages.itemCount,
                     key = pages.itemKey { it.uniqueId }

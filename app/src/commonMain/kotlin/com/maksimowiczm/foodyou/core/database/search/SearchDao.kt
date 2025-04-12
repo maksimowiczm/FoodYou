@@ -66,9 +66,12 @@ abstract class SearchDao {
             s.measurement AS measurement,
             s.quantity AS quantity
         FROM Suggestion s
-        WHERE s.productId NOT IN (
-            SELECT productId
-            FROM Measured
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM Measured m
+            WHERE 
+                (m.productId IS NOT NULL AND m.productId = s.productId)
+                OR (m.recipeId IS NOT NULL AND m.recipeId = s.recipeId)
         )
         """
     )
