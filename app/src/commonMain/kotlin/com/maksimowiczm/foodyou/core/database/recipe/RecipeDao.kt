@@ -2,7 +2,9 @@ package com.maksimowiczm.foodyou.core.database.recipe
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 
 @Dao
 abstract class RecipeDao {
@@ -35,4 +37,27 @@ abstract class RecipeDao {
         """
     )
     abstract fun observeProductsByText(query: String?): PagingSource<Int, IngredientVirtualEntity>
+
+    @Insert
+    protected abstract suspend fun insertRecipe(recipeEntity: RecipeEntity): Long
+
+    @Insert
+    protected abstract suspend fun insertRecipeIngredient(recipeIngredientEntity: RecipeIngredientEntity): Long
+
+    @Transaction
+    open suspend fun insertRecipeWithIngredients(
+        recipeEntity: RecipeEntity,
+        recipeIngredientEntities: List<RecipeIngredientEntity>
+    ): Long {
+        val recipeId = insertRecipe(recipeEntity)
+        recipeIngredientEntities.forEach {
+            insertRecipeIngredient(
+                it.copy(
+                    recipeId = recipeId
+                )
+            )
+        }
+
+        return recipeId
+    }
 }
