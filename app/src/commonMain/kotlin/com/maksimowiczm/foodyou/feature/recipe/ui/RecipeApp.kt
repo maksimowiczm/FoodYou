@@ -32,6 +32,7 @@ import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun RecipeApp(
@@ -39,7 +40,10 @@ internal fun RecipeApp(
     onCreate: (recipeId: Long) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    viewModel: RecipeViewModel = koinViewModel()
+    recipeId: Long = -1,
+    viewModel: RecipeViewModel = koinViewModel(
+        parameters = { parametersOf(recipeId) }
+    )
 ) {
     val onBack: () -> Unit = {
         if (navController.currentBackStack.value.size == 2) {

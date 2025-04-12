@@ -36,7 +36,8 @@ internal class RecipeViewModel(
     private val foodRepository: FoodRepository,
     searchRepository: SearchRepository,
     private val recipeRepository: RecipeRepository,
-    private val observeMeasurableFoodUseCase: ObserveMeasurableFoodUseCase
+    private val observeMeasurableFoodUseCase: ObserveMeasurableFoodUseCase,
+    private val recipeId: Long = -1
 ) : ViewModel() {
     private val _state = MutableStateFlow<RecipeState>(RecipeState())
     val state = _state.asStateFlow()

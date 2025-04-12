@@ -29,6 +29,7 @@ import com.maksimowiczm.foodyou.feature.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.product.UpdateProduct
 import com.maksimowiczm.foodyou.feature.product.productGraph
 import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
+import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
@@ -253,7 +254,9 @@ private fun AddFoodNavHost(
                             launchSingleTop = true
                         }
 
-                        is FoodId.Recipe -> TODO()
+                        is FoodId.Recipe -> navController.navigate(UpdateRecipe(foodId.id)) {
+                            launchSingleTop = true
+                        }
                     }
                 }
             )
@@ -311,7 +314,19 @@ private fun AddFoodNavHost(
                 navController.popBackStack<CreateRecipe>(inclusive = true)
             },
             onCreate = {
-                // TODO
+                navController.navigate(MeasureFood(recipeId = it)) {
+                    launchSingleTop = true
+
+                    popUpTo<SearchFood> {
+                        inclusive = false
+                    }
+                }
+            },
+            onUpdateClose = {
+                navController.popBackStack<UpdateRecipe>(inclusive = true)
+            },
+            onUpdate = {
+                navController.popBackStack<UpdateRecipe>(inclusive = true)
             }
         )
     }
