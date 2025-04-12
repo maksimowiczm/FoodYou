@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,10 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.maksimowiczm.foodyou.core.ui.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.core.ui.ext.throwable
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.SearchScreen
 import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsErrorCard
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -73,6 +77,7 @@ private fun AddIngredientScreen(
     modifier: Modifier = Modifier
 ) {
     val searchBarState = rememberSearchBarState()
+    val shimmer = rememberShimmer(ShimmerBounds.View)
 
     SearchScreen(
         pages = pages,
@@ -108,6 +113,15 @@ private fun AddIngredientScreen(
             items(
                 count = pages.itemCount
             ) {
+                val ingredient = pages[it]
+
+                Text(ingredient.toString())
+            }
+
+            if (pages.loadState.append is androidx.paging.LoadState.Loading) {
+                items(3) {
+                    FoodListItemSkeleton(shimmer)
+                }
             }
         }
     }

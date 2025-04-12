@@ -20,6 +20,7 @@ import com.maksimowiczm.foodyou.core.database.openfoodfacts.OpenFoodFactsPagingK
 import com.maksimowiczm.foodyou.core.database.product.ProductDao
 import com.maksimowiczm.foodyou.core.database.product.ProductEntity
 import com.maksimowiczm.foodyou.core.database.product.ProductSourceConverter
+import com.maksimowiczm.foodyou.core.database.recipe.RecipeDao
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.core.database.search.MeasuredFoodView
@@ -61,6 +62,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val productDao: ProductDao
     abstract val searchDao: SearchDao
     abstract val diaryDayDao: DiaryDayDao
+    abstract val recipeDao: RecipeDao
 
     companion object {
         const val VERSION = 6
