@@ -94,8 +94,8 @@ internal class ProductRepository(database: FoodYouDatabase) {
         val entity = ProductEntity(
             id = id,
             name = name,
-            brand = brand,
-            barcode = barcode,
+            brand = brand?.takeIf { it.isNotBlank() },
+            barcode = barcode?.takeIf { it.isNotBlank() },
             nutrients = nutrients,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
