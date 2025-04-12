@@ -71,7 +71,11 @@ private fun RecipeNavHost(
                     }
                 },
                 onEditIngredient = {
-                    // TODO
+                    val index = recipeState.ingredients.indexOf(it)
+
+                    navController.navigate(UpdateIngredientMeasurement(index)) {
+                        launchSingleTop = true
+                    }
                 },
                 onRemoveIngredient = remember(viewModel) { viewModel::onRemoveIngredient },
                 modifier = modifier
@@ -157,6 +161,45 @@ private fun RecipeNavHost(
                     }
                 )
             }
+        }
+        crossfadeComposable<UpdateIngredientMeasurement> {
+            val (index) = it.toRoute<UpdateIngredientMeasurement>()
+
+            val ingredient = recipeState.ingredients.getOrNull(index)
+                ?: return@crossfadeComposable
+
+            UpdateIngredientMeasurementScreen(
+                ingredient = ingredient,
+                onBack = {
+                    navController.popBackStack<UpdateIngredientMeasurement>(inclusive = true)
+                },
+                onMeasurement = {
+                    viewModel.onUpdateIngredient(
+                        index = index,
+                        ingredient = ingredient.copy(
+                            measurement = it
+                        )
+                    )
+                    navController.navigate(CreateRecipe) {
+                        popUpTo(CreateRecipe) {
+                            inclusive = false
+                        }
+
+                        launchSingleTop = true
+                    }
+                },
+                onEditFood = {
+                    navController.navigate(UpdateProduct(ingredient.product.id.id)) {
+                        launchSingleTop = true
+                    }
+                },
+                onDeleteFood = {
+                    navController.popBackStack<UpdateIngredientMeasurement>(inclusive = true)
+                    viewModel.onRemoveIngredient(ingredient)
+                    viewModel.onProductDelete(ingredient.product.id.id)
+                },
+                viewModel = viewModel
+            )
         }
         productGraph(
             onCreateClose = {

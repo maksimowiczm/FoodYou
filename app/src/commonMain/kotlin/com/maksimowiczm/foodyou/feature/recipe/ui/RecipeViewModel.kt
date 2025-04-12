@@ -61,6 +61,16 @@ internal class RecipeViewModel(
         }
     }
 
+    fun onUpdateIngredient(index: Int, ingredient: Ingredient) {
+        _state.update {
+            it.copy(
+                ingredients = it.ingredients.toMutableList().apply {
+                    this[index] = ingredient
+                }
+            )
+        }
+    }
+
     fun onRemoveIngredient(ingredient: Ingredient) {
         _state.update {
             it.copy(
