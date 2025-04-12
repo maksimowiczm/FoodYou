@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
-import com.maksimowiczm.foodyou.feature.addfood.data.SearchRepository
+import com.maksimowiczm.foodyou.core.repository.SearchRepository
+import com.maksimowiczm.foodyou.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,7 +20,8 @@ internal class SearchFoodViewModel(
     private val mealId: Long,
     private val date: LocalDate,
     private val measurementRepository: MeasurementRepository,
-    private val searchRepository: SearchRepository
+    private val addFoodRepository: AddFoodRepository,
+    searchRepository: SearchRepository
 ) : ViewModel() {
     private val mutableSearchQuery = MutableSharedFlow<String?>(replay = 1).apply { tryEmit(null) }
 
@@ -37,7 +39,7 @@ internal class SearchFoodViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pages = mutableSearchQuery.flatMapLatest { query ->
-        searchRepository.queryFood(
+        addFoodRepository.queryFood(
             query = query,
             mealId = mealId,
             date = date

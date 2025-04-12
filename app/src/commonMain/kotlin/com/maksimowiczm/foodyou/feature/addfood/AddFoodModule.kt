@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.addfood
 
-import com.maksimowiczm.foodyou.feature.addfood.data.SearchRepository
+import com.maksimowiczm.foodyou.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.CreateMeasurementScreenViewModel
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.UpdateMeasurementScreenViewModel
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodViewModel
@@ -13,7 +13,7 @@ val addFoodModule = module {
     viewModelOf(::UpdateMeasurementScreenViewModel)
 
     factory {
-        SearchRepository(
+        AddFoodRepository(
             database = get(),
             remoteMediatorFactory = get()
         )

@@ -14,7 +14,6 @@ import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.MeasurementId
 import com.maksimowiczm.foodyou.core.model.PortionWeight
-import com.maksimowiczm.foodyou.core.model.SearchQuery
 import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,32 +24,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
-internal class SearchRepository(
+internal class AddFoodRepository(
     database: FoodYouDatabase,
     private val remoteMediatorFactory: ProductRemoteMediatorFactory,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     val searchDao = database.searchDao
     private val ioScope = CoroutineScope(ioDispatcher + SupervisorJob())
-
-    fun observeRecentQueries(limit: Int): Flow<List<SearchQuery>> =
-        searchDao.observeRecentQueries(limit).map { list ->
-            list.map {
-                val date = Instant
-                    .fromEpochSeconds(it.epochSeconds)
-                    .toLocalDateTime(TimeZone.currentSystemDefault())
-
-                SearchQuery(
-                    query = it.query,
-                    date = date
-                )
-            }
-        }
 
     @OptIn(ExperimentalPagingApi::class)
     fun queryFood(query: String?, mealId: Long, date: LocalDate): Flow<PagingData<SearchFoodItem>> {

@@ -9,4 +9,5 @@ val repositoryModule = module {
 
     factoryOf(::MeasurementRepositoryImpl).bind<MeasurementRepository>()
     factoryOf(::GoalsRepositoryImpl).bind<GoalsRepository>()
+    factoryOf(::SearchRepositoryImpl).bind<SearchRepository>()
 }
