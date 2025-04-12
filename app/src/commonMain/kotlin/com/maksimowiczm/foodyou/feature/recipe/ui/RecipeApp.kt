@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.recipe.ui
 
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -9,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -27,7 +29,8 @@ private fun RecipeNavHost(
     navController: NavHostController = rememberNavController()
 ) {
     val viewModel = koinViewModel<RecipeViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val recipeState by viewModel.state.collectAsStateWithLifecycle()
+    val searchListState = rememberLazyListState()
 
     NavHost(
         navController = navController,
@@ -35,7 +38,7 @@ private fun RecipeNavHost(
     ) {
         crossfadeComposable<CreateRecipe> {
             RecipeFormScreen(
-                state = state,
+                state = recipeState,
                 onNameChange = remember(viewModel) { viewModel::onNameChange },
                 onServingsChange = remember(viewModel) { viewModel::onServingsChange },
                 onAddIngredient = {
@@ -55,6 +58,26 @@ private fun RecipeNavHost(
             )
         }
         crossfadeComposable<AddIngredient> {
+            AddIngredientScreen(
+                viewModel = viewModel,
+                listState = searchListState,
+                onBarcodeScanner = {
+                    navController.navigate(BarcodeScanner) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+        crossfadeComposable<BarcodeScanner> {
+            CameraBarcodeScannerScreen(
+                onBarcodeScan = {
+                    viewModel.onSearch(it)
+                    navController.popBackStack<BarcodeScanner>(inclusive = true)
+                },
+                onClose = {
+                    navController.popBackStack<BarcodeScanner>(inclusive = true)
+                }
+            )
         }
     }
 }
@@ -64,3 +87,6 @@ private data object CreateRecipe
 
 @Serializable
 private data object AddIngredient
+
+@Serializable
+private data object BarcodeScanner
