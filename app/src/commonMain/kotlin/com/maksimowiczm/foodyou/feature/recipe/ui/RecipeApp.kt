@@ -3,6 +3,9 @@ package com.maksimowiczm.foodyou.feature.recipe.ui
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -10,11 +13,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
@@ -31,24 +36,19 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun RecipeApp(
     onBack: () -> Unit,
-    onCreate: (Long) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    RecipeNavHost(
-        onBack = onBack,
-        onCreate = onCreate,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun RecipeNavHost(
-    onBack: () -> Unit,
-    onCreate: (Long) -> Unit,
+    onCreate: (recipeId: Long) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    viewModel: RecipeViewModel = koinViewModel()
 ) {
-    val viewModel = koinViewModel<RecipeViewModel>()
+    val onBack: () -> Unit = {
+        if (navController.currentBackStack.value.size == 2) {
+            onBack()
+        } else {
+            navController.popBackStack<CreateRecipe>(inclusive = true)
+        }
+    }
+
     val recipeState by viewModel.state.collectAsStateWithLifecycle()
     val ingredients by viewModel.ingredients.collectAsStateWithLifecycle()
     val searchListState = rememberLazyListState()
@@ -66,7 +66,8 @@ private fun RecipeNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = CreateRecipe
+        startDestination = CreateRecipe,
+        modifier = modifier
     ) {
         crossfadeComposable<CreateRecipe> {
             RecipeFormScreen(
@@ -79,13 +80,7 @@ private fun RecipeNavHost(
                         launchSingleTop = true
                     }
                 },
-                onClose = {
-                    if (navController.currentBackStack.value.size == 2) {
-                        onBack()
-                    } else {
-                        navController.popBackStack<CreateRecipe>(inclusive = true)
-                    }
-                },
+                onClose = onBack,
                 onCreate = remember(viewModel) { viewModel::onCreate },
                 onEditProduct = {
                     navController.navigate(UpdateProduct(it)) {
@@ -99,8 +94,7 @@ private fun RecipeNavHost(
                         launchSingleTop = true
                     }
                 },
-                onRemoveIngredient = remember(viewModel) { viewModel::onRemoveIngredient },
-                modifier = modifier
+                onRemoveIngredient = remember(viewModel) { viewModel::onRemoveIngredient }
             )
         }
         crossfadeComposable<AddIngredient>(
@@ -112,14 +106,34 @@ private fun RecipeNavHost(
                 }
             }
         ) {
+            val pages = viewModel.pages.collectAsLazyPagingItems(
+                viewModel.viewModelScope.coroutineContext
+            )
+            val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
+
+            val textFieldState = rememberTextFieldState()
+
+            LaunchedEffect(viewModel) {
+                viewModel.searchQuery.collectLatest {
+                    when (it) {
+                        null -> textFieldState.clearText()
+                        else -> textFieldState.setTextAndPlaceCursorAtEnd(it)
+                    }
+                }
+            }
+
             AddIngredientScreen(
-                viewModel = viewModel,
-                listState = searchListState,
+                pages = pages,
+                recentQueries = recentQueries,
                 onBarcodeScanner = {
                     navController.navigate(BarcodeScanner) {
                         launchSingleTop = true
                     }
                 },
+                listState = searchListState,
+                textFieldState = textFieldState,
+                onSearch = remember(viewModel) { viewModel::onSearch },
+                onClear = remember(viewModel) { { viewModel.onSearch(null) } },
                 onProductClick = {
                     navController.navigate(MeasureIngredient(it))
                 },
@@ -188,7 +202,14 @@ private fun RecipeNavHost(
 
             val ingredient = ingredients.getOrNull(index) ?: return@crossfadeComposable
 
+            val food = run {
+                viewModel
+                    .observeMeasurableFood(ingredient.productId)
+                    .collectAsStateWithLifecycle(null).value
+            } ?: return@crossfadeComposable
+
             UpdateIngredientMeasurementScreen(
+                food = food,
                 ingredient = ingredient,
                 onBack = {
                     navController.popBackStack<UpdateIngredientMeasurement>(inclusive = true)
@@ -209,16 +230,15 @@ private fun RecipeNavHost(
                     }
                 },
                 onEditFood = {
-                    navController.navigate(UpdateProduct(ingredient.product.id.id)) {
+                    navController.navigate(UpdateProduct(ingredient.productId)) {
                         launchSingleTop = true
                     }
                 },
                 onDeleteFood = {
                     navController.popBackStack<UpdateIngredientMeasurement>(inclusive = true)
                     viewModel.onRemoveIngredient(index)
-                    viewModel.onProductDelete(ingredient.product.id.id)
-                },
-                viewModel = viewModel
+                    viewModel.onProductDelete(ingredient.productId)
+                }
             )
         }
         productGraph(

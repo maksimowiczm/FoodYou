@@ -8,6 +8,8 @@ import com.maksimowiczm.foodyou.core.model.Product
 
 @Immutable
 internal data class Ingredient(val product: Product, val measurement: Measurement) {
+    val productId = product.id.id
+
     val weight: Float?
         get() = with(product) {
             when (measurement) {

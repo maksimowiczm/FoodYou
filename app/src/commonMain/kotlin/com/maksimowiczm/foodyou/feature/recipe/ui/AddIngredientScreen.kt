@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -18,17 +16,13 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.model.SearchQuery
 import com.maksimowiczm.foodyou.core.ui.component.FoodListItemSkeleton
@@ -40,54 +34,12 @@ import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-@Composable
-internal fun AddIngredientScreen(
-    viewModel: RecipeViewModel,
-    listState: LazyListState,
-    onBarcodeScanner: () -> Unit,
-    onProductClick: (productId: Long) -> Unit,
-    onCreateProduct: () -> Unit,
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val pages = viewModel.pages.collectAsLazyPagingItems(
-        viewModel.viewModelScope.coroutineContext
-    )
-    val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
-
-    val textFieldState = rememberTextFieldState()
-
-    LaunchedEffect(viewModel) {
-        viewModel.searchQuery.collectLatest {
-            when (it) {
-                null -> textFieldState.clearText()
-                else -> textFieldState.setTextAndPlaceCursorAtEnd(it)
-            }
-        }
-    }
-
-    AddIngredientScreen(
-        pages = pages,
-        recentQueries = recentQueries,
-        onBarcodeScanner = onBarcodeScanner,
-        modifier = modifier,
-        listState = listState,
-        textFieldState = textFieldState,
-        onSearch = remember(viewModel) { viewModel::onSearch },
-        onClear = remember(viewModel) { { viewModel.onSearch(null) } },
-        onProductClick = onProductClick,
-        onCreateProduct = onCreateProduct,
-        onBack = onBack
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-private fun AddIngredientScreen(
+internal fun AddIngredientScreen(
     pages: LazyPagingItems<Ingredient>,
     recentQueries: List<SearchQuery>,
     onBarcodeScanner: () -> Unit,
