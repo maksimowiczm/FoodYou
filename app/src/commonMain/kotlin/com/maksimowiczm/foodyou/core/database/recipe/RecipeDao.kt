@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.core.database.recipe
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
@@ -63,6 +64,26 @@ abstract class RecipeDao {
         }
 
         return recipeId
+    }
+
+    @Suppress("FunctionName")
+    @Delete
+    protected abstract suspend fun _deleteRecipe(recipeEntity: RecipeEntity)
+
+    @Delete
+    protected abstract suspend fun deleteRecipeIngredient(
+        recipeIngredientEntity: RecipeIngredientEntity
+    )
+
+    @Transaction
+    open suspend fun deleteRecipe(recipeId: Long) {
+        val recipeWithIngredients = getRecipe(recipeId)
+        if (recipeWithIngredients != null) {
+            _deleteRecipe(recipeWithIngredients.recipeEntity)
+            recipeWithIngredients.ingredients.forEach {
+                deleteRecipeIngredient(it)
+            }
+        }
     }
 
     @Update

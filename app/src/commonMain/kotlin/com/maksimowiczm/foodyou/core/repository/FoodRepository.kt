@@ -76,7 +76,7 @@ internal class FoodRepositoryImpl(database: FoodYouDatabase) : FoodRepository {
     override suspend fun deleteFood(id: FoodId) {
         when (id) {
             is FoodId.Product -> productDao.deleteProduct(id.id)
-            is FoodId.Recipe -> TODO()
+            is FoodId.Recipe -> recipeDao.deleteRecipe(id.id)
         }
     }
 }
