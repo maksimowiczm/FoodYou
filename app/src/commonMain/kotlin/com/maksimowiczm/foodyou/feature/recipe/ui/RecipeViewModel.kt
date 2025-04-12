@@ -5,15 +5,18 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.repository.FoodRepository
+import com.maksimowiczm.foodyou.core.repository.SearchRepository
 import com.maksimowiczm.foodyou.feature.measurement.ObserveMeasurableFoodUseCase
 import com.maksimowiczm.foodyou.feature.recipe.data.RecipeRepository
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import pro.respawn.kmmutils.inputforms.Form
@@ -22,11 +25,18 @@ import pro.respawn.kmmutils.inputforms.default.Rules
 
 internal class RecipeViewModel(
     private val foodRepository: FoodRepository,
+    private val searchRepository: SearchRepository,
     private val recipeRepository: RecipeRepository,
     private val observeMeasurableFoodUseCase: ObserveMeasurableFoodUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow<RecipeState>(RecipeState())
     val state = _state.asStateFlow()
+
+    val recentQueries = searchRepository.observeRecentQueries(20).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(30_000L),
+        initialValue = emptyList()
+    )
 
     private val _searchQuery = MutableSharedFlow<String?>(replay = 1).apply { tryEmit(null) }
     val searchQuery = _searchQuery.asSharedFlow()

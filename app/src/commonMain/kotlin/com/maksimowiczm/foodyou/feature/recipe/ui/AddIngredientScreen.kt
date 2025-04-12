@@ -22,14 +22,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.core.model.SearchQuery
 import com.maksimowiczm.foodyou.core.ui.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.core.ui.ext.throwable
+import com.maksimowiczm.foodyou.feature.addfood.ui.component.ProductSearchBarSuggestions
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.SearchScreen
 import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsErrorCard
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
@@ -37,6 +41,7 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -52,6 +57,7 @@ internal fun AddIngredientScreen(
     val pages = viewModel.pages.collectAsLazyPagingItems(
         viewModel.viewModelScope.coroutineContext
     )
+    val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
 
     val textFieldState = rememberTextFieldState()
 
@@ -66,6 +72,7 @@ internal fun AddIngredientScreen(
 
     AddIngredientScreen(
         pages = pages,
+        recentQueries = recentQueries,
         onBarcodeScanner = onBarcodeScanner,
         modifier = modifier,
         listState = listState,
@@ -82,6 +89,7 @@ internal fun AddIngredientScreen(
 @Composable
 private fun AddIngredientScreen(
     pages: LazyPagingItems<Ingredient>,
+    recentQueries: List<SearchQuery>,
     onBarcodeScanner: () -> Unit,
     listState: LazyListState,
     textFieldState: TextFieldState,
@@ -92,6 +100,7 @@ private fun AddIngredientScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val searchBarState = rememberSearchBarState()
     val shimmer = rememberShimmer(ShimmerBounds.View)
 
@@ -114,7 +123,22 @@ private fun AddIngredientScreen(
                 )
             }
         },
-        fullScreenSearchBarContent = {},
+        fullScreenSearchBarContent = {
+            ProductSearchBarSuggestions(
+                recentQueries = recentQueries.map { it.query },
+                onSearch = {
+                    onSearch(it)
+                    textFieldState.setTextAndPlaceCursorAtEnd(it)
+                    coroutineScope.launch {
+                        searchBarState.animateToCollapsed()
+                    }
+                },
+                onFill = {
+                    textFieldState.setTextAndPlaceCursorAtEnd(it)
+                    onSearch(it)
+                }
+            )
+        },
         errorCard = {
             val error by remember(pages.loadState) {
                 derivedStateOf { pages.throwable }
