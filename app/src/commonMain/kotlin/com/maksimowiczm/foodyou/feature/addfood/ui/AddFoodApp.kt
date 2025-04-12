@@ -213,11 +213,11 @@ private fun AddFoodNavHost(
                 },
                 onEditEntry = {
                     val route = when (it) {
-                        is MeasurementId.Product -> UpdateProductMeasurement(
+                        is MeasurementId.Product -> UpdateMeasurement(
                             productMeasurementId = it.id
                         )
 
-                        is MeasurementId.Recipe -> UpdateProductMeasurement(
+                        is MeasurementId.Recipe -> UpdateMeasurement(
                             recipeMeasurementId = it.id
                         )
                     }
@@ -266,7 +266,7 @@ private fun AddFoodNavHost(
                 }
             )
         }
-        crossfadeComposable<UpdateProductMeasurement>(
+        crossfadeComposable<UpdateMeasurement>(
             popEnterTransition = {
                 if (initialState.destination.hasRoute<UpdateProduct>()) {
                     fadeIn(snap())
@@ -275,7 +275,7 @@ private fun AddFoodNavHost(
                 }
             }
         ) {
-            val (productMeasurement, recipeMeasurement) = it.toRoute<UpdateProductMeasurement>()
+            val (productMeasurement, recipeMeasurement) = it.toRoute<UpdateMeasurement>()
 
             val measurementId = when {
                 productMeasurement != null -> MeasurementId.Product(productMeasurement)
@@ -286,22 +286,20 @@ private fun AddFoodNavHost(
             UpdateMeasurementScreen(
                 measurementId = measurementId,
                 onBack = {
-                    navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
+                    navController.popBackStack<UpdateMeasurement>(inclusive = true)
                 },
                 onDelete = {
-                    navController.popBackStack<UpdateProductMeasurement>(inclusive = true)
+                    navController.popBackStack<UpdateMeasurement>(inclusive = true)
                 },
                 onEdit = {
-                    when (measurementId) {
-                        is MeasurementId.Product ->
-                            navController.navigate(UpdateProduct(measurementId.id)) {
-                                launchSingleTop = true
-                            }
+                    when (it) {
+                        is FoodId.Product -> navController.navigate(UpdateProduct(it.id)) {
+                            launchSingleTop = true
+                        }
 
-                        is MeasurementId.Recipe ->
-                            navController.navigate(UpdateRecipe(measurementId.id)) {
-                                launchSingleTop = true
-                            }
+                        is FoodId.Recipe -> navController.navigate(UpdateRecipe(it.id)) {
+                            launchSingleTop = true
+                        }
                     }
                 }
             )
@@ -359,7 +357,7 @@ private data object SearchFoodBarcodeScanner
 private data object Meal
 
 @Serializable
-private data class UpdateProductMeasurement(
+private data class UpdateMeasurement(
     val productMeasurementId: Long? = null,
     val recipeMeasurementId: Long? = null
 ) {

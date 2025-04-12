@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.measurement.MeasurementScreen
 import kotlinx.coroutines.flow.collectLatest
@@ -21,7 +22,7 @@ internal fun UpdateMeasurementScreen(
     measurementId: MeasurementId,
     onBack: () -> Unit,
     onDelete: () -> Unit,
-    onEdit: () -> Unit,
+    onEdit: (FoodId) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdateMeasurementScreenViewModel = koinViewModel(
         parameters = { parametersOf(measurementId) }
@@ -49,7 +50,7 @@ internal fun UpdateMeasurementScreen(
             selectedMeasurement = selectedMeasurement ?: food.selected,
             onBack = onBack,
             onMeasurement = remember(viewModel) { viewModel::onConfirm },
-            onEditFood = onEdit,
+            onEditFood = { onEdit(food.food.id) },
             onDeleteFood = { viewModel.onDeleteFood(food.food.id) },
             modifier = modifier
         )
