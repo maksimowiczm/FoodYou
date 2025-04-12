@@ -64,7 +64,8 @@ import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
         AutoMigration(from = 12, to = 13),
         AutoMigration(from = 13, to = 14),
         AutoMigration(from = 14, to = 15),
-        AutoMigration(from = 15, to = 16)
+        AutoMigration(from = 15, to = 16),
+        AutoMigration(from = 16, to = 17)
     ]
 )
 @TypeConverters(
@@ -81,7 +82,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val recipeDao: RecipeDao
 
     companion object {
-        const val VERSION = 16
+        const val VERSION = 17
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,

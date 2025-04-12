@@ -4,7 +4,8 @@ import androidx.room.Embedded
 import com.maksimowiczm.foodyou.core.database.core.NutrientsEmbedded
 
 data class FoodMeasurementVirtualEntity(
-    val productId: Long,
+    val productId: Long?,
+    val recipeId: Long?,
 
     // Product data
     val name: String,
@@ -13,6 +14,7 @@ data class FoodMeasurementVirtualEntity(
     val nutrients: NutrientsEmbedded,
     val packageWeight: Float?,
     val servingWeight: Float?,
+    val servings: Int?,
 
     // Measurement data
     val measurementId: Long,

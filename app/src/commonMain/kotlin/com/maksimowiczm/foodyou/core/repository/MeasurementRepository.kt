@@ -17,6 +17,8 @@ import com.maksimowiczm.foodyou.core.model.Nutrients
 import com.maksimowiczm.foodyou.core.model.PortionWeight
 import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.model.ProductWithMeasurement
+import com.maksimowiczm.foodyou.core.model.Recipe
+import com.maksimowiczm.foodyou.core.model.RecipeWithMeasurement
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
@@ -63,7 +65,7 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
     override fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?> =
         when (measurementId) {
             is MeasurementId.Product -> measurementDao.observeProductMeasurement(measurementId.id)
-            is MeasurementId.Recipe -> TODO()
+            is MeasurementId.Recipe -> measurementDao.observeRecipeMeasurement(measurementId.id)
         }.map { it?.toFoodWithMeasurement() }
 
     override suspend fun getSuggestions(foodId: FoodId): List<Measurement> = when (foodId) {
@@ -197,38 +199,60 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
     private companion object {
         const val TAG = "MeasurementRepositoryImpl"
     }
-}
 
-private fun FoodMeasurementVirtualEntity.toFoodWithMeasurement(): FoodWithMeasurement {
-    val measurement = when (measurement) {
-        MeasurementEntity.Gram -> Measurement.Gram(quantity)
-        MeasurementEntity.Package -> Measurement.Package(quantity)
-        MeasurementEntity.Serving -> Measurement.Serving(quantity)
+    private fun FoodMeasurementVirtualEntity.toFoodWithMeasurement(): FoodWithMeasurement {
+        val measurement = when (measurement) {
+            MeasurementEntity.Gram -> Measurement.Gram(quantity)
+            MeasurementEntity.Package -> Measurement.Package(quantity)
+            MeasurementEntity.Serving -> Measurement.Serving(quantity)
+        }
+
+        return when {
+            productId != null -> {
+                ProductWithMeasurement(
+                    measurementId = MeasurementId.Product(measurementId),
+                    measurement = measurement,
+                    product = Product(
+                        id = FoodId.Product(productId),
+                        name = name,
+                        brand = brand,
+                        barcode = null,
+                        nutrients = Nutrients(
+                            calories = nutrients.calories.toNutrientValue(),
+                            proteins = nutrients.proteins.toNutrientValue(),
+                            carbohydrates = nutrients.carbohydrates.toNutrientValue(),
+                            sugars = nutrients.sugars.toNutrientValue(),
+                            fats = nutrients.fats.toNutrientValue(),
+                            saturatedFats = nutrients.saturatedFats.toNutrientValue(),
+                            salt = nutrients.salt.toNutrientValue(),
+                            sodium = nutrients.sodium.toNutrientValue(),
+                            fiber = nutrients.fiber.toNutrientValue()
+                        ),
+                        packageWeight = packageWeight?.let { PortionWeight.Package(it) },
+                        servingWeight = servingWeight?.let { PortionWeight.Serving(it) }
+                    )
+                )
+            }
+
+            recipeId != null && servings != null -> {
+                RecipeWithMeasurement(
+                    measurementId = MeasurementId.Recipe(measurementId),
+                    measurement = measurement,
+                    recipe = Recipe(
+                        id = FoodId.Recipe(recipeId),
+                        name = name,
+                        servings = servings,
+                        // TODO idk
+                        ingredients = emptyList()
+                    )
+                )
+            }
+
+            else -> {
+                error("FoodMeasurementVirtualEntity must have either productId or recipeId")
+            }
+        }
     }
-
-    return ProductWithMeasurement(
-        measurementId = MeasurementId.Product(measurementId),
-        measurement = measurement,
-        product = Product(
-            id = FoodId.Product(productId),
-            name = name,
-            brand = brand,
-            barcode = null,
-            nutrients = Nutrients(
-                calories = nutrients.calories.toNutrientValue(),
-                proteins = nutrients.proteins.toNutrientValue(),
-                carbohydrates = nutrients.carbohydrates.toNutrientValue(),
-                sugars = nutrients.sugars.toNutrientValue(),
-                fats = nutrients.fats.toNutrientValue(),
-                saturatedFats = nutrients.saturatedFats.toNutrientValue(),
-                salt = nutrients.salt.toNutrientValue(),
-                sodium = nutrients.sodium.toNutrientValue(),
-                fiber = nutrients.fiber.toNutrientValue()
-            ),
-            packageWeight = packageWeight?.let { PortionWeight.Package(it) },
-            servingWeight = servingWeight?.let { PortionWeight.Serving(it) }
-        )
-    )
 }
 
 private fun SuggestionVirtualEntity.toMeasurement(): Measurement = when (measurement) {
