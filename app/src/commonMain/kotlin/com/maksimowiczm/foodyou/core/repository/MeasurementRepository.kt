@@ -8,8 +8,6 @@ import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementEnti
 import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementVirtualEntity
 import com.maksimowiczm.foodyou.core.database.measurement.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.SuggestionVirtualEntity
-import com.maksimowiczm.foodyou.core.database.recipe.RecipeDao
-import com.maksimowiczm.foodyou.core.ext.combine
 import com.maksimowiczm.foodyou.core.mapper.ProductMapper
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
@@ -26,9 +24,6 @@ import com.maksimowiczm.foodyou.core.model.RecipeWithMeasurement
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -63,92 +58,71 @@ interface MeasurementRepository {
 
 internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : MeasurementRepository {
     private val measurementDao: MeasurementDao = database.measurementDao
-    private val recipeDao: RecipeDao = database.recipeDao
 
     override fun observeMeasurements(
         date: LocalDate,
         mealId: Long
     ): Flow<List<FoodWithMeasurement>> = combine(
-        observeRecipeMeasurement(date, mealId),
-        observeProductMeasurement(date, mealId)
+        observeRecipeMeasurements(date, mealId),
+        observeProductMeasurements(date, mealId)
     ) { recipeMeasurements, productMeasurements ->
         (recipeMeasurements + productMeasurements).sortedBy { it.measurementDate }
     }
 
-    private fun observeProductMeasurement(date: LocalDate, mealId: Long) =
+    private fun observeProductMeasurements(date: LocalDate, mealId: Long) =
         measurementDao.observeProductMeasurements(
             epochDay = date.toEpochDays(),
             mealId = mealId
         ).map { it.map { it.toProductWithMeasurement() } }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun observeRecipeMeasurement(
-        date: LocalDate,
-        mealId: Long
-    ): Flow<List<RecipeWithMeasurement>> {
-        return measurementDao.observeRecipeMeasurements(
+    private fun observeRecipeMeasurements(date: LocalDate, mealId: Long) =
+        measurementDao.observeRecipeMeasurements(
             epochDay = date.toEpochDays(),
             mealId = mealId
-        ).flatMapLatest { list ->
-            if (list.isEmpty()) {
-                return@flatMapLatest flowOf(emptyList())
-            }
-
+        ).map { list ->
             list.map { rm ->
-                recipeDao
-                    .observeRecipe(rm.recipe.id)
-                    .filterNotNull()
-                    .map {
-                        val (_, ingredients) = it
+                val ingredients = rm.ingredients.map {
+                    val product = with(ProductMapper) { it.toModel() }
+                    val quantity = it.recipeIngredientEntity.quantity
 
-                        ingredients.map { ingredient ->
-                            val product = with(ProductMapper) { ingredient.toModel() }
-                            val measurement = ingredient.recipeIngredientEntity.measurement
-                            val quantity = ingredient.recipeIngredientEntity.quantity
-
-                            val ingredientMeasurement =
-                                when (measurement) {
-                                    MeasurementEntity.Gram -> Measurement.Gram(quantity)
-                                    MeasurementEntity.Package -> Measurement.Package(quantity)
-                                    MeasurementEntity.Serving -> Measurement.Serving(quantity)
-                                }
-
-                            RecipeIngredient(
-                                product = product,
-                                measurement = ingredientMeasurement
-                            )
-                        }
+                    val measurement = when (it.recipeIngredientEntity.measurement) {
+                        MeasurementEntity.Gram -> Measurement.Gram(quantity)
+                        MeasurementEntity.Package -> Measurement.Package(quantity)
+                        MeasurementEntity.Serving -> Measurement.Serving(quantity)
                     }
-                    .map {
-                        Recipe(
-                            id = FoodId.Recipe(rm.recipe.id),
-                            name = rm.recipe.name,
-                            servings = rm.recipe.servings,
-                            ingredients = it
-                        )
-                    }
-                    .map {
-                        val quantity = rm.measurement.quantity
-                        val measurement = when (rm.measurement.measurement) {
-                            MeasurementEntity.Gram -> Measurement.Gram(quantity)
-                            MeasurementEntity.Package -> Measurement.Package(quantity)
-                            MeasurementEntity.Serving -> Measurement.Serving(quantity)
-                        }
 
-                        val date = Instant
-                            .fromEpochSeconds(rm.measurement.createdAt)
-                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                    RecipeIngredient(
+                        product = product,
+                        measurement = measurement
+                    )
+                }
 
-                        RecipeWithMeasurement(
-                            recipe = it,
-                            measurementId = MeasurementId.Recipe(rm.measurement.id),
-                            measurement = measurement,
-                            measurementDate = date
-                        )
-                    }
-            }.combine { it.toList() }
+                val recipe = Recipe(
+                    id = FoodId.Recipe(rm.recipe.id),
+                    name = rm.recipe.name,
+                    servings = rm.recipe.servings,
+                    ingredients = ingredients
+                )
+
+                val quantity = rm.measurement.quantity
+                val measurement = when (rm.measurement.measurement) {
+                    MeasurementEntity.Gram -> Measurement.Gram(quantity)
+                    MeasurementEntity.Package -> Measurement.Package(quantity)
+                    MeasurementEntity.Serving -> Measurement.Serving(quantity)
+                }
+                val date = Instant
+                    .fromEpochSeconds(rm.measurement.createdAt)
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+
+                RecipeWithMeasurement(
+                    recipe = recipe,
+                    measurementId = MeasurementId.Recipe(rm.measurement.id),
+                    measurement = measurement,
+                    measurementDate = date
+                )
+            }
         }
-    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?> =
@@ -161,64 +135,49 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
             is MeasurementId.Recipe ->
                 measurementDao
                     .observeRecipeMeasurement(measurementId.id)
-                    .flatMapLatest { rm ->
-                        if (rm == null) {
-                            return@flatMapLatest flowOf(null)
+                    .map { rm ->
+                        if (rm == null) return@map null
+
+                        val ingredients = rm.ingredients.map {
+                            val product = with(ProductMapper) { it.toModel() }
+                            val quantity = it.recipeIngredientEntity.quantity
+
+                            val measurement = when (it.recipeIngredientEntity.measurement) {
+                                MeasurementEntity.Gram -> Measurement.Gram(quantity)
+                                MeasurementEntity.Package -> Measurement.Package(quantity)
+                                MeasurementEntity.Serving -> Measurement.Serving(quantity)
+                            }
+
+                            RecipeIngredient(
+                                product = product,
+                                measurement = measurement
+                            )
                         }
 
-                        recipeDao
-                            .observeRecipe(rm.recipe.id)
-                            .filterNotNull()
-                            .map { recipe ->
-                                val (_, ingredients) = recipe
+                        val recipe = Recipe(
+                            id = FoodId.Recipe(rm.recipe.id),
+                            name = rm.recipe.name,
+                            servings = rm.recipe.servings,
+                            ingredients = ingredients
+                        )
 
-                                ingredients.map { ingredient ->
-                                    val product = with(ProductMapper) { ingredient.toModel() }
-                                    val measurement = ingredient.recipeIngredientEntity.measurement
-                                    val quantity = ingredient.recipeIngredientEntity.quantity
+                        val quantity = rm.measurement.quantity
+                        val measurement = when (rm.measurement.measurement) {
+                            MeasurementEntity.Gram -> Measurement.Gram(quantity)
+                            MeasurementEntity.Package -> Measurement.Package(quantity)
+                            MeasurementEntity.Serving -> Measurement.Serving(quantity)
+                        }
 
-                                    RecipeIngredient(
-                                        product = product,
-                                        measurement = when (measurement) {
-                                            MeasurementEntity.Gram -> Measurement.Gram(quantity)
-                                            MeasurementEntity.Package -> Measurement.Package(
-                                                quantity
-                                            )
+                        val date = Instant
+                            .fromEpochSeconds(rm.measurement.createdAt)
+                            .toLocalDateTime(TimeZone.currentSystemDefault())
 
-                                            MeasurementEntity.Serving -> Measurement.Serving(
-                                                quantity
-                                            )
-                                        }
-                                    )
-                                }
-                            }
-                            .map {
-                                Recipe(
-                                    id = FoodId.Recipe(rm.recipe.id),
-                                    name = rm.recipe.name,
-                                    servings = rm.recipe.servings,
-                                    ingredients = it
-                                )
-                            }
-                            .map {
-                                val quantity = rm.measurement.quantity
-                                val measurement = when (rm.measurement.measurement) {
-                                    MeasurementEntity.Gram -> Measurement.Gram(quantity)
-                                    MeasurementEntity.Package -> Measurement.Package(quantity)
-                                    MeasurementEntity.Serving -> Measurement.Serving(quantity)
-                                }
-
-                                val date = Instant
-                                    .fromEpochSeconds(rm.measurement.createdAt)
-                                    .toLocalDateTime(TimeZone.currentSystemDefault())
-
-                                RecipeWithMeasurement(
-                                    recipe = it,
-                                    measurementId = MeasurementId.Recipe(rm.measurement.id),
-                                    measurement = measurement,
-                                    measurementDate = date
-                                )
-                            }
+                        RecipeWithMeasurement(
+                            recipe = recipe,
+                            measurementId = MeasurementId.Recipe(rm.measurement.id),
+                            measurement = measurement,
+                            measurementDate = date
+                        )
                     }
         }
 

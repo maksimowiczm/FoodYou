@@ -3,15 +3,19 @@ package com.maksimowiczm.foodyou.core.database.measurement
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeEntity
+import com.maksimowiczm.foodyou.core.database.recipe.RecipeIngredientWithProductView
 
 data class RecipeMeasurementVirtualEntity(
-    @Embedded
+    @Embedded(prefix = "r_")
     val recipe: RecipeEntity,
 
+    @Embedded(prefix = "m_")
+    val measurement: RecipeMeasurementEntity,
+
     @Relation(
-        parentColumn = "id",
-        entityColumn = "recipeId",
-        entity = RecipeMeasurementEntity::class
+        parentColumn = "r_id",
+        entityColumn = "r_recipeId",
+        entity = RecipeIngredientWithProductView::class
     )
-    val measurement: RecipeMeasurementEntity
+    val ingredients: List<RecipeIngredientWithProductView>
 )

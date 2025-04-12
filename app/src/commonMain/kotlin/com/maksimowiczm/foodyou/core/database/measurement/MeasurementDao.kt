@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.core.database.measurement
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstants.GRAM
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstants.PACKAGE
@@ -113,11 +114,24 @@ abstract class MeasurementDao {
         mealId: Long
     ): Flow<List<ProductMeasurementVirtualEntity>>
 
+    @Transaction
     @Query(
         """
-        SELECT r.*
+        SELECT DISTINCT
+            r.id AS r_id,
+            r.name AS r_name,
+            r.servings AS r_servings,
+            m.id AS m_id,
+            m.mealId AS m_mealId,
+            m.epochDay AS m_epochDay,
+            m.recipeId AS m_recipeId,
+            m.measurement AS m_measurement,
+            m.quantity AS m_quantity,
+            m.createdAt AS m_createdAt,
+            m.isDeleted AS m_isDeleted
         FROM RecipeEntity r
         LEFT JOIN RecipeMeasurementEntity m ON r.id = m.recipeId
+        LEFT JOIN RecipeIngredientWithProductView i ON i.r_recipeId = r.id
         WHERE m.epochDay = :epochDay
         AND m.mealId = :mealId
         AND m.isDeleted = 0
@@ -128,11 +142,24 @@ abstract class MeasurementDao {
         mealId: Long
     ): Flow<List<RecipeMeasurementVirtualEntity>>
 
+    @Transaction
     @Query(
         """
-        SELECT r.*
+        SELECT DISTINCT
+            r.id AS r_id,
+            r.name AS r_name,
+            r.servings AS r_servings,
+            m.id AS m_id,
+            m.mealId AS m_mealId,
+            m.epochDay AS m_epochDay,
+            m.recipeId AS m_recipeId,
+            m.measurement AS m_measurement,
+            m.quantity AS m_quantity,
+            m.createdAt AS m_createdAt,
+            m.isDeleted AS m_isDeleted
         FROM RecipeEntity r
         LEFT JOIN RecipeMeasurementEntity m ON r.id = m.recipeId
+        LEFT JOIN RecipeIngredientWithProductView i ON i.r_recipeId = r.id
         WHERE m.id = :measurementId
         AND m.isDeleted = 0
         """
