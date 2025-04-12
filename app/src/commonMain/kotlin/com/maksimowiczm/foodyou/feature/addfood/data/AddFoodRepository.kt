@@ -124,7 +124,7 @@ internal class AddFoodRepository(
 
 private fun FoodSearchVirtualEntity.toSearchFoodItem(): SearchFoodItem {
     when {
-        productId != null -> {
+        productId != null && recipeId == null -> {
             val foodId = FoodId.Product(productId)
             val measurementId = measurementId?.let { MeasurementId.Product(measurementId) }
 
@@ -144,9 +144,9 @@ private fun FoodSearchVirtualEntity.toSearchFoodItem(): SearchFoodItem {
             )
         }
 
-        recipeId != null -> {
+        recipeId != null && productId == null -> {
             val foodId = FoodId.Recipe(recipeId)
-            val measurementId = measurementId?.let { MeasurementId.Product(measurementId) }
+            val measurementId = measurementId?.let { MeasurementId.Recipe(measurementId) }
 
             return SearchFoodItem(
                 foodId = foodId,
