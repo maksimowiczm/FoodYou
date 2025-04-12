@@ -127,6 +127,8 @@
     <string name="action_delete_unused_products">Delete unused products</string>
     <string name="action_error_details" description="Show error details">Details</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Add ingredient</string>
+    <string name="action_edit_ingredient_measurement">Edit ingredient measurement</string>
+    <string name="action_delete_ingredient">Delete ingredient</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>

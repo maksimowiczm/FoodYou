@@ -70,6 +70,10 @@ private fun RecipeNavHost(
                         launchSingleTop = true
                     }
                 },
+                onEditIngredient = {
+                    // TODO
+                },
+                onRemoveIngredient = remember(viewModel) { viewModel::onRemoveIngredient },
                 modifier = modifier
             )
         }
@@ -184,3 +188,6 @@ private data object BarcodeScanner
 
 @Serializable
 private data class MeasureIngredient(val productId: Long)
+
+@Serializable
+private data class UpdateIngredientMeasurement(val index: Int)

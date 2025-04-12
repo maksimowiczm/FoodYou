@@ -61,6 +61,14 @@ internal class RecipeViewModel(
         }
     }
 
+    fun onRemoveIngredient(ingredient: Ingredient) {
+        _state.update {
+            it.copy(
+                ingredients = it.ingredients - ingredient
+            )
+        }
+    }
+
     private val nameForm = Form(
         strategy = ValidationStrategy.LazyEval,
         Rules.NonEmpty
