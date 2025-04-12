@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class RecipeDao {
@@ -62,4 +63,15 @@ abstract class RecipeDao {
 
         return recipeId
     }
+
+    @Transaction
+    @Query(
+        """
+        SELECT r.*
+        FROM RecipeEntity r
+        JOIN RecipeIngredientEntity ri ON r.id = ri.recipeId
+        WHERE r.id = :id
+        """
+    )
+    abstract fun observeRecipe(id: Long): Flow<RecipeWithIngredientsVirtualEntity?>
 }
