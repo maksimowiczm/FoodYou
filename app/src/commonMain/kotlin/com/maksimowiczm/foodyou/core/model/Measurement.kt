@@ -8,13 +8,8 @@ sealed interface Measurement {
      */
     fun weight(food: Food): Float? = when (this) {
         is Gram -> value
-        is Package -> when (food) {
-            is Product -> food.packageWeight?.let { weight(food.packageWeight) }
-        }
-
-        is Serving -> when (food) {
-            is Product -> food.servingWeight?.let { weight(food.servingWeight) }
-        }
+        is Package -> food.packageWeight?.let { weight(it) }
+        is Serving -> food.servingWeight?.let { weight(it) }
     }
 
     @JvmInline

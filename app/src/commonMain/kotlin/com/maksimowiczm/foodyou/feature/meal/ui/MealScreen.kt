@@ -73,7 +73,6 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.MeasurementId
-import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsRow
@@ -697,13 +696,12 @@ private val MealFood.measurementString: String?
         val short = measurementStringShort
         val weight = weight?.formatClipZeros() ?: return null
 
-        return when (food) {
-            is Product -> when (measurement) {
-                is Measurement.Gram -> short
-                is Measurement.Package,
-                is Measurement.Serving ->
-                    "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
-            }
+        return when (measurement) {
+            is Measurement.Gram -> short
+            is Measurement.Package,
+            is Measurement.Serving -> "$short ($weight ${stringResource(
+                Res.string.unit_gram_short
+            )})"
         }
     }
 
