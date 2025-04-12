@@ -213,12 +213,12 @@ private fun AddFoodNavHost(
                 },
                 onEditEntry = {
                     val route = when (it) {
-                        is MeasurementId.Product -> MeasureFood(
-                            productId = it.id
+                        is MeasurementId.Product -> UpdateProductMeasurement(
+                            productMeasurementId = it.id
                         )
 
-                        is MeasurementId.Recipe -> MeasureFood(
-                            recipeId = it.id
+                        is MeasurementId.Recipe -> UpdateProductMeasurement(
+                            recipeMeasurementId = it.id
                         )
                     }
 
