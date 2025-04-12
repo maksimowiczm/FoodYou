@@ -11,8 +11,11 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ListItem
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,6 +37,7 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun AddIngredientScreen(
@@ -41,6 +45,7 @@ internal fun AddIngredientScreen(
     listState: LazyListState,
     onBarcodeScanner: () -> Unit,
     onProductClick: (productId: Long) -> Unit,
+    onCreateProduct: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -68,6 +73,7 @@ internal fun AddIngredientScreen(
         onSearch = remember(viewModel) { viewModel::onSearch },
         onClear = remember(viewModel) { { viewModel.onSearch(null) } },
         onProductClick = onProductClick,
+        onCreateProduct = onCreateProduct,
         onBack = onBack
     )
 }
@@ -82,6 +88,7 @@ private fun AddIngredientScreen(
     onSearch: (String) -> Unit,
     onClear: () -> Unit,
     onProductClick: (productId: Long) -> Unit,
+    onCreateProduct: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -97,7 +104,16 @@ private fun AddIngredientScreen(
         textFieldState = textFieldState,
         searchBarState = searchBarState,
         topBar = null,
-        floatingActionButton = {},
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onCreateProduct
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(Res.string.action_add)
+                )
+            }
+        },
         fullScreenSearchBarContent = {},
         errorCard = {
             val error by remember(pages.loadState) {

@@ -14,6 +14,9 @@ import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.measurement.MeasurementScreen
+import com.maksimowiczm.foodyou.feature.product.CreateProduct
+import com.maksimowiczm.foodyou.feature.product.UpdateProduct
+import com.maksimowiczm.foodyou.feature.product.productGraph
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -73,6 +76,11 @@ private fun RecipeNavHost(
                 onProductClick = {
                     navController.navigate(MeasureIngredient(it))
                 },
+                onCreateProduct = {
+                    navController.navigate(CreateProduct) {
+                        launchSingleTop = true
+                    }
+                },
                 onBack = {
                     navController.popBackStack<AddIngredient>(inclusive = true)
                 }
@@ -118,7 +126,9 @@ private fun RecipeNavHost(
                         }
                     },
                     onEditFood = {
-                        // TODO
+                        navController.navigate(UpdateProduct(productId)) {
+                            launchSingleTop = true
+                        }
                     },
                     onDeleteFood = {
                         viewModel.onProductDelete(productId)
@@ -127,6 +137,22 @@ private fun RecipeNavHost(
                 )
             }
         }
+        productGraph(
+            onCreateClose = {
+                navController.popBackStack<CreateProduct>(inclusive = true)
+            },
+            onCreateProduct = {
+                navController.navigate(MeasureIngredient(it)) {
+                    launchSingleTop = true
+                }
+            },
+            onUpdateClose = {
+                navController.popBackStack<UpdateProduct>(inclusive = true)
+            },
+            onUpdateProduct = {
+                navController.popBackStack<UpdateProduct>(inclusive = true)
+            }
+        )
     }
 }
 
