@@ -147,42 +147,41 @@ private fun RecipeNavHost(
         crossfadeComposable<MeasureIngredient> {
             val (productId) = it.toRoute<MeasureIngredient>()
 
-            val food by viewModel.observeMeasurableFood(productId).collectAsStateWithLifecycle(null)
+            val food = run {
+                viewModel.observeMeasurableFood(productId).collectAsStateWithLifecycle(null).value
+            } ?: return@crossfadeComposable
 
-            when (val food = food) {
-                null -> Unit
-                else -> MeasurementScreen(
-                    food = food,
-                    selectedMeasurement = null,
-                    onBack = {
-                        navController.popBackStack<MeasureIngredient>(inclusive = true)
-                    },
-                    onMeasurement = {
-                        viewModel.onAddIngredient(
-                            Ingredient(
-                                product = food.food as Product,
-                                measurement = it
-                            )
+            MeasurementScreen(
+                food = food,
+                selectedMeasurement = null,
+                onBack = {
+                    navController.popBackStack<MeasureIngredient>(inclusive = true)
+                },
+                onMeasurement = {
+                    viewModel.onAddIngredient(
+                        Ingredient(
+                            product = food.food as Product,
+                            measurement = it
                         )
-                        navController.navigate(CreateRecipe) {
-                            popUpTo(CreateRecipe) {
-                                inclusive = false
-                            }
+                    )
+                    navController.navigate(CreateRecipe) {
+                        popUpTo(CreateRecipe) {
+                            inclusive = false
+                        }
 
-                            launchSingleTop = true
-                        }
-                    },
-                    onEditFood = {
-                        navController.navigate(UpdateProduct(productId)) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onDeleteFood = {
-                        viewModel.onProductDelete(productId)
-                        navController.popBackStack<MeasureIngredient>(inclusive = true)
+                        launchSingleTop = true
                     }
-                )
-            }
+                },
+                onEditFood = {
+                    navController.navigate(UpdateProduct(productId)) {
+                        launchSingleTop = true
+                    }
+                },
+                onDeleteFood = {
+                    viewModel.onProductDelete(productId)
+                    navController.popBackStack<MeasureIngredient>(inclusive = true)
+                }
+            )
         }
         crossfadeComposable<UpdateIngredientMeasurement> {
             val (index) = it.toRoute<UpdateIngredientMeasurement>()
