@@ -1,16 +1,20 @@
 package com.maksimowiczm.foodyou.feature.recipe.ui
 
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.model.Product
+import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.measurement.MeasurementScreen
@@ -64,7 +68,15 @@ private fun RecipeNavHost(
                 modifier = modifier
             )
         }
-        crossfadeComposable<AddIngredient> {
+        crossfadeComposable<AddIngredient>(
+            popEnterTransition = {
+                if (initialState.destination.hasRoute<CreateProduct>()) {
+                    fadeIn(snap())
+                } else {
+                    CrossFadeComposableDefaults.enterTransition()
+                }
+            }
+        ) {
             AddIngredientScreen(
                 viewModel = viewModel,
                 listState = searchListState,
