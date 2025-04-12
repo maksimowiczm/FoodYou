@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.FoodMeasurementVirtual
 import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementDao
 import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementEntity
+import com.maksimowiczm.foodyou.core.database.measurement.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.SuggestionVirtualEntity
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
@@ -103,7 +104,18 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                 measurementDao.addProductMeasurement(entity)
             }
 
-            is FoodId.Recipe -> TODO()
+            is FoodId.Recipe -> {
+                val entity = RecipeMeasurementEntity(
+                    mealId = mealId,
+                    epochDay = date.toEpochDays(),
+                    recipeId = foodId.id,
+                    measurement = type,
+                    quantity = quantity,
+                    createdAt = now
+                )
+
+                measurementDao.addRecipeMeasurement(entity)
+            }
         }
     }
 

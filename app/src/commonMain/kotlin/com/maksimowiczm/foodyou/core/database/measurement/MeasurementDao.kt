@@ -16,6 +16,9 @@ abstract class MeasurementDao {
     @Insert
     abstract suspend fun addProductMeasurement(entity: ProductMeasurementEntity)
 
+    @Insert
+    abstract suspend fun addRecipeMeasurement(entity: RecipeMeasurementEntity)
+
     @Update
     abstract suspend fun updateProductMeasurement(entity: ProductMeasurementEntity)
 
