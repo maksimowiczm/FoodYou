@@ -74,4 +74,15 @@ abstract class RecipeDao {
         """
     )
     abstract fun observeRecipe(id: Long): Flow<RecipeWithIngredientsVirtualEntity?>
+
+    @Transaction
+    @Query(
+        """
+        SELECT r.*
+        FROM RecipeEntity r
+        JOIN RecipeIngredientEntity ri ON r.id = ri.recipeId
+        WHERE r.id = :id
+        """
+    )
+    abstract suspend fun getRecipe(id: Long): RecipeWithIngredientsVirtualEntity?
 }

@@ -7,15 +7,20 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
+import com.maksimowiczm.foodyou.core.database.product.ProductDao
 import com.maksimowiczm.foodyou.core.database.recipe.IngredientVirtualEntity
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeDao
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.core.mapper.ProductMapper
+import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Recipe
+import com.maksimowiczm.foodyou.core.model.RecipeIngredient
 import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 internal class RecipeRepository(
@@ -23,6 +28,7 @@ internal class RecipeRepository(
     private val remoteMediatorFactory: ProductRemoteMediatorFactory
 ) {
     private val recipeDao: RecipeDao = database.recipeDao
+    private val productDao: ProductDao = database.productDao
 
     @OptIn(ExperimentalPagingApi::class)
     fun queryProducts(query: String?): Flow<PagingData<Ingredient>> = Pager(
@@ -34,6 +40,35 @@ internal class RecipeRepository(
         recipeDao.observeProductsByText(query)
     }.flow.map {
         it.map { it.toIngredient() }
+    }
+
+    suspend fun getRecipeById(id: Long): Recipe? {
+        val (recipeEntity, ingredients) = recipeDao.getRecipe(id) ?: return null
+
+        val products = ingredients.map { ingredient ->
+            val product = with(ProductMapper) {
+                productDao.observeProduct(ingredient.productId).first()?.toModel() ?: return null
+            }
+
+            val quantity = ingredient.quantity
+            val measurement = when (ingredient.measurement) {
+                MeasurementEntity.Gram -> Measurement.Gram(quantity)
+                MeasurementEntity.Package -> Measurement.Package(quantity)
+                MeasurementEntity.Serving -> Measurement.Serving(quantity)
+            }
+
+            RecipeIngredient(
+                product = product,
+                measurement = measurement
+            )
+        }
+
+        return Recipe(
+            id = FoodId.Recipe(recipeEntity.id),
+            name = recipeEntity.name,
+            servings = recipeEntity.servings,
+            ingredients = products
+        )
     }
 
     suspend fun createRecipe(name: String, servings: Int, ingredients: List<Ingredient>): Long {

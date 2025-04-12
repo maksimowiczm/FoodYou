@@ -25,9 +25,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import pro.respawn.kmmutils.inputforms.Form
 import pro.respawn.kmmutils.inputforms.ValidationStrategy
 import pro.respawn.kmmutils.inputforms.default.Rules
+import pro.respawn.kmmutils.inputforms.dsl.input
 import pro.respawn.kmmutils.inputforms.dsl.isValid
 
 private data class IngredientInternal(val measurement: Measurement, val productId: FoodId.Product)
@@ -39,10 +41,24 @@ internal class RecipeViewModel(
     private val observeMeasurableFoodUseCase: ObserveMeasurableFoodUseCase,
     private val recipeId: Long = -1
 ) : ViewModel() {
-    private val _state = MutableStateFlow<RecipeState>(RecipeState())
+    val recipe = runBlocking { recipeRepository.getRecipeById(recipeId) }
+
+    private val _state = MutableStateFlow<RecipeState>(
+        RecipeState(
+            name = input(recipe?.name ?: ""),
+            servings = input(recipe?.servings?.toString() ?: "1")
+        )
+    )
     val state = _state.asStateFlow()
 
-    private val _ingredients = MutableStateFlow<List<IngredientInternal>>(emptyList())
+    private val _ingredients = MutableStateFlow<List<IngredientInternal>>(
+        recipe?.ingredients?.map {
+            IngredientInternal(
+                measurement = it.measurement,
+                productId = it.product.id
+            )
+        } ?: emptyList()
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val ingredients = _ingredients.flatMapLatest {
