@@ -9,8 +9,8 @@ data class RecipeWithIngredientsVirtualEntity(
 
     @Relation(
         parentColumn = "id",
-        entityColumn = "recipeId",
-        entity = RecipeIngredientEntity::class
+        entityColumn = "r_recipeId",
+        entity = RecipeIngredientWithProductView::class
     )
-    val ingredients: List<RecipeIngredientEntity>
+    val ingredients: List<RecipeIngredientWithProductView>
 )

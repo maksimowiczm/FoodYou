@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementEnti
 import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementVirtualEntity
 import com.maksimowiczm.foodyou.core.database.measurement.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.SuggestionVirtualEntity
-import com.maksimowiczm.foodyou.core.database.product.ProductDao
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeDao
 import com.maksimowiczm.foodyou.core.ext.combine
 import com.maksimowiczm.foodyou.core.mapper.ProductMapper
@@ -28,7 +27,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -66,7 +64,6 @@ interface MeasurementRepository {
 internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : MeasurementRepository {
     private val measurementDao: MeasurementDao = database.measurementDao
     private val recipeDao: RecipeDao = database.recipeDao
-    private val productDao: ProductDao = database.productDao
 
     override fun observeMeasurements(
         date: LocalDate,
@@ -105,23 +102,16 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                         val (_, ingredients) = it
 
                         ingredients.map { ingredient ->
-                            val productEntity =
-                                productDao
-                                    .observeProduct(ingredient.productId)
-                                    .filterNotNull()
-                                    .first()
+                            val product = with(ProductMapper) { ingredient.toModel() }
+                            val measurement = ingredient.recipeIngredientEntity.measurement
+                            val quantity = ingredient.recipeIngredientEntity.quantity
 
-                            val product = with(ProductMapper) { productEntity.toModel() }
-
-                            val ingredientMeasurement = when (ingredient.measurement) {
-                                MeasurementEntity.Gram -> Measurement.Gram(ingredient.quantity)
-                                MeasurementEntity.Package -> Measurement.Package(
-                                    ingredient.quantity
-                                )
-                                MeasurementEntity.Serving -> Measurement.Serving(
-                                    ingredient.quantity
-                                )
-                            }
+                            val ingredientMeasurement =
+                                when (measurement) {
+                                    MeasurementEntity.Gram -> Measurement.Gram(quantity)
+                                    MeasurementEntity.Package -> Measurement.Package(quantity)
+                                    MeasurementEntity.Serving -> Measurement.Serving(quantity)
+                                }
 
                             RecipeIngredient(
                                 product = product,
@@ -183,25 +173,20 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                                 val (_, ingredients) = recipe
 
                                 ingredients.map { ingredient ->
-                                    val productEntity =
-                                        productDao
-                                            .observeProduct(ingredient.productId)
-                                            .filterNotNull()
-                                            .first()
-
-                                    val product = with(ProductMapper) { productEntity.toModel() }
+                                    val product = with(ProductMapper) { ingredient.toModel() }
+                                    val measurement = ingredient.recipeIngredientEntity.measurement
+                                    val quantity = ingredient.recipeIngredientEntity.quantity
 
                                     RecipeIngredient(
                                         product = product,
-                                        measurement = when (ingredient.measurement) {
-                                            MeasurementEntity.Gram -> Measurement.Gram(
-                                                ingredient.quantity
-                                            )
+                                        measurement = when (measurement) {
+                                            MeasurementEntity.Gram -> Measurement.Gram(quantity)
                                             MeasurementEntity.Package -> Measurement.Package(
-                                                ingredient.quantity
+                                                quantity
                                             )
+
                                             MeasurementEntity.Serving -> Measurement.Serving(
-                                                ingredient.quantity
+                                                quantity
                                             )
                                         }
                                     )

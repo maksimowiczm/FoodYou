@@ -81,7 +81,7 @@ abstract class RecipeDao {
         if (recipeWithIngredients != null) {
             _deleteRecipe(recipeWithIngredients.recipeEntity)
             recipeWithIngredients.ingredients.forEach {
-                deleteRecipeIngredient(it)
+                deleteRecipeIngredient(it.recipeIngredientEntity)
             }
         }
     }
@@ -110,7 +110,7 @@ abstract class RecipeDao {
         """
         SELECT r.*
         FROM RecipeEntity r
-        JOIN RecipeIngredientEntity ri ON r.id = ri.recipeId
+        JOIN RecipeIngredientWithProductView ri ON r.id = ri.r_recipeId
         WHERE r.id = :id
         """
     )
@@ -121,7 +121,7 @@ abstract class RecipeDao {
         """
         SELECT r.*
         FROM RecipeEntity r
-        JOIN RecipeIngredientEntity ri ON r.id = ri.recipeId
+        JOIN RecipeIngredientWithProductView ri ON r.id = ri.r_recipeId
         WHERE r.id = :id
         """
     )

@@ -4,7 +4,6 @@ import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.core.database.product.ProductDao
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeDao
-import com.maksimowiczm.foodyou.core.ext.combine
 import com.maksimowiczm.foodyou.core.mapper.ProductMapper
 import com.maksimowiczm.foodyou.core.model.Food
 import com.maksimowiczm.foodyou.core.model.FoodId
@@ -13,9 +12,6 @@ import com.maksimowiczm.foodyou.core.model.Recipe
 import com.maksimowiczm.foodyou.core.model.RecipeIngredient
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 interface FoodRepository {
@@ -35,41 +31,33 @@ internal class FoodRepositoryImpl(database: FoodYouDatabase) : FoodRepository {
                 .observeProduct(id.id)
                 .map { with(ProductMapper) { it?.toModel() } }
 
-        is FoodId.Recipe -> recipeDao.observeRecipe(id.id).flatMapLatest {
-            if (it == null) {
-                return@flatMapLatest flowOf(null)
-            }
+        is FoodId.Recipe -> recipeDao.observeRecipe(id.id).map {
+            if (it == null) return@map null
 
             val (recipeEntity, ingredients) = it
 
             val products = ingredients.map { ingredient ->
-                productDao
-                    .observeProduct(ingredient.productId)
-                    .filterNotNull()
-                    .map {
-                        val product = with(ProductMapper) { it.toModel() }
-                        val quantity = ingredient.quantity
-                        val measurement = when (ingredient.measurement) {
-                            MeasurementEntity.Gram -> Measurement.Gram(quantity)
-                            MeasurementEntity.Package -> Measurement.Package(quantity)
-                            MeasurementEntity.Serving -> Measurement.Serving(quantity)
-                        }
 
-                        RecipeIngredient(
-                            product = product,
-                            measurement = measurement
-                        )
-                    }
-            }.combine { it.toList() }
+                val product = with(ProductMapper) { ingredient.toModel() }
+                val quantity = ingredient.recipeIngredientEntity.quantity
+                val measurement = when (ingredient.recipeIngredientEntity.measurement) {
+                    MeasurementEntity.Gram -> Measurement.Gram(quantity)
+                    MeasurementEntity.Package -> Measurement.Package(quantity)
+                    MeasurementEntity.Serving -> Measurement.Serving(quantity)
+                }
 
-            products.map { products ->
-                Recipe(
-                    id = FoodId.Recipe(recipeEntity.id),
-                    name = recipeEntity.name,
-                    servings = recipeEntity.servings,
-                    ingredients = products
+                RecipeIngredient(
+                    product = product,
+                    measurement = measurement
                 )
             }
+
+            Recipe(
+                id = FoodId.Recipe(recipeEntity.id),
+                name = recipeEntity.name,
+                servings = recipeEntity.servings,
+                ingredients = products
+            )
         }
     }
 

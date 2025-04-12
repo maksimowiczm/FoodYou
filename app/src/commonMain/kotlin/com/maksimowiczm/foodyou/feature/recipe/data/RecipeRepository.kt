@@ -7,7 +7,6 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
-import com.maksimowiczm.foodyou.core.database.product.ProductDao
 import com.maksimowiczm.foodyou.core.database.recipe.IngredientVirtualEntity
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeDao
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeEntity
@@ -20,7 +19,6 @@ import com.maksimowiczm.foodyou.core.model.RecipeIngredient
 import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 internal class RecipeRepository(
@@ -28,7 +26,6 @@ internal class RecipeRepository(
     private val remoteMediatorFactory: ProductRemoteMediatorFactory
 ) {
     private val recipeDao: RecipeDao = database.recipeDao
-    private val productDao: ProductDao = database.productDao
 
     @OptIn(ExperimentalPagingApi::class)
     fun queryProducts(query: String?): Flow<PagingData<Ingredient>> = Pager(
@@ -46,12 +43,10 @@ internal class RecipeRepository(
         val (recipeEntity, ingredients) = recipeDao.getRecipe(id) ?: return null
 
         val products = ingredients.map { ingredient ->
-            val product = with(ProductMapper) {
-                productDao.observeProduct(ingredient.productId).first()?.toModel() ?: return null
-            }
+            val product = with(ProductMapper) { ingredient.toModel() }
 
-            val quantity = ingredient.quantity
-            val measurement = when (ingredient.measurement) {
+            val quantity = ingredient.recipeIngredientEntity.quantity
+            val measurement = when (ingredient.recipeIngredientEntity.measurement) {
                 MeasurementEntity.Gram -> Measurement.Gram(quantity)
                 MeasurementEntity.Package -> Measurement.Package(quantity)
                 MeasurementEntity.Serving -> Measurement.Serving(quantity)
