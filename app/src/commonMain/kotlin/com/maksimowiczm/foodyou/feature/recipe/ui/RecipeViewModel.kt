@@ -28,8 +28,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import pro.respawn.kmmutils.inputforms.Form
+import pro.respawn.kmmutils.inputforms.Rule
+import pro.respawn.kmmutils.inputforms.ValidationError
 import pro.respawn.kmmutils.inputforms.ValidationStrategy
 import pro.respawn.kmmutils.inputforms.default.Rules
+import pro.respawn.kmmutils.inputforms.dsl.checks
 import pro.respawn.kmmutils.inputforms.dsl.input
 import pro.respawn.kmmutils.inputforms.dsl.isValid
 
@@ -171,7 +174,14 @@ internal class RecipeViewModel(
 
     private val servingsForm = Form(
         strategy = ValidationStrategy.LazyEval,
-        Rules.DigitsOnly
+        Rules.NonEmpty,
+        Rules.DigitsOnly,
+        Rules.ShorterThan(3),
+        // Disallow 0
+        Rule {
+            { it.toIntOrNull()?.let { it > 0 } ?: false } checks
+                { object : ValidationError.Generic("") {} }
+        }
     )
 
     fun onServingsChange(servings: String) {
