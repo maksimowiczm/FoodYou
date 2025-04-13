@@ -506,11 +506,7 @@ private val SearchFoodItem.measurementString: String?
             is Measurement.Gram -> short
             is Measurement.Package,
             is Measurement.Serving ->
-                "$short ($weight ${
-                    stringResource(
-                        Res.string.unit_gram_short
-                    )
-                })"
+                "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
         }
     }
 
