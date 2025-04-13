@@ -699,9 +699,8 @@ private val MealFood.measurementString: String?
         return when (measurement) {
             is Measurement.Gram -> short
             is Measurement.Package,
-            is Measurement.Serving -> "$short ($weight ${stringResource(
-                Res.string.unit_gram_short
-            )})"
+            is Measurement.Serving ->
+                "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
         }
     }
 
