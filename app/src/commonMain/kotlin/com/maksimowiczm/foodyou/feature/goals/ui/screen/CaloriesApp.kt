@@ -48,7 +48,10 @@ private fun CaloriesNavHost(
     ) {
         crossfadeComposable<CaloriesScreen>(
             popEnterTransition = {
-                if (initialState.destination.hasRoute<UpdateProduct>() == true) {
+                if (
+                    initialState.destination.hasRoute<UpdateProduct>() == true ||
+                    initialState.destination.hasRoute<UpdateRecipe>() == true
+                ) {
                     fadeIn(snap())
                 } else {
                     CrossFadeComposableDefaults.enterTransition()
@@ -64,7 +67,7 @@ private fun CaloriesNavHost(
                             launchSingleTop = true
                         }
 
-                        is FoodId.Recipe -> navController.navigate(it.id) {
+                        is FoodId.Recipe -> navController.navigate(UpdateRecipe(it.id)) {
                             launchSingleTop = true
                         }
                     }
