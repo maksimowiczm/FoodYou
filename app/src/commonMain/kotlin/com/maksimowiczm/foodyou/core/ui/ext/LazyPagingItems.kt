@@ -7,17 +7,17 @@ val LazyPagingItems<*>.throwable: Throwable?
     get() {
         when (val state = loadState.refresh) {
             is LoadState.Error -> return state.error
-            else -> null
+            else -> Unit
         }
 
         when (val state = loadState.append) {
             is LoadState.Error -> return state.error
-            else -> null
+            else -> Unit
         }
 
         when (val state = loadState.prepend) {
             is LoadState.Error -> return state.error
-            else -> null
+            else -> Unit
         }
 
         return null
