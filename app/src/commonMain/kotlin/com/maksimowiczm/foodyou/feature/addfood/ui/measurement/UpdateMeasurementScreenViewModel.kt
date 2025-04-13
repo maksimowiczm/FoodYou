@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.MeasurementId
 import com.maksimowiczm.foodyou.core.repository.FoodRepository
 import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
-import com.maksimowiczm.foodyou.feature.addfood.domain.ObserveMeasurableFoodUseCase
+import com.maksimowiczm.foodyou.feature.measurement.ObserveMeasurableFoodUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay

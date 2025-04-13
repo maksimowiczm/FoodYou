@@ -14,7 +14,6 @@ import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.MeasurementId
 import com.maksimowiczm.foodyou.core.model.PortionWeight
-import com.maksimowiczm.foodyou.core.model.SearchQuery
 import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,32 +24,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
-internal class SearchRepository(
+internal class AddFoodRepository(
     database: FoodYouDatabase,
     private val remoteMediatorFactory: ProductRemoteMediatorFactory,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     val searchDao = database.searchDao
     private val ioScope = CoroutineScope(ioDispatcher + SupervisorJob())
-
-    fun observeRecentQueries(limit: Int): Flow<List<SearchQuery>> =
-        searchDao.observeRecentQueries(limit).map { list ->
-            list.map {
-                val date = Instant
-                    .fromEpochSeconds(it.epochSeconds)
-                    .toLocalDateTime(TimeZone.currentSystemDefault())
-
-                SearchQuery(
-                    query = it.query,
-                    date = date
-                )
-            }
-        }
 
     @OptIn(ExperimentalPagingApi::class)
     fun queryFood(query: String?, mealId: Long, date: LocalDate): Flow<PagingData<SearchFoodItem>> {
@@ -141,23 +123,49 @@ internal class SearchRepository(
 }
 
 private fun FoodSearchVirtualEntity.toSearchFoodItem(): SearchFoodItem {
-    val foodId = FoodId.Product(productId)
-    val measurementId = measurementId?.let { MeasurementId.Product(measurementId) }
+    when {
+        productId != null && recipeId == null -> {
+            val foodId = FoodId.Product(productId)
+            val measurementId = measurementId?.let { MeasurementId.Product(measurementId) }
 
-    return SearchFoodItem(
-        foodId = foodId,
-        name = name,
-        brand = brand,
-        calories = calories,
-        proteins = proteins,
-        carbohydrates = carbohydrates,
-        fats = fats,
-        packageWeight = packageWeight?.let { PortionWeight.Package(it) },
-        servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
-        measurementId = measurementId,
-        measurement = toMeasurement(),
-        uniqueId = foodId.uniqueId(measurementId)
-    )
+            return SearchFoodItem(
+                foodId = foodId,
+                name = name,
+                brand = brand,
+                calories = calories,
+                proteins = proteins,
+                carbohydrates = carbohydrates,
+                fats = fats,
+                packageWeight = packageWeight?.let { PortionWeight.Package(it) },
+                servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
+                measurementId = measurementId,
+                measurement = toMeasurement(),
+                uniqueId = foodId.uniqueId(measurementId)
+            )
+        }
+
+        recipeId != null && productId == null -> {
+            val foodId = FoodId.Recipe(recipeId)
+            val measurementId = measurementId?.let { MeasurementId.Recipe(measurementId) }
+
+            return SearchFoodItem(
+                foodId = foodId,
+                name = name,
+                brand = brand,
+                calories = calories,
+                proteins = proteins,
+                carbohydrates = carbohydrates,
+                fats = fats,
+                packageWeight = packageWeight?.let { PortionWeight.Package(it) },
+                servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
+                measurementId = measurementId,
+                measurement = toMeasurement(),
+                uniqueId = foodId.uniqueId(measurementId)
+            )
+        }
+
+        else -> error("Data inconsistency: productId and recipeId are null")
+    }
 }
 
 private fun FoodSearchVirtualEntity.toMeasurement(): Measurement = when (measurement) {
@@ -170,11 +178,14 @@ private fun FoodId.uniqueId(measurementId: MeasurementId?): String {
     val measurementId = measurementId?.let {
         when (it) {
             is MeasurementId.Product -> it.id
+            is MeasurementId.Recipe -> it.id
         }
     }
 
     return when (this) {
         is FoodId.Product if (measurementId != null) -> "p_${id}_$measurementId"
         is FoodId.Product -> "p_$id"
+        is FoodId.Recipe if (measurementId != null) -> "r_${id}_$measurementId"
+        is FoodId.Recipe -> "r_$id"
     }
 }

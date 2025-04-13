@@ -35,6 +35,12 @@
     <string name="headline_incomplete_products">Incomplete products</string>
     <string name="headline_filter_foods_by_country">Filter foods by country</string>
     <string name="headline_use_global_database">Use global database</string>
+    <string name="headline_product">Product</string>
+    <string name="headline_recipe">Recipe</string>
+    <string name="headline_create_recipe">Create recipe</string>
+    <string name="headline_update_recipe">Update recipe</string>
+    <string name="headline_ingredients" description="Recipe ingredients">Ingredients</string>
+    <string name="headline_summary">Summary</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
@@ -60,6 +66,9 @@
     <string name="product_name">Name</string>
     <string name="product_brand">Brand</string>
     <string name="product_barcode">Barcode</string>
+
+    <string name="recipe_servings">Servings</string>
+    <string name="description_recipe_servings">How many servings does this recipe make</string>
 
     <string name="nutriment_proteins">Proteins</string>
     <string name="nutriment_proteins_short">P</string>
@@ -118,6 +127,9 @@
     <string name="action_include_all_day_meals">Include all-day meals</string>
     <string name="action_delete_unused_products">Delete unused products</string>
     <string name="action_error_details" description="Show error details">Details</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Add ingredient</string>
+    <string name="action_edit_ingredient_measurement">Edit ingredient measurement</string>
+    <string name="action_delete_ingredient">Delete ingredient</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -142,6 +154,7 @@
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>
+    <string name="question_discard_recipe">Discard recipe?</string>
 
     <string name="error_this_field_is_required">This field is required</string>
     <string name="error_invalid_number">Invalid number</string>

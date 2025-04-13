@@ -2,12 +2,12 @@ package com.maksimowiczm.foodyou.core.model
 
 import kotlinx.datetime.LocalDateTime
 
-data class ProductWithMeasurement(
-    override val measurementId: MeasurementId.Product,
+data class RecipeWithMeasurement(
+    override val measurementId: MeasurementId.Recipe,
     override val measurement: Measurement,
     override val measurementDate: LocalDateTime,
-    val product: Product
+    val recipe: Recipe
 ) : FoodWithMeasurement {
     override val food: Food
-        get() = product
+        get() = recipe
 }

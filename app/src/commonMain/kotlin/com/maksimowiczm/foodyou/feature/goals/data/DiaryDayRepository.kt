@@ -53,8 +53,14 @@ private fun List<DiaryDayView>.toFoods(): Map<Meal, List<Food>> = groupBy {
             MeasurementEntity.Serving -> Measurement.Serving(it.quantity)
         }
 
+        val id = when {
+            it.productId != null -> FoodId.Product(it.productId)
+            it.recipeId != null -> FoodId.Recipe(it.recipeId)
+            else -> error("Product ID and Recipe ID are both null")
+        }
+
         Food(
-            foodId = FoodId.Product(it.productId),
+            foodId = id,
             name = it.foodName,
             packageWeight = it.packageWeight?.let { PortionWeight.Package(it) },
             servingWeight = it.servingWeight?.let { PortionWeight.Serving(it) },

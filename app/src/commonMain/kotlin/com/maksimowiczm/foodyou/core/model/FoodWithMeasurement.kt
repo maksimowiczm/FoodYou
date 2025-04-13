@@ -1,8 +1,11 @@
 package com.maksimowiczm.foodyou.core.model
 
+import kotlinx.datetime.LocalDateTime
+
 sealed interface FoodWithMeasurement {
     val measurementId: MeasurementId
     val measurement: Measurement
+    val measurementDate: LocalDateTime
     val food: Food
 
     /**
@@ -12,12 +15,7 @@ sealed interface FoodWithMeasurement {
     val weight: Float?
         get() = when (val measurement = measurement) {
             is Measurement.Gram -> measurement.value
-            is Measurement.Package -> when (val food = food) {
-                is Product -> food.packageWeight?.weight?.let { it * measurement.quantity }
-            }
-
-            is Measurement.Serving -> when (val food = food) {
-                is Product -> food.servingWeight?.weight?.let { it * measurement.quantity }
-            }
+            is Measurement.Package -> food.packageWeight?.weight?.let { it * measurement.quantity }
+            is Measurement.Serving -> food.servingWeight?.weight?.let { it * measurement.quantity }
         }
 }

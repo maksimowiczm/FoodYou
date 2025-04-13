@@ -50,6 +50,7 @@ abstract class SearchDao {
         UNION
         SELECT
             s.productId AS productId,
+            s.recipeId AS recipeId,
             :epochDay AS epochDay,
             :mealId AS mealId,
             s.name AS name,
@@ -65,9 +66,12 @@ abstract class SearchDao {
             s.measurement AS measurement,
             s.quantity AS quantity
         FROM Suggestion s
-        WHERE s.productId NOT IN (
-            SELECT productId
-            FROM Measured
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM Measured m
+            WHERE 
+                (m.productId IS NOT NULL AND m.productId = s.productId)
+                OR (m.recipeId IS NOT NULL AND m.recipeId = s.recipeId)
         )
         """
     )
@@ -101,6 +105,7 @@ abstract class SearchDao {
         UNION
         SELECT
             s.productId AS productId,
+            NULL AS recipeId,
             :epochDay AS epochDay,
             :mealId AS mealId,
             s.name AS name,
