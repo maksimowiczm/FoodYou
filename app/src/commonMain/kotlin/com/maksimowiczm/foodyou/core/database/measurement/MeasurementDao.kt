@@ -80,27 +80,10 @@ abstract class MeasurementDao {
     )
     abstract suspend fun restoreRecipeMeasurement(id: Long)
 
+    @Transaction
     @Query(
         """
-        SELECT
-            p.id AS productId,
-            p.name AS name,
-            p.brand AS brand,
-            p.packageWeight AS packageWeight,
-            p.servingWeight AS servingWeight,
-            p.calories AS calories,
-            p.proteins AS proteins,
-            p.carbohydrates AS carbohydrates,
-            p.sugars AS sugars,
-            p.fats AS fats,
-            p.saturatedFats AS saturatedFats,
-            p.salt AS salt,
-            p.sodium AS sodium,
-            p.fiber AS fiber,
-            m.id AS measurementId,
-            m.measurement AS measurement,
-            m.quantity AS quantity,
-            m.createdAt AS createdAt
+        SELECT p.*
         FROM ProductMeasurementEntity m
         LEFT JOIN ProductEntity p ON p.id = m.productId
         WHERE diaryEpochDay = :epochDay
@@ -168,27 +151,10 @@ abstract class MeasurementDao {
         measurementId: Long
     ): Flow<RecipeMeasurementVirtualEntity?>
 
+    @Transaction
     @Query(
         """
-        SELECT
-            p.id AS productId,
-            p.name AS name,
-            p.brand AS brand,
-            p.packageWeight AS packageWeight,
-            p.servingWeight AS servingWeight,
-            p.calories AS calories,
-            p.proteins AS proteins,
-            p.carbohydrates AS carbohydrates,
-            p.sugars AS sugars,
-            p.fats AS fats,
-            p.saturatedFats AS saturatedFats,
-            p.salt AS salt,
-            p.sodium AS sodium,
-            p.fiber AS fiber,
-            m.id AS measurementId,
-            m.measurement AS measurement,
-            m.quantity AS quantity,
-            m.createdAt AS createdAt
+        SELECT p.* 
         FROM ProductMeasurementEntity m
         LEFT JOIN ProductEntity p ON p.id = m.productId
         WHERE m.id = :measurementId

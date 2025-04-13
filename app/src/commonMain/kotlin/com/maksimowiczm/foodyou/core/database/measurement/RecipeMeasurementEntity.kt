@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.maksimowiczm.foodyou.core.database.core.EntityWithMeasurement
 import com.maksimowiczm.foodyou.core.database.meal.MealEntity
 import com.maksimowiczm.foodyou.core.database.recipe.RecipeEntity
 
@@ -38,8 +39,8 @@ data class RecipeMeasurementEntity(
     val recipeId: Long,
 
     // Measurement
-    val measurement: Measurement,
-    val quantity: Float,
+    override val measurement: Measurement,
+    override val quantity: Float,
 
     // Additional
     /**
@@ -47,4 +48,4 @@ data class RecipeMeasurementEntity(
      */
     val createdAt: Long,
     val isDeleted: Boolean = false
-)
+) : EntityWithMeasurement

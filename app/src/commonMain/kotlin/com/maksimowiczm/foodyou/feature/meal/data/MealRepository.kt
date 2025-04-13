@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.meal.data
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.core.database.meal.MealDao
 import com.maksimowiczm.foodyou.core.database.meal.MealEntity
+import com.maksimowiczm.foodyou.core.ext.mapValues
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime
@@ -33,18 +34,6 @@ internal class MealRepositoryImpl(database: FoodYouDatabase) : MealRepository {
     override fun observeMeal(id: Long): Flow<Meal?> = mealDao.observeMeal(id).map { entity ->
         entity?.let {
             Meal(
-                id = it.id,
-                name = it.name,
-                from = LocalTime(it.fromHour, it.fromMinute),
-                to = LocalTime(it.toHour, it.toMinute),
-                rank = it.rank
-            )
-        }
-    }
-
-    override fun observeMeals(): Flow<List<Meal>> = mealDao.observeMeals().map { list ->
-        list.map { entity ->
-            Meal(
                 id = entity.id,
                 name = entity.name,
                 from = LocalTime(entity.fromHour, entity.fromMinute),
@@ -52,6 +41,16 @@ internal class MealRepositoryImpl(database: FoodYouDatabase) : MealRepository {
                 rank = entity.rank
             )
         }
+    }
+
+    override fun observeMeals(): Flow<List<Meal>> = mealDao.observeMeals().mapValues { entity ->
+        Meal(
+            id = entity.id,
+            name = entity.name,
+            from = LocalTime(entity.fromHour, entity.fromMinute),
+            to = LocalTime(entity.toHour, entity.toMinute),
+            rank = entity.rank
+        )
     }
 
     override suspend fun createMeal(name: String, from: LocalTime, to: LocalTime) {

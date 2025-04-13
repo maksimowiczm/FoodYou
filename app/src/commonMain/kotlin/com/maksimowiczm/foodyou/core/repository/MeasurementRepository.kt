@@ -2,25 +2,22 @@ package com.maksimowiczm.foodyou.core.repository
 
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementDao
 import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementVirtualEntity
 import com.maksimowiczm.foodyou.core.database.measurement.RecipeMeasurementEntity
-import com.maksimowiczm.foodyou.core.database.measurement.SuggestionVirtualEntity
+import com.maksimowiczm.foodyou.core.database.measurement.RecipeMeasurementVirtualEntity
+import com.maksimowiczm.foodyou.core.ext.mapValues
+import com.maksimowiczm.foodyou.core.mapper.MeasurementMapper
 import com.maksimowiczm.foodyou.core.mapper.ProductMapper
+import com.maksimowiczm.foodyou.core.mapper.RecipeMapper
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.MeasurementId
-import com.maksimowiczm.foodyou.core.model.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.core.model.Nutrients
-import com.maksimowiczm.foodyou.core.model.PortionWeight
-import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.model.ProductWithMeasurement
-import com.maksimowiczm.foodyou.core.model.Recipe
-import com.maksimowiczm.foodyou.core.model.RecipeIngredient
 import com.maksimowiczm.foodyou.core.model.RecipeWithMeasurement
+import kotlin.collections.map
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -73,56 +70,14 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
         measurementDao.observeProductMeasurements(
             epochDay = date.toEpochDays(),
             mealId = mealId
-        ).map { it.map { it.toProductWithMeasurement() } }
+        ).mapValues { it.toProductWithMeasurement() }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeRecipeMeasurements(date: LocalDate, mealId: Long) =
         measurementDao.observeRecipeMeasurements(
             epochDay = date.toEpochDays(),
             mealId = mealId
-        ).map { list ->
-            list.map { rm ->
-                val ingredients = rm.ingredients.map {
-                    val product = with(ProductMapper) { it.product.toModel() }
-                    val quantity = it.recipeIngredientEntity.quantity
-
-                    val measurement = when (it.recipeIngredientEntity.measurement) {
-                        MeasurementEntity.Gram -> Measurement.Gram(quantity)
-                        MeasurementEntity.Package -> Measurement.Package(quantity)
-                        MeasurementEntity.Serving -> Measurement.Serving(quantity)
-                    }
-
-                    RecipeIngredient(
-                        product = product,
-                        measurement = measurement
-                    )
-                }
-
-                val recipe = Recipe(
-                    id = FoodId.Recipe(rm.recipe.id),
-                    name = rm.recipe.name,
-                    servings = rm.recipe.servings,
-                    ingredients = ingredients
-                )
-
-                val quantity = rm.measurement.quantity
-                val measurement = when (rm.measurement.measurement) {
-                    MeasurementEntity.Gram -> Measurement.Gram(quantity)
-                    MeasurementEntity.Package -> Measurement.Package(quantity)
-                    MeasurementEntity.Serving -> Measurement.Serving(quantity)
-                }
-                val date = Instant
-                    .fromEpochSeconds(rm.measurement.createdAt)
-                    .toLocalDateTime(TimeZone.currentSystemDefault())
-
-                RecipeWithMeasurement(
-                    recipe = recipe,
-                    measurementId = MeasurementId.Recipe(rm.measurement.id),
-                    measurement = measurement,
-                    measurementDate = date
-                )
-            }
-        }
+        ).mapValues { it.toRecipeWithMeasurement() }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?> =
@@ -135,56 +90,13 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
             is MeasurementId.Recipe ->
                 measurementDao
                     .observeRecipeMeasurement(measurementId.id)
-                    .map { rm ->
-                        if (rm == null) return@map null
-
-                        val ingredients = rm.ingredients.map {
-                            val product = with(ProductMapper) { it.product.toModel() }
-                            val quantity = it.recipeIngredientEntity.quantity
-
-                            val measurement = when (it.recipeIngredientEntity.measurement) {
-                                MeasurementEntity.Gram -> Measurement.Gram(quantity)
-                                MeasurementEntity.Package -> Measurement.Package(quantity)
-                                MeasurementEntity.Serving -> Measurement.Serving(quantity)
-                            }
-
-                            RecipeIngredient(
-                                product = product,
-                                measurement = measurement
-                            )
-                        }
-
-                        val recipe = Recipe(
-                            id = FoodId.Recipe(rm.recipe.id),
-                            name = rm.recipe.name,
-                            servings = rm.recipe.servings,
-                            ingredients = ingredients
-                        )
-
-                        val quantity = rm.measurement.quantity
-                        val measurement = when (rm.measurement.measurement) {
-                            MeasurementEntity.Gram -> Measurement.Gram(quantity)
-                            MeasurementEntity.Package -> Measurement.Package(quantity)
-                            MeasurementEntity.Serving -> Measurement.Serving(quantity)
-                        }
-
-                        val date = Instant
-                            .fromEpochSeconds(rm.measurement.createdAt)
-                            .toLocalDateTime(TimeZone.currentSystemDefault())
-
-                        RecipeWithMeasurement(
-                            recipe = recipe,
-                            measurementId = MeasurementId.Recipe(rm.measurement.id),
-                            measurement = measurement,
-                            measurementDate = date
-                        )
-                    }
+                    .map { it?.toRecipeWithMeasurement() }
         }
 
     override suspend fun getSuggestions(foodId: FoodId): List<Measurement> = when (foodId) {
         is FoodId.Product -> measurementDao.getProductMeasurementSuggestions(foodId.id)
         is FoodId.Recipe -> measurementDao.getRecipeMeasurementSuggestions(foodId.id)
-    }.map { it.toMeasurement() }
+    }.map { with(MeasurementMapper) { it.toMeasurement() } }
 
     override suspend fun addMeasurement(
         date: LocalDate,
@@ -192,11 +104,7 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
         foodId: FoodId,
         measurement: Measurement
     ) {
-        val type = when (measurement) {
-            is Measurement.Gram -> MeasurementEntity.Gram
-            is Measurement.Package -> MeasurementEntity.Package
-            is Measurement.Serving -> MeasurementEntity.Serving
-        }
+        val type = with(MeasurementMapper) { measurement.toEntity() }
 
         val quantity = when (measurement) {
             is Measurement.Gram -> measurement.value
@@ -236,11 +144,7 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
     }
 
     override suspend fun updateMeasurement(measurementId: MeasurementId, measurement: Measurement) {
-        val type = when (measurement) {
-            is Measurement.Gram -> MeasurementEntity.Gram
-            is Measurement.Package -> MeasurementEntity.Package
-            is Measurement.Serving -> MeasurementEntity.Serving
-        }
+        val type = with(MeasurementMapper) { measurement.toEntity() }
 
         val quantity = when (measurement) {
             is Measurement.Gram -> measurement.value
@@ -315,42 +219,27 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
 }
 
 private fun ProductMeasurementVirtualEntity.toProductWithMeasurement(): ProductWithMeasurement {
-    val measurement = when (measurement) {
-        MeasurementEntity.Gram -> Measurement.Gram(quantity)
-        MeasurementEntity.Package -> Measurement.Package(quantity)
-        MeasurementEntity.Serving -> Measurement.Serving(quantity)
-    }
-
-    val date = Instant.fromEpochSeconds(createdAt).toLocalDateTime(TimeZone.currentSystemDefault())
+    val date = Instant
+        .fromEpochSeconds(measurement.createdAt)
+        .toLocalDateTime(TimeZone.currentSystemDefault())
 
     return ProductWithMeasurement(
-        measurementId = MeasurementId.Product(measurementId),
-        measurement = measurement,
+        measurementId = MeasurementId.Product(measurement.id),
+        measurement = with(MeasurementMapper) { measurement.toMeasurement() },
         measurementDate = date,
-        product = Product(
-            id = FoodId.Product(productId),
-            name = name,
-            brand = brand,
-            barcode = null,
-            nutrients = Nutrients(
-                calories = nutrients.calories.toNutrientValue(),
-                proteins = nutrients.proteins.toNutrientValue(),
-                carbohydrates = nutrients.carbohydrates.toNutrientValue(),
-                sugars = nutrients.sugars.toNutrientValue(),
-                fats = nutrients.fats.toNutrientValue(),
-                saturatedFats = nutrients.saturatedFats.toNutrientValue(),
-                salt = nutrients.salt.toNutrientValue(),
-                sodium = nutrients.sodium.toNutrientValue(),
-                fiber = nutrients.fiber.toNutrientValue()
-            ),
-            packageWeight = packageWeight?.let { PortionWeight.Package(it) },
-            servingWeight = servingWeight?.let { PortionWeight.Serving(it) }
-        )
+        product = with(ProductMapper) { product.toModel() }
     )
 }
 
-private fun SuggestionVirtualEntity.toMeasurement(): Measurement = when (measurement) {
-    MeasurementEntity.Gram -> Measurement.Gram(quantity)
-    MeasurementEntity.Package -> Measurement.Package(quantity)
-    MeasurementEntity.Serving -> Measurement.Serving(quantity)
+private fun RecipeMeasurementVirtualEntity.toRecipeWithMeasurement(): RecipeWithMeasurement {
+    val date = Instant
+        .fromEpochSeconds(this.measurement.createdAt)
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+
+    return RecipeWithMeasurement(
+        recipe = with(RecipeMapper) { toModel() },
+        measurementId = MeasurementId.Recipe(this.measurement.id),
+        measurement = with(MeasurementMapper) { measurement.toMeasurement() },
+        measurementDate = date
+    )
 }

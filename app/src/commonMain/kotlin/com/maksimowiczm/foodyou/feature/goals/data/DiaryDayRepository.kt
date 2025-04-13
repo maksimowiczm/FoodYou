@@ -3,11 +3,9 @@ package com.maksimowiczm.foodyou.feature.goals.data
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.core.database.goals.DiaryDayDao
 import com.maksimowiczm.foodyou.core.database.goals.DiaryDayView
-import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
+import com.maksimowiczm.foodyou.core.mapper.MeasurementMapper
+import com.maksimowiczm.foodyou.core.mapper.NutrientsMapper
 import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.model.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.core.model.Nutrients
 import com.maksimowiczm.foodyou.core.model.PortionWeight
 import com.maksimowiczm.foodyou.core.repository.GoalsRepository
 import com.maksimowiczm.foodyou.feature.goals.model.DiaryDay
@@ -47,12 +45,6 @@ private fun List<DiaryDayView>.toFoods(): Map<Meal, List<Food>> = groupBy {
     )
 }.mapValues { (_, list) ->
     list.map {
-        val measurement = when (it.measurement) {
-            MeasurementEntity.Gram -> Measurement.Gram(it.quantity)
-            MeasurementEntity.Package -> Measurement.Package(it.quantity)
-            MeasurementEntity.Serving -> Measurement.Serving(it.quantity)
-        }
-
         val id = when {
             it.productId != null -> FoodId.Product(it.productId)
             it.recipeId != null -> FoodId.Recipe(it.recipeId)
@@ -64,18 +56,8 @@ private fun List<DiaryDayView>.toFoods(): Map<Meal, List<Food>> = groupBy {
             name = it.foodName,
             packageWeight = it.packageWeight?.let { PortionWeight.Package(it) },
             servingWeight = it.servingWeight?.let { PortionWeight.Serving(it) },
-            nutrients = Nutrients(
-                calories = it.nutrients.calories.toNutrientValue(),
-                proteins = it.nutrients.proteins.toNutrientValue(),
-                carbohydrates = it.nutrients.carbohydrates.toNutrientValue(),
-                sugars = it.nutrients.sugars.toNutrientValue(),
-                fats = it.nutrients.fats.toNutrientValue(),
-                saturatedFats = it.nutrients.saturatedFats.toNutrientValue(),
-                salt = it.nutrients.salt.toNutrientValue(),
-                sodium = it.nutrients.sodium.toNutrientValue(),
-                fiber = it.nutrients.fiber.toNutrientValue()
-            ),
-            measurement = measurement
+            nutrients = with(NutrientsMapper) { it.nutrients.toModel() },
+            measurement = with(MeasurementMapper) { it.toMeasurement() }
         )
     }
 }

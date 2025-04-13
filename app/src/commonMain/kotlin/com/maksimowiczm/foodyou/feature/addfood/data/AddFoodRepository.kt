@@ -5,13 +5,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
-import androidx.paging.map
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.core.database.search.FoodSearchVirtualEntity
 import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
+import com.maksimowiczm.foodyou.core.ext.mapValues
+import com.maksimowiczm.foodyou.core.mapper.MeasurementMapper
 import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.MeasurementId
 import com.maksimowiczm.foodyou.core.model.PortionWeight
 import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediatorFactory
@@ -21,7 +20,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -105,9 +103,7 @@ internal class AddFoodRepository(
                     epochDay = date.toEpochDays()
                 )
             }
-        }.flow.map { data ->
-            data.map { it.toSearchFoodItem() }
-        }
+        }.flow.mapValues { it.toSearchFoodItem() }
     }
 
     private suspend fun insertProductQueryWithCurrentTime(query: String) {
@@ -139,7 +135,7 @@ private fun FoodSearchVirtualEntity.toSearchFoodItem(): SearchFoodItem {
                 packageWeight = packageWeight?.let { PortionWeight.Package(it) },
                 servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
                 measurementId = measurementId,
-                measurement = toMeasurement(),
+                measurement = with(MeasurementMapper) { toMeasurement() },
                 uniqueId = foodId.uniqueId(measurementId)
             )
         }
@@ -159,19 +155,13 @@ private fun FoodSearchVirtualEntity.toSearchFoodItem(): SearchFoodItem {
                 packageWeight = packageWeight?.let { PortionWeight.Package(it) },
                 servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
                 measurementId = measurementId,
-                measurement = toMeasurement(),
+                measurement = with(MeasurementMapper) { toMeasurement() },
                 uniqueId = foodId.uniqueId(measurementId)
             )
         }
 
         else -> error("Data inconsistency: productId and recipeId are null")
     }
-}
-
-private fun FoodSearchVirtualEntity.toMeasurement(): Measurement = when (measurement) {
-    MeasurementEntity.Gram -> Measurement.Gram(quantity)
-    MeasurementEntity.Package -> Measurement.Package(quantity)
-    MeasurementEntity.Serving -> Measurement.Serving(quantity)
 }
 
 private fun FoodId.uniqueId(measurementId: MeasurementId?): String {

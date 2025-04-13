@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.core.database.goals
 
 import androidx.room.DatabaseView
 import androidx.room.Embedded
+import com.maksimowiczm.foodyou.core.database.core.EntityWithMeasurement
 import com.maksimowiczm.foodyou.core.database.core.NutrientsEmbedded
 import com.maksimowiczm.foodyou.core.database.measurement.Measurement
 
@@ -87,6 +88,6 @@ data class DiaryDayView(
 
     // Measurement
     val measurementId: Long,
-    val measurement: Measurement,
-    val quantity: Float
-)
+    override val measurement: Measurement,
+    override val quantity: Float
+) : EntityWithMeasurement

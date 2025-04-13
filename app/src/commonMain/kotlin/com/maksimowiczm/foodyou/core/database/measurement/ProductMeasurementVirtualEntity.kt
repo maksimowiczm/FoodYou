@@ -1,25 +1,17 @@
 package com.maksimowiczm.foodyou.core.database.measurement
 
 import androidx.room.Embedded
-import com.maksimowiczm.foodyou.core.database.core.NutrientsEmbedded
+import androidx.room.Relation
+import com.maksimowiczm.foodyou.core.database.product.ProductEntity
 
 data class ProductMeasurementVirtualEntity(
-    val productId: Long,
-
-    // Product data
-    val name: String,
-    val brand: String?,
     @Embedded
-    val nutrients: NutrientsEmbedded,
-    val packageWeight: Float?,
-    val servingWeight: Float?,
+    val product: ProductEntity,
 
-    // Measurement data
-    val measurementId: Long,
-    val measurement: Measurement,
-    val quantity: Float,
-    /**
-     * Epoch seconds
-     */
-    val createdAt: Long
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "productId",
+        entity = ProductMeasurementEntity::class
+    )
+    val measurement: ProductMeasurementEntity
 )
