@@ -18,7 +18,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstant
                 WHEN ri.measurement = $SERVING AND p.servingWeight IS NOT NULL THEN p.calories * (ri.quantity * p.servingWeight / 100.0)
                 ELSE 0 
             END
-        ) AS calories,
+        ) * 100 / rw.totalWeight AS calories,
         SUM(
             CASE 
                 WHEN ri.measurement = $GRAM THEN p.proteins * (ri.quantity / 100.0)
@@ -26,7 +26,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstant
                 WHEN ri.measurement = $SERVING AND p.servingWeight IS NOT NULL THEN p.proteins * (ri.quantity * p.servingWeight / 100.0)
                 ELSE 0 
             END
-        ) AS proteins,
+        ) * 100 / rw.totalWeight AS proteins,
         SUM(
             CASE 
                 WHEN ri.measurement = $GRAM THEN p.carbohydrates * (ri.quantity / 100.0)
@@ -34,7 +34,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstant
                 WHEN ri.measurement = $SERVING AND p.servingWeight IS NOT NULL THEN p.carbohydrates * (ri.quantity * p.servingWeight / 100.0)
                 ELSE 0 
             END
-        ) AS carbohydrates,
+        ) * 100 / rw.totalWeight AS carbohydrates,
         SUM(
             CASE 
                 WHEN ri.measurement = $GRAM THEN p.sugars * (ri.quantity / 100.0)
@@ -42,7 +42,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstant
                 WHEN ri.measurement = $SERVING AND p.servingWeight IS NOT NULL THEN p.sugars * (ri.quantity * p.servingWeight / 100.0)
                 ELSE 0 
             END
-        ) AS sugars,
+        ) * 100 / rw.totalWeight AS sugars,
         SUM(
             CASE 
                 WHEN ri.measurement = $GRAM THEN p.fats * (ri.quantity / 100.0)
@@ -50,7 +50,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstant
                 WHEN ri.measurement = $SERVING AND p.servingWeight IS NOT NULL THEN p.fats * (ri.quantity * p.servingWeight / 100.0)
                 ELSE 0 
             END
-        ) AS fats,
+        ) * 100 / rw.totalWeight AS fats,
         SUM(
             CASE 
                 WHEN ri.measurement = $GRAM THEN p.saturatedFats * (ri.quantity / 100.0)
@@ -58,7 +58,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstant
                 WHEN ri.measurement = $SERVING AND p.servingWeight IS NOT NULL THEN p.saturatedFats * (ri.quantity * p.servingWeight / 100.0)
                 ELSE 0 
             END
-        ) AS saturatedFats,
+        ) * 100 / rw.totalWeight AS saturatedFats,
         SUM(
             CASE 
                 WHEN ri.measurement = $GRAM THEN p.salt * (ri.quantity / 100.0)
@@ -66,7 +66,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstant
                 WHEN ri.measurement = $SERVING AND p.servingWeight IS NOT NULL THEN p.salt * (ri.quantity * p.servingWeight / 100.0)
                 ELSE 0 
             END
-        ) AS salt,
+        ) * 100 / rw.totalWeight AS salt,
         SUM(
             CASE 
                 WHEN ri.measurement = $GRAM THEN p.sodium * (ri.quantity / 100.0)
@@ -74,7 +74,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstant
                 WHEN ri.measurement = $SERVING AND p.servingWeight IS NOT NULL THEN p.sodium * (ri.quantity * p.servingWeight / 100.0)
                 ELSE 0 
             END
-        ) AS sodium,
+        ) * 100 / rw.totalWeight AS sodium,
         SUM(
             CASE 
                 WHEN ri.measurement = $GRAM THEN p.fiber * (ri.quantity / 100.0)
@@ -82,17 +82,18 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstant
                 WHEN ri.measurement = $SERVING AND p.servingWeight IS NOT NULL THEN p.fiber * (ri.quantity * p.servingWeight / 100.0)
                 ELSE 0 
             END
-        ) AS fiber
+        ) * 100 / rw.totalWeight AS fiber
     FROM RecipeEntity r
     JOIN RecipeIngredientEntity ri ON r.id = ri.recipeId
     JOIN ProductEntity p ON ri.productId = p.id
+    JOIN RecipeWeightView rw ON r.id = rw.recipeId
     GROUP BY r.id
     """
 )
 data class RecipeNutritionView(
     val recipeId: Long,
 
-    // Total nutrition values for the recipe
+    // Total nutrition per 100g
     @Embedded
     val nutrition: NutrientsEmbedded
 )
