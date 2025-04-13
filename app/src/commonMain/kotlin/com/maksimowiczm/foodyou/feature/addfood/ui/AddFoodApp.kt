@@ -228,7 +228,10 @@ private fun AddFoodNavHost(
         }
         crossfadeComposable<MeasureFood>(
             popEnterTransition = {
-                if (initialState.destination.hasRoute<UpdateProduct>()) {
+                if (
+                    initialState.destination.hasRoute<UpdateProduct>() ||
+                    initialState.destination.hasRoute<UpdateRecipe>()
+                ) {
                     fadeIn(snap())
                 } else {
                     CrossFadeComposableDefaults.enterTransition()
@@ -268,7 +271,10 @@ private fun AddFoodNavHost(
         }
         crossfadeComposable<UpdateMeasurement>(
             popEnterTransition = {
-                if (initialState.destination.hasRoute<UpdateProduct>()) {
+                if (
+                    initialState.destination.hasRoute<UpdateProduct>() ||
+                    initialState.destination.hasRoute<UpdateRecipe>()
+                ) {
                     fadeIn(snap())
                 } else {
                     CrossFadeComposableDefaults.enterTransition()
