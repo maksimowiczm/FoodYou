@@ -1,10 +1,22 @@
-New Features
-- Open Food Facts global search
-- delete unused Open Food Facts products
-- remote database error details
+New features
+- recipes
+- open food facts global search
+- delete unused open food facts products
+- show remote database error details
+- show warning dialog for incomplete translations when changing language
 
 Changes
-- calorie summary won't display empty meals in the filter chips
+- calorie summary won't display empty meals in filter chips
 
 Fixed bugs
-- product form won't crash anymore when requesting next field on "fats" field if field "sugars" was hidden
+- product form no longer crashes when requesting the next field on "fats" if the "sugars" field was hidden
+
+Translations
+- added Portuguese (Brazilian)
+- added Russian
+
+Code
+This release is marked as 2.0.0 because of significant source code changes that affect the overall structure of the app. The internal codebase has been heavily updated. The major version bump reflects these foundational changes.
+
+Notes
+Possible other unintended changes. If you notice something odd happening, please report it.
