@@ -75,6 +75,14 @@ abstract class RecipeDao {
         recipeIngredientEntity: RecipeIngredientEntity
     )
 
+    @Query(
+        """
+        DELETE FROM RecipeIngredientEntity
+        WHERE recipeId = :recipeId
+        """
+    )
+    protected abstract suspend fun deleteRecipeIngredients(recipeId: Long)
+
     @Transaction
     open suspend fun deleteRecipe(recipeId: Long) {
         val recipeWithIngredients = getRecipe(recipeId)
@@ -89,19 +97,15 @@ abstract class RecipeDao {
     @Update
     protected abstract suspend fun updateRecipe(recipeEntity: RecipeEntity)
 
-    @Update
-    protected abstract suspend fun updateRecipeIngredient(
-        recipeIngredientEntity: RecipeIngredientEntity
-    )
-
     @Transaction
     open suspend fun updateRecipeWithIngredients(
         recipeEntity: RecipeEntity,
         recipeIngredientEntities: List<RecipeIngredientEntity>
     ) {
         updateRecipe(recipeEntity)
+        deleteRecipeIngredients(recipeEntity.id)
         recipeIngredientEntities.forEach {
-            updateRecipeIngredient(it)
+            insertRecipeIngredient(it.copy(recipeId = recipeEntity.id))
         }
     }
 

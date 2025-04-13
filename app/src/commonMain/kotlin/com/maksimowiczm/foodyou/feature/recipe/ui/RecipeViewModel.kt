@@ -12,6 +12,7 @@ import com.maksimowiczm.foodyou.core.repository.SearchRepository
 import com.maksimowiczm.foodyou.feature.measurement.ObserveMeasurableFoodUseCase
 import com.maksimowiczm.foodyou.feature.recipe.data.RecipeRepository
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
+import com.maksimowiczm.foodyou.feature.recipe.model.compare
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,15 +42,7 @@ internal class RecipeViewModel(
     private val observeMeasurableFoodUseCase: ObserveMeasurableFoodUseCase,
     private val recipeId: Long = -1
 ) : ViewModel() {
-    val recipe = runBlocking { recipeRepository.getRecipeById(recipeId) }
-
-    private val _state = MutableStateFlow<RecipeState>(
-        RecipeState(
-            name = input(recipe?.name ?: ""),
-            servings = input(recipe?.servings?.toString() ?: "1")
-        )
-    )
-    val state = _state.asStateFlow()
+    private val recipe = runBlocking { recipeRepository.getRecipeById(recipeId) }
 
     private val _ingredients = MutableStateFlow<List<IngredientInternal>>(
         recipe?.ingredients?.map {
@@ -61,7 +54,7 @@ internal class RecipeViewModel(
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val ingredients = _ingredients.flatMapLatest {
+    private val ingredients = _ingredients.flatMapLatest {
         if (it.isEmpty()) {
             return@flatMapLatest flowOf(emptyList<Ingredient>())
         }
@@ -79,10 +72,33 @@ internal class RecipeViewModel(
                     )
                 }
         }.combine { it.toList() }
+    }
+
+    private val nameState = MutableStateFlow(recipe?.name?.let { input(it) } ?: input())
+    private val servingsState =
+        MutableStateFlow(recipe?.servings?.let { input(it.toString()) } ?: input("1"))
+
+    val state = kotlinx.coroutines.flow.combine(
+        nameState,
+        servingsState,
+        ingredients
+    ) { name, servings, ingredients ->
+        RecipeState(
+            name = name,
+            servings = servings,
+            isModified = if (recipe == null) {
+                name.value.isNotBlank() || servings.value != "1" || ingredients.isNotEmpty()
+            } else {
+                name.value != recipe.name ||
+                    servings.value != recipe.servings.toString() ||
+                    !ingredients.compare(recipe.ingredients)
+            },
+            ingredients = ingredients
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(30_000L),
-        initialValue = emptyList()
+        initialValue = RecipeState()
     )
 
     val recentQueries = searchRepository.observeRecentQueries(20).stateIn(
@@ -144,11 +160,7 @@ internal class RecipeViewModel(
     )
 
     fun onNameChange(name: String) {
-        _state.update {
-            it.copy(
-                name = nameForm(name)
-            )
-        }
+        nameState.update { nameForm(name) }
     }
 
     private val servingsForm = Form(
@@ -157,11 +169,7 @@ internal class RecipeViewModel(
     )
 
     fun onServingsChange(servings: String) {
-        _state.update {
-            it.copy(
-                servings = servingsForm(servings)
-            )
-        }
+        servingsState.update { servingsForm(servings) }
     }
 
     fun onProductDelete(productId: Long) {
@@ -177,7 +185,7 @@ internal class RecipeViewModel(
         if (_createState.value is CreateState.CreatingRecipe) return
 
         val state = state.value
-        val ingredientsState = ingredients.value
+        val ingredientsState = state.ingredients
 
         val name = state.name.takeIf { it.isValid }?.value ?: return
         val servings = state.servings.takeIf { it.isValid }?.value?.toIntOrNull() ?: return

@@ -70,7 +70,6 @@ import pro.respawn.kmmutils.inputforms.dsl.isValid
 @Composable
 internal fun RecipeFormScreen(
     state: RecipeState,
-    ingredients: List<Ingredient>,
     onNameChange: (String) -> Unit,
     onServingsChange: (String) -> Unit,
     onAddIngredient: () -> Unit,
@@ -88,11 +87,9 @@ internal fun RecipeFormScreen(
             onConfirm = onClose
         )
     }
-    val isModified = state.isModified || ingredients.isNotEmpty()
-    val isValid = state.isValid && ingredients.isNotEmpty()
 
     val handleClose = {
-        if (isModified) {
+        if (state.isModified) {
             showDiscardDialog = true
         } else {
             onClose()
@@ -100,7 +97,7 @@ internal fun RecipeFormScreen(
     }
 
     BackHandler(
-        enabled = isModified
+        enabled = state.isModified
     ) {
         showDiscardDialog = true
     }
@@ -122,7 +119,7 @@ internal fun RecipeFormScreen(
             actions = {
                 TextButton(
                     onClick = onCreate,
-                    enabled = isValid
+                    enabled = state.isValid
                 ) {
                     Text(stringResource(Res.string.action_create))
                 }
@@ -134,7 +131,7 @@ internal fun RecipeFormScreen(
     val coroutineScope = rememberCoroutineScope()
     var selectedIngredientIndex by rememberSaveable { mutableStateOf(-1) }
     if (selectedIngredientIndex != -1) {
-        val item = ingredients.getOrNull(selectedIngredientIndex)
+        val item = state.ingredients.getOrNull(selectedIngredientIndex)
 
         LaunchedEffect(item) {
             if (item == null) {
@@ -305,14 +302,14 @@ internal fun RecipeFormScreen(
                 }
             }
 
-            items(ingredients) {
+            items(state.ingredients) {
                 it.ListItem(
                     modifier = Modifier
-                        .clickable { selectedIngredientIndex = ingredients.indexOf(it) }
+                        .clickable { selectedIngredientIndex = state.ingredients.indexOf(it) }
                 )
             }
 
-            if (ingredients.isNotEmpty()) {
+            if (state.ingredients.isNotEmpty()) {
                 item {
                     HorizontalDivider(Modifier.padding(bottom = 8.dp))
                 }
@@ -327,11 +324,13 @@ internal fun RecipeFormScreen(
                 }
 
                 item {
-                    val nutrients = ingredients
+                    val nutrients = state.ingredients
                         .map { it.product.nutrients * (it.weight ?: 0f) / 100f }
                         .sum()
 
-                    val anyProductIncomplete = ingredients.any { !it.product.nutrients.isComplete }
+                    val anyProductIncomplete = state.ingredients.any {
+                        !it.product.nutrients.isComplete
+                    }
 
                     Column {
                         CaloriesProgressIndicator(
@@ -353,7 +352,7 @@ internal fun RecipeFormScreen(
 
                         if (anyProductIncomplete) {
                             IncompleteFoodsList(
-                                foods = ingredients
+                                foods = state.ingredients
                                     .distinctBy { it.product.id }
                                     .map {
                                         IncompleteFoodData(

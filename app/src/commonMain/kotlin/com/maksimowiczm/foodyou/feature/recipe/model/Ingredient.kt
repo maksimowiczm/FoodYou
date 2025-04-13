@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.Measurement.Gram
 import com.maksimowiczm.foodyou.core.model.Measurement.Serving
 import com.maksimowiczm.foodyou.core.model.Product
+import com.maksimowiczm.foodyou.core.model.RecipeIngredient
 
 @Immutable
 internal data class Ingredient(val product: Product, val measurement: Measurement) {
@@ -18,4 +19,24 @@ internal data class Ingredient(val product: Product, val measurement: Measuremen
                 is Serving -> servingWeight?.let { measurement.weight(servingWeight) }
             }
         }
+}
+
+/**
+ * Compares two lists of ingredients to check if they are equal.
+ *
+ * @param other The list of RecipeIngredient to compare with.
+ * @return True if the lists are equal, false otherwise.
+ */
+internal fun List<Ingredient>.compare(other: List<RecipeIngredient>): Boolean {
+    if (this.size != other.size) return false
+
+    val thisMap = this.associateBy { it.product.id }
+    val otherMap = other.associateBy { it.product.id }
+
+    return thisMap.all { (key, value) ->
+        val otherValue = otherMap[key]
+        if (otherValue == null) return@all false
+
+        value.measurement == otherValue.measurement
+    }
 }
