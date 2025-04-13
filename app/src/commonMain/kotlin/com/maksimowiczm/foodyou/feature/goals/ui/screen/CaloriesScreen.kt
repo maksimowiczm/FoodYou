@@ -166,7 +166,7 @@ private fun CaloriesScreen(
                         nutrients = diaryDay.meals
                             .filter { it in meals }
                             .flatMap { diaryDay.foods[it] ?: emptyList() }
-                            .map { it.nutrients }
+                            .mapNotNull { it.realNutrients }
                             .sum(),
                         incompleteValue = {
                             {
