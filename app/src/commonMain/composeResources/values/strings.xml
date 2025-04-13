@@ -38,6 +38,7 @@
     <string name="headline_product">Product</string>
     <string name="headline_recipe">Recipe</string>
     <string name="headline_create_recipe">Create recipe</string>
+    <string name="headline_update_recipe">Update recipe</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ingredients</string>
     <string name="headline_summary">Summary</string>
 

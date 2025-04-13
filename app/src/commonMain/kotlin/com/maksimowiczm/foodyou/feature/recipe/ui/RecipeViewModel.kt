@@ -43,6 +43,11 @@ internal class RecipeViewModel(
     private val recipeId: Long = -1
 ) : ViewModel() {
     private val recipe = runBlocking { recipeRepository.getRecipeById(recipeId) }
+    private val action = if (recipe == null) {
+        RecipeAction.Create
+    } else {
+        RecipeAction.Update
+    }
 
     private val _ingredients = MutableStateFlow<List<IngredientInternal>>(
         recipe?.ingredients?.map {
@@ -93,12 +98,13 @@ internal class RecipeViewModel(
                     servings.value != recipe.servings.toString() ||
                     !ingredients.compare(recipe.ingredients)
             },
-            ingredients = ingredients
+            ingredients = ingredients,
+            action = action
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(30_000L),
-        initialValue = RecipeState()
+        initialValue = RecipeState(action = action)
     )
 
     val recentQueries = searchRepository.observeRecentQueries(20).stateIn(

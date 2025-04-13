@@ -105,7 +105,14 @@ internal fun RecipeFormScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val topBar = @Composable {
         TopAppBar(
-            title = { Text(stringResource(Res.string.headline_create_recipe)) },
+            title = {
+                val text = when (state.action) {
+                    RecipeAction.Create -> stringResource(Res.string.headline_create_recipe)
+                    RecipeAction.Update -> stringResource(Res.string.headline_update_recipe)
+                }
+
+                Text(text)
+            },
             navigationIcon = {
                 IconButton(
                     onClick = handleClose
@@ -117,11 +124,16 @@ internal fun RecipeFormScreen(
                 }
             },
             actions = {
+                val text = when (state.action) {
+                    RecipeAction.Create -> stringResource(Res.string.action_create)
+                    RecipeAction.Update -> stringResource(Res.string.action_save)
+                }
+
                 TextButton(
                     onClick = onCreate,
                     enabled = state.isValid
                 ) {
-                    Text(stringResource(Res.string.action_create))
+                    Text(text)
                 }
             },
             scrollBehavior = scrollBehavior
