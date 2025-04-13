@@ -56,7 +56,6 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.sum
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
-import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
@@ -336,6 +335,10 @@ internal fun RecipeFormScreen(
                 }
 
                 item {
+                    Spacer(Modifier.height(8.dp))
+                }
+
+                item {
                     val nutrients = state.ingredients
                         .map { it.product.nutrients * (it.weight ?: 0f) / 100f }
                         .sum()
@@ -345,16 +348,6 @@ internal fun RecipeFormScreen(
                     }
 
                     Column {
-                        CaloriesProgressIndicator(
-                            proteins = nutrients.proteins.value,
-                            carbohydrates = nutrients.carbohydrates.value,
-                            fats = nutrients.fats.value,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(32.dp)
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                        )
-
                         NutrientsList(
                             nutrients = nutrients,
                             modifier = Modifier
