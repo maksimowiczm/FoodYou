@@ -43,7 +43,7 @@ internal class RecipeRepository(
         val (recipeEntity, ingredients) = recipeDao.getRecipe(id) ?: return null
 
         val products = ingredients.map { ingredient ->
-            val product = with(ProductMapper) { ingredient.toModel() }
+            val product = with(ProductMapper) { ingredient.product.toModel() }
 
             val quantity = ingredient.recipeIngredientEntity.quantity
             val measurement = when (ingredient.recipeIngredientEntity.measurement) {

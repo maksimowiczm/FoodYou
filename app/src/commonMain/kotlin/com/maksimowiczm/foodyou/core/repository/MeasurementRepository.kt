@@ -83,7 +83,7 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
         ).map { list ->
             list.map { rm ->
                 val ingredients = rm.ingredients.map {
-                    val product = with(ProductMapper) { it.toModel() }
+                    val product = with(ProductMapper) { it.product.toModel() }
                     val quantity = it.recipeIngredientEntity.quantity
 
                     val measurement = when (it.recipeIngredientEntity.measurement) {
@@ -139,7 +139,7 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                         if (rm == null) return@map null
 
                         val ingredients = rm.ingredients.map {
-                            val product = with(ProductMapper) { it.toModel() }
+                            val product = with(ProductMapper) { it.product.toModel() }
                             val quantity = it.recipeIngredientEntity.quantity
 
                             val measurement = when (it.recipeIngredientEntity.measurement) {
