@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.recipe.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.MeasurableFood
@@ -17,29 +18,29 @@ internal fun UpdateIngredientMeasurementScreen(
     onDeleteFood: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var replaced = false
-    val suggestions = food.suggestions
-    val realSuggestions = suggestions.map {
-        if (replaced) {
-            return@map it
+    val realSuggestions = remember(food) {
+        var replaced = false
+        val suggestions = food.suggestions
+
+        suggestions.map {
+            if (replaced) {
+                return@map it
+            }
+
+            val real = when (it) {
+                is Measurement.Gram ->
+                    ingredient.measurement as? Measurement.Gram ?: return@map it
+
+                is Measurement.Package ->
+                    ingredient.measurement as? Measurement.Package ?: return@map it
+
+                is Measurement.Serving ->
+                    ingredient.measurement as? Measurement.Serving ?: return@map it
+            }
+
+            replaced = true
+            real
         }
-
-        val real = when (it) {
-            is Measurement.Gram ->
-                ingredient.measurement as? Measurement.Gram
-                    ?: return@map it
-
-            is Measurement.Package ->
-                ingredient.measurement as? Measurement.Package
-                    ?: return@map it
-
-            is Measurement.Serving ->
-                ingredient.measurement as? Measurement.Serving
-                    ?: return@map it
-        }
-
-        replaced = true
-        real
     }
 
     val food = food.copy(
