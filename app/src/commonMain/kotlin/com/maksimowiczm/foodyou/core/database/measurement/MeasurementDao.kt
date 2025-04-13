@@ -106,7 +106,7 @@ abstract class MeasurementDao {
         WHERE diaryEpochDay = :epochDay
         AND mealId = :mealId
         AND isDeleted = 0
-        ORDER BY m.createdAt DESC 
+        ORDER BY m.createdAt DESC
         """
     )
     abstract fun observeProductMeasurements(
