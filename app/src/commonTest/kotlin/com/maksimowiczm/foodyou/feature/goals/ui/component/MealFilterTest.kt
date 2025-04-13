@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.feature.goals.ui.component
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotSelected
-import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
