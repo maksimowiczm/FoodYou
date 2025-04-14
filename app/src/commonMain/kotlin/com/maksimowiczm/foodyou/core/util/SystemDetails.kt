@@ -30,3 +30,9 @@ expect class SystemDetails {
      */
     val countries: List<Country>
 }
+
+/**
+ * Checks if the system's default country is United States which is default locale for the app.
+ */
+val SystemDetails.isUS: Boolean
+    get() = defaultCountry.code == "US"

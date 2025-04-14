@@ -13,13 +13,17 @@ import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun LanguageWarningDialog(onDismissRequest: () -> Unit, modifier: Modifier = Modifier) {
+internal fun LanguageWarningDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         confirmButton = {
             TextButton(
-                onClick = onDismissRequest
+                onClick = onConfirm
             ) {
                 Text(stringResource(Res.string.positive_ok))
             }

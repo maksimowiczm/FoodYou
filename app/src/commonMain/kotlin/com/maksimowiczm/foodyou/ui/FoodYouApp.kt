@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.feature.language.TranslationWarningStartupDialog
 import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
 
 @Suppress("ktlint:compose:modifier-missing-check")
@@ -20,6 +21,7 @@ fun FoodYouApp() {
                     LocalHomeSharedTransitionScope provides this
                 ) {
                     FoodYouNavHost()
+                    TranslationWarningStartupDialog()
                 }
             }
         }

@@ -30,11 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -43,9 +39,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.language.languages
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
-import kotlin.collections.component1
-import kotlin.collections.component2
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -87,16 +80,8 @@ private fun LanguageScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-    var showWarningDialog by rememberSaveable { mutableStateOf(false) }
-    if (showWarningDialog) {
-        LanguageWarningDialog(
-            onDismissRequest = { showWarningDialog = false }
-        )
-    }
-
     val onLanguageSelect = remember(onLanguageSelect) {
         { tag: String? ->
-            showWarningDialog = true
             onLanguageSelect(tag)
         }
     }
