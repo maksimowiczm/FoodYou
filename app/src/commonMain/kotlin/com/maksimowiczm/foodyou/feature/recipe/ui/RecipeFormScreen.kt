@@ -82,6 +82,7 @@ internal fun RecipeFormScreen(
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     if (showDiscardDialog) {
         DiscardDialog(
+            action = state.action,
             onDismissRequest = { showDiscardDialog = false },
             onConfirm = onClose
         )
@@ -381,6 +382,7 @@ internal fun RecipeFormScreen(
 
 @Composable
 private fun DiscardDialog(
+    action: RecipeAction,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier
@@ -403,7 +405,10 @@ private fun DiscardDialog(
             }
         },
         text = {
-            Text(stringResource(Res.string.question_discard_recipe))
+            when (action) {
+                RecipeAction.Create -> Text(stringResource(Res.string.question_discard_recipe))
+                RecipeAction.Update -> Text(stringResource(Res.string.question_discard_changes))
+            }
         }
     )
 }
