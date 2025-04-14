@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">مجهول</string>
+    <string name="headline_create_product">إنشاء منتج</string>
+    <string name="headline_settings">الإعدادات</string>
+    <string name="headline_calories_goal">السعرات الحرارية الهدف</string>
+    <string name="headline_daily_goals">الأهداف اليومية</string>
+    <string name="headline_product_serving_and_packaging">الحصص والعبوات</string>
+    <string name="headline_general">عام</string>
+    <string name="headline_macronutrients">المغذيات الكبرى</string>
+    <string name="headline_nutrients">المغذيات</string>
+    <string name="headline_meals">الوجبات</string>
+    <string name="headline_delete_product">حذف منتج</string>
+    <string name="headline_edit_product">تعديل منتج</string>
+    <string name="headline_permission_required">الإذن مطلوب</string>
+    <string name="headline_language">اللغة</string>
+    <string name="headline_authors">المطورون</string>
+    <string name="headline_system">النظام</string>
+    <string name="headline_system_language_settings">إعدادات لغة النظام</string>
+    <string name="headline_secure_screen">الشاشة الآمنة</string>
+    <string name="headline_about">حول</string>
+    <string name="headline_miscellaneous">متنوع</string>
+    <string name="headline_version">الإصدار</string>
+    <string name="headline_share_your_thoughts">شارك أفكارك</string>
+    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">إظهار التقدير</string>
+    <string name="headline_clear_cache">مسح الملفات المؤقتة</string>
+    <string name="headline_all_day" description="All-day (meal)">طوال اليوم</string>
+    <string name="headline_time_based_ordering">الترتيب حسب الوقت</string>
+    <string name="headline_incomplete_products">منتجات غير مكتملة</string>
+    <string name="headline_remote_food_database">قاعدة بيانات الطعام عن بُعد</string>
+    <string name="open_food_facts_disclaimer">مشروع Open Food Facts قائم على مساهمات المجتمع.
+قد تكون البيانات غير مكتملة أو قديمة أو غير دقيقة.
+لا يتحمل هذا التطبيق مسؤولية صحة المعلومات.
+يُرجى التحقق من المعلومات قبل استخدامها.</string>
+    <string name="weight">الوزن</string>
+    <string name="unit_calories">السعرات الحرارية</string>
+    <string name="unit_kcal">كيلو سعرة حرارية</string>
+    <plurals name="unit_gram">
+        <item quantity="zero">جرام</item>
+        <item quantity="one">جرام</item>
+        <item quantity="two">grams</item>
+        <item quantity="few">grams</item>
+        <item quantity="many">جرامات</item>
+        <item quantity="other">جرام</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="zero">مل لتر</item>
+        <item quantity="one">مل لتر</item>
+        <item quantity="two">milliliters</item>
+        <item quantity="few">milliliters</item>
+        <item quantity="many">مل لترات</item>
+        <item quantity="other">مل لتر</item>
+    </plurals>
+    <string name="product_package_weight">وزن العبوة</string>
+    <string name="product_package">عبوة</string>
+    <string name="product_serving_weight">وزن الحصة</string>
+    <string name="product_serving">الحصة</string>
+    <string name="product_name">الاسم</string>
+    <string name="product_brand">الماركة</string>
+    <string name="product_barcode">الباركود</string>
+    <string name="nutriment_proteins">بروتينات</string>
+    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_carbohydrates">نشويات</string>
+    <string name="nutriment_carbohydrates_short">C</string>
+    <string name="nutriment_sugars">سكريات</string>
+    <string name="nutriment_fats">دهون</string>
+    <string name="nutriment_fats_short">F</string>
+    <string name="nutriment_saturated_fats">دهون مشبعة</string>
+    <string name="nutriment_salt">أملاح</string>
+    <string name="nutriment_sodium">صوديوم</string>
+    <string name="nutriment_fiber">ألياف</string>
+    <string name="action_show_remaining_fields">إظهار الحقول المتبقية</string>
+    <string name="action_search">بحث</string>
+    <string name="action_scan_barcode">مسح الباركود</string>
+    <string name="action_add">إضافة</string>
+    <string name="action_go_back">العودة</string>
+    <string name="action_retry">إعادة المحاولة</string>
+    <string name="action_tap_to_allow_access">انقر للسماح بالوصول</string>
+    <string name="action_create">إنشاء</string>
+    <string name="action_clear">مسح</string>
+    <string name="action_cancel">إلغاء</string>
+    <string name="action_go_to_settings">الذهاب إلى الإعدادات</string>
+    <string name="action_save">حفظ</string>
+    <string name="action_delete">حذف</string>
+    <string name="action_confirm">تأكيد</string>
+    <string name="action_add_meal">إضافة وجبة</string>
+    <string name="action_edit">تعديل</string>
+    <string name="action_insert_suggested_search">إدراج البحث المقترح</string>
+    <string name="action_edit_entry">تعديل المدخل</string>
+    <string name="action_delete_entry">حذف المدخل</string>
+    <string name="action_add_food" description="Should be short. Can be single 'Add'.">إضافة طعام</string>
+    <string name="action_undo">تراجع</string>
+    <string name="action_close">إغلاق</string>
+    <string name="action_discard">تجاهل</string>
+    <string name="action_enable">تفعيل</string>
+    <string name="action_don_t_show_again">لا تظهر مرة أخرى</string>
+    <string name="action_translate">ترجم</string>
+    <string name="action_enable_camera_flash">تفعيل فلاش الكاميرا</string>
+    <string name="action_disable_camera_flash">تعطيل فلاش الكاميرا</string>
+    <string name="action_prevent_screen_capture">منع التقاط الشاشة</string>
+    <string name="action_go_to_today">اذهب لليوم</string>
+    <string name="action_read_more">قراءة المزيد</string>
+    <string name="action_select_country">تحديد الدولة</string>
+    <string name="action_use_open_food_facts">استخدم قاعدة بيانات Open Food Facts</string>
+    <string name="action_see_terms_of_use">انظر شروط الاستخدام</string>
+    <string name="action_bug_report_on_github">تقرير الأخطاء على GitHub</string>
+    <string name="action_feature_request_on_github">طلب ميزة على GitHub</string>
+    <string name="action_leave_a_star_on_github">اترك نجمة على GitHub</string>
+    <string name="action_show_calendar">عرض التقويم</string>
+    <string name="action_reorder">إعادة ترتيب</string>
+    <string name="action_move_up" description="reorder list item up">انقل للأعلى</string>
+    <string name="action_move_down" description="reorder list item down">انقل للأسفل</string>
+    <string name="action_use_time_based_ordering">استخدم ترتيب حسب الوقت</string>
+    <string name="action_include_all_day_meals">يتضمن وجبات اليوم كله</string>
+    <string name="neutral_barcode_scanner_camera_request">السماح بالوصول إلى كاميراتك لمسح الباركودات</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">يجب عليك السماح بالوصول حتى تتمكن من مسح الباركود</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">يتطلب مسح الباركودات الحصول على إذن الكاميرا. يُرجى السماح بذلك في إعدادات التطبيق.</string>
+    <string name="neutral_no_products_found">لا توجد منتجات</string>
+    <string name="neutral_food_database_load_error">تعذر تنزيل المنتجات من قاعدة البيانات الغذائية عن بُعد. لا يزال بإمكانك عرض المنتجات التي سَبَق تنزيلها.</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="zero">%1$d calories left</item>
+        <item quantity="one">%1$d سعرة متبقية</item>
+        <item quantity="two">%1$d calories left</item>
+        <item quantity="few">%1$d calories left</item>
+        <item quantity="many">%1$d calories left</item>
+        <item quantity="other">%1$d سعرة متبقية</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">حدد أهدافك اليومية</string>
+    <string name="neutral_all_values_per_x">كل القيم لكل %1$s</string>
+    <string name="neutral_set_your_meal_schedule">حدد موعد وجبتك</string>
+    <string name="neutral_permanently_delete_meal">حذف الوجبة نهائيًا؟</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">سُتحذف الوجبة نهائيًا. ستُفقد جميع البيانات المتعلقة بها.</string>
+    <string name="neutral_required">مطلوب</string>
+    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">يتم حساب السعرات الحرارية تلقائيًا بناءً على المغذيات الكبرى</string>
+    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">يبدو أن هذه الوجبة فارغة. أضف طعامًا لتتبع سعراتك الحرارية.</string>
+    <string name="neutral_entry_deleted">حُذف المدخل</string>
+    <string name="neutral_help_translating_the_app">المساعدة في ترجمة التطبيق</string>
+    <string name="neutral_manage_food_database">إدارة قاعدة بيانات طعامك</string>
+    <string name="question_discard_product">تجاهل المنتج؟</string>
+    <string name="question_discard_changes">تجاهل التغيرات؟</string>
+    <string name="error_this_field_is_required">هذا الحقل مطلوب</string>
+    <string name="error_invalid_number">رقم غير صحيح</string>
+    <string name="error_value_cannot_be_negative">لا يمكن أن تكون القيمة سالبة</string>
+    <string name="error_value_must_be_less_than">يجب أن تكون القيمة أقل من %1$s</string>
+    <string name="error_value_must_be_integer">لابد أن تكون القيمة عددًا صحيحًا</string>
+    <string name="error_sum_of_percentages_must_be_100">يجب أن يكون مجموع النسب المئوية 100</string>
+    <string name="error_value_cannot_exceed_100">لا يمكن أن تتجاوز القيمة 100</string>
+    <string name="positive_goal_reached">حُقق الهدف</string>
+    <string name="positive_ok">حسنًا</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="zero">Exceeded by %1$d calories</item>
+        <item quantity="one">تجاوز %1$d سعرة</item>
+        <item quantity="two">Exceeded by %1$d calories</item>
+        <item quantity="few">Exceeded by %1$d calories</item>
+        <item quantity="many">Exceeded by %1$d calories</item>
+        <item quantity="other">تجاوز %1$d سعرة</item>
+    </plurals>
+    <string name="description_calories_goal">حدد هدفك اليومي من السعرات الحرارية. سيساعدك هذا على تتبع تقدمك والالتزام به.</string>
+    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">سيُحذف المنتج نهائيًا. لا يمكن التراجع عن هذا الإجراء. ستُحذف كل السجلات اليومية المتعلقة بهذا المنتج.</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database."> ستُحذف هذه المُدخلة من سجلك اليومي. يُمكنك إضافتها مُجددًا في أي وقت.</string>
+    <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">فعّل Open Food Facts في الإعدادات للوصول إلى معلومات مفصلة عن المنتجات</string>
+    <string name="description_open_food_facts">هي قاعدة بيانات تعاونية ومجانية ومفتوحة للمنتجات الغذائية من جميع أنحاء العالم.</string>
+    <string name="description_README_setting">عرض ملف README الخاص بالمشروع على GitHub</string>
+    <string name="description_about_setting">اعرف المزيد حول التطبيق</string>
+    <string name="description_show_some_love">إذا وجدت هذا المشروع مفيدًا، يُرجى تقييمه على GitHub! فهو يُساعد الآخرين على اكتشافه ويُحافظ على استمرارية التطوير.</string>
+    <string name="description_share_your_thoughts">إذا كانت لديكم أي ملاحظات، أو طلب ميزات، أو تقارير عن أخطاء، يُرجى إعلامي! يسعدني سماع آرائكم.</string>
+    <string name="description_open_food_facts_clear_query_cache">مسح الملفات المؤقتة لاستعلام Open Food Facts</string>
+    <string name="description_time_based_meals_sorting">عند تفعيلها، ستُعرض الوجبات التي تتناولها حاليًا أولاً</string>
+    <string name="description_action_include_all_day_meals">سيتم تضمين وجبات اليوم كله في قائمة الوجبات الحالية</string>
+    <string name="description_incomplete_nutrition_data">بعض المنتجات المستعملة تنقصها هذه القيمة؛ لذا، قد لا تكون القيمة المعروضة دقيقة</string>
+    <string name="headline_launcher_icon_by_icons8">أيقونة المشغل من Icons8</string>
+    <string name="neutral_see_other_awesome_icons_here">شاهد أيقونات أخرى رائعة هنا</string>
+    <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
+    <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
+</resources>
