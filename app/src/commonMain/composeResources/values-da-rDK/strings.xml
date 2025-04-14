@@ -3,7 +3,6 @@
     <string name="not_available_short">Ikke relevant</string>
     <string name="headline_create_product">Opret produkt</string>
     <string name="headline_settings">Indstillinger</string>
-    <string name="headline_diary">Dagbog</string>
     <string name="headline_calories_goal">Kaloriemål</string>
     <string name="headline_daily_goals">Daglige mål</string>
     <string name="headline_product_serving_and_packaging">Portioner og emballage</string>
@@ -30,11 +29,9 @@
     <string name="headline_incomplete_products">Ufuldstændige produkter</string>
     <string name="headline_remote_food_database">Fjernfødevaredatabase</string>
     <string name="open_food_facts_disclaimer">Open Food Facts er et fællesskabsdrevet projekt. Data kan være ufuldstændige, forældede eller unøjagtige. Denne app er uden ansvar for oplysningernes validitet. Bekræft før brug.</string>
-    <string name="in_x_times_y">I %1$s x %2$s</string>
     <string name="weight">Vægt</string>
     <string name="unit_calories">Kalorier</string>
     <string name="unit_kcal">kcal</string>
-    <string name="in_x_weight_unit">I %1$s %2$s</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
         <item quantity="other">gram</item>
@@ -49,7 +46,6 @@
     <string name="product_serving">Portion</string>
     <string name="product_name">Navn</string>
     <string name="product_brand">Mærke</string>
-    <string name="product_weight_unit">Vægtenhed</string>
     <string name="product_barcode">Stregkode</string>
     <string name="nutriment_proteins">Proteiner</string>
     <string name="nutriment_proteins_short">P</string>
@@ -69,7 +65,6 @@
     <string name="action_go_back">Gå tilbage</string>
     <string name="action_retry">Prøv igen</string>
     <string name="action_tap_to_allow_access">Tryk for at tillade adgang</string>
-    <string name="action_create_new_product">Opret nyt produkt</string>
     <string name="action_create">Opret</string>
     <string name="action_clear">Ryd</string>
     <string name="action_cancel">Afbryd</string>
@@ -129,10 +124,8 @@
     <string name="question_discard_product">Kassér produkt?</string>
     <string name="question_discard_changes">Kassér ændringer?</string>
     <string name="error_this_field_is_required">Obligatorisk felt</string>
-    <string name="error_this_field_cannot_be_empty">Obligatorisk felt</string>
     <string name="error_invalid_number">Ugyldigt tal</string>
     <string name="error_value_cannot_be_negative">Værdi må ikke være negativ</string>
-    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Sum af makronæringsstoffer må ikke overstige 100g</string>
     <string name="error_value_must_be_less_than">Værdi skal være lavere end %1$s</string>
     <string name="error_value_must_be_integer">Værdi skal være et heltal</string>
     <string name="error_sum_of_percentages_must_be_100">Sum af procenter skal udgøre 100</string>
@@ -153,7 +146,6 @@
     <string name="description_show_some_love">Finder man dette projekt nyttigt, så overvej at give det en stjerne på GitHub! Det hjælper andre til at finde det og holder udviklingen i gang.</string>
     <string name="description_share_your_thoughts">Har du feedback, funktionsanmodninger eller fejlanmeldelser, så lad mig det vide! Jeg vil meget gerne høre fra dig.</string>
     <string name="description_open_food_facts_clear_query_cache">Ryd Open Food Facts forespørgsels-cache</string>
-    <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">Rydning af cachen udløser en gendownload af hele Open Food Facts-databasen. Det anbefales ikke at rydde cachen, medmindre man ved, hvad man foretager sig.</string>
     <string name="description_time_based_meals_sorting">Når aktiveret, vises måltider, som p.t. finder sted, først</string>
     <string name="description_action_include_all_day_meals">Alle dagens måltider inkluderes på den aktuelle måltidsliste</string>
     <string name="description_incomplete_nutrition_data">Nogle af de brugte produkter mangler denne værdi; derfor er den viste værdi muligvis ikke akkurat</string>

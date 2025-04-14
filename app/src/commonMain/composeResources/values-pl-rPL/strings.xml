@@ -3,7 +3,6 @@
     <string name="not_available_short">BD</string>
     <string name="headline_create_product">Stwórz produkt</string>
     <string name="headline_settings">Ustawienia</string>
-    <string name="headline_diary">Dziennik</string>
     <string name="headline_calories_goal">Cel kaloryczny</string>
     <string name="headline_daily_goals">Cele dzienne</string>
     <string name="headline_product_serving_and_packaging">Porcja i opakowanie</string>
@@ -28,13 +27,19 @@
     <string name="headline_all_day" description="All-day (meal)">Cały dzień</string>
     <string name="headline_time_based_ordering">Kolejność oparta na czasie</string>
     <string name="headline_incomplete_products">Niekompletne produkty</string>
+    <string name="headline_filter_foods_by_country">Filtruj produkty spożywcze według kraju</string>
+    <string name="headline_use_global_database">Użyj globalnej bazy danych</string>
+    <string name="headline_product">Produkt</string>
+    <string name="headline_recipe">Przepis</string>
+    <string name="headline_create_recipe">Stwórz przepis</string>
+    <string name="headline_update_recipe">Edytuj przepis</string>
+    <string name="headline_ingredients" description="Recipe ingredients">Składniki</string>
+    <string name="headline_summary">Podsumowanie</string>
     <string name="headline_remote_food_database">Zdalna baza danych żywności</string>
     <string name="open_food_facts_disclaimer">Open Food Facts to projekt tworzony przez społeczność. Dane mogą być niekompletne, nieaktualne lub nieprecyzyjne. Ta aplikacja nie odpowiada za ich poprawność. Weryfikuj informacje przed użyciem.</string>
-    <string name="in_x_times_y">W %1$s x %2$s</string>
     <string name="weight">Waga</string>
     <string name="unit_calories">Kalorie</string>
     <string name="unit_kcal">kcal</string>
-    <string name="in_x_weight_unit">W %1$s %2$s</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
         <item quantity="few">gramy</item>
@@ -53,8 +58,9 @@
     <string name="product_serving">Porcja</string>
     <string name="product_name">Nazwa</string>
     <string name="product_brand">Marka</string>
-    <string name="product_weight_unit">Jednostka pomiaru</string>
     <string name="product_barcode">Kod kreskowy</string>
+    <string name="recipe_servings">Porcje</string>
+    <string name="description_recipe_servings">Z ilu porcji składa się przepis</string>
     <string name="nutriment_proteins">Białka</string>
     <string name="nutriment_proteins_short">B</string>
     <string name="nutriment_carbohydrates">Węglowodany</string>
@@ -73,7 +79,6 @@
     <string name="action_go_back">Wróć</string>
     <string name="action_retry">Spróbuj ponownie</string>
     <string name="action_tap_to_allow_access">Kliknij, aby zezwolić</string>
-    <string name="action_create_new_product">Stwórz nowy produkt</string>
     <string name="action_create">Stwórz</string>
     <string name="action_clear">Wyczyść</string>
     <string name="action_cancel">Anuluj</string>
@@ -110,6 +115,11 @@
     <string name="action_move_down" description="reorder list item down">Przesuń w dół</string>
     <string name="action_use_time_based_ordering">Używaj kolejności opartej na czasie</string>
     <string name="action_include_all_day_meals">Uwzględnij całodniowe posiłki</string>
+    <string name="action_delete_unused_products">Usuń nieużywane produkty</string>
+    <string name="action_error_details" description="Show error details">Szczegóły</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Dodaj składnik</string>
+    <string name="action_edit_ingredient_measurement">Zmień pomiar składnika</string>
+    <string name="action_delete_ingredient">Usuń składnik</string>
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
@@ -134,11 +144,12 @@
     <string name="neutral_manage_food_database">Zarządzaj swoją bazą danych żywności</string>
     <string name="question_discard_product">Odrzucić produkt?</string>
     <string name="question_discard_changes">Odrzucić zmiany?</string>
+    <string name="question_discard_recipe">Odrzucić przepis?</string>
     <string name="error_this_field_is_required">To pole jest wymagane</string>
-    <string name="error_this_field_cannot_be_empty">To pole nie może być puste</string>
     <string name="error_invalid_number">Niepoprawna liczba</string>
     <string name="error_value_cannot_be_negative">Wartość nie może być ujemna</string>
-    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Suma makroskładników nie może przekraczać 100g</string>
+    <string name="error_value_must_be_positive">Wartość musi być dodatnia</string>
+    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Suma makroskładników nie może przekraczać 100 g</string>
     <string name="error_value_must_be_less_than">Wartość musi być mniejsza niż %1$s</string>
     <string name="error_value_must_be_integer">Wartość musi być liczbą całkowitą</string>
     <string name="error_sum_of_percentages_must_be_100">Suma procentów musi wynosić 100</string>
@@ -161,10 +172,14 @@
     <string name="description_show_some_love">Jeśli uważasz, że ten projekt jest pomocny, rozważ dodanie mu gwiazdki na GitHubie! Dzięki temu więcej osób go odkryje, a rozwój projektu będzie mógł trwać dalej.</string>
     <string name="description_share_your_thoughts">Jeśli masz jakiekolwiek uwagi, propozycje funkcji lub zgłoszenia błędów, daj mi znać! Chętnie wysłucham Twojej opinii.</string>
     <string name="description_open_food_facts_clear_query_cache">Wyczyść pamięć podręczną zapytań Open Food Facts</string>
-    <string name="description_open_food_facts_clear_cache" description="Warn user that it will cause full database re-download.">Wyczyszczenie pamięci podręcznej spowoduje ponowne pełne pobranie bazy danych. Nie zaleca się czyszczenia pamięci podręcznej, chyba że wiesz, co robisz.</string>
+    <string name="description_open_food_facts_clear_cache">Wyczyszczenie pamięci podręcznej Open Food Facts zresetuje lokalny stan bazy danych Open Food Facts. Oznacza to, że aplikacja będzie mogła ponownie pobrać produkty, które wcześniej usunąłeś. Może to spowodować ponowne pobranie dużej ilości danych.</string>
     <string name="description_time_based_meals_sorting">Gdy włączone, posiłki trwające w danym momencie będą wyświetlane jako pierwsze</string>
     <string name="description_action_include_all_day_meals">Całodniowe posiłki zostaną uwzględnione w aktualnej liście posiłków</string>
     <string name="description_incomplete_nutrition_data">Niektóre z używanych produktów nie mają tej wartości, dlatego wyświetlana wartość może być niedokładna</string>
+    <string name="description_use_global_database">Zaleca się korzystanie z bazy danych produktów spożywczych z Twojego kraju. Możesz włączyć globalną bazę danych, ale może ona zawierać dużą liczbę produktów, co może znacząco zwiększyć rozmiar Twojej bazy danych.</string>
+    <string name="description_delete_unused_open_food_facts_products_short">Usuń nieużywane produkty Open Food Facts</string>
+    <string name="description_delete_unused_open_food_facts_products">Produkty Open Food Facts, które nie zostały użyte w Twoim dzienniku, zostaną usunięte. Produkty, które dodałeś ręcznie lub edytowałeś, nie zostaną usunięte. Nie będziesz mógł ponownie wyszukiwać usuniętych produktów, chyba że wyczyścisz pamięć podręczną Open Food Facts. Nadal będziesz mógł znaleźć usunięte produkty za pomocą kodu kreskowego.</string>
+    <string name="description_translation_warning">Tłumaczenia są tworzone przez wolontariuszy. Mogą nie być idealne, a niektóre tłumaczenia mogą być niekompletne. Jeśli zauważysz jakiekolwiek błędy, nie wahaj się pomóc w ich poprawie.</string>
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Zobacz inne świetne ikony tutaj</string>
     <string name="link_open_food_facts">https://pl.openfoodfacts.org/</string>

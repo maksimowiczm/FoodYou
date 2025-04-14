@@ -27,6 +27,14 @@
     <string name="headline_all_day" description="All-day (meal)">O dia todo</string>
     <string name="headline_time_based_ordering">Ordenação por tempo</string>
     <string name="headline_incomplete_products">Produtos incompletos</string>
+    <string name="headline_filter_foods_by_country">Filtrar alimentos por país</string>
+    <string name="headline_use_global_database">Usar banco de dados global</string>
+    <string name="headline_product">Produto</string>
+    <string name="headline_recipe">Receita</string>
+    <string name="headline_create_recipe">Criar receita</string>
+    <string name="headline_update_recipe">Atualizar receita</string>
+    <string name="headline_ingredients" description="Recipe ingredients">Ingredientes</string>
+    <string name="headline_summary">Resumo</string>
     <string name="headline_remote_food_database">Banco de dados remoto de alimentos</string>
     <string name="open_food_facts_disclaimer">O Open Food Facts é um projeto voltado para a comunidade. Os dados podem estar incompletos, desatualizados ou imprecisos. Este aplicativo não é responsável pela validade das informações. Por favor, verifique antes de usar.</string>
     <string name="weight">Peso</string>
@@ -47,6 +55,8 @@
     <string name="product_name">Nome</string>
     <string name="product_brand">Marca</string>
     <string name="product_barcode">Código de barras</string>
+    <string name="recipe_servings">Porções</string>
+    <string name="description_recipe_servings">Quantas porções esta receita rende</string>
     <string name="nutriment_proteins">Proteínas</string>
     <string name="nutriment_proteins_short">P</string>
     <string name="nutriment_carbohydrates">Carboidratos</string>
@@ -101,6 +111,11 @@
     <string name="action_move_down" description="reorder list item down">Mover para baixo</string>
     <string name="action_use_time_based_ordering">Ordenar por tempo</string>
     <string name="action_include_all_day_meals">Incluir refeições do dia todo</string>
+    <string name="action_delete_unused_products">Apagar produtos não utilizados</string>
+    <string name="action_error_details" description="Show error details">Detalhes</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Adicionar ingredientes</string>
+    <string name="action_edit_ingredient_measurement">Editar medida de ingredientes</string>
+    <string name="action_delete_ingredient">Excluir ingrediente</string>
     <string name="neutral_barcode_scanner_camera_request">Permitir acesso à sua câmera para escanear códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Você deve permitir o acesso para digitalizar códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">A permissão da câmera é obrigatória para ler códigos de barras. Permita isso nas configurações do aplicativo.</string>
@@ -123,9 +138,12 @@
     <string name="neutral_manage_food_database">Gerencie seu banco de dados de alimentos</string>
     <string name="question_discard_product">Descartar o produto?</string>
     <string name="question_discard_changes">Descartar alterações?</string>
+    <string name="question_discard_recipe">Descartar receita?</string>
     <string name="error_this_field_is_required">Este campo é obrigatório</string>
     <string name="error_invalid_number">Número inválido</string>
     <string name="error_value_cannot_be_negative">O valor não pode ser negativo</string>
+    <string name="error_value_must_be_positive">Valor deve ser positivo</string>
+    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Soma dos macronutrientes não pode exceder 100 g</string>
     <string name="error_value_must_be_less_than">O valor deve ser menor que %1$s</string>
     <string name="error_value_must_be_integer">O valor deve ser um número inteiro</string>
     <string name="error_sum_of_percentages_must_be_100">A soma das porcentagens deve ser 100</string>
@@ -146,9 +164,14 @@
     <string name="description_show_some_love">Se você achar este projeto útil, considere dar uma estrela a ele no GitHub! Isso ajuda outras pessoas a descobri-lo e mantém o desenvolvimento em andamento.</string>
     <string name="description_share_your_thoughts">Se você tiver algum feedback, solicitação de recursos ou relatório de bugs, entre em contato comigo! Gostaria muito de ouvir sua opinião.</string>
     <string name="description_open_food_facts_clear_query_cache">Limpar o cache de consulta do Open Food Facts</string>
+    <string name="description_open_food_facts_clear_cache">Limpar o cache do Open Food Facts redefinirá o banco de dados local do Open Food Facts. Isso significa que o aplicativo poderá realizar o download dos produtos que você excluiu anteriormente. Isso pode fazer com que muitos dados sejam baixados novamente.</string>
     <string name="description_time_based_meals_sorting">Quando ativado, as refeições que estão acontecendo no momento serão exibidas primeiro</string>
     <string name="description_action_include_all_day_meals">As refeições do dia todo serão incluídas na lista de refeições atual</string>
     <string name="description_incomplete_nutrition_data">Alguns dos produtos usados não têm esse valor; portanto, o valor exibido pode não ser exato</string>
+    <string name="description_use_global_database">É recomendável usar o banco de dados de alimentos do seu país. Você pode habilitar o banco de dados global, mas ele pode conter um grande número de produtos e aumentar significativamente o tamanho do seu banco de dados.</string>
+    <string name="description_delete_unused_open_food_facts_products_short">Excluir produtos Open Food Facts não usados</string>
+    <string name="description_delete_unused_open_food_facts_products">Os produtos do Open Food Facts que não forem utilizados no seu diário serão excluídos. Os produtos que você adicionou manualmente ou editou não serão excluídos. Você não poderá pesquisar produtos excluídos novamente, a menos que limpe o cache do Open Food Facts. No entanto, você ainda poderá encontrar produtos excluídos usando um código de barras.</string>
+    <string name="description_translation_warning">As traduções feitas por voluntários. Elas podem não ser perfeitas e algumas traduções podem estar faltando. Se você notar algum erro, não hesite em ajudar a melhorá-las.</string>
     <string name="headline_launcher_icon_by_icons8">Ícone da aplicação por Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Veja outros ícones incríveis aqui</string>
     <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
