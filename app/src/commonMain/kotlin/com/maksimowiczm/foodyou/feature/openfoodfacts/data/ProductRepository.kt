@@ -1,10 +1,9 @@
 package com.maksimowiczm.foodyou.feature.openfoodfacts.data
 
-import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.product.ProductSource
+import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
+import com.maksimowiczm.foodyou.core.data.source.ProductLocalDataSource
 
-internal class ProductRepository(database: FoodYouDatabase) {
-    private val productDao = database.productDao
+internal class ProductRepository(private val productDao: ProductLocalDataSource) {
 
     suspend fun deleteUnusedOpenFoodFactsProducts() {
         productDao.deleteUnusedProducts(ProductSource.OpenFoodFacts)

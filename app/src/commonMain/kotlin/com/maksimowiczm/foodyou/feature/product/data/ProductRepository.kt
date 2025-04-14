@@ -1,16 +1,14 @@
 package com.maksimowiczm.foodyou.feature.product.data
 
-import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.core.NutrientsEmbedded
-import com.maksimowiczm.foodyou.core.database.product.ProductDao
-import com.maksimowiczm.foodyou.core.database.product.ProductEntity
-import com.maksimowiczm.foodyou.core.database.product.ProductSource
+import com.maksimowiczm.foodyou.core.data.model.Nutrients
+import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
+import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
+import com.maksimowiczm.foodyou.core.data.source.ProductLocalDataSource
 import com.maksimowiczm.foodyou.core.mapper.ProductMapper
 import com.maksimowiczm.foodyou.core.model.Product
 import kotlinx.coroutines.flow.first
 
-internal class ProductRepository(database: FoodYouDatabase) {
-    private val productDao: ProductDao = database.productDao
+internal class ProductRepository(private val productDao: ProductLocalDataSource) {
 
     suspend fun getProductById(id: Long): Product? = with(ProductMapper) {
         return productDao.observeProduct(id).first()?.toModel()
@@ -37,7 +35,7 @@ internal class ProductRepository(database: FoodYouDatabase) {
         packageWeight: Float?,
         servingWeight: Float?
     ): Long {
-        val nutrients = NutrientsEmbedded(
+        val nutrients = Nutrients(
             calories = calories,
             proteins = proteins,
             carbohydrates = carbohydrates,
@@ -79,7 +77,7 @@ internal class ProductRepository(database: FoodYouDatabase) {
         packageWeight: Float?,
         servingWeight: Float?
     ) {
-        val nutrients = NutrientsEmbedded(
+        val nutrients = Nutrients(
             calories = calories,
             proteins = proteins,
             carbohydrates = carbohydrates,

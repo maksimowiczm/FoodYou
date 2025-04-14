@@ -4,11 +4,10 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.recipe.IngredientVirtualEntity
-import com.maksimowiczm.foodyou.core.database.recipe.RecipeDao
-import com.maksimowiczm.foodyou.core.database.recipe.RecipeEntity
-import com.maksimowiczm.foodyou.core.database.recipe.RecipeIngredientEntity
+import com.maksimowiczm.foodyou.core.data.model.recipe.IngredientSuggestion
+import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeEntity
+import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeIngredientEntity
+import com.maksimowiczm.foodyou.core.data.source.RecipeLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
 import com.maksimowiczm.foodyou.core.mapper.MeasurementMapper
 import com.maksimowiczm.foodyou.core.mapper.ProductMapper
@@ -20,10 +19,9 @@ import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.coroutines.flow.Flow
 
 internal class RecipeRepository(
-    database: FoodYouDatabase,
+    private val recipeDao: RecipeLocalDataSource,
     private val remoteMediatorFactory: ProductRemoteMediatorFactory
 ) {
-    private val recipeDao: RecipeDao = database.recipeDao
 
     @OptIn(ExperimentalPagingApi::class)
     fun queryProducts(query: String?): Flow<PagingData<Ingredient>> = Pager(
@@ -32,7 +30,7 @@ internal class RecipeRepository(
         ),
         remoteMediator = remoteMediatorFactory.createWithQuery(query)
     ) {
-        recipeDao.observeProductsByText(query)
+        recipeDao.observeIngredientSuggestions(query)
     }.flow.mapValues { it.toIngredient() }
 
     suspend fun getRecipeById(id: Long): Recipe? = with(RecipeMapper) {
@@ -94,7 +92,7 @@ internal class RecipeRepository(
     }
 }
 
-private fun IngredientVirtualEntity.toIngredient(): Ingredient = Ingredient(
+private fun IngredientSuggestion.toIngredient(): Ingredient = Ingredient(
     product = with(ProductMapper) { productEntity.toModel() },
     measurement = with(MeasurementMapper) { toMeasurement() }
 )

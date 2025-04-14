@@ -1,8 +1,7 @@
 package com.maksimowiczm.foodyou.core.repository
 
-import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.product.ProductDao
-import com.maksimowiczm.foodyou.core.database.recipe.RecipeDao
+import com.maksimowiczm.foodyou.core.data.source.ProductLocalDataSource
+import com.maksimowiczm.foodyou.core.data.source.RecipeLocalDataSource
 import com.maksimowiczm.foodyou.core.mapper.ProductMapper
 import com.maksimowiczm.foodyou.core.mapper.RecipeMapper
 import com.maksimowiczm.foodyou.core.model.Food
@@ -17,9 +16,10 @@ interface FoodRepository {
     suspend fun deleteFood(id: FoodId)
 }
 
-internal class FoodRepositoryImpl(database: FoodYouDatabase) : FoodRepository {
-    private val productDao: ProductDao = database.productDao
-    private val recipeDao: RecipeDao = database.recipeDao
+internal class FoodRepositoryImpl(
+    private val productDao: ProductLocalDataSource,
+    private val recipeDao: RecipeLocalDataSource
+) : FoodRepository {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeFood(id: FoodId): Flow<Food?> = when (id) {

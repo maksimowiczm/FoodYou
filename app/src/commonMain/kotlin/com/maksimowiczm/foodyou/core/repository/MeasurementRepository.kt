@@ -1,12 +1,12 @@
 package com.maksimowiczm.foodyou.core.repository
 
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.measurement.MeasurementDao
-import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementEntity
-import com.maksimowiczm.foodyou.core.database.measurement.ProductMeasurementVirtualEntity
-import com.maksimowiczm.foodyou.core.database.measurement.RecipeMeasurementEntity
-import com.maksimowiczm.foodyou.core.database.measurement.RecipeMeasurementVirtualEntity
+import com.maksimowiczm.foodyou.core.data.model.measurement.ProductMeasurementEntity
+import com.maksimowiczm.foodyou.core.data.model.measurement.ProductWithMeasurement as ProductWithMeasurementEntity
+import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeMeasurementEntity
+import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeWithMeasurement as RecipeWithMeasurementEntity
+import com.maksimowiczm.foodyou.core.data.source.ProductMeasurementLocalDataSource
+import com.maksimowiczm.foodyou.core.data.source.RecipeMeasurementLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
 import com.maksimowiczm.foodyou.core.mapper.MeasurementMapper
 import com.maksimowiczm.foodyou.core.mapper.ProductMapper
@@ -53,8 +53,10 @@ interface MeasurementRepository {
     suspend fun restoreMeasurement(measurementId: MeasurementId)
 }
 
-internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : MeasurementRepository {
-    private val measurementDao: MeasurementDao = database.measurementDao
+internal class MeasurementRepositoryImpl(
+    private val recipeMeasurementDao: RecipeMeasurementLocalDataSource,
+    private val productMeasurementDao: ProductMeasurementLocalDataSource
+) : MeasurementRepository {
 
     override fun observeMeasurements(
         date: LocalDate,
@@ -67,14 +69,14 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
     }
 
     private fun observeProductMeasurements(date: LocalDate, mealId: Long) =
-        measurementDao.observeProductMeasurements(
+        productMeasurementDao.observeProductMeasurements(
             epochDay = date.toEpochDays(),
             mealId = mealId
         ).mapValues { it.toProductWithMeasurement() }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeRecipeMeasurements(date: LocalDate, mealId: Long) =
-        measurementDao.observeRecipeMeasurements(
+        recipeMeasurementDao.observeRecipeMeasurements(
             epochDay = date.toEpochDays(),
             mealId = mealId
         ).mapValues { it.toRecipeWithMeasurement() }
@@ -83,19 +85,19 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
     override fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?> =
         when (measurementId) {
             is MeasurementId.Product ->
-                measurementDao
+                productMeasurementDao
                     .observeProductMeasurement(measurementId.id)
                     .map { it?.toProductWithMeasurement() }
 
             is MeasurementId.Recipe ->
-                measurementDao
+                recipeMeasurementDao
                     .observeRecipeMeasurement(measurementId.id)
                     .map { it?.toRecipeWithMeasurement() }
         }
 
     override suspend fun getSuggestions(foodId: FoodId): List<Measurement> = when (foodId) {
-        is FoodId.Product -> measurementDao.getProductMeasurementSuggestions(foodId.id)
-        is FoodId.Recipe -> measurementDao.getRecipeMeasurementSuggestions(foodId.id)
+        is FoodId.Product -> productMeasurementDao.getProductMeasurementSuggestions(foodId.id)
+        is FoodId.Recipe -> recipeMeasurementDao.getRecipeMeasurementSuggestions(foodId.id)
     }.map { with(MeasurementMapper) { it.toMeasurement() } }
 
     override suspend fun addMeasurement(
@@ -125,7 +127,7 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                     createdAt = now
                 )
 
-                measurementDao.addProductMeasurement(entity)
+                productMeasurementDao.addProductMeasurement(entity)
             }
 
             is FoodId.Recipe -> {
@@ -138,7 +140,7 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                     createdAt = now
                 )
 
-                measurementDao.addRecipeMeasurement(entity)
+                recipeMeasurementDao.addRecipeMeasurement(entity)
             }
         }
     }
@@ -154,7 +156,7 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
 
         when (measurementId) {
             is MeasurementId.Product -> {
-                val entity = measurementDao
+                val entity = productMeasurementDao
                     .getProductMeasurement(measurementId.id)
                     ?.copy(
                         measurement = type,
@@ -166,11 +168,11 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                     return
                 }
 
-                measurementDao.updateProductMeasurement(entity)
+                productMeasurementDao.updateProductMeasurement(entity)
             }
 
             is MeasurementId.Recipe -> {
-                val entity = measurementDao
+                val entity = recipeMeasurementDao
                     .getRecipeMeasurement(measurementId.id)
                     ?.copy(
                         measurement = type,
@@ -182,7 +184,7 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
                     return
                 }
 
-                measurementDao.updateRecipeMeasurement(entity)
+                recipeMeasurementDao.updateRecipeMeasurement(entity)
             }
         }
     }
@@ -190,26 +192,25 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
     override suspend fun removeMeasurement(measurementId: MeasurementId) {
         when (measurementId) {
             is MeasurementId.Product -> {
-                val entity = measurementDao.getProductMeasurement(measurementId.id) ?: return
-                measurementDao.deleteProductMeasurement(entity.id)
+                val entity = productMeasurementDao.getProductMeasurement(measurementId.id) ?: return
+                productMeasurementDao.deleteProductMeasurement(entity.id)
             }
 
             is MeasurementId.Recipe -> {
-                val entity = measurementDao.getRecipeMeasurement(measurementId.id) ?: return
-                measurementDao.deleteRecipeMeasurement(entity.id)
+                val entity = recipeMeasurementDao.getRecipeMeasurement(measurementId.id) ?: return
+                recipeMeasurementDao.deleteRecipeMeasurement(entity.id)
             }
         }
     }
 
     override suspend fun restoreMeasurement(measurementId: MeasurementId) {
         when (measurementId) {
-            is MeasurementId.Product -> {
-                measurementDao.restoreProductMeasurement(measurementId.id)
-            }
+            is MeasurementId.Product ->
+                productMeasurementDao.restoreProductMeasurement(measurementId.id)
 
-            is MeasurementId.Recipe -> {
-                measurementDao.restoreRecipeMeasurement(measurementId.id)
-            }
+            is MeasurementId.Recipe -> recipeMeasurementDao.restoreRecipeMeasurement(
+                measurementId.id
+            )
         }
     }
 
@@ -218,7 +219,7 @@ internal class MeasurementRepositoryImpl(database: FoodYouDatabase) : Measuremen
     }
 }
 
-private fun ProductMeasurementVirtualEntity.toProductWithMeasurement(): ProductWithMeasurement {
+private fun ProductWithMeasurementEntity.toProductWithMeasurement(): ProductWithMeasurement {
     val date = Instant
         .fromEpochSeconds(measurement.createdAt)
         .toLocalDateTime(TimeZone.currentSystemDefault())
@@ -231,7 +232,7 @@ private fun ProductMeasurementVirtualEntity.toProductWithMeasurement(): ProductW
     )
 }
 
-private fun RecipeMeasurementVirtualEntity.toRecipeWithMeasurement(): RecipeWithMeasurement {
+private fun RecipeWithMeasurementEntity.toRecipeWithMeasurement(): RecipeWithMeasurement {
     val date = Instant
         .fromEpochSeconds(this.measurement.createdAt)
         .toLocalDateTime(TimeZone.currentSystemDefault())

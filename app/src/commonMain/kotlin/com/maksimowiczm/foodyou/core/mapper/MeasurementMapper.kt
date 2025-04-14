@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.core.mapper
 
-import com.maksimowiczm.foodyou.core.database.core.EntityWithMeasurement
-import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
+import com.maksimowiczm.foodyou.core.data.model.abstraction.EntityWithMeasurement
+import com.maksimowiczm.foodyou.core.data.model.measurement.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.core.model.Measurement
 
 object MeasurementMapper {

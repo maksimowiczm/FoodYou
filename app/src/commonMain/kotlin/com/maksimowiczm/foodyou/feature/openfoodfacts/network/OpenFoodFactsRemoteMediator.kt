@@ -4,12 +4,12 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.core.database.core.NutrientsEmbedded
-import com.maksimowiczm.foodyou.core.database.openfoodfacts.OpenFoodFactsDao
-import com.maksimowiczm.foodyou.core.database.openfoodfacts.OpenFoodFactsPagingKeyEntity
-import com.maksimowiczm.foodyou.core.database.product.ProductDao
-import com.maksimowiczm.foodyou.core.database.product.ProductEntity
-import com.maksimowiczm.foodyou.core.database.product.ProductSource
+import com.maksimowiczm.foodyou.core.data.database.openfoodfacts.OpenFoodFactsDao
+import com.maksimowiczm.foodyou.core.data.database.product.ProductDao
+import com.maksimowiczm.foodyou.core.data.model.Nutrients
+import com.maksimowiczm.foodyou.core.data.model.openfoodfacts.OpenFoodFactsPagingKeyEntity
+import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
+import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
 import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediator
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.openfoodfacts.network.model.OpenFoodFactsNutrients
@@ -156,7 +156,7 @@ private fun OpenFoodFactsProduct.toEntity(): ProductEntity? {
     )
 }
 
-private fun OpenFoodFactsNutrients.toEntity(): NutrientsEmbedded? {
+private fun OpenFoodFactsNutrients.toEntity(): Nutrients? {
     if (
         proteins100g == null ||
         carbohydrates100g == null ||
@@ -171,7 +171,7 @@ private fun OpenFoodFactsNutrients.toEntity(): NutrientsEmbedded? {
         fats = fat100g
     )
 
-    return NutrientsEmbedded(
+    return Nutrients(
         calories = energy100g,
         proteins = proteins100g,
         carbohydrates = carbohydrates100g,

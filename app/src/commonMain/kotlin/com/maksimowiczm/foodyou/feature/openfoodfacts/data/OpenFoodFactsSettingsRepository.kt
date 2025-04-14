@@ -2,8 +2,7 @@ package com.maksimowiczm.foodyou.feature.openfoodfacts.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.openfoodfacts.OpenFoodFactsDao
+import com.maksimowiczm.foodyou.core.data.source.OpenFoodFactsLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.get
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
@@ -16,9 +15,8 @@ import kotlinx.coroutines.flow.map
 internal class OpenFoodFactsSettingsRepository(
     private val dataStore: DataStore<Preferences>,
     private val systemDetails: SystemDetails,
-    database: FoodYouDatabase
+    private val openFoodFactsDao: OpenFoodFactsLocalDataSource
 ) {
-    private val openFoodFactsDao: OpenFoodFactsDao = database.openFoodFactsDao
 
     fun observeOpenFoodFactsEnabled() = dataStore
         .observe(OpenFoodFactsPreferences.isEnabled)

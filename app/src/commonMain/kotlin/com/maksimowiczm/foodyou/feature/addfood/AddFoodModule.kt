@@ -12,10 +12,5 @@ val addFoodModule = module {
     viewModelOf(::CreateMeasurementScreenViewModel)
     viewModelOf(::UpdateMeasurementScreenViewModel)
 
-    factory {
-        AddFoodRepository(
-            database = get(),
-            remoteMediatorFactory = get()
-        )
-    }
+    factory { AddFoodRepository(get(), get(), get()) }
 }

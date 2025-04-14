@@ -1,8 +1,7 @@
 package com.maksimowiczm.foodyou.feature.meal.data
 
-import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.meal.MealDao
-import com.maksimowiczm.foodyou.core.database.meal.MealEntity
+import com.maksimowiczm.foodyou.core.data.model.meal.MealEntity
+import com.maksimowiczm.foodyou.core.data.source.MealLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -28,8 +27,7 @@ internal interface MealRepository {
     suspend fun updateMealsRanks(map: Map<Long, Int>)
 }
 
-internal class MealRepositoryImpl(database: FoodYouDatabase) : MealRepository {
-    private val mealDao: MealDao = database.mealDao
+internal class MealRepositoryImpl(private val mealDao: MealLocalDataSource) : MealRepository {
 
     override fun observeMeal(id: Long): Flow<Meal?> = mealDao.observeMeal(id).map { entity ->
         entity?.let {

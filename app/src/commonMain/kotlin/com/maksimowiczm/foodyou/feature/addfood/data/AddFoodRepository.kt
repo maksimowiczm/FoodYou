@@ -5,9 +5,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
-import com.maksimowiczm.foodyou.core.database.search.FoodSearchVirtualEntity
-import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
+import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
+import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
+import com.maksimowiczm.foodyou.core.data.source.FoodLocalDataSource
+import com.maksimowiczm.foodyou.core.data.source.SearchLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
 import com.maksimowiczm.foodyou.core.mapper.MeasurementMapper
 import com.maksimowiczm.foodyou.core.model.FoodId
@@ -25,11 +26,11 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
 internal class AddFoodRepository(
-    database: FoodYouDatabase,
+    private val searchLocalDataSource: SearchLocalDataSource,
+    private val foodLocalDataSource: FoodLocalDataSource,
     private val remoteMediatorFactory: ProductRemoteMediatorFactory,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
-    val searchDao = database.searchDao
     private val ioScope = CoroutineScope(ioDispatcher + SupervisorJob())
 
     @OptIn(ExperimentalPagingApi::class)
@@ -58,7 +59,7 @@ internal class AddFoodRepository(
         val barcode = extractedBarcode
         val searchQuery = effectiveQuery ?: query
         val localOnly = query == null
-        val remoteMediator: RemoteMediator<Int, FoodSearchVirtualEntity>? = when {
+        val remoteMediator: RemoteMediator<Int, FoodSearchEntity>? = when {
             localOnly -> null
             barcode != null -> remoteMediatorFactory.createWithBarcode(barcode)
             else -> remoteMediatorFactory.createWithQuery(searchQuery)
@@ -78,7 +79,7 @@ internal class AddFoodRepository(
             remoteMediator = remoteMediator
         ) {
             if (barcode != null) {
-                searchDao.queryFoodByBarcode(
+                foodLocalDataSource.queryFoodByBarcode(
                     barcode = barcode,
                     mealId = mealId,
                     epochDay = date.toEpochDays()
@@ -93,7 +94,7 @@ internal class AddFoodRepository(
 
                 val (query1, query2, query3, query4, query5) = queryList + List(5) { null }
 
-                searchDao.queryFood(
+                foodLocalDataSource.queryFood(
                     query1 = query1,
                     query2 = query2,
                     query3 = query3,
@@ -109,7 +110,7 @@ internal class AddFoodRepository(
     private suspend fun insertProductQueryWithCurrentTime(query: String) {
         val epochSeconds = Clock.System.now().epochSeconds
 
-        searchDao.upsert(
+        searchLocalDataSource.upsert(
             SearchQueryEntity(
                 query = query,
                 epochSeconds = epochSeconds
@@ -118,7 +119,7 @@ internal class AddFoodRepository(
     }
 }
 
-private fun FoodSearchVirtualEntity.toSearchFoodItem(): SearchFoodItem {
+private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
     when {
         productId != null && recipeId == null -> {
             val foodId = FoodId.Product(productId)

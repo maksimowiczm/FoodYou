@@ -1,13 +1,13 @@
 package com.maksimowiczm.foodyou.core.mapper
 
-import com.maksimowiczm.foodyou.core.database.measurement.RecipeMeasurementVirtualEntity
-import com.maksimowiczm.foodyou.core.database.recipe.RecipeWithIngredientsVirtualEntity
+import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeWithMeasurement
+import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeWithIngredients
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Recipe
 import com.maksimowiczm.foodyou.core.model.RecipeIngredient
 
 object RecipeMapper {
-    fun RecipeWithIngredientsVirtualEntity.toModel(): Recipe {
+    fun RecipeWithIngredients.toModel(): Recipe {
         val (recipeEntity, ingredients) = this
 
         val products = ingredients.map { ingredient ->
@@ -30,7 +30,7 @@ object RecipeMapper {
         )
     }
 
-    fun RecipeMeasurementVirtualEntity.toModel(): Recipe {
+    fun RecipeWithMeasurement.toModel(): Recipe {
         val ingredients = ingredients.map {
             val product = with(ProductMapper) { it.product.toModel() }
             val measurement = with(MeasurementMapper) { it.recipeIngredientEntity.toMeasurement() }
