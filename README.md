@@ -16,6 +16,7 @@ A free and open-source calorie counter app
     <img src="metadata/en-US/images/phoneScreenshots/400_measure_product.png" width="30%"/>
     <img src="metadata/en-US/images/phoneScreenshots/201_diary_day_details.png" width="30%"/>
     <img src="metadata/en-US/images/phoneScreenshots/500_create_product.png" width="30%"/>
+    <img src="metadata/en-US/images/phoneScreenshots/550_create_recipe.png" width="30%"/>
     <img src="metadata/en-US/images/phoneScreenshots/600_settings.png" width="30%"/>
 </div>
 
