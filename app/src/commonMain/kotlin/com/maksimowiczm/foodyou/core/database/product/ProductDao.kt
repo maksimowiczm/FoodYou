@@ -76,13 +76,27 @@ abstract class ProductDao {
 
     @Query(
         """
+        WITH UsedInRecipes AS (
+            SELECT DISTINCT productId 
+            FROM RecipeIngredientEntity i
+        ),
+        UsedInMeals AS (
+            SELECT DISTINCT productId 
+            FROM ProductMeasurementEntity m
+        ),
+        UsedProducts AS (
+            SELECT DISTINCT productId 
+            FROM UsedInRecipes
+            UNION
+            SELECT DISTINCT productId 
+            FROM UsedInMeals
+        )
         DELETE FROM ProductEntity 
         WHERE id IN (
-            SELECT p.id 
-            FROM ProductEntity p
-            LEFT JOIN ProductMeasurementEntity m ON m.productId = p.id 
-            WHERE m.productId IS NULL 
-            AND p.productSource = :source
+            SELECT id 
+            FROM ProductEntity 
+            WHERE productSource = :source
+            AND id NOT IN (SELECT productId FROM UsedProducts)
         )
         """
     )
