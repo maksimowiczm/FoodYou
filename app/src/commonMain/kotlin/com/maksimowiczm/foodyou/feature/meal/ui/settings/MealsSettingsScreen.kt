@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -419,11 +420,11 @@ private fun rememberMealsSettingsCardStates(
 ): MutableState<List<MealCardStateWithMeal>> {
     val stableMeals = meals.sortedBy { it.id }
 
-    val textFieldStates = stableMeals.map { meal ->
-        meal.id to rememberTextFieldState(meal.name)
+    val textFieldStates = stableMeals.associate { meal ->
+        meal.id to key(meal.id) { rememberTextFieldState(meal.name) }
     }
 
-    val fromTimeStates = stableMeals.map { meal ->
+    val fromTimeStates = stableMeals.associate { meal ->
         meal.id to rememberSaveable(
             meal.from,
             saver = LocalTimeInput.Saver
@@ -432,7 +433,7 @@ private fun rememberMealsSettingsCardStates(
         }
     }
 
-    val toTimeStates = stableMeals.map { meal ->
+    val toTimeStates = stableMeals.associate { meal ->
         meal.id to rememberSaveable(
             meal.to,
             saver = LocalTimeInput.Saver
@@ -441,23 +442,25 @@ private fun rememberMealsSettingsCardStates(
         }
     }
 
-    val isAllDayStates = stableMeals.map { meal ->
+    val isAllDayStates = stableMeals.associate { meal ->
         meal.id to rememberSaveable(meal.isAllDay) {
             mutableStateOf(meal.isAllDay)
         }
     }
 
     return remember(meals) {
-        val res = meals.map { meal ->
+        val state = meals.map { meal ->
+            val id = meal.id
+
             MealCardStateWithMeal(
                 meal = meal,
-                nameInput = textFieldStates.first { it.first == meal.id }.second,
-                fromTimeInput = fromTimeStates.first { it.first == meal.id }.second,
-                toTimeInput = toTimeStates.first { it.first == meal.id }.second,
-                isAllDay = isAllDayStates.first { it.first == meal.id }.second
+                nameInput = textFieldStates[id]!!,
+                fromTimeInput = fromTimeStates[id]!!,
+                toTimeInput = toTimeStates[id]!!,
+                isAllDay = isAllDayStates[id]!!
             )
         }
 
-        mutableStateOf(res)
+        mutableStateOf(state)
     }
 }
