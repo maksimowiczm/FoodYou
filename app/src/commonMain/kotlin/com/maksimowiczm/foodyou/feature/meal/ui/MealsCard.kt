@@ -62,26 +62,101 @@ internal fun MealsCard(
     homeState: HomeState,
     onMealClick: (epochDay: Int, mealId: Long) -> Unit,
     onAddClick: (epochDay: Int, mealId: Long) -> Unit,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     viewModel: MealsCardViewModel = koinViewModel()
 ) {
     val meals by viewModel.observeMeals(homeState.selectedDate).collectAsStateWithLifecycle(null)
+    val useVerticalLayout by viewModel.useVerticalLayout.collectAsStateWithLifecycle()
 
-    MealsCard(
-        meals = meals,
-        formatTime = remember(viewModel) { viewModel::formatTime },
-        onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
-        onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
-        animatedVisibilityScope = animatedVisibilityScope,
-        epochDay = homeState.selectedDate.toEpochDays(),
-        modifier = modifier,
-        shimmer = homeState.shimmer
-    )
+    if (useVerticalLayout) {
+        VerticalMealsCard(
+            meals = meals,
+            formatTime = remember(viewModel) { viewModel::formatTime },
+            onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
+            onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
+            animatedVisibilityScope = animatedVisibilityScope,
+            epochDay = homeState.selectedDate.toEpochDays(),
+            contentPadding = contentPadding,
+            modifier = modifier,
+            shimmer = homeState.shimmer
+        )
+    } else {
+        HorizontalMealsCard(
+            meals = meals,
+            formatTime = remember(viewModel) { viewModel::formatTime },
+            onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
+            onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
+            animatedVisibilityScope = animatedVisibilityScope,
+            epochDay = homeState.selectedDate.toEpochDays(),
+            modifier = modifier,
+            shimmer = homeState.shimmer
+        )
+    }
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalAnimationApi::class)
 @Composable
-private fun MealsCard(
+private fun VerticalMealsCard(
+    meals: List<MealWithSummary>?,
+    formatTime: (LocalTime) -> String,
+    onMealClick: (mealId: Long) -> Unit,
+    onAddClick: (mealId: Long) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    epochDay: Int,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberShimmer(
+        shimmerBounds = ShimmerBounds.Window
+    )
+) {
+    val sharedTransitionScope =
+        LocalHomeSharedTransitionScope.current ?: error("SharedTransitionScope not found")
+
+    val transition = updateTransition(meals)
+
+    val meals = remember(meals) {
+        meals ?: List<MealWithSummary?>(4) { null }
+    }
+
+    with(sharedTransitionScope) {
+        Column(
+            modifier = modifier.padding(contentPadding),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            meals.forEachIndexed { i, meal ->
+                transition.Crossfade(
+                    contentKey = { it != null },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (it != null && meal != null) {
+                        MealCard(
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            epochDay = epochDay,
+                            meal = meal,
+                            isEmpty = meal.isEmpty,
+                            totalCalories = meal.calories,
+                            totalProteins = meal.proteins,
+                            totalCarbohydrates = meal.carbohydrates,
+                            totalFats = meal.fats,
+                            formatTime = formatTime,
+                            onMealClick = { onMealClick(meal.id) },
+                            onAddClick = { onAddClick(meal.id) }
+                        )
+                    } else {
+                        MealCardSkeleton(
+                            shimmer = shimmer
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalAnimationApi::class)
+@Composable
+private fun HorizontalMealsCard(
     meals: List<MealWithSummary>?,
     formatTime: (LocalTime) -> String,
     onMealClick: (mealId: Long) -> Unit,
