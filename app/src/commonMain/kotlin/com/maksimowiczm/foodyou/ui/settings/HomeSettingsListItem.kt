@@ -1,8 +1,8 @@
-package com.maksimowiczm.foodyou.feature.meal.ui.settings
+package com.maksimowiczm.foodyou.ui.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -13,19 +13,23 @@ import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun MealsSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun HomeSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = {
-            Text(stringResource(Res.string.headline_meals))
+            Text(
+                text = stringResource(Res.string.headline_home)
+            )
         },
-        modifier = modifier.clickable { onClick() },
-        supportingContent = {
-            Text(stringResource(Res.string.neutral_setup_your_meals_cards))
-        },
+        modifier = modifier.clickable(onClick = onClick),
         leadingContent = {
             Icon(
-                imageVector = Icons.Default.Restaurant,
+                imageVector = Icons.Outlined.Home,
                 contentDescription = null
+            )
+        },
+        supportingContent = {
+            Text(
+                text = stringResource(Res.string.action_edit_your_home_page)
             )
         }
     )

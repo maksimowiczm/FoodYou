@@ -41,6 +41,8 @@
     <string name="headline_update_recipe">Update recipe</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ingredients</string>
     <string name="headline_summary">Summary</string>
+    <string name="headline_home" description="Home page - main screen">Home</string>
+    <string name="headline_home_settings">Home settings</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
@@ -130,6 +132,7 @@
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Add ingredient</string>
     <string name="action_edit_ingredient_measurement">Edit ingredient measurement</string>
     <string name="action_delete_ingredient">Delete ingredient</string>
+    <string name="action_edit_your_home_page">Edit your home page</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -143,6 +146,7 @@
     <string name="neutral_set_your_daily_goals">Set your daily goals</string>
     <string name="neutral_all_values_per_x">All values per %1$s</string>
     <string name="neutral_set_your_meal_schedule">Set your meal schedule</string>
+    <string name="neutral_setup_your_meals_cards">Setup your meals cards</string>
     <string name="neutral_permanently_delete_meal">Permanently delete meal?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Meal will be deleted permanently. All data related to this meal will be lost.</string>
     <string name="neutral_required">Required</string>

@@ -20,6 +20,7 @@ import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsSettings
 import com.maksimowiczm.foodyou.feature.openfoodfacts.openFoodFactsGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
+import com.maksimowiczm.foodyou.ui.settings.HomeSettings
 import com.maksimowiczm.foodyou.ui.settings.Settings
 import com.maksimowiczm.foodyou.ui.settings.settingsGraph
 
@@ -64,8 +65,16 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
             }
         )
         settingsGraph(
-            onBack = {
+            onSettingsBack = {
                 navController.popBackStack<Settings>(inclusive = true)
+            },
+            onHomeSettingsBack = {
+                navController.popBackStack<HomeSettings>(inclusive = true)
+            },
+            onHomeSettings = {
+                navController.navigate(HomeSettings) {
+                    launchSingleTop = true
+                }
             },
             onOpenFoodFactsSettings = {
                 navController.navigate(OpenFoodFactsSettings) {

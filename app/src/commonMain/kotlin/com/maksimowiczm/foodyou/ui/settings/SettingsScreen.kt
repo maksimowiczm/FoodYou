@@ -16,7 +16,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
 import com.maksimowiczm.foodyou.feature.goals.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
-import com.maksimowiczm.foodyou.feature.meal.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsSettingsListItem
 import com.maksimowiczm.foodyou.feature.security.SecureScreenSettingsListItem
 import foodyou.app.generated.resources.*
@@ -27,8 +26,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onHomeSettings: () -> Unit,
     onOpenFoodFactsSettings: () -> Unit,
-    onMealsSettings: () -> Unit,
     onGoalsSettings: () -> Unit,
     onAbout: () -> Unit,
     onLanguage: () -> Unit,
@@ -60,13 +59,13 @@ fun SettingsScreen(
             contentPadding = paddingValues
         ) {
             item {
-                OpenFoodFactsSettingsListItem(
-                    onClick = onOpenFoodFactsSettings
+                HomeSettingsListItem(
+                    onClick = onHomeSettings
                 )
             }
             item {
-                MealsSettingsListItem(
-                    onClick = onMealsSettings
+                OpenFoodFactsSettingsListItem(
+                    onClick = onOpenFoodFactsSettings
                 )
             }
             item {
