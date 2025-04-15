@@ -8,7 +8,7 @@ import androidx.room.Update
 import com.maksimowiczm.foodyou.core.data.model.measurement.MeasurementSuggestion
 import com.maksimowiczm.foodyou.core.data.model.measurement.ProductMeasurementEntity
 import com.maksimowiczm.foodyou.core.data.model.measurement.ProductWithMeasurement
-import com.maksimowiczm.foodyou.core.data.source.ProductMeasurementLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
 import kotlinx.coroutines.flow.Flow
 
 @Dao

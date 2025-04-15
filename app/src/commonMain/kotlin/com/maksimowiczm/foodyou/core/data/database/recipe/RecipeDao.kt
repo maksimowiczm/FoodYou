@@ -11,7 +11,7 @@ import com.maksimowiczm.foodyou.core.data.model.recipe.IngredientSuggestion
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeWithIngredients
-import com.maksimowiczm.foodyou.core.data.source.RecipeLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.RecipeLocalDataSource
 import kotlinx.coroutines.flow.Flow
 
 @Dao

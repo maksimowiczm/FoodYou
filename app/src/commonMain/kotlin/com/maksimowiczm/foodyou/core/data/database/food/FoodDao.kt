@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
-import com.maksimowiczm.foodyou.core.data.source.FoodLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
 
 @Dao
 abstract class FoodDao : FoodLocalDataSource {

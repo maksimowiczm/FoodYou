@@ -6,7 +6,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
 import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
-import com.maksimowiczm.foodyou.core.data.source.ProductLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.ProductLocalDataSource
 import kotlinx.coroutines.flow.Flow
 
 @Dao

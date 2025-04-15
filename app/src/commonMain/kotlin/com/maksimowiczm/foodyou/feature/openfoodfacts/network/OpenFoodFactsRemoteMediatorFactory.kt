@@ -7,9 +7,9 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.data.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.core.data.database.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.core.data.database.product.ProductDao
+import com.maksimowiczm.foodyou.core.domain.source.ProductNetworkDataSource
+import com.maksimowiczm.foodyou.core.domain.source.ProductRemoteMediator
 import com.maksimowiczm.foodyou.core.ext.get
-import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediator
-import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.openfoodfacts.data.OpenFoodFactsPreferences
 import kotlinx.coroutines.runBlocking
 
@@ -17,7 +17,7 @@ import kotlinx.coroutines.runBlocking
 internal class OpenFoodFactsRemoteMediatorFactory(
     private val dataStore: DataStore<Preferences>,
     database: FoodYouDatabase
-) : ProductRemoteMediatorFactory {
+) : ProductNetworkDataSource {
 
     private val openFoodFactsDao: OpenFoodFactsDao = database.openFoodFactsDao
     private val productDao: ProductDao = database.productDao
@@ -42,7 +42,9 @@ internal class OpenFoodFactsRemoteMediatorFactory(
     private val countryCode
         get() = runBlocking { dataStore.get(OpenFoodFactsPreferences.countryCode) }
 
-    override fun <T : Any> createWithQuery(query: String?): ProductRemoteMediator<T>? {
+    override fun <T : Any> createRemoteMediatorWithQuery(
+        query: String?
+    ): ProductRemoteMediator<T>? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
 
         if (query == null) {
@@ -65,7 +67,9 @@ internal class OpenFoodFactsRemoteMediatorFactory(
         )
     }
 
-    override fun <T : Any> createWithBarcode(barcode: String): ProductRemoteMediator<T>? {
+    override fun <T : Any> createRemoteMediatorWithBarcode(
+        barcode: String
+    ): ProductRemoteMediator<T>? {
         val openFoodFactsNetworkDataSource = openFoodFactsNetworkDataSource ?: return null
 
         val country = countryCode

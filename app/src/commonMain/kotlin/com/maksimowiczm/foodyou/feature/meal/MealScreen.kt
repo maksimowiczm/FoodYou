@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.meal
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.core.model.MeasurementId
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.meal.ui.MealScreen
 import kotlinx.datetime.LocalDate
 

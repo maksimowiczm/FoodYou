@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.feature.goals.model
 
-import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.model.Nutrients
-import com.maksimowiczm.foodyou.core.model.PortionWeight
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Nutrients
+import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 
 internal data class Food(
     val foodId: FoodId,

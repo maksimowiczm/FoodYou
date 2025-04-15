@@ -2,10 +2,10 @@ package com.maksimowiczm.foodyou.feature.meal.domain
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.maksimowiczm.foodyou.core.domain.model.sum
+import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.ext.combine
 import com.maksimowiczm.foodyou.core.ext.observe
-import com.maksimowiczm.foodyou.core.model.sum
-import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.util.DateProvider
 import com.maksimowiczm.foodyou.feature.meal.data.MealPreferences
 import com.maksimowiczm.foodyou.feature.meal.data.MealRepository

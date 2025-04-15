@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.meal.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.model.MeasurementId
-import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
+import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.util.DateFormatter
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealWithFoodUseCase
 import kotlinx.coroutines.channels.Channel

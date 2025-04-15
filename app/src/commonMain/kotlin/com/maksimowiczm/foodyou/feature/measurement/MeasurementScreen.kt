@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.measurement
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.ui.MeasurementScreen as MeasurementScreenImpl
 
 @Composable

@@ -7,20 +7,20 @@ import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.core.data.model.recipe.IngredientSuggestion
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeIngredientEntity
-import com.maksimowiczm.foodyou.core.data.source.RecipeLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
+import com.maksimowiczm.foodyou.core.domain.mapper.ProductMapper
+import com.maksimowiczm.foodyou.core.domain.mapper.RecipeMapper
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Recipe
+import com.maksimowiczm.foodyou.core.domain.source.ProductNetworkDataSource
+import com.maksimowiczm.foodyou.core.domain.source.RecipeLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
-import com.maksimowiczm.foodyou.core.mapper.MeasurementMapper
-import com.maksimowiczm.foodyou.core.mapper.ProductMapper
-import com.maksimowiczm.foodyou.core.mapper.RecipeMapper
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.model.Recipe
-import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.coroutines.flow.Flow
 
 internal class RecipeRepository(
     private val recipeDao: RecipeLocalDataSource,
-    private val remoteMediatorFactory: ProductRemoteMediatorFactory
+    private val remoteMediatorFactory: ProductNetworkDataSource
 ) {
 
     @OptIn(ExperimentalPagingApi::class)
@@ -28,7 +28,7 @@ internal class RecipeRepository(
         config = PagingConfig(
             pageSize = 30
         ),
-        remoteMediator = remoteMediatorFactory.createWithQuery(query)
+        remoteMediator = remoteMediatorFactory.createRemoteMediatorWithQuery(query)
     ) {
         recipeDao.observeIngredientSuggestions(query)
     }.flow.mapValues { it.toIngredient() }

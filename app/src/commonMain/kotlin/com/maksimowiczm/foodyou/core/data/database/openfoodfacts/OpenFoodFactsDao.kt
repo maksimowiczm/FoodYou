@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.maksimowiczm.foodyou.core.data.model.openfoodfacts.OpenFoodFactsPagingKeyEntity
-import com.maksimowiczm.foodyou.core.data.source.OpenFoodFactsLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.OpenFoodFactsLocalDataSource
 
 @Dao
 abstract class OpenFoodFactsDao : OpenFoodFactsLocalDataSource {

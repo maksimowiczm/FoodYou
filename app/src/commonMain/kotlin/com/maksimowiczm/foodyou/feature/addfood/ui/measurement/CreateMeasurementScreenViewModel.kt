@@ -3,10 +3,10 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.measurement
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.repository.FoodRepository
-import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
+import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.measurement.ObserveMeasurableFoodUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -73,7 +73,6 @@ internal class CreateMeasurementScreenViewModel(
     fun onDeleteFood(foodId: FoodId) {
         viewModelScope.launch {
             foodRepository.deleteFood(foodId)
-
             _eventBus.emit(MeasurementScreenEvent.FoodDeleted)
         }
     }

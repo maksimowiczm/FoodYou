@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.meal.data
 
 import com.maksimowiczm.foodyou.core.data.model.meal.MealEntity
-import com.maksimowiczm.foodyou.core.data.source.MealLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.MealLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

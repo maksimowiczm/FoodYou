@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
-import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.product_package

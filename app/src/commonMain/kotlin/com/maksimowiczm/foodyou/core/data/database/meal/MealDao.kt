@@ -7,7 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.maksimowiczm.foodyou.core.data.model.meal.MealEntity
-import com.maksimowiczm.foodyou.core.data.source.MealLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.MealLocalDataSource
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
-import com.maksimowiczm.foodyou.core.repository.SearchRepository
+import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
+import com.maksimowiczm.foodyou.core.domain.repository.SearchRepository
 import com.maksimowiczm.foodyou.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi

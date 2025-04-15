@@ -3,12 +3,12 @@ package com.maksimowiczm.foodyou.feature.recipe.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Product
+import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
+import com.maksimowiczm.foodyou.core.domain.repository.SearchRepository
 import com.maksimowiczm.foodyou.core.ext.combine
-import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.model.Product
-import com.maksimowiczm.foodyou.core.repository.FoodRepository
-import com.maksimowiczm.foodyou.core.repository.SearchRepository
 import com.maksimowiczm.foodyou.feature.measurement.ObserveMeasurableFoodUseCase
 import com.maksimowiczm.foodyou.feature.recipe.data.RecipeRepository
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
@@ -68,8 +68,7 @@ internal class RecipeViewModel(
         }
 
         it.map {
-            foodRepository
-                .observeFood(it.productId)
+            foodRepository.observeFood(it.productId)
                 .filterNotNull()
                 .map { product ->
                     product as Product

@@ -10,7 +10,7 @@ import com.maksimowiczm.foodyou.core.data.model.Nutrients
 import com.maksimowiczm.foodyou.core.data.model.openfoodfacts.OpenFoodFactsPagingKeyEntity
 import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
 import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
-import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediator
+import com.maksimowiczm.foodyou.core.domain.source.ProductRemoteMediator
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.openfoodfacts.network.model.OpenFoodFactsNutrients
 import com.maksimowiczm.foodyou.feature.openfoodfacts.network.model.OpenFoodFactsProduct

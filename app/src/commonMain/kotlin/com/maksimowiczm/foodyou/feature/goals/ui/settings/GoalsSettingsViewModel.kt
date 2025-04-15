@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.goals.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.model.DailyGoals
-import com.maksimowiczm.foodyou.core.repository.GoalsRepository
+import com.maksimowiczm.foodyou.core.domain.model.DailyGoals
+import com.maksimowiczm.foodyou.feature.goals.data.GoalsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow

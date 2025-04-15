@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
-import com.maksimowiczm.foodyou.core.model.SearchQuery
+import com.maksimowiczm.foodyou.core.domain.model.SearchQuery
 import com.maksimowiczm.foodyou.core.ui.component.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.core.ui.ext.throwable
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.ProductSearchBarSuggestions

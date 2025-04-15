@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.core.data.database.goals
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.maksimowiczm.foodyou.core.data.source.DiaryDayLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.DiaryDayLocalDataSource
 import kotlinx.coroutines.flow.Flow
 
 @Dao

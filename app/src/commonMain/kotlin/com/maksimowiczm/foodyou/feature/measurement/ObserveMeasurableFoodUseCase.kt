@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.feature.measurement
 
-import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.model.MeasurementId
-import com.maksimowiczm.foodyou.core.repository.FoodRepository
-import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
+import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
+import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map

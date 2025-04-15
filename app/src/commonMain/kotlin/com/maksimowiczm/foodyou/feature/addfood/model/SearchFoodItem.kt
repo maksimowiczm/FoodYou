@@ -1,12 +1,12 @@
 package com.maksimowiczm.foodyou.feature.addfood.model
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.model.Measurement.Gram
-import com.maksimowiczm.foodyou.core.model.Measurement.Serving
-import com.maksimowiczm.foodyou.core.model.MeasurementId
-import com.maksimowiczm.foodyou.core.model.PortionWeight
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Measurement.Gram
+import com.maksimowiczm.foodyou.core.domain.model.Measurement.Serving
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
+import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 
 @Immutable
 internal data class SearchFoodItem(

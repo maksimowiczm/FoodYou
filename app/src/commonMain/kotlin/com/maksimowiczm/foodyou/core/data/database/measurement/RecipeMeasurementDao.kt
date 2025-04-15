@@ -11,7 +11,7 @@ import com.maksimowiczm.foodyou.core.data.database.measurement.MeasurementSQLCon
 import com.maksimowiczm.foodyou.core.data.model.measurement.MeasurementSuggestion
 import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeMeasurementEntity
 import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeWithMeasurement
-import com.maksimowiczm.foodyou.core.data.source.RecipeMeasurementLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.model.DailyGoals
+import com.maksimowiczm.foodyou.core.domain.model.DailyGoals
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

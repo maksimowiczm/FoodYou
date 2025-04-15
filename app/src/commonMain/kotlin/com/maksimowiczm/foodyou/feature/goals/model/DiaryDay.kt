@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.goals.model
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.core.model.DailyGoals
+import com.maksimowiczm.foodyou.core.domain.model.DailyGoals
 import kotlin.math.roundToInt
 import kotlinx.datetime.LocalDate
 import pro.respawn.kmmutils.common.sumOf

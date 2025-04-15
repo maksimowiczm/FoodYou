@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
-import com.maksimowiczm.foodyou.core.data.source.SearchLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.SearchLocalDataSource
 import kotlinx.coroutines.flow.Flow
 
 @Dao

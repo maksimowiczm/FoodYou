@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.recipe.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.MeasurableFood
 import com.maksimowiczm.foodyou.feature.measurement.MeasurementScreen
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient

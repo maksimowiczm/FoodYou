@@ -14,8 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.model.NutrientValue
-import com.maksimowiczm.foodyou.core.model.Nutrients
+import com.maksimowiczm.foodyou.core.domain.model.NutrientValue
+import com.maksimowiczm.foodyou.core.domain.model.Nutrients
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.Res

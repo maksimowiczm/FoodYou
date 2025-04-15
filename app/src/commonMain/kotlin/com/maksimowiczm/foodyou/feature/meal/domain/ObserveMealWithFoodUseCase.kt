@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.feature.meal.domain
 
+import com.maksimowiczm.foodyou.core.domain.model.Food
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
+import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.ext.sumOf
-import com.maksimowiczm.foodyou.core.model.Food
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.model.MeasurementId
-import com.maksimowiczm.foodyou.core.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.feature.meal.data.MealRepository
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.Flow

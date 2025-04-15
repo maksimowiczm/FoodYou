@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.feature.recipe.model
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.model.Measurement.Gram
-import com.maksimowiczm.foodyou.core.model.Measurement.Serving
-import com.maksimowiczm.foodyou.core.model.Product
-import com.maksimowiczm.foodyou.core.model.RecipeIngredient
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Measurement.Gram
+import com.maksimowiczm.foodyou.core.domain.model.Measurement.Serving
+import com.maksimowiczm.foodyou.core.domain.model.Product
+import com.maksimowiczm.foodyou.core.domain.model.RecipeIngredient
 
 @Immutable
 internal data class Ingredient(val product: Product, val measurement: Measurement) {

@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
-import com.maksimowiczm.foodyou.core.model.DailyGoals
+import com.maksimowiczm.foodyou.core.domain.model.DailyGoals
 import com.maksimowiczm.foodyou.core.ui.form.FormFieldWithTextFieldValue
 import com.maksimowiczm.foodyou.core.ui.form.between
 import com.maksimowiczm.foodyou.core.ui.form.floatParser

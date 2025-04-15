@@ -1,11 +1,10 @@
 package com.maksimowiczm.foodyou.feature.goals.ui.card
 
 import androidx.lifecycle.ViewModel
-import com.maksimowiczm.foodyou.feature.goals.data.DiaryDayRepository
+import com.maksimowiczm.foodyou.feature.goals.data.GoalsRepository
 import kotlinx.datetime.LocalDate
 
-internal class CaloriesCardViewModel(private val diaryDayRepository: DiaryDayRepository) :
-    ViewModel() {
+internal class CaloriesCardViewModel(private val repository: GoalsRepository) : ViewModel() {
 
-    fun observeDiaryDay(date: LocalDate) = diaryDayRepository.observeDiaryDay(date)
+    fun observeDiaryDay(date: LocalDate) = repository.observeDiaryDay(date)
 }

@@ -7,14 +7,14 @@ import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
 import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
-import com.maksimowiczm.foodyou.core.data.source.FoodLocalDataSource
-import com.maksimowiczm.foodyou.core.data.source.SearchLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
+import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
+import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.ProductNetworkDataSource
+import com.maksimowiczm.foodyou.core.domain.source.SearchLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
-import com.maksimowiczm.foodyou.core.mapper.MeasurementMapper
-import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.MeasurementId
-import com.maksimowiczm.foodyou.core.model.PortionWeight
-import com.maksimowiczm.foodyou.core.repository.ProductRemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +28,7 @@ import kotlinx.datetime.LocalDate
 internal class AddFoodRepository(
     private val searchLocalDataSource: SearchLocalDataSource,
     private val foodLocalDataSource: FoodLocalDataSource,
-    private val remoteMediatorFactory: ProductRemoteMediatorFactory,
+    private val remoteMediatorFactory: ProductNetworkDataSource,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     private val ioScope = CoroutineScope(ioDispatcher + SupervisorJob())
@@ -61,8 +61,8 @@ internal class AddFoodRepository(
         val localOnly = query == null
         val remoteMediator: RemoteMediator<Int, FoodSearchEntity>? = when {
             localOnly -> null
-            barcode != null -> remoteMediatorFactory.createWithBarcode(barcode)
-            else -> remoteMediatorFactory.createWithQuery(searchQuery)
+            barcode != null -> remoteMediatorFactory.createRemoteMediatorWithBarcode(barcode)
+            else -> remoteMediatorFactory.createRemoteMediatorWithQuery(searchQuery)
         }
 
         // Insert query if it's not a barcode and not empty
