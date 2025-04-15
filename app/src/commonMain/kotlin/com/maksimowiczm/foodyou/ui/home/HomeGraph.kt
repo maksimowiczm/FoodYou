@@ -10,6 +10,7 @@ data object Home
 fun NavGraphBuilder.homeGraph(
     onSettings: () -> Unit,
     onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onMealCardLongClick: (epochDay: Int, mealId: Long) -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onCaloriesCardClick: (epochDay: Int) -> Unit
 ) {
@@ -18,6 +19,7 @@ fun NavGraphBuilder.homeGraph(
             animatedVisibilityScope = this,
             onSettings = onSettings,
             onMealCardClick = onMealCardClick,
+            onMealCardLongClick = onMealCardLongClick,
             onMealCardAddClick = onMealCardAddClick,
             onCaloriesCardClick = onCaloriesCardClick
         )

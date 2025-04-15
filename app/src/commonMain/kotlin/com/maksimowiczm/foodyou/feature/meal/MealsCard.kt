@@ -12,6 +12,7 @@ fun MealsCard(
     animatedVisibilityScope: AnimatedVisibilityScope,
     homeState: HomeState,
     onMealClick: (epochDay: Int, mealId: Long) -> Unit,
+    onMealLongClick: (epochDay: Int, mealId: Long) -> Unit,
     onAddClick: (epochDay: Int, mealId: Long) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
@@ -20,6 +21,7 @@ fun MealsCard(
         animatedVisibilityScope = animatedVisibilityScope,
         homeState = homeState,
         onMealClick = onMealClick,
+        onMealLongClick = onMealLongClick,
         onAddClick = onAddClick,
         contentPadding = contentPadding,
         modifier = modifier

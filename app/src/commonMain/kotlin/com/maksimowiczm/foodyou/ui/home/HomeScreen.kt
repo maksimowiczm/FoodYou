@@ -31,6 +31,7 @@ fun HomeScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     onSettings: () -> Unit,
     onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onMealCardLongClick: (epochDay: Int, mealId: Long) -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onCaloriesCardClick: (epochDay: Int) -> Unit,
     modifier: Modifier = Modifier
@@ -76,6 +77,7 @@ fun HomeScreen(
                     animatedVisibilityScope = animatedVisibilityScope,
                     homeState = homeState,
                     onMealClick = onMealCardClick,
+                    onMealLongClick = onMealCardLongClick,
                     onAddClick = onMealCardAddClick,
                     contentPadding = PaddingValues(horizontal = 8.dp)
                 )

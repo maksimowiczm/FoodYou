@@ -10,6 +10,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,6 +62,7 @@ internal fun MealsCard(
     animatedVisibilityScope: AnimatedVisibilityScope,
     homeState: HomeState,
     onMealClick: (epochDay: Int, mealId: Long) -> Unit,
+    onMealLongClick: (epochDay: Int, mealId: Long) -> Unit,
     onAddClick: (epochDay: Int, mealId: Long) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
@@ -74,6 +76,7 @@ internal fun MealsCard(
             meals = meals,
             formatTime = remember(viewModel) { viewModel::formatTime },
             onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
+            onMealLongClick = { onMealLongClick(homeState.selectedDate.toEpochDays(), it) },
             onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
             animatedVisibilityScope = animatedVisibilityScope,
             epochDay = homeState.selectedDate.toEpochDays(),
@@ -86,6 +89,7 @@ internal fun MealsCard(
             meals = meals,
             formatTime = remember(viewModel) { viewModel::formatTime },
             onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
+            onMealLongClick = { onMealLongClick(homeState.selectedDate.toEpochDays(), it) },
             onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
             animatedVisibilityScope = animatedVisibilityScope,
             epochDay = homeState.selectedDate.toEpochDays(),
@@ -101,6 +105,7 @@ private fun VerticalMealsCard(
     meals: List<MealWithSummary>?,
     formatTime: (LocalTime) -> String,
     onMealClick: (mealId: Long) -> Unit,
+    onMealLongClick: (mealId: Long) -> Unit,
     onAddClick: (mealId: Long) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     epochDay: Int,
@@ -141,6 +146,7 @@ private fun VerticalMealsCard(
                             totalFats = meal.fats,
                             formatTime = formatTime,
                             onMealClick = { onMealClick(meal.id) },
+                            onMealLongClick = { onMealLongClick(meal.id) },
                             onAddClick = { onAddClick(meal.id) }
                         )
                     } else {
@@ -160,6 +166,7 @@ private fun HorizontalMealsCard(
     meals: List<MealWithSummary>?,
     formatTime: (LocalTime) -> String,
     onMealClick: (mealId: Long) -> Unit,
+    onMealLongClick: (mealId: Long) -> Unit,
     onAddClick: (mealId: Long) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     epochDay: Int,
@@ -216,6 +223,7 @@ private fun HorizontalMealsCard(
                         totalFats = meal.fats,
                         formatTime = formatTime,
                         onMealClick = { onMealClick(meal.id) },
+                        onMealLongClick = { onMealLongClick(meal.id) },
                         onAddClick = { onAddClick(meal.id) }
                     )
                 } else {
@@ -303,11 +311,11 @@ private fun SharedTransitionScope.MealCard(
     totalFats: Int,
     formatTime: (LocalTime) -> String,
     onMealClick: () -> Unit,
+    onMealLongClick: () -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     FoodYouHomeCard(
-        onClick = onMealClick,
         modifier = modifier.sharedBounds(
             sharedContentState = rememberSharedContentState(
                 key = MealCardTransitionKeys.MealContainer(
@@ -435,37 +443,44 @@ private fun SharedTransitionScope.MealCard(
             LocalHomeSharedTransitionScope.current ?: error("SharedTransitionScope not found")
 
         with(sharedTransitionScope) {
-            MealHeader(
-                headline = headline,
-                time = time,
-                modifier = Modifier.padding(16.dp),
-                nutrientsLayout = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        NutrientsLayout(
-                            caloriesLabel = caloriesLabel,
-                            proteinsLabel = proteinsLabel,
-                            carbohydratesLabel = carbohydratesLabel,
-                            fatsLabel = fatsLabel,
-                            modifier = Modifier.sharedElement(
-                                sharedContentState = rememberSharedContentState(
-                                    key = MealCardTransitionKeys.MealNutrients(
-                                        mealId = meal.id,
-                                        epochDay = epochDay
-                                    )
-                                ),
-                                animatedVisibilityScope = animatedVisibilityScope
+            Box(
+                modifier = Modifier.combinedClickable(
+                    onLongClick = onMealLongClick,
+                    onClick = onMealClick
+                )
+            ) {
+                MealHeader(
+                    headline = headline,
+                    time = time,
+                    modifier = Modifier.padding(16.dp),
+                    nutrientsLayout = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            NutrientsLayout(
+                                caloriesLabel = caloriesLabel,
+                                proteinsLabel = proteinsLabel,
+                                carbohydratesLabel = carbohydratesLabel,
+                                fatsLabel = fatsLabel,
+                                modifier = Modifier.sharedElement(
+                                    sharedContentState = rememberSharedContentState(
+                                        key = MealCardTransitionKeys.MealNutrients(
+                                            mealId = meal.id,
+                                            epochDay = epochDay
+                                        )
+                                    ),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
                             )
-                        )
 
-                        Spacer(Modifier.weight(1f))
+                            Spacer(Modifier.weight(1f))
 
-                        actionButton()
+                            actionButton()
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
