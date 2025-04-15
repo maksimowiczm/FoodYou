@@ -35,4 +35,13 @@ internal class MealsCardViewModel(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = runBlocking { dataStore.get(MealPreferences.useVerticalLayout) ?: false }
         )
+
+    val useCompactLayout = dataStore
+        .observe(MealPreferences.useCompactLayout)
+        .map { it ?: false }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = runBlocking { dataStore.get(MealPreferences.useCompactLayout) ?: false }
+        )
 }

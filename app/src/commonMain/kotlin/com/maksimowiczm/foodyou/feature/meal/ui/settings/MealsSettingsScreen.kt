@@ -83,6 +83,7 @@ internal fun MealsSettingsScreen(
     val useTimeBasedSorting by viewModel.useTimeBasedSorting.collectAsStateWithLifecycle()
     val includeAllDayMeals by viewModel.includeAllDayMeals.collectAsStateWithLifecycle()
     val useVerticalLayout by viewModel.useVerticalLayout.collectAsStateWithLifecycle()
+    val useCompactLayout by viewModel.useCompactLayout.collectAsStateWithLifecycle()
 
     // TODO shimmer?
     when (val meals = meals) {
@@ -92,6 +93,7 @@ internal fun MealsSettingsScreen(
             useTimeBasedSorting = useTimeBasedSorting,
             includeAllDayMeals = includeAllDayMeals,
             useVerticalLayout = useVerticalLayout,
+            useCompactLayout = useCompactLayout,
             onBack = onBack,
             formatTime = remember(viewModel) { viewModel::formatTime },
             onCreateMeal = remember(viewModel) { viewModel::createMeal },
@@ -102,9 +104,8 @@ internal fun MealsSettingsScreen(
             onToggleIncludeAllDayMeals = remember(viewModel) {
                 viewModel::toggleIncludeAllDayMeals
             },
-            onToggleVerticalLayout = remember(viewModel) {
-                viewModel::toggleUseVerticalLayout
-            },
+            onToggleVerticalLayout = remember(viewModel) { viewModel::toggleUseVerticalLayout },
+            onToggleCompactLayout = remember(viewModel) { viewModel::toggleUseCompactLayout },
             modifier = modifier
         )
     }
@@ -117,6 +118,7 @@ private fun MealsSettingsScreen(
     useTimeBasedSorting: Boolean,
     includeAllDayMeals: Boolean,
     useVerticalLayout: Boolean,
+    useCompactLayout: Boolean,
     onBack: () -> Unit,
     formatTime: (LocalTime) -> String,
     onCreateMeal: (String, LocalTime, LocalTime) -> Unit,
@@ -126,6 +128,7 @@ private fun MealsSettingsScreen(
     onToggleTimeBasedSorting: (Boolean) -> Unit,
     onToggleIncludeAllDayMeals: (Boolean) -> Unit,
     onToggleVerticalLayout: (Boolean) -> Unit,
+    onToggleCompactLayout: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     hapticFeedback: HapticFeedback = LocalHapticFeedback.current
 ) {
@@ -466,6 +469,24 @@ private fun MealsSettingsScreen(
                         RadioButton(
                             selected = !useVerticalLayout,
                             onClick = { onToggleVerticalLayout(false) }
+                        )
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(stringResource(Res.string.action_use_compact_layout))
+                    },
+                    modifier = Modifier.clickable { onToggleCompactLayout(!useCompactLayout) },
+                    supportingContent = {
+                        Text(stringResource(Res.string.description_compact_meals_cards))
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = useCompactLayout,
+                            onCheckedChange = { onToggleCompactLayout(it) }
                         )
                     }
                 )

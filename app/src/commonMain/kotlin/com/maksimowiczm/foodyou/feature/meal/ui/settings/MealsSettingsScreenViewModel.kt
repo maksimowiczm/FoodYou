@@ -62,6 +62,17 @@ internal class MealsSettingsScreenViewModel(
             }
         )
 
+    val useCompactLayout = dataStore
+        .observe(MealPreferences.useCompactLayout)
+        .map { it ?: false }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = runBlocking {
+                dataStore.get(MealPreferences.useCompactLayout) ?: false
+            }
+        )
+
     fun updateMealsRanks(meals: List<Meal>) {
         viewModelScope.launch {
             val map = meals.mapIndexed { index, meal -> meal.id to index }.toMap()
@@ -106,6 +117,12 @@ internal class MealsSettingsScreenViewModel(
     fun toggleUseVerticalLayout(state: Boolean) {
         viewModelScope.launch {
             dataStore.set(MealPreferences.useVerticalLayout to state)
+        }
+    }
+
+    fun toggleUseCompactLayout(state: Boolean) {
+        viewModelScope.launch {
+            dataStore.set(MealPreferences.useCompactLayout to state)
         }
     }
 

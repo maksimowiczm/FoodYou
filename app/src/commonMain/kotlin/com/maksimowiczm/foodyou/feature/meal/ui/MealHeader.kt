@@ -23,10 +23,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun MealHeader(
     headline: @Composable () -> Unit,
-    time: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    time: (@Composable () -> Unit)? = null,
     spacer: @Composable () -> Unit = { Spacer(Modifier.height(8.dp)) },
-    nutrientsLayout: @Composable () -> Unit
+    nutrientsLayout: (@Composable () -> Unit)? = null
 ) {
     Column(
         modifier = modifier
@@ -39,13 +39,15 @@ internal fun MealHeader(
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.labelLarge
         ) {
-            time()
+            time?.let { time() }
         }
         spacer()
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            nutrientsLayout()
+        nutrientsLayout?.let {
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                nutrientsLayout()
+            }
         }
     }
 }

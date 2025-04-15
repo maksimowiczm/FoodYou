@@ -7,4 +7,5 @@ internal object MealPreferences {
     val includeAllDayMeals = booleanPreferencesKey("include_all_day_meals")
 
     val useVerticalLayout = booleanPreferencesKey("use_vertical_layout")
+    val useCompactLayout = booleanPreferencesKey("use_compact_layout")
 }

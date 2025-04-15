@@ -70,10 +70,12 @@ internal fun MealsCard(
 ) {
     val meals by viewModel.observeMeals(homeState.selectedDate).collectAsStateWithLifecycle(null)
     val useVerticalLayout by viewModel.useVerticalLayout.collectAsStateWithLifecycle()
+    val useCompactLayout by viewModel.useCompactLayout.collectAsStateWithLifecycle()
 
     if (useVerticalLayout) {
         VerticalMealsCard(
             meals = meals,
+            useCompactLayout = useCompactLayout,
             formatTime = remember(viewModel) { viewModel::formatTime },
             onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
             onMealLongClick = { onMealLongClick(homeState.selectedDate.toEpochDays(), it) },
@@ -87,6 +89,7 @@ internal fun MealsCard(
     } else {
         HorizontalMealsCard(
             meals = meals,
+            useCompactLayout = useCompactLayout,
             formatTime = remember(viewModel) { viewModel::formatTime },
             onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
             onMealLongClick = { onMealLongClick(homeState.selectedDate.toEpochDays(), it) },
@@ -103,6 +106,7 @@ internal fun MealsCard(
 @Composable
 private fun VerticalMealsCard(
     meals: List<MealWithSummary>?,
+    useCompactLayout: Boolean,
     formatTime: (LocalTime) -> String,
     onMealClick: (mealId: Long) -> Unit,
     onMealLongClick: (mealId: Long) -> Unit,
@@ -135,24 +139,37 @@ private fun VerticalMealsCard(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     if (it != null && meal != null) {
-                        MealCard(
-                            animatedVisibilityScope = animatedVisibilityScope,
-                            epochDay = epochDay,
-                            meal = meal,
-                            isEmpty = meal.isEmpty,
-                            totalCalories = meal.calories,
-                            totalProteins = meal.proteins,
-                            totalCarbohydrates = meal.carbohydrates,
-                            totalFats = meal.fats,
-                            formatTime = formatTime,
-                            onMealClick = { onMealClick(meal.id) },
-                            onMealLongClick = { onMealLongClick(meal.id) },
-                            onAddClick = { onAddClick(meal.id) }
-                        )
+                        if (useCompactLayout) {
+                            CompactMealCard(
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                epochDay = epochDay,
+                                meal = meal,
+                                onMealClick = { onMealClick(meal.id) },
+                                onMealLongClick = { onMealLongClick(meal.id) },
+                                onAddClick = { onAddClick(meal.id) }
+                            )
+                        } else {
+                            MealCard(
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                epochDay = epochDay,
+                                meal = meal,
+                                isEmpty = meal.isEmpty,
+                                totalCalories = meal.calories,
+                                totalProteins = meal.proteins,
+                                totalCarbohydrates = meal.carbohydrates,
+                                totalFats = meal.fats,
+                                formatTime = formatTime,
+                                onMealClick = { onMealClick(meal.id) },
+                                onMealLongClick = { onMealLongClick(meal.id) },
+                                onAddClick = { onAddClick(meal.id) }
+                            )
+                        }
                     } else {
-                        MealCardSkeleton(
-                            shimmer = shimmer
-                        )
+                        if (useCompactLayout) {
+                            CompactMealCardSkeleton(shimmer)
+                        } else {
+                            MealCardSkeleton(shimmer)
+                        }
                     }
                 }
             }
@@ -164,6 +181,7 @@ private fun VerticalMealsCard(
 @Composable
 private fun HorizontalMealsCard(
     meals: List<MealWithSummary>?,
+    useCompactLayout: Boolean,
     formatTime: (LocalTime) -> String,
     onMealClick: (mealId: Long) -> Unit,
     onMealLongClick: (mealId: Long) -> Unit,
@@ -212,26 +230,76 @@ private fun HorizontalMealsCard(
                     )
             ) {
                 if (it != null && meal != null) {
-                    MealCard(
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        epochDay = epochDay,
-                        meal = meal,
-                        isEmpty = meal.isEmpty,
-                        totalCalories = meal.calories,
-                        totalProteins = meal.proteins,
-                        totalCarbohydrates = meal.carbohydrates,
-                        totalFats = meal.fats,
-                        formatTime = formatTime,
-                        onMealClick = { onMealClick(meal.id) },
-                        onMealLongClick = { onMealLongClick(meal.id) },
-                        onAddClick = { onAddClick(meal.id) }
-                    )
+                    if (useCompactLayout) {
+                        CompactMealCard(
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            epochDay = epochDay,
+                            meal = meal,
+                            onMealClick = { onMealClick(meal.id) },
+                            onMealLongClick = { onMealLongClick(meal.id) },
+                            onAddClick = { onAddClick(meal.id) }
+                        )
+                    } else {
+                        MealCard(
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            epochDay = epochDay,
+                            meal = meal,
+                            isEmpty = meal.isEmpty,
+                            totalCalories = meal.calories,
+                            totalProteins = meal.proteins,
+                            totalCarbohydrates = meal.carbohydrates,
+                            totalFats = meal.fats,
+                            formatTime = formatTime,
+                            onMealClick = { onMealClick(meal.id) },
+                            onMealLongClick = { onMealLongClick(meal.id) },
+                            onAddClick = { onAddClick(meal.id) }
+                        )
+                    }
                 } else {
-                    MealCardSkeleton(
-                        shimmer = shimmer
-                    )
+                    if (useCompactLayout) {
+                        CompactMealCardSkeleton(shimmer)
+                    } else {
+                        MealCardSkeleton(shimmer)
+                    }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun CompactMealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
+    val headline = @Composable {
+        Box(
+            modifier = Modifier
+                .shimmer(shimmer)
+                .size(140.dp, MaterialTheme.typography.headlineMedium.toDp() - 4.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+        )
+    }
+
+    FoodYouHomeCard(
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MealHeader(
+                headline = headline,
+                spacer = {}
+            )
+            FilledIconButton(
+                onClick = {},
+                modifier = Modifier.shimmer(shimmer),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                ),
+                enabled = false,
+                content = {}
+            )
         }
     }
 }
@@ -480,6 +548,95 @@ private fun SharedTransitionScope.MealCard(
                         }
                     }
                 )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun SharedTransitionScope.CompactMealCard(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    epochDay: Int,
+    meal: MealWithSummary,
+    onMealClick: () -> Unit,
+    onMealLongClick: () -> Unit,
+    onAddClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FoodYouHomeCard(
+        modifier = modifier.sharedBounds(
+            sharedContentState = rememberSharedContentState(
+                key = MealCardTransitionKeys.MealContainer(
+                    mealId = meal.id,
+                    epochDay = epochDay
+                )
+            ),
+            animatedVisibilityScope = animatedVisibilityScope,
+            enter = MealCardTransitionSpecs.containerEnterTransition,
+            exit = MealCardTransitionSpecs.containerExitTransition,
+            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+            clipInOverlayDuringTransition = OverlayClip(
+                animatedVisibilityScope.overlayClipFromCardToScreen()
+            )
+        )
+    ) {
+        val headline = @Composable {
+            Text(
+                text = meal.name,
+                modifier = Modifier.sharedElement(
+                    sharedContentState = rememberSharedContentState(
+                        key = MealCardTransitionKeys.MealTitle(
+                            mealId = meal.id,
+                            epochDay = epochDay
+                        )
+                    ),
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
+            )
+        }
+
+        val actionButton = @Composable {
+            with(animatedVisibilityScope) {
+                FilledIconButton(
+                    onClick = onAddClick,
+                    modifier = Modifier
+                        .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
+                        .animateEnterExit(
+                            enter = crossfadeIn(),
+                            exit = fadeOut(tween(50))
+                        )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(Res.string.action_add)
+                    )
+                }
+            }
+        }
+
+        val sharedTransitionScope =
+            LocalHomeSharedTransitionScope.current ?: error("SharedTransitionScope not found")
+
+        with(sharedTransitionScope) {
+            Row(
+                modifier = Modifier
+                    .combinedClickable(
+                        onLongClick = onMealLongClick,
+                        onClick = onMealClick
+                    )
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MealHeader(
+                    headline = headline,
+                    spacer = {}
+                )
+                Box {
+                    actionButton()
+                }
             }
         }
     }
