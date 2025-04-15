@@ -43,6 +43,9 @@
     <string name="headline_summary">Summary</string>
     <string name="headline_home" description="Home page - main screen">Home</string>
     <string name="headline_home_settings">Home settings</string>
+    <string name="headline_layout">Layout</string>
+    <string name="headline_vertical">Vertical</string>
+    <string name="headline_horizontal">Horizontal</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>

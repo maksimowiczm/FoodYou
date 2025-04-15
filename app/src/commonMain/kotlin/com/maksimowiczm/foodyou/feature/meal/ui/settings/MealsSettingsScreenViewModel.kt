@@ -51,6 +51,17 @@ internal class MealsSettingsScreenViewModel(
             }
         )
 
+    val useVerticalLayout = dataStore
+        .observe(MealPreferences.useVerticalLayout)
+        .map { it ?: false }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = runBlocking {
+                dataStore.get(MealPreferences.useVerticalLayout) ?: false
+            }
+        )
+
     fun updateMealsRanks(meals: List<Meal>) {
         viewModelScope.launch {
             val map = meals.mapIndexed { index, meal -> meal.id to index }.toMap()
@@ -89,6 +100,12 @@ internal class MealsSettingsScreenViewModel(
     fun toggleIncludeAllDayMeals(state: Boolean) {
         viewModelScope.launch {
             dataStore.set(MealPreferences.includeAllDayMeals to state)
+        }
+    }
+
+    fun toggleUseVerticalLayout(state: Boolean) {
+        viewModelScope.launch {
+            dataStore.set(MealPreferences.useVerticalLayout to state)
         }
     }
 

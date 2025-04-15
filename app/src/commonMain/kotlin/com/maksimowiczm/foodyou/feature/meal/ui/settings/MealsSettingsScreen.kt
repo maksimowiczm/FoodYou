@@ -3,11 +3,13 @@ package com.maksimowiczm.foodyou.feature.meal.ui.settings
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -15,8 +17,11 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material.icons.filled.East
 import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.South
+import androidx.compose.material.icons.filled.West
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,6 +29,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -50,10 +56,12 @@ import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ext.performToggle
@@ -74,6 +82,7 @@ internal fun MealsSettingsScreen(
     val meals by viewModel.meals.collectAsStateWithLifecycle()
     val useTimeBasedSorting by viewModel.useTimeBasedSorting.collectAsStateWithLifecycle()
     val includeAllDayMeals by viewModel.includeAllDayMeals.collectAsStateWithLifecycle()
+    val useVerticalLayout by viewModel.useVerticalLayout.collectAsStateWithLifecycle()
 
     // TODO shimmer?
     when (val meals = meals) {
@@ -82,6 +91,7 @@ internal fun MealsSettingsScreen(
             meals = meals,
             useTimeBasedSorting = useTimeBasedSorting,
             includeAllDayMeals = includeAllDayMeals,
+            useVerticalLayout = useVerticalLayout,
             onBack = onBack,
             formatTime = remember(viewModel) { viewModel::formatTime },
             onCreateMeal = remember(viewModel) { viewModel::createMeal },
@@ -91,6 +101,9 @@ internal fun MealsSettingsScreen(
             onToggleTimeBasedSorting = remember(viewModel) { viewModel::toggleTimeBasedSorting },
             onToggleIncludeAllDayMeals = remember(viewModel) {
                 viewModel::toggleIncludeAllDayMeals
+            },
+            onToggleVerticalLayout = remember(viewModel) {
+                viewModel::toggleUseVerticalLayout
             },
             modifier = modifier
         )
@@ -103,6 +116,7 @@ private fun MealsSettingsScreen(
     meals: List<Meal>,
     useTimeBasedSorting: Boolean,
     includeAllDayMeals: Boolean,
+    useVerticalLayout: Boolean,
     onBack: () -> Unit,
     formatTime: (LocalTime) -> String,
     onCreateMeal: (String, LocalTime, LocalTime) -> Unit,
@@ -111,6 +125,7 @@ private fun MealsSettingsScreen(
     onSaveMealOrder: (List<Meal>) -> Unit,
     onToggleTimeBasedSorting: (Boolean) -> Unit,
     onToggleIncludeAllDayMeals: (Boolean) -> Unit,
+    onToggleVerticalLayout: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     hapticFeedback: HapticFeedback = LocalHapticFeedback.current
 ) {
@@ -403,6 +418,56 @@ private fun MealsSettingsScreen(
                         headlineColor = contentColor,
                         supportingColor = contentColor
                     )
+                )
+            }
+
+            item {
+                Text(
+                    text = stringResource(Res.string.headline_layout),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                ListItem(
+                    headlineContent = {
+                        Row {
+                            Text(stringResource(Res.string.headline_vertical))
+                            Spacer(Modifier.width(8.dp))
+                            Icon(
+                                imageVector = Icons.Default.South,
+                                contentDescription = stringResource(Res.string.action_reorder)
+                            )
+                        }
+                    },
+                    modifier = Modifier.clickable { onToggleVerticalLayout(true) },
+                    leadingContent = {
+                        RadioButton(
+                            selected = useVerticalLayout,
+                            onClick = { onToggleVerticalLayout(true) }
+                        )
+                    }
+                )
+                ListItem(
+                    headlineContent = {
+                        Row {
+                            Text(stringResource(Res.string.headline_horizontal))
+                            Spacer(Modifier.width(8.dp))
+                            Icon(
+                                imageVector = when (LocalLayoutDirection.current) {
+                                    LayoutDirection.Ltr -> Icons.Default.East
+                                    LayoutDirection.Rtl -> Icons.Default.West
+                                },
+                                contentDescription = stringResource(Res.string.action_reorder)
+                            )
+                        }
+                    },
+                    modifier = Modifier.clickable { onToggleVerticalLayout(false) },
+                    leadingContent = {
+                        RadioButton(
+                            selected = !useVerticalLayout,
+                            onClick = { onToggleVerticalLayout(false) }
+                        )
+                    }
                 )
             }
         }
