@@ -12,23 +12,18 @@ import com.maksimowiczm.foodyou.core.domain.mapper.ProductMapper
 import com.maksimowiczm.foodyou.core.domain.mapper.RecipeMapper
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.model.Recipe
-import com.maksimowiczm.foodyou.core.domain.source.ProductNetworkDataSource
 import com.maksimowiczm.foodyou.core.domain.source.RecipeLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.coroutines.flow.Flow
 
-internal class RecipeRepository(
-    private val recipeDao: RecipeLocalDataSource,
-    private val remoteMediatorFactory: ProductNetworkDataSource
-) {
+internal class RecipeRepository(private val recipeDao: RecipeLocalDataSource) {
 
     @OptIn(ExperimentalPagingApi::class)
     fun queryProducts(query: String?): Flow<PagingData<Ingredient>> = Pager(
         config = PagingConfig(
             pageSize = 30
-        ),
-        remoteMediator = remoteMediatorFactory.createRemoteMediatorWithQuery(query)
+        )
     ) {
         recipeDao.observeIngredientSuggestions(query)
     }.flow.mapValues { it.toIngredient() }

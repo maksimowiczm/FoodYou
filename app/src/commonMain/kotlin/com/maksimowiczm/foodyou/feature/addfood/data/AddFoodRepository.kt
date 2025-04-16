@@ -4,7 +4,6 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
 import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
 import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
@@ -12,7 +11,6 @@ import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
-import com.maksimowiczm.foodyou.core.domain.source.ProductNetworkDataSource
 import com.maksimowiczm.foodyou.core.domain.source.SearchLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
@@ -28,7 +26,6 @@ import kotlinx.datetime.LocalDate
 internal class AddFoodRepository(
     private val searchLocalDataSource: SearchLocalDataSource,
     private val foodLocalDataSource: FoodLocalDataSource,
-    private val remoteMediatorFactory: ProductNetworkDataSource,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     private val ioScope = CoroutineScope(ioDispatcher + SupervisorJob())
@@ -58,12 +55,6 @@ internal class AddFoodRepository(
 
         val barcode = extractedBarcode
         val searchQuery = effectiveQuery ?: query
-        val localOnly = query == null
-        val remoteMediator: RemoteMediator<Int, FoodSearchEntity>? = when {
-            localOnly -> null
-            barcode != null -> remoteMediatorFactory.createRemoteMediatorWithBarcode(barcode)
-            else -> remoteMediatorFactory.createRemoteMediatorWithQuery(searchQuery)
-        }
 
         // Insert query if it's not a barcode and not empty
         if (barcode == null && searchQuery?.isNotBlank() == true) {
@@ -75,8 +66,7 @@ internal class AddFoodRepository(
         return Pager(
             config = PagingConfig(
                 pageSize = 30
-            ),
-            remoteMediator = remoteMediator
+            )
         ) {
             if (barcode != null) {
                 foodLocalDataSource.queryFoodByBarcode(

@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.openfoodfacts.network
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
+import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.data.database.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.core.data.database.product.ProductDao
@@ -10,7 +11,6 @@ import com.maksimowiczm.foodyou.core.data.model.Nutrients
 import com.maksimowiczm.foodyou.core.data.model.openfoodfacts.OpenFoodFactsPagingKeyEntity
 import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
 import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
-import com.maksimowiczm.foodyou.core.domain.source.ProductRemoteMediator
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.openfoodfacts.network.model.OpenFoodFactsNutrients
 import com.maksimowiczm.foodyou.feature.openfoodfacts.network.model.OpenFoodFactsProduct
@@ -23,7 +23,7 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
     private val openFoodFactsDao: OpenFoodFactsDao,
     private val productDao: ProductDao,
     private val openFoodFactsNetworkDataSource: OpenFoodFactsNetworkDataSource
-) : ProductRemoteMediator<T>() {
+) : RemoteMediator<Int, T>() {
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, T>): MediatorResult {
