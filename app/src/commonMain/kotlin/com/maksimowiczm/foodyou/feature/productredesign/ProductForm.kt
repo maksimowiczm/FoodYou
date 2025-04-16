@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
@@ -77,6 +76,13 @@ internal fun ProductForm(
     var fabHeight by remember { mutableIntStateOf(0) }
     val sugarsRequester = remember { FocusRequester() }
 
+    val insets = remember(contentPadding) {
+        WindowInsets(
+            left = contentPadding.calculateLeftPadding(layoutDirection),
+            right = contentPadding.calculateRightPadding(layoutDirection)
+        )
+    }
+
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
@@ -94,15 +100,13 @@ internal fun ProductForm(
                     contentDescription = stringResource(Res.string.action_create)
                 )
             }
-        }
-    ) {
+        },
+        contentWindowInsets = insets
+    ) { paddingValues ->
         FlowRow(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .padding(
-                    start = contentPadding.calculateStartPadding(layoutDirection),
-                    end = contentPadding.calculateEndPadding(layoutDirection)
-                )
+                .padding(paddingValues)
                 .imePadding()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp),
