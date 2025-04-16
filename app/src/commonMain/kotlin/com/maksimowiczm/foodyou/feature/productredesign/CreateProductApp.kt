@@ -6,13 +6,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -22,10 +29,27 @@ import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun CreateProductApp(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
+    val currentDestination by navController.currentBackStackEntryFlow.collectAsStateWithLifecycle(
+        null
+    )
+    val onBack = remember(navController) {
+        {
+            val destination = currentDestination?.destination
+
+            when {
+                destination == null -> Unit
+                destination.hasRoute<CreateProductHome>() == true -> onBack()
+                destination.hasRoute<CreateOpenFoodFactsProduct>() == true ->
+                    navController.popBackStack<CreateOpenFoodFactsProduct>(inclusive = true)
+            }
+        }
+    }
+
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
         modifier = modifier,
@@ -43,7 +67,8 @@ internal fun CreateProductApp(onBack: () -> Unit, modifier: Modifier = Modifier)
                             contentDescription = null
                         )
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { paddingValues ->
@@ -72,23 +97,40 @@ internal fun CreateProductApp(onBack: () -> Unit, modifier: Modifier = Modifier)
                 }
             ) {
                 CreateProductHomeScreen(
-                    onCreateOpenFoodFacts = {
-                        navController.navigate(CreateOpenFoodFactsProduct) {
-                            launchSingleTop = true
+                    onCreateOpenFoodFacts = remember(navController) {
+                        {
+                            navController.navigate(CreateOpenFoodFactsProduct) {
+                                launchSingleTop = true
+                            }
                         }
                     },
-                    onCreateProduct = {
-                        navController.navigate(CreateProductForm) {
-                            launchSingleTop = true
+                    onCreateProduct = remember(navController) {
+                        {
+                            navController.navigate(CreateProductForm) {
+                                launchSingleTop = true
+                            }
                         }
                     },
                     modifier = Modifier
                         .padding(paddingValues)
                         .consumeWindowInsets(paddingValues)
                         .fillMaxSize()
+                        .padding(horizontal = 16.dp)
                 )
             }
-            forwardBackwardComposable<CreateOpenFoodFactsProduct> { }
+            forwardBackwardComposable<CreateOpenFoodFactsProduct> {
+                DownloadOpenFoodFactsProduct(
+                    animatedVisibilityScope = this,
+                    onSearch = {
+                        // TODO
+                    },
+                    onDownload = {
+                        // TODO
+                    },
+                    contentPadding = paddingValues,
+                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+                )
+            }
             forwardBackwardComposable<CreateProductForm> { }
         }
     }
