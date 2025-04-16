@@ -4,7 +4,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.text.input.TextFieldState
@@ -16,20 +15,14 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.domain.model.SearchQuery
 import com.maksimowiczm.foodyou.core.ui.component.FoodListItemSkeleton
-import com.maksimowiczm.foodyou.core.ui.ext.throwable
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.ProductSearchBarSuggestions
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.SearchScreen
-import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsErrorCard
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
@@ -91,19 +84,7 @@ internal fun AddIngredientScreen(
                 }
             )
         },
-        errorCard = {
-            val error by remember(pages.loadState) {
-                derivedStateOf { pages.throwable }
-            }
-
-            error?.let {
-                OpenFoodFactsErrorCard(
-                    throwable = it,
-                    onRetry = remember(pages) { pages::refresh },
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-            }
-        },
+        errorCard = {},
         hintCard = {},
         modifier = modifier
     ) { paddingValues ->

@@ -42,7 +42,6 @@ import org.koin.core.parameter.parametersOf
 internal fun AddFoodApp(
     outerOnBack: () -> Unit,
     outerAnimatedScope: AnimatedContentScope,
-    onOpenFoodFactsSettings: () -> Unit,
     mealId: Long,
     epochDay: Int,
     skipToSearch: Boolean,
@@ -55,7 +54,6 @@ internal fun AddFoodApp(
             AddFoodNavHost(
                 outerOnBack = outerOnBack,
                 outerAnimatedScope = outerAnimatedScope,
-                onOpenFoodFactsSettings = onOpenFoodFactsSettings,
                 mealId = mealId,
                 epochDay = epochDay,
                 skipToSearch = skipToSearch,
@@ -71,7 +69,6 @@ internal fun AddFoodApp(
 private fun AddFoodNavHost(
     outerOnBack: () -> Unit,
     outerAnimatedScope: AnimatedContentScope,
-    onOpenFoodFactsSettings: () -> Unit,
     mealId: Long,
     epochDay: Int,
     skipToSearch: Boolean,
@@ -123,7 +120,6 @@ private fun AddFoodNavHost(
                             launchSingleTop = true
                         }
                     },
-                    onOpenFoodFactsSettings = onOpenFoodFactsSettings,
                     onFoodClick = {
                         val route = when (it) {
                             is FoodId.Product -> MeasureFood(
