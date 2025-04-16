@@ -12,8 +12,9 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
@@ -27,11 +28,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -39,15 +43,15 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -110,7 +114,7 @@ internal fun ProductForm(
                 .imePadding()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
             Spacer(Modifier.height(contentPadding.calculateTopPadding()).fillMaxWidth())
 
@@ -121,15 +125,14 @@ internal fun ProductForm(
                 style = MaterialTheme.typography.labelLarge
             )
 
-            val name by remember(state) {
-                derivedStateOf { state.name.value }
+            val nameState = rememberInputState(state.name.value) {
+                onNameChange(it)
             }
             TextField(
-                value = TextFieldValue(name, TextRange(name.length)),
-                onValueChange = { onNameChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = nameState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_name)) },
-                isError = !state.name.isValid,
+                isError = state.name.isInvalid,
                 supportingText = {
                     val input = state.name
                     if (input is Input.Invalid) {
@@ -143,13 +146,12 @@ internal fun ProductForm(
                 )
             )
 
-            val brand by remember(state) {
-                derivedStateOf { state.brand.value }
+            val brandState = rememberInputState(state.brand.value) {
+                onBrandChange(it)
             }
             TextField(
-                value = TextFieldValue(brand, TextRange(brand.length)),
-                onValueChange = { onBrandChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = brandState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_brand)) },
                 supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
                 keyboardOptions = KeyboardOptions(
@@ -157,10 +159,12 @@ internal fun ProductForm(
                 )
             )
 
+            val barcodeState = rememberInputState(state.barcode.value) {
+                onBarcodeChange(it)
+            }
             TextField(
-                value = TextFieldValue(state.barcode.value, TextRange(state.barcode.value.length)),
-                onValueChange = { onBarcodeChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = barcodeState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_barcode)) },
                 supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
                 keyboardOptions = KeyboardOptions(
@@ -178,16 +182,15 @@ internal fun ProductForm(
                 style = MaterialTheme.typography.labelLarge
             )
 
-            val proteins by remember(state) {
-                derivedStateOf { state.proteins.value }
+            val proteinsState = rememberInputState(state.proteins.value) {
+                onProteinsChange(it)
             }
             TextField(
-                value = TextFieldValue(proteins, TextRange(proteins.length)),
-                onValueChange = { onProteinsChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = proteinsState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_proteins)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                isError = !state.proteins.isValid,
+                isError = state.proteins.isInvalid,
                 supportingText = {
                     val input = state.proteins
                     if (input is Input.Invalid) {
@@ -202,16 +205,15 @@ internal fun ProductForm(
                 )
             )
 
-            val carbohydrates by remember(state) {
-                derivedStateOf { state.carbohydrates.value }
+            val carbohydratesState = rememberInputState(state.carbohydrates.value) {
+                onCarbohydratesChange(it)
             }
             TextField(
-                value = TextFieldValue(carbohydrates, TextRange(carbohydrates.length)),
-                onValueChange = { onCarbohydratesChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = carbohydratesState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                isError = !state.carbohydrates.isValid,
+                isError = state.carbohydrates.isInvalid,
                 supportingText = {
                     val input = state.carbohydrates
                     if (input is Input.Invalid) {
@@ -226,16 +228,15 @@ internal fun ProductForm(
                 )
             )
 
-            val fats by remember(state) {
-                derivedStateOf { state.fats.value }
+            val fatsState = rememberInputState(state.fats.value) {
+                onFatsChange(it)
             }
             TextField(
-                value = TextFieldValue(fats, TextRange(fats.length)),
-                onValueChange = { onFatsChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = fatsState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_fats)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                isError = !state.fats.isValid,
+                isError = state.fats.isInvalid,
                 supportingText = {
                     val input = state.fats
                     if (input is Input.Invalid) {
@@ -248,7 +249,7 @@ internal fun ProductForm(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
                 ),
-                keyboardActions = KeyboardActions {
+                onKeyboardAction = {
                     sugarsRequester.requestFocus()
                 }
             )
@@ -261,7 +262,7 @@ internal fun ProductForm(
             TextField(
                 value = calories,
                 onValueChange = {},
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.unit_calories)) },
                 supportingText = {
                     Text(stringResource(Res.string.neutral_calories_are_calculated))
@@ -280,19 +281,15 @@ internal fun ProductForm(
                 style = MaterialTheme.typography.labelLarge
             )
 
-            val sugars by remember(state) {
-                derivedStateOf { state.sugars.value }
+            val sugarsState = rememberInputState(state.sugars.value) {
+                onSugarsChange(it)
             }
             TextField(
-                value = TextFieldValue(sugars, TextRange(sugars.length)),
-                onValueChange = { onSugarsChange(it.text) },
-                modifier = Modifier
-                    .widthIn(min = 300.dp)
-                    .weight(1f)
-                    .focusRequester(sugarsRequester),
+                state = sugarsState,
+                modifier = Modifier.widthIn(min = 300.dp).focusRequester(sugarsRequester),
                 label = { Text(stringResource(Res.string.nutriment_sugars)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                isError = !state.sugars.isValid,
+                isError = state.sugars.isInvalid,
                 supportingText = {
                     val input = state.sugars
                     if (input is Input.Invalid) {
@@ -307,16 +304,15 @@ internal fun ProductForm(
                 )
             )
 
-            val saturatedFats by remember(state) {
-                derivedStateOf { state.saturatedFats.value }
+            val saturatedFatsState = rememberInputState(state.saturatedFats.value) {
+                onSaturatedFatsChange(it)
             }
             TextField(
-                value = TextFieldValue(saturatedFats, TextRange(saturatedFats.length)),
-                onValueChange = { onSaturatedFatsChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = saturatedFatsState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_saturated_fats)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                isError = !state.saturatedFats.isValid,
+                isError = state.saturatedFats.isInvalid,
                 supportingText = {
                     val input = state.saturatedFats
                     if (input is Input.Invalid) {
@@ -331,16 +327,15 @@ internal fun ProductForm(
                 )
             )
 
-            val salt by remember(state) {
-                derivedStateOf { state.salt.value }
+            val saltState = rememberInputState(state.salt.value) {
+                onSaltChange(it)
             }
             TextField(
-                value = TextFieldValue(salt, TextRange(salt.length)),
-                onValueChange = { onSaltChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = saltState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_salt)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                isError = !state.salt.isValid,
+                isError = state.salt.isInvalid,
                 supportingText = {
                     val input = state.salt
                     if (input is Input.Invalid) {
@@ -355,16 +350,15 @@ internal fun ProductForm(
                 )
             )
 
-            val sodium by remember(state) {
-                derivedStateOf { state.sodium.value }
+            val sodiumState = rememberInputState(state.sodium.value) {
+                onSodiumChange(it)
             }
             TextField(
-                value = TextFieldValue(sodium, TextRange(sodium.length)),
-                onValueChange = { onSodiumChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = sodiumState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_sodium)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                isError = !state.sodium.isValid,
+                isError = state.sodium.isInvalid,
                 supportingText = {
                     val input = state.sodium
                     if (input is Input.Invalid) {
@@ -379,16 +373,15 @@ internal fun ProductForm(
                 )
             )
 
-            val fiber by remember(state) {
-                derivedStateOf { state.fiber.value }
+            val fiberState = rememberInputState(state.fiber.value) {
+                onFiberChange(it)
             }
             TextField(
-                value = TextFieldValue(fiber, TextRange(fiber.length)),
-                onValueChange = { onFiberChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = fiberState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_fiber)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                isError = !state.fiber.isValid,
+                isError = state.fiber.isInvalid,
                 supportingText = {
                     val input = state.fiber
                     if (input is Input.Invalid) {
@@ -413,16 +406,15 @@ internal fun ProductForm(
                 style = MaterialTheme.typography.labelLarge
             )
 
-            val packageWeight by remember(state) {
-                derivedStateOf { state.packageWeight.value }
+            val packageWeightState = rememberInputState(state.packageWeight.value) {
+                onPackageWeightChange(it)
             }
             TextField(
-                value = TextFieldValue(packageWeight, TextRange(packageWeight.length)),
-                onValueChange = { onPackageWeightChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = packageWeightState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_package_weight)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                isError = !state.packageWeight.isValid,
+                isError = state.packageWeight.isInvalid,
                 supportingText = {
                     val input = state.packageWeight
                     if (input is Input.Invalid) {
@@ -437,16 +429,15 @@ internal fun ProductForm(
                 )
             )
 
-            val servingWeight by remember(state) {
-                derivedStateOf { state.servingWeight.value }
+            val servingWeightState = rememberInputState(state.servingWeight.value) {
+                onServingWeightChange(it)
             }
             TextField(
-                value = TextFieldValue(servingWeight, TextRange(servingWeight.length)),
-                onValueChange = { onServingWeightChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
+                state = servingWeightState,
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_serving_weight)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                isError = !state.servingWeight.isValid,
+                isError = state.servingWeight.isInvalid,
                 supportingText = {
                     val input = state.servingWeight
                     if (input is Input.Invalid) {
@@ -464,6 +455,22 @@ internal fun ProductForm(
             Spacer(Modifier.height(contentPadding.calculateBottomPadding()).fillMaxWidth())
             val height = LocalDensity.current.run { fabHeight.toDp() }
             Spacer(Modifier.height(height).fillMaxWidth())
+        }
+    }
+}
+
+@Composable
+private fun rememberInputState(
+    initialValue: String,
+    onValueChange: (String) -> Unit
+): TextFieldState {
+    val onValueChange by rememberUpdatedState(onValueChange)
+
+    return rememberTextFieldState(initialValue).also {
+        LaunchedEffect(it) {
+            snapshotFlow { it.text.toString() }
+                .drop(1)
+                .collectLatest { onValueChange(it) }
         }
     }
 }
