@@ -36,6 +36,7 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+@Suppress("ktlint:compose:vm-forwarding-check")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun CreateProductApp(
@@ -98,6 +99,7 @@ internal fun CreateProductApp(
         CreateProductNavHost(
             onOpenFoodFacts = onOpenFoodFacts,
             contentPadding = paddingValues,
+            viewModel = viewModel,
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             navController = navController
         )
@@ -118,6 +120,7 @@ private data object CreateProductForm
 private fun CreateProductNavHost(
     onOpenFoodFacts: () -> Unit,
     contentPadding: PaddingValues,
+    viewModel: CreateProductViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -179,9 +182,25 @@ private fun CreateProductNavHost(
             )
         }
         forwardBackwardComposable<CreateProductForm> {
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
             ProductForm(
+                state = state,
                 animatedVisibilityScope = this,
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
+                onNameChange = remember(viewModel) { viewModel::onNameChange },
+                onBrandChange = remember(viewModel) { viewModel::onBrandChange },
+                onBarcodeChange = remember(viewModel) { viewModel::onBarcodeChange },
+                onProteinsChange = remember(viewModel) { viewModel::onProteinsChange },
+                onCarbohydratesChange = remember(viewModel) { viewModel::onCarbohydratesChange },
+                onFatsChange = remember(viewModel) { viewModel::onFatsChange },
+                onSugarsChange = remember(viewModel) { viewModel::onSugarsChange },
+                onSaturatedFatsChange = remember(viewModel) { viewModel::onSaturatedFatsChange },
+                onSaltChange = remember(viewModel) { viewModel::onSaltChange },
+                onSodiumChange = remember(viewModel) { viewModel::onSodiumChange },
+                onFiberChange = remember(viewModel) { viewModel::onFiberChange },
+                onPackageWeightChange = remember(viewModel) { viewModel::onPackageWeightChange },
+                onServingWeightChange = remember(viewModel) { viewModel::onServingWeightChange }
             )
         }
     }
