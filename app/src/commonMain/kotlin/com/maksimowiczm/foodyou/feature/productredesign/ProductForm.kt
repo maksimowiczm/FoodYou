@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,6 +35,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -41,6 +45,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -69,6 +74,7 @@ internal fun ProductForm(
     val layoutDirection = LocalLayoutDirection.current
 
     var fabHeight by remember { mutableIntStateOf(0) }
+    val sugarsRequester = remember { FocusRequester() }
 
     Scaffold(
         modifier = modifier,
@@ -132,6 +138,7 @@ internal fun ProductForm(
                 onValueChange = { onBrandChange(it.text) },
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_brand)) },
+                supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 )
@@ -142,6 +149,7 @@ internal fun ProductForm(
                 onValueChange = { onBarcodeChange(it.text) },
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_barcode)) },
+                supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 )
@@ -202,7 +210,10 @@ internal fun ProductForm(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
-                )
+                ),
+                keyboardActions = KeyboardActions {
+                    sugarsRequester.requestFocus()
+                }
             )
 
             val calories by remember(state) {
@@ -219,11 +230,139 @@ internal fun ProductForm(
                     Text(stringResource(Res.string.neutral_calories_are_calculated))
                 },
                 suffix = { Text(stringResource(Res.string.unit_kcal)) },
+                readOnly = true
+            )
+
+            Text(
+                text = stringResource(Res.string.headline_nutrients),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelLarge
+            )
+
+            val sugars by remember(state) {
+                derivedStateOf { state.sugars.value }
+            }
+            TextField(
+                value = TextFieldValue(sugars, TextRange(sugars.length)),
+                onValueChange = { onSugarsChange(it.text) },
+                modifier = Modifier.widthIn(min = 300.dp).focusRequester(sugarsRequester),
+                label = { Text(stringResource(Res.string.nutriment_sugars)) },
+                suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+                supportingText = { RequiredLabel() },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
-                ),
-                readOnly = true
+                )
+            )
+
+            val saturatedFats by remember(state) {
+                derivedStateOf { state.saturatedFats.value }
+            }
+            TextField(
+                value = TextFieldValue(saturatedFats, TextRange(saturatedFats.length)),
+                onValueChange = { onSaturatedFatsChange(it.text) },
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.nutriment_saturated_fats)) },
+                suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+                supportingText = { RequiredLabel() },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            val salt by remember(state) {
+                derivedStateOf { state.salt.value }
+            }
+            TextField(
+                value = TextFieldValue(salt, TextRange(salt.length)),
+                onValueChange = { onSaltChange(it.text) },
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.nutriment_salt)) },
+                suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+                supportingText = { RequiredLabel() },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            val sodium by remember(state) {
+                derivedStateOf { state.sodium.value }
+            }
+            TextField(
+                value = TextFieldValue(sodium, TextRange(sodium.length)),
+                onValueChange = { onSodiumChange(it.text) },
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.nutriment_sodium)) },
+                suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+                supportingText = { RequiredLabel() },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            val fiber by remember(state) {
+                derivedStateOf { state.fiber.value }
+            }
+            TextField(
+                value = TextFieldValue(fiber, TextRange(fiber.length)),
+                onValueChange = { onFiberChange(it.text) },
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.nutriment_fiber)) },
+                suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+                supportingText = { RequiredLabel() },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            Text(
+                text = stringResource(Res.string.headline_product_serving_and_packaging),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelLarge
+            )
+
+            val packageWeight by remember(state) {
+                derivedStateOf { state.packageWeight.value }
+            }
+            TextField(
+                value = TextFieldValue(packageWeight, TextRange(packageWeight.length)),
+                onValueChange = { onPackageWeightChange(it.text) },
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.product_package_weight)) },
+                suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+                supportingText = { RequiredLabel() },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            val servingWeight by remember(state) {
+                derivedStateOf { state.servingWeight.value }
+            }
+            TextField(
+                value = TextFieldValue(servingWeight, TextRange(servingWeight.length)),
+                onValueChange = { onServingWeightChange(it.text) },
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.product_serving_weight)) },
+                suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+                supportingText = { RequiredLabel() },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Done
+                )
             )
 
             Spacer(Modifier.height(contentPadding.calculateBottomPadding()).fillMaxWidth())
