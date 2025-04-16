@@ -136,9 +136,6 @@ kotlin {
 
             // Coil
             implementation(libs.coil.compose)
-
-            // KMP utils
-            implementation(libs.kmputils.inputforms)
         }
 
         commonTest.dependencies {

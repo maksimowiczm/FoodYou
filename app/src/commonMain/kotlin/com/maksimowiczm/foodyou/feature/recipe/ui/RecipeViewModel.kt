@@ -9,6 +9,9 @@ import com.maksimowiczm.foodyou.core.domain.model.Product
 import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
 import com.maksimowiczm.foodyou.core.domain.repository.SearchRepository
 import com.maksimowiczm.foodyou.core.ext.combine
+import com.maksimowiczm.foodyou.core.input.Form
+import com.maksimowiczm.foodyou.core.input.ValidationStrategy
+import com.maksimowiczm.foodyou.core.input.dsl.input
 import com.maksimowiczm.foodyou.feature.measurement.ObserveMeasurableFoodUseCase
 import com.maksimowiczm.foodyou.feature.recipe.data.RecipeRepository
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
@@ -27,14 +30,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import pro.respawn.kmmutils.inputforms.Form
-import pro.respawn.kmmutils.inputforms.Rule
-import pro.respawn.kmmutils.inputforms.ValidationError
-import pro.respawn.kmmutils.inputforms.ValidationStrategy
-import pro.respawn.kmmutils.inputforms.default.Rules
-import pro.respawn.kmmutils.inputforms.dsl.checks
-import pro.respawn.kmmutils.inputforms.dsl.input
-import pro.respawn.kmmutils.inputforms.dsl.isValid
 
 private data class IngredientInternal(val measurement: Measurement, val productId: FoodId.Product)
 
@@ -81,9 +76,13 @@ internal class RecipeViewModel(
         }.combine { it.toList() }
     }
 
-    private val nameState = MutableStateFlow(recipe?.name?.let { input(it) } ?: input())
+    private val nameState =
+        MutableStateFlow(recipe?.name?.let { input<RecipeInputError>(it) } ?: input())
     private val servingsState =
-        MutableStateFlow(recipe?.servings?.let { input(it.toString()) } ?: input("1"))
+        MutableStateFlow(
+            recipe?.servings?.let { input<RecipeInputError>(it.toString()) }
+                ?: input("1")
+        )
 
     val state = kotlinx.coroutines.flow.combine(
         nameState,
@@ -164,7 +163,7 @@ internal class RecipeViewModel(
 
     private val nameForm = Form(
         strategy = ValidationStrategy.LazyEval,
-        Rules.NonEmpty
+        RecipeInputRules.NotEmpty
     )
 
     fun onNameChange(name: String) {
@@ -173,14 +172,8 @@ internal class RecipeViewModel(
 
     private val servingsForm = Form(
         strategy = ValidationStrategy.LazyEval,
-        Rules.NonEmpty,
-        Rules.DigitsOnly,
-        Rules.ShorterThan(3),
-        // Disallow 0
-        Rule {
-            { it.toIntOrNull()?.let { it > 0 } ?: false } checks
-                { object : ValidationError.Generic("") {} }
-        }
+        RecipeInputRules.NotEmpty,
+        RecipeInputRules.PositiveInteger
     )
 
     fun onServingsChange(servings: String) {

@@ -63,7 +63,6 @@ import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import pro.respawn.kmmutils.inputforms.dsl.isValid
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
