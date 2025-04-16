@@ -41,6 +41,7 @@
     <string name="headline_update_recipe">Update recipe</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ingredients</string>
     <string name="headline_summary">Summary</string>
+    <string name="headline_actions">Actions</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
@@ -115,6 +116,7 @@
     <string name="action_read_more">Read more</string>
     <string name="action_select_country">Select country</string>
     <string name="action_use_open_food_facts">Use Open Food Facts</string>
+    <string name="action_use_open_food_facts_product">Use Open Food Facts product</string>
     <string name="action_see_terms_of_use">See terms of use</string>
     <string name="action_bug_report_on_github">Bug report on GitHub</string>
     <string name="action_feature_request_on_github">Feature request on GitHub</string>

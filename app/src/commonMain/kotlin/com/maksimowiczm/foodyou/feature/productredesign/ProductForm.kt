@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.productredesign
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -9,13 +9,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,7 +36,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -65,6 +70,7 @@ internal fun ProductForm(
     onFiberChange: (String) -> Unit,
     onPackageWeightChange: (String) -> Unit,
     onServingWeightChange: (String) -> Unit,
+    onUseOpenFoodFactsProduct: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val layoutDirection = LocalLayoutDirection.current
@@ -83,16 +89,36 @@ internal fun ProductForm(
         modifier = modifier,
         contentWindowInsets = insets
     ) { paddingValues ->
-        FlowRow(
+        Column(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(paddingValues)
                 .imePadding()
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Spacer(Modifier.height(contentPadding.calculateTopPadding()).fillMaxWidth())
+
+            Text(
+                text = stringResource(Res.string.headline_actions),
+                modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelLarge
+            )
+
+            AssistChip(
+                onClick = onUseOpenFoodFactsProduct,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Download,
+                        contentDescription = null,
+                        modifier = Modifier.size(AssistChipDefaults.IconSize)
+                    )
+                },
+                label = {
+                    Text(stringResource(Res.string.action_use_open_food_facts_product))
+                }
+            )
 
             Text(
                 text = stringResource(Res.string.headline_general),
@@ -106,7 +132,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = nameState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.product_name)) },
                 isError = state.name.isInvalid,
                 supportingText = {
@@ -127,7 +153,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = brandState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.product_brand)) },
                 supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
                 keyboardOptions = KeyboardOptions(
@@ -140,7 +166,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = barcodeState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.product_barcode)) },
                 supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
                 keyboardOptions = KeyboardOptions(
@@ -163,7 +189,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = proteinsState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.nutriment_proteins)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = state.proteins.isInvalid,
@@ -186,7 +212,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = carbohydratesState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = state.carbohydrates.isInvalid,
@@ -209,7 +235,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = fatsState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.nutriment_fats)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = state.fats.isInvalid,
@@ -238,7 +264,7 @@ internal fun ProductForm(
             TextField(
                 value = calories,
                 onValueChange = {},
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.unit_calories)) },
                 supportingText = {
                     Text(stringResource(Res.string.neutral_calories_are_calculated))
@@ -262,7 +288,9 @@ internal fun ProductForm(
             }
             TextField(
                 state = sugarsState,
-                modifier = Modifier.widthIn(min = 300.dp).focusRequester(sugarsRequester),
+                modifier = Modifier.widthIn(
+                    min = 300.dp
+                ).fillMaxWidth().focusRequester(sugarsRequester),
                 label = { Text(stringResource(Res.string.nutriment_sugars)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = state.sugars.isInvalid,
@@ -285,7 +313,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = saturatedFatsState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.nutriment_saturated_fats)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = state.saturatedFats.isInvalid,
@@ -308,7 +336,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = saltState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.nutriment_salt)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = state.salt.isInvalid,
@@ -331,7 +359,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = sodiumState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.nutriment_sodium)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = state.sodium.isInvalid,
@@ -354,7 +382,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = fiberState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.nutriment_fiber)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = state.fiber.isInvalid,
@@ -387,7 +415,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = packageWeightState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.product_package_weight)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = state.packageWeight.isInvalid,
@@ -410,7 +438,7 @@ internal fun ProductForm(
             }
             TextField(
                 state = servingWeightState,
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                 label = { Text(stringResource(Res.string.product_serving_weight)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = state.servingWeight.isInvalid,

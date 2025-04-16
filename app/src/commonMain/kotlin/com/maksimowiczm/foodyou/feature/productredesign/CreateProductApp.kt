@@ -4,9 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,15 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
-import com.maksimowiczm.foodyou.core.navigation.ForwardBackwardComposableDefaults
-import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_create
@@ -59,12 +52,9 @@ internal fun CreateProductApp(
 
         when {
             destination == null -> Unit
-            destination.hasRoute<CreateProductHome>() == true -> onBack()
+            destination.hasRoute<CreateProductForm>() == true -> onBack()
             destination.hasRoute<CreateOpenFoodFactsProduct>() == true ->
                 navController.popBackStack<CreateOpenFoodFactsProduct>(inclusive = true)
-
-            destination.hasRoute<CreateProductForm>() == true ->
-                navController.popBackStack<CreateProductForm>(inclusive = true)
         }
     }
     // TODO Replace it with WebView on android?
@@ -127,9 +117,6 @@ internal fun CreateProductApp(
 }
 
 @Serializable
-private data object CreateProductHome
-
-@Serializable
 private data object CreateOpenFoodFactsProduct
 
 @Serializable
@@ -146,51 +133,9 @@ private fun CreateProductNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = CreateProductHome,
+        startDestination = CreateProductForm,
         modifier = modifier
     ) {
-        crossfadeComposable<CreateProductHome>(
-            popEnterTransition = {
-                if (initialState.destination.hasRoute<CreateOpenFoodFactsProduct>() ||
-                    initialState.destination.hasRoute<CreateProductForm>()
-                ) {
-                    ForwardBackwardComposableDefaults.popEnterTransition()
-                } else {
-                    CrossFadeComposableDefaults.enterTransition()
-                }
-            },
-            exitTransition = {
-                if (targetState.destination.hasRoute<CreateOpenFoodFactsProduct>() ||
-                    targetState.destination.hasRoute<CreateProductForm>()
-                ) {
-                    ForwardBackwardComposableDefaults.exitTransition()
-                } else {
-                    CrossFadeComposableDefaults.exitTransition()
-                }
-            }
-        ) {
-            CreateProductHomeScreen(
-                onCreateOpenFoodFacts = remember(navController) {
-                    {
-                        navController.navigate(CreateOpenFoodFactsProduct) {
-                            launchSingleTop = true
-                        }
-                    }
-                },
-                onCreateProduct = remember(navController) {
-                    {
-                        navController.navigate(CreateProductForm) {
-                            launchSingleTop = true
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .padding(contentPadding)
-                    .consumeWindowInsets(contentPadding)
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-            )
-        }
         forwardBackwardComposable<CreateOpenFoodFactsProduct> {
             DownloadOpenFoodFactsProduct(
                 animatedVisibilityScope = this,
@@ -199,6 +144,10 @@ private fun CreateProductNavHost(
                     // TODO
                     navController.navigate(CreateProductForm) {
                         launchSingleTop = true
+
+                        popUpTo(CreateOpenFoodFactsProduct) {
+                            inclusive = false
+                        }
                     }
                 },
                 contentPadding = contentPadding
@@ -222,7 +171,14 @@ private fun CreateProductNavHost(
                 onSodiumChange = remember(viewModel) { viewModel::onSodiumChange },
                 onFiberChange = remember(viewModel) { viewModel::onFiberChange },
                 onPackageWeightChange = remember(viewModel) { viewModel::onPackageWeightChange },
-                onServingWeightChange = remember(viewModel) { viewModel::onServingWeightChange }
+                onServingWeightChange = remember(viewModel) { viewModel::onServingWeightChange },
+                onUseOpenFoodFactsProduct = remember(navController) {
+                    {
+                        navController.navigate(CreateOpenFoodFactsProduct) {
+                            launchSingleTop = true
+                        }
+                    }
+                }
             )
         }
     }
