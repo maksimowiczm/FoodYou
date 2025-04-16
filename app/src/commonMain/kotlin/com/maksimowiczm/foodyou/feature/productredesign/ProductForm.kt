@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -31,13 +32,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.ui.ext.plus
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -59,7 +60,9 @@ internal fun ProductForm(
                 modifier = Modifier.animateFloatingActionButton(
                     visible = !animatedVisibilityScope.transition.isRunning,
                     alignment = Alignment.BottomEnd
-                )
+                ).onSizeChanged {
+                    fabHeight = it.height
+                }
             ) {
                 Icon(
                     imageVector = Icons.Default.Save,
@@ -75,11 +78,13 @@ internal fun ProductForm(
                     start = contentPadding.calculateStartPadding(layoutDirection),
                     end = contentPadding.calculateEndPadding(layoutDirection)
                 )
+                .imePadding()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Spacer(Modifier.height(contentPadding.calculateTopPadding()).fillMaxWidth())
+
             Text(
                 text = stringResource(Res.string.headline_general),
                 modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
@@ -92,9 +97,7 @@ internal fun ProductForm(
                 onValueChange = {},
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_name)) },
-                supportingText = {
-                    Text("* " + stringResource(Res.string.neutral_required))
-                },
+                supportingText = { RequiredLabel() },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 )
@@ -120,9 +123,82 @@ internal fun ProductForm(
                 )
             )
 
+            Text(
+                text = stringResource(Res.string.headline_macronutrients),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelLarge
+            )
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.nutriment_proteins)) },
+                suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+                supportingText = { RequiredLabel() },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
+                suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+                supportingText = { RequiredLabel() },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.nutriment_fats)) },
+                suffix = { Text(stringResource(Res.string.unit_gram_short)) },
+                supportingText = { RequiredLabel() },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.unit_calories)) },
+                supportingText = {
+                    Text(stringResource(Res.string.neutral_calories_are_calculated))
+                },
+                suffix = { Text(stringResource(Res.string.unit_kcal)) },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+                readOnly = true
+            )
+
             Spacer(Modifier.height(contentPadding.calculateBottomPadding()).fillMaxWidth())
             val height = LocalDensity.current.run { fabHeight.toDp() }
             Spacer(Modifier.height(height).fillMaxWidth())
         }
     }
+}
+
+@Composable
+private fun RequiredLabel(modifier: Modifier = Modifier) {
+    Text(
+        text = "* " + stringResource(Res.string.neutral_required),
+        modifier = modifier
+    )
 }
