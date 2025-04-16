@@ -34,10 +34,15 @@ import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.link_open_food_facts
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun CreateProductApp(onBack: () -> Unit, modifier: Modifier = Modifier) {
+internal fun CreateProductApp(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: CreateProductViewModel = koinViewModel()
+) {
     val navController = rememberNavController()
     val currentDestination by navController.currentBackStackEntryFlow.collectAsStateWithLifecycle(
         null
@@ -50,6 +55,9 @@ internal fun CreateProductApp(onBack: () -> Unit, modifier: Modifier = Modifier)
             destination.hasRoute<CreateProductHome>() == true -> onBack()
             destination.hasRoute<CreateOpenFoodFactsProduct>() == true ->
                 navController.popBackStack<CreateOpenFoodFactsProduct>(inclusive = true)
+
+            destination.hasRoute<CreateProductForm>() == true ->
+                navController.popBackStack<CreateProductForm>(inclusive = true)
         }
     }
     // TODO Replace it with WebView on android?
@@ -171,6 +179,9 @@ private fun CreateProductNavHost(
             )
         }
         forwardBackwardComposable<CreateProductForm> {
+            ProductForm(
+                contentPadding = contentPadding
+            )
         }
     }
 }
