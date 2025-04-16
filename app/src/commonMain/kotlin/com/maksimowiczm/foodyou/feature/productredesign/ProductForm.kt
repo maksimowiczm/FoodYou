@@ -1,74 +1,128 @@
 package com.maksimowiczm.foodyou.feature.productredesign
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.ext.plus
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun ProductForm(contentPadding: PaddingValues, modifier: Modifier = Modifier) {
-    val gridState = rememberLazyGridState()
+internal fun ProductForm(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier
+) {
+    val layoutDirection = LocalLayoutDirection.current
 
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 300.dp),
+    var fabHeight by remember { mutableIntStateOf(0) }
+
+    Scaffold(
         modifier = modifier,
-        state = gridState,
-        contentPadding = contentPadding + PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {},
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = !animatedVisibilityScope.transition.isRunning,
+                    alignment = Alignment.BottomEnd
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Save,
+                    contentDescription = stringResource(Res.string.action_create)
+                )
+            }
+        }
     ) {
-        item(
-            span = { GridItemSpan(maxLineSpan) }
+        FlowRow(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection)
+                )
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            Spacer(Modifier.height(contentPadding.calculateTopPadding()).fillMaxWidth())
             Text(
                 text = stringResource(Res.string.headline_general),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelLarge
             )
-        }
 
-        item {
             OutlinedTextField(
                 value = "",
                 onValueChange = {},
+                modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_name)) },
                 supportingText = {
                     Text("* " + stringResource(Res.string.neutral_required))
-                }
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                )
             )
-        }
 
-        item {
             OutlinedTextField(
                 value = "",
                 onValueChange = {},
-                label = { Text(stringResource(Res.string.product_brand)) }
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.product_brand)) },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                )
             )
-        }
 
-        item {
             OutlinedTextField(
                 value = "",
                 onValueChange = {},
-                label = { Text(stringResource(Res.string.product_barcode)) }
+                modifier = Modifier.widthIn(min = 300.dp),
+                label = { Text(stringResource(Res.string.product_barcode)) },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                )
             )
+
+            Spacer(Modifier.height(contentPadding.calculateBottomPadding()).fillMaxWidth())
+            val height = LocalDensity.current.run { fabHeight.toDp() }
+            Spacer(Modifier.height(height).fillMaxWidth())
         }
     }
 }

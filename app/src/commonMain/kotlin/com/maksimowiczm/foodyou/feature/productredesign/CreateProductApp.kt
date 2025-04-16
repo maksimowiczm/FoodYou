@@ -180,6 +180,7 @@ private fun CreateProductNavHost(
         }
         forwardBackwardComposable<CreateProductForm> {
             ProductForm(
+                animatedVisibilityScope = this,
                 contentPadding = contentPadding
             )
         }
