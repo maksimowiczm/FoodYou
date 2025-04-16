@@ -123,7 +123,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(name, TextRange(name.length)),
                 onValueChange = { onNameChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.product_name)) },
                 isError = !state.name.isValid,
                 supportingText = {
@@ -145,7 +145,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(brand, TextRange(brand.length)),
                 onValueChange = { onBrandChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.product_brand)) },
                 supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
                 keyboardOptions = KeyboardOptions(
@@ -156,7 +156,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(state.barcode.value, TextRange(state.barcode.value.length)),
                 onValueChange = { onBarcodeChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.product_barcode)) },
                 supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
                 keyboardOptions = KeyboardOptions(
@@ -180,7 +180,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(proteins, TextRange(proteins.length)),
                 onValueChange = { onProteinsChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.nutriment_proteins)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = !state.proteins.isValid,
@@ -204,7 +204,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(carbohydrates, TextRange(carbohydrates.length)),
                 onValueChange = { onCarbohydratesChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = !state.carbohydrates.isValid,
@@ -228,7 +228,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(fats, TextRange(fats.length)),
                 onValueChange = { onFatsChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.nutriment_fats)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = !state.fats.isValid,
@@ -257,7 +257,7 @@ internal fun ProductForm(
             TextField(
                 value = calories,
                 onValueChange = {},
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.unit_calories)) },
                 supportingText = {
                     Text(stringResource(Res.string.neutral_calories_are_calculated))
@@ -282,7 +282,10 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(sugars, TextRange(sugars.length)),
                 onValueChange = { onSugarsChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp).focusRequester(sugarsRequester),
+                modifier = Modifier
+                    .widthIn(min = 300.dp)
+                    .weight(1f)
+                    .focusRequester(sugarsRequester),
                 label = { Text(stringResource(Res.string.nutriment_sugars)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = !state.sugars.isValid,
@@ -306,7 +309,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(saturatedFats, TextRange(saturatedFats.length)),
                 onValueChange = { onSaturatedFatsChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.nutriment_saturated_fats)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = !state.saturatedFats.isValid,
@@ -330,7 +333,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(salt, TextRange(salt.length)),
                 onValueChange = { onSaltChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.nutriment_salt)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = !state.salt.isValid,
@@ -354,7 +357,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(sodium, TextRange(sodium.length)),
                 onValueChange = { onSodiumChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.nutriment_sodium)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = !state.sodium.isValid,
@@ -378,7 +381,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(fiber, TextRange(fiber.length)),
                 onValueChange = { onFiberChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.nutriment_fiber)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = !state.fiber.isValid,
@@ -412,7 +415,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(packageWeight, TextRange(packageWeight.length)),
                 onValueChange = { onPackageWeightChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.product_package_weight)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = !state.packageWeight.isValid,
@@ -436,7 +439,7 @@ internal fun ProductForm(
             TextField(
                 value = TextFieldValue(servingWeight, TextRange(servingWeight.length)),
                 onValueChange = { onServingWeightChange(it.text) },
-                modifier = Modifier.widthIn(min = 300.dp),
+                modifier = Modifier.widthIn(min = 300.dp).weight(1f),
                 label = { Text(stringResource(Res.string.product_serving_weight)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 isError = !state.servingWeight.isValid,
