@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.feature.productredesign
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -31,6 +35,8 @@ import com.maksimowiczm.foodyou.core.navigation.ForwardBackwardComposableDefault
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.action_create
+import foodyou.app.generated.resources.headline_create_product
 import foodyou.app.generated.resources.link_open_food_facts
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
@@ -79,9 +85,6 @@ internal fun CreateProductApp(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = {
-                    Text("Create Product")
-                },
                 navigationIcon = {
                     IconButton(
                         onClick = onBack
@@ -90,6 +93,23 @@ internal fun CreateProductApp(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null
                         )
+                    }
+                },
+                title = {
+                    Text(stringResource(Res.string.headline_create_product))
+                },
+                actions = {
+                    AnimatedVisibility(
+                        visible =
+                        currentDestination?.destination?.hasRoute<CreateProductForm>() == true,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        TextButton(
+                            onClick = {}
+                        ) {
+                            Text(stringResource(Res.string.action_create))
+                        }
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -177,6 +197,9 @@ private fun CreateProductNavHost(
                 onSearch = onOpenFoodFacts,
                 onDownload = {
                     // TODO
+                    navController.navigate(CreateProductForm) {
+                        launchSingleTop = true
+                    }
                 },
                 contentPadding = contentPadding
             )
@@ -186,7 +209,6 @@ private fun CreateProductNavHost(
 
             ProductForm(
                 state = state,
-                animatedVisibilityScope = this,
                 contentPadding = contentPadding,
                 onNameChange = remember(viewModel) { viewModel::onNameChange },
                 onBrandChange = remember(viewModel) { viewModel::onBrandChange },

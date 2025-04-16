@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.productredesign
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,17 +15,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -40,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.ImeAction
@@ -58,7 +51,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun ProductForm(
     state: ProductFormState,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     contentPadding: PaddingValues,
     onNameChange: (String) -> Unit,
     onBrandChange: (String) -> Unit,
@@ -89,22 +81,6 @@ internal fun ProductForm(
 
     Scaffold(
         modifier = modifier,
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {},
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = !animatedVisibilityScope.transition.isRunning,
-                    alignment = Alignment.BottomEnd
-                ).onSizeChanged {
-                    fabHeight = it.height
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Save,
-                    contentDescription = stringResource(Res.string.action_create)
-                )
-            }
-        },
         contentWindowInsets = insets
     ) { paddingValues ->
         FlowRow(
