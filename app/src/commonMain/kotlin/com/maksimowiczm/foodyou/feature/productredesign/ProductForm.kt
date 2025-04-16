@@ -45,6 +45,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
@@ -124,7 +125,15 @@ internal fun ProductForm(
                 onValueChange = { onNameChange(it.text) },
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_name)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.name.isValid,
+                supportingText = {
+                    val input = state.name
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        RequiredLabel()
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 )
@@ -174,7 +183,15 @@ internal fun ProductForm(
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_proteins)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.proteins.isValid,
+                supportingText = {
+                    val input = state.proteins
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        RequiredLabel()
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
@@ -190,7 +207,15 @@ internal fun ProductForm(
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.carbohydrates.isValid,
+                supportingText = {
+                    val input = state.carbohydrates
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        RequiredLabel()
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
@@ -206,7 +231,15 @@ internal fun ProductForm(
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_fats)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.fats.isValid,
+                supportingText = {
+                    val input = state.fats
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        RequiredLabel()
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
@@ -252,7 +285,15 @@ internal fun ProductForm(
                 modifier = Modifier.widthIn(min = 300.dp).focusRequester(sugarsRequester),
                 label = { Text(stringResource(Res.string.nutriment_sugars)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.sugars.isValid,
+                supportingText = {
+                    val input = state.sugars
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        Spacer(Modifier.height(LocalTextStyle.current.toDp()))
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
@@ -268,7 +309,15 @@ internal fun ProductForm(
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_saturated_fats)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.saturatedFats.isValid,
+                supportingText = {
+                    val input = state.saturatedFats
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        Spacer(Modifier.height(LocalTextStyle.current.toDp()))
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
@@ -284,7 +333,15 @@ internal fun ProductForm(
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_salt)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.salt.isValid,
+                supportingText = {
+                    val input = state.salt
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        Spacer(Modifier.height(LocalTextStyle.current.toDp()))
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
@@ -300,7 +357,15 @@ internal fun ProductForm(
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_sodium)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.sodium.isValid,
+                supportingText = {
+                    val input = state.sodium
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        Spacer(Modifier.height(LocalTextStyle.current.toDp()))
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
@@ -316,7 +381,15 @@ internal fun ProductForm(
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.nutriment_fiber)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.fiber.isValid,
+                supportingText = {
+                    val input = state.fiber
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        Spacer(Modifier.height(LocalTextStyle.current.toDp()))
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
@@ -342,7 +415,15 @@ internal fun ProductForm(
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_package_weight)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.packageWeight.isValid,
+                supportingText = {
+                    val input = state.packageWeight
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        Spacer(Modifier.height(LocalTextStyle.current.toDp()))
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
@@ -358,7 +439,15 @@ internal fun ProductForm(
                 modifier = Modifier.widthIn(min = 300.dp),
                 label = { Text(stringResource(Res.string.product_serving_weight)) },
                 suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                supportingText = { RequiredLabel() },
+                isError = !state.servingWeight.isValid,
+                supportingText = {
+                    val input = state.servingWeight
+                    if (input is Input.Invalid) {
+                        Text(input.errors.stringResource())
+                    } else {
+                        Spacer(Modifier.height(LocalTextStyle.current.toDp()))
+                    }
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Done
