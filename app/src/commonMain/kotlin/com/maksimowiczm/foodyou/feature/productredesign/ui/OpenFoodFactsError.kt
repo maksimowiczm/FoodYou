@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign
+package com.maksimowiczm.foodyou.feature.productredesign.ui
 
 internal sealed interface OpenFoodFactsError {
     data object InvalidUrl : OpenFoodFactsError

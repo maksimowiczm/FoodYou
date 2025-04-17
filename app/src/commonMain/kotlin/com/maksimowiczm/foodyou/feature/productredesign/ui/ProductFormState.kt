@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign
+package com.maksimowiczm.foodyou.feature.productredesign.ui
 
 import androidx.compose.runtime.Composable
 import com.maksimowiczm.foodyou.core.input.Input

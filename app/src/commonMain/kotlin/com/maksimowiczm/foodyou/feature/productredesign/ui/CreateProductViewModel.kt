@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign
+package com.maksimowiczm.foodyou.feature.productredesign.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
