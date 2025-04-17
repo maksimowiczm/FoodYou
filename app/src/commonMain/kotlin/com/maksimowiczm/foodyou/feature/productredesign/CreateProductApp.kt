@@ -89,7 +89,7 @@ internal fun CreateProductApp(
 
     BackHandler(
         enabled = currentDestination?.destination?.hasRoute<CreateProductForm>() == true &&
-                state.isModified
+            state.isModified
     ) {
         showDiscardDialog = true
     }
@@ -123,7 +123,7 @@ internal fun CreateProductApp(
                 actions = {
                     AnimatedVisibility(
                         visible =
-                            currentDestination?.destination?.hasRoute<CreateProductForm>() == true,
+                        currentDestination?.destination?.hasRoute<CreateProductForm>() == true,
                         enter = fadeIn(),
                         exit = fadeOut()
                     ) {
