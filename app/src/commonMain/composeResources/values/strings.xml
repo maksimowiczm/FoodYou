@@ -41,7 +41,6 @@
     <string name="headline_update_recipe">Update recipe</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ingredients</string>
     <string name="headline_summary">Summary</string>
-    <string name="headline_actions">Actions</string>
     <string name="headline_example_links">Example links</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
