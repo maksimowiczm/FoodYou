@@ -1,15 +1,30 @@
 package com.maksimowiczm.foodyou.feature.productredesign
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.core.domain.model.openfoodfacts.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.core.domain.source.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.core.input.Form
 import com.maksimowiczm.foodyou.core.input.ValidationStrategy
+import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-internal class CreateProductViewModel : ViewModel() {
+internal class CreateProductViewModel(
+    private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource
+) : ViewModel() {
     private val _formState = MutableStateFlow<ProductFormState>(ProductFormState())
     val formState = _formState.asStateFlow()
+
+    private val _isDownloading = MutableStateFlow(false)
+    val isDownloading = _isDownloading.asStateFlow()
+
+    private val _eventBus = Channel<ProductFormEvent>()
+    val eventBus = _eventBus.receiveAsFlow()
 
     private val nameForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
@@ -171,5 +186,64 @@ internal class CreateProductViewModel : ViewModel() {
                 servingWeight = servingWeightForm.validate(servingWeight)
             )
         }
+    }
+
+    private val _openFoodFactsError = MutableStateFlow<OpenFoodFactsError?>(null)
+    val openFoodFactsError = _openFoodFactsError.asStateFlow()
+    private val openFoodFactsLinkHelper by lazy { OpenFoodFactsLinkHelper() }
+    fun onDownloadOpenFoodFacts(url: String) {
+        viewModelScope.launch {
+            _isDownloading.emit(true)
+
+            val code = when (val code = openFoodFactsLinkHelper.extractCode(url)) {
+                null -> {
+                    _openFoodFactsError.emit(OpenFoodFactsError.InvalidUrl)
+                    _isDownloading.emit(false)
+                    return@launch
+                }
+
+                else -> code
+            }
+
+            val product = runCatching {
+                openFoodFactsRemoteDataSource.getProduct(code, null) ?: error("Product not found")
+            }
+
+            product
+                .onSuccess { remote ->
+                    _formState.update { remote.asState() }
+                    _eventBus.send(ProductFormEvent.DownloadedProductSuccessfully)
+                }
+                .onFailure {
+                    _openFoodFactsError.emit(OpenFoodFactsError.DownloadProductFailed(it))
+                }
+
+            _isDownloading.emit(false)
+        }
+    }
+
+    private fun OpenFoodFactsProduct.asState(): ProductFormState = ProductFormState(
+        name = nameForm(productName ?: ""),
+        brand = brandForm(brands ?: ""),
+        barcode = barcodeForm(code ?: ""),
+        proteins = proteinsForm(nutrients?.proteins100g?.formatClipZeros() ?: ""),
+        carbohydrates = carbohydratesForm(nutrients?.carbohydrates100g?.formatClipZeros() ?: ""),
+        fats = fatsForm(nutrients?.fat100g?.formatClipZeros() ?: ""),
+        sugars = sugarsForm(nutrients?.sugars100g?.formatClipZeros() ?: ""),
+        saturatedFats = saturatedFatsForm(nutrients?.saturatedFat100g?.formatClipZeros() ?: ""),
+        salt = saltForm(nutrients?.salt100g?.formatClipZeros() ?: ""),
+        sodium = sodiumForm(nutrients?.sodium100g?.formatClipZeros() ?: ""),
+        fiber = fiberForm(nutrients?.fiber100g?.formatClipZeros() ?: ""),
+        packageWeight = packageWeightForm(packageQuantity.toString()),
+        servingWeight = servingWeightForm(servingQuantity.toString())
+    )
+}
+
+private class OpenFoodFactsLinkHelper {
+    fun extractCode(url: String): String? {
+        // Extract barcode from product URL
+        val regex = "openfoodfacts\\.org/product/(\\d+)".toRegex()
+        val barcode = regex.find(url)?.groupValues?.getOrNull(1)
+        return barcode
     }
 }

@@ -1,7 +1,9 @@
 package com.maksimowiczm.foodyou.feature.productredesign
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
@@ -38,10 +40,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,14 +51,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.ui.ext.plus
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun DownloadOpenFoodFactsProduct(
+    isDownloading: Boolean,
+    error: OpenFoodFactsError?,
     animatedVisibilityScope: AnimatedVisibilityScope,
     contentPadding: PaddingValues,
     onSearch: () -> Unit,
@@ -74,14 +74,6 @@ internal fun DownloadOpenFoodFactsProduct(
     )
 
     val linkTextState = rememberTextFieldState()
-    var downloading by remember { mutableStateOf(false) }
-    LaunchedEffect(downloading) {
-        if (downloading) {
-            delay(3_000)
-            downloading = false
-        }
-    }
-
     var fabHeight by remember { mutableIntStateOf(0) }
 
     Scaffold(
@@ -109,7 +101,9 @@ internal fun DownloadOpenFoodFactsProduct(
                 }
                 ExtendedFloatingActionButton(
                     onClick = {
-                        downloading = true
+                        if (linkTextState.text.isNotEmpty()) {
+                            onDownload(linkTextState.text.toString())
+                        }
                     }
                 ) {
                     Icon(
@@ -130,7 +124,7 @@ internal fun DownloadOpenFoodFactsProduct(
         ) {
             stickyHeader {
                 AnimatedContent(
-                    targetState = downloading,
+                    targetState = isDownloading,
                     modifier = Modifier.fillMaxWidth(),
                     transitionSpec = { fadeIn() togetherWith fadeOut() }
                 ) {
@@ -180,7 +174,7 @@ internal fun DownloadOpenFoodFactsProduct(
                     ),
                     onKeyboardAction = {
                         if (linkTextState.text.isNotEmpty()) {
-                            downloading = true
+                            onDownload(linkTextState.text.toString())
                         }
                     }
                 )
@@ -198,6 +192,16 @@ internal fun DownloadOpenFoodFactsProduct(
                         Text(stringResource(Res.string.link_open_food_facts_product_example_1))
                         Text(stringResource(Res.string.link_open_food_facts_product_example_2))
                     }
+                }
+            }
+
+            item {
+                val transition = updateTransition(error)
+
+                transition.AnimatedVisibility(
+                    visible = { it != null }
+                ) {
+                    Text(error.toString())
                 }
             }
 

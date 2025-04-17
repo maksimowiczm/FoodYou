@@ -16,12 +16,16 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -131,25 +135,41 @@ private fun CreateProductNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
     NavHost(
         navController = navController,
         startDestination = CreateProductForm,
         modifier = modifier
     ) {
         forwardBackwardComposable<CreateOpenFoodFactsProduct> {
-            DownloadOpenFoodFactsProduct(
-                animatedVisibilityScope = this,
-                onSearch = onOpenFoodFacts,
-                onDownload = {
-                    // TODO
-                    navController.navigate(CreateProductForm) {
-                        launchSingleTop = true
+            val isDownloading by viewModel.isDownloading.collectAsStateWithLifecycle()
+            val error by viewModel.openFoodFactsError.collectAsStateWithLifecycle()
 
-                        popUpTo(CreateOpenFoodFactsProduct) {
-                            inclusive = false
+            LaunchedEffect(viewModel.eventBus) {
+                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.eventBus.collect { event ->
+                        when (event) {
+                            is ProductFormEvent.DownloadedProductSuccessfully ->
+                                navController
+                                    .navigate(CreateProductForm) {
+                                        launchSingleTop = true
+
+                                        popUpTo<CreateProductForm> {
+                                            inclusive = false
+                                        }
+                                    }
                         }
                     }
-                },
+                }
+            }
+
+            DownloadOpenFoodFactsProduct(
+                isDownloading = isDownloading,
+                error = error,
+                animatedVisibilityScope = this,
+                onSearch = onOpenFoodFacts,
+                onDownload = remember(viewModel) { viewModel::onDownloadOpenFoodFacts },
                 contentPadding = contentPadding
             )
         }
