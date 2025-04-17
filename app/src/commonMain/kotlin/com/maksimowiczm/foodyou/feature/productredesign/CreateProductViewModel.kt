@@ -260,6 +260,7 @@ internal class CreateProductViewModel(
     fun onDownloadOpenFoodFacts(url: String) {
         viewModelScope.launch {
             _isDownloading.emit(true)
+            _openFoodFactsError.emit(null)
 
             val code = when (val code = openFoodFactsLinkHelper.extractCode(url)) {
                 null -> {

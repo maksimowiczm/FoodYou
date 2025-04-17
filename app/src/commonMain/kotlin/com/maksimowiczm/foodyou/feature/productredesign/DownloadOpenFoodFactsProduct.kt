@@ -1,8 +1,10 @@
 package com.maksimowiczm.foodyou.feature.productredesign
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -30,6 +32,8 @@ import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -44,10 +48,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
@@ -56,9 +63,11 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalAnimationApi::class)
 @Composable
 internal fun DownloadOpenFoodFactsProduct(
     isDownloading: Boolean,
@@ -78,7 +87,22 @@ internal fun DownloadOpenFoodFactsProduct(
     )
 
     val linkTextState = rememberTextFieldState()
+    var linkTextStateEmptyError by remember { mutableStateOf(false) }
+    LaunchedEffect(linkTextState) {
+        snapshotFlow { linkTextState.text }
+            .drop(1)
+            .collectLatest { linkTextStateEmptyError = it.isBlank() }
+    }
     var fabHeight by remember { mutableIntStateOf(0) }
+
+    val onDownload = {
+        val url = linkTextState.text.toString()
+        if (url.isNotEmpty()) {
+            onDownload(url)
+        } else {
+            linkTextStateEmptyError = true
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -94,11 +118,7 @@ internal fun DownloadOpenFoodFactsProduct(
                 horizontalAlignment = Alignment.End
             ) {
                 ExtendedFloatingActionButton(
-                    onClick = {
-                        if (linkTextState.text.isNotEmpty()) {
-                            onDownload(linkTextState.text.toString())
-                        }
-                    }
+                    onClick = onDownload
                 ) {
                     Icon(
                         imageVector = Icons.Default.Download,
@@ -144,6 +164,7 @@ internal fun DownloadOpenFoodFactsProduct(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
+                    isError = linkTextStateEmptyError || error != null,
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Link,
@@ -163,14 +184,17 @@ internal fun DownloadOpenFoodFactsProduct(
                         }
                     },
                     label = { Text(stringResource(Res.string.product_link)) },
+                    supportingText = {
+                        when (error) {
+                            OpenFoodFactsError.InvalidUrl -> Text("Invalid URL")
+                            is OpenFoodFactsError.DownloadProductFailed,
+                            null -> Unit
+                        }
+                    },
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done
                     ),
-                    onKeyboardAction = {
-                        if (linkTextState.text.isNotEmpty()) {
-                            onDownload(linkTextState.text.toString())
-                        }
-                    }
+                    onKeyboardAction = { onDownload() }
                 )
             }
 
@@ -227,13 +251,22 @@ internal fun DownloadOpenFoodFactsProduct(
             }
 
             item {
-                // TODO
                 val transition = updateTransition(error)
 
-                transition.AnimatedVisibility(
-                    visible = { it != null }
+                transition.Crossfade(
+                    contentKey = { it is OpenFoodFactsError.DownloadProductFailed }
                 ) {
-                    Text(error.toString())
+                    when (it) {
+                        is OpenFoodFactsError.DownloadProductFailed -> DownloadErrorCard(
+                            error = it.error,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                        )
+
+                        OpenFoodFactsError.InvalidUrl,
+                        null -> Unit
+                    }
                 }
             }
 
@@ -241,6 +274,37 @@ internal fun DownloadOpenFoodFactsProduct(
                 val dp = LocalDensity.current.run { fabHeight.toDp() }
                 Spacer(Modifier.height(dp))
             }
+        }
+    }
+}
+
+@Composable
+private fun DownloadErrorCard(error: Throwable, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .animateContentSize()
+        ) {
+            Text(
+                text = stringResource(Res.string.neutral_failed_to_download_the_product)
+            )
+
+            // TODO
+            //  Might want to show more user-friendly error messages
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                text = error.toString(),
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }

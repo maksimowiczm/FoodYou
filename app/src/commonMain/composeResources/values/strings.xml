@@ -157,6 +157,7 @@
     <string name="neutral_entry_deleted">Entry deleted</string>
     <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_manage_food_database">Manage your food database</string>
+    <string name="neutral_failed_to_download_the_product">Failed to download the product</string>
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>
