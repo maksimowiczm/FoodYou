@@ -9,43 +9,28 @@ import com.maksimowiczm.foodyou.core.domain.model.openfoodfacts.OpenFoodFactsPro
 import com.maksimowiczm.foodyou.core.domain.source.OpenFoodFactsRemoteDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.timeout
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
 
-internal class OpenFoodFactsNetworkDataSource(
-    private val client: HttpClient = HttpClient {
-        defaultRequest {
-            url(BuildConfig.OPEN_FOOD_FACTS_URL)
-            userAgent(BuildConfig.OPEN_FOOD_FACTS_USER_AGENT)
-        }
-
-        install(HttpTimeout) {
-            requestTimeoutMillis = TIMEOUT
-            connectTimeoutMillis = TIMEOUT
-            socketTimeoutMillis = TIMEOUT
-        }
-
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                }
-            )
-        }
-    }
-) : OpenFoodFactsRemoteDataSource {
+internal class OpenFoodFactsNetworkDataSource(private val client: HttpClient) :
+    OpenFoodFactsRemoteDataSource {
 
     override suspend fun getProduct(code: String, country: String?): OpenFoodFactsProduct? {
         val countries = country?.lowercase()
 
-        val response = client.get("api/v2/product/$code") {
+        val url = "${BuildConfig.OPEN_FOOD_FACTS_URL}api/v2/product/$code"
+        val response = client.get(url) {
+            userAgent(BuildConfig.OPEN_FOOD_FACTS_USER_AGENT)
+
+            timeout {
+                requestTimeoutMillis = TIMEOUT
+                connectTimeoutMillis = TIMEOUT
+                socketTimeoutMillis = TIMEOUT
+            }
+
             countries?.let { parameter("countries", countries) }
             parameter("fields", FIELDS)
         }
@@ -68,7 +53,9 @@ internal class OpenFoodFactsNetworkDataSource(
     ): OpenFoodFactsPageResponse {
         val countries = country?.lowercase()
 
-        val response = client.get("cgi/search.pl?search_simple=1&json=1") {
+        val url = "${BuildConfig.OPEN_FOOD_FACTS_URL}cgi/search.pl"
+        val response = client.get(url) {
+            userAgent(BuildConfig.OPEN_FOOD_FACTS_USER_AGENT)
             parameter("search_terms", query)
             countries?.let { parameter("countries", countries) }
             parameter("page", page)
@@ -81,7 +68,7 @@ internal class OpenFoodFactsNetworkDataSource(
 
     private companion object {
         private const val TAG = "OpenFoodFactsNetworkDataSource"
-        private const val TIMEOUT = 30_000L
+        private const val TIMEOUT = 10_000L
     }
 }
 

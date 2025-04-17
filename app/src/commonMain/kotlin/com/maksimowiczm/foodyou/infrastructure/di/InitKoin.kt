@@ -21,6 +21,7 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         databaseModule,
         dataStoreModule,
         domainModule,
+        networkModule,
         openFoodFactsModule,
         utilsModule
     )
