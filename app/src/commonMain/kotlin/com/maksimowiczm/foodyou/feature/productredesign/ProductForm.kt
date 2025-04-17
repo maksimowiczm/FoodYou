@@ -13,9 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
@@ -29,14 +28,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -49,10 +44,10 @@ import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.drop
 import org.jetbrains.compose.resources.stringResource
 
+// TODO
+//  When downloading a product set selection to the end of the text field
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun ProductForm(
@@ -125,11 +120,9 @@ internal fun ProductForm(
                     style = MaterialTheme.typography.labelLarge
                 )
 
-                val nameState = rememberInputState(state.name.value) {
-                    onNameChange(it)
-                }
                 TextField(
-                    state = nameState,
+                    value = state.name.value,
+                    onValueChange = onNameChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.product_name)) },
                     isError = state.name.isInvalid,
@@ -146,11 +139,9 @@ internal fun ProductForm(
                     )
                 )
 
-                val brandState = rememberInputState(state.brand.value) {
-                    onBrandChange(it)
-                }
                 TextField(
-                    state = brandState,
+                    value = state.brand.value,
+                    onValueChange = onBrandChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.product_brand)) },
                     supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
@@ -159,11 +150,9 @@ internal fun ProductForm(
                     )
                 )
 
-                val barcodeState = rememberInputState(state.barcode.value) {
-                    onBarcodeChange(it)
-                }
                 TextField(
-                    state = barcodeState,
+                    value = state.barcode.value,
+                    onValueChange = onBarcodeChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.product_barcode)) },
                     supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
@@ -181,11 +170,9 @@ internal fun ProductForm(
                     style = MaterialTheme.typography.labelLarge
                 )
 
-                val proteinsState = rememberInputState(state.proteins.value) {
-                    onProteinsChange(it)
-                }
                 TextField(
-                    state = proteinsState,
+                    value = state.proteins.value,
+                    onValueChange = onProteinsChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.nutriment_proteins)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
@@ -204,11 +191,9 @@ internal fun ProductForm(
                     )
                 )
 
-                val carbohydratesState = rememberInputState(state.carbohydrates.value) {
-                    onCarbohydratesChange(it)
-                }
                 TextField(
-                    state = carbohydratesState,
+                    value = state.carbohydrates.value,
+                    onValueChange = onCarbohydratesChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
@@ -227,11 +212,9 @@ internal fun ProductForm(
                     )
                 )
 
-                val fatsState = rememberInputState(state.fats.value) {
-                    onFatsChange(it)
-                }
                 TextField(
-                    state = fatsState,
+                    value = state.fats.value,
+                    onValueChange = onFatsChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.nutriment_fats)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
@@ -248,18 +231,13 @@ internal fun ProductForm(
                         keyboardType = KeyboardType.Decimal,
                         imeAction = ImeAction.Next
                     ),
-                    onKeyboardAction = {
+                    keyboardActions = KeyboardActions {
                         sugarsRequester.requestFocus()
                     }
                 )
 
-                val calories by remember(state) {
-                    derivedStateOf {
-                        state.calories?.formatClipZeros() ?: ""
-                    }
-                }
                 TextField(
-                    value = calories,
+                    value = state.calories?.formatClipZeros() ?: "",
                     onValueChange = {},
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.unit_calories)) },
@@ -279,11 +257,9 @@ internal fun ProductForm(
                     style = MaterialTheme.typography.labelLarge
                 )
 
-                val sugarsState = rememberInputState(state.sugars.value) {
-                    onSugarsChange(it)
-                }
                 TextField(
-                    state = sugarsState,
+                    value = state.sugars.value,
+                    onValueChange = onSugarsChange,
                     modifier = Modifier
                         .widthIn(min = 300.dp)
                         .fillMaxWidth()
@@ -305,11 +281,9 @@ internal fun ProductForm(
                     )
                 )
 
-                val saturatedFatsState = rememberInputState(state.saturatedFats.value) {
-                    onSaturatedFatsChange(it)
-                }
                 TextField(
-                    state = saturatedFatsState,
+                    value = state.saturatedFats.value,
+                    onValueChange = onSaturatedFatsChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.nutriment_saturated_fats)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
@@ -328,11 +302,9 @@ internal fun ProductForm(
                     )
                 )
 
-                val saltState = rememberInputState(state.salt.value) {
-                    onSaltChange(it)
-                }
                 TextField(
-                    state = saltState,
+                    value = state.salt.value,
+                    onValueChange = onSaltChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.nutriment_salt)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
@@ -351,11 +323,9 @@ internal fun ProductForm(
                     )
                 )
 
-                val sodiumState = rememberInputState(state.sodium.value) {
-                    onSodiumChange(it)
-                }
                 TextField(
-                    state = sodiumState,
+                    value = state.sodium.value,
+                    onValueChange = onSodiumChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.nutriment_sodium)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
@@ -374,11 +344,9 @@ internal fun ProductForm(
                     )
                 )
 
-                val fiberState = rememberInputState(state.fiber.value) {
-                    onFiberChange(it)
-                }
                 TextField(
-                    state = fiberState,
+                    value = state.fiber.value,
+                    onValueChange = onFiberChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.nutriment_fiber)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
@@ -406,11 +374,9 @@ internal fun ProductForm(
                     style = MaterialTheme.typography.labelLarge
                 )
 
-                val packageWeightState = rememberInputState(state.packageWeight.value) {
-                    onPackageWeightChange(it)
-                }
                 TextField(
-                    state = packageWeightState,
+                    value = state.packageWeight.value,
+                    onValueChange = onPackageWeightChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.product_package_weight)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
@@ -429,11 +395,9 @@ internal fun ProductForm(
                     )
                 )
 
-                val servingWeightState = rememberInputState(state.servingWeight.value) {
-                    onServingWeightChange(it)
-                }
                 TextField(
-                    state = servingWeightState,
+                    value = state.servingWeight.value,
+                    onValueChange = onServingWeightChange,
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.product_serving_weight)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
@@ -456,22 +420,6 @@ internal fun ProductForm(
             Spacer(Modifier.height(contentPadding.calculateBottomPadding()).fillMaxWidth())
             val height = LocalDensity.current.run { fabHeight.toDp() }
             Spacer(Modifier.height(height).fillMaxWidth())
-        }
-    }
-}
-
-@Composable
-private fun rememberInputState(
-    initialValue: String,
-    onValueChange: (String) -> Unit
-): TextFieldState {
-    val onValueChange by rememberUpdatedState(onValueChange)
-
-    return rememberTextFieldState(initialValue).also {
-        LaunchedEffect(it) {
-            snapshotFlow { it.text.toString() }
-                .drop(1)
-                .collectLatest { onValueChange(it) }
         }
     }
 }
