@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ContentPaste
@@ -59,10 +60,12 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.ui.ext.paste
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
@@ -87,6 +90,7 @@ internal fun DownloadOpenFoodFactsProduct(
         bottom = contentPadding.calculateBottomPadding()
     )
 
+    val clipboard = LocalClipboard.current
     val linkTextState = rememberTextFieldState()
     var linkTextStateEmptyError by remember { mutableStateOf(false) }
     LaunchedEffect(linkTextState) {
@@ -223,7 +227,10 @@ internal fun DownloadOpenFoodFactsProduct(
                 ) {
                     AssistChip(
                         onClick = {
-                            // TODO
+                            val text = clipboard.paste()
+                            if (text != null && text.isNotEmpty()) {
+                                linkTextState.setTextAndPlaceCursorAtEnd(text)
+                            }
                         },
                         leadingIcon = {
                             Icon(
