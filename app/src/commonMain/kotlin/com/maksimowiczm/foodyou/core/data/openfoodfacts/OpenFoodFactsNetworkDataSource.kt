@@ -85,7 +85,7 @@ private const val FIELDS = "" +
     ",product_quantity" +
     ",product_quantity_unit"
 
-private class RetrofitOpenFoodFactsNetworkApi(private val client: HttpClient) {
+private class KtorOpenFoodFactsNetworkClient(private val client: HttpClient) {
     suspend fun getProduct(code: String, countries: String?): HttpResponse =
         client.get("api/v2/product/$code") {
             countries?.let { parameter("countries", countries) }
