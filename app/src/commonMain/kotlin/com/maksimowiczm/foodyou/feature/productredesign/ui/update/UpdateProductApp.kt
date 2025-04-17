@@ -29,7 +29,6 @@ internal fun UpdateProductApp(
         ) { paddingValues ->
             ProductForm(
                 state = state,
-                contentPadding = paddingValues,
                 onNameChange = remember(viewModel) { viewModel::onNameChange },
                 onBrandChange = remember(viewModel) { viewModel::onBrandChange },
                 onBarcodeChange = remember(viewModel) { viewModel::onBarcodeChange },
@@ -42,8 +41,7 @@ internal fun UpdateProductApp(
                 onSodiumChange = remember(viewModel) { viewModel::onSodiumChange },
                 onFiberChange = remember(viewModel) { viewModel::onFiberChange },
                 onPackageWeightChange = remember(viewModel) { viewModel::onPackageWeightChange },
-                onServingWeightChange = remember(viewModel) { viewModel::onServingWeightChange },
-                onUseOpenFoodFactsProduct = {}
+                onServingWeightChange = remember(viewModel) { viewModel::onServingWeightChange }
             )
         }
     }

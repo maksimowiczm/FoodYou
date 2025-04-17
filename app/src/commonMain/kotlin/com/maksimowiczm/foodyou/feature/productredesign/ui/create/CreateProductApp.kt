@@ -3,10 +3,18 @@ package com.maksimowiczm.foodyou.feature.productredesign.ui.create
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -29,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,6 +53,7 @@ import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_cancel
 import foodyou.app.generated.resources.action_create
 import foodyou.app.generated.resources.action_discard
+import foodyou.app.generated.resources.action_use_open_food_facts_product
 import foodyou.app.generated.resources.headline_create_product
 import foodyou.app.generated.resources.link_open_food_facts
 import foodyou.app.generated.resources.question_discard_product
@@ -225,38 +235,64 @@ private fun CreateProductNavHost(
             val state by viewModel.formState.collectAsStateWithLifecycle()
 
             key(formKey.toString()) {
-                ProductForm(
-                    state = state,
+                LazyColumn(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     contentPadding = contentPadding,
-                    onNameChange = remember(viewModel) { viewModel::onNameChange },
-                    onBrandChange = remember(viewModel) { viewModel::onBrandChange },
-                    onBarcodeChange = remember(viewModel) { viewModel::onBarcodeChange },
-                    onProteinsChange = remember(viewModel) { viewModel::onProteinsChange },
-                    onCarbohydratesChange = remember(viewModel) {
-                        viewModel::onCarbohydratesChange
-                    },
-                    onFatsChange = remember(viewModel) { viewModel::onFatsChange },
-                    onSugarsChange = remember(viewModel) { viewModel::onSugarsChange },
-                    onSaturatedFatsChange = remember(viewModel) {
-                        viewModel::onSaturatedFatsChange
-                    },
-                    onSaltChange = remember(viewModel) { viewModel::onSaltChange },
-                    onSodiumChange = remember(viewModel) { viewModel::onSodiumChange },
-                    onFiberChange = remember(viewModel) { viewModel::onFiberChange },
-                    onPackageWeightChange = remember(viewModel) {
-                        viewModel::onPackageWeightChange
-                    },
-                    onServingWeightChange = remember(viewModel) {
-                        viewModel::onServingWeightChange
-                    },
-                    onUseOpenFoodFactsProduct = remember(navController) {
-                        {
-                            navController.navigate(CreateOpenFoodFactsProduct) {
-                                launchSingleTop = true
-                            }
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    item {
+                        FlowRow {
+                            AssistChip(
+                                onClick = {
+                                    navController.navigate(CreateOpenFoodFactsProduct) {
+                                        launchSingleTop = true
+                                    }
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Download,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(AssistChipDefaults.IconSize)
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        stringResource(
+                                            Res.string.action_use_open_food_facts_product
+                                        )
+                                    )
+                                }
+                            )
                         }
                     }
-                )
+
+                    item {
+                        ProductForm(
+                            state = state,
+                            onNameChange = remember(viewModel) { viewModel::onNameChange },
+                            onBrandChange = remember(viewModel) { viewModel::onBrandChange },
+                            onBarcodeChange = remember(viewModel) { viewModel::onBarcodeChange },
+                            onProteinsChange = remember(viewModel) { viewModel::onProteinsChange },
+                            onCarbohydratesChange = remember(viewModel) {
+                                viewModel::onCarbohydratesChange
+                            },
+                            onFatsChange = remember(viewModel) { viewModel::onFatsChange },
+                            onSugarsChange = remember(viewModel) { viewModel::onSugarsChange },
+                            onSaturatedFatsChange = remember(viewModel) {
+                                viewModel::onSaturatedFatsChange
+                            },
+                            onSaltChange = remember(viewModel) { viewModel::onSaltChange },
+                            onSodiumChange = remember(viewModel) { viewModel::onSodiumChange },
+                            onFiberChange = remember(viewModel) { viewModel::onFiberChange },
+                            onPackageWeightChange = remember(viewModel) {
+                                viewModel::onPackageWeightChange
+                            },
+                            onServingWeightChange = remember(viewModel) {
+                                viewModel::onServingWeightChange
+                            }
+                        )
+                    }
+                }
             }
         }
     }
