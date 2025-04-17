@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -18,7 +19,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
@@ -31,10 +35,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.action_cancel
 import foodyou.app.generated.resources.action_create
+import foodyou.app.generated.resources.action_discard
 import foodyou.app.generated.resources.headline_create_product
 import foodyou.app.generated.resources.link_open_food_facts
+import foodyou.app.generated.resources.question_discard_product
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -47,16 +55,24 @@ internal fun CreateProductApp(
     modifier: Modifier = Modifier,
     viewModel: CreateProductViewModel = koinViewModel()
 ) {
+    val state by viewModel.formState.collectAsStateWithLifecycle()
+    var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
+
     val navController = rememberNavController()
-    val currentDestination by navController.currentBackStackEntryFlow.collectAsStateWithLifecycle(
-        null
-    )
-    val onBack = {
+    val currentDestination by navController
+        .currentBackStackEntryFlow
+        .collectAsStateWithLifecycle(null)
+
+    val handleBack = {
         val destination = currentDestination?.destination
 
         when {
             destination == null -> Unit
-            destination.hasRoute<CreateProductForm>() == true -> onBack()
+            destination.hasRoute<CreateProductForm>() == true -> when (state.isModified) {
+                true -> showDiscardDialog = true
+                false -> onBack()
+            }
+
             destination.hasRoute<CreateOpenFoodFactsProduct>() == true ->
                 navController.popBackStack<CreateOpenFoodFactsProduct>(inclusive = true)
         }
@@ -66,14 +82,26 @@ internal fun CreateProductApp(
         val uriHandler = LocalUriHandler.current
         val openFoodFactsUrl = stringResource(Res.string.link_open_food_facts)
 
-        remember(uriHandler, openFoodFactsUrl) {
-            {
-                uriHandler.openUri(openFoodFactsUrl)
-            }
-        }
+        remember(uriHandler, openFoodFactsUrl) { { uriHandler.openUri(openFoodFactsUrl) } }
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+    BackHandler(
+        enabled = currentDestination?.destination?.hasRoute<CreateProductForm>() == true &&
+                state.isModified
+    ) {
+        showDiscardDialog = true
+    }
+    if (showDiscardDialog) {
+        DiscardDialog(
+            onDismissRequest = { showDiscardDialog = false },
+            onConfirm = {
+                showDiscardDialog = false
+                onBack()
+            }
+        )
+    }
 
     Scaffold(
         modifier = modifier,
@@ -81,7 +109,7 @@ internal fun CreateProductApp(
             TopAppBar(
                 navigationIcon = {
                     IconButton(
-                        onClick = onBack
+                        onClick = handleBack
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -95,12 +123,15 @@ internal fun CreateProductApp(
                 actions = {
                     AnimatedVisibility(
                         visible =
-                        currentDestination?.destination?.hasRoute<CreateProductForm>() == true,
+                            currentDestination?.destination?.hasRoute<CreateProductForm>() == true,
                         enter = fadeIn(),
                         exit = fadeOut()
                     ) {
                         TextButton(
-                            onClick = {}
+                            onClick = {
+                                // TODO
+                            },
+                            enabled = state.isValid
                         ) {
                             Text(stringResource(Res.string.action_create))
                         }
@@ -209,4 +240,33 @@ private fun CreateProductNavHost(
             )
         }
     }
+}
+
+@Composable
+private fun DiscardDialog(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm
+            ) {
+                Text(stringResource(Res.string.action_discard))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text(stringResource(Res.string.action_cancel))
+            }
+        },
+        text = {
+            Text(stringResource(Res.string.question_discard_product))
+        }
+    )
 }

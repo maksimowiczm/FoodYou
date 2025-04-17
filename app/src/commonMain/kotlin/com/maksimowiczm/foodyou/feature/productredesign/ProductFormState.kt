@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.core.input.dsl.input
 import com.maksimowiczm.foodyou.core.input.dsl.validates
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 internal data class ProductFormState(
@@ -24,7 +23,8 @@ internal data class ProductFormState(
     val sodium: Input<ProductFormError> = input(),
     val fiber: Input<ProductFormError> = input(),
     val packageWeight: Input<ProductFormError> = input(),
-    val servingWeight: Input<ProductFormError> = input()
+    val servingWeight: Input<ProductFormError> = input(),
+    val isModified: Boolean = false
 ) {
     private val proteinsValue
         get() = proteins.value.toFloatOrNull()
@@ -41,6 +41,21 @@ internal data class ProductFormState(
 
             return NutrientsHelper.calculateCalories(proteins, carbohydrates, fats)
         }
+
+    val isValid = name.isValid &&
+        !name.isEmptyValue &&
+        brand.isValidOrEmpty &&
+        barcode.isValidOrEmpty &&
+        proteins.isValid &&
+        carbohydrates.isValid &&
+        fats.isValid &&
+        sugars.isValidOrEmpty &&
+        saturatedFats.isValidOrEmpty &&
+        salt.isValidOrEmpty &&
+        sodium.isValidOrEmpty &&
+        fiber.isValidOrEmpty &&
+        packageWeight.isValidOrEmpty &&
+        servingWeight.isValidOrEmpty
 }
 
 internal sealed interface ProductFormError {

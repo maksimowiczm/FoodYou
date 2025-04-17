@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.core.domain.model.openfoodfacts.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.core.domain.source.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.core.input.Form
+import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.input.ValidationStrategy
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import kotlinx.coroutines.channels.Channel
@@ -42,8 +43,11 @@ internal class CreateProductViewModel(
     private val brandForm = Form<ProductFormError>(ValidationStrategy.LazyEval)
     fun onBrandChange(brand: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 brand = brandForm.validate(brand)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -51,8 +55,11 @@ internal class CreateProductViewModel(
     private val barcodeForm = Form<ProductFormError>(ValidationStrategy.LazyEval)
     fun onBarcodeChange(barcode: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 barcode = barcodeForm.validate(barcode)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -66,8 +73,11 @@ internal class CreateProductViewModel(
 
     fun onProteinsChange(proteins: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 proteins = proteinsForm.validate(proteins)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -81,8 +91,11 @@ internal class CreateProductViewModel(
 
     fun onCarbohydratesChange(carbohydrates: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 carbohydrates = carbohydratesForm.validate(carbohydrates)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -96,8 +109,11 @@ internal class CreateProductViewModel(
 
     fun onFatsChange(fats: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 fats = fatsForm.validate(fats)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -110,8 +126,11 @@ internal class CreateProductViewModel(
 
     fun onSugarsChange(sugars: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 sugars = sugarsForm.validate(sugars)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -124,8 +143,11 @@ internal class CreateProductViewModel(
 
     fun onSaturatedFatsChange(saturatedFats: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 saturatedFats = saturatedFatsForm.validate(saturatedFats)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -138,8 +160,11 @@ internal class CreateProductViewModel(
 
     fun onSaltChange(salt: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 salt = saltForm.validate(salt)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -152,8 +177,11 @@ internal class CreateProductViewModel(
 
     fun onSodiumChange(sodium: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 sodium = sodiumForm.validate(sodium)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -166,8 +194,11 @@ internal class CreateProductViewModel(
 
     fun onFiberChange(fiber: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 fiber = fiberForm.validate(fiber)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -180,8 +211,11 @@ internal class CreateProductViewModel(
 
     fun onPackageWeightChange(packageWeight: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 packageWeight = packageWeightForm.validate(packageWeight)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
@@ -194,10 +228,30 @@ internal class CreateProductViewModel(
 
     fun onServingWeightChange(servingWeight: String) {
         _formState.update {
-            it.copy(
+            val newState = it.copy(
                 servingWeight = servingWeightForm.validate(servingWeight)
             )
+            newState.copy(
+                isModified = isModified(newState)
+            )
         }
+    }
+
+    private fun isModified(formState: ProductFormState) = when {
+        formState.name !is Input.Empty -> true
+        formState.brand !is Input.Empty -> true
+        formState.barcode !is Input.Empty -> true
+        formState.proteins !is Input.Empty -> true
+        formState.carbohydrates !is Input.Empty -> true
+        formState.fats !is Input.Empty -> true
+        formState.sugars !is Input.Empty -> true
+        formState.saturatedFats !is Input.Empty -> true
+        formState.salt !is Input.Empty -> true
+        formState.sodium !is Input.Empty -> true
+        formState.fiber !is Input.Empty -> true
+        formState.packageWeight !is Input.Empty -> true
+        formState.servingWeight !is Input.Empty -> true
+        else -> false
     }
 
     private val _openFoodFactsError = MutableStateFlow<OpenFoodFactsError?>(null)
@@ -223,7 +277,12 @@ internal class CreateProductViewModel(
 
             product
                 .onSuccess { remote ->
-                    _formState.update { remote.asState() }
+                    _formState.update {
+                        val newState = remote.asState()
+                        newState.copy(
+                            isModified = isModified(newState)
+                        )
+                    }
                     _eventBus.send(ProductFormEvent.DownloadedProductSuccessfully)
                 }
                 .onFailure {
