@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.core.input.Form
 import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.input.ValidationStrategy
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.feature.productredesign.data.ProductRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class CreateProductViewModel(
+    private val productRepository: ProductRepository,
     private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource
 ) : ViewModel() {
     private val _formState = MutableStateFlow<ProductFormState>(ProductFormState())
@@ -255,7 +257,56 @@ internal class CreateProductViewModel(
     }
 
     fun onCreateProduct() {
-        // TODO
+        val formState = _formState.value
+
+        if (formState.error != null || !formState.isValid) {
+            return
+        }
+
+        val name = formState.name.takeIf { it.isValid }?.value ?: return
+        val brand = formState.brand.takeIf { it.isValidOrEmpty }?.value
+        val barcode = formState.barcode.takeIf { it.isValidOrEmpty }?.value
+
+        val proteins = formState.proteins.takeIf { it.isValid }?.value?.toFloatOrNull() ?: return
+        val carbohydrates =
+            formState.carbohydrates.takeIf { it.isValid }?.value?.toFloatOrNull() ?: return
+        val fats = formState.fats.takeIf { it.isValid }?.value?.toFloatOrNull() ?: return
+        val calories = formState.calories ?: return
+
+        val sugars = formState.sugars.takeIf { it.isValidOrEmpty }?.value?.toFloatOrNull()
+        val saturatedFats =
+            formState.saturatedFats.takeIf { it.isValidOrEmpty }?.value?.toFloatOrNull()
+        val salt = formState.salt.takeIf { it.isValidOrEmpty }?.value?.toFloatOrNull()
+        val sodium = formState.sodium.takeIf { it.isValidOrEmpty }?.value?.toFloatOrNull()
+        val fiber = formState.fiber.takeIf { it.isValidOrEmpty }?.value?.toFloatOrNull()
+
+        val packageWeight =
+            formState.packageWeight.takeIf { it.isValidOrEmpty }?.value?.toFloatOrNull()
+        val servingWeight =
+            formState.servingWeight.takeIf { it.isValidOrEmpty }?.value?.toFloatOrNull()
+
+        viewModelScope.launch {
+            _eventBus.send(ProductFormEvent.CreatingProduct)
+
+            val id = productRepository.createProduct(
+                name = name,
+                brand = brand,
+                barcode = barcode,
+                calories = calories,
+                proteins = proteins,
+                carbohydrates = carbohydrates,
+                fats = fats,
+                sugars = sugars,
+                saturatedFats = saturatedFats,
+                salt = salt,
+                sodium = sodium,
+                fiber = fiber,
+                packageWeight = packageWeight,
+                servingWeight = servingWeight
+            )
+
+            _eventBus.send(ProductFormEvent.ProductCreated(id))
+        }
     }
 
     private val _openFoodFactsErrorBus = Channel<OpenFoodFactsError?>()

@@ -23,6 +23,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -54,6 +55,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun CreateProductApp(
     onBack: () -> Unit,
+    onProductCreate: (productId: Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreateProductViewModel = koinViewModel()
 ) {
@@ -143,6 +145,7 @@ internal fun CreateProductApp(
     ) { paddingValues ->
         CreateProductNavHost(
             onOpenFoodFacts = onOpenFoodFacts,
+            onProductCreate = onProductCreate,
             contentPadding = paddingValues,
             viewModel = viewModel,
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -161,6 +164,7 @@ private data object CreateProductForm
 @Composable
 private fun CreateProductNavHost(
     onOpenFoodFacts: () -> Unit,
+    onProductCreate: (productId: Long) -> Unit,
     contentPadding: PaddingValues,
     viewModel: CreateProductViewModel,
     modifier: Modifier = Modifier,
@@ -171,6 +175,7 @@ private fun CreateProductNavHost(
     // text fields with the new data.
     var formKey by rememberSaveable { mutableIntStateOf(0) }
 
+    val onProductCreated by rememberUpdatedState(onProductCreate)
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(viewModel.eventBus) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -187,6 +192,9 @@ private fun CreateProductNavHost(
 
                         formKey = formKey + 1_000_690_420 * 1_000_420_690
                     }
+
+                    ProductFormEvent.CreatingProduct -> Unit
+                    is ProductFormEvent.ProductCreated -> onProductCreated(event.id)
                 }
             }
         }
