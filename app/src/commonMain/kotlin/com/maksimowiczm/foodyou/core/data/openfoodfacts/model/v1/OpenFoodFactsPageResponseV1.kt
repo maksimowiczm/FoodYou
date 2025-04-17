@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.core.data.openfoodfacts.model.v1
 
-import com.maksimowiczm.foodyou.core.data.openfoodfacts.model.OpenFoodPageResponse
+import com.maksimowiczm.foodyou.core.data.openfoodfacts.model.OpenFoodFactsPageResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,4 +14,4 @@ internal data class OpenFoodFactsPageResponseV1(
     override val pageSize: Int,
     @SerialName("products")
     override val products: List<OpenFoodFactsProductV1>
-) : OpenFoodPageResponse
+) : OpenFoodFactsPageResponse

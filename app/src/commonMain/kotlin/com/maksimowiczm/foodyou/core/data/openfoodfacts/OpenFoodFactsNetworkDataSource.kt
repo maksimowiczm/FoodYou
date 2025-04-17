@@ -2,7 +2,8 @@ package com.maksimowiczm.foodyou.core.data.openfoodfacts
 
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.BuildConfig
-import com.maksimowiczm.foodyou.core.data.openfoodfacts.model.OpenFoodPageResponse
+import com.maksimowiczm.foodyou.core.data.openfoodfacts.model.OpenFoodFactsPageResponse
+import com.maksimowiczm.foodyou.core.data.openfoodfacts.model.v1.OpenFoodFactsPageResponseV1
 import com.maksimowiczm.foodyou.core.data.openfoodfacts.model.v2.OpenFoodFactsProductResponseV2
 import com.maksimowiczm.foodyou.core.domain.model.openfoodfacts.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.core.domain.source.OpenFoodFactsRemoteDataSource
@@ -64,7 +65,7 @@ internal class OpenFoodFactsNetworkDataSource(
         country: String?,
         page: Int?,
         pageSize: Int
-    ): OpenFoodPageResponse {
+    ): OpenFoodFactsPageResponse {
         val countries = country?.lowercase()
 
         val response = client.get("cgi/search.pl?search_simple=1&json=1") {
@@ -75,7 +76,7 @@ internal class OpenFoodFactsNetworkDataSource(
             parameter("fields", FIELDS)
         }
 
-        return response.body<OpenFoodPageResponse>()
+        return response.body<OpenFoodFactsPageResponseV1>()
     }
 
     private companion object {
