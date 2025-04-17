@@ -27,7 +27,7 @@ internal class CreateProductViewModel(
     private val _eventBus = Channel<ProductFormEvent>()
     val eventBus = _eventBus.receiveAsFlow()
 
-    private val nameForm = Form<ProductFormError>(
+    private val nameForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.NotEmpty
     )
@@ -40,7 +40,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val brandForm = Form<ProductFormError>(ValidationStrategy.LazyEval)
+    private val brandForm = Form<ProductFormFieldError>(ValidationStrategy.LazyEval)
     fun onBrandChange(brand: String) {
         _formState.update {
             val newState = it.copy(
@@ -52,7 +52,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val barcodeForm = Form<ProductFormError>(ValidationStrategy.LazyEval)
+    private val barcodeForm = Form<ProductFormFieldError>(ValidationStrategy.LazyEval)
     fun onBarcodeChange(barcode: String) {
         _formState.update {
             val newState = it.copy(
@@ -64,7 +64,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val proteinsForm = Form<ProductFormError>(
+    private val proteinsForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.NotEmpty,
         ProductFormRules.EmptyOrFloat,
@@ -82,7 +82,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val carbohydratesForm = Form<ProductFormError>(
+    private val carbohydratesForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.NotEmpty,
         ProductFormRules.EmptyOrFloat,
@@ -100,7 +100,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val fatsForm = Form<ProductFormError>(
+    private val fatsForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.NotEmpty,
         ProductFormRules.EmptyOrFloat,
@@ -118,7 +118,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val sugarsForm = Form<ProductFormError>(
+    private val sugarsForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.NanOrBetween0and100
@@ -135,7 +135,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val saturatedFatsForm = Form<ProductFormError>(
+    private val saturatedFatsForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.NanOrBetween0and100
@@ -152,7 +152,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val saltForm = Form<ProductFormError>(
+    private val saltForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.NanOrBetween0and100
@@ -169,7 +169,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val sodiumForm = Form<ProductFormError>(
+    private val sodiumForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.NanOrBetween0and100
@@ -186,7 +186,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val fiberForm = Form<ProductFormError>(
+    private val fiberForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.NanOrBetween0and100
@@ -203,7 +203,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val packageWeightForm = Form<ProductFormError>(
+    private val packageWeightForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.PositiveFloat
@@ -220,7 +220,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val servingWeightForm = Form<ProductFormError>(
+    private val servingWeightForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.PositiveFloat

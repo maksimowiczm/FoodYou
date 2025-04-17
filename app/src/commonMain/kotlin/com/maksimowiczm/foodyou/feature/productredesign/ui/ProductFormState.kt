@@ -11,19 +11,19 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 internal data class ProductFormState(
-    val name: Input<ProductFormError> = input(),
-    val brand: Input<ProductFormError> = input(),
-    val barcode: Input<ProductFormError> = input(),
-    val proteins: Input<ProductFormError> = input(),
-    val carbohydrates: Input<ProductFormError> = input(),
-    val fats: Input<ProductFormError> = input(),
-    val sugars: Input<ProductFormError> = input(),
-    val saturatedFats: Input<ProductFormError> = input(),
-    val salt: Input<ProductFormError> = input(),
-    val sodium: Input<ProductFormError> = input(),
-    val fiber: Input<ProductFormError> = input(),
-    val packageWeight: Input<ProductFormError> = input(),
-    val servingWeight: Input<ProductFormError> = input(),
+    val name: Input<ProductFormFieldError> = input(),
+    val brand: Input<ProductFormFieldError> = input(),
+    val barcode: Input<ProductFormFieldError> = input(),
+    val proteins: Input<ProductFormFieldError> = input(),
+    val carbohydrates: Input<ProductFormFieldError> = input(),
+    val fats: Input<ProductFormFieldError> = input(),
+    val sugars: Input<ProductFormFieldError> = input(),
+    val saturatedFats: Input<ProductFormFieldError> = input(),
+    val salt: Input<ProductFormFieldError> = input(),
+    val sodium: Input<ProductFormFieldError> = input(),
+    val fiber: Input<ProductFormFieldError> = input(),
+    val packageWeight: Input<ProductFormFieldError> = input(),
+    val servingWeight: Input<ProductFormFieldError> = input(),
     val isModified: Boolean = false
 ) {
     private val proteinsValue
@@ -56,45 +56,63 @@ internal data class ProductFormState(
         fiber.isValidOrEmpty &&
         packageWeight.isValidOrEmpty &&
         servingWeight.isValidOrEmpty
+
+    val error: ProductFormError?
+        get() {
+            val proteins = proteinsValue ?: return null
+            val carbohydrates = carbohydratesValue ?: return null
+            val fats = fatsValue ?: return null
+
+            val total = proteins + carbohydrates + fats
+            return if (total > 100f) {
+                ProductFormError.MacronutrientsExceeds100
+            } else {
+                null
+            }
+        }
+}
+
+internal sealed interface ProductFormFieldError {
+    object Empty : ProductFormFieldError
+    object NotANumber : ProductFormFieldError
+    object NegativeNumber : ProductFormFieldError
+    object Exceeds100 : ProductFormFieldError
 }
 
 internal sealed interface ProductFormError {
-    object Empty : ProductFormError
-    object NotANumber : ProductFormError
-    object NegativeNumber : ProductFormError
-    object Exceeds100 : ProductFormError
+    object MacronutrientsExceeds100 : ProductFormError
 }
 
 internal object ProductFormRules {
-    val NotEmpty = Rule<ProductFormError> {
-        { it.isNotBlank() } checks { ProductFormError.Empty }
+    val NotEmpty = Rule<ProductFormFieldError> {
+        { it.isNotBlank() } checks { ProductFormFieldError.Empty }
     }
 
-    val NanOrBetween0and100 = Rule<ProductFormError> {
+    val NanOrBetween0and100 = Rule<ProductFormFieldError> {
         { it.toFloatOrNull() } validates {
             when {
                 it == null -> null
-                it < 0f -> ProductFormError.NegativeNumber
-                it > 100f -> ProductFormError.Exceeds100
+                it < 0f -> ProductFormFieldError.NegativeNumber
+                it > 100f -> ProductFormFieldError.Exceeds100
                 else -> null
             }
         }
     }
 
-    val EmptyOrFloat = Rule<ProductFormError> {
+    val EmptyOrFloat = Rule<ProductFormFieldError> {
         {
             when {
                 it.isBlank() -> true
                 else -> it.toFloatOrNull() != null
             }
-        } checks { ProductFormError.NotANumber }
+        } checks { ProductFormFieldError.NotANumber }
     }
 
-    val PositiveFloat = Rule<ProductFormError> {
+    val PositiveFloat = Rule<ProductFormFieldError> {
         { it.toFloatOrNull() } validates {
             when {
                 it == null -> null
-                it < 0f -> ProductFormError.NegativeNumber
+                it < 0f -> ProductFormFieldError.NegativeNumber
                 else -> null
             }
         }
@@ -102,15 +120,17 @@ internal object ProductFormRules {
 }
 
 @Composable
-internal fun Iterable<ProductFormError>.stringResource(): String {
+internal fun Iterable<ProductFormFieldError>.stringResource(): String {
     @Suppress("SimplifiableCallChain") // Can't call @Composable from lambda
     return map { it.stringResource() }.joinToString("\n")
 }
 
 @Composable
-private fun ProductFormError.stringResource(): String = when (this) {
-    ProductFormError.Empty -> stringResource(Res.string.error_this_field_is_required)
-    ProductFormError.NotANumber -> stringResource(Res.string.error_invalid_number)
-    ProductFormError.NegativeNumber -> stringResource(Res.string.error_value_cannot_be_negative)
-    ProductFormError.Exceeds100 -> stringResource(Res.string.error_value_cannot_exceed_100)
+private fun ProductFormFieldError.stringResource(): String = when (this) {
+    ProductFormFieldError.Empty -> stringResource(Res.string.error_this_field_is_required)
+    ProductFormFieldError.NotANumber -> stringResource(Res.string.error_invalid_number)
+    ProductFormFieldError.NegativeNumber -> stringResource(
+        Res.string.error_value_cannot_be_negative
+    )
+    ProductFormFieldError.Exceeds100 -> stringResource(Res.string.error_value_cannot_exceed_100)
 }

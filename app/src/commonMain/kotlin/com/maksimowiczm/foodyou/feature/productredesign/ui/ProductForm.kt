@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.productredesign.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -190,7 +191,9 @@ internal fun ProductForm(
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.nutriment_proteins)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                    isError = state.proteins.isInvalid,
+                    isError =
+                    state.proteins.isInvalid ||
+                        state.error == ProductFormError.MacronutrientsExceeds100,
                     supportingText = {
                         val input = state.proteins
                         if (input is Input.Invalid) {
@@ -213,7 +216,9 @@ internal fun ProductForm(
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                    isError = state.carbohydrates.isInvalid,
+                    isError =
+                    state.carbohydrates.isInvalid ||
+                        state.error == ProductFormError.MacronutrientsExceeds100,
                     supportingText = {
                         val input = state.carbohydrates
                         if (input is Input.Invalid) {
@@ -236,7 +241,9 @@ internal fun ProductForm(
                     modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
                     label = { Text(stringResource(Res.string.nutriment_fats)) },
                     suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-                    isError = state.fats.isInvalid,
+                    isError =
+                    state.fats.isInvalid ||
+                        state.error == ProductFormError.MacronutrientsExceeds100,
                     supportingText = {
                         val input = state.fats
                         if (input is Input.Invalid) {
@@ -262,9 +269,23 @@ internal fun ProductForm(
                     supportingText = {
                         Text(stringResource(Res.string.neutral_calories_are_calculated))
                     },
+                    isError = state.error == ProductFormError.MacronutrientsExceeds100,
                     suffix = { Text(stringResource(Res.string.unit_kcal)) },
                     readOnly = true
                 )
+
+                AnimatedVisibility(
+                    visible = state.error == ProductFormError.MacronutrientsExceeds100,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    Text(
+                        text = stringResource(
+                            Res.string.error_sum_of_macronutrients_cannot_exceed_100g
+                        ),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
 
                 Text(
                     text = stringResource(Res.string.headline_nutrients),
