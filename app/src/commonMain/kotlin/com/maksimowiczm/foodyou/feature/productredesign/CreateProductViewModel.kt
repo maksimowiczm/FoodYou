@@ -254,17 +254,17 @@ internal class CreateProductViewModel(
         else -> false
     }
 
-    private val _openFoodFactsError = MutableStateFlow<OpenFoodFactsError?>(null)
-    val openFoodFactsError = _openFoodFactsError.asStateFlow()
+    private val _openFoodFactsErrorBus = Channel<OpenFoodFactsError?>()
+    val openFoodFactsErrorBus = _openFoodFactsErrorBus.receiveAsFlow()
     private val openFoodFactsLinkHelper by lazy { OpenFoodFactsLinkHelper() }
     fun onDownloadOpenFoodFacts(url: String) {
         viewModelScope.launch {
             _isDownloading.emit(true)
-            _openFoodFactsError.emit(null)
+            _openFoodFactsErrorBus.send(null)
 
             val code = when (val code = openFoodFactsLinkHelper.extractCode(url)) {
                 null -> {
-                    _openFoodFactsError.emit(OpenFoodFactsError.InvalidUrl)
+                    _openFoodFactsErrorBus.send(OpenFoodFactsError.InvalidUrl)
                     _isDownloading.emit(false)
                     return@launch
                 }
@@ -287,7 +287,7 @@ internal class CreateProductViewModel(
                     _eventBus.send(ProductFormEvent.DownloadedProductSuccessfully)
                 }
                 .onFailure {
-                    _openFoodFactsError.emit(OpenFoodFactsError.DownloadProductFailed(it))
+                    _openFoodFactsErrorBus.send(OpenFoodFactsError.DownloadProductFailed(it))
                 }
 
             _isDownloading.emit(false)

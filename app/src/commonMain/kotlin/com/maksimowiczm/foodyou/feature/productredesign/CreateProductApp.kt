@@ -192,7 +192,9 @@ private fun CreateProductNavHost(
     ) {
         forwardBackwardComposable<CreateOpenFoodFactsProduct> {
             val isDownloading by viewModel.isDownloading.collectAsStateWithLifecycle()
-            val error by viewModel.openFoodFactsError.collectAsStateWithLifecycle()
+            // Yes, it will drop the error on configuration change, but does it really matter...
+            // TODO remember the error on configuration change
+            val error by viewModel.openFoodFactsErrorBus.collectAsStateWithLifecycle(null)
 
             DownloadOpenFoodFactsProduct(
                 isDownloading = isDownloading,
