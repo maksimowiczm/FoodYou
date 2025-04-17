@@ -1,10 +1,10 @@
-package com.maksimowiczm.foodyou.feature.openfoodfacts.network.model
+package com.maksimowiczm.foodyou.core.domain.model.openfoodfacts
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class OpenFoodFactsNutrients(
+data class OpenFoodFactsNutrients(
     @SerialName("carbohydrates_100g")
     val carbohydrates100g: Float? = null,
     @SerialName("energy-kcal_100g")

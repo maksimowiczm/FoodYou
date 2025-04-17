@@ -1,4 +1,6 @@
-package com.maksimowiczm.foodyou.feature.openfoodfacts.network.model
+package com.maksimowiczm.foodyou.core.data.openfoodfacts.model
+
+import com.maksimowiczm.foodyou.core.domain.model.openfoodfacts.OpenFoodFactsProduct
 
 internal interface OpenFoodPageResponse {
     val count: Int

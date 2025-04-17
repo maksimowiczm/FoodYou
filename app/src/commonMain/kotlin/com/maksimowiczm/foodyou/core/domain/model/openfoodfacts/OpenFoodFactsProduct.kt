@@ -1,10 +1,9 @@
-package com.maksimowiczm.foodyou.feature.openfoodfacts.network.model
+package com.maksimowiczm.foodyou.core.domain.model.openfoodfacts
 
-internal interface OpenFoodFactsProduct {
+interface OpenFoodFactsProduct {
     val productName: String?
     val brands: String?
     val code: String?
-    val imageUrl: String?
     val nutrients: OpenFoodFactsNutrients?
     val packageQuantity: Float?
     val packageQuantityUnit: String?

@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.feature.openfoodfacts.network
+package com.maksimowiczm.foodyou.core.data.openfoodfacts
 
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.BuildConfig
-import com.maksimowiczm.foodyou.feature.openfoodfacts.network.model.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.feature.openfoodfacts.network.model.OpenFoodPageResponse
-import com.maksimowiczm.foodyou.feature.openfoodfacts.network.model.v1.OpenFoodFactsPageResponseV1
-import com.maksimowiczm.foodyou.feature.openfoodfacts.network.model.v2.OpenFoodFactsProductResponseV2
+import com.maksimowiczm.foodyou.core.data.openfoodfacts.model.OpenFoodPageResponse
+import com.maksimowiczm.foodyou.core.data.openfoodfacts.model.v1.OpenFoodFactsPageResponseV1
+import com.maksimowiczm.foodyou.core.data.openfoodfacts.model.v2.OpenFoodFactsProductResponseV2
+import com.maksimowiczm.foodyou.core.domain.model.openfoodfacts.OpenFoodFactsProduct
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
