@@ -3,9 +3,16 @@ package com.maksimowiczm.foodyou.feature.productredesign.data
 import com.maksimowiczm.foodyou.core.data.model.Nutrients
 import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
 import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
+import com.maksimowiczm.foodyou.core.domain.mapper.ProductMapper
+import com.maksimowiczm.foodyou.core.domain.model.Product
 import com.maksimowiczm.foodyou.core.domain.source.ProductLocalDataSource
+import kotlinx.coroutines.flow.first
 
 internal class ProductRepository(private val localProductDataSource: ProductLocalDataSource) {
+
+    suspend fun getProductById(id: Long): Product? = with(ProductMapper) {
+        return localProductDataSource.observeProduct(id).first()?.toModel()
+    }
 
     /**
      * Creates a new user product in the database.
