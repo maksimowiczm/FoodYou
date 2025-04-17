@@ -53,8 +53,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import org.jetbrains.compose.resources.stringResource
 
-// TODO
-//  When downloading a product set selection to the end of the text field
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun ProductForm(

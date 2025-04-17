@@ -254,6 +254,10 @@ internal class CreateProductViewModel(
         else -> false
     }
 
+    fun onCreateProduct() {
+        // TODO
+    }
+
     private val _openFoodFactsErrorBus = Channel<OpenFoodFactsError?>()
     val openFoodFactsErrorBus = _openFoodFactsErrorBus.receiveAsFlow()
     private val openFoodFactsLinkHelper by lazy { OpenFoodFactsLinkHelper() }

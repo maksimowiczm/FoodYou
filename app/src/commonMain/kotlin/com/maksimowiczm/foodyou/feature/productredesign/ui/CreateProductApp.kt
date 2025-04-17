@@ -130,9 +130,7 @@ internal fun CreateProductApp(
                         exit = fadeOut()
                     ) {
                         TextButton(
-                            onClick = {
-                                // TODO
-                            },
+                            onClick = remember(viewModel) { viewModel::onCreateProduct },
                             enabled = state.isValid
                         ) {
                             Text(stringResource(Res.string.action_create))
