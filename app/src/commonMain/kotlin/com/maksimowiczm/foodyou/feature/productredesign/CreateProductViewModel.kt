@@ -60,7 +60,8 @@ internal class CreateProductViewModel(
     private val proteinsForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.NotEmpty,
-        ProductFormRules.between0and100
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.NanOrBetween0and100
     )
 
     fun onProteinsChange(proteins: String) {
@@ -73,7 +74,9 @@ internal class CreateProductViewModel(
 
     private val carbohydratesForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
-        ProductFormRules.between0and100
+        ProductFormRules.NotEmpty,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.NanOrBetween0and100
     )
 
     fun onCarbohydratesChange(carbohydrates: String) {
@@ -86,7 +89,9 @@ internal class CreateProductViewModel(
 
     private val fatsForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
-        ProductFormRules.between0and100
+        ProductFormRules.NotEmpty,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.NanOrBetween0and100
     )
 
     fun onFatsChange(fats: String) {
@@ -99,7 +104,8 @@ internal class CreateProductViewModel(
 
     private val sugarsForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
-        ProductFormRules.between0and100
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.NanOrBetween0and100
     )
 
     fun onSugarsChange(sugars: String) {
@@ -112,7 +118,8 @@ internal class CreateProductViewModel(
 
     private val saturatedFatsForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
-        ProductFormRules.between0and100
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.NanOrBetween0and100
     )
 
     fun onSaturatedFatsChange(saturatedFats: String) {
@@ -125,7 +132,8 @@ internal class CreateProductViewModel(
 
     private val saltForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
-        ProductFormRules.between0and100
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.NanOrBetween0and100
     )
 
     fun onSaltChange(salt: String) {
@@ -138,7 +146,8 @@ internal class CreateProductViewModel(
 
     private val sodiumForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
-        ProductFormRules.between0and100
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.NanOrBetween0and100
     )
 
     fun onSodiumChange(sodium: String) {
@@ -151,7 +160,8 @@ internal class CreateProductViewModel(
 
     private val fiberForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
-        ProductFormRules.between0and100
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.NanOrBetween0and100
     )
 
     fun onFiberChange(fiber: String) {
@@ -164,7 +174,8 @@ internal class CreateProductViewModel(
 
     private val packageWeightForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
-        ProductFormRules.positiveFloat
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.PositiveFloat
     )
 
     fun onPackageWeightChange(packageWeight: String) {
@@ -177,7 +188,8 @@ internal class CreateProductViewModel(
 
     private val servingWeightForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
-        ProductFormRules.positiveFloat
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.PositiveFloat
     )
 
     fun onServingWeightChange(servingWeight: String) {

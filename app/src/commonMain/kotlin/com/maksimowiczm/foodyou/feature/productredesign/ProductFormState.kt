@@ -55,22 +55,31 @@ internal object ProductFormRules {
         { it.isNotBlank() } checks { ProductFormError.Empty }
     }
 
-    val between0and100 = Rule<ProductFormError> {
+    val NanOrBetween0and100 = Rule<ProductFormError> {
         { it.toFloatOrNull() } validates {
-            when (it) {
-                null -> ProductFormError.NotANumber
-                else if (it < 0) -> ProductFormError.NegativeNumber
-                else if (it > 100) -> ProductFormError.Exceeds100
+            when {
+                it == null -> null
+                it < 0f -> ProductFormError.NegativeNumber
+                it > 100f -> ProductFormError.Exceeds100
                 else -> null
             }
         }
     }
 
-    val positiveFloat = Rule<ProductFormError> {
+    val EmptyOrFloat = Rule<ProductFormError> {
+        {
+            when {
+                it.isBlank() -> true
+                else -> it.toFloatOrNull() != null
+            }
+        } checks { ProductFormError.NotANumber }
+    }
+
+    val PositiveFloat = Rule<ProductFormError> {
         { it.toFloatOrNull() } validates {
-            when (it) {
-                null -> ProductFormError.NotANumber
-                else if (it < 0) -> ProductFormError.NegativeNumber
+            when {
+                it == null -> null
+                it < 0f -> ProductFormError.NegativeNumber
                 else -> null
             }
         }
