@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 internal class CreateProductViewModel : ViewModel() {
-    private val _state = MutableStateFlow<ProductFormState>(ProductFormState())
-    val state = _state.asStateFlow()
+    private val _formState = MutableStateFlow<ProductFormState>(ProductFormState())
+    val formState = _formState.asStateFlow()
 
     private val nameForm = Form<ProductFormError>(
         ValidationStrategy.LazyEval,
@@ -17,7 +17,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onNameChange(name: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 name = nameForm.validate(name)
             )
@@ -26,7 +26,7 @@ internal class CreateProductViewModel : ViewModel() {
 
     private val brandForm = Form<ProductFormError>(ValidationStrategy.LazyEval)
     fun onBrandChange(brand: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 brand = brandForm.validate(brand)
             )
@@ -35,7 +35,7 @@ internal class CreateProductViewModel : ViewModel() {
 
     private val barcodeForm = Form<ProductFormError>(ValidationStrategy.LazyEval)
     fun onBarcodeChange(barcode: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 barcode = barcodeForm.validate(barcode)
             )
@@ -49,7 +49,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onProteinsChange(proteins: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 proteins = proteinsForm.validate(proteins)
             )
@@ -62,7 +62,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onCarbohydratesChange(carbohydrates: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 carbohydrates = carbohydratesForm.validate(carbohydrates)
             )
@@ -75,7 +75,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onFatsChange(fats: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 fats = fatsForm.validate(fats)
             )
@@ -88,7 +88,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onSugarsChange(sugars: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 sugars = sugarsForm.validate(sugars)
             )
@@ -101,7 +101,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onSaturatedFatsChange(saturatedFats: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 saturatedFats = saturatedFatsForm.validate(saturatedFats)
             )
@@ -114,7 +114,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onSaltChange(salt: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 salt = saltForm.validate(salt)
             )
@@ -127,7 +127,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onSodiumChange(sodium: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 sodium = sodiumForm.validate(sodium)
             )
@@ -140,7 +140,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onFiberChange(fiber: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 fiber = fiberForm.validate(fiber)
             )
@@ -153,7 +153,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onPackageWeightChange(packageWeight: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 packageWeight = packageWeightForm.validate(packageWeight)
             )
@@ -166,7 +166,7 @@ internal class CreateProductViewModel : ViewModel() {
     )
 
     fun onServingWeightChange(servingWeight: String) {
-        _state.update {
+        _formState.update {
             it.copy(
                 servingWeight = servingWeightForm.validate(servingWeight)
             )

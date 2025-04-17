@@ -154,7 +154,7 @@ private fun CreateProductNavHost(
             )
         }
         forwardBackwardComposable<CreateProductForm> {
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.formState.collectAsStateWithLifecycle()
 
             ProductForm(
                 state = state,
