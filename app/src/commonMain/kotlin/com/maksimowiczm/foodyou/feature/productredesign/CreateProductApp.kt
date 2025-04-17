@@ -19,6 +19,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -166,6 +168,11 @@ private fun CreateProductNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
+    // This is a hack to force recomposition of the form when the user downloads a product
+    // from Open Food Facts and returns to the form with the product data. It will recreate
+    // text fields with the new data.
+    var formKey by rememberSaveable { mutableIntStateOf(0) }
+
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(viewModel.eventBus) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -179,6 +186,8 @@ private fun CreateProductNavHost(
                                 inclusive = false
                             }
                         }
+
+                        formKey = formKey + 1_000_690_420 * 1_000_420_690
                     }
                 }
             }
@@ -208,38 +217,40 @@ private fun CreateProductNavHost(
         forwardBackwardComposable<CreateProductForm> {
             val state by viewModel.formState.collectAsStateWithLifecycle()
 
-            ProductForm(
-                state = state,
-                contentPadding = contentPadding,
-                onNameChange = remember(viewModel) { viewModel::onNameChange },
-                onBrandChange = remember(viewModel) { viewModel::onBrandChange },
-                onBarcodeChange = remember(viewModel) { viewModel::onBarcodeChange },
-                onProteinsChange = remember(viewModel) { viewModel::onProteinsChange },
-                onCarbohydratesChange = remember(viewModel) {
-                    viewModel::onCarbohydratesChange
-                },
-                onFatsChange = remember(viewModel) { viewModel::onFatsChange },
-                onSugarsChange = remember(viewModel) { viewModel::onSugarsChange },
-                onSaturatedFatsChange = remember(viewModel) {
-                    viewModel::onSaturatedFatsChange
-                },
-                onSaltChange = remember(viewModel) { viewModel::onSaltChange },
-                onSodiumChange = remember(viewModel) { viewModel::onSodiumChange },
-                onFiberChange = remember(viewModel) { viewModel::onFiberChange },
-                onPackageWeightChange = remember(viewModel) {
-                    viewModel::onPackageWeightChange
-                },
-                onServingWeightChange = remember(viewModel) {
-                    viewModel::onServingWeightChange
-                },
-                onUseOpenFoodFactsProduct = remember(navController) {
-                    {
-                        navController.navigate(CreateOpenFoodFactsProduct) {
-                            launchSingleTop = true
+            key(formKey.toString()) {
+                ProductForm(
+                    state = state,
+                    contentPadding = contentPadding,
+                    onNameChange = remember(viewModel) { viewModel::onNameChange },
+                    onBrandChange = remember(viewModel) { viewModel::onBrandChange },
+                    onBarcodeChange = remember(viewModel) { viewModel::onBarcodeChange },
+                    onProteinsChange = remember(viewModel) { viewModel::onProteinsChange },
+                    onCarbohydratesChange = remember(viewModel) {
+                        viewModel::onCarbohydratesChange
+                    },
+                    onFatsChange = remember(viewModel) { viewModel::onFatsChange },
+                    onSugarsChange = remember(viewModel) { viewModel::onSugarsChange },
+                    onSaturatedFatsChange = remember(viewModel) {
+                        viewModel::onSaturatedFatsChange
+                    },
+                    onSaltChange = remember(viewModel) { viewModel::onSaltChange },
+                    onSodiumChange = remember(viewModel) { viewModel::onSodiumChange },
+                    onFiberChange = remember(viewModel) { viewModel::onFiberChange },
+                    onPackageWeightChange = remember(viewModel) {
+                        viewModel::onPackageWeightChange
+                    },
+                    onServingWeightChange = remember(viewModel) {
+                        viewModel::onServingWeightChange
+                    },
+                    onUseOpenFoodFactsProduct = remember(navController) {
+                        {
+                            navController.navigate(CreateOpenFoodFactsProduct) {
+                                launchSingleTop = true
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
