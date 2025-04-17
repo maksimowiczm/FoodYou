@@ -17,7 +17,7 @@ import com.maksimowiczm.foodyou.feature.language.Language
 import com.maksimowiczm.foodyou.feature.language.languageGraph
 import com.maksimowiczm.foodyou.feature.meal.MealsSettings
 import com.maksimowiczm.foodyou.feature.meal.mealGraph
-import com.maksimowiczm.foodyou.feature.productredesign.ui.CreateProductApp
+import com.maksimowiczm.foodyou.feature.productredesign.ui.create.CreateProductApp
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.Settings

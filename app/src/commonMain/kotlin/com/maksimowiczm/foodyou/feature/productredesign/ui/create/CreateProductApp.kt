@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign.ui
+package com.maksimowiczm.foodyou.feature.productredesign.ui.create
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -39,6 +39,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
+import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductForm
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_cancel
 import foodyou.app.generated.resources.action_create

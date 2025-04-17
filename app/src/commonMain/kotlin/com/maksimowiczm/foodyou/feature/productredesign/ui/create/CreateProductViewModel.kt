@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign.ui
+package com.maksimowiczm.foodyou.feature.productredesign.ui.create
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +9,9 @@ import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.input.ValidationStrategy
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.productredesign.data.ProductRepository
+import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductFormFieldError
+import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductFormRules
+import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductFormState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

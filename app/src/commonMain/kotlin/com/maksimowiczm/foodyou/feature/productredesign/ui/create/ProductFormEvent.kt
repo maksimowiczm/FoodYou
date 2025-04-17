@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign.ui
+package com.maksimowiczm.foodyou.feature.productredesign.ui.create
 
 internal sealed interface ProductFormEvent {
     data object DownloadedProductSuccessfully : ProductFormEvent
