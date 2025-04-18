@@ -116,11 +116,11 @@ internal fun ProductForm(
             )
         )
 
-        val barcodeState = rememberInputState(state.barcode.value) {
-            onBarcodeChange(it)
-        }
+        // Use string because barcode scanner will update it
+        // This is so spaghetti 💀
         TextField(
-            state = barcodeState,
+            value = state.barcode.value,
+            onValueChange = onBarcodeChange,
             modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
             enabled = enabled,
             label = { Text(stringResource(Res.string.product_barcode)) },
