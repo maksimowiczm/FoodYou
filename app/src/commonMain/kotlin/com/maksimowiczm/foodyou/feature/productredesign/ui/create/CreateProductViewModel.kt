@@ -333,18 +333,28 @@ internal class CreateProductViewModel(
     fun onDownloadOpenFoodFacts() {
         val url = _openFoodFactsLink.value.value
 
+        if (url.isEmpty()) {
+            _openFoodFactsLink.update {
+                Input.Invalid(it.value, listOf(OpenFoodFactsLinkError.Empty))
+            }
+            return
+        }
+
         viewModelScope.launch {
-            _isDownloading.emit(true)
             _openFoodFactsError.emit(null)
 
             val code = when (val code = openFoodFactsLinkHelper.extractCode(url)) {
                 null -> {
-                    _isDownloading.emit(false)
+                    _openFoodFactsLink.update {
+                        Input.Invalid(it.value, listOf(OpenFoodFactsLinkError.InvalidUrl))
+                    }
                     return@launch
                 }
 
                 else -> code
             }
+
+            _isDownloading.emit(true)
 
             val product = runCatching {
                 openFoodFactsRemoteDataSource.getProduct(code, null) ?: error("Product not found")

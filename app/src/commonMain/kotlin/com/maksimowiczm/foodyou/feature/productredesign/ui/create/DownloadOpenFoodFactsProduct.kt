@@ -89,26 +89,22 @@ internal fun DownloadOpenFoodFactsProduct(
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
-            Column(
+            ExtendedFloatingActionButton(
+                onClick = onDownload,
                 modifier = Modifier
                     .animateFloatingActionButton(
                         visible = !animatedVisibilityScope.transition.isRunning,
                         alignment = Alignment.BottomEnd
                     ).onSizeChanged {
                         fabHeight = it.height
-                    },
-                horizontalAlignment = Alignment.End
+                    }
             ) {
-                ExtendedFloatingActionButton(
-                    onClick = onDownload
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Download,
-                        contentDescription = stringResource(Res.string.action_download)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(Res.string.action_download))
-                }
+                Icon(
+                    imageVector = Icons.Default.Download,
+                    contentDescription = stringResource(Res.string.action_download)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(Res.string.action_download))
             }
         },
         contentWindowInsets = insets
