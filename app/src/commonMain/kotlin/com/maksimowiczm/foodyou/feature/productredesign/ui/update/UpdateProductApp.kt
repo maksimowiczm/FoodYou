@@ -28,6 +28,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductForm
 import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductFormState
 import foodyou.app.generated.resources.*
@@ -63,7 +67,7 @@ internal fun UpdateProductApp(
 
     when (val state = state) {
         null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
-        else -> UpdateProductApp(
+        else -> UpdateProductNavHost(
             state = state,
             onNameChange = remember(viewModel) { viewModel::onNameChange },
             onBrandChange = remember(viewModel) { viewModel::onBrandChange },
@@ -82,6 +86,73 @@ internal fun UpdateProductApp(
             onSave = remember(viewModel) { viewModel::onUpdate },
             modifier = modifier
         )
+    }
+}
+
+@Composable
+private fun UpdateProductNavHost(
+    state: ProductFormState,
+    onNameChange: (String) -> Unit,
+    onBrandChange: (String) -> Unit,
+    onBarcodeChange: (String) -> Unit,
+    onProteinsChange: (String) -> Unit,
+    onCarbohydratesChange: (String) -> Unit,
+    onFatsChange: (String) -> Unit,
+    onSugarsChange: (String) -> Unit,
+    onSaturatedFatsChange: (String) -> Unit,
+    onSaltChange: (String) -> Unit,
+    onSodiumChange: (String) -> Unit,
+    onFiberChange: (String) -> Unit,
+    onPackageWeightChange: (String) -> Unit,
+    onServingWeightChange: (String) -> Unit,
+    onBack: () -> Unit,
+    onSave: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val navController = rememberNavController()
+
+    // Barcode scanner must be on same navController as the app because it should be fullscreen
+    NavHost(
+        navController = navController,
+        startDestination = "app"
+    ) {
+        crossfadeComposable("app") {
+            UpdateProductApp(
+                state = state,
+                onNameChange = onNameChange,
+                onBrandChange = onBrandChange,
+                onBarcodeChange = onBarcodeChange,
+                onProteinsChange = onProteinsChange,
+                onCarbohydratesChange = onCarbohydratesChange,
+                onFatsChange = onFatsChange,
+                onSugarsChange = onSugarsChange,
+                onSaturatedFatsChange = onSaturatedFatsChange,
+                onSaltChange = onSaltChange,
+                onSodiumChange = onSodiumChange,
+                onFiberChange = onFiberChange,
+                onPackageWeightChange = onPackageWeightChange,
+                onServingWeightChange = onServingWeightChange,
+                onBack = onBack,
+                onSave = onSave,
+                onBarcodeScanner = {
+                    navController.navigate("barcode") {
+                        launchSingleTop = true
+                    }
+                },
+                modifier = modifier
+            )
+        }
+        crossfadeComposable("barcode") {
+            CameraBarcodeScannerScreen(
+                onClose = {
+                    navController.popBackStack("barcode", inclusive = true)
+                },
+                onBarcodeScan = {
+                    onBarcodeChange(it)
+                    navController.popBackStack("barcode", inclusive = true)
+                }
+            )
+        }
     }
 }
 
@@ -104,8 +175,11 @@ private fun UpdateProductApp(
     onServingWeightChange: (String) -> Unit,
     onBack: () -> Unit,
     onSave: () -> Unit,
+    onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // TODO back handler
+
     val handleBack = {
         onBack()
     }
@@ -163,7 +237,8 @@ private fun UpdateProductApp(
                     onSodiumChange = onSodiumChange,
                     onFiberChange = onFiberChange,
                     onPackageWeightChange = onPackageWeightChange,
-                    onServingWeightChange = onServingWeightChange
+                    onServingWeightChange = onServingWeightChange,
+                    onBarcodeScanner = onBarcodeScanner
                 )
             }
         }

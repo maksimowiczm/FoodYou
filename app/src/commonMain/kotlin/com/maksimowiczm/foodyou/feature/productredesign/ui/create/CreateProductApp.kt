@@ -50,8 +50,10 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
+import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductForm
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
@@ -67,6 +69,50 @@ internal fun CreateProductApp(
     onProductCreate: (productId: Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreateProductViewModel = koinViewModel()
+) {
+    val navController = rememberNavController()
+
+    // Barcode scanner must be on same navController as the app because it should be fullscreen
+    NavHost(
+        navController = navController,
+        startDestination = "app"
+    ) {
+        crossfadeComposable("app") {
+            CreateProductApp(
+                onBack = onBack,
+                onProductCreate = onProductCreate,
+                onBarcodeScanner = {
+                    navController.navigate("barcode") {
+                        launchSingleTop = true
+                    }
+                },
+                viewModel = viewModel,
+                modifier = modifier
+            )
+        }
+        crossfadeComposable("barcode") {
+            CameraBarcodeScannerScreen(
+                onClose = {
+                    navController.popBackStack("barcode", inclusive = true)
+                },
+                onBarcodeScan = {
+                    viewModel.onBarcodeChange(it)
+                    navController.popBackStack("barcode", inclusive = true)
+                }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Suppress("ktlint:compose:vm-forwarding-check")
+@Composable
+private fun CreateProductApp(
+    onBack: () -> Unit,
+    onProductCreate: (productId: Long) -> Unit,
+    onBarcodeScanner: () -> Unit,
+    viewModel: CreateProductViewModel,
+    modifier: Modifier = Modifier
 ) {
     val state by viewModel.formState.collectAsStateWithLifecycle()
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
@@ -98,8 +144,6 @@ internal fun CreateProductApp(
         remember(uriHandler, openFoodFactsUrl) { { uriHandler.openUri(openFoodFactsUrl) } }
     }
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
     BackHandler(
         enabled = currentDestination?.destination?.hasRoute<CreateProductForm>() == true &&
             state.isModified
@@ -115,6 +159,8 @@ internal fun CreateProductApp(
             }
         )
     }
+
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
         modifier = modifier,
@@ -155,6 +201,7 @@ internal fun CreateProductApp(
         CreateProductNavHost(
             onOpenFoodFacts = onOpenFoodFacts,
             onProductCreate = onProductCreate,
+            onBarcodeScanner = onBarcodeScanner,
             contentPadding = paddingValues,
             viewModel = viewModel,
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -174,6 +221,7 @@ private data object CreateProductForm
 private fun CreateProductNavHost(
     onOpenFoodFacts: () -> Unit,
     onProductCreate: (productId: Long) -> Unit,
+    onBarcodeScanner: () -> Unit,
     contentPadding: PaddingValues,
     viewModel: CreateProductViewModel,
     modifier: Modifier = Modifier,
@@ -305,6 +353,7 @@ private fun CreateProductNavHost(
                             onServingWeightChange = remember(viewModel) {
                                 viewModel::onServingWeightChange
                             },
+                            onBarcodeScanner = onBarcodeScanner,
                             enabled = !isDownloading
                         )
                     }

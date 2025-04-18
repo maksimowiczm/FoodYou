@@ -11,7 +11,11 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -56,6 +60,7 @@ internal fun ProductForm(
     onFiberChange: (String) -> Unit,
     onPackageWeightChange: (String) -> Unit,
     onServingWeightChange: (String) -> Unit,
+    onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
@@ -120,6 +125,16 @@ internal fun ProductForm(
             enabled = enabled,
             label = { Text(stringResource(Res.string.product_barcode)) },
             supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
+            trailingIcon = {
+                IconButton(
+                    onClick = onBarcodeScanner
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.QrCodeScanner,
+                        contentDescription = stringResource(Res.string.action_scan_barcode)
+                    )
+                }
+            },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
             )
