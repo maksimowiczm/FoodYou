@@ -12,13 +12,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -234,6 +237,8 @@ private fun CreateProductNavHost(
         }
         forwardBackwardComposable<CreateProductForm> {
             val state by viewModel.formState.collectAsStateWithLifecycle()
+            val openFoodFactsError by viewModel.openFoodFactsError.collectAsStateWithLifecycle()
+            val isDownloading by viewModel.isDownloading.collectAsStateWithLifecycle()
 
             key(formKey.toString()) {
                 LazyColumn(
@@ -250,12 +255,26 @@ private fun CreateProductNavHost(
                                     }
                                 },
                                 leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Default.Download,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(AssistChipDefaults.IconSize)
-                                    )
+                                    when {
+                                        isDownloading -> CircularProgressIndicator(
+                                            modifier = Modifier.size(AssistChipDefaults.IconSize)
+                                        )
+
+                                        openFoodFactsError != null -> Icon(
+                                            imageVector = Icons.Default.Error,
+                                            modifier = Modifier.size(AssistChipDefaults.IconSize),
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.error
+                                        )
+
+                                        else -> Icon(
+                                            imageVector = Icons.Default.Download,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(AssistChipDefaults.IconSize)
+                                        )
+                                    }
                                 },
+                                enabled = !isDownloading,
                                 label = {
                                     Text(
                                         stringResource(
@@ -290,7 +309,8 @@ private fun CreateProductNavHost(
                             },
                             onServingWeightChange = remember(viewModel) {
                                 viewModel::onServingWeightChange
-                            }
+                            },
+                            enabled = !isDownloading
                         )
                     }
                 }
