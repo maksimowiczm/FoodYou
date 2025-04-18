@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -52,14 +53,8 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductForm
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_cancel
-import foodyou.app.generated.resources.action_create
-import foodyou.app.generated.resources.action_discard
-import foodyou.app.generated.resources.action_use_open_food_facts_product
-import foodyou.app.generated.resources.headline_create_product
-import foodyou.app.generated.resources.link_open_food_facts
-import foodyou.app.generated.resources.question_discard_product
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -242,7 +237,7 @@ private fun CreateProductNavHost(
 
             key(formKey.toString()) {
                 LazyColumn(
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp).imePadding(),
                     contentPadding = contentPadding,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {

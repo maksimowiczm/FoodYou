@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.feature.productredesign.ui.create
 import androidx.compose.runtime.Composable
 import com.maksimowiczm.foodyou.core.input.Rule
 import com.maksimowiczm.foodyou.core.input.dsl.checks
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.error_this_field_is_required
 import org.jetbrains.compose.resources.stringResource
 
 internal data class DownloadProductFailed(val throwable: Throwable)
