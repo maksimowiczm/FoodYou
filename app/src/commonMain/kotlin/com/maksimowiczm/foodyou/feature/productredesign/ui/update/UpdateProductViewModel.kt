@@ -57,8 +57,11 @@ internal class UpdateProductViewModel(
 
     fun onNameChange(name: String) {
         _formState.update {
-            it?.copy(
+            val newState = it?.copy(
                 name = nameForm.validate(name)
+            )
+            newState?.copy(
+                isModified = isModified(newState)
             )
         }
     }
