@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.productredesign.ui.update
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.core.domain.model.Product
 import com.maksimowiczm.foodyou.core.input.Form
 import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.input.ValidationStrategy
@@ -22,12 +23,15 @@ internal class UpdateProductViewModel(
     private val productId: Long,
     private val productRepository: ProductRepository
 ) : ViewModel() {
+    private var product: Product? = null
     private val _formState = MutableStateFlow<ProductFormState?>(null)
     val formState = _formState.asStateFlow()
 
     init {
         viewModelScope.launch {
             val product = productRepository.getProductById(productId) ?: return@launch
+
+            this@UpdateProductViewModel.product = product
 
             _formState.value = ProductFormState(
                 name = input(product.name),
@@ -263,20 +267,22 @@ internal class UpdateProductViewModel(
         }
     }
 
+    private fun Input<ProductFormFieldError>.float(): Float? = value.toFloatOrNull()
+
     private fun isModified(formState: ProductFormState) = when {
-        formState.name !is Input.Empty -> true
-        formState.brand !is Input.Empty -> true
-        formState.barcode !is Input.Empty -> true
-        formState.proteins !is Input.Empty -> true
-        formState.carbohydrates !is Input.Empty -> true
-        formState.fats !is Input.Empty -> true
-        formState.sugars !is Input.Empty -> true
-        formState.saturatedFats !is Input.Empty -> true
-        formState.salt !is Input.Empty -> true
-        formState.sodium !is Input.Empty -> true
-        formState.fiber !is Input.Empty -> true
-        formState.packageWeight !is Input.Empty -> true
-        formState.servingWeight !is Input.Empty -> true
+        formState.name.value != product?.name -> true
+        formState.brand.value != product?.brand -> true
+        formState.barcode.value != product?.barcode -> true
+        formState.proteins.float() != product?.nutrients?.proteins?.value -> true
+        formState.carbohydrates.float() != product?.nutrients?.carbohydrates?.value -> true
+        formState.fats.float() != product?.nutrients?.fats?.value -> true
+        formState.sugars.float() != product?.nutrients?.sugars?.value -> true
+        formState.saturatedFats.float() != product?.nutrients?.saturatedFats?.value -> true
+        formState.salt.float() != product?.nutrients?.salt?.value -> true
+        formState.sodium.float() != product?.nutrients?.sodium?.value -> true
+        formState.fiber.float() != product?.nutrients?.fiber?.value -> true
+        formState.packageWeight.float() != product?.packageWeight?.weight -> true
+        formState.servingWeight.float() != product?.servingWeight?.weight -> true
         else -> false
     }
 
