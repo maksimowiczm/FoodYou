@@ -10,7 +10,7 @@ object ProductMapper {
         id = FoodId.Product(id),
         name = name,
         brand = brand,
-        barcode = null,
+        barcode = barcode,
         nutrients = with(NutrientsMapper) { nutrients.toModel() },
         packageWeight = packageWeight?.let { PortionWeight.Package(it) },
         servingWeight = servingWeight?.let { PortionWeight.Serving(it) }
