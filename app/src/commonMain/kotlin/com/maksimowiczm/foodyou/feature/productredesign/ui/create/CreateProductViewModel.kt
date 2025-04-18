@@ -359,6 +359,8 @@ internal class CreateProductViewModel(
                         )
                     }
                     _eventBus.send(ProductFormEvent.DownloadedProductSuccessfully)
+                    _openFoodFactsLink.update { input() }
+                    _openFoodFactsError.emit(null)
                 }
                 .onFailure {
                     _openFoodFactsError.emit(DownloadProductFailed(it))

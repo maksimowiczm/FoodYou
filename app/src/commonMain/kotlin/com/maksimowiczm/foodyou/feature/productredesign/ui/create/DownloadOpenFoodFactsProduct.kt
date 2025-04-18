@@ -148,6 +148,7 @@ internal fun DownloadOpenFoodFactsProduct(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
+                    enabled = !isDownloading,
                     isError = linkInput.isInvalid || error != null,
                     leadingIcon = {
                         Icon(
@@ -207,15 +208,16 @@ internal fun DownloadOpenFoodFactsProduct(
                                 onLinkChange(text)
                             }
                         },
+                        label = {
+                            Text(stringResource(Res.string.action_paste_url))
+                        },
+                        enabled = !isDownloading,
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.ContentPaste,
                                 contentDescription = null,
                                 modifier = Modifier.size(AssistChipDefaults.IconSize)
                             )
-                        },
-                        label = {
-                            Text(stringResource(Res.string.action_paste_url))
                         }
                     )
                     AssistChip(
