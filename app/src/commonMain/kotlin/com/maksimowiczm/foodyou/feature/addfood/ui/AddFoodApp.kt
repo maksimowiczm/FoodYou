@@ -17,6 +17,7 @@ import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.addfood.SearchSharedTransition
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.CreateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.UpdateMeasurementScreen
@@ -25,9 +26,8 @@ import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.rememberSearchFoodScreenState
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.meal.MealScreen
-import com.maksimowiczm.foodyou.feature.product.CreateProduct
-import com.maksimowiczm.foodyou.feature.product.UpdateProduct
-import com.maksimowiczm.foodyou.feature.product.productGraph
+import com.maksimowiczm.foodyou.feature.productredesign.CreateProductScreen
+import com.maksimowiczm.foodyou.feature.productredesign.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
@@ -88,8 +88,7 @@ private fun AddFoodNavHost(
     ) {
         crossfadeComposable<SearchFood>(
             popEnterTransition = {
-                if (initialState.destination.hasRoute<CreateProduct>() ||
-                    initialState.destination.hasRoute<CreateRecipe>()
+                if (initialState.destination.hasRoute<CreateRecipe>()
                 ) {
                     fadeIn(snap())
                 } else {
@@ -224,10 +223,7 @@ private fun AddFoodNavHost(
         }
         crossfadeComposable<MeasureFood>(
             popEnterTransition = {
-                if (
-                    initialState.destination.hasRoute<UpdateProduct>() ||
-                    initialState.destination.hasRoute<UpdateRecipe>()
-                ) {
+                if (initialState.destination.hasRoute<UpdateRecipe>()) {
                     fadeIn(snap())
                 } else {
                     CrossFadeComposableDefaults.enterTransition()
@@ -267,10 +263,7 @@ private fun AddFoodNavHost(
         }
         crossfadeComposable<UpdateMeasurement>(
             popEnterTransition = {
-                if (
-                    initialState.destination.hasRoute<UpdateProduct>() ||
-                    initialState.destination.hasRoute<UpdateRecipe>()
-                ) {
+                if (initialState.destination.hasRoute<UpdateRecipe>()) {
                     fadeIn(snap())
                 } else {
                     CrossFadeComposableDefaults.enterTransition()
@@ -306,26 +299,41 @@ private fun AddFoodNavHost(
                 }
             )
         }
-        productGraph(
-            onCreateProduct = {
-                navController.navigate(MeasureFood(productId = it)) {
-                    launchSingleTop = true
+        forwardBackwardComposable<CreateProduct> {
+            CreateProductScreen(
+                onBack = {
+                    navController.popBackStack<CreateProduct>(inclusive = true)
+                },
+                onProductCreate = { productId ->
+                    navController.navigate(MeasureFood(productId = productId)) {
+                        launchSingleTop = true
 
-                    popUpTo<SearchFood> {
-                        inclusive = false
+                        popUpTo<SearchFood> {
+                            inclusive = false
+                        }
                     }
                 }
-            },
-            onCreateClose = {
-                navController.popBackStack<CreateProduct>(inclusive = true)
-            },
-            onUpdateProduct = {
-                navController.popBackStack<UpdateProduct>(inclusive = true)
-            },
-            onUpdateClose = {
-                navController.popBackStack<UpdateProduct>(inclusive = true)
-            }
-        )
+            )
+        }
+        forwardBackwardComposable<UpdateProduct> {
+            val (productId) = it.toRoute<UpdateProduct>()
+
+            UpdateProductScreen(
+                productId = productId,
+                onBack = {
+                    navController.popBackStack<UpdateProduct>(inclusive = true)
+                },
+                onProductUpdate = {
+                    navController.navigate(MeasureFood(productId)) {
+                        launchSingleTop = true
+
+                        popUpTo<SearchFood> {
+                            inclusive = false
+                        }
+                    }
+                }
+            )
+        }
         recipeGraph(
             onCreateClose = {
                 navController.popBackStack<CreateRecipe>(inclusive = true)
@@ -357,6 +365,12 @@ private data object SearchFoodBarcodeScanner
 
 @Serializable
 private data object Meal
+
+@Serializable
+private data object CreateProduct
+
+@Serializable
+private data class UpdateProduct(val productId: Long)
 
 @Serializable
 private data class UpdateMeasurement(
