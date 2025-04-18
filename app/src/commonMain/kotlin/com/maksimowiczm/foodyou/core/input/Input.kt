@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.core.input
 
-import pro.respawn.kmmutils.common.isValid
+import com.maksimowiczm.foodyou.core.input.dsl.isValid
 
 sealed interface Input<E> {
     val value: String
