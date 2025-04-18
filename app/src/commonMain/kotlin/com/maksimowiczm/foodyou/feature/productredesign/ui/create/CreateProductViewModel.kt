@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.core.domain.source.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.core.input.Form
 import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.input.ValidationStrategy
+import com.maksimowiczm.foodyou.core.input.dsl.input
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.productredesign.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductFormFieldError
@@ -312,17 +313,32 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val _openFoodFactsErrorBus = Channel<OpenFoodFactsError?>()
-    val openFoodFactsErrorBus = _openFoodFactsErrorBus.receiveAsFlow()
+    private val _openFoodFactsLink = MutableStateFlow(input<OpenFoodFactsLinkError>())
+    val openFoodFactsLink = _openFoodFactsLink.asStateFlow()
+    private val openFoodFactsLinkForm = Form<OpenFoodFactsLinkError>(
+        strategy = ValidationStrategy.FailFast,
+        OpenFoodFactsLinkRules.NotEmpty,
+        OpenFoodFactsLinkRules.ValidUrl
+    )
+
+    fun onDownloadLinkChange(link: String) {
+        _openFoodFactsLink.update {
+            openFoodFactsLinkForm.validate(link)
+        }
+    }
+
     private val openFoodFactsLinkHelper by lazy { OpenFoodFactsLinkHelper() }
-    fun onDownloadOpenFoodFacts(url: String) {
+    private val _openFoodFactsError = MutableStateFlow<DownloadProductFailed?>(null)
+    val openFoodFactsError = _openFoodFactsError.asStateFlow()
+    fun onDownloadOpenFoodFacts() {
+        val url = _openFoodFactsLink.value.value
+
         viewModelScope.launch {
             _isDownloading.emit(true)
-            _openFoodFactsErrorBus.send(null)
+            _openFoodFactsError.emit(null)
 
             val code = when (val code = openFoodFactsLinkHelper.extractCode(url)) {
                 null -> {
-                    _openFoodFactsErrorBus.send(OpenFoodFactsError.InvalidUrl)
                     _isDownloading.emit(false)
                     return@launch
                 }
@@ -345,7 +361,7 @@ internal class CreateProductViewModel(
                     _eventBus.send(ProductFormEvent.DownloadedProductSuccessfully)
                 }
                 .onFailure {
-                    _openFoodFactsErrorBus.send(OpenFoodFactsError.DownloadProductFailed(it))
+                    _openFoodFactsError.emit(DownloadProductFailed(it))
                 }
 
             _isDownloading.emit(false)

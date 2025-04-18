@@ -2,10 +2,8 @@ package com.maksimowiczm.foodyou.feature.productredesign.ui.create
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
@@ -23,9 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ContentPaste
@@ -50,13 +45,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
@@ -65,21 +57,22 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.ui.ext.paste
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.drop
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalAnimationApi::class)
 @Composable
 internal fun DownloadOpenFoodFactsProduct(
+    linkInput: Input<OpenFoodFactsLinkError>,
+    onLinkChange: (String) -> Unit,
     isDownloading: Boolean,
-    error: OpenFoodFactsError?,
+    error: DownloadProductFailed?,
     animatedVisibilityScope: AnimatedVisibilityScope,
     contentPadding: PaddingValues,
     onSearch: () -> Unit,
-    onDownload: (url: String) -> Unit,
+    onDownload: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val layoutDirection = LocalLayoutDirection.current
@@ -91,23 +84,7 @@ internal fun DownloadOpenFoodFactsProduct(
     )
 
     val clipboard = LocalClipboard.current
-    val linkTextState = rememberTextFieldState()
-    var linkTextStateEmptyError by remember { mutableStateOf(false) }
-    LaunchedEffect(linkTextState) {
-        snapshotFlow { linkTextState.text }
-            .drop(1)
-            .collectLatest { linkTextStateEmptyError = it.isBlank() }
-    }
     var fabHeight by remember { mutableIntStateOf(0) }
-
-    val onDownload = {
-        val url = linkTextState.text.toString()
-        if (url.isNotEmpty()) {
-            onDownload(url)
-        } else {
-            linkTextStateEmptyError = true
-        }
-    }
 
     Scaffold(
         modifier = modifier,
@@ -166,11 +143,12 @@ internal fun DownloadOpenFoodFactsProduct(
 
             item {
                 OutlinedTextField(
-                    state = linkTextState,
+                    value = linkInput.value,
+                    onValueChange = { onLinkChange(it) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    isError = linkTextStateEmptyError || error != null,
+                    isError = linkInput.isInvalid || error != null,
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Link,
@@ -178,9 +156,9 @@ internal fun DownloadOpenFoodFactsProduct(
                         )
                     },
                     trailingIcon = {
-                        if (linkTextState.text.isNotEmpty()) {
+                        if (linkInput.value.isNotEmpty()) {
                             IconButton(
-                                onClick = linkTextState::clearText
+                                onClick = { onLinkChange("") }
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
@@ -191,16 +169,13 @@ internal fun DownloadOpenFoodFactsProduct(
                     },
                     label = { Text(stringResource(Res.string.product_link)) },
                     supportingText = {
-                        when (error) {
-                            OpenFoodFactsError.InvalidUrl -> Text("Invalid URL")
-                            is OpenFoodFactsError.DownloadProductFailed,
-                            null -> Unit
-                        }
+                        linkInput as? Input.Invalid<OpenFoodFactsLinkError>
+                            ?: return@OutlinedTextField
+                        Text(linkInput.errors.stringResource())
                     },
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done
-                    ),
-                    onKeyboardAction = { onDownload() }
+                    )
                 )
             }
 
@@ -229,7 +204,7 @@ internal fun DownloadOpenFoodFactsProduct(
                         onClick = {
                             val text = clipboard.paste()
                             if (text != null && text.isNotEmpty()) {
-                                linkTextState.setTextAndPlaceCursorAtEnd(text)
+                                onLinkChange(text)
                             }
                         },
                         leadingIcon = {
@@ -260,22 +235,13 @@ internal fun DownloadOpenFoodFactsProduct(
             }
 
             item {
-                val transition = updateTransition(error)
-
-                transition.Crossfade(
-                    contentKey = { it is OpenFoodFactsError.DownloadProductFailed }
-                ) {
-                    when (it) {
-                        is OpenFoodFactsError.DownloadProductFailed -> DownloadErrorCard(
-                            error = it.error,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                        )
-
-                        OpenFoodFactsError.InvalidUrl,
-                        null -> Unit
-                    }
+                if (error?.throwable != null) {
+                    DownloadErrorCard(
+                        error = error.throwable,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
                 }
             }
 
