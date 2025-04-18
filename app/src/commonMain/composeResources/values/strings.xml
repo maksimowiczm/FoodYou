@@ -136,6 +136,7 @@
     <string name="action_download">Download</string>
     <string name="action_paste_url">Paste URL</string>
     <string name="action_browse_open_food_facts">Browse Open Food Facts</string>
+    <string name="action_open_browser">Open browser</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -199,6 +200,7 @@
     <string name="description_delete_unused_open_food_facts_products_short">Delete unused Open Food Facts products</string>
     <string name="description_delete_unused_open_food_facts_products">Open Food Facts products that are not used in your diary will be deleted. Products that you have added manually or edited will not be deleted. You won't be able to search for deleted products again unless you clear the Open Food Facts cache. However, you will still be able to find deleted products using a barcode.</string>
     <string name="description_translation_warning">Translations are created by volunteers. They may not be perfect and some translations may be missing. If you notice any mistakes don't hesitate to help improving them.</string>
+    <string name="description_browse_open_food_facts">Open Food Facts website will be opened in your browser. You can search for the products there and copy the link to the product you want to add.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>

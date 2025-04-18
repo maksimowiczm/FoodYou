@@ -136,12 +136,24 @@ private fun CreateProductApp(
                 navController.popBackStack<CreateOpenFoodFactsProduct>(inclusive = true)
         }
     }
+
+    var showBrowserWarning by rememberSaveable { mutableStateOf(false) }
     // TODO Replace it with WebView on android?
     val onOpenFoodFacts = run {
         val uriHandler = LocalUriHandler.current
         val openFoodFactsUrl = stringResource(Res.string.link_open_food_facts)
 
         remember(uriHandler, openFoodFactsUrl) { { uriHandler.openUri(openFoodFactsUrl) } }
+    }
+
+    if (showBrowserWarning) {
+        OpenBrowserDialog(
+            onDismissRequest = { showBrowserWarning = false },
+            onConfirm = {
+                showBrowserWarning = false
+                onOpenFoodFacts()
+            }
+        )
     }
 
     BackHandler(
@@ -199,7 +211,7 @@ private fun CreateProductApp(
         }
     ) { paddingValues ->
         CreateProductNavHost(
-            onOpenFoodFacts = onOpenFoodFacts,
+            onOpenFoodFacts = { showBrowserWarning = true },
             onProductCreate = onProductCreate,
             onBarcodeScanner = onBarcodeScanner,
             contentPadding = paddingValues,
@@ -388,6 +400,33 @@ private fun DiscardDialog(
         },
         text = {
             Text(stringResource(Res.string.question_discard_product))
+        }
+    )
+}
+
+@Composable
+private fun OpenBrowserDialog(onDismissRequest: () -> Unit, onConfirm: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(stringResource(Res.string.action_browse_open_food_facts))
+        },
+        text = {
+            Text(stringResource(Res.string.description_browse_open_food_facts))
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text(stringResource(Res.string.action_cancel))
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm
+            ) {
+                Text(stringResource(Res.string.action_open_browser))
+            }
         }
     )
 }
