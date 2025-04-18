@@ -11,8 +11,11 @@ import com.maksimowiczm.foodyou.feature.productredesign.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductFormFieldError
 import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductFormRules
 import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductFormState
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -273,5 +276,18 @@ internal class UpdateProductViewModel(
         formState.packageWeight !is Input.Empty -> true
         formState.servingWeight !is Input.Empty -> true
         else -> false
+    }
+
+    private val _eventBus = Channel<ProductFormEvent>()
+    val eventBus = _eventBus.receiveAsFlow()
+
+    fun onUpdate() {
+        viewModelScope.launch {
+            _eventBus.send(ProductFormEvent.UpdatingProduct)
+
+            delay(1000L)
+
+            _eventBus.send(ProductFormEvent.ProductUpdated(productId))
+        }
     }
 }

@@ -393,7 +393,7 @@ internal class CreateProductViewModel(
         sodium = sodiumForm(nutrients?.sodium100g?.formatClipZeros() ?: ""),
         fiber = fiberForm(nutrients?.fiber100g?.formatClipZeros() ?: ""),
         packageWeight = packageWeightForm(packageQuantity?.formatClipZeros() ?: ""),
-        servingWeight = servingWeightForm(servingQuantity?.formatClipZeros() ?: ""),
+        servingWeight = servingWeightForm(servingQuantity?.formatClipZeros() ?: "")
     )
 }
 
