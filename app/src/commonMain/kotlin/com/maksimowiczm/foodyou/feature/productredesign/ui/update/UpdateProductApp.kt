@@ -44,7 +44,7 @@ import org.koin.core.parameter.parametersOf
 internal fun UpdateProductApp(
     productId: Long,
     onBack: () -> Unit,
-    onProductUpdate: (productId: Long) -> Unit,
+    onProductUpdate: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdateProductViewModel = koinViewModel(
         parameters = { parametersOf(productId) }
@@ -58,7 +58,7 @@ internal fun UpdateProductApp(
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.eventBus.collect {
                 when (it) {
-                    is ProductFormEvent.ProductUpdated -> onProductUpdate(it.id)
+                    is ProductFormEvent.ProductUpdated -> onProductUpdate()
                     ProductFormEvent.UpdatingProduct -> Unit
                 }
             }
