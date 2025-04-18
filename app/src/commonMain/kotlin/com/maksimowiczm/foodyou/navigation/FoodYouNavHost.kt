@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
@@ -17,7 +16,6 @@ import com.maksimowiczm.foodyou.feature.language.Language
 import com.maksimowiczm.foodyou.feature.language.languageGraph
 import com.maksimowiczm.foodyou.feature.meal.MealsSettings
 import com.maksimowiczm.foodyou.feature.meal.mealGraph
-import com.maksimowiczm.foodyou.feature.productredesign.ui.UpdateProductScreen
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.Settings
@@ -27,30 +25,8 @@ import com.maksimowiczm.foodyou.ui.settings.settingsGraph
 fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
-        startDestination = "elo"
+        startDestination = Home
     ) {
-        composable("elo") {
-            UpdateProductScreen(
-                productId = 2,
-                onBack = {
-                    navController.popBackStack()
-                },
-                onProductUpdate = {
-                    navController.navigate(Home) {
-                        launchSingleTop = true
-                    }
-                }
-            )
-//            CreateProductScreen(
-//                onBack = {},
-//                onProductCreate = {
-//                    navController.navigate(Home) {
-//                        launchSingleTop = true
-//                    }
-//                }
-//            )
-        }
-
         homeGraph(
             onSettings = {
                 navController.navigate(Settings) {
