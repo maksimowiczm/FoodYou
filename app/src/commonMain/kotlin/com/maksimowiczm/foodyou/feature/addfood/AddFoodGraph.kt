@@ -12,14 +12,13 @@ data class AddFoodSearchFood(val mealId: Long, val epochDay: Int)
 @Serializable
 data class AddFoodMeal(val mealId: Long, val epochDay: Int)
 
-fun NavGraphBuilder.addFoodGraph(onBack: () -> Unit, onOpenFoodFactsSettings: () -> Unit) {
+fun NavGraphBuilder.addFoodGraph(onBack: () -> Unit) {
     crossfadeComposable<AddFoodSearchFood> {
         val (mealId, epochDay) = it.toRoute<AddFoodSearchFood>()
 
         AddFoodApp(
             outerOnBack = onBack,
             outerAnimatedScope = this,
-            onOpenFoodFactsSettings = onOpenFoodFactsSettings,
             mealId = mealId,
             epochDay = epochDay,
             skipToSearch = true
@@ -31,7 +30,6 @@ fun NavGraphBuilder.addFoodGraph(onBack: () -> Unit, onOpenFoodFactsSettings: ()
         AddFoodApp(
             outerOnBack = onBack,
             outerAnimatedScope = this,
-            onOpenFoodFactsSettings = onOpenFoodFactsSettings,
             mealId = mealId,
             epochDay = epochDay,
             skipToSearch = false

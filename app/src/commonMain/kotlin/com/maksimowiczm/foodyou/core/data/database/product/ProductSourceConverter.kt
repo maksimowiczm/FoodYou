@@ -7,14 +7,19 @@ import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
 class ProductSourceConverter {
     @TypeConverter
     fun fromProductSource(productSource: ProductSource): Int = when (productSource) {
-        ProductSource.User -> 0
-        ProductSource.OpenFoodFacts -> 1
+        ProductSource.User -> ProductSourceSQLConstants.USER
+        ProductSource.OpenFoodFacts -> ProductSourceSQLConstants.OPEN_FOOD_FACTS
     }
 
     @TypeConverter
     fun toProductSource(productSource: Int): ProductSource = when (productSource) {
-        0 -> ProductSource.User
-        1 -> ProductSource.OpenFoodFacts
-        else -> throw IllegalArgumentException("ProductSource not found")
+        ProductSourceSQLConstants.USER -> ProductSource.User
+        ProductSourceSQLConstants.OPEN_FOOD_FACTS -> ProductSource.OpenFoodFacts
+        else -> error("ProductSource not found")
     }
+}
+
+object ProductSourceSQLConstants {
+    const val USER = 0
+    const val OPEN_FOOD_FACTS = 1
 }

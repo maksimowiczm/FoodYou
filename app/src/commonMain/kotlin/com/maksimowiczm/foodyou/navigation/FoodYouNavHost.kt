@@ -16,8 +16,6 @@ import com.maksimowiczm.foodyou.feature.language.Language
 import com.maksimowiczm.foodyou.feature.language.languageGraph
 import com.maksimowiczm.foodyou.feature.meal.MealsSettings
 import com.maksimowiczm.foodyou.feature.meal.mealGraph
-import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsSettings
-import com.maksimowiczm.foodyou.feature.openfoodfacts.openFoodFactsGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.Settings
@@ -67,11 +65,6 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
             onBack = {
                 navController.popBackStack<Settings>(inclusive = true)
             },
-            onOpenFoodFactsSettings = {
-                navController.navigate(OpenFoodFactsSettings) {
-                    launchSingleTop = true
-                }
-            },
             onMealsSettings = {
                 navController.navigate(MealsSettings) {
                     launchSingleTop = true
@@ -98,11 +91,6 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
             onBack = {
                 navController.popBackStack<AddFoodSearchFood>(inclusive = true)
                 navController.popBackStack<AddFoodMeal>(inclusive = true)
-            },
-            onOpenFoodFactsSettings = {
-                navController.navigate(OpenFoodFactsSettings) {
-                    launchSingleTop = true
-                }
             }
         )
         goalsGraph(
@@ -118,11 +106,6 @@ fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
         mealGraph(
             onMealsSettingsBack = {
                 navController.popBackStack<MealsSettings>(inclusive = true)
-            }
-        )
-        openFoodFactsGraph(
-            onOpenFoodFactsSettingsBack = {
-                navController.popBackStack<OpenFoodFactsSettings>(inclusive = true)
             }
         )
     }

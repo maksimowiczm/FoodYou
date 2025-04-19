@@ -1,0 +1,595 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 8,
+    "identityHash": "06dfd047105d4a3893700ec76121c9d0",
+    "entities": [
+      {
+        "tableName": "MealEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `fromHour` INTEGER NOT NULL, `fromMinute` INTEGER NOT NULL, `toHour` INTEGER NOT NULL, `toMinute` INTEGER NOT NULL, `rank` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromHour",
+            "columnName": "fromHour",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromMinute",
+            "columnName": "fromMinute",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toHour",
+            "columnName": "toHour",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toMinute",
+            "columnName": "toMinute",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rank",
+            "columnName": "rank",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "ProductEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `productSource` INTEGER NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbohydrates` REAL NOT NULL, `sugars` REAL, `fats` REAL NOT NULL, `saturatedFats` REAL, `salt` REAL, `sodium` REAL, `fiber` REAL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "brand",
+            "columnName": "brand",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "barcode",
+            "columnName": "barcode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "packageWeight",
+            "columnName": "packageWeight",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "servingWeight",
+            "columnName": "servingWeight",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "productSource",
+            "columnName": "productSource",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.calories",
+            "columnName": "calories",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.proteins",
+            "columnName": "proteins",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.carbohydrates",
+            "columnName": "carbohydrates",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.sugars",
+            "columnName": "sugars",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.fats",
+            "columnName": "fats",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.saturatedFats",
+            "columnName": "saturatedFats",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.salt",
+            "columnName": "salt",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.sodium",
+            "columnName": "sodium",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.fiber",
+            "columnName": "fiber",
+            "affinity": "REAL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "ProductMeasurementEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mealId` INTEGER NOT NULL, `diaryEpochDay` INTEGER NOT NULL, `productId` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, `createdAt` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, FOREIGN KEY(`productId`) REFERENCES `ProductEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`mealId`) REFERENCES `MealEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mealId",
+            "columnName": "mealId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diaryEpochDay",
+            "columnName": "diaryEpochDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "productId",
+            "columnName": "productId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "measurement",
+            "columnName": "measurement",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "isDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_ProductMeasurementEntity_productId",
+            "unique": false,
+            "columnNames": [
+              "productId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ProductMeasurementEntity_productId` ON `${TABLE_NAME}` (`productId`)"
+          },
+          {
+            "name": "index_ProductMeasurementEntity_isDeleted",
+            "unique": false,
+            "columnNames": [
+              "isDeleted"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ProductMeasurementEntity_isDeleted` ON `${TABLE_NAME}` (`isDeleted`)"
+          },
+          {
+            "name": "index_ProductMeasurementEntity_mealId",
+            "unique": false,
+            "columnNames": [
+              "mealId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ProductMeasurementEntity_mealId` ON `${TABLE_NAME}` (`mealId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "ProductEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "productId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "MealEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "mealId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "OpenFoodFactsPagingKeyEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`queryString` TEXT NOT NULL, `country` TEXT NOT NULL, `fetchedCount` INTEGER NOT NULL, `totalCount` INTEGER NOT NULL, PRIMARY KEY(`queryString`, `country`))",
+        "fields": [
+          {
+            "fieldPath": "queryString",
+            "columnName": "queryString",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fetchedCount",
+            "columnName": "fetchedCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalCount",
+            "columnName": "totalCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "queryString",
+            "country"
+          ]
+        }
+      },
+      {
+        "tableName": "SearchQueryEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`query` TEXT NOT NULL, `epochSeconds` INTEGER NOT NULL, PRIMARY KEY(`query`))",
+        "fields": [
+          {
+            "fieldPath": "query",
+            "columnName": "query",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "epochSeconds",
+            "columnName": "epochSeconds",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "query"
+          ]
+        }
+      },
+      {
+        "tableName": "RecipeEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `servings` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "servings",
+            "columnName": "servings",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "RecipeIngredientEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recipeId` INTEGER NOT NULL, `productId` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, FOREIGN KEY(`recipeId`) REFERENCES `RecipeEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`productId`) REFERENCES `ProductEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recipeId",
+            "columnName": "recipeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "productId",
+            "columnName": "productId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "measurement",
+            "columnName": "measurement",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_RecipeIngredientEntity_recipeId",
+            "unique": false,
+            "columnNames": [
+              "recipeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeIngredientEntity_recipeId` ON `${TABLE_NAME}` (`recipeId`)"
+          },
+          {
+            "name": "index_RecipeIngredientEntity_productId",
+            "unique": false,
+            "columnNames": [
+              "productId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeIngredientEntity_productId` ON `${TABLE_NAME}` (`productId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "RecipeEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "recipeId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "ProductEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "productId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "RecipeMeasurementEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mealId` INTEGER NOT NULL, `epochDay` INTEGER NOT NULL, `recipeId` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, `createdAt` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, FOREIGN KEY(`recipeId`) REFERENCES `RecipeEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`mealId`) REFERENCES `MealEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mealId",
+            "columnName": "mealId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "epochDay",
+            "columnName": "epochDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recipeId",
+            "columnName": "recipeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "measurement",
+            "columnName": "measurement",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "isDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_RecipeMeasurementEntity_recipeId",
+            "unique": false,
+            "columnNames": [
+              "recipeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeMeasurementEntity_recipeId` ON `${TABLE_NAME}` (`recipeId`)"
+          },
+          {
+            "name": "index_RecipeMeasurementEntity_isDeleted",
+            "unique": false,
+            "columnNames": [
+              "isDeleted"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeMeasurementEntity_isDeleted` ON `${TABLE_NAME}` (`isDeleted`)"
+          },
+          {
+            "name": "index_RecipeMeasurementEntity_mealId",
+            "unique": false,
+            "columnNames": [
+              "mealId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeMeasurementEntity_mealId` ON `${TABLE_NAME}` (`mealId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "RecipeEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "recipeId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "MealEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "mealId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [
+      {
+        "viewName": "RecipeWeightView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH TotalWeight AS (\n        SELECT \n            r.id AS recipeId,\n            SUM(\n                CASE \n                    WHEN ri.measurement = 0 THEN ri.quantity\n                    WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN ri.quantity * p.servingWeight\n                    WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN ri.quantity * p.packageWeight\n                    ELSE 0\n                END\n            ) AS totalWeight\n        FROM RecipeEntity r\n        JOIN RecipeIngredientEntity ri ON r.id = ri.recipeId\n        JOIN ProductEntity p ON ri.productId = p.id\n        GROUP BY r.id\n    ) \n    SELECT\n        r.id AS recipeId,\n        tw.totalWeight AS totalWeight,\n        tw.totalWeight / r.servings AS servingWeight\n    FROM RecipeEntity r\n    JOIN TotalWeight tw ON r.id = tw.recipeId"
+      },
+      {
+        "viewName": "RecipeIngredientProductDetails",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT\n        p.id AS p_id,\n        p.name AS p_name,\n        p.brand AS p_brand,\n        p.barcode AS p_barcode,\n        p.calories AS p_calories,\n        p.proteins AS p_proteins,\n        p.carbohydrates AS p_carbohydrates,\n        p.sugars AS p_sugars,\n        p.fats AS p_fats,\n        p.saturatedFats AS p_saturatedFats,\n        p.salt AS p_salt,\n        p.sodium AS p_sodium,\n        p.fiber AS p_fiber,\n        p.packageWeight AS p_packageWeight,\n        p.servingWeight AS p_servingWeight,\n        p.productSource AS p_productSource,\n        i.id AS r_id,\n        i.recipeId AS r_recipeId,\n        i.productId AS r_productId,\n        i.measurement AS r_measurement,\n        i.quantity AS r_quantity\n    FROM RecipeIngredientEntity i\n    JOIN ProductEntity p ON i.productId = p.id"
+      },
+      {
+        "viewName": "RecipeNutritionView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT \n        r.id AS recipeId,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.calories * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.calories * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.calories * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS calories,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.proteins * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.proteins * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.proteins * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS proteins,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.carbohydrates * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.carbohydrates * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.carbohydrates * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS carbohydrates,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.sugars * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.sugars * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.sugars * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS sugars,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.fats * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.fats * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.fats * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS fats,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.saturatedFats * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.saturatedFats * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.saturatedFats * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS saturatedFats,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.salt * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.salt * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.salt * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS salt,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.sodium * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.sodium * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.sodium * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS sodium,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.fiber * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.fiber * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.fiber * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS fiber\n    FROM RecipeEntity r\n    JOIN RecipeIngredientEntity ri ON r.id = ri.recipeId\n    JOIN ProductEntity p ON ri.productId = p.id\n    JOIN RecipeWeightView rw ON r.id = rw.recipeId\n    GROUP BY r.id"
+      },
+      {
+        "viewName": "DiaryDayView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH Product AS (\n        SELECT\n            diaryEpochDay AS epochDay,\n            pm.mealId AS mealId,\n            m.name AS mealName,\n            pm.productId AS productId,\n            NULL AS recipeId,\n            p.name AS foodName,\n            p.calories AS calories,\n            p.proteins AS proteins,\n            p.carbohydrates AS carbohydrates,\n            p.sugars AS sugars,\n            p.fats AS fats,\n            p.saturatedFats AS saturatedFats,\n            p.salt AS salt,\n            p.sodium AS sodium,\n            p.fiber AS fiber,\n            p.packageWeight AS packageWeight,\n            p.servingWeight AS servingWeight,\n            pm.id AS measurementId,\n            pm.measurement AS measurement,\n            pm.quantity AS quantity\n        FROM ProductMeasurementEntity pm\n        JOIN ProductEntity p ON pm.productId = p.id\n        JOIN MealEntity m ON pm.mealId = m.id\n        WHERE pm.isDeleted = 0\n    ),\n    Recipe AS (\n        SELECT\n            epochDay AS epochDay,\n            rm.mealId AS mealId,\n            m.name AS mealName,\n            NULL AS productId,\n            r.id AS recipeId,\n            r.name AS foodName,\n            rn.calories AS calories,\n            rn.proteins AS proteins,\n            rn.carbohydrates AS carbohydrates,\n            rn.sugars AS sugars,\n            rn.fats AS fats,\n            rn.saturatedFats AS saturatedFats,\n            rn.salt AS salt,\n            rn.sodium AS sodium,\n            rn.fiber AS fiber,\n            rw.totalWeight AS packageWeight,\n            rw.servingWeight AS servingWeight,\n            rm.id AS measurementId,\n            rm.measurement AS measurement,\n            rm.quantity AS quantity\n        FROM RecipeMeasurementEntity rm\n        JOIN RecipeEntity r ON rm.recipeId = r.id\n        JOIN RecipeNutritionView rn ON r.id = rn.recipeId\n        JOIN RecipeWeightView rw ON r.id = rw.recipeId\n        JOIN MealEntity m ON rm.mealId = m.id\n        WHERE rm.isDeleted = 0\n    )\n    SELECT * FROM Product\n    UNION ALL\n    SELECT * FROM Recipe"
+      },
+      {
+        "viewName": "MeasuredFoodView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH Product AS (\n        SELECT\n            p.id AS productId,\n            NULL AS recipeId,\n            pm.diaryEpochDay AS epochDay,\n            pm.mealId AS mealId,\n            p.name AS name,\n            p.brand AS brand,\n            p.barcode AS barcode,\n            p.calories AS calories,\n            p.proteins AS proteins,\n            p.carbohydrates AS carbohydrates,\n            p.fats AS fats,\n            p.packageWeight AS packageWeight,\n            p.servingWeight AS servingWeight,\n            pm.id AS measurementId,\n            pm.measurement AS measurement,\n            pm.quantity AS quantity\n        FROM ProductEntity p\n        JOIN ProductMeasurementEntity pm ON p.id = pm.productId\n        WHERE pm.isDeleted = 0\n    ),\n    Recipe AS (\n        SELECT\n            NULL AS productId,\n            r.id AS recipeId,\n            rm.epochDay AS epochDay,\n            rm.mealId AS mealId,\n            r.name AS name,\n            NULL AS brand,\n            NULL AS barcode,\n            rn.calories AS calories,\n            rn.proteins AS proteins,\n            rn.carbohydrates AS carbohydrates,\n            rn.fats AS fats,\n            rw.totalWeight AS packageWeight,\n            rw.servingWeight AS servingWeight,\n            rm.id AS measurementId,\n            rm.measurement AS measurement,\n            rm.quantity AS quantity\n        FROM RecipeEntity r\n        JOIN RecipeMeasurementEntity rm ON r.id = rm.recipeId\n        JOIN RecipeNutritionView rn ON r.id = rn.recipeId\n        JOIN RecipeWeightView rw ON r.id = rw.recipeId\n        WHERE rm.isDeleted = 0\n    )\n    SELECT * FROM Product\n    UNION ALL\n    SELECT * FROM Recipe"
+      },
+      {
+        "viewName": "MeasurementSuggestionView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH Product AS (\n        SELECT\n            p.id AS productId,\n            NULL AS recipeId,\n            p.name AS name,\n            p.brand AS brand,\n            p.barcode AS barcode,\n            p.calories AS calories,\n            p.proteins AS proteins,\n            p.carbohydrates AS carbohydrates,\n            p.fats AS fats,\n            p.packageWeight AS packageWeight,\n            p.servingWeight AS servingWeight,\n\n            CASE \n                WHEN pm.measurement IS NOT NULL THEN pm.measurement\n                WHEN p.servingWeight IS NOT NULL THEN 2\n                WHEN p.packageWeight IS NOT NULL THEN 1\n                ELSE 0\n            END AS measurement,\n\n            CASE \n                WHEN pm.quantity IS NOT NULL THEN pm.quantity\n                WHEN p.servingWeight IS NOT NULL THEN 1\n                WHEN p.packageWeight IS NOT NULL THEN 1\n                ELSE 100\n            END AS quantity\n\n        FROM ProductEntity p\n        LEFT JOIN ProductMeasurementEntity pm ON p.id = pm.productId\n        WHERE \n            pm.createdAt IS NULL \n            OR pm.createdAt = (\n                SELECT MAX(createdAt)\n                FROM ProductMeasurementEntity\n                WHERE productId = pm.productId\n            )\n    ),\n    Recipe AS (\n        SELECT\n            NULL AS productId,\n            r.id AS recipeId,\n            r.name AS name,\n            NULL AS brand,\n            NULL AS barcode,\n            rn.calories AS calories,\n            rn.proteins AS proteins,\n            rn.carbohydrates AS carbohydrates,\n            rn.fats AS fats,\n            rw.totalWeight AS packageWeight,\n            rw.servingWeight AS servingWeight,\n            CASE \n                WHEN rm.measurement IS NOT NULL THEN rm.measurement\n                ELSE 2\n            END AS measurement,\n\n            CASE \n                WHEN rm.quantity IS NOT NULL THEN rm.quantity\n                ELSE 1\n            END AS quantity\n            \n        FROM RecipeEntity r\n        LEFT JOIN RecipeMeasurementEntity rm ON r.id = rm.recipeId\n        LEFT JOIN RecipeNutritionView rn ON r.id = rn.recipeId\n        LEFT JOIN RecipeWeightView rw ON r.id = rw.recipeId\n        WHERE\n            rm.createdAt IS NULL \n            OR rm.createdAt = (\n                SELECT MAX(createdAt)\n                FROM RecipeMeasurementEntity\n                WHERE recipeId = rm.recipeId\n            )\n    )\n    SELECT * FROM Product p\n    UNION ALL\n    SELECT * FROM Recipe r"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '06dfd047105d4a3893700ec76121c9d0')"
+    ]
+  }
+}

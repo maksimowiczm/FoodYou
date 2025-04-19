@@ -20,6 +20,7 @@ import com.maksimowiczm.foodyou.core.data.database.measurement.RecipeMeasurement
 import com.maksimowiczm.foodyou.core.data.database.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.core.data.database.product.ProductDao
 import com.maksimowiczm.foodyou.core.data.database.product.ProductSourceConverter
+import com.maksimowiczm.foodyou.core.data.database.product.ProductSourceSQLConstants.OPEN_FOOD_FACTS
 import com.maksimowiczm.foodyou.core.data.database.recipe.RecipeDao
 import com.maksimowiczm.foodyou.core.data.database.recipe.RecipeNutritionView
 import com.maksimowiczm.foodyou.core.data.database.recipe.RecipeWeightView
@@ -78,11 +79,12 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val foodDao: FoodDao
 
     companion object {
-        const val VERSION = 7
+        const val VERSION = 8
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,
-            MIGRATION_2_3
+            MIGRATION_2_3,
+            MIGRATION_7_8
         )
 
         fun Builder<FoodYouDatabase>.buildDatabase(
@@ -253,5 +255,37 @@ private val MIGRATION_2_3 = object : Migration(2, 3) {
         )
 
         database.execSQL("DROP TABLE ProductQueryEntity")
+    }
+}
+
+// Delete unused products from OpenFoodFacts source
+private val MIGRATION_7_8 = object : Migration(7, 8) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            WITH UsedInRecipes AS (
+                SELECT DISTINCT productId 
+                FROM RecipeIngredientEntity i
+            ),
+            UsedInMeals AS (
+                SELECT DISTINCT productId 
+                FROM ProductMeasurementEntity m
+            ),
+            UsedProducts AS (
+                SELECT DISTINCT productId 
+                FROM UsedInRecipes
+                UNION
+                SELECT DISTINCT productId 
+                FROM UsedInMeals
+            )
+            DELETE FROM ProductEntity 
+            WHERE id IN (
+                SELECT id 
+                FROM ProductEntity 
+                WHERE productSource = $OPEN_FOOD_FACTS
+                AND id NOT IN (SELECT productId FROM UsedProducts)
+            ) 
+            """.trimIndent()
+        )
     }
 }
