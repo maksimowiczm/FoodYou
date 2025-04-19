@@ -1,8 +1,8 @@
-package com.maksimowiczm.foodyou.feature.productredesign
+package com.maksimowiczm.foodyou.feature.product
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.maksimowiczm.foodyou.feature.productredesign.ui.create.CreateProductApp
+import com.maksimowiczm.foodyou.feature.product.ui.create.CreateProductApp
 
 @Composable
 fun CreateProductScreen(

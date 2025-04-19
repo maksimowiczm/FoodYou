@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign.ui.update
+package com.maksimowiczm.foodyou.feature.product.ui.update
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,8 +37,8 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
-import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductForm
-import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductFormState
+import com.maksimowiczm.foodyou.feature.product.ui.ProductForm
+import com.maksimowiczm.foodyou.feature.product.ui.ProductFormState
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource

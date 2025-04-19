@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign.data
+package com.maksimowiczm.foodyou.feature.product.data
 
 import com.maksimowiczm.foodyou.core.data.model.Nutrients
 import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity

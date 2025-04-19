@@ -26,8 +26,8 @@ import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.rememberSearchFoodScreenState
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.meal.MealScreen
-import com.maksimowiczm.foodyou.feature.productredesign.CreateProductScreen
-import com.maksimowiczm.foodyou.feature.productredesign.UpdateProductScreen
+import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
+import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.recipeGraph

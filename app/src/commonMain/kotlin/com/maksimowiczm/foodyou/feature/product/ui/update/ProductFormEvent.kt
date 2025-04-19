@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign.ui.update
+package com.maksimowiczm.foodyou.feature.product.ui.update
 
 internal sealed interface ProductFormEvent {
     data object UpdatingProduct : ProductFormEvent

@@ -26,8 +26,8 @@ import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.measurement.MeasurementScreen
-import com.maksimowiczm.foodyou.feature.productredesign.CreateProductScreen
-import com.maksimowiczm.foodyou.feature.productredesign.UpdateProductScreen
+import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
+import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.Serializable

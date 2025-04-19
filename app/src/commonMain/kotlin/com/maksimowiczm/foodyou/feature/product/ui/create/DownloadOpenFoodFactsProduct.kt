@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign.ui.create
+package com.maksimowiczm.foodyou.feature.product.ui.create
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibilityScope

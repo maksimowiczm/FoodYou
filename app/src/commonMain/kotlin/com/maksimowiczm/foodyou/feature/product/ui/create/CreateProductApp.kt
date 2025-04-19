@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productredesign.ui.create
+package com.maksimowiczm.foodyou.feature.product.ui.create
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -54,7 +54,7 @@ import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
-import com.maksimowiczm.foodyou.feature.productredesign.ui.ProductForm
+import com.maksimowiczm.foodyou.feature.product.ui.ProductForm
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.serialization.Serializable
