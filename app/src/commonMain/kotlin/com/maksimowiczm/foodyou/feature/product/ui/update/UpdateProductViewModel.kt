@@ -98,7 +98,7 @@ internal class UpdateProductViewModel(
         ValidationStrategy.LazyEval,
         ProductFormRules.NotEmpty,
         ProductFormRules.EmptyOrFloat,
-        ProductFormRules.NanOrBetween0and100
+        ProductFormRules.FloatBetween0and100
     )
 
     fun onProteinsChange(proteins: String) {
@@ -116,7 +116,7 @@ internal class UpdateProductViewModel(
         ValidationStrategy.LazyEval,
         ProductFormRules.NotEmpty,
         ProductFormRules.EmptyOrFloat,
-        ProductFormRules.NanOrBetween0and100
+        ProductFormRules.FloatBetween0and100
     )
 
     fun onCarbohydratesChange(carbohydrates: String) {
@@ -134,7 +134,7 @@ internal class UpdateProductViewModel(
         ValidationStrategy.LazyEval,
         ProductFormRules.NotEmpty,
         ProductFormRules.EmptyOrFloat,
-        ProductFormRules.NanOrBetween0and100
+        ProductFormRules.FloatBetween0and100
     )
 
     fun onFatsChange(fats: String) {
@@ -151,7 +151,7 @@ internal class UpdateProductViewModel(
     private val sugarsForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
-        ProductFormRules.NanOrBetween0and100
+        ProductFormRules.FloatBetween0and100
     )
 
     fun onSugarsChange(sugars: String) {
@@ -168,7 +168,7 @@ internal class UpdateProductViewModel(
     private val saturatedFatsForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
-        ProductFormRules.NanOrBetween0and100
+        ProductFormRules.FloatBetween0and100
     )
 
     fun onSaturatedFatsChange(saturatedFats: String) {
@@ -185,7 +185,7 @@ internal class UpdateProductViewModel(
     private val saltForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
-        ProductFormRules.NanOrBetween0and100
+        ProductFormRules.FloatBetween0and100
     )
 
     fun onSaltChange(salt: String) {
@@ -202,7 +202,7 @@ internal class UpdateProductViewModel(
     private val sodiumForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
-        ProductFormRules.NanOrBetween0and100
+        ProductFormRules.FloatBetween0and100
     )
 
     fun onSodiumChange(sodium: String) {
@@ -219,7 +219,7 @@ internal class UpdateProductViewModel(
     private val fiberForm = Form<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
-        ProductFormRules.NanOrBetween0and100
+        ProductFormRules.FloatBetween0and100
     )
 
     fun onFiberChange(fiber: String) {

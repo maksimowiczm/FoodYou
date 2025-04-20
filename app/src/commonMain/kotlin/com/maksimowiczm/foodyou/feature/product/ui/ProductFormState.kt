@@ -88,10 +88,10 @@ internal object ProductFormRules {
         { it.isNotBlank() } checks { ProductFormFieldError.Empty }
     }
 
-    val NanOrBetween0and100 = Rule<ProductFormFieldError> {
+    val FloatBetween0and100 = Rule<ProductFormFieldError> {
         { it.toFloatOrNull() } validates {
             when {
-                it == null -> null
+                it == null -> ProductFormFieldError.NotANumber
                 it < 0f -> ProductFormFieldError.NegativeNumber
                 it > 100f -> ProductFormFieldError.Exceeds100
                 else -> null
@@ -111,7 +111,7 @@ internal object ProductFormRules {
     val PositiveFloat = Rule<ProductFormFieldError> {
         { it.toFloatOrNull() } validates {
             when {
-                it == null -> null
+                it == null -> ProductFormFieldError.NotANumber
                 it < 0f -> ProductFormFieldError.NegativeNumber
                 else -> null
             }
@@ -132,5 +132,6 @@ private fun ProductFormFieldError.stringResource(): String = when (this) {
     ProductFormFieldError.NegativeNumber -> stringResource(
         Res.string.error_value_cannot_be_negative
     )
+
     ProductFormFieldError.Exceeds100 -> stringResource(Res.string.error_value_cannot_exceed_100)
 }
