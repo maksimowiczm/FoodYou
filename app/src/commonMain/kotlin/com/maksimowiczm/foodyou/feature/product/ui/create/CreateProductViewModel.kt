@@ -1,29 +1,54 @@
 package com.maksimowiczm.foodyou.feature.product.ui.create
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.core.domain.model.openfoodfacts.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.core.domain.source.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.core.ext.observe
+import com.maksimowiczm.foodyou.core.ext.set
 import com.maksimowiczm.foodyou.core.input.Form
 import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.input.ValidationStrategy
 import com.maksimowiczm.foodyou.core.input.dsl.input
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.feature.product.data.OpenFoodFactsPreferences
 import com.maksimowiczm.foodyou.feature.product.data.ProductRepository
 import com.maksimowiczm.foodyou.feature.product.ui.ProductFormFieldError
 import com.maksimowiczm.foodyou.feature.product.ui.ProductFormRules
 import com.maksimowiczm.foodyou.feature.product.ui.ProductFormState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class CreateProductViewModel(
     private val productRepository: ProductRepository,
-    private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource
+    private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource,
+    private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
+    val hideExternalBrowserWarning: StateFlow<Boolean> = dataStore
+        .observe(OpenFoodFactsPreferences.hideExternalBrowserWarning)
+        .map { it ?: false }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = false
+        )
+
+    fun toggleOpenFoodFactsBrowserWarning(state: Boolean) {
+        viewModelScope.launch {
+            dataStore.set(OpenFoodFactsPreferences.hideExternalBrowserWarning to state)
+        }
+    }
+
     private val _formState = MutableStateFlow<ProductFormState>(ProductFormState())
     val formState = _formState.asStateFlow()
 

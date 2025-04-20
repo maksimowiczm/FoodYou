@@ -3,9 +3,13 @@ package com.maksimowiczm.foodyou.feature.product.ui.create
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +21,7 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -38,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
@@ -115,6 +121,8 @@ private fun CreateProductApp(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.formState.collectAsStateWithLifecycle()
+    val hideOpenFoodWarning by viewModel.hideExternalBrowserWarning.collectAsStateWithLifecycle()
+
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
 
     val navController = rememberNavController()
@@ -148,9 +156,11 @@ private fun CreateProductApp(
 
     if (showBrowserWarning) {
         OpenBrowserDialog(
+            hideNextTime = hideOpenFoodWarning,
             onDismissRequest = { showBrowserWarning = false },
             onConfirm = {
                 showBrowserWarning = false
+                viewModel.toggleOpenFoodFactsBrowserWarning(it)
                 onOpenFoodFacts()
             }
         )
@@ -211,7 +221,13 @@ private fun CreateProductApp(
         }
     ) { paddingValues ->
         CreateProductNavHost(
-            onOpenFoodFacts = { showBrowserWarning = true },
+            onOpenFoodFacts = {
+                if (hideOpenFoodWarning) {
+                    onOpenFoodFacts()
+                } else {
+                    showBrowserWarning = true
+                }
+            },
             onProductCreate = onProductCreate,
             onBarcodeScanner = onBarcodeScanner,
             contentPadding = paddingValues,
@@ -405,14 +421,38 @@ private fun DiscardDialog(
 }
 
 @Composable
-private fun OpenBrowserDialog(onDismissRequest: () -> Unit, onConfirm: () -> Unit) {
+private fun OpenBrowserDialog(
+    hideNextTime: Boolean,
+    onDismissRequest: () -> Unit,
+    onConfirm: (hideNextTime: Boolean) -> Unit
+) {
+    var hideNextTime by rememberSaveable { mutableStateOf(hideNextTime) }
+
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
             Text(stringResource(Res.string.action_browse_open_food_facts))
         },
         text = {
-            Text(stringResource(Res.string.description_browse_open_food_facts))
+            Column {
+                Text(stringResource(Res.string.description_browse_open_food_facts))
+                Row(
+                    modifier = Modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = { hideNextTime = !hideNextTime }
+                    ),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Checkbox(
+                        checked = hideNextTime,
+                        onCheckedChange = { hideNextTime = it }
+                    )
+
+                    Text(stringResource(Res.string.neutral_dont_show_again))
+                }
+            }
         },
         dismissButton = {
             TextButton(
@@ -423,7 +463,7 @@ private fun OpenBrowserDialog(onDismissRequest: () -> Unit, onConfirm: () -> Uni
         },
         confirmButton = {
             TextButton(
-                onClick = onConfirm
+                onClick = { onConfirm(hideNextTime) }
             ) {
                 Text(stringResource(Res.string.action_open_browser))
             }
