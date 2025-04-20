@@ -56,6 +56,7 @@ internal fun UpdateProductApp(
     )
 ) {
     val state by viewModel.formState.collectAsStateWithLifecycle()
+    var enabled by remember { mutableStateOf(true) }
 
     val onProductUpdate by rememberUpdatedState(onProductUpdate)
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -64,7 +65,7 @@ internal fun UpdateProductApp(
             viewModel.eventBus.collect {
                 when (it) {
                     is ProductFormEvent.ProductUpdated -> onProductUpdate()
-                    ProductFormEvent.UpdatingProduct -> Unit
+                    ProductFormEvent.UpdatingProduct -> enabled = false
                 }
             }
         }
@@ -74,6 +75,7 @@ internal fun UpdateProductApp(
         null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
         else -> UpdateProductNavHost(
             state = state,
+            enabled = enabled,
             onNameChange = remember(viewModel) { viewModel::onNameChange },
             onBrandChange = remember(viewModel) { viewModel::onBrandChange },
             onBarcodeChange = remember(viewModel) { viewModel::onBarcodeChange },
@@ -97,6 +99,7 @@ internal fun UpdateProductApp(
 @Composable
 private fun UpdateProductNavHost(
     state: ProductFormState,
+    enabled: Boolean,
     onNameChange: (String) -> Unit,
     onBrandChange: (String) -> Unit,
     onBarcodeChange: (String) -> Unit,
@@ -124,6 +127,7 @@ private fun UpdateProductNavHost(
         crossfadeComposable("app") {
             UpdateProductApp(
                 state = state,
+                enabled = enabled,
                 onNameChange = onNameChange,
                 onBrandChange = onBrandChange,
                 onBarcodeChange = onBarcodeChange,
@@ -165,6 +169,7 @@ private fun UpdateProductNavHost(
 @Composable
 private fun UpdateProductApp(
     state: ProductFormState,
+    enabled: Boolean,
     onNameChange: (String) -> Unit,
     onBrandChange: (String) -> Unit,
     onBarcodeChange: (String) -> Unit,
@@ -261,7 +266,8 @@ private fun UpdateProductApp(
                     onFiberChange = onFiberChange,
                     onPackageWeightChange = onPackageWeightChange,
                     onServingWeightChange = onServingWeightChange,
-                    onBarcodeScanner = onBarcodeScanner
+                    onBarcodeScanner = onBarcodeScanner,
+                    enabled = enabled
                 )
             }
         }
