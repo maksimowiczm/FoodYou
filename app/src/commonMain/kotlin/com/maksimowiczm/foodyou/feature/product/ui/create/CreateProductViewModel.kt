@@ -1,207 +1,295 @@
 package com.maksimowiczm.foodyou.feature.product.ui.create
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.core.domain.model.openfoodfacts.OpenFoodFactsProduct
+import com.maksimowiczm.foodyou.core.domain.source.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.core.ext.observe
+import com.maksimowiczm.foodyou.core.ext.set
+import com.maksimowiczm.foodyou.core.input.Form
+import com.maksimowiczm.foodyou.core.input.Input
+import com.maksimowiczm.foodyou.core.input.ValidationStrategy
+import com.maksimowiczm.foodyou.core.input.dsl.input
+import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.feature.product.data.OpenFoodFactsPreferences
 import com.maksimowiczm.foodyou.feature.product.data.ProductRepository
-import com.maksimowiczm.foodyou.feature.product.ui.Exceeds100
-import com.maksimowiczm.foodyou.feature.product.ui.FloatNumber
-import com.maksimowiczm.foodyou.feature.product.ui.NonNegativeNumber
-import com.maksimowiczm.foodyou.feature.product.ui.PositiveNumber
+import com.maksimowiczm.foodyou.feature.product.ui.ProductFormFieldError
+import com.maksimowiczm.foodyou.feature.product.ui.ProductFormRules
+import com.maksimowiczm.foodyou.feature.product.ui.ProductFormState
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import pro.respawn.kmmutils.inputforms.Form
-import pro.respawn.kmmutils.inputforms.ValidationStrategy
-import pro.respawn.kmmutils.inputforms.default.Rules
-import pro.respawn.kmmutils.inputforms.dsl.isValid
-import pro.respawn.kmmutils.inputforms.dsl.isValidOrEmpty
 
-internal class CreateProductViewModel(private val productRepository: ProductRepository) :
-    ViewModel() {
-    private val _idState = MutableStateFlow<CreateState>(CreateState.Nothing)
-    val idState = _idState.asStateFlow()
+internal class CreateProductViewModel(
+    private val productRepository: ProductRepository,
+    private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource,
+    private val dataStore: DataStore<Preferences>
+) : ViewModel() {
+    val hideExternalBrowserWarning: StateFlow<Boolean> = dataStore
+        .observe(OpenFoodFactsPreferences.hideExternalBrowserWarning)
+        .map { it ?: false }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = false
+        )
 
-    private val nutrientsRules = arrayOf(
-        Rules.FloatNumber,
-        Rules.NonNegativeNumber,
-        Rules.Exceeds100
-    )
+    fun toggleOpenFoodFactsBrowserWarning(state: Boolean) {
+        viewModelScope.launch {
+            dataStore.set(OpenFoodFactsPreferences.hideExternalBrowserWarning to state)
+        }
+    }
 
-    private val nameForm = Form(ValidationStrategy.LazyEval, Rules.NonEmpty)
-    private val brandForm = Form(ValidationStrategy.FailFast)
-    private val barcodeForm = Form(ValidationStrategy.FailFast)
+    private val _formState = MutableStateFlow<ProductFormState>(ProductFormState())
+    val formState = _formState.asStateFlow()
 
-    private val proteinsForm = Form(
-        ValidationStrategy.LazyEval,
-        Rules.NonEmpty,
-        *nutrientsRules
-    )
-    private val carbohydratesForm = Form(
-        ValidationStrategy.LazyEval,
-        Rules.NonEmpty,
-        *nutrientsRules
-    )
-    private val fatsForm = Form(
-        ValidationStrategy.LazyEval,
-        Rules.NonEmpty,
-        *nutrientsRules
-    )
+    private val _isDownloading = MutableStateFlow(false)
+    val isDownloading = _isDownloading.asStateFlow()
 
-    private val sugarsForm = Form(
-        ValidationStrategy.FailFast,
-        *nutrientsRules
-    )
-    private val saturatedFatsForm = Form(
-        ValidationStrategy.FailFast,
-        *nutrientsRules
-    )
-    private val saltForm = Form(
-        ValidationStrategy.FailFast,
-        *nutrientsRules
-    )
-    private val sodiumForm = Form(
-        ValidationStrategy.FailFast,
-        *nutrientsRules
-    )
-    private val fiberForm = Form(
-        ValidationStrategy.FailFast,
-        *nutrientsRules
-    )
+    private val _eventBus = Channel<ProductFormEvent>()
+    val eventBus = _eventBus.receiveAsFlow()
 
-    private val packageWeightForm = Form(
+    private val nameForm = Form<ProductFormFieldError>(
         ValidationStrategy.FailFast,
-        Rules.FloatNumber,
-        Rules.PositiveNumber
+        ProductFormRules.NotEmpty
     )
-    private val servingWeightForm = Form(
-        ValidationStrategy.FailFast,
-        Rules.FloatNumber,
-        Rules.PositiveNumber
-    )
-
-    private val _state = MutableStateFlow(CreateProductState())
-    val state = _state.asStateFlow()
 
     fun onNameChange(name: String) {
-        _state.update {
-            it.copy(
-                name = nameForm(name),
-                isModified = it.isModified || name.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                name = nameForm.validate(name)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
 
+    private val brandForm = Form<ProductFormFieldError>(ValidationStrategy.FailFast)
     fun onBrandChange(brand: String) {
-        _state.update {
-            it.copy(
-                brand = brandForm(brand),
-                isModified = it.isModified || brand.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                brand = brandForm.validate(brand)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
 
+    private val barcodeForm = Form<ProductFormFieldError>(ValidationStrategy.FailFast)
     fun onBarcodeChange(barcode: String) {
-        _state.update {
-            it.copy(
-                barcode = barcodeForm(barcode),
-                isModified = it.isModified || barcode.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                barcode = barcodeForm.validate(barcode)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
+
+    private val proteinsForm = Form<ProductFormFieldError>(
+        ValidationStrategy.FailFast,
+        ProductFormRules.NotEmpty,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.FloatBetween0and100
+    )
 
     fun onProteinsChange(proteins: String) {
-        _state.update {
-            it.copy(
-                proteins = proteinsForm(proteins),
-                isModified = it.isModified || proteins.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                proteins = proteinsForm.validate(proteins)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
+
+    private val carbohydratesForm = Form<ProductFormFieldError>(
+        ValidationStrategy.FailFast,
+        ProductFormRules.NotEmpty,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.FloatBetween0and100
+    )
 
     fun onCarbohydratesChange(carbohydrates: String) {
-        _state.update {
-            it.copy(
-                carbohydrates = carbohydratesForm(carbohydrates),
-                isModified = it.isModified || carbohydrates.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                carbohydrates = carbohydratesForm.validate(carbohydrates)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
+
+    private val fatsForm = Form<ProductFormFieldError>(
+        ValidationStrategy.FailFast,
+        ProductFormRules.NotEmpty,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.FloatBetween0and100
+    )
 
     fun onFatsChange(fats: String) {
-        _state.update {
-            it.copy(
-                fats = fatsForm(fats),
-                isModified = it.isModified || fats.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                fats = fatsForm.validate(fats)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
+
+    private val sugarsForm = Form<ProductFormFieldError>(
+        ValidationStrategy.FailFast,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.FloatBetween0and100
+    )
 
     fun onSugarsChange(sugars: String) {
-        _state.update {
-            it.copy(
-                sugars = sugarsForm(sugars),
-                isModified = it.isModified || sugars.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                sugars = sugarsForm.validate(sugars)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
+
+    private val saturatedFatsForm = Form<ProductFormFieldError>(
+        ValidationStrategy.FailFast,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.FloatBetween0and100
+    )
 
     fun onSaturatedFatsChange(saturatedFats: String) {
-        _state.update {
-            it.copy(
-                saturatedFats = saturatedFatsForm(saturatedFats),
-                isModified = it.isModified || saturatedFats.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                saturatedFats = saturatedFatsForm.validate(saturatedFats)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
+
+    private val saltForm = Form<ProductFormFieldError>(
+        ValidationStrategy.FailFast,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.FloatBetween0and100
+    )
 
     fun onSaltChange(salt: String) {
-        _state.update {
-            it.copy(
-                salt = saltForm(salt),
-                isModified = it.isModified || salt.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                salt = saltForm.validate(salt)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
+
+    private val sodiumForm = Form<ProductFormFieldError>(
+        ValidationStrategy.FailFast,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.FloatBetween0and100
+    )
 
     fun onSodiumChange(sodium: String) {
-        _state.update {
-            it.copy(
-                sodium = sodiumForm(sodium),
-                isModified = it.isModified || sodium.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                sodium = sodiumForm.validate(sodium)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
+
+    private val fiberForm = Form<ProductFormFieldError>(
+        ValidationStrategy.FailFast,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.FloatBetween0and100
+    )
 
     fun onFiberChange(fiber: String) {
-        _state.update {
-            it.copy(
-                fiber = fiberForm(fiber),
-                isModified = it.isModified || fiber.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                fiber = fiberForm.validate(fiber)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
+
+    private val packageWeightForm = Form<ProductFormFieldError>(
+        ValidationStrategy.FailFast,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.PositiveFloat
+    )
 
     fun onPackageWeightChange(packageWeight: String) {
-        _state.update {
-            it.copy(
-                packageWeight = packageWeightForm(packageWeight),
-                isModified = it.isModified || packageWeight.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                packageWeight = packageWeightForm.validate(packageWeight)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
+
+    private val servingWeightForm = Form<ProductFormFieldError>(
+        ValidationStrategy.FailFast,
+        ProductFormRules.EmptyOrFloat,
+        ProductFormRules.PositiveFloat
+    )
 
     fun onServingWeightChange(servingWeight: String) {
-        _state.update {
-            it.copy(
-                servingWeight = servingWeightForm(servingWeight),
-                isModified = it.isModified || servingWeight.isNotBlank()
+        _formState.update {
+            val newState = it.copy(
+                servingWeight = servingWeightForm.validate(servingWeight)
+            )
+            newState.copy(
+                isModified = isModified(newState)
             )
         }
     }
 
-    fun onCreate() {
-        val formState = _state.value
+    private fun isModified(formState: ProductFormState) = when {
+        formState.name !is Input.Empty -> true
+        formState.brand !is Input.Empty -> true
+        formState.barcode !is Input.Empty -> true
+        formState.proteins !is Input.Empty -> true
+        formState.carbohydrates !is Input.Empty -> true
+        formState.fats !is Input.Empty -> true
+        formState.sugars !is Input.Empty -> true
+        formState.saturatedFats !is Input.Empty -> true
+        formState.salt !is Input.Empty -> true
+        formState.sodium !is Input.Empty -> true
+        formState.fiber !is Input.Empty -> true
+        formState.packageWeight !is Input.Empty -> true
+        formState.servingWeight !is Input.Empty -> true
+        else -> false
+    }
+
+    fun onCreateProduct() {
+        val formState = _formState.value
 
         if (formState.error != null || !formState.isValid) {
             return
@@ -215,6 +303,7 @@ internal class CreateProductViewModel(private val productRepository: ProductRepo
         val carbohydrates =
             formState.carbohydrates.takeIf { it.isValid }?.value?.toFloatOrNull() ?: return
         val fats = formState.fats.takeIf { it.isValid }?.value?.toFloatOrNull() ?: return
+        val calories = formState.calories ?: return
 
         val sugars = formState.sugars.takeIf { it.isValidOrEmpty }?.value?.toFloatOrNull()
         val saturatedFats =
@@ -229,17 +318,17 @@ internal class CreateProductViewModel(private val productRepository: ProductRepo
             formState.servingWeight.takeIf { it.isValidOrEmpty }?.value?.toFloatOrNull()
 
         viewModelScope.launch {
-            _idState.value = CreateState.CreatingProduct
+            _eventBus.send(ProductFormEvent.CreatingProduct)
 
-            val id = productRepository.createUserProduct(
+            val id = productRepository.createProduct(
                 name = name,
                 brand = brand,
                 barcode = barcode,
-                calories = formState.calories ?: return@launch,
+                calories = calories,
                 proteins = proteins,
                 carbohydrates = carbohydrates,
-                sugars = sugars,
                 fats = fats,
+                sugars = sugars,
                 saturatedFats = saturatedFats,
                 salt = salt,
                 sodium = sodium,
@@ -248,7 +337,99 @@ internal class CreateProductViewModel(private val productRepository: ProductRepo
                 servingWeight = servingWeight
             )
 
-            _idState.value = CreateState.Created(id)
+            _eventBus.send(ProductFormEvent.ProductCreated(id))
         }
+    }
+
+    private val _openFoodFactsLink = MutableStateFlow(input<OpenFoodFactsLinkError>())
+    val openFoodFactsLink = _openFoodFactsLink.asStateFlow()
+    private val openFoodFactsLinkForm = Form<OpenFoodFactsLinkError>(
+        strategy = ValidationStrategy.FailFast,
+        OpenFoodFactsLinkRules.NotEmpty,
+        OpenFoodFactsLinkRules.ValidUrl
+    )
+
+    fun onDownloadLinkChange(link: String) {
+        _openFoodFactsLink.update {
+            openFoodFactsLinkForm.validate(link)
+        }
+    }
+
+    private val openFoodFactsLinkHelper by lazy { OpenFoodFactsLinkHelper() }
+    private val _openFoodFactsError = MutableStateFlow<DownloadProductFailed?>(null)
+    val openFoodFactsError = _openFoodFactsError.asStateFlow()
+    fun onDownloadOpenFoodFacts() {
+        val url = _openFoodFactsLink.value.value
+
+        if (url.isEmpty()) {
+            _openFoodFactsLink.update {
+                Input.Invalid(it.value, listOf(OpenFoodFactsLinkError.Empty))
+            }
+            return
+        }
+
+        viewModelScope.launch {
+            _openFoodFactsError.emit(null)
+
+            val code = when (val code = openFoodFactsLinkHelper.extractCode(url)) {
+                null -> {
+                    _openFoodFactsLink.update {
+                        Input.Invalid(it.value, listOf(OpenFoodFactsLinkError.InvalidUrl))
+                    }
+                    return@launch
+                }
+
+                else -> code
+            }
+
+            _isDownloading.emit(true)
+
+            val product = runCatching {
+                openFoodFactsRemoteDataSource.getProduct(code, null) ?: error("Product not found")
+            }
+
+            product
+                .onSuccess { remote ->
+                    _formState.update {
+                        val newState = remote.asState()
+                        newState.copy(
+                            isModified = isModified(newState)
+                        )
+                    }
+                    _eventBus.send(ProductFormEvent.DownloadedProductSuccessfully)
+                    _openFoodFactsLink.update { input() }
+                    _openFoodFactsError.emit(null)
+                }
+                .onFailure {
+                    _openFoodFactsError.emit(DownloadProductFailed(it))
+                }
+
+            _isDownloading.emit(false)
+        }
+    }
+
+    private fun OpenFoodFactsProduct.asState(): ProductFormState = ProductFormState(
+        name = nameForm(productName ?: ""),
+        brand = brandForm(brands ?: ""),
+        barcode = barcodeForm(code ?: ""),
+        proteins = proteinsForm(nutrients?.proteins100g?.formatClipZeros() ?: ""),
+        carbohydrates = carbohydratesForm(nutrients?.carbohydrates100g?.formatClipZeros() ?: ""),
+        fats = fatsForm(nutrients?.fat100g?.formatClipZeros() ?: ""),
+        sugars = sugarsForm(nutrients?.sugars100g?.formatClipZeros() ?: ""),
+        saturatedFats = saturatedFatsForm(nutrients?.saturatedFat100g?.formatClipZeros() ?: ""),
+        salt = saltForm(nutrients?.salt100g?.formatClipZeros() ?: ""),
+        sodium = sodiumForm(nutrients?.sodium100g?.formatClipZeros() ?: ""),
+        fiber = fiberForm(nutrients?.fiber100g?.formatClipZeros() ?: ""),
+        packageWeight = packageWeightForm(packageQuantity?.formatClipZeros() ?: ""),
+        servingWeight = servingWeightForm(servingQuantity?.formatClipZeros() ?: "")
+    )
+}
+
+private class OpenFoodFactsLinkHelper {
+    fun extractCode(url: String): String? {
+        // Extract barcode from product URL
+        val regex = "openfoodfacts\\.org/product/(\\d+)".toRegex()
+        val barcode = regex.find(url)?.groupValues?.getOrNull(1)
+        return barcode
     }
 }

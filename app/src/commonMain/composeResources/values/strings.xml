@@ -41,6 +41,7 @@
     <string name="headline_update_recipe">Update recipe</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ingredients</string>
     <string name="headline_summary">Summary</string>
+    <string name="headline_example_links">Example links</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
@@ -66,6 +67,7 @@
     <string name="product_name">Name</string>
     <string name="product_brand">Brand</string>
     <string name="product_barcode">Barcode</string>
+    <string name="product_link">Product link</string>
 
     <string name="recipe_servings">Servings</string>
     <string name="description_recipe_servings">How many servings does this recipe make</string>
@@ -115,6 +117,7 @@
     <string name="action_read_more">Read more</string>
     <string name="action_select_country">Select country</string>
     <string name="action_use_open_food_facts">Use Open Food Facts</string>
+    <string name="action_use_open_food_facts_product">Use Open Food Facts product</string>
     <string name="action_see_terms_of_use">See terms of use</string>
     <string name="action_bug_report_on_github">Bug report on GitHub</string>
     <string name="action_feature_request_on_github">Feature request on GitHub</string>
@@ -130,6 +133,10 @@
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Add ingredient</string>
     <string name="action_edit_ingredient_measurement">Edit ingredient measurement</string>
     <string name="action_delete_ingredient">Delete ingredient</string>
+    <string name="action_download">Download</string>
+    <string name="action_paste_url">Paste URL</string>
+    <string name="action_browse_open_food_facts">Browse Open Food Facts</string>
+    <string name="action_open_browser">Open browser</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -151,6 +158,8 @@
     <string name="neutral_entry_deleted">Entry deleted</string>
     <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_manage_food_database">Manage your food database</string>
+    <string name="neutral_failed_to_download_the_product">Failed to download the product</string>
+    <string name="neutral_dont_show_again">Don't show again</string>
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>
@@ -192,13 +201,16 @@
     <string name="description_delete_unused_open_food_facts_products_short">Delete unused Open Food Facts products</string>
     <string name="description_delete_unused_open_food_facts_products">Open Food Facts products that are not used in your diary will be deleted. Products that you have added manually or edited will not be deleted. You won't be able to search for deleted products again unless you clear the Open Food Facts cache. However, you will still be able to find deleted products using a barcode.</string>
     <string name="description_translation_warning">Translations are created by volunteers. They may not be perfect and some translations may be missing. If you notice any mistakes don't hesitate to help improving them.</string>
+    <string name="description_browse_open_food_facts">Open Food Facts website will be opened in your browser. You can search for the products there and copy the link to the product you want to add.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">See other awesome icons here</string>
 
     <string name="link_translate" translatable="false">https://crowdin.com/project/food-you</string>
-    <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
+    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
+    <string name="link_open_food_facts_product_example_1" translatable="false">https://world.openfoodfacts.org/product/1234567890123</string>
+    <string name="link_open_food_facts_product_example_2" translatable="false">https://world.openfoodfacts.org/product/1234567890123/product-name</string>
     <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
     <string name="link_github_issue" translatable="false">https://github.com/maksimowiczm/FoodYou/issues</string>
     <string name="link_github_repository" translatable="false">https://github.com/maksimowiczm/FoodYou</string>

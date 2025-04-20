@@ -9,11 +9,12 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
-import com.maksimowiczm.foodyou.feature.product.UpdateProduct
-import com.maksimowiczm.foodyou.feature.product.productGraph
+import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
 import kotlinx.datetime.LocalDate
@@ -48,10 +49,7 @@ private fun CaloriesNavHost(
     ) {
         crossfadeComposable<CaloriesScreen>(
             popEnterTransition = {
-                if (
-                    initialState.destination.hasRoute<UpdateProduct>() == true ||
-                    initialState.destination.hasRoute<UpdateRecipe>() == true
-                ) {
+                if (initialState.destination.hasRoute<UpdateRecipe>() == true) {
                     fadeIn(snap())
                 } else {
                     CrossFadeComposableDefaults.enterTransition()
@@ -74,16 +72,19 @@ private fun CaloriesNavHost(
                 }
             )
         }
-        productGraph(
-            onCreateProduct = {},
-            onCreateClose = {},
-            onUpdateProduct = {
-                navController.popBackStack<UpdateProduct>(inclusive = true)
-            },
-            onUpdateClose = {
-                navController.popBackStack<UpdateProduct>(inclusive = true)
-            }
-        )
+        forwardBackwardComposable<UpdateProduct> {
+            val (productId) = it.toRoute<UpdateProduct>()
+
+            UpdateProductScreen(
+                productId = productId,
+                onBack = {
+                    navController.popBackStack<UpdateProduct>(inclusive = true)
+                },
+                onProductUpdate = {
+                    navController.popBackStack<UpdateProduct>(inclusive = true)
+                }
+            )
+        }
         recipeGraph(
             onCreateClose = {},
             onCreate = {},
@@ -95,3 +96,6 @@ private fun CaloriesNavHost(
 
 @Serializable
 private data object CaloriesScreen
+
+@Serializable
+private data class UpdateProduct(val id: Long)

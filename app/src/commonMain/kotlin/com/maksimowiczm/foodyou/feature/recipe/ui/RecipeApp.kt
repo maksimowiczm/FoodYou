@@ -23,11 +23,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.core.domain.model.Product
 import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.measurement.MeasurementScreen
-import com.maksimowiczm.foodyou.feature.product.CreateProduct
-import com.maksimowiczm.foodyou.feature.product.UpdateProduct
-import com.maksimowiczm.foodyou.feature.product.productGraph
+import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
+import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.Serializable
@@ -243,22 +243,31 @@ internal fun RecipeApp(
                 }
             )
         }
-        productGraph(
-            onCreateClose = {
-                navController.popBackStack<CreateProduct>(inclusive = true)
-            },
-            onCreateProduct = {
-                navController.navigate(MeasureIngredient(it)) {
-                    launchSingleTop = true
+        forwardBackwardComposable<CreateProduct> {
+            CreateProductScreen(
+                onBack = {
+                    navController.popBackStack<CreateProduct>(inclusive = true)
+                },
+                onProductCreate = {
+                    navController.navigate(MeasureIngredient(it)) {
+                        launchSingleTop = true
+                    }
                 }
-            },
-            onUpdateClose = {
-                navController.popBackStack<UpdateProduct>(inclusive = true)
-            },
-            onUpdateProduct = {
-                navController.popBackStack<UpdateProduct>(inclusive = true)
-            }
-        )
+            )
+        }
+        forwardBackwardComposable<UpdateProduct> {
+            val (productId) = it.toRoute<UpdateProduct>()
+
+            UpdateProductScreen(
+                productId = productId,
+                onBack = {
+                    navController.popBackStack<UpdateProduct>(inclusive = true)
+                },
+                onProductUpdate = {
+                    navController.popBackStack<UpdateProduct>(inclusive = true)
+                }
+            )
+        }
     }
 }
 
@@ -276,3 +285,9 @@ private data class MeasureIngredient(val productId: Long)
 
 @Serializable
 private data class UpdateIngredientMeasurement(val index: Int)
+
+@Serializable
+private data object CreateProduct
+
+@Serializable
+private data class UpdateProduct(val id: Long)

@@ -8,10 +8,10 @@ import com.maksimowiczm.foodyou.core.domain.model.Product
 import com.maksimowiczm.foodyou.core.domain.source.ProductLocalDataSource
 import kotlinx.coroutines.flow.first
 
-internal class ProductRepository(private val productDao: ProductLocalDataSource) {
+internal class ProductRepository(private val localProductDataSource: ProductLocalDataSource) {
 
     suspend fun getProductById(id: Long): Product? = with(ProductMapper) {
-        return productDao.observeProduct(id).first()?.toModel()
+        return localProductDataSource.observeProduct(id).first()?.toModel()
     }
 
     /**
@@ -19,7 +19,7 @@ internal class ProductRepository(private val productDao: ProductLocalDataSource)
      *
      * @return The ID of the newly created product.
      */
-    suspend fun createUserProduct(
+    suspend fun createProduct(
         name: String,
         brand: String?,
         barcode: String?,
@@ -57,7 +57,7 @@ internal class ProductRepository(private val productDao: ProductLocalDataSource)
             productSource = ProductSource.User
         )
 
-        return productDao.upsertProduct(entity)
+        return localProductDataSource.upsertProduct(entity)
     }
 
     suspend fun updateProduct(
@@ -100,6 +100,6 @@ internal class ProductRepository(private val productDao: ProductLocalDataSource)
             productSource = ProductSource.User
         )
 
-        productDao.upsertProduct(entity)
+        localProductDataSource.upsertProduct(entity)
     }
 }

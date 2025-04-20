@@ -72,8 +72,6 @@ import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.ProductSearchBarSuggestions
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.SearchScreen
-import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsErrorCard
-import com.maksimowiczm.foodyou.feature.openfoodfacts.OpenFoodFactsSearchHint
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
@@ -91,7 +89,6 @@ internal fun SearchFoodScreen(
     onBack: () -> Unit,
     onProductAdd: () -> Unit,
     onRecipeAdd: () -> Unit,
-    onOpenFoodFactsSettings: () -> Unit,
     onFoodClick: (FoodId) -> Unit,
     onBarcodeScanner: () -> Unit,
     viewModel: SearchFoodViewModel,
@@ -121,7 +118,6 @@ internal fun SearchFoodScreen(
         onBarcodeScanner = onBarcodeScanner,
         onProductAdd = onProductAdd,
         onRecipeAdd = onRecipeAdd,
-        onOpenFoodFactsSettings = onOpenFoodFactsSettings,
         onFoodClick = onFoodClick,
         onFoodToggle = remember(viewModel) {
             { state, food ->
@@ -151,7 +147,6 @@ private fun SearchFoodScreen(
     onBarcodeScanner: () -> Unit,
     onProductAdd: () -> Unit,
     onRecipeAdd: () -> Unit,
-    onOpenFoodFactsSettings: () -> Unit,
     onFoodClick: (FoodId) -> Unit,
     onFoodToggle: (Boolean, SearchFoodItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -312,20 +307,8 @@ private fun SearchFoodScreen(
                 val error by remember(pages.loadState) {
                     derivedStateOf { pages.throwable }
                 }
-
-                error?.let {
-                    OpenFoodFactsErrorCard(
-                        throwable = it,
-                        onRetry = remember(pages) { pages::refresh },
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-                }
             },
             hintCard = {
-                OpenFoodFactsSearchHint(
-                    onGoToSettings = onOpenFoodFactsSettings,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
             }
         ) { paddingValues ->
             if (showEmptyLabel) {
