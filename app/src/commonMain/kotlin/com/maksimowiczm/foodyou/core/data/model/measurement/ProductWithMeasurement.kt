@@ -5,13 +5,13 @@ import androidx.room.Relation
 import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
 
 data class ProductWithMeasurement(
-    @Embedded
+    @Relation(
+        parentColumn = "productId",
+        entityColumn = "id",
+        entity = ProductEntity::class
+    )
     val product: ProductEntity,
 
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "productId",
-        entity = ProductMeasurementEntity::class
-    )
+    @Embedded
     val measurement: ProductMeasurementEntity
 )
