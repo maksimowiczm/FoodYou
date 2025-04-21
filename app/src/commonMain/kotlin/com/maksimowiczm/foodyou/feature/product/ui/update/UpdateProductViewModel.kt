@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.product.ui.update
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.core.domain.model.Product
+import com.maksimowiczm.foodyou.core.input.AllowEmptyForm
 import com.maksimowiczm.foodyou.core.input.Form
 import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.input.ValidationStrategy
@@ -70,7 +71,7 @@ internal class UpdateProductViewModel(
         }
     }
 
-    private val brandForm = Form<ProductFormFieldError>(ValidationStrategy.LazyEval)
+    private val brandForm = AllowEmptyForm<ProductFormFieldError>(ValidationStrategy.LazyEval)
     fun onBrandChange(brand: String) {
         _formState.update {
             val newState = it?.copy(
@@ -82,7 +83,7 @@ internal class UpdateProductViewModel(
         }
     }
 
-    private val barcodeForm = Form<ProductFormFieldError>(ValidationStrategy.LazyEval)
+    private val barcodeForm = AllowEmptyForm<ProductFormFieldError>(ValidationStrategy.LazyEval)
     fun onBarcodeChange(barcode: String) {
         _formState.update {
             val newState = it?.copy(
@@ -165,7 +166,7 @@ internal class UpdateProductViewModel(
         }
     }
 
-    private val saturatedFatsForm = Form<ProductFormFieldError>(
+    private val saturatedFatsForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.FloatBetween0and100
@@ -182,7 +183,7 @@ internal class UpdateProductViewModel(
         }
     }
 
-    private val saltForm = Form<ProductFormFieldError>(
+    private val saltForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.FloatBetween0and100
@@ -199,7 +200,7 @@ internal class UpdateProductViewModel(
         }
     }
 
-    private val sodiumForm = Form<ProductFormFieldError>(
+    private val sodiumForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.FloatBetween0and100
@@ -216,7 +217,7 @@ internal class UpdateProductViewModel(
         }
     }
 
-    private val fiberForm = Form<ProductFormFieldError>(
+    private val fiberForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.FloatBetween0and100
@@ -233,7 +234,7 @@ internal class UpdateProductViewModel(
         }
     }
 
-    private val packageWeightForm = Form<ProductFormFieldError>(
+    private val packageWeightForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.PositiveFloat
@@ -250,7 +251,7 @@ internal class UpdateProductViewModel(
         }
     }
 
-    private val servingWeightForm = Form<ProductFormFieldError>(
+    private val servingWeightForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.LazyEval,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.PositiveFloat

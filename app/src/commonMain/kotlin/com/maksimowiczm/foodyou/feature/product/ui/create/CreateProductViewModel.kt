@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.core.domain.model.openfoodfacts.OpenFoodFactsPro
 import com.maksimowiczm.foodyou.core.domain.source.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
+import com.maksimowiczm.foodyou.core.input.AllowEmptyForm
 import com.maksimowiczm.foodyou.core.input.Form
 import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.input.ValidationStrategy
@@ -74,7 +75,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val brandForm = Form<ProductFormFieldError>(ValidationStrategy.FailFast)
+    private val brandForm = AllowEmptyForm<ProductFormFieldError>(ValidationStrategy.FailFast)
     fun onBrandChange(brand: String) {
         _formState.update {
             val newState = it.copy(
@@ -86,7 +87,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val barcodeForm = Form<ProductFormFieldError>(ValidationStrategy.FailFast)
+    private val barcodeForm = AllowEmptyForm<ProductFormFieldError>(ValidationStrategy.FailFast)
     fun onBarcodeChange(barcode: String) {
         _formState.update {
             val newState = it.copy(
@@ -152,7 +153,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val sugarsForm = Form<ProductFormFieldError>(
+    private val sugarsForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.FailFast,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.FloatBetween0and100
@@ -169,7 +170,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val saturatedFatsForm = Form<ProductFormFieldError>(
+    private val saturatedFatsForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.FailFast,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.FloatBetween0and100
@@ -186,7 +187,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val saltForm = Form<ProductFormFieldError>(
+    private val saltForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.FailFast,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.FloatBetween0and100
@@ -203,7 +204,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val sodiumForm = Form<ProductFormFieldError>(
+    private val sodiumForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.FailFast,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.FloatBetween0and100
@@ -220,7 +221,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val fiberForm = Form<ProductFormFieldError>(
+    private val fiberForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.FailFast,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.FloatBetween0and100
@@ -237,7 +238,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val packageWeightForm = Form<ProductFormFieldError>(
+    private val packageWeightForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.FailFast,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.PositiveFloat
@@ -254,7 +255,7 @@ internal class CreateProductViewModel(
         }
     }
 
-    private val servingWeightForm = Form<ProductFormFieldError>(
+    private val servingWeightForm = AllowEmptyForm<ProductFormFieldError>(
         ValidationStrategy.FailFast,
         ProductFormRules.EmptyOrFloat,
         ProductFormRules.PositiveFloat
