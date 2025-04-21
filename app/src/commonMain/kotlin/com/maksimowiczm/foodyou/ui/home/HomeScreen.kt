@@ -18,6 +18,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
+import com.maksimowiczm.foodyou.feature.changelog.AppUpdateChangelogModalBottomSheet
 import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
 import com.maksimowiczm.foodyou.feature.meal.MealsCard
 import foodyou.app.generated.resources.*
@@ -35,6 +36,8 @@ fun HomeScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val homeState = rememberHomeState()
+
+    AppUpdateChangelogModalBottomSheet()
 
     Scaffold(
         modifier = modifier,

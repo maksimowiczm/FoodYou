@@ -42,6 +42,9 @@
     <string name="headline_ingredients" description="Recipe ingredients">Ingredients</string>
     <string name="headline_summary">Summary</string>
     <string name="headline_example_links">Example links</string>
+    <string name="headline_whats_new">What's new</string>
+    <string name="headline_changelog">Changelog</string>
+    <string name="headline_installed" description="Installed version of the app">Installed</string>
 
     <string name="headline_remote_food_database">Remote food database</string>
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
@@ -137,6 +140,7 @@
     <string name="action_paste_url">Paste URL</string>
     <string name="action_browse_open_food_facts">Browse Open Food Facts</string>
     <string name="action_open_browser">Open browser</string>
+    <string name="action_copy">Copy</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -160,6 +164,7 @@
     <string name="neutral_manage_food_database">Manage your food database</string>
     <string name="neutral_failed_to_download_the_product">Failed to download the product</string>
     <string name="neutral_dont_show_again">Don't show again</string>
+    <string name="neutral_copied">Info copied to clipboard</string>
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>
@@ -202,6 +207,7 @@
     <string name="description_delete_unused_open_food_facts_products">Open Food Facts products that are not used in your diary will be deleted. Products that you have added manually or edited will not be deleted. You won't be able to search for deleted products again unless you clear the Open Food Facts cache. However, you will still be able to find deleted products using a barcode.</string>
     <string name="description_translation_warning">Translations are created by volunteers. They may not be perfect and some translations may be missing. If you notice any mistakes don't hesitate to help improving them.</string>
     <string name="description_browse_open_food_facts">Open Food Facts website will be opened in your browser. You can search for the products there and copy the link to the product you want to add.</string>
+    <string name="description_changelog">See what's new in the app</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
@@ -214,5 +220,12 @@
     <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
     <string name="link_github_issue" translatable="false">https://github.com/maksimowiczm/FoodYou/issues</string>
     <string name="link_github_repository" translatable="false">https://github.com/maksimowiczm/FoodYou</string>
+
+    <!-- Don't translate changelog strings -->
+    <string name="changelog_new_features" translatable="false">New features</string>
+    <string name="changelog_changes" translatable="false">Changes</string>
+    <string name="changelog_bug_fixes" translatable="false">Bug fixes</string>
+    <string name="changelog_translations" translatable="false">Translations</string>
+    <string name="changelog_notes" translatable="false">Notes</string>
 
 </resources>

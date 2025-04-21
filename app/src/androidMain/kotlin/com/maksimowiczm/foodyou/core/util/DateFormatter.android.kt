@@ -33,6 +33,11 @@ actual class DateFormatter(
         return date.toJavaLocalDate().format(formatter)
     }
 
+    actual fun formatDateShort(date: LocalDate): String {
+        val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", defaultLocale)
+        return date.toJavaLocalDate().format(formatter)
+    }
+
     actual fun formatTime(time: LocalTime): String = if (DateFormat.is24HourFormat(context)) {
         DateTimeFormatter
             .ofPattern("HH:mm", defaultLocale)

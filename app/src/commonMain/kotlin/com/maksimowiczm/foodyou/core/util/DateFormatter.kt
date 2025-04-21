@@ -32,6 +32,13 @@ expect class DateFormatter {
     fun formatDate(date: LocalDate): String
 
     /**
+     * Formats the specified [date] as a string in the "d MMMM yyyy" format.
+     *
+     * For example, in English (US), this could return "21 April 2025".
+     */
+    fun formatDateShort(date: LocalDate): String
+
+    /**
      * Formats the specified [time] as a string in the "hh:mm" format.
      *
      * The formatting respects the system's locale.

@@ -52,15 +52,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.input.Input
-import com.maksimowiczm.foodyou.core.ui.ext.paste
+import com.maksimowiczm.foodyou.core.util.ClipboardManager
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalAnimationApi::class)
 @Composable
@@ -73,7 +73,8 @@ internal fun DownloadOpenFoodFactsProduct(
     contentPadding: PaddingValues,
     onSearch: () -> Unit,
     onDownload: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    clipboardManager: ClipboardManager = koinInject()
 ) {
     val layoutDirection = LocalLayoutDirection.current
     val insets = WindowInsets(
@@ -83,7 +84,6 @@ internal fun DownloadOpenFoodFactsProduct(
         bottom = contentPadding.calculateBottomPadding()
     )
 
-    val clipboard = LocalClipboard.current
     var fabHeight by remember { mutableIntStateOf(0) }
 
     Scaffold(
@@ -199,7 +199,7 @@ internal fun DownloadOpenFoodFactsProduct(
                 ) {
                     AssistChip(
                         onClick = {
-                            val text = clipboard.paste()
+                            val text = clipboardManager.paste()
                             if (text != null && text.isNotEmpty()) {
                                 onLinkChange(text)
                             }

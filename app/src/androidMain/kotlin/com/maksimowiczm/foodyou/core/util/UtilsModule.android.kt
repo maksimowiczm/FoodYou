@@ -10,3 +10,7 @@ actual fun Module.systemDetails() {
 actual fun Module.dateFormatter() {
     factoryOf(::DateFormatter)
 }
+
+actual fun Module.clipboardManager() {
+    factoryOf(::ClipboardManager)
+}
