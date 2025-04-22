@@ -19,7 +19,7 @@ object Changelog {
 
     val v2_1_0 = Version(
         version = "2.1.0",
-        date = LocalDate(2025, 4, 22), // TODO
+        date = LocalDate(2025, 4, 22),
         newFeatures = listOf(
             "changelog",
             "add Open Food Facts product manually"
