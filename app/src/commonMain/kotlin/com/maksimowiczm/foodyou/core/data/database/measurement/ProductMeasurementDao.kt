@@ -50,7 +50,7 @@ abstract class ProductMeasurementDao : ProductMeasurementLocalDataSource {
     @Transaction
     @Query(
         """
-        SELECT p.*
+        SELECT m.*
         FROM ProductMeasurementEntity m
         LEFT JOIN ProductEntity p ON p.id = m.productId
         WHERE diaryEpochDay = :epochDay
@@ -67,7 +67,7 @@ abstract class ProductMeasurementDao : ProductMeasurementLocalDataSource {
     @Transaction
     @Query(
         """
-        SELECT p.* 
+        SELECT m.* 
         FROM ProductMeasurementEntity m
         LEFT JOIN ProductEntity p ON p.id = m.productId
         WHERE m.id = :measurementId
