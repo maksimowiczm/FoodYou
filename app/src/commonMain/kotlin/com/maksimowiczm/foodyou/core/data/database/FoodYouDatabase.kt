@@ -17,7 +17,6 @@ import com.maksimowiczm.foodyou.core.data.database.meal.MealDao
 import com.maksimowiczm.foodyou.core.data.database.measurement.MeasurementTypeConverter
 import com.maksimowiczm.foodyou.core.data.database.measurement.ProductMeasurementDao
 import com.maksimowiczm.foodyou.core.data.database.measurement.RecipeMeasurementDao
-import com.maksimowiczm.foodyou.core.data.database.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.core.data.database.product.ProductDao
 import com.maksimowiczm.foodyou.core.data.database.product.ProductSourceConverter
 import com.maksimowiczm.foodyou.core.data.database.product.ProductSourceSQLConstants.OPEN_FOOD_FACTS
@@ -28,7 +27,6 @@ import com.maksimowiczm.foodyou.core.data.database.search.SearchDao
 import com.maksimowiczm.foodyou.core.data.model.meal.MealEntity
 import com.maksimowiczm.foodyou.core.data.model.measurement.ProductMeasurementEntity
 import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeMeasurementEntity
-import com.maksimowiczm.foodyou.core.data.model.openfoodfacts.OpenFoodFactsPagingKeyEntity
 import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeIngredientEntity
@@ -40,7 +38,6 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
         MealEntity::class,
         ProductEntity::class,
         ProductMeasurementEntity::class,
-        OpenFoodFactsPagingKeyEntity::class,
         SearchQueryEntity::class,
         RecipeEntity::class,
         RecipeIngredientEntity::class,
@@ -57,10 +54,26 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
     version = FoodYouDatabase.VERSION,
     exportSchema = true,
     autoMigrations = [
+        /**
+         * @see [MIGRATION_1_2]
+         * Add rank to MealEntity
+         */
+        /**
+         * @see [MIGRATION_2_3]
+         * 2.0.0 schema change
+         */
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
         AutoMigration(from = 5, to = 6),
         AutoMigration(from = 6, to = 7)
+        /**
+         * @see [MIGRATION_7_8]
+         * Remove unused products from OpenFoodFacts source
+         */
+        /**
+         * @see [MIGRATION_8_9]
+         * Remove OpenFoodFactsPagingKeyEntity
+         */
     ]
 )
 @TypeConverters(
@@ -71,7 +84,6 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val mealDao: MealDao
     abstract val recipeMeasurementDao: RecipeMeasurementDao
     abstract val productMeasurementDao: ProductMeasurementDao
-    abstract val openFoodFactsDao: OpenFoodFactsDao
     abstract val productDao: ProductDao
     abstract val searchDao: SearchDao
     abstract val diaryDayDao: DiaryDayDao
@@ -79,12 +91,13 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val foodDao: FoodDao
 
     companion object {
-        const val VERSION = 8
+        const val VERSION = 9
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,
             MIGRATION_2_3,
-            MIGRATION_7_8
+            MIGRATION_7_8,
+            MIGRATION_8_9
         )
 
         fun Builder<FoodYouDatabase>.buildDatabase(
@@ -285,6 +298,16 @@ private val MIGRATION_7_8 = object : Migration(7, 8) {
                 WHERE productSource = $OPEN_FOOD_FACTS
                 AND id NOT IN (SELECT productId FROM UsedProducts)
             ) 
+            """.trimIndent()
+        )
+    }
+}
+
+private val MIGRATION_8_9 = object : Migration(8, 9) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            DROP TABLE IF EXISTS OpenFoodFactsPagingKeyEntity
             """.trimIndent()
         )
     }

@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.core.data.database.meal.InitializeMealsCallback
 import com.maksimowiczm.foodyou.core.domain.source.DiaryDayLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.MealLocalDataSource
-import com.maksimowiczm.foodyou.core.domain.source.OpenFoodFactsLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.ProductLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.RecipeLocalDataSource
@@ -34,7 +33,6 @@ actual val databaseModule = module {
     factory { database.diaryDayDao }.bind<DiaryDayLocalDataSource>()
     factory { database.foodDao }.bind<FoodLocalDataSource>()
     factory { database.mealDao }.bind<MealLocalDataSource>()
-    factory { database.openFoodFactsDao }.bind<OpenFoodFactsLocalDataSource>()
     factory { database.productDao }.bind<ProductLocalDataSource>()
     factory { database.productMeasurementDao }.bind<ProductMeasurementLocalDataSource>()
     factory { database.recipeDao }.bind<RecipeLocalDataSource>()
