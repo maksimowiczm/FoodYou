@@ -92,6 +92,11 @@ internal fun CreateProductApp(
                         launchSingleTop = true
                     }
                 },
+                onOpenFoodFactsBarcodeScanner = {
+                    navController.navigate("openfoodbarcode") {
+                        launchSingleTop = true
+                    }
+                },
                 viewModel = viewModel,
                 modifier = modifier
             )
@@ -107,6 +112,18 @@ internal fun CreateProductApp(
                 }
             )
         }
+        crossfadeComposable("openfoodbarcode") {
+            CameraBarcodeScannerScreen(
+                onClose = {
+                    navController.popBackStack("openfoodbarcode", inclusive = true)
+                },
+                onBarcodeScan = {
+                    val link = "https://world.openfoodfacts.org/product/$it"
+                    viewModel.onDownloadOpenFoodFacts(link)
+                    navController.popBackStack("openfoodbarcode", inclusive = true)
+                }
+            )
+        }
     }
 }
 
@@ -117,6 +134,7 @@ private fun CreateProductApp(
     onBack: () -> Unit,
     onProductCreate: (productId: Long) -> Unit,
     onBarcodeScanner: () -> Unit,
+    onOpenFoodFactsBarcodeScanner: () -> Unit,
     viewModel: CreateProductViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -230,6 +248,7 @@ private fun CreateProductApp(
             },
             onProductCreate = onProductCreate,
             onBarcodeScanner = onBarcodeScanner,
+            onOpenFoodFactsBarcodeScanner = onOpenFoodFactsBarcodeScanner,
             contentPadding = paddingValues,
             viewModel = viewModel,
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -250,6 +269,7 @@ private fun CreateProductNavHost(
     onOpenFoodFacts: () -> Unit,
     onProductCreate: (productId: Long) -> Unit,
     onBarcodeScanner: () -> Unit,
+    onOpenFoodFactsBarcodeScanner: () -> Unit,
     contentPadding: PaddingValues,
     viewModel: CreateProductViewModel,
     modifier: Modifier = Modifier,
@@ -302,7 +322,8 @@ private fun CreateProductNavHost(
                 error = error,
                 animatedVisibilityScope = this,
                 onSearch = onOpenFoodFacts,
-                onDownload = remember(viewModel) { viewModel::onDownloadOpenFoodFacts },
+                onDownload = { viewModel.onDownloadOpenFoodFacts(it) },
+                onBarcodeScanner = onOpenFoodFactsBarcodeScanner,
                 contentPadding = contentPadding
             )
         }

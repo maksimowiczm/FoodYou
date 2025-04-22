@@ -359,13 +359,18 @@ internal class CreateProductViewModel(
     private val openFoodFactsLinkHelper by lazy { OpenFoodFactsLinkHelper() }
     private val _openFoodFactsError = MutableStateFlow<DownloadProductFailed?>(null)
     val openFoodFactsError = _openFoodFactsError.asStateFlow()
-    fun onDownloadOpenFoodFacts() {
-        val url = _openFoodFactsLink.value.value
-
+    fun onDownloadOpenFoodFacts(url: String) {
         if (url.isEmpty()) {
             _openFoodFactsLink.update {
                 Input.Invalid(it.value, listOf(OpenFoodFactsLinkError.Empty))
             }
+            return
+        }
+
+        val input = openFoodFactsLinkForm.validate(url)
+        _openFoodFactsLink.update { input }
+
+        if (input.isInvalid) {
             return
         }
 

@@ -20,12 +20,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.filled.QrCode2
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -72,7 +74,8 @@ internal fun DownloadOpenFoodFactsProduct(
     animatedVisibilityScope: AnimatedVisibilityScope,
     contentPadding: PaddingValues,
     onSearch: () -> Unit,
-    onDownload: () -> Unit,
+    onDownload: (url: String) -> Unit,
+    onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier,
     clipboardManager: ClipboardManager = koinInject()
 ) {
@@ -90,7 +93,7 @@ internal fun DownloadOpenFoodFactsProduct(
         modifier = modifier,
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = onDownload,
+                onClick = { onDownload(linkInput.value) },
                 modifier = Modifier
                     .animateFloatingActionButton(
                         visible = !animatedVisibilityScope.transition.isRunning,
@@ -172,7 +175,10 @@ internal fun DownloadOpenFoodFactsProduct(
                     },
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done
-                    )
+                    ),
+                    keyboardActions = KeyboardActions {
+                        onDownload(linkInput.value)
+                    }
                 )
             }
 
@@ -227,6 +233,20 @@ internal fun DownloadOpenFoodFactsProduct(
                         },
                         label = {
                             Text(stringResource(Res.string.action_browse_open_food_facts))
+                        }
+                    )
+                    AssistChip(
+                        onClick = onBarcodeScanner,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.QrCode2,
+                                contentDescription = null,
+                                modifier = Modifier.size(AssistChipDefaults.IconSize)
+                            )
+                        },
+                        enabled = !isDownloading,
+                        label = {
+                            Text(stringResource(Res.string.action_scan_barcode))
                         }
                     )
                 }
