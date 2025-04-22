@@ -471,7 +471,7 @@ private fun OpenBrowserDialog(
                         onCheckedChange = { hideNextTime = it }
                     )
 
-                    Text(stringResource(Res.string.neutral_dont_show_again))
+                    Text(stringResource(Res.string.action_don_t_show_again))
                 }
             }
         },
