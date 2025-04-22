@@ -34,6 +34,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.input.Input
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
@@ -138,6 +139,12 @@ internal fun ProductForm(
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
             )
+        )
+
+        Text(
+            text = stringResource(Res.string.neutral_all_values_per_x, "100 g"),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
         )
 
         Text(
