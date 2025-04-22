@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.maksimowiczm.foodyou.feature.changelog
 
 import androidx.compose.runtime.Composable
@@ -11,8 +13,31 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            v2_1_0,
             v2_0_0
         )
+
+    val v2_1_0 = Version(
+        version = "2.1.0",
+        date = LocalDate(2025, 4, 22), // TODO
+        newFeatures = listOf(
+            "changelog",
+            "add Open Food Facts product manually"
+        ),
+        changes = listOf(
+            "remove Open Food Facts in-app search",
+            "remove all unused Open Food Facts products"
+        ),
+        bugFixes = listOf(
+            "product barcode can be edited in the product form",
+            "display valid meal summary on the meal screen and cards",
+            "don't crash on meal screen when there is more than one measurement with the same product in the meal"
+        ),
+        notes = """
+            Why was the Open Food Facts search removed?
+            It was removed because it wasn't working as expected. The search often caused confusion among users, as it frequently returned inaccurate or irrelevant results. This led to my decision to remove the in-app search feature altogether and replace it with a manual entry option. This isn't a rant against Open Food Facts, as it's a great and free project. To be fair, the app used the deprecated V1 API, which seems inadequate for a modern app.
+        """.trimIndent()
+    )
 
     val v2_0_0 = Version(
         version = "2.0.0",
