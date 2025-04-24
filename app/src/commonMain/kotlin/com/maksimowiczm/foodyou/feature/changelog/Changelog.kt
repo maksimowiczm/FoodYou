@@ -13,9 +13,25 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            v2_1_1,
             v2_1_0,
             v2_0_0
         )
+
+    val v2_1_1 = Version(
+        version = "2.1.1",
+        date = LocalDate(2025, 4, 24),
+        translations = listOf(
+            "updated Arabic",
+            "updated Danish",
+            "updated German",
+            "updated Italian",
+            "updated Polish",
+            "updated Portuguese (Brazilian)",
+            "updated Russian",
+            "updated Turkish"
+        )
+    )
 
     val v2_1_0 = Version(
         version = "2.1.0",
