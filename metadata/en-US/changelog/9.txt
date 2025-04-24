@@ -1,0 +1,9 @@
+Translations
+- updated Arabic
+- updated Danish
+- updated German
+- updated Italian
+- updated Polish
+- updated Portuguese (Brazilian)
+- updated Russian
+- updated Turkish
