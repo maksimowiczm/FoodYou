@@ -23,13 +23,19 @@
     <string name="headline_version">Versione</string>
     <string name="headline_share_your_thoughts">Condividi i tuoi pensieri</string>
     <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Mostra il tuo supporto</string>
-    <string name="headline_clear_cache">Pulisci cache</string>
     <string name="headline_all_day" description="All-day (meal)">Tutto il giorno</string>
     <string name="headline_time_based_ordering">Ordine basato sul tempo</string>
     <string name="headline_incomplete_products">Prodotti incompleti</string>
-    <string name="headline_filter_foods_by_country">Filtra alimenti in base al paese</string>
-    <string name="headline_use_global_database">Utilizza database globale</string>
-    <string name="headline_remote_food_database">Database alimentare remoto</string>
+    <string name="headline_product">Prodotto</string>
+    <string name="headline_recipe">Ricetta</string>
+    <string name="headline_create_recipe">Crea ricetta</string>
+    <string name="headline_update_recipe">Aggiorna ricetta</string>
+    <string name="headline_ingredients" description="Recipe ingredients">Ingredienti</string>
+    <string name="headline_summary">Riepilogo</string>
+    <string name="headline_example_links">Link di esempio</string>
+    <string name="headline_whats_new">Novità</string>
+    <string name="headline_changelog">Changelog</string>
+    <string name="headline_installed" description="Installed version of the app">Installata</string>
     <string name="open_food_facts_disclaimer">Open Food Facts è un progetto supportato dalla community. I dati potrebbero essere incompleti, obsoleti o imprecisi. Questa app non è responsabile della validità delle informazioni. Si prega di verificare prima dell\'uso.</string>
     <string name="weight">Peso</string>
     <string name="unit_calories">Calorie</string>
@@ -49,6 +55,9 @@
     <string name="product_name">Nome</string>
     <string name="product_brand">Marca</string>
     <string name="product_barcode">Codice a barre</string>
+    <string name="product_link">Link prodotto</string>
+    <string name="recipe_servings">Porzioni</string>
+    <string name="description_recipe_servings">Quante porzioni si ottengono con questa ricetta</string>
     <string name="nutriment_proteins">Proteine</string>
     <string name="nutriment_proteins_short">P</string>
     <string name="nutriment_carbohydrates">Carboidrati</string>
@@ -60,12 +69,10 @@
     <string name="nutriment_salt">Sale</string>
     <string name="nutriment_sodium">Sodio</string>
     <string name="nutriment_fiber">Fibre</string>
-    <string name="action_show_remaining_fields">Mostra i campi rimanenti</string>
     <string name="action_search">Cerca</string>
     <string name="action_scan_barcode">Scansiona codice a barre</string>
     <string name="action_add">Aggiungi</string>
     <string name="action_go_back">Indietro</string>
-    <string name="action_retry">Riprova</string>
     <string name="action_tap_to_allow_access">Tocca per consentire l\'accesso</string>
     <string name="action_create">Crea</string>
     <string name="action_clear">Pulisci</string>
@@ -83,17 +90,13 @@
     <string name="action_undo">Annulla</string>
     <string name="action_close">Chiudi</string>
     <string name="action_discard">Abbandona</string>
-    <string name="action_enable">Abilita</string>
     <string name="action_don_t_show_again">Non mostrare più</string>
     <string name="action_translate">Traduci</string>
     <string name="action_enable_camera_flash">Attiva il flash della fotocamera</string>
     <string name="action_disable_camera_flash">Disattiva il flash della fotocamera</string>
     <string name="action_prevent_screen_capture">Impedisci l\'acquisizione dello schermo</string>
     <string name="action_go_to_today">Vai a oggi</string>
-    <string name="action_read_more">Leddi di più</string>
-    <string name="action_select_country">Seleziona nazione</string>
-    <string name="action_use_open_food_facts">Utilizza Open Food Facts</string>
-    <string name="action_see_terms_of_use">Consulta i termini di utilizzo</string>
+    <string name="action_use_open_food_facts_product">Utilizza prodotto Open Food Facts</string>
     <string name="action_bug_report_on_github">Segnala un bug su GitHub</string>
     <string name="action_feature_request_on_github">Richiedi funzionalità su GitHub</string>
     <string name="action_leave_a_star_on_github">Lascia una stella su GitHub</string>
@@ -103,13 +106,18 @@
     <string name="action_move_down" description="reorder list item down">Sposta giù</string>
     <string name="action_use_time_based_ordering">Usa ordine basato sul tempo</string>
     <string name="action_include_all_day_meals">Includi i pasti di tutto il giorno</string>
-    <string name="action_delete_unused_products">Elimina prodotti inutilizzati</string>
-    <string name="action_error_details" description="Show error details">Dettagli</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Aggiungi ingrediente</string>
+    <string name="action_edit_ingredient_measurement">Modifica quantità dell\'ingrediente</string>
+    <string name="action_delete_ingredient">Elimina ingrediente</string>
+    <string name="action_download">Scarica</string>
+    <string name="action_paste_url">Incolla URL</string>
+    <string name="action_browse_open_food_facts">Esplora Open Food Facts</string>
+    <string name="action_open_browser">Apri il browser</string>
+    <string name="action_copy">Copia</string>
     <string name="neutral_barcode_scanner_camera_request">Permetti l\'accesso alla tua fotocamera per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Devi permettere l\'accesso per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L\'autorizzazione alla fotocamera è necessaria per scansionare i codici a barre. Per favore, concedila nelle impostazioni dell\'app.</string>
     <string name="neutral_no_products_found">Nessun prodotto trovato</string>
-    <string name="neutral_food_database_load_error">Impossibile scaricare i prodotti dal database alimentare remoto. Puoi comunque visualizzare i prodotti scaricati in precedenza.</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d caloria rimasta</item>
         <item quantity="other">%1$d calorie rimaste</item>
@@ -124,13 +132,14 @@
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Sembra che questo pasto sia vuoto. Aggiungi alcuni alimenti per tracciare le tue calorie.</string>
     <string name="neutral_entry_deleted">Voce eliminata</string>
     <string name="neutral_help_translating_the_app">Aiuta a tradurre l\'app</string>
-    <string name="neutral_manage_food_database">Gestisci il tuo database alimentare</string>
+    <string name="neutral_failed_to_download_the_product">Download del prodotto non riuscito</string>
+    <string name="neutral_copied">Informazioni copiate negli appunti</string>
     <string name="question_discard_product">Abbandonare l\'inserimento del prodotto?</string>
     <string name="question_discard_changes">Abbandonare le modifiche?</string>
+    <string name="question_discard_recipe">Scartare la ricetta?</string>
     <string name="error_this_field_is_required">Questo campo è richiesto</string>
     <string name="error_invalid_number">Numero non valido</string>
     <string name="error_value_cannot_be_negative">Il valore non può essere negativo</string>
-    <string name="error_value_must_be_positive">Il valore deve essere positivo</string>
     <string name="error_sum_of_macronutrients_cannot_exceed_100g">La somma dei macronutrienti non può superare i 100 g</string>
     <string name="error_value_must_be_less_than">Il valore deve essere inferiore di %1$s</string>
     <string name="error_value_must_be_integer">Il valore deve essere un intero</string>
@@ -145,23 +154,18 @@
     <string name="description_calories_goal">Imposta il tuo obiettivo di apporto calorico giornaliero. Questo ti aiuterà a monitorare i progressi e a restare sulla giusta strada.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Il prodotto verrà eliminato definitivamente. Questa azione non può essere annullata. Tutte le voci del diario relative a questo prodotto saranno eliminate.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Questa voce verrà eliminata dal tuo diario. Puoi aggiungerla di nuovo in qualsiasi momento.</string>
-    <string name="description_open_food_facts_search_hint" description="Inform user that he can enable Open Food Facts database in settings">Abilita Open Food Facts nelle impostazioni per accedere ad informazioni dettagliate sui prodotti</string>
-    <string name="description_open_food_facts">è un database collaborativo, gratuito e aperto di prodotti alimentari da tutto il mondo.</string>
     <string name="description_README_setting">Visualizza il README del progetto su GitHub</string>
     <string name="description_about_setting">Scopri di più sull\'app</string>
     <string name="description_show_some_love">Se trovi utile questo progetto, considera di dargli una stella su GitHub! Aiuta gli altri a scoprirlo e sostiene il continuo sviluppo.</string>
     <string name="description_share_your_thoughts">Se hai feedback, richieste di funzionalità o segnalazioni di bug, fammelo sapere! Mi piacerebbe sentire la tua opinione.</string>
-    <string name="description_open_food_facts_clear_query_cache">Cancella la cache delle query di Open Food Facts</string>
-    <string name="description_open_food_facts_clear_cache">La pulizia della cache di Open Food Facts ripristinerà lo stato locale del database di Open Food Facts. Questo significa che l\'app potrà scaricare nuovamente i prodotti che hai eliminato in precedenza. Ciò potrebbe causare il nuovo download di una grande quantità di dati.</string>
     <string name="description_time_based_meals_sorting">Se abilitato, i pasti in corso verranno mostrati per primi</string>
     <string name="description_action_include_all_day_meals">I pasti di tutto il giorno verranno inclusi nell\'attuale elenco dei pasti</string>
     <string name="description_incomplete_nutrition_data">Alcuni dei prodotti utilizzati non dispongono di questo valore; pertanto, il valore visualizzato potrebbe non essere accurato</string>
-    <string name="description_use_global_database">Si consiglia di utilizzare un database alimentare del tuo paese. Puoi abilitare il database globale, ma potrebbe contenere un numero elevato di prodotti e aumentare significativamente le dimensioni del tuo database.</string>
-    <string name="description_delete_unused_open_food_facts_products_short">Elimina prodotti Open Food Facts inutilizzati</string>
-    <string name="description_delete_unused_open_food_facts_products">I prodotti di Open Food Facts non utilizzati nel tuo diario verranno eliminati. I prodotti che hai aggiunto manualmente o modificato non verranno eliminati. Non potrai cercare nuovamente i prodotti eliminati a meno che tu non cancelli la cache di Open Food Facts. Tuttavia, potrai ancora trovare i prodotti eliminati utilizzando un codice a barre.</string>
     <string name="description_translation_warning">Le traduzioni sono create da volontari. Potrebbero non essere perfette e alcune traduzioni potrebbero mancare. Se noti degli errori, non esitare a contribuire per migliorarle.</string>
+    <string name="description_browse_open_food_facts">Il sito web di Open Food Facts verrà aperto nel tuo browser. Puoi cercare i prodotti e copiare il link del prodotto che desideri aggiungere.</string>
+    <string name="description_changelog">Scopri le novità dell\'app</string>
     <string name="headline_launcher_icon_by_icons8">Icona del launcher di Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Guarda altre fantastiche icone qui</string>
-    <string name="link_open_food_facts">https://world.openfoodfacts.org/</string>
-    <string name="link_open_food_facts_terms_of_use">https://world.openfoodfacts.org/terms-of-use</string>
+    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
+    <!-- Don't translate changelog strings -->
 </resources>
