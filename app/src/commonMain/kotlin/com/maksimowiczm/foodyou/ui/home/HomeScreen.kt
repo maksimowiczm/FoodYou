@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.ui.home
 
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -62,12 +64,13 @@ fun HomeScreen(
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
+            contentPadding = paddingValues,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
                 CalendarCard(
                     homeState = homeState,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
 
@@ -76,7 +79,8 @@ fun HomeScreen(
                     animatedVisibilityScope = animatedVisibilityScope,
                     homeState = homeState,
                     onMealClick = onMealCardClick,
-                    onAddClick = onMealCardAddClick
+                    onAddClick = onMealCardAddClick,
+                    contentPadding = PaddingValues(horizontal = 8.dp)
                 )
             }
 
@@ -85,7 +89,7 @@ fun HomeScreen(
                     animatedVisibilityScope = animatedVisibilityScope,
                     homeState = homeState,
                     onClick = onCaloriesCardClick,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
         }

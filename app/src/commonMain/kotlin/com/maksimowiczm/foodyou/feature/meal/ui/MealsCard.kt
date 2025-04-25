@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -62,6 +64,7 @@ internal fun MealsCard(
     homeState: HomeState,
     onMealClick: (epochDay: Int, mealId: Long) -> Unit,
     onAddClick: (epochDay: Int, mealId: Long) -> Unit,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     viewModel: MealsCardViewModel = koinViewModel()
 ) {
@@ -74,6 +77,7 @@ internal fun MealsCard(
         onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
         animatedVisibilityScope = animatedVisibilityScope,
         epochDay = homeState.selectedDate.toEpochDays(),
+        contentPadding = contentPadding,
         modifier = modifier,
         shimmer = homeState.shimmer
     )
@@ -88,6 +92,7 @@ private fun MealsCard(
     onAddClick: (mealId: Long) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     epochDay: Int,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberShimmer(
         shimmerBounds = ShimmerBounds.Window
@@ -111,8 +116,10 @@ private fun MealsCard(
             state = pagerState,
             modifier = modifier.animateContentSize(),
             contentPadding = PaddingValues(
-                start = 8.dp,
-                end = 24.dp
+                start = contentPadding.calculateStartPadding(LocalLayoutDirection.current),
+                end = 24.dp,
+                top = contentPadding.calculateTopPadding(),
+                bottom = contentPadding.calculateBottomPadding()
             )
         ) { page ->
             val pageOffset = pagerState.currentPage - page + pagerState.currentPageOffsetFraction
