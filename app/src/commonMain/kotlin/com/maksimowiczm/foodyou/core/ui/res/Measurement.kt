@@ -1,18 +1,14 @@
-package com.maksimowiczm.foodyou.feature.measurement.ui
+package com.maksimowiczm.foodyou.core.ui.res
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.product_package
-import foodyou.app.generated.resources.product_serving
-import foodyou.app.generated.resources.unit_gram_short
-import foodyou.app.generated.resources.x_times_y
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun Measurement.stringResource() = when (this) {
+fun Measurement.stringResource() = when (this) {
     is Measurement.Package -> stringResource(
         Res.string.x_times_y,
         quantity.formatClipZeros(),
@@ -30,7 +26,7 @@ internal fun Measurement.stringResource() = when (this) {
     }
 }
 
-internal val Measurement.Companion.Saver: Saver<Measurement?, ArrayList<Any>>
+val Measurement.Companion.Saver: Saver<Measurement?, ArrayList<Any>>
     get() = Saver(
         save = {
             val id = when (it) {

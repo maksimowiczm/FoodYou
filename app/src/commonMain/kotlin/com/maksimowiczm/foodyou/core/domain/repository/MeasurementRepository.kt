@@ -17,7 +17,6 @@ import com.maksimowiczm.foodyou.core.domain.model.RecipeWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
-import kotlin.collections.map
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -37,7 +36,13 @@ interface MeasurementRepository {
      * Get suggestions for the measurement depending on previous measurements. If there are no
      * previous measurements then return default suggestions.
      */
-    suspend fun getSuggestions(foodId: FoodId): List<Measurement>
+    fun observeSuggestions(foodId: FoodId): Flow<List<Measurement>>
+
+    /**
+     * Get the latest suggestion for the measurement depending on previous measurements.
+     * If there are no previous measurements then return null.
+     */
+    fun observeLatestSuggestion(foodId: FoodId): Flow<Measurement?>
 
     suspend fun addMeasurement(
         date: LocalDate,
@@ -95,10 +100,29 @@ internal class MeasurementRepositoryImpl(
                     .map { it?.toRecipeWithMeasurement() }
         }
 
-    override suspend fun getSuggestions(foodId: FoodId): List<Measurement> = when (foodId) {
-        is FoodId.Product -> productMeasurementDao.getProductMeasurementSuggestions(foodId.id)
-        is FoodId.Recipe -> recipeMeasurementDao.getRecipeMeasurementSuggestions(foodId.id)
-    }.map { with(MeasurementMapper) { it.toMeasurement() } }
+    override fun observeSuggestions(foodId: FoodId): Flow<List<Measurement>> = when (foodId) {
+        is FoodId.Product ->
+            productMeasurementDao
+                .observeProductMeasurementSuggestions(foodId.id)
+                .mapValues { with(MeasurementMapper) { it.toMeasurement() } }
+
+        is FoodId.Recipe ->
+            recipeMeasurementDao
+                .observeRecipeMeasurementSuggestions(foodId.id)
+                .mapValues { with(MeasurementMapper) { it.toMeasurement() } }
+    }
+
+    override fun observeLatestSuggestion(foodId: FoodId): Flow<Measurement?> = when (foodId) {
+        is FoodId.Product ->
+            productMeasurementDao
+                .observeLatestProductMeasurementSuggestion(foodId.id)
+                .map { with(MeasurementMapper) { it?.toMeasurement() } }
+
+        is FoodId.Recipe ->
+            recipeMeasurementDao
+                .observeLatestRecipeMeasurementSuggestion(foodId.id)
+                .map { with(MeasurementMapper) { it?.toMeasurement() } }
+    }
 
     override suspend fun addMeasurement(
         date: LocalDate,

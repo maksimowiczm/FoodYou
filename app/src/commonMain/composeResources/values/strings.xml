@@ -45,6 +45,7 @@
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
 
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
+    <string name="times_y" translatable="false">x %1$s</string>
     <string name="weight">Weight</string>
     <string name="unit_calories">Calories</string>
     <string name="unit_kcal">kcal</string>
@@ -127,6 +128,8 @@
     <string name="action_browse_open_food_facts">Browse Open Food Facts</string>
     <string name="action_open_browser">Open browser</string>
     <string name="action_copy">Copy</string>
+    <string name="action_choose_other_date">Choose other date</string>
+    <string name="action_choose_other_measurement">Choose other measurement</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>

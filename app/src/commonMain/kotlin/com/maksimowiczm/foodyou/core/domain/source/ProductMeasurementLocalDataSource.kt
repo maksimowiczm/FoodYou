@@ -13,6 +13,6 @@ interface ProductMeasurementLocalDataSource {
     suspend fun restoreProductMeasurement(id: Long)
     fun observeProductMeasurements(epochDay: Int, mealId: Long): Flow<List<ProductWithMeasurement>>
     fun observeProductMeasurement(measurementId: Long): Flow<ProductWithMeasurement?>
-    suspend fun getProductMeasurementSuggestion(productId: Long): MeasurementSuggestion
-    suspend fun getProductMeasurementSuggestions(productId: Long): List<MeasurementSuggestion>
+    fun observeProductMeasurementSuggestions(productId: Long): Flow<List<MeasurementSuggestion>>
+    fun observeLatestProductMeasurementSuggestion(productId: Long): Flow<MeasurementSuggestion?>
 }

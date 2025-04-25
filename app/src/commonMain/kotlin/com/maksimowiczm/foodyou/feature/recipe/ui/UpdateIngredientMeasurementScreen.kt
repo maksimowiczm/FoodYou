@@ -5,7 +5,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.MeasurableFood
-import com.maksimowiczm.foodyou.feature.measurement.MeasurementScreen
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 
 @Composable
@@ -49,8 +48,9 @@ internal fun UpdateIngredientMeasurementScreen(
     )
 
     MeasurementScreen(
-        food = food,
-        selectedMeasurement = ingredient.measurement,
+        food = food.food,
+        suggestions = food.suggestions,
+        selected = ingredient.measurement,
         onBack = onBack,
         onMeasurement = onMeasurement,
         onEditFood = onEditFood,

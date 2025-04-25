@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.measurement.ui
+package com.maksimowiczm.foodyou.feature.measurement.ui.basic
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

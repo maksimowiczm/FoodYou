@@ -1,7 +1,5 @@
 package com.maksimowiczm.foodyou.feature.meal
 
-import com.maksimowiczm.foodyou.feature.meal.data.MealRepository
-import com.maksimowiczm.foodyou.feature.meal.data.MealRepositoryImpl
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealWithFoodUseCase
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealWithFoodUseCaseImpl
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsUseCase
@@ -17,8 +15,6 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val mealModule = module {
-    factoryOf(::MealRepositoryImpl).bind<MealRepository>()
-
     factoryOf(::ObserveMealsUseCaseImpl).bind<ObserveMealsUseCase>()
     factoryOf(::ObserveMealsWithSummaryUseCaseImpl).bind<ObserveMealsWithSummaryUseCase>()
     factoryOf(::ObserveMealWithFoodUseCaseImpl).bind<ObserveMealWithFoodUseCase>()

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.measurement.ui
+package com.maksimowiczm.foodyou.feature.addfood.ui.measurement
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.Food
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.ui.res.stringResource
 
 @Composable
 internal fun WeightChips(

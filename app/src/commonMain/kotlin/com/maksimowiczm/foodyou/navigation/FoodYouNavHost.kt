@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -22,10 +23,14 @@ import com.maksimowiczm.foodyou.ui.settings.Settings
 import com.maksimowiczm.foodyou.ui.settings.settingsGraph
 
 @Composable
-fun FoodYouNavHost(navController: NavHostController = rememberNavController()) {
+fun FoodYouNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
+) {
     NavHost(
         navController = navController,
-        startDestination = Home
+        startDestination = Home,
+        modifier = modifier
     ) {
         homeGraph(
             onSettings = {

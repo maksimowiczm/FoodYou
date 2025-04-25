@@ -4,12 +4,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.core.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.core.ext.get
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
 import com.maksimowiczm.foodyou.core.util.DateFormatter
 import com.maksimowiczm.foodyou.feature.meal.data.MealPreferences
-import com.maksimowiczm.foodyou.feature.meal.data.MealRepository
 import com.maksimowiczm.foodyou.feature.meal.domain.Meal
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsUseCase
 import kotlinx.coroutines.flow.SharingStarted

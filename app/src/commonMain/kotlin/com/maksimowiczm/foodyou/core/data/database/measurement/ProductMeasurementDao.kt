@@ -80,39 +80,6 @@ abstract class ProductMeasurementDao : ProductMeasurementLocalDataSource {
 
     @Query(
         """
-        SELECT 
-            COALESCE(m.quantity,
-                CASE 
-                    WHEN p.servingWeight IS NOT NULL THEN 1
-                    WHEN p.packageWeight IS NOT NULL THEN 1
-                    ELSE 100
-                END
-            ) AS quantity,
-            COALESCE(m.measurement,
-                CASE 
-                    WHEN p.servingWeight IS NOT NULL THEN ${MeasurementSQLConstants.SERVING}
-                    WHEN p.packageWeight IS NOT NULL THEN ${MeasurementSQLConstants.PACKAGE}
-                    ELSE ${MeasurementSQLConstants.GRAM}
-                END
-            ) AS measurement
-        FROM ProductEntity p
-        LEFT JOIN (
-            SELECT * 
-            FROM ProductMeasurementEntity 
-            WHERE productId = :productId
-            ORDER BY createdAt DESC
-            LIMIT 1
-        ) m ON m.productId = p.id
-        WHERE p.id = :productId
-        LIMIT 1
-        """
-    )
-    abstract override suspend fun getProductMeasurementSuggestion(
-        productId: Long
-    ): MeasurementSuggestion
-
-    @Query(
-        """
         WITH LatestMeasurements AS (
             SELECT DISTINCT m1.quantity, m1.measurement
             FROM ProductMeasurementEntity m1
@@ -160,10 +127,23 @@ abstract class ProductMeasurementDao : ProductMeasurementLocalDataSource {
         WHERE NOT EXISTS (
             SELECT 1 FROM LatestMeasurements lm WHERE lm.measurement = d.measurement
         )
-        ORDER BY measurement DESC
+        ORDER BY measurement
         """
     )
-    abstract override suspend fun getProductMeasurementSuggestions(
+    abstract override fun observeProductMeasurementSuggestions(
         productId: Long
-    ): List<MeasurementSuggestion>
+    ): Flow<List<MeasurementSuggestion>>
+
+    @Query(
+        """
+        SELECT *
+        FROM ProductMeasurementEntity
+        WHERE productId = :productId
+        ORDER BY createdAt DESC
+        LIMIT 1
+        """
+    )
+    abstract override fun observeLatestProductMeasurementSuggestion(
+        productId: Long
+    ): Flow<MeasurementSuggestion?>
 }

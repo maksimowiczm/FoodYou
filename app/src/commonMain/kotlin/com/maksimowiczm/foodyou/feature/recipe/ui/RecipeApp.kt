@@ -25,7 +25,6 @@ import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
-import com.maksimowiczm.foodyou.feature.measurement.MeasurementScreen
 import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
@@ -168,8 +167,9 @@ internal fun RecipeApp(
             } ?: return@crossfadeComposable
 
             MeasurementScreen(
-                food = food,
-                selectedMeasurement = null,
+                food = food.food,
+                suggestions = food.suggestions,
+                selected = null,
                 onBack = {
                     navController.popBackStack<MeasureIngredient>(inclusive = true)
                 },

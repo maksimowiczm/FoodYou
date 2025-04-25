@@ -153,10 +153,23 @@ abstract class RecipeMeasurementDao : RecipeMeasurementLocalDataSource {
         WHERE NOT EXISTS (
             SELECT 1 FROM LatestMeasurements lm WHERE lm.measurement = d.measurement
         )
-        ORDER BY measurement DESC
+        ORDER BY measurement
         """
     )
-    abstract override suspend fun getRecipeMeasurementSuggestions(
+    abstract override fun observeRecipeMeasurementSuggestions(
         recipeId: Long
-    ): List<MeasurementSuggestion>
+    ): Flow<List<MeasurementSuggestion>>
+
+    @Query(
+        """
+        SELECT quantity, measurement
+        FROM RecipeMeasurementEntity
+        WHERE recipeId = :recipeId
+        ORDER BY createdAt DESC
+        LIMIT 1
+        """
+    )
+    abstract override fun observeLatestRecipeMeasurementSuggestion(
+        recipeId: Long
+    ): Flow<MeasurementSuggestion?>
 }

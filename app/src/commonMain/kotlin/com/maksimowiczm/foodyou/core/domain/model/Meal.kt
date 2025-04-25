@@ -1,8 +1,8 @@
-package com.maksimowiczm.foodyou.feature.meal.data
+package com.maksimowiczm.foodyou.core.domain.model
 
 import kotlinx.datetime.LocalTime
 
-internal data class Meal(
+data class Meal(
     val id: Long,
     val name: String,
     val from: LocalTime,

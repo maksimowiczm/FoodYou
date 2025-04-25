@@ -1,13 +1,14 @@
-package com.maksimowiczm.foodyou.feature.meal.data
+package com.maksimowiczm.foodyou.core.domain.repository
 
 import com.maksimowiczm.foodyou.core.data.model.meal.MealEntity
+import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.domain.source.MealLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime
 
-internal interface MealRepository {
+interface MealRepository {
 
     fun observeMeal(id: Long): Flow<Meal?>
 

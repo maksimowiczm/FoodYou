@@ -11,7 +11,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.feature.measurement.MeasurementScreen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.datetime.LocalDate
 import org.koin.compose.viewmodel.koinViewModel
@@ -48,8 +47,9 @@ internal fun CreateMeasurementScreen(
     when (val food = food) {
         null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
         else -> MeasurementScreen(
-            food = food,
-            selectedMeasurement = selectedMeasurement,
+            food = food.food,
+            suggestions = food.suggestions,
+            selected = selectedMeasurement ?: food.selected,
             onBack = onBack,
             onMeasurement = remember(viewModel) { viewModel::onConfirm },
             onEditFood = onEdit,
