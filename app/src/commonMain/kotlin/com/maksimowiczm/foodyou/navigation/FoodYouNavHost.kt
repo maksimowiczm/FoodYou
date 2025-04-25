@@ -38,6 +38,11 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
+            onAbout = {
+                navController.navigate(About) {
+                    launchSingleTop = true
+                }
+            },
             onMealCardClick = { epochDay, mealId ->
                 navController.navigate(
                     AddFoodMeal(

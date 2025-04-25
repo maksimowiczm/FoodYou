@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.ui.home
 
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -15,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -31,6 +34,7 @@ import org.jetbrains.compose.resources.stringResource
 fun HomeScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     onSettings: () -> Unit,
+    onAbout: () -> Unit,
     onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onCaloriesCardClick: (epochDay: Int) -> Unit,
@@ -46,7 +50,15 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(Res.string.app_name))
+                    Text(
+                        text = stringResource(Res.string.app_name),
+                        modifier = Modifier
+                            .clickable(
+                                onClick = onAbout,
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            )
+                    )
                 },
                 actions = {
                     IconButton(
