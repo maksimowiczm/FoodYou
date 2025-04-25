@@ -26,6 +26,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onHomeSettings: () -> Unit,
     onMealsSettings: () -> Unit,
     onGoalsSettings: () -> Unit,
     onAbout: () -> Unit,
@@ -57,6 +58,11 @@ fun SettingsScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues
         ) {
+            item {
+                HomeSettingsListItem(
+                    onClick = onHomeSettings
+                )
+            }
             item {
                 MealsSettingsListItem(
                     onClick = onMealsSettings

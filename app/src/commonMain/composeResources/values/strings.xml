@@ -41,6 +41,8 @@
     <string name="headline_whats_new">What's new</string>
     <string name="headline_changelog">Changelog</string>
     <string name="headline_installed" description="Installed version of the app">Installed</string>
+    <string name="headline_home" description="Home screen">Home</string>
+    <string name="headline_home_settings" description="Home screen settings">Home settings</string>
 
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
 
@@ -130,6 +132,7 @@
     <string name="action_copy">Copy</string>
     <string name="action_choose_other_date">Choose other date</string>
     <string name="action_choose_other_measurement">Choose other measurement</string>
+    <string name="action_edit_your_home_page">Edit your home page</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
