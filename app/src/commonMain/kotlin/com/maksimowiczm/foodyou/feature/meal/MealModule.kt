@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsUseCaseImpl
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsWithSummaryUseCase
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsWithSummaryUseCaseImpl
 import com.maksimowiczm.foodyou.feature.meal.ui.MealScreenViewModel
-import com.maksimowiczm.foodyou.feature.meal.ui.MealsCardViewModel
+import com.maksimowiczm.foodyou.feature.meal.ui.card.MealsCardViewModel
 import com.maksimowiczm.foodyou.feature.meal.ui.settings.MealsSettingsScreenViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf

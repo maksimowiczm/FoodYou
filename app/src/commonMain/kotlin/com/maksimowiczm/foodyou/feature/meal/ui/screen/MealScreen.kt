@@ -66,7 +66,7 @@ import com.maksimowiczm.foodyou.core.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
-import com.maksimowiczm.foodyou.feature.meal.ui.MealCardTransitionSpecs
+import com.maksimowiczm.foodyou.feature.meal.ui.card.MealCardTransitionSpecs
 import com.maksimowiczm.foodyou.feature.meal.ui.component.MealHeader
 import com.maksimowiczm.foodyou.feature.meal.ui.component.NutrientsLayout
 import foodyou.app.generated.resources.*
