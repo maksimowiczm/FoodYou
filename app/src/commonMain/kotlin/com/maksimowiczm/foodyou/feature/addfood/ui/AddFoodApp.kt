@@ -191,9 +191,8 @@ private fun AddFoodNavHost(
         crossfadeComposable<Meal> {
             val homeSTS =
                 LocalHomeSharedTransitionScope.current ?: error("No home shared transition scope")
-            val addFoodSTS =
-                LocalAddFoodSharedTransitionScope.current
-                    ?: error("No add food shared transition scope")
+            val addFoodSTS = LocalAddFoodSharedTransitionScope.current
+                ?: error("No add food shared transition scope")
 
             MealScreen(
                 screenSts = addFoodSTS,
