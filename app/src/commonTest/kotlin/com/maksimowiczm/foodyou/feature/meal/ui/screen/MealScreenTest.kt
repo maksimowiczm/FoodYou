@@ -33,9 +33,9 @@ class MealScreenTest {
     @OptIn(ExperimentalTime::class, ExperimentalSharedTransitionApi::class)
     @Composable
     private fun MealScreen(
-        modifier: Modifier = Modifier.Companion,
+        modifier: Modifier = Modifier,
         meal: Meal = testMeal(),
-        date: LocalDate = LocalDate.Companion.now(),
+        date: LocalDate = LocalDate.now(),
         foods: List<FoodWithMeasurement> = listOf(testProductWithMeasurement()),
         deletedMeasurement: Flow<MeasurementId> = emptyFlow(),
         onAddFood: () -> Unit = {},
