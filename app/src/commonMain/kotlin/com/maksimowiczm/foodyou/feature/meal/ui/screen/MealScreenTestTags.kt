@@ -9,4 +9,5 @@ object MealScreenTestTags {
     const val ADD_FOOD_FAB = "add_food_fab"
     const val BARCODE_SCANNER_FAB = "barcode_scanner_fab"
     const val BOTTOM_SHEET = "bottom_sheet"
+    const val SNACKBAR = "snackbar"
 }

@@ -42,6 +42,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -55,6 +58,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -83,6 +87,8 @@ import com.maksimowiczm.foodyou.feature.meal.ui.component.MealHeader
 import com.maksimowiczm.foodyou.feature.meal.ui.component.NutrientsLayout
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
@@ -102,10 +108,12 @@ fun MealScreen(
     date: LocalDate,
     meal: Meal?,
     foods: List<FoodWithMeasurement>?,
+    deletedMeasurementFlow: Flow<MeasurementId>,
     onAddFood: () -> Unit,
     onBarcodeScanner: () -> Unit,
     onEditMeasurement: (MeasurementId) -> Unit,
     onDeleteEntry: (MeasurementId) -> Unit,
+    onRestoreEntry: (MeasurementId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (meal == null || foods == null) {
@@ -120,10 +128,12 @@ fun MealScreen(
             date = date,
             meal = meal,
             foods = foods,
+            deletedMeasurementFlow = deletedMeasurementFlow,
             onAddFood = onAddFood,
             onBarcodeScanner = onBarcodeScanner,
             onEditMeasurement = onEditMeasurement,
             onDeleteEntry = onDeleteEntry,
+            onRestoreEntry = onRestoreEntry,
             modifier = modifier
         )
     }
@@ -147,10 +157,12 @@ fun MealScreen(
     date: LocalDate,
     meal: Meal,
     foods: List<FoodWithMeasurement>,
+    deletedMeasurementFlow: Flow<MeasurementId>,
     onAddFood: () -> Unit,
     onBarcodeScanner: () -> Unit,
     onEditMeasurement: (MeasurementId) -> Unit,
     onDeleteEntry: (MeasurementId) -> Unit,
+    onRestoreEntry: (MeasurementId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -238,10 +250,35 @@ fun MealScreen(
         }
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val latestOnRestoreMeasurement by rememberUpdatedState(onRestoreEntry)
+    val entryDeletedString = stringResource(Res.string.neutral_entry_deleted)
+    val undoString = stringResource(Res.string.action_undo)
+    LaunchedEffect(deletedMeasurementFlow) {
+        deletedMeasurementFlow.collectLatest { id ->
+            val result = snackbarHostState.showSnackbar(
+                message = entryDeletedString,
+                actionLabel = undoString,
+                withDismissAction = true
+            )
+
+            when (result) {
+                SnackbarResult.Dismissed -> Unit
+                SnackbarResult.ActionPerformed -> latestOnRestoreMeasurement(id)
+            }
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = topBar,
-        floatingActionButton = fab
+        floatingActionButton = fab,
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.testTag(MealScreenTestTags.SNACKBAR)
+            )
+        }
     ) { paddingValues ->
         LazyColumn(
             state = listState,

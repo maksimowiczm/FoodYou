@@ -45,10 +45,12 @@ fun MealScreen(
         date = date,
         meal = meal,
         foods = foods,
+        deletedMeasurementFlow = viewModel.deletedMeasurement,
         onAddFood = onAddFood,
         onBarcodeScanner = onBarcodeScanner,
         onEditMeasurement = onEditMeasurement,
         onDeleteEntry = viewModel::onDeleteMeasurement,
+        onRestoreEntry = viewModel::onRestoreMeasurement,
         modifier = modifier
     )
 }

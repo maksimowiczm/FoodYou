@@ -6,7 +6,9 @@ import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.ext.launch
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.LocalDate
 
@@ -33,7 +35,15 @@ class MealScreenViewModel(
         initialValue = null
     )
 
+    private val deletedMeasurementEvent = Channel<MeasurementId>()
+    val deletedMeasurement = deletedMeasurementEvent.receiveAsFlow()
+
     fun onDeleteMeasurement(measurementId: MeasurementId) = launch {
         measurementRepository.removeMeasurement(measurementId)
+        deletedMeasurementEvent.send(measurementId)
+    }
+
+    fun onRestoreMeasurement(measurementId: MeasurementId) = launch {
+        measurementRepository.restoreMeasurement(measurementId)
     }
 }

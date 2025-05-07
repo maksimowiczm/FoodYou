@@ -5,6 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
@@ -18,6 +21,9 @@ import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.ext.AnimatedSharedTransitionLayout
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.LocalDate
 import org.junit.Test
 
@@ -31,24 +37,28 @@ class MealScreenTest {
         meal: Meal = testMeal(),
         date: LocalDate = LocalDate.Companion.now(),
         foods: List<FoodWithMeasurement> = listOf(testProductWithMeasurement()),
+        deletedMeasurement: Flow<MeasurementId> = emptyFlow(),
         onAddFood: () -> Unit = {},
         onBarcodeScanner: () -> Unit = {},
         onEditMeasurement: (MeasurementId) -> Unit = {},
-        onDeleteEntry: (MeasurementId) -> Unit = {}
+        onDeleteEntry: (MeasurementId) -> Unit = {},
+        onRestoreEntry: (MeasurementId) -> Unit = {}
     ) {
         AnimatedSharedTransitionLayout {
-            com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreen(
+            MealScreen(
                 screenSts = sharedTransitionScope,
                 screenScope = animatedVisibilityScope,
                 enterSts = sharedTransitionScope,
                 enterScope = animatedVisibilityScope,
                 meal = meal,
                 foods = foods,
+                deletedMeasurementFlow = deletedMeasurement,
                 date = date,
                 onAddFood = onAddFood,
                 onBarcodeScanner = onBarcodeScanner,
                 onEditMeasurement = onEditMeasurement,
                 onDeleteEntry = onDeleteEntry,
+                onRestoreEntry = onRestoreEntry,
                 modifier = modifier
             )
         }
@@ -73,6 +83,7 @@ class MealScreenTest {
         onNodeWithTag(MealScreenTestTags.ADD_FOOD_FAB).assertIsDisplayed()
         onNodeWithTag(MealScreenTestTags.BARCODE_SCANNER_FAB).assertIsDisplayed()
         onNodeWithTag(MealScreenTestTags.FoodItem(productId)).assertIsDisplayed()
+        onNodeWithTag(MealScreenTestTags.SNACKBAR).assertIsNotDisplayed()
         onNodeWithTag(MealScreenTestTags.BOTTOM_SHEET).assertDoesNotExist()
     }
 
@@ -89,14 +100,35 @@ class MealScreenTest {
                             id = productId
                         )
                     )
-                ),
-                onAddFood = {},
-                onBarcodeScanner = {},
-                onEditMeasurement = {}
+                )
             )
         }
 
         onNodeWithTag(MealScreenTestTags.FoodItem(productId)).performClick()
         onNodeWithTag(MealScreenTestTags.BOTTOM_SHEET).assertIsDisplayed()
+    }
+
+    @Test
+    fun show_snackbar_after_delete() = runComposeUiTest {
+        val productId = FoodId.Product(1L)
+        val measurementId = MeasurementId.Product(1L)
+
+        setContent {
+            MealScreen(
+                meal = testMeal(),
+                foods = listOf(
+                    testProductWithMeasurement(
+                        product = testProduct(
+                            id = productId
+                        )
+                    )
+                ),
+                deletedMeasurement = flowOf(measurementId)
+            )
+        }
+
+        waitUntil {
+            onNodeWithTag(MealScreenTestTags.SNACKBAR).isDisplayed()
+        }
     }
 }
