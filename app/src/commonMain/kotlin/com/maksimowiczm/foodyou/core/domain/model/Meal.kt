@@ -8,4 +8,7 @@ data class Meal(
     val from: LocalTime,
     val to: LocalTime,
     val rank: Int
-)
+) {
+    val isAllDay: Boolean
+        get() = from == to
+}
