@@ -303,6 +303,7 @@ fun MealScreen(
         }
 
         LazyColumn(
+            modifier = Modifier.testTag(MealScreenTestTags.FOOD_ITEMS),
             state = listState,
             contentPadding = paddingValues.add(
                 PaddingValues(

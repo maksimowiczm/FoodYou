@@ -82,7 +82,23 @@ class MealScreenTest {
 
         onNodeWithTag(MealScreenTestTags.ADD_FOOD_FAB).assertIsDisplayed()
         onNodeWithTag(MealScreenTestTags.BARCODE_SCANNER_FAB).assertIsDisplayed()
+        onNodeWithTag(MealScreenTestTags.FOOD_ITEMS).assertIsDisplayed()
         onNodeWithTag(MealScreenTestTags.FoodItem(productId)).assertIsDisplayed()
+        onNodeWithTag(MealScreenTestTags.SNACKBAR).assertIsNotDisplayed()
+        onNodeWithTag(MealScreenTestTags.BOTTOM_SHEET).assertDoesNotExist()
+    }
+
+    @Test
+    fun empty_foods_initial() = runComposeUiTest {
+        setContent {
+            MealScreen(
+                foods = emptyList()
+            )
+        }
+
+        onNodeWithTag(MealScreenTestTags.ADD_FOOD_FAB).assertIsDisplayed()
+        onNodeWithTag(MealScreenTestTags.BARCODE_SCANNER_FAB).assertIsDisplayed()
+        onNodeWithTag(MealScreenTestTags.FOOD_ITEMS).assertIsNotDisplayed()
         onNodeWithTag(MealScreenTestTags.SNACKBAR).assertIsNotDisplayed()
         onNodeWithTag(MealScreenTestTags.BOTTOM_SHEET).assertDoesNotExist()
     }
