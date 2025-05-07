@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -74,6 +75,35 @@ import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
+
+@JvmName("NullableMealScreen")
+@Composable
+fun MealScreen(
+    date: LocalDate,
+    meal: Meal?,
+    foods: List<FoodWithMeasurement>?,
+    onAddFood: () -> Unit,
+    onBarcodeScanner: () -> Unit,
+    onEditMeasurement: (MeasurementId) -> Unit,
+    onDeleteEntry: (MeasurementId) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (meal == null || foods == null) {
+        // TODO loading state
+        Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
+    } else {
+        MealScreen(
+            date = date,
+            meal = meal,
+            foods = foods,
+            onAddFood = onAddFood,
+            onBarcodeScanner = onBarcodeScanner,
+            onEditMeasurement = onEditMeasurement,
+            onDeleteEntry = onDeleteEntry,
+            modifier = modifier
+        )
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
