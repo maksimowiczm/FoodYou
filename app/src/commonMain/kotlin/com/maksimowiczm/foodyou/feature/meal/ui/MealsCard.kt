@@ -49,6 +49,8 @@ import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.meal.domain.MealWithSummary
 import com.maksimowiczm.foodyou.feature.meal.ui.MealCardTransitionSpecs.overlayClipFromCardToScreen
+import com.maksimowiczm.foodyou.feature.meal.ui.component.MealHeader
+import com.maksimowiczm.foodyou.feature.meal.ui.component.NutrientsLayout
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer

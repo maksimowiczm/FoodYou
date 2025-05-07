@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal.ui
+package com.maksimowiczm.foodyou.feature.meal.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

@@ -83,6 +83,8 @@ import com.maksimowiczm.foodyou.feature.addfood.ui.LocalAddFoodSharedTransitionS
 import com.maksimowiczm.foodyou.feature.meal.domain.MealFood
 import com.maksimowiczm.foodyou.feature.meal.domain.MealWithFood
 import com.maksimowiczm.foodyou.feature.meal.ui.MealCardTransitionSpecs.overlayClipFromScreenToCard
+import com.maksimowiczm.foodyou.feature.meal.ui.component.MealHeader
+import com.maksimowiczm.foodyou.feature.meal.ui.component.NutrientsLayout
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
