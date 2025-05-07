@@ -18,7 +18,7 @@ import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.feature.addfood.SearchSharedTransition
+import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.CreateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.UpdateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodScreen
@@ -26,6 +26,7 @@ import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.rememberSearchFoodScreenState
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.meal.MealScreen
+import com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreenSharedTransition
 import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
@@ -143,19 +144,19 @@ private fun AddFoodNavHost(
                     modifier = Modifier
                         .sharedBounds(
                             sharedContentState = rememberSharedContentState(
-                                key = SearchSharedTransition.CONTAINER
+                                key = MealScreenSharedTransition.FAB_CONTAINER
                             ),
-                            enter = SearchSharedTransition.screenContainerEnterTransition,
-                            exit = SearchSharedTransition.screenContainerExitTransition,
+                            enter = MealScreenSharedTransition.screenContainerEnterTransition,
+                            exit = MealScreenSharedTransition.screenContainerExitTransition,
                             animatedVisibilityScope = this@crossfadeComposable
                         )
                         .sharedBounds(
                             sharedContentState = rememberSharedContentState(
-                                key = SearchSharedTransition.CONTENT
+                                key = MealScreenSharedTransition.FAB_CONTENT
                             ),
                             animatedVisibilityScope = this@crossfadeComposable,
-                            enter = SearchSharedTransition.screenContentEnterTransition,
-                            exit = SearchSharedTransition.screenContentExitTransition
+                            enter = MealScreenSharedTransition.screenContentEnterTransition,
+                            exit = MealScreenSharedTransition.screenContentExitTransition
                         ),
                     state = searchScreenState
                 )
@@ -188,9 +189,17 @@ private fun AddFoodNavHost(
             )
         }
         crossfadeComposable<Meal> {
+            val homeSTS =
+                LocalHomeSharedTransitionScope.current ?: error("No home shared transition scope")
+            val addFoodSTS =
+                LocalAddFoodSharedTransitionScope.current
+                    ?: error("No add food shared transition scope")
+
             MealScreen(
-                navigationScope = this,
-                mealHeaderScope = outerAnimatedScope,
+                screenSts = addFoodSTS,
+                screenScope = this,
+                enterSTS = homeSTS,
+                enterScope = outerAnimatedScope,
                 mealId = mealId,
                 date = date,
                 onAddFood = {

@@ -1,6 +1,13 @@
 package com.maksimowiczm.foodyou.feature.meal.ui.screen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.AnimationConstants.DefaultDurationMillis
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +32,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,6 +46,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,7 +76,9 @@ import com.maksimowiczm.foodyou.core.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.feature.meal.ui.card.MealCardTransitionKeys
 import com.maksimowiczm.foodyou.feature.meal.ui.card.MealCardTransitionSpecs
+import com.maksimowiczm.foodyou.feature.meal.ui.card.MealCardTransitionSpecs.overlayClipFromScreenToCard
 import com.maksimowiczm.foodyou.feature.meal.ui.component.MealHeader
 import com.maksimowiczm.foodyou.feature.meal.ui.component.NutrientsLayout
 import foodyou.app.generated.resources.*
@@ -76,9 +87,18 @@ import kotlinx.coroutines.flow.first
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * @param screenSts scope for the screen transition
+ * @param enterSTS scope for the enter transition
+ */
+@OptIn(ExperimentalSharedTransitionApi::class)
 @JvmName("NullableMealScreen")
 @Composable
 fun MealScreen(
+    screenSts: SharedTransitionScope,
+    screenScope: AnimatedVisibilityScope,
+    enterSTS: SharedTransitionScope,
+    enterScope: AnimatedVisibilityScope,
     date: LocalDate,
     meal: Meal?,
     foods: List<FoodWithMeasurement>?,
@@ -93,6 +113,10 @@ fun MealScreen(
         Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
     } else {
         MealScreen(
+            screenSts = screenSts,
+            screenScope = screenScope,
+            enterSTS = enterSTS,
+            enterScope = enterScope,
             date = date,
             meal = meal,
             foods = foods,
@@ -105,9 +129,21 @@ fun MealScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * @param screenSts scope for the screen transition
+ * @param enterSTS scope for the enter transition
+ */
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalSharedTransitionApi::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 @Composable
 fun MealScreen(
+    screenSts: SharedTransitionScope,
+    screenScope: AnimatedVisibilityScope,
+    enterSTS: SharedTransitionScope,
+    enterScope: AnimatedVisibilityScope,
     date: LocalDate,
     meal: Meal,
     foods: List<FoodWithMeasurement>,
@@ -121,27 +157,60 @@ fun MealScreen(
     val coroutineScope = rememberCoroutineScope()
     val density = LocalDensity.current
 
-    // Flag on first scroll
-    var scrolled by rememberSaveable { mutableStateOf(false) }
-    LaunchedEffect(listState.isScrollInProgress) {
-        scrolled = snapshotFlow { listState.isScrollInProgress }.first { it }
+    val topBar = @Composable {
+        with(enterSTS) {
+            MealScreenTopBar(
+                enterScope = enterScope,
+                meal = meal,
+                foods = foods,
+                date = date,
+                modifier = Modifier.sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = MealCardTransitionKeys.MealContainer(
+                            mealId = meal.id,
+                            epochDay = date.toEpochDays()
+                        )
+                    ),
+                    animatedVisibilityScope = enterScope,
+                    enter = MealCardTransitionSpecs.containerEnterTransition,
+                    exit = MealCardTransitionSpecs.containerExitTransition,
+                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                    clipInOverlayDuringTransition = OverlayClip(
+                        enterScope.overlayClipFromScreenToCard()
+                    )
+                )
+            )
+        }
     }
 
     var fabHeight by remember { mutableIntStateOf(0) }
     val fab = @Composable {
-        MealScreenFloatingActionButton(
-            onAddFood = onAddFood,
-            onBarcodeScanner = onBarcodeScanner,
-            expanded = !scrolled || !listState.canScrollForward,
-            modifier = Modifier.onGloballyPositioned { fabHeight = it.size.height }
-        )
+        // Flag on first scroll
+        var scrolled by rememberSaveable { mutableStateOf(false) }
+        LaunchedEffect(listState.isScrollInProgress) {
+            scrolled = snapshotFlow { listState.isScrollInProgress }.first { it }
+        }
+
+        with(screenSts) {
+            MealScreenFloatingActionButton(
+                screenScope = screenScope,
+                onAddFood = onAddFood,
+                onBarcodeScanner = onBarcodeScanner,
+                expanded = !scrolled || !listState.canScrollForward,
+                modifier = Modifier
+                    .animateFloatingActionButton(
+                        visible = !enterScope.transition.isRunning,
+                        alignment = Alignment.BottomEnd
+                    )
+                    .onGloballyPositioned { fabHeight = it.size.height }
+            )
+        }
     }
 
     var selectedIndex by rememberSaveable { mutableStateOf(-1) }
     val selectedItem = remember(foods, selectedIndex) {
         foods.getOrNull(selectedIndex)
     }
-
     if (selectedItem != null) {
         val sheetState = rememberModalBottomSheetState()
 
@@ -171,13 +240,7 @@ fun MealScreen(
 
     Scaffold(
         modifier = modifier,
-        topBar = {
-            MealScreenTopBar(
-                meal = meal,
-                foods = foods,
-                date = date
-            )
-        },
+        topBar = topBar,
         floatingActionButton = fab
     ) { paddingValues ->
         LazyColumn(
@@ -211,25 +274,47 @@ fun MealScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-private fun MealScreenTopBar(
+private fun SharedTransitionScope.MealScreenTopBar(
+    enterScope: AnimatedVisibilityScope,
     meal: Meal,
     foods: List<FoodWithMeasurement>,
     date: LocalDate,
     modifier: Modifier = Modifier
 ) {
     val dateFormatter = LocalDateFormatter.current
+    val epochDay = date.toEpochDays()
 
     val insets = TopAppBarDefaults.windowInsets
     val headerColor = MealCardTransitionSpecs.containerColor
 
     val headline = @Composable {
-        Text(meal.name)
+        Text(
+            text = meal.name,
+            modifier = Modifier.sharedElement(
+                sharedContentState = rememberSharedContentState(
+                    key = MealCardTransitionKeys.MealTitle(
+                        mealId = meal.id,
+                        epochDay = epochDay
+                    )
+                ),
+                animatedVisibilityScope = enterScope
+            )
+        )
     }
     val time = @Composable {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.sharedElement(
+                sharedContentState = rememberSharedContentState(
+                    key = MealCardTransitionKeys.MealTime(
+                        mealId = meal.id,
+                        epochDay = epochDay
+                    )
+                ),
+                animatedVisibilityScope = enterScope
+            )
         ) {
             if (meal.isAllDay) {
                 Text(
@@ -253,21 +338,61 @@ private fun MealScreenTopBar(
         }
     }
 
-    val calories = foods
-        .sumOf { it.food.nutrients.calories.value * it.weight!! / 100f }
-        .roundToInt()
+    val caloriesLabel = @Composable {
+        val calories = foods
+            .sumOf { it.food.nutrients.calories.value * it.weight!! / 100f }
+            .roundToInt()
 
-    val proteins = foods
-        .sumOf { it.food.nutrients.proteins.value * it.weight!! / 100f }
-        .roundToInt()
+        Text(
+            text = if (foods.isEmpty()) {
+                stringResource(Res.string.em_dash)
+            } else {
+                calories.toString()
+            }
+        )
+    }
 
-    val carbohydrates = foods
-        .sumOf { it.food.nutrients.carbohydrates.value * it.weight!! / 100f }
-        .roundToInt()
+    val proteinsLabel = @Composable {
+        val proteins = foods
+            .sumOf { it.food.nutrients.proteins.value * it.weight!! / 100f }
+            .roundToInt()
 
-    val fats = foods
-        .sumOf { it.food.nutrients.fats.value * it.weight!! / 100f }
-        .roundToInt()
+        Text(
+            text = if (foods.isEmpty()) {
+                stringResource(Res.string.em_dash)
+            } else {
+                "$proteins " + stringResource(Res.string.unit_gram_short)
+            }
+        )
+    }
+
+    val carbohydratesLabel = @Composable {
+        val carbohydrates = foods
+            .sumOf { it.food.nutrients.carbohydrates.value * it.weight!! / 100f }
+            .roundToInt()
+
+        Text(
+            text = if (foods.isEmpty()) {
+                stringResource(Res.string.em_dash)
+            } else {
+                "$carbohydrates " + stringResource(Res.string.unit_gram_short)
+            }
+        )
+    }
+
+    val fatsLabel = @Composable {
+        val fats = foods
+            .sumOf { it.food.nutrients.fats.value * it.weight!! / 100f }
+            .roundToInt()
+
+        Text(
+            text = if (foods.isEmpty()) {
+                stringResource(Res.string.em_dash)
+            } else {
+                "$fats " + stringResource(Res.string.unit_gram_short)
+            }
+        )
+    }
 
     Surface(
         modifier = modifier,
@@ -279,10 +404,20 @@ private fun MealScreenTopBar(
                 .consumeWindowInsets(insets)
                 .padding(16.dp)
         ) {
-            Text(
-                text = dateFormatter.formatDate(date),
-                style = MaterialTheme.typography.bodyLarge
-            )
+            with(enterScope) {
+                Text(
+                    text = dateFormatter.formatDate(date),
+                    modifier = Modifier.animateEnterExit(
+                        enter = fadeIn(
+                            tween(
+                                delayMillis = DefaultDurationMillis
+                            )
+                        ),
+                        exit = fadeOut(tween(50))
+                    ),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
 
             Spacer(Modifier.height(16.dp))
 
@@ -292,42 +427,19 @@ private fun MealScreenTopBar(
                 spacer = { Spacer(Modifier.height(16.dp)) },
                 nutrientsLayout = {
                     NutrientsLayout(
-                        caloriesLabel = {
-                            Text(
-                                text = if (foods.isEmpty()) {
-                                    stringResource(Res.string.em_dash)
-                                } else {
-                                    calories.toString()
-                                }
-                            )
-                        },
-                        proteinsLabel = {
-                            Text(
-                                text = if (foods.isEmpty()) {
-                                    stringResource(Res.string.em_dash)
-                                } else {
-                                    "$proteins " + stringResource(Res.string.unit_gram_short)
-                                }
-                            )
-                        },
-                        carbohydratesLabel = {
-                            Text(
-                                text = if (foods.isEmpty()) {
-                                    stringResource(Res.string.em_dash)
-                                } else {
-                                    "$carbohydrates " + stringResource(Res.string.unit_gram_short)
-                                }
-                            )
-                        },
-                        fatsLabel = {
-                            Text(
-                                text = if (foods.isEmpty()) {
-                                    stringResource(Res.string.em_dash)
-                                } else {
-                                    "$fats " + stringResource(Res.string.unit_gram_short)
-                                }
-                            )
-                        }
+                        caloriesLabel = caloriesLabel,
+                        proteinsLabel = proteinsLabel,
+                        carbohydratesLabel = carbohydratesLabel,
+                        fatsLabel = fatsLabel,
+                        modifier = Modifier.sharedElement(
+                            sharedContentState = rememberSharedContentState(
+                                key = MealCardTransitionKeys.MealNutrients(
+                                    mealId = meal.id,
+                                    epochDay = epochDay
+                                )
+                            ),
+                            animatedVisibilityScope = enterScope
+                        )
                     )
                 }
             )
@@ -335,8 +447,10 @@ private fun MealScreenTopBar(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun MealScreenFloatingActionButton(
+private fun SharedTransitionScope.MealScreenFloatingActionButton(
+    screenScope: AnimatedVisibilityScope,
     onAddFood: () -> Unit,
     onBarcodeScanner: () -> Unit,
     expanded: Boolean,
@@ -347,24 +461,49 @@ private fun MealScreenFloatingActionButton(
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        SmallFloatingActionButton(
-            onClick = onBarcodeScanner,
-            modifier = Modifier.testTag(MealScreenTestTags.BARCODE_SCANNER_FAB),
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-        ) {
-            Icon(
-                imageVector = Icons.Default.QrCodeScanner,
-                contentDescription = stringResource(Res.string.action_scan_barcode)
-            )
+        with(screenScope) {
+            SmallFloatingActionButton(
+                onClick = onBarcodeScanner,
+                modifier = Modifier
+                    .testTag(MealScreenTestTags.BARCODE_SCANNER_FAB)
+                    .animateEnterExit(
+                        enter = MealScreenSharedTransition.smallFabEnterTransition
+                    ),
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            ) {
+                Icon(
+                    imageVector = Icons.Default.QrCodeScanner,
+                    contentDescription = stringResource(Res.string.action_scan_barcode)
+                )
+            }
         }
 
         FloatingActionButton(
             onClick = onAddFood,
-            modifier = Modifier.testTag(MealScreenTestTags.ADD_FOOD_FAB)
+            modifier = Modifier
+                .testTag(MealScreenTestTags.ADD_FOOD_FAB)
+                .sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = MealScreenSharedTransition.FAB_CONTAINER
+                    ),
+                    animatedVisibilityScope = screenScope,
+                    enter = MealScreenSharedTransition.fabContainerEnterTransition,
+                    exit = MealScreenSharedTransition.fabContainerExitTransition,
+                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                )
         ) {
             Box(
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = MealScreenSharedTransition.FAB_CONTENT
+                    ),
+                    animatedVisibilityScope = screenScope,
+                    enter = MealScreenSharedTransition.fabContentEnterTransition,
+                    exit = MealScreenSharedTransition.fabContentExitTransition,
+                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                )
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 16.dp),

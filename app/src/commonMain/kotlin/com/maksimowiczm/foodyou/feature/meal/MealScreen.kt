@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.feature.meal
 
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -11,10 +13,17 @@ import kotlinx.datetime.LocalDate
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+/**
+ * @param screenSts scope for the screen transition
+ * @param enterSTS scope for the enter transition
+ */
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MealScreen(
-    navigationScope: AnimatedVisibilityScope,
-    mealHeaderScope: AnimatedVisibilityScope,
+    screenSts: SharedTransitionScope,
+    screenScope: AnimatedVisibilityScope,
+    enterSTS: SharedTransitionScope,
+    enterScope: AnimatedVisibilityScope,
     mealId: Long,
     date: LocalDate,
     onAddFood: () -> Unit,
@@ -29,6 +38,10 @@ fun MealScreen(
     val foods = viewModel.foods.collectAsStateWithLifecycle().value
 
     MealScreen(
+        screenSts = screenSts,
+        screenScope = screenScope,
+        enterSTS = enterSTS,
+        enterScope = enterScope,
         date = date,
         meal = meal,
         foods = foods,
