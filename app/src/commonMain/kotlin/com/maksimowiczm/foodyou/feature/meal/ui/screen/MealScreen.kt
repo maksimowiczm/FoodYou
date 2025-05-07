@@ -308,7 +308,7 @@ fun MealScreen(
             state = listState,
             contentPadding = paddingValues.add(
                 PaddingValues(
-                    bottom = density.run { fabHeight.toDp() } + 8.dp
+                    bottom = density.run { fabHeight.toDp() } + 16.dp + 8.dp
                 )
             )
         ) {
