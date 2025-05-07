@@ -5,6 +5,7 @@ package com.maksimowiczm.foodyou.feature.changelog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.maksimowiczm.foodyou.BuildConfig
+import com.maksimowiczm.foodyou.core.ext.now
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.datetime.LocalDate
@@ -13,10 +14,23 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_1_1,
             v2_1_0,
             v2_0_0
         )
+
+    val next = Version.next(
+        version = "next",
+        date = LocalDate.now(),
+        newFeatures = listOf(),
+        changes = listOf(
+            "small UI tweaks in the meal screen"
+        ),
+        bugFixes = listOf(),
+        translations = listOf(),
+        notes = null
+    )
 
     val v2_1_1 = Version(
         version = "2.1.1",
@@ -123,5 +137,25 @@ data class Version(
                 }
             }
         }
+    }
+
+    companion object {
+        fun next(
+            version: String,
+            date: LocalDate,
+            newFeatures: List<String>,
+            changes: List<String>,
+            bugFixes: List<String>,
+            translations: List<String>,
+            notes: String?
+        ) = Version(
+            version = version,
+            date = date,
+            newFeatures = newFeatures,
+            changes = changes,
+            bugFixes = bugFixes,
+            translations = translations,
+            notes = notes
+        )
     }
 }
