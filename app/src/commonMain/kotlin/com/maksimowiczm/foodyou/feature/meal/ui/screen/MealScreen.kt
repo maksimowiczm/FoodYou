@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
@@ -634,7 +635,9 @@ private fun BottomSheetContent(
             headlineContent = {
                 Text(stringResource(Res.string.action_delete_entry))
             },
-            modifier = Modifier.clickable { showDeleteDialog = true },
+            modifier = Modifier
+                .testTag(MealScreenTestTags.DELETE_ENTRY_BUTTON)
+                .clickable { showDeleteDialog = true },
             leadingContent = {
                 Icon(
                     imageVector = Icons.Default.Delete,
@@ -642,6 +645,8 @@ private fun BottomSheetContent(
                 )
             },
             colors = ListItemDefaults.colors(
+                headlineColor = MaterialTheme.colorScheme.error,
+                leadingIconColor = MaterialTheme.colorScheme.error,
                 containerColor = Color.Transparent
             )
         )
@@ -654,23 +659,21 @@ private fun DeleteDialog(onDismissRequest: () -> Unit, onDeleteEntry: () -> Unit
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(
-                onClick = onDeleteEntry
+                onClick = onDeleteEntry,
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
             ) {
                 Text(stringResource(Res.string.action_delete))
             }
         },
+        modifier = Modifier.testTag(MealScreenTestTags.DELETE_DIALOG),
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest
             ) {
                 Text(stringResource(Res.string.action_cancel))
             }
-        },
-        icon = {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = null
-            )
         },
         title = {
             Text(stringResource(Res.string.action_delete_entry))

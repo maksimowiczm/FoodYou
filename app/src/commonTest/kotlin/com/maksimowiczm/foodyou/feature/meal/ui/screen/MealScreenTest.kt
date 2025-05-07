@@ -147,4 +147,37 @@ class MealScreenTest {
             onNodeWithTag(MealScreenTestTags.SNACKBAR).isDisplayed()
         }
     }
+
+    @Test
+    fun show_delete_dialog_after_delete() = runComposeUiTest {
+        val productId = FoodId.Product(1L)
+        val measurementId = MeasurementId.Product(1L)
+
+        setContent {
+            MealScreen(
+                meal = testMeal(),
+                foods = listOf(
+                    testProductWithMeasurement(
+                        product = testProduct(
+                            id = productId
+                        )
+                    )
+                ),
+                deletedMeasurement = flowOf(measurementId)
+            )
+        }
+
+        // Open the bottom sheet
+        onNodeWithTag(MealScreenTestTags.FoodItem(productId)).performClick()
+        waitUntil {
+            onNodeWithTag(MealScreenTestTags.BOTTOM_SHEET).isDisplayed()
+        }
+
+        // Click the delete button
+        onNodeWithTag(MealScreenTestTags.DELETE_ENTRY_BUTTON).performClick()
+
+        waitUntil {
+            onNodeWithTag(MealScreenTestTags.DELETE_DIALOG).isDisplayed()
+        }
+    }
 }

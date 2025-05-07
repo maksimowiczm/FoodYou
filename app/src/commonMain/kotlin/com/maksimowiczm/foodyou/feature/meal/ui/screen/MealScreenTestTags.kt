@@ -11,4 +11,6 @@ object MealScreenTestTags {
     const val BARCODE_SCANNER_FAB = "barcode_scanner_fab"
     const val BOTTOM_SHEET = "bottom_sheet"
     const val SNACKBAR = "snackbar"
+    const val DELETE_DIALOG = "delete_dialog"
+    const val DELETE_ENTRY_BUTTON = "delete_entry_button"
 }
