@@ -15,9 +15,9 @@ import com.maksimowiczm.foodyou.core.domain.model.testProduct
 import com.maksimowiczm.foodyou.core.domain.model.testProductWithMeasurement
 import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDate
 import org.junit.Test
-import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTestApi::class)
 class MealScreenTest {
