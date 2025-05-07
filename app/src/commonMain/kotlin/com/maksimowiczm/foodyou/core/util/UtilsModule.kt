@@ -8,12 +8,9 @@ expect fun Module.systemDetails()
 
 expect fun Module.dateFormatter()
 
-expect fun Module.clipboardManager()
-
 val utilsModule = module {
     single { DateProviderImpl() }.bind<DateProvider>()
 
     systemDetails()
     dateFormatter()
-    clipboardManager()
 }

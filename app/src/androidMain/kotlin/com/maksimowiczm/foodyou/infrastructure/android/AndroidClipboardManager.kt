@@ -1,27 +1,27 @@
-package com.maksimowiczm.foodyou.core.util
+package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.content.ClipData
 import android.content.Context
 import android.os.Build
 import android.widget.Toast
+import com.maksimowiczm.foodyou.core.ui.utils.ClipboardManager
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.neutral_copied
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
 
-actual class ClipboardManager(private val context: Context) {
+class AndroidClipboardManager(private val context: Context) : ClipboardManager {
     private val clipboard: android.content.ClipboardManager
         get() = context.getSystemService(
             Context.CLIPBOARD_SERVICE
         ) as android.content.ClipboardManager
 
-    private val copyMessage by lazy {
-        runBlocking {
+    private val copyMessage: String
+        get() = runBlocking {
             getString(Res.string.neutral_copied)
         }
-    }
 
-    actual fun copy(label: String, text: String) {
+    override fun copy(label: String, text: String) {
         val clip = ClipData.newPlainText(label, text)
         clipboard.setPrimaryClip(clip)
 
@@ -30,7 +30,7 @@ actual class ClipboardManager(private val context: Context) {
         }
     }
 
-    actual fun paste(): String? {
+    override fun paste(): String? {
         val clip = clipboard.primaryClip
 
         return if (clip != null && clip.itemCount > 0) {

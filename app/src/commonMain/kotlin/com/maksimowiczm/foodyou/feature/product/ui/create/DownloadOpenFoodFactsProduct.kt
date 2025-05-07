@@ -59,10 +59,9 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.input.Input
-import com.maksimowiczm.foodyou.core.util.ClipboardManager
+import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalAnimationApi::class)
 @Composable
@@ -76,9 +75,9 @@ internal fun DownloadOpenFoodFactsProduct(
     onSearch: () -> Unit,
     onDownload: (url: String) -> Unit,
     onBarcodeScanner: () -> Unit,
-    modifier: Modifier = Modifier,
-    clipboardManager: ClipboardManager = koinInject()
+    modifier: Modifier = Modifier
 ) {
+    val clipboardManager = LocalClipboardManager.current
     val layoutDirection = LocalLayoutDirection.current
     val insets = WindowInsets(
         left = contentPadding.calculateLeftPadding(layoutDirection),

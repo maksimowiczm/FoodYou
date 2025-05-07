@@ -9,6 +9,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.lifecycleScope
 import com.maksimowiczm.foodyou.core.ext.observe
+import com.maksimowiczm.foodyou.core.ui.utils.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.feature.security.data.SecurityPreferences
 import com.maksimowiczm.foodyou.ui.FoodYouApp
 import kotlinx.coroutines.flow.collectLatest
@@ -27,7 +28,11 @@ class FoodYouMainActivity : AppCompatActivity() {
 
         enableEdgeToEdge()
         setContent {
-            FoodYouApp()
+            ClipboardManagerProvider(
+                clipboardManager = AndroidClipboardManager(this)
+            ) {
+                FoodYouApp()
+            }
         }
     }
 

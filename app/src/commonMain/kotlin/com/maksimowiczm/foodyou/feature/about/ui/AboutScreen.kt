@@ -39,22 +39,21 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.core.ui.component.CardButton
-import com.maksimowiczm.foodyou.core.util.ClipboardManager
+import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import com.maksimowiczm.foodyou.feature.changelog.ChangelogModalBottomSheet
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun AboutScreen(
     modifier: Modifier = Modifier,
-    viewModel: AboutSettingsViewModel = koinViewModel(),
-    clipboardManager: ClipboardManager = koinInject()
+    viewModel: AboutSettingsViewModel = koinViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val clipboardManager = LocalClipboardManager.current
 
     val githubStarClicked by viewModel.githubStar.collectAsStateWithLifecycle()
 

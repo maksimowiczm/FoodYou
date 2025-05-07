@@ -47,7 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.util.ClipboardManager
+import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import com.maksimowiczm.foodyou.core.util.DateFormatter
 import com.maksimowiczm.foodyou.feature.changelog.Changelog
 import com.maksimowiczm.foodyou.feature.changelog.Version
@@ -112,9 +112,10 @@ private fun SheetContent(modifier: Modifier = Modifier) {
 private fun ChangelogItem(
     version: Version,
     modifier: Modifier = Modifier,
-    dateFormatter: DateFormatter = koinInject(),
-    clipboardManager: ClipboardManager = koinInject()
+    dateFormatter: DateFormatter = koinInject()
 ) {
+    val clipboardManager = LocalClipboardManager.current
+
     val changelogString = stringResource(Res.string.headline_changelog)
     val changelogText = version.stringResource()
     val coroutineScope = rememberCoroutineScope()
