@@ -37,6 +37,7 @@ import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.goals.model.DiaryDay
 import com.maksimowiczm.foodyou.feature.goals.ui.CaloriesIndicatorTransitionKeys
 import com.maksimowiczm.foodyou.feature.goals.ui.component.CaloriesIndicator
@@ -61,7 +62,6 @@ internal fun CaloriesScreen(
     if (diaryDay != null) {
         CaloriesScreen(
             diaryDay = diaryDay!!,
-            formatDate = viewModel::formatDate,
             animatedVisibilityScope = animatedVisibilityScope,
             onFoodClick = onFoodClick,
             modifier = modifier
@@ -77,11 +77,12 @@ internal fun CaloriesScreen(
 @Composable
 private fun CaloriesScreen(
     diaryDay: DiaryDay,
-    formatDate: (LocalDate) -> String,
     onFoodClick: (FoodId) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
+    val dateFormatter = LocalDateFormatter.current
+
     val filterState = rememberMealsFilterState(diaryDay.meals.toSet())
     val meals by remember(filterState.selectedMeals) {
         derivedStateOf {
@@ -107,7 +108,7 @@ private fun CaloriesScreen(
                 ) {
                     with(animatedVisibilityScope) {
                         Text(
-                            text = formatDate(diaryDay.date),
+                            text = dateFormatter.formatDate(diaryDay.date),
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier
                                 .animateEnterExit(

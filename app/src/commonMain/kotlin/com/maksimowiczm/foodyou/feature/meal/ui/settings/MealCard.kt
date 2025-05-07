@@ -59,6 +59,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.datetime.LocalTime
@@ -68,7 +69,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun MealCard(
     state: MealCardState,
-    formatTime: (LocalTime) -> String,
     onSave: () -> Unit,
     shouldShowDeleteDialog: Boolean,
     onDelete: () -> Unit,
@@ -79,6 +79,8 @@ internal fun MealCard(
     shadowElevation: Dp = 0.dp,
     action: (@Composable () -> Unit)? = null
 ) {
+    val dateFormatter = LocalDateFormatter.current
+
     val nameInput: @Composable RowScope.() -> Unit = {
         BasicTextField(
             state = state.nameInput,
@@ -227,7 +229,7 @@ internal fun MealCard(
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = formatTime(state.fromTimeInput.value),
+                    text = dateFormatter.formatTime(state.fromTimeInput.value),
                     style = MaterialTheme.typography.headlineSmall
                 )
             }
@@ -245,7 +247,7 @@ internal fun MealCard(
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = formatTime(state.toTimeInput.value),
+                    text = dateFormatter.formatTime(state.toTimeInput.value),
                     style = MaterialTheme.typography.headlineSmall
                 )
             }

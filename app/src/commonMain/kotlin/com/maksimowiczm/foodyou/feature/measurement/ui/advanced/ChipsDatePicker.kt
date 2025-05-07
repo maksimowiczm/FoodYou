@@ -16,12 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.util.DateFormatter
+import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_choose_other_date
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 internal fun ChipsDatePicker(
@@ -29,9 +28,10 @@ internal fun ChipsDatePicker(
     selectedDate: LocalDate,
     onDateChange: (LocalDate) -> Unit,
     onChooseDate: () -> Unit,
-    modifier: Modifier = Modifier.Companion,
-    dateFormatter: DateFormatter = koinInject()
+    modifier: Modifier = Modifier
 ) {
+    val dateFormatter = LocalDateFormatter.current
+
     Row(
         modifier = modifier
     ) {

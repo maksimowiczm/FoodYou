@@ -51,6 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
+import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.flow.collectLatest
@@ -72,10 +73,12 @@ internal fun CalendarCard(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel = koinViewModel()
 ) {
+    val dateFormatter = LocalDateFormatter.current
+
     val today by viewModel.today.collectAsStateWithLifecycle()
 
     val calendarState = rememberCalendarState(
-        namesOfDayOfWeek = remember { viewModel.weekDayNamesShort },
+        namesOfDayOfWeek = remember { dateFormatter.weekDayNamesShort },
         referenceDate = today,
         selectedDate = homeState.selectedDate
     )
@@ -91,7 +94,6 @@ internal fun CalendarCard(
 
     CalendarCard(
         calendarState = calendarState,
-        formatMonthYear = remember(viewModel) { viewModel::formatMonthYear },
         modifier = modifier
     )
 }
@@ -99,10 +101,10 @@ internal fun CalendarCard(
 @Composable
 private fun CalendarCard(
     calendarState: CalendarState,
-    formatMonthYear: (LocalDate) -> String,
     modifier: Modifier = Modifier,
     colors: CalendarCardColors = CalendarCardDefaults.colors()
 ) {
+    val dateFormatter = LocalDateFormatter.current
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
     if (showDatePicker) {
@@ -128,7 +130,7 @@ private fun CalendarCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = formatMonthYear(
+                    text = dateFormatter.formatMonthYear(
                         calendarState.firstVisibleDate ?: calendarState.selectedDate
                     )
                 )

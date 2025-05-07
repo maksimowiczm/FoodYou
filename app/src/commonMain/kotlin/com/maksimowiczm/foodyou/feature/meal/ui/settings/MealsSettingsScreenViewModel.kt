@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.core.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.core.ext.get
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
-import com.maksimowiczm.foodyou.core.util.DateFormatter
 import com.maksimowiczm.foodyou.feature.meal.data.MealPreferences
 import com.maksimowiczm.foodyou.feature.meal.domain.Meal
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsUseCase
@@ -22,7 +21,6 @@ import kotlinx.datetime.LocalTime
 internal class MealsSettingsScreenViewModel(
     observeMealsUseCase: ObserveMealsUseCase,
     private val mealRepository: MealRepository,
-    private val dateFormatter: DateFormatter,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
     val meals = observeMealsUseCase().stateIn(
@@ -91,6 +89,4 @@ internal class MealsSettingsScreenViewModel(
             dataStore.set(MealPreferences.includeAllDayMeals to state)
         }
     }
-
-    fun formatTime(time: LocalTime) = dateFormatter.formatTime(time)
 }

@@ -77,6 +77,7 @@ import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.addfood.SearchSharedTransition
 import com.maksimowiczm.foodyou.feature.addfood.ui.LocalAddFoodSharedTransitionScope
 import com.maksimowiczm.foodyou.feature.meal.domain.MealFood
@@ -90,7 +91,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -124,8 +124,6 @@ internal fun MealScreen(
             onEditEntry = onEditEntry,
             onDeleteEntry = remember(viewModel) { viewModel::onDeleteMeasurement },
             onDeleteEntryUndo = remember(viewModel) { viewModel::onRestoreMeasurement },
-            formatDate = remember(viewModel) { viewModel::formatDate },
-            formatTime = remember(viewModel) { viewModel::formatTime },
             modifier = modifier
         )
     }
@@ -148,8 +146,6 @@ private fun MealScreen(
     onEditEntry: (MeasurementId) -> Unit,
     onDeleteEntry: (MeasurementId) -> Unit,
     onDeleteEntryUndo: (MeasurementId) -> Unit,
-    formatDate: (LocalDate) -> String,
-    formatTime: (LocalTime) -> String,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
@@ -165,8 +161,6 @@ private fun MealScreen(
                 mealHeaderScope = mealHeaderScope,
                 meal = meal,
                 epochDay = epochDay,
-                formatDate = formatDate,
-                formatTime = formatTime,
                 modifier = Modifier.sharedBounds(
                     sharedContentState = rememberSharedContentState(
                         key = MealCardTransitionKeys.MealContainer(
@@ -392,10 +386,10 @@ private fun SharedTransitionScope.TopBar(
     mealHeaderScope: AnimatedVisibilityScope,
     meal: MealWithFood,
     epochDay: Int,
-    formatDate: (LocalDate) -> String,
-    formatTime: (LocalTime) -> String,
     modifier: Modifier = Modifier
 ) {
+    val dateFormatter = LocalDateFormatter.current
+
     val insets = TopAppBarDefaults.windowInsets
     val headerColor = MealCardTransitionSpecs.containerColor
 
@@ -435,13 +429,13 @@ private fun SharedTransitionScope.TopBar(
                 val enDash = stringResource(Res.string.en_dash)
 
                 Text(
-                    text = remember(enDash, meal, formatTime) {
+                    text = remember(enDash, meal, dateFormatter) {
                         buildString {
-                            append(formatTime(meal.from))
+                            append(dateFormatter.formatTime(meal.from))
                             append(" ")
                             append(enDash)
                             append(" ")
-                            append(formatTime(meal.to))
+                            append(dateFormatter.formatTime(meal.to))
                         }
                     },
                     color = MaterialTheme.colorScheme.outline
@@ -499,7 +493,7 @@ private fun SharedTransitionScope.TopBar(
         ) {
             with(mealHeaderScope) {
                 Text(
-                    text = formatDate(meal.date),
+                    text = dateFormatter.formatDate(meal.date),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.animateEnterExit(
                         enter = fadeIn(

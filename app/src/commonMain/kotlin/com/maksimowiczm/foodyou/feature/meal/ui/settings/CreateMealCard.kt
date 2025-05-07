@@ -23,7 +23,6 @@ internal fun CreateMealCard(
     isCreating: Boolean,
     onCreatingChange: (Boolean) -> Unit,
     onCreate: (name: String, from: LocalTime, to: LocalTime) -> Unit,
-    formatTime: (LocalTime) -> String,
     modifier: Modifier = Modifier
 ) {
     if (isCreating) {
@@ -44,7 +43,6 @@ internal fun CreateMealCard(
                 )
                 onCreatingChange(false)
             },
-            formatTime = formatTime,
             action = null,
             shouldShowDeleteDialog = false,
             modifier = modifier.testTag(CreateMealCardTestTags.CREATE_MEAL_SETTINGS_CARD)

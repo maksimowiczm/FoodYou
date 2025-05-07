@@ -25,8 +25,7 @@ class CreateMealCardTest {
             CreateMealCard(
                 isCreating = false,
                 onCreatingChange = {},
-                onCreate = { _, _, _ -> },
-                formatTime = { it.toString() }
+                onCreate = { _, _, _ -> }
             )
         }
 
@@ -41,8 +40,7 @@ class CreateMealCardTest {
             CreateMealCard(
                 isCreating = isCreating,
                 onCreatingChange = { isCreating = it },
-                onCreate = { _, _, _ -> },
-                formatTime = { it.toString() }
+                onCreate = { _, _, _ -> }
             )
         }
 
@@ -60,8 +58,7 @@ class CreateMealCardTest {
             CreateMealCard(
                 isCreating = isCreating,
                 onCreatingChange = { isCreating = it },
-                onCreate = { _, _, _ -> },
-                formatTime = { it.toString() }
+                onCreate = { _, _, _ -> }
             )
         }
 
@@ -82,8 +79,7 @@ class CreateMealCardTest {
             CreateMealCard(
                 isCreating = isCreating,
                 onCreatingChange = { isCreating = it },
-                onCreate = { _, _, _ -> },
-                formatTime = { it.toString() }
+                onCreate = { _, _, _ -> }
             )
         }
 

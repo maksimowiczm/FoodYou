@@ -83,7 +83,6 @@ internal fun MealsSettingsScreen(
             useTimeBasedSorting = useTimeBasedSorting,
             includeAllDayMeals = includeAllDayMeals,
             onBack = onBack,
-            formatTime = remember(viewModel) { viewModel::formatTime },
             onCreateMeal = remember(viewModel) { viewModel::createMeal },
             onUpdateMeal = remember(viewModel) { viewModel::updateMeal },
             onDeleteMeal = remember(viewModel) { viewModel::deleteMeal },
@@ -104,7 +103,6 @@ private fun MealsSettingsScreen(
     useTimeBasedSorting: Boolean,
     includeAllDayMeals: Boolean,
     onBack: () -> Unit,
-    formatTime: (LocalTime) -> String,
     onCreateMeal: (String, LocalTime, LocalTime) -> Unit,
     onUpdateMeal: (Meal) -> Unit,
     onDeleteMeal: (Meal) -> Unit,
@@ -241,7 +239,6 @@ private fun MealsSettingsScreen(
 
                     MealCard(
                         state = cardState,
-                        formatTime = formatTime,
                         onSave = {
                             onUpdateMeal(cardState.intoMeal())
                             hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
@@ -320,7 +317,6 @@ private fun MealsSettingsScreen(
                     isCreating = isCreating,
                     onCreatingChange = { isCreating = it },
                     onCreate = onCreateMeal,
-                    formatTime = formatTime,
                     modifier = Modifier.padding(horizontal = 8.dp).focusRequester(focusRequester)
                 )
             }

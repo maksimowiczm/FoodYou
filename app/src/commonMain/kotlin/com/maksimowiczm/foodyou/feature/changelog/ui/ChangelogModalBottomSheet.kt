@@ -48,14 +48,13 @@ import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
-import com.maksimowiczm.foodyou.core.util.DateFormatter
+import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.changelog.Changelog
 import com.maksimowiczm.foodyou.feature.changelog.Version
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,11 +108,8 @@ private fun SheetContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ChangelogItem(
-    version: Version,
-    modifier: Modifier = Modifier,
-    dateFormatter: DateFormatter = koinInject()
-) {
+private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
+    val dateFormatter = LocalDateFormatter.current
     val clipboardManager = LocalClipboardManager.current
 
     val changelogString = stringResource(Res.string.headline_changelog)

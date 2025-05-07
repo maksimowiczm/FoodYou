@@ -46,6 +46,7 @@ import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
+import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.meal.domain.MealWithSummary
 import com.maksimowiczm.foodyou.feature.meal.ui.MealCardTransitionSpecs.overlayClipFromCardToScreen
 import com.valentinilk.shimmer.Shimmer
@@ -54,7 +55,6 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.absoluteValue
-import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -72,7 +72,6 @@ internal fun MealsCard(
 
     MealsCard(
         meals = meals,
-        formatTime = remember(viewModel) { viewModel::formatTime },
         onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
         onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
         animatedVisibilityScope = animatedVisibilityScope,
@@ -87,7 +86,6 @@ internal fun MealsCard(
 @Composable
 private fun MealsCard(
     meals: List<MealWithSummary>?,
-    formatTime: (LocalTime) -> String,
     onMealClick: (mealId: Long) -> Unit,
     onAddClick: (mealId: Long) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -146,7 +144,6 @@ private fun MealsCard(
                         totalProteins = meal.proteins,
                         totalCarbohydrates = meal.carbohydrates,
                         totalFats = meal.fats,
-                        formatTime = formatTime,
                         onMealClick = { onMealClick(meal.id) },
                         onAddClick = { onAddClick(meal.id) }
                     )
@@ -233,11 +230,12 @@ private fun SharedTransitionScope.MealCard(
     totalProteins: Int,
     totalCarbohydrates: Int,
     totalFats: Int,
-    formatTime: (LocalTime) -> String,
     onMealClick: () -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val dateFormatter = LocalDateFormatter.current
+
     FoodYouHomeCard(
         onClick = onMealClick,
         modifier = modifier.sharedBounds(
@@ -292,13 +290,13 @@ private fun SharedTransitionScope.MealCard(
                     val enDash = stringResource(Res.string.en_dash)
 
                     Text(
-                        text = remember(enDash, meal, formatTime) {
+                        text = remember(enDash, meal, dateFormatter) {
                             buildString {
-                                append(formatTime(meal.from))
+                                append(dateFormatter.formatTime(meal.from))
                                 append(" ")
                                 append(enDash)
                                 append(" ")
-                                append(formatTime(meal.to))
+                                append(dateFormatter.formatTime(meal.to))
                             }
                         },
                         color = MaterialTheme.colorScheme.outline

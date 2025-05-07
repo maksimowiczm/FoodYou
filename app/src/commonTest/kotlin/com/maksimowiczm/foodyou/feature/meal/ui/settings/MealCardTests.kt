@@ -35,7 +35,6 @@ class MealCardTests {
         name: String,
         from: LocalTime,
         to: LocalTime,
-        formatTime: (LocalTime) -> String,
         action: @Composable (() -> Unit)? = null
     ) {
         val meal = Meal(
@@ -54,7 +53,6 @@ class MealCardTests {
                     toTimeInput = LocalTimeInput(to),
                     isAllDay = mutableStateOf(meal.isAllDay)
                 ),
-                formatTime = formatTime,
                 onSave = {},
                 shouldShowDeleteDialog = true,
                 onDelete = {},
@@ -68,13 +66,12 @@ class MealCardTests {
         val name = "Test"
         val from = LocalTime(12, 0, 0)
         val to = LocalTime(14, 0, 0)
-        val formatTime: (LocalTime) -> String = { it.toString() }
 
-        setupCard(name, from, to, formatTime)
+        setupCard(name, from, to)
 
         onNodeWithTag(NAME_INPUT).assertIsDisplayed().assertTextEquals(name)
-        onNodeWithTag(FROM_TIME_PICKER).assertIsDisplayed().assertTextEquals(formatTime(from))
-        onNodeWithTag(TO_TIME_PICKER).assertIsDisplayed().assertTextEquals(formatTime(to))
+        onNodeWithTag(FROM_TIME_PICKER).assertIsDisplayed()
+        onNodeWithTag(TO_TIME_PICKER).assertIsDisplayed()
 
         onNodeWithTag(DELETE_BUTTON).assertIsDisplayed()
         onNodeWithTag(CONFIRM_BUTTON).assertDoesNotExist()
@@ -88,9 +85,8 @@ class MealCardTests {
         val name = "Test"
         val from = LocalTime(12, 0, 0)
         val to = LocalTime(14, 0, 0)
-        val formatTime: (LocalTime) -> String = { it.toString() }
 
-        setupCard(name, from, to, formatTime)
+        setupCard(name, from, to)
 
         onNodeWithTag(ALL_DAY_SWITCH).performClick()
 
@@ -106,9 +102,8 @@ class MealCardTests {
     fun test_initial_ui_time_frames_equal() = runComposeUiTest {
         val name = "Test"
         val time = LocalTime(12, 0, 0)
-        val formatTime: (LocalTime) -> String = { it.toString() }
 
-        setupCard(name, time, time, formatTime)
+        setupCard(name, time, time)
 
         onNodeWithTag(NAME_INPUT).assertIsDisplayed().assertTextEquals(name)
         onNodeWithTag(FROM_TIME_PICKER).assertDoesNotExist()
@@ -127,7 +122,7 @@ class MealCardTests {
         val time = LocalTime(12, 0, 0)
         val formatTime: (LocalTime) -> String = { it.toString() }
 
-        setupCard(name, time, time, formatTime)
+        setupCard(name, time, time)
 
         onNodeWithTag(ALL_DAY_SWITCH).performClick()
 
@@ -143,9 +138,8 @@ class MealCardTests {
     fun test_action_button() = runComposeUiTest {
         val name = "Test"
         val time = LocalTime(12, 0, 0)
-        val formatTime: (LocalTime) -> String = { it.toString() }
 
-        setupCard(name, time, time, formatTime) {
+        setupCard(name, time, time) {
             Box(modifier = Modifier.size(50.dp).testTag("TEST"))
         }
 

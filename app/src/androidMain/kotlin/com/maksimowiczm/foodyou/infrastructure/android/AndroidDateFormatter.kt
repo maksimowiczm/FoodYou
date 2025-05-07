@@ -1,7 +1,8 @@
-package com.maksimowiczm.foodyou.core.util
+package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.content.Context
 import android.text.format.DateFormat
+import com.maksimowiczm.foodyou.core.ui.utils.DateFormatter
 import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -11,34 +12,31 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalTime
 
-actual class DateFormatter(
-    private val context: Context,
-    private val androidSystemDetails: SystemDetails
-) {
+class AndroidDateFormatter(private val context: Context) : DateFormatter {
     private val defaultLocale: Locale
-        get() = androidSystemDetails.defaultLocale
+        get() = context.defaultLocale
 
-    actual val weekDayNamesShort: List<String>
+    override val weekDayNamesShort: List<String>
         get() = DayOfWeek.entries.map {
             it.getDisplayName(TextStyle.SHORT, defaultLocale)
         }
 
-    actual fun formatMonthYear(date: LocalDate): String {
+    override fun formatMonthYear(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("LLLL yyyy", defaultLocale)
         return date.toJavaLocalDate().format(formatter)
     }
 
-    actual fun formatDate(date: LocalDate): String {
+    override fun formatDate(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy, EEEE", defaultLocale)
         return date.toJavaLocalDate().format(formatter)
     }
 
-    actual fun formatDateShort(date: LocalDate): String {
+    override fun formatDateShort(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", defaultLocale)
         return date.toJavaLocalDate().format(formatter)
     }
 
-    actual fun formatTime(time: LocalTime): String = if (DateFormat.is24HourFormat(context)) {
+    override fun formatTime(time: LocalTime): String = if (DateFormat.is24HourFormat(context)) {
         DateTimeFormatter
             .ofPattern("HH:mm", defaultLocale)
             .format(time.toJavaLocalTime())

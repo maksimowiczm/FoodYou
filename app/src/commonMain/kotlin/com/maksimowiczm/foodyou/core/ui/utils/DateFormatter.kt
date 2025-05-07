@@ -1,9 +1,12 @@
-package com.maksimowiczm.foodyou.core.util
+package com.maksimowiczm.foodyou.core.ui.utils
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
-expect class DateFormatter {
+interface DateFormatter {
     /**
      * The abbreviated names of the days of the week, ordered starting from the first day
      * of the week as defined by the system's locale.
@@ -47,4 +50,28 @@ expect class DateFormatter {
      * @return A string representing the formatted time.
      */
     fun formatTime(time: LocalTime): String
+}
+
+private val defaultDateFormatter: DateFormatter = object : DateFormatter {
+    override val weekDayNamesShort: List<String>
+        get() = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+
+    override fun formatMonthYear(date: LocalDate): String = date.toString()
+
+    override fun formatDate(date: LocalDate): String = date.toString()
+
+    override fun formatDateShort(date: LocalDate): String = date.toString()
+
+    override fun formatTime(time: LocalTime): String = time.toString()
+}
+
+val LocalDateFormatter = staticCompositionLocalOf { defaultDateFormatter }
+
+@Composable
+fun DateFormatterProvider(dateFormatter: DateFormatter, content: @Composable () -> Unit) {
+    CompositionLocalProvider(
+        LocalDateFormatter provides dateFormatter
+    ) {
+        content()
+    }
 }

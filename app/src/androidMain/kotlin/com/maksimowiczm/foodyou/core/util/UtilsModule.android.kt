@@ -6,7 +6,3 @@ import org.koin.core.module.dsl.factoryOf
 actual fun Module.systemDetails() {
     factoryOf(::SystemDetails)
 }
-
-actual fun Module.dateFormatter() {
-    factoryOf(::DateFormatter)
-}
