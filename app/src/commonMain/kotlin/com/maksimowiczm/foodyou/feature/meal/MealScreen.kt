@@ -15,14 +15,14 @@ import org.koin.core.parameter.parametersOf
 
 /**
  * @param screenSts scope for the screen transition
- * @param enterSTS scope for the enter transition
+ * @param enterSts scope for the enter transition
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MealScreen(
     screenSts: SharedTransitionScope,
     screenScope: AnimatedVisibilityScope,
-    enterSTS: SharedTransitionScope,
+    enterSts: SharedTransitionScope,
     enterScope: AnimatedVisibilityScope,
     mealId: Long,
     date: LocalDate,
@@ -40,7 +40,7 @@ fun MealScreen(
     MealScreen(
         screenSts = screenSts,
         screenScope = screenScope,
-        enterSTS = enterSTS,
+        enterSts = enterSts,
         enterScope = enterScope,
         date = date,
         meal = meal,

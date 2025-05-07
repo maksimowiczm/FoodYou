@@ -89,7 +89,7 @@ import org.jetbrains.compose.resources.stringResource
 
 /**
  * @param screenSts scope for the screen transition
- * @param enterSTS scope for the enter transition
+ * @param enterSts scope for the enter transition
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @JvmName("NullableMealScreen")
@@ -97,7 +97,7 @@ import org.jetbrains.compose.resources.stringResource
 fun MealScreen(
     screenSts: SharedTransitionScope,
     screenScope: AnimatedVisibilityScope,
-    enterSTS: SharedTransitionScope,
+    enterSts: SharedTransitionScope,
     enterScope: AnimatedVisibilityScope,
     date: LocalDate,
     meal: Meal?,
@@ -115,7 +115,7 @@ fun MealScreen(
         MealScreen(
             screenSts = screenSts,
             screenScope = screenScope,
-            enterSTS = enterSTS,
+            enterSts = enterSts,
             enterScope = enterScope,
             date = date,
             meal = meal,
@@ -131,7 +131,7 @@ fun MealScreen(
 
 /**
  * @param screenSts scope for the screen transition
- * @param enterSTS scope for the enter transition
+ * @param enterSts scope for the enter transition
  */
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -142,7 +142,7 @@ fun MealScreen(
 fun MealScreen(
     screenSts: SharedTransitionScope,
     screenScope: AnimatedVisibilityScope,
-    enterSTS: SharedTransitionScope,
+    enterSts: SharedTransitionScope,
     enterScope: AnimatedVisibilityScope,
     date: LocalDate,
     meal: Meal,
@@ -158,7 +158,7 @@ fun MealScreen(
     val density = LocalDensity.current
 
     val topBar = @Composable {
-        with(enterSTS) {
+        with(enterSts) {
             MealScreenTopBar(
                 enterScope = enterScope,
                 meal = meal,

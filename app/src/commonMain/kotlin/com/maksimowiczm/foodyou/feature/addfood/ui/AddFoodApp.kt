@@ -198,7 +198,7 @@ private fun AddFoodNavHost(
             MealScreen(
                 screenSts = addFoodSTS,
                 screenScope = this,
-                enterSTS = homeSTS,
+                enterSts = homeSTS,
                 enterScope = outerAnimatedScope,
                 mealId = mealId,
                 date = date,

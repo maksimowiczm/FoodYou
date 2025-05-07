@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.meal.ui.screen
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -14,6 +15,7 @@ import com.maksimowiczm.foodyou.core.domain.model.testMeal
 import com.maksimowiczm.foodyou.core.domain.model.testProduct
 import com.maksimowiczm.foodyou.core.domain.model.testProductWithMeasurement
 import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.ext.AnimatedSharedTransitionLayout
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDate
@@ -22,7 +24,7 @@ import org.junit.Test
 @OptIn(ExperimentalTestApi::class)
 class MealScreenTest {
 
-    @OptIn(ExperimentalTime::class)
+    @OptIn(ExperimentalTime::class, ExperimentalSharedTransitionApi::class)
     @Composable
     private fun MealScreen(
         modifier: Modifier = Modifier.Companion,
@@ -34,16 +36,22 @@ class MealScreenTest {
         onEditMeasurement: (MeasurementId) -> Unit = {},
         onDeleteEntry: (MeasurementId) -> Unit = {}
     ) {
-        com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreen(
-            meal = meal,
-            foods = foods,
-            date = date,
-            onAddFood = onAddFood,
-            onBarcodeScanner = onBarcodeScanner,
-            onEditMeasurement = onEditMeasurement,
-            onDeleteEntry = onDeleteEntry,
-            modifier = modifier
-        )
+        AnimatedSharedTransitionLayout {
+            com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreen(
+                screenSts = sharedTransitionScope,
+                screenScope = animatedVisibilityScope,
+                enterSts = sharedTransitionScope,
+                enterScope = animatedVisibilityScope,
+                meal = meal,
+                foods = foods,
+                date = date,
+                onAddFood = onAddFood,
+                onBarcodeScanner = onBarcodeScanner,
+                onEditMeasurement = onEditMeasurement,
+                onDeleteEntry = onDeleteEntry,
+                modifier = modifier
+            )
+        }
     }
 
     @Test
