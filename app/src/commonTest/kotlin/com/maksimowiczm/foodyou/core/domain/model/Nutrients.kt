@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.core.domain.model
 
 fun testNutrients(
-    calories: Float = 100f,
+    calories: Float = 145f,
     protein: Float = 10f,
     carbohydrates: Float = 15f,
     sugars: Float = 5f,

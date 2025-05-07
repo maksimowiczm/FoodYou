@@ -7,7 +7,7 @@ fun testProduct(
     nutrients: Nutrients = testNutrients(),
     barcode: String? = "1234567890123",
     packageWeight: PortionWeight.Package? = PortionWeight.Package(500f),
-    servingWeight: PortionWeight.Serving? = PortionWeight.Serving(100f)
+    servingWeight: PortionWeight.Serving? = PortionWeight.Serving(20f)
 ): Product = Product(
     id = id,
     name = name,
