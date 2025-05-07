@@ -21,11 +21,9 @@ object Changelog {
         )
 
     val next = Version.next(
-        version = "next",
-        date = LocalDate.now(),
         newFeatures = listOf(),
         changes = listOf(
-            "small UI tweaks in the meal screen"
+            "small visual adjustments made to the meal screen"
         ),
         bugFixes = listOf(),
         translations = listOf(),
@@ -141,16 +139,14 @@ data class Version(
 
     companion object {
         fun next(
-            version: String,
-            date: LocalDate,
             newFeatures: List<String>,
             changes: List<String>,
             bugFixes: List<String>,
             translations: List<String>,
             notes: String?
         ) = Version(
-            version = version,
-            date = date,
+            version = "next",
+            date = LocalDate.now(),
             newFeatures = newFeatures,
             changes = changes,
             bugFixes = bugFixes,
