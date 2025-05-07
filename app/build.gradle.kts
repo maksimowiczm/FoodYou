@@ -86,8 +86,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(compose.runtime)
-//            implementation(compose.foundation)
-            implementation(libs.androidx.foundation)
+            implementation(compose.foundation)
 //            implementation(compose.material3)
             implementation(libs.androidx.material3)
             implementation(compose.material3AdaptiveNavigationSuite)
@@ -113,9 +112,6 @@ kotlin {
             // Room
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)
-
-            // Paging
-            implementation(libs.androidx.paging.runtime)
 
             // Logger
             implementation(libs.kermit)
@@ -173,12 +169,6 @@ android {
             initWith(getByName("release"))
             applicationIdSuffix = ".preview"
             versionNameSuffix = "-preview"
-
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
 
             manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher_preview"
             manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round_preview"
