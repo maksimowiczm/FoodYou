@@ -24,11 +24,6 @@ expect class SystemDetails {
      * This value is derived from the system configuration and represents the ISO 3166-1 alpha-2 country code.
      */
     val defaultCountry: Country
-
-    /**
-     * The list of countries available on the system.
-     */
-    val countries: List<Country>
 }
 
 /**
