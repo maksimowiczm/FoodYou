@@ -35,8 +35,6 @@ import com.maksimowiczm.foodyou.data.HomePreferences
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
 import com.maksimowiczm.foodyou.feature.meal.MealsCard
-import com.maksimowiczm.foodyou.ui.settings.home.HomeCard
-import com.maksimowiczm.foodyou.ui.settings.home.toHomeCards
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource

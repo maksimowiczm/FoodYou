@@ -18,7 +18,7 @@ import com.maksimowiczm.foodyou.feature.goals.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.feature.meal.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.security.SecureScreenSettingsListItem
-import com.maksimowiczm.foodyou.ui.settings.home.HomeSettingsListItem
+import com.maksimowiczm.foodyou.ui.home.HomeSettingsListItem
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource

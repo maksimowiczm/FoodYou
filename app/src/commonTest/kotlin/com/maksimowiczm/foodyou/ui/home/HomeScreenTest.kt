@@ -12,7 +12,6 @@ import androidx.compose.ui.test.runComposeUiTest
 import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
 import com.maksimowiczm.foodyou.ext.AnimatedSharedTransitionLayout
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
-import com.maksimowiczm.foodyou.ui.settings.home.HomeCard
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)

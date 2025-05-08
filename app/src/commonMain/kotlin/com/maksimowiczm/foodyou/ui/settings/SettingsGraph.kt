@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.ui.settings
 import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.ui.settings.home.HomeSettingsScreen
+import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

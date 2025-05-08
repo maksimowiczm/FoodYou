@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.settings.home
+package com.maksimowiczm.foodyou.ui.home
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState

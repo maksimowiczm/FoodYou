@@ -9,7 +9,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
-import com.maksimowiczm.foodyou.ui.settings.home.HomeSettingsScreenTestTags.CARDS_LIST
+import com.maksimowiczm.foodyou.ui.home.HomeCard
+import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreenTestTags
+import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreenTestTags.CARDS_LIST
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -23,7 +25,7 @@ class HomeSettingsScreenTest {
         onMealsSettings: () -> Unit = {},
         onReorder: (List<HomeCard>) -> Unit = {}
     ) {
-        com.maksimowiczm.foodyou.ui.settings.home.HomeSettingsScreen(
+        com.maksimowiczm.foodyou.ui.home.HomeSettingsScreen(
             order = order,
             onBack = onBack,
             onMealsSettings = onMealsSettings,
