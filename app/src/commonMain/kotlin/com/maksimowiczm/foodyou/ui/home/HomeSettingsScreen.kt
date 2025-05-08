@@ -221,9 +221,10 @@ fun HomeSettingsScreen(
                             .testTag(testTag)
                             .padding(horizontal = 8.dp)
                     ) {
-                        MealsCardContent(it) {
-                            onMealsSettings()
-                        }
+                        MealsCardContent(
+                            rs = it,
+                            onMore = onMealsSettings
+                        )
                     }
 
                     HomeCard.Calories -> MyCard(
