@@ -16,8 +16,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.DragHandle
-import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -141,6 +142,7 @@ fun HomeSettingsScreen(
 
                     HomeCard.Meals -> MealsCard(
                         draggableState = reorderableLazyListState,
+                        onMore = onMealsSettings,
                         modifier = Modifier
                             .testTag(testTag)
                             .padding(horizontal = 8.dp)
@@ -197,7 +199,7 @@ private fun LazyItemScope.CalendarCard(
             }
             Spacer(Modifier.width(16.dp))
             Text(
-                text = "Calendar",
+                text = stringResource(Res.string.headline_calendar),
                 modifier = Modifier.weight(1f)
             )
             Spacer(Modifier.weight(1f))
@@ -219,6 +221,7 @@ private fun LazyItemScope.CalendarCard(
 @Composable
 private fun LazyItemScope.MealsCard(
     draggableState: ReorderableLazyListState,
+    onMore: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ReorderableItem(
@@ -238,10 +241,18 @@ private fun LazyItemScope.MealsCard(
             }
             Spacer(Modifier.width(16.dp))
             Text(
-                text = "Meals",
+                text = stringResource(Res.string.headline_meals),
                 modifier = Modifier.weight(1f)
             )
             Spacer(Modifier.weight(1f))
+            IconButton(
+                onClick = onMore
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = stringResource(Res.string.action_show_more)
+                )
+            }
             IconButton(
                 onClick = {},
                 modifier = Modifier
@@ -273,13 +284,13 @@ private fun LazyItemScope.CaloriesCard(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.Flag,
+                    imageVector = Icons.Outlined.Flag,
                     contentDescription = null
                 )
             }
             Spacer(Modifier.width(16.dp))
             Text(
-                text = "Calories",
+                text = stringResource(Res.string.unit_calories),
                 modifier = Modifier.weight(1f)
             )
             Spacer(Modifier.weight(1f))
