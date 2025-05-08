@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.ui.home
 
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -31,7 +33,6 @@ import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.data.HomePreferences
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
-import com.maksimowiczm.foodyou.feature.changelog.AppUpdateChangelogModalBottomSheet
 import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
 import com.maksimowiczm.foodyou.feature.meal.MealsCard
 import com.maksimowiczm.foodyou.ui.settings.home.HomeCard
@@ -41,7 +42,6 @@ import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -53,56 +53,87 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     dataStore: DataStore<Preferences> = koinInject()
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val homeState = rememberHomeState()
-
     val order by dataStore
         .observe(HomePreferences.homeOrder)
         .map { it.toHomeCards() }
         .collectAsStateWithLifecycle(dataStore.getBlocking(HomePreferences.homeOrder).toHomeCards())
 
-    AppUpdateChangelogModalBottomSheet()
+    HomeScreen(
+        animatedVisibilityScope = animatedVisibilityScope,
+        order = order,
+        onSettings = onSettings,
+        onAbout = onAbout,
+        onMealCardClick = onMealCardClick,
+        onMealCardAddClick = onMealCardAddClick,
+        onCaloriesCardClick = onCaloriesCardClick,
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@Composable
+fun HomeScreen(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    order: List<HomeCard>,
+    onSettings: () -> Unit,
+    onAbout: () -> Unit,
+    onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
+    onCaloriesCardClick: (epochDay: Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val homeState = rememberHomeState()
+
+    val topBar = @Composable {
+        TopAppBar(
+            title = {
+                Text(
+                    text = stringResource(Res.string.app_name),
+                    modifier = Modifier.clickable(
+                        onClick = onAbout,
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    )
+                )
+            },
+            actions = {
+                IconButton(
+                    onClick = onSettings
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(Res.string.action_go_to_settings)
+                    )
+                }
+            },
+            scrollBehavior = scrollBehavior
+        )
+    }
 
     Scaffold(
         modifier = modifier,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(Res.string.app_name),
-                        modifier = Modifier.clickable(
-                            onClick = onAbout,
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        )
-                    )
-                },
-                actions = {
-                    IconButton(
-                        onClick = onSettings
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(Res.string.action_go_to_settings)
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior
-            )
-        }
+        topBar = topBar
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier
+                .testTag(HomeScreenTestTags.CARDS_LIST)
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(
-                items = order
+                items = order,
+                key = { it.name }
             ) {
+                val testTag = HomeScreenTestTags.Card(it).toString()
+
                 when (it) {
                     HomeCard.Calendar -> CalendarCard(
                         homeState = homeState,
-                        modifier = Modifier.padding(horizontal = 8.dp)
+                        modifier = Modifier
+                            .testTag(testTag)
+                            .padding(horizontal = 8.dp)
                     )
 
                     HomeCard.Meals -> MealsCard(
@@ -110,14 +141,17 @@ fun HomeScreen(
                         homeState = homeState,
                         onMealClick = onMealCardClick,
                         onAddClick = onMealCardAddClick,
-                        contentPadding = PaddingValues(horizontal = 8.dp)
+                        contentPadding = PaddingValues(horizontal = 8.dp),
+                        modifier = Modifier.testTag(testTag)
                     )
 
                     HomeCard.Calories -> CaloriesCard(
                         animatedVisibilityScope = animatedVisibilityScope,
                         homeState = homeState,
                         onClick = onCaloriesCardClick,
-                        modifier = Modifier.padding(horizontal = 8.dp)
+                        modifier = Modifier
+                            .testTag(testTag)
+                            .padding(horizontal = 8.dp)
                     )
                 }
             }
