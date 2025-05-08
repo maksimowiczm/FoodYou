@@ -45,7 +45,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -118,6 +121,30 @@ fun HomeSettingsScreen(
         }
     }
 
+    val moveUp: (HomeCard) -> Boolean = {
+        val index = localOrder.indexOf(it)
+        if (index > 0) {
+            localOrder = localOrder.toMutableList().apply {
+                add(index - 1, removeAt(index))
+            }
+            true
+        } else {
+            false
+        }
+    }
+
+    val moveDown: (HomeCard) -> Boolean = {
+        val index = localOrder.indexOf(it)
+        if (index < localOrder.size - 1) {
+            localOrder = localOrder.toMutableList().apply {
+                add(index + 1, removeAt(index))
+            }
+            true
+        } else {
+            false
+        }
+    }
+
     val latestOnReorder by rememberUpdatedState(onReorder)
     LaunchedEffect(Unit) {
         snapshotFlow { localOrder }
@@ -127,28 +154,27 @@ fun HomeSettingsScreen(
     }
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val topBar = @Composable {
-        LargeTopAppBar(
-            title = {
-                Text(stringResource(Res.string.headline_home_settings))
-            },
-            navigationIcon = {
-                IconButton(
-                    onClick = onBack
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(Res.string.action_go_back)
-                    )
-                }
-            },
-            scrollBehavior = scrollBehavior
-        )
-    }
 
     Scaffold(
         modifier = modifier,
-        topBar = topBar
+        topBar = {
+            LargeTopAppBar(
+                title = {
+                    Text(stringResource(Res.string.headline_home_settings))
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onBack
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(Res.string.action_go_back)
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior
+            )
+        }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -177,6 +203,8 @@ fun HomeSettingsScreen(
                     HomeCard.Calendar -> MyCard(
                         card = card,
                         draggableState = reorderableLazyListState,
+                        moveUp = { moveUp(card) },
+                        moveDown = { moveDown(card) },
                         modifier = Modifier
                             .testTag(testTag)
                             .padding(horizontal = 8.dp)
@@ -187,6 +215,8 @@ fun HomeSettingsScreen(
                     HomeCard.Meals -> MyCard(
                         card = card,
                         draggableState = reorderableLazyListState,
+                        moveUp = { moveUp(card) },
+                        moveDown = { moveDown(card) },
                         modifier = Modifier
                             .testTag(testTag)
                             .padding(horizontal = 8.dp)
@@ -199,6 +229,8 @@ fun HomeSettingsScreen(
                     HomeCard.Calories -> MyCard(
                         card = card,
                         draggableState = reorderableLazyListState,
+                        moveUp = { moveUp(card) },
+                        moveDown = { moveDown(card) },
                         modifier = Modifier
                             .testTag(testTag)
                             .padding(horizontal = 8.dp)
@@ -215,9 +247,14 @@ fun HomeSettingsScreen(
 private fun LazyItemScope.MyCard(
     card: HomeCard,
     draggableState: ReorderableLazyListState,
+    moveUp: () -> Boolean,
+    moveDown: () -> Boolean,
     modifier: Modifier = Modifier,
     content: @Composable ReorderableCollectionItemScope.(RowScope) -> Unit
 ) {
+    val moveUpString = stringResource(Res.string.action_move_up)
+    val moveDownString = stringResource(Res.string.action_move_down)
+
     ReorderableItem(
         state = draggableState,
         key = card.name,
@@ -234,6 +271,18 @@ private fun LazyItemScope.MyCard(
         )
 
         Surface(
+            modifier = Modifier.semantics {
+                customActions = listOf(
+                    CustomAccessibilityAction(
+                        label = moveUpString,
+                        action = moveUp
+                    ),
+                    CustomAccessibilityAction(
+                        label = moveDownString,
+                        action = moveDown
+                    )
+                )
+            },
             color = containerColor,
             shadowElevation = elevation,
             tonalElevation = elevation,
