@@ -116,7 +116,6 @@ private fun MealsSettingsScreen(
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        // Must subtract 1 because the first item isn't reorderable
         cardStates = cardStates.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }

@@ -191,6 +191,7 @@
     <string name="description_translation_warning">Translations are created by volunteers. They may not be perfect and some translations may be missing. If you notice any mistakes don't hesitate to help improving them.</string>
     <string name="description_browse_open_food_facts">Open Food Facts website will be opened in your browser. You can search for the products there and copy the link to the product you want to add.</string>
     <string name="description_changelog">See what's new in the app</string>
+    <string name="description_home_settings">Customize your home page</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
