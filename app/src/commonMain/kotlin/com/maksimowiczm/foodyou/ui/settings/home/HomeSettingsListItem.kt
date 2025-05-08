@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.settings
+package com.maksimowiczm.foodyou.ui.settings.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons

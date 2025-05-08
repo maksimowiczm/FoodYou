@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.settings
+package com.maksimowiczm.foodyou.ui.settings.home
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -11,13 +11,38 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
+@Composable
+fun HomeSettingsScreen(
+    onBack: () -> Unit,
+    onMealsSettings: () -> Unit,
+    viewModel: HomeSettingsViewModel,
+    modifier: Modifier = Modifier
+) {
+    val order = viewModel.order.collectAsStateWithLifecycle().value
+
+    HomeSettingsScreen(
+        order = order,
+        onBack = onBack,
+        onMealsSettings = onMealsSettings,
+        onReorder = viewModel::reorder,
+        modifier = modifier
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+fun HomeSettingsScreen(
+    order: List<HomeCard>,
+    onBack: () -> Unit,
+    onMealsSettings: () -> Unit,
+    onReorder: (List<HomeCard>) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Scaffold(
         modifier = modifier,
         topBar = {
