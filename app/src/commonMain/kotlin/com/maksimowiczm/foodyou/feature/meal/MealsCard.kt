@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
-import com.maksimowiczm.foodyou.feature.meal.ui.MealsCard
+import com.maksimowiczm.foodyou.feature.meal.ui.card.MealsCard
 
 @Composable
 fun MealsCard(

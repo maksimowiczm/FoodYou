@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal.ui
+package com.maksimowiczm.foodyou.feature.meal.ui.card
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.EnterExitState

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfood
+package com.maksimowiczm.foodyou.feature.meal.ui.screen
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -8,9 +8,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import com.maksimowiczm.foodyou.core.ui.motion.AnimationConstantsExt
 
-object SearchSharedTransition {
-    const val CONTAINER = "meal_search_container"
-    const val CONTENT = "meal_search_content"
+object MealScreenSharedTransition {
+    const val FAB_CONTAINER = "meal_fab_container"
+    const val FAB_CONTENT = "meal_fab_content"
 
     val fabContainerEnterTransition: EnterTransition = fadeIn()
     val fabContainerExitTransition: ExitTransition = fadeOut(

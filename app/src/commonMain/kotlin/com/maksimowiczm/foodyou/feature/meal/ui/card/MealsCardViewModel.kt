@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal.ui
+package com.maksimowiczm.foodyou.feature.meal.ui.card
 
 import androidx.lifecycle.ViewModel
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsWithSummaryUseCase
