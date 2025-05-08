@@ -15,11 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun HomeSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
-        headlineContent = {
-            Text(
-                text = stringResource(Res.string.headline_home)
-            )
-        },
+        headlineContent = { Text(stringResource(Res.string.headline_home)) },
         modifier = modifier.clickable(onClick = onClick),
         leadingContent = {
             Icon(
@@ -27,10 +23,6 @@ fun HomeSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
                 contentDescription = null
             )
         },
-        supportingContent = {
-            Text(
-                text = stringResource(Res.string.action_edit_your_home_page)
-            )
-        }
+        supportingContent = { Text(stringResource(Res.string.action_edit_your_home_page)) }
     )
 }
