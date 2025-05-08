@@ -85,35 +85,33 @@ fun HomeScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val homeState = rememberHomeState()
 
-    val topBar = @Composable {
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(Res.string.app_name),
-                    modifier = Modifier.clickable(
-                        onClick = onAbout,
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    )
-                )
-            },
-            actions = {
-                IconButton(
-                    onClick = onSettings
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(Res.string.action_go_to_settings)
-                    )
-                }
-            },
-            scrollBehavior = scrollBehavior
-        )
-    }
-
     Scaffold(
         modifier = modifier,
-        topBar = topBar
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(Res.string.app_name),
+                        modifier = Modifier.clickable(
+                            onClick = onAbout,
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        )
+                    )
+                },
+                actions = {
+                    IconButton(
+                        onClick = onSettings
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(Res.string.action_go_to_settings)
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior
+            )
+        }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
