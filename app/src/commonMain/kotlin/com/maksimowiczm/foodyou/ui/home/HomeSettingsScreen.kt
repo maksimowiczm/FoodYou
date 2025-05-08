@@ -198,45 +198,23 @@ fun HomeSettingsScreen(
                 key = { it.name }
             ) { card ->
                 val testTag = HomeSettingsScreenTestTags.Card(card).toString()
-
-                when (card) {
-                    HomeCard.Calendar -> MyCard(
-                        card = card,
-                        draggableState = reorderableLazyListState,
-                        moveUp = { moveUp(card) },
-                        moveDown = { moveDown(card) },
-                        modifier = Modifier
-                            .testTag(testTag)
-                            .padding(horizontal = 8.dp)
-                    ) {
-                        CalendarCardContent(it)
-                    }
-
-                    HomeCard.Meals -> MyCard(
-                        card = card,
-                        draggableState = reorderableLazyListState,
-                        moveUp = { moveUp(card) },
-                        moveDown = { moveDown(card) },
-                        modifier = Modifier
-                            .testTag(testTag)
-                            .padding(horizontal = 8.dp)
-                    ) {
-                        MealsCardContent(
+                MyCard(
+                    card = card,
+                    draggableState = reorderableLazyListState,
+                    moveUp = { moveUp(card) },
+                    moveDown = { moveDown(card) },
+                    modifier = Modifier
+                        .testTag(testTag)
+                        .padding(horizontal = 8.dp)
+                ) {
+                    when (card) {
+                        HomeCard.Calendar -> CalendarCardContent(it)
+                        HomeCard.Meals -> MealsCardContent(
                             rs = it,
                             onMore = onMealsSettings
                         )
-                    }
 
-                    HomeCard.Calories -> MyCard(
-                        card = card,
-                        draggableState = reorderableLazyListState,
-                        moveUp = { moveUp(card) },
-                        moveDown = { moveDown(card) },
-                        modifier = Modifier
-                            .testTag(testTag)
-                            .padding(horizontal = 8.dp)
-                    ) {
-                        CaloriesCardContent(it)
+                        HomeCard.Calories -> CaloriesCardContent(it)
                     }
                 }
             }
