@@ -294,17 +294,9 @@ private fun ReorderableCollectionItemScope.CalendarCardContent(rs: RowScope) = w
         modifier = Modifier.weight(1f)
     )
     Spacer(Modifier.weight(1f))
-    IconButton(
-        onClick = {},
-        modifier = Modifier
-            .clearAndSetSemantics {}
-            .hapticDraggableHandle(this@CalendarCardContent)
-    ) {
-        Icon(
-            imageVector = Icons.Default.DragHandle,
-            contentDescription = stringResource(Res.string.action_reorder)
-        )
-    }
+    DragHandle(
+        modifier = Modifier.hapticDraggableHandle(this@CalendarCardContent)
+    )
 }
 
 @Composable
@@ -333,17 +325,9 @@ private fun ReorderableCollectionItemScope.MealsCardContent(rs: RowScope, onMore
                 contentDescription = stringResource(Res.string.action_show_more)
             )
         }
-        IconButton(
-            onClick = {},
-            modifier = Modifier
-                .clearAndSetSemantics {}
-                .hapticDraggableHandle(this@MealsCardContent)
-        ) {
-            Icon(
-                imageVector = Icons.Default.DragHandle,
-                contentDescription = stringResource(Res.string.action_reorder)
-            )
-        }
+        DragHandle(
+            modifier = Modifier.hapticDraggableHandle(this@MealsCardContent)
+        )
     }
 
 @Composable
@@ -363,11 +347,18 @@ private fun ReorderableCollectionItemScope.CaloriesCardContent(rs: RowScope) = w
         modifier = Modifier.weight(1f)
     )
     Spacer(Modifier.weight(1f))
+    DragHandle(
+        modifier = Modifier.hapticDraggableHandle(this@CaloriesCardContent)
+    )
+}
+
+@Composable
+private fun DragHandle(modifier: Modifier = Modifier) {
     IconButton(
         onClick = {},
         modifier = Modifier
             .clearAndSetSemantics {}
-            .hapticDraggableHandle(this@CaloriesCardContent)
+            .then(modifier)
     ) {
         Icon(
             imageVector = Icons.Default.DragHandle,
