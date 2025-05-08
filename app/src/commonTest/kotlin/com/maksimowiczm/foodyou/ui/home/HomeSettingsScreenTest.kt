@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.settings.home
+package com.maksimowiczm.foodyou.ui.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,8 +9,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
-import com.maksimowiczm.foodyou.ui.home.HomeCard
-import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreenTestTags
 import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreenTestTags.CARDS_LIST
 import kotlin.test.Test
 
