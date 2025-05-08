@@ -5,7 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import com.maksimowiczm.foodyou.feature.meal.domain.Meal
+import com.maksimowiczm.foodyou.core.domain.model.Meal
 
 @Stable
 internal class MealCardStateWithMeal(
@@ -41,7 +41,8 @@ internal class MealCardStateWithMeal(
             id = meal.id,
             name = name.toString(),
             from = fromTime,
-            to = toTime
+            to = toTime,
+            rank = -1
         )
     }
 }

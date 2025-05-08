@@ -4,13 +4,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.core.ext.get
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
 import com.maksimowiczm.foodyou.feature.meal.data.MealPreferences
-import com.maksimowiczm.foodyou.feature.meal.domain.Meal
-import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -19,15 +18,17 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalTime
 
 internal class MealsSettingsScreenViewModel(
-    observeMealsUseCase: ObserveMealsUseCase,
     private val mealRepository: MealRepository,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
-    val meals = observeMealsUseCase().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = null
-    )
+    val sortedMeals = mealRepository
+        .observeMeals()
+        .map { list -> list.sortedBy { it.rank } }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = null
+        )
 
     val useTimeBasedSorting = dataStore
         .observe(MealPreferences.timeBasedSorting)

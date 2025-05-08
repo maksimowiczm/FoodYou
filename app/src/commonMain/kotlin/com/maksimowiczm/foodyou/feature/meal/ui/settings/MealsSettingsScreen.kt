@@ -56,8 +56,8 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.ui.ext.performToggle
-import com.maksimowiczm.foodyou.feature.meal.domain.Meal
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
@@ -71,7 +71,7 @@ internal fun MealsSettingsScreen(
     modifier: Modifier = Modifier,
     viewModel: MealsSettingsScreenViewModel = koinViewModel()
 ) {
-    val meals by viewModel.meals.collectAsStateWithLifecycle()
+    val meals by viewModel.sortedMeals.collectAsStateWithLifecycle()
     val useTimeBasedSorting by viewModel.useTimeBasedSorting.collectAsStateWithLifecycle()
     val includeAllDayMeals by viewModel.includeAllDayMeals.collectAsStateWithLifecycle()
 
