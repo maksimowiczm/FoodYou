@@ -289,10 +289,7 @@ private fun ReorderableCollectionItemScope.CalendarCardContent(rs: RowScope) = w
         )
     }
     Spacer(Modifier.width(16.dp))
-    Text(
-        text = stringResource(Res.string.headline_calendar),
-        modifier = Modifier.weight(1f)
-    )
+    Text(stringResource(Res.string.headline_calendar))
     Spacer(Modifier.weight(1f))
     DragHandle(
         modifier = Modifier.hapticDraggableHandle(this@CalendarCardContent)
@@ -312,10 +309,7 @@ private fun ReorderableCollectionItemScope.MealsCardContent(rs: RowScope, onMore
             )
         }
         Spacer(Modifier.width(16.dp))
-        Text(
-            text = stringResource(Res.string.headline_meals),
-            modifier = Modifier.weight(1f)
-        )
+        Text(stringResource(Res.string.headline_meals))
         Spacer(Modifier.weight(1f))
         IconButton(
             onClick = onMore
@@ -342,10 +336,7 @@ private fun ReorderableCollectionItemScope.CaloriesCardContent(rs: RowScope) = w
         )
     }
     Spacer(Modifier.width(16.dp))
-    Text(
-        text = stringResource(Res.string.unit_calories),
-        modifier = Modifier.weight(1f)
-    )
+    Text(stringResource(Res.string.unit_calories))
     Spacer(Modifier.weight(1f))
     DragHandle(
         modifier = Modifier.hapticDraggableHandle(this@CaloriesCardContent)
