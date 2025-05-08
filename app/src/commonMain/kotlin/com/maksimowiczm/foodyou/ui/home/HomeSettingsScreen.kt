@@ -59,7 +59,6 @@ import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
 import com.maksimowiczm.foodyou.data.HomePreferences
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -70,6 +69,7 @@ import org.koin.compose.koinInject
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyListState
+import sh.calvin.reorderable.hapticDraggableHandle
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
@@ -320,7 +320,7 @@ private fun ReorderableCollectionItemScope.CalendarCardContent(rs: RowScope) = w
         onClick = {},
         modifier = Modifier
             .clearAndSetSemantics {}
-            .draggableHandle()
+            .hapticDraggableHandle(this@CalendarCardContent)
     ) {
         Icon(
             imageVector = Icons.Default.DragHandle,
@@ -359,7 +359,7 @@ private fun ReorderableCollectionItemScope.MealsCardContent(rs: RowScope, onMore
             onClick = {},
             modifier = Modifier
                 .clearAndSetSemantics {}
-                .draggableHandle()
+                .hapticDraggableHandle(this@MealsCardContent)
         ) {
             Icon(
                 imageVector = Icons.Default.DragHandle,
@@ -389,7 +389,7 @@ private fun ReorderableCollectionItemScope.CaloriesCardContent(rs: RowScope) = w
         onClick = {},
         modifier = Modifier
             .clearAndSetSemantics {}
-            .draggableHandle()
+            .hapticDraggableHandle(this@CaloriesCardContent)
     ) {
         Icon(
             imageVector = Icons.Default.DragHandle,
