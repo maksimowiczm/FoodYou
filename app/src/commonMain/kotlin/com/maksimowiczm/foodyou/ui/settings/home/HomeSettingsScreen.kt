@@ -37,6 +37,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -46,14 +47,23 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.ext.getBlocking
+import com.maksimowiczm.foodyou.core.ext.observe
+import com.maksimowiczm.foodyou.core.ext.set
+import com.maksimowiczm.foodyou.data.HomePreferences
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyListState
@@ -63,16 +73,25 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun HomeSettingsScreen(
     onBack: () -> Unit,
     onMealsSettings: () -> Unit,
-    viewModel: HomeSettingsViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    dataStore: DataStore<Preferences> = koinInject()
 ) {
-    val order = viewModel.order.collectAsStateWithLifecycle().value
+    val coroutineScope = rememberCoroutineScope()
+
+    val order by dataStore
+        .observe(HomePreferences.homeOrder)
+        .map { it.toHomeCards() }
+        .collectAsStateWithLifecycle(dataStore.getBlocking(HomePreferences.homeOrder).toHomeCards())
 
     HomeSettingsScreen(
         order = order,
         onBack = onBack,
         onMealsSettings = onMealsSettings,
-        onReorder = viewModel::reorder,
+        onReorder = {
+            coroutineScope.launch {
+                dataStore.set(HomePreferences.homeOrder to it.string())
+            }
+        },
         modifier = modifier
     )
 }

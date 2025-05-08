@@ -5,3 +5,11 @@ enum class HomeCard {
     Meals,
     Calories
 }
+
+fun String?.toHomeCards() = this
+    ?.split(",")
+    ?.map { it.trim() }
+    ?.map { HomeCard.valueOf(it) }
+    ?: HomeCard.entries
+
+fun List<HomeCard>.string() = joinToString(",") { it.name }

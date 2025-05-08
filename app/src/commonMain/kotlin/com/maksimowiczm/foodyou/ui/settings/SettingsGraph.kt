@@ -4,7 +4,6 @@ import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.ui.settings.home.HomeSettingsScreen
-import com.maksimowiczm.foodyou.ui.settings.home.HomeSettingsViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -34,8 +33,7 @@ fun NavGraphBuilder.settingsGraph(
     forwardBackwardComposable<HomeSettings> {
         HomeSettingsScreen(
             onBack = onBack,
-            onMealsSettings = onMealsSettings,
-            viewModel = HomeSettingsViewModel()
+            onMealsSettings = onMealsSettings
         )
     }
 }
