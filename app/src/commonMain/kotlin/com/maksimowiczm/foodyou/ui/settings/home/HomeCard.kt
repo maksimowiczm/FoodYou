@@ -6,10 +6,12 @@ enum class HomeCard {
     Calories
 }
 
-fun String?.toHomeCards() = this
-    ?.split(",")
-    ?.map { it.trim() }
-    ?.map { HomeCard.valueOf(it) }
-    ?: HomeCard.entries
+fun String?.toHomeCards() = runCatching {
+    this
+        ?.split(",")
+        ?.map { it.trim() }
+        ?.map { HomeCard.entries[it.toInt()] }
+        ?: HomeCard.entries
+}.getOrElse { HomeCard.entries }
 
-fun List<HomeCard>.string() = joinToString(",") { it.name }
+fun List<HomeCard>.string() = joinToString(",") { it.ordinal.toString() }
