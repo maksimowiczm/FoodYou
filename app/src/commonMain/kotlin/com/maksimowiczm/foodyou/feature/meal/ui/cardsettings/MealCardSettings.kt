@@ -110,17 +110,11 @@ fun MealCardSettings(
             item {
                 ListItem(
                     headlineContent = {
-                        Text(
-                            text = stringResource(Res.string.action_use_time_based_ordering)
-                        )
+                        Text(stringResource(Res.string.action_use_time_based_ordering))
                     },
                     modifier = Modifier.clickable { toggleTimeBased(!useTimeBasedSorting) },
                     supportingContent = {
-                        Text(
-                            text = stringResource(
-                                Res.string.description_time_based_meals_sorting
-                            )
-                        )
+                        Text(stringResource(Res.string.description_time_based_meals_sorting))
                     },
                     trailingContent = {
                         Switch(
@@ -140,9 +134,7 @@ fun MealCardSettings(
 
                 ListItem(
                     headlineContent = {
-                        Text(
-                            text = stringResource(Res.string.action_include_all_day_meals)
-                        )
+                        Text(stringResource(Res.string.action_include_all_day_meals))
                     },
                     modifier = Modifier.clickable(
                         enabled = useTimeBasedSorting
@@ -150,11 +142,7 @@ fun MealCardSettings(
                         toggleIncludeAllDayMeals(!includeAllDayMeals)
                     },
                     supportingContent = {
-                        Text(
-                            text = stringResource(
-                                Res.string.description_action_include_all_day_meals
-                            )
-                        )
+                        Text(stringResource(Res.string.description_action_include_all_day_meals))
                     },
                     trailingContent = {
                         Switch(
