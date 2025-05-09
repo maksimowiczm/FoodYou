@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
@@ -110,7 +111,7 @@ fun HomeScreen(
             modifier = Modifier
                 .testTag(HomeScreenTestTags.CARDS_LIST)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues,
+            contentPadding = paddingValues.add(PaddingValues(bottom = 8.dp)),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(

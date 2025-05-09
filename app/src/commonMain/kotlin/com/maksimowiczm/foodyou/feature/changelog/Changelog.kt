@@ -22,10 +22,12 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(
-            "home page customization, edit the home page to your liking"
+            "Home page customization, edit the home page to your liking",
+            "Meals cards customization, use vertical or horizontal layout"
         ),
         changes = listOf(
-            "small visual adjustments made to the meal screen"
+            "Small visual adjustments made to the meal screen",
+            "Meals time-based ordering \"include all-day meals\" option changed to \"ignore all-day meals\". All-day meals are now included in the meal list by default."
         ),
         bugFixes = listOf(),
         translations = listOf(),
@@ -36,14 +38,14 @@ object Changelog {
         version = "2.1.1",
         date = LocalDate(2025, 4, 24),
         translations = listOf(
-            "updated Arabic",
-            "updated Danish",
-            "updated German",
-            "updated Italian",
-            "updated Polish",
-            "updated Portuguese (Brazilian)",
-            "updated Russian",
-            "updated Turkish"
+            "Updated Arabic",
+            "Updated Danish",
+            "Updated German",
+            "Updated Italian",
+            "Updated Polish",
+            "Updated Portuguese (Brazilian)",
+            "Updated Russian",
+            "Updated Turkish"
         )
     )
 
@@ -51,17 +53,17 @@ object Changelog {
         version = "2.1.0",
         date = LocalDate(2025, 4, 22),
         newFeatures = listOf(
-            "changelog",
-            "add Open Food Facts product manually"
+            "Changelog",
+            "Add Open Food Facts product manually"
         ),
         changes = listOf(
-            "remove Open Food Facts in-app search",
-            "remove all unused Open Food Facts products"
+            "Remove Open Food Facts in-app search",
+            "Remove all unused Open Food Facts products"
         ),
         bugFixes = listOf(
-            "product barcode can be edited in the product form",
-            "display valid meal summary on the meal screen and cards",
-            "don't crash on meal screen when there is more than one measurement with the same product in the meal"
+            "Product barcode can be edited in the product form",
+            "Display valid meal summary on the meal screen and cards",
+            "Don't crash on meal screen when there is more than one measurement with the same product in the meal"
         ),
         notes = """
             Why was the Open Food Facts search removed?
@@ -73,22 +75,22 @@ object Changelog {
         version = "2.0.0",
         date = LocalDate(2025, 4, 14),
         newFeatures = listOf(
-            "recipes",
-            "open food facts global search",
-            "delete unused open food facts products",
-            "show remote database error details",
-            "show warning dialog for incomplete translations when changing language"
+            "Recipes",
+            "Open food facts global search",
+            "Delete unused open food facts products",
+            "Show remote database error details",
+            "Show warning dialog for incomplete translations when changing language"
         ),
         changes = listOf(
-            "calorie summary won't display empty meals in filter chips"
+            "Calorie summary won't display empty meals in filter chips"
         ),
         bugFixes = listOf(
-            "product form no longer crashes when requesting the next field on \"fats\" if the \"sugars\" field was hidden"
+            "Product form no longer crashes when requesting the next field on \"fats\" if the \"sugars\" field was hidden"
         ),
         translations = listOf(
-            "added Portuguese (Brazilian)",
-            "added Russian",
-            "added Arabic"
+            "Added Portuguese (Brazilian)",
+            "Added Russian",
+            "Added Arabic"
         ),
         notes = """
             This release is marked as 2.0.0 because of significant source code changes that affect the overall structure of the app. The internal codebase has been heavily updated. The major version bump reflects these foundational changes.
