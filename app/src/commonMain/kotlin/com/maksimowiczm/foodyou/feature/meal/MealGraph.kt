@@ -13,8 +13,8 @@ data object MealsSettings
 data object MealCardSettings
 
 fun NavGraphBuilder.mealGraph(
-    onMealsSettingsBack: () -> Unit,
     onMealsSettings: () -> Unit,
+    onMealsSettingsBack: () -> Unit,
     onMealsCardSettings: () -> Unit,
     onMealsCardSettingsBack: () -> Unit
 ) {

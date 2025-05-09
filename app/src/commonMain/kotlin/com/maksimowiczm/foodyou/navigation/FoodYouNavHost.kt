@@ -131,14 +131,14 @@ fun FoodYouNavHost(
             }
         )
         mealGraph(
-            onMealsSettingsBack = {
-                navController.popBackStack<MealsSettings>(inclusive = true)
-            },
             onMealsSettings = {
                 navController.navigate(MealsSettings) {
                     launchSingleTop = true
                     popUpTo<MealsSettings>()
                 }
+            },
+            onMealsSettingsBack = {
+                navController.popBackStack<MealsSettings>(inclusive = true)
             },
             onMealsCardSettings = {
                 navController.navigate(MealCardSettings) {
