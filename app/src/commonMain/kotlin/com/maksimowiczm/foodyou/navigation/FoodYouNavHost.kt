@@ -15,6 +15,7 @@ import com.maksimowiczm.foodyou.feature.goals.GoalsSettings
 import com.maksimowiczm.foodyou.feature.goals.goalsGraph
 import com.maksimowiczm.foodyou.feature.language.Language
 import com.maksimowiczm.foodyou.feature.language.languageGraph
+import com.maksimowiczm.foodyou.feature.meal.MealCardSettings
 import com.maksimowiczm.foodyou.feature.meal.MealsSettings
 import com.maksimowiczm.foodyou.feature.meal.mealGraph
 import com.maksimowiczm.foodyou.ui.home.Home
@@ -83,6 +84,11 @@ fun FoodYouNavHost(
             },
             onMealsSettings = {
                 navController.navigate(MealsSettings) {
+                    launchSingleTop = true
+                }
+            },
+            onMealCardSettings = {
+                navController.navigate(MealCardSettings) {
                     launchSingleTop = true
                 }
             },
