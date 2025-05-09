@@ -132,11 +132,13 @@ fun FoodYouNavHost(
             onMealsSettings = {
                 navController.navigate(MealsSettings) {
                     launchSingleTop = true
+                    popUpTo<MealsSettings>()
                 }
             },
             onMealCardSettings = {
                 navController.navigate(MealCardSettings) {
                     launchSingleTop = true
+                    popUpTo<MealCardSettings>()
                 }
             },
             onMealCardSettingsBack = {
