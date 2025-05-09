@@ -55,6 +55,11 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
+            onMealCardLongClick = {
+                navController.navigate(MealCardSettings) {
+                    launchSingleTop = true
+                }
+            },
             onMealCardAddClick = { epochDay, mealId ->
                 navController.navigate(
                     AddFoodSearchFood(

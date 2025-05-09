@@ -11,6 +11,7 @@ fun NavGraphBuilder.homeGraph(
     onSettings: () -> Unit,
     onAbout: () -> Unit,
     onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onCaloriesCardClick: (epochDay: Int) -> Unit
 ) {
@@ -21,6 +22,7 @@ fun NavGraphBuilder.homeGraph(
             onAbout = onAbout,
             onMealCardClick = onMealCardClick,
             onMealCardAddClick = onMealCardAddClick,
+            onMealCardLongClick = onMealCardLongClick,
             onCaloriesCardClick = onCaloriesCardClick
         )
     }
