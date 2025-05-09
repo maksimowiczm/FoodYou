@@ -27,13 +27,8 @@ import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.feature.meal.data.MealPreferences
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_include_all_day_meals
-import foodyou.app.generated.resources.action_use_time_based_ordering
-import foodyou.app.generated.resources.description_action_include_all_day_meals
-import foodyou.app.generated.resources.description_time_based_meals_sorting
-import foodyou.app.generated.resources.headline_meals
-import foodyou.app.generated.resources.headline_time_based_ordering
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -165,7 +160,7 @@ fun MealCardSettings(
             item {
                 ListItem(
                     headlineContent = {
-                        Text("Meals settings")
+                        Text(stringResource(Res.string.headline_meals_settings))
                     },
                     modifier = Modifier.clickable { onMealsSettings() }
                 )

@@ -294,7 +294,9 @@ private fun MealsSettingsScreen(
             item {
                 HorizontalDivider()
                 ListItem(
-                    headlineContent = { Text("Meal card settings") },
+                    headlineContent = {
+                        Text(stringResource(Res.string.headline_meals_cards_settings))
+                    },
                     modifier = Modifier.clickable { onMealCardSettings() }
                 )
             }

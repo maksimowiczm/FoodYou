@@ -44,6 +44,8 @@
     <string name="headline_home" description="Home screen">Home</string>
     <string name="headline_home_settings" description="Home screen settings">Home settings</string>
     <string name="headline_calendar">Calendar</string>
+    <string name="headline_meals_settings">Meals settings</string>
+    <string name="headline_meals_cards_settings">Meals cards settings</string>
 
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
 
