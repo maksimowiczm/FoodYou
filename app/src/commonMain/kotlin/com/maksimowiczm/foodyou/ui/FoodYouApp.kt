@@ -5,7 +5,7 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.feature.language.TranslationWarningStartupDialog
 import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
@@ -18,7 +18,7 @@ fun FoodYouApp() {
         Surface {
             SharedTransitionLayout {
                 CompositionLocalProvider(
-                    LocalHomeSharedTransitionScope provides this
+                    LocalNavigationSharedTransitionScope provides this
                 ) {
                     FoodYouNavHost()
                     TranslationWarningStartupDialog()

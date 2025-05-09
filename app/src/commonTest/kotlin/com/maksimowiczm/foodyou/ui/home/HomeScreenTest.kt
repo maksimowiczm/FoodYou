@@ -9,7 +9,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
-import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.ext.AnimatedSharedTransitionLayout
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
 import kotlin.test.Test
@@ -31,7 +31,7 @@ class HomeScreenTest {
     ) {
         AnimatedSharedTransitionLayout {
             CompositionLocalProvider(
-                LocalHomeSharedTransitionScope provides sharedTransitionScope
+                LocalNavigationSharedTransitionScope provides sharedTransitionScope
             ) {
                 HomeScreen(
                     animatedVisibilityScope = animatedVisibilityScope,

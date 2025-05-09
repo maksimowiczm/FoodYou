@@ -18,7 +18,7 @@ import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.CreateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.UpdateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodScreen
@@ -189,8 +189,8 @@ private fun AddFoodNavHost(
             )
         }
         crossfadeComposable<Meal> {
-            val homeSTS =
-                LocalHomeSharedTransitionScope.current ?: error("No home shared transition scope")
+            val homeSTS = LocalNavigationSharedTransitionScope.current
+                ?: error("No home shared transition scope")
             val addFoodSTS = LocalAddFoodSharedTransitionScope.current
                 ?: error("No add food shared transition scope")
 

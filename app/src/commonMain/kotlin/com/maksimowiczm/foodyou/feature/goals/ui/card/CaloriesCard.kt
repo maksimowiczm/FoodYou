@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import com.maksimowiczm.foodyou.feature.goals.model.DiaryDay
@@ -40,8 +40,8 @@ internal fun CaloriesCard(
         .collectAsStateWithLifecycle(null)
     val diaryDay = diaryDayState.value
 
-    val homeSTS =
-        LocalHomeSharedTransitionScope.current ?: error("No HomeSharedTransitionScope provided")
+    val homeSTS = LocalNavigationSharedTransitionScope.current
+        ?: error("No HomeSharedTransitionScope provided")
 
     val onClick = remember(homeState, onClick) {
         { onClick(diaryDay?.date?.toEpochDays() ?: homeState.selectedDate.toEpochDays()) }

@@ -5,4 +5,4 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.compositionLocalOf
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-val LocalHomeSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> { null }
+val LocalNavigationSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> { null }

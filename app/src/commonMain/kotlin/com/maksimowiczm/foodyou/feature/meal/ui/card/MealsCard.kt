@@ -41,7 +41,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
@@ -110,7 +110,7 @@ private fun MealsCard(
     )
 
     val sharedTransitionScope =
-        LocalHomeSharedTransitionScope.current ?: error("SharedTransitionScope not found")
+        LocalNavigationSharedTransitionScope.current ?: error("SharedTransitionScope not found")
 
     val transition = updateTransition(meals)
 
@@ -370,7 +370,7 @@ private fun SharedTransitionScope.MealCard(
         }
 
         val sharedTransitionScope =
-            LocalHomeSharedTransitionScope.current ?: error("SharedTransitionScope not found")
+            LocalNavigationSharedTransitionScope.current ?: error("SharedTransitionScope not found")
 
         with(sharedTransitionScope) {
             MealHeader(

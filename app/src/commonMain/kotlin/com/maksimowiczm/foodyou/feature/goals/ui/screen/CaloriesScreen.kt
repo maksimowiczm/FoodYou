@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.sum
-import com.maksimowiczm.foodyou.core.ui.LocalHomeSharedTransitionScope
+import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
@@ -90,7 +90,7 @@ private fun CaloriesScreen(
         }
     }
 
-    val homeSTS = LocalHomeSharedTransitionScope.current ?: error("No SharedTransitionScope")
+    val homeSTS = LocalNavigationSharedTransitionScope.current ?: error("No SharedTransitionScope")
 
     val topBar = @Composable {
         val insets = TopAppBarDefaults.windowInsets
