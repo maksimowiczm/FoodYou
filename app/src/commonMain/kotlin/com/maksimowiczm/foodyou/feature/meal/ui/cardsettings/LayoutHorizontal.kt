@@ -16,7 +16,7 @@ fun LayoutHorizontal(modifier: Modifier = Modifier) {
         LazyRow(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
             userScrollEnabled = false
         ) {
