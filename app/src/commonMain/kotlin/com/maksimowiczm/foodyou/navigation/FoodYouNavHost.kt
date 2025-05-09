@@ -140,13 +140,13 @@ fun FoodYouNavHost(
                     popUpTo<MealsSettings>()
                 }
             },
-            onMealCardSettings = {
+            onMealsCardSettings = {
                 navController.navigate(MealCardSettings) {
                     launchSingleTop = true
                     popUpTo<MealCardSettings>()
                 }
             },
-            onMealCardSettingsBack = {
+            onMealsCardSettingsBack = {
                 navController.popBackStack<MealCardSettings>(inclusive = true)
             }
         )

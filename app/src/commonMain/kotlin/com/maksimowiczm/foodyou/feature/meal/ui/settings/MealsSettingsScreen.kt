@@ -65,7 +65,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 internal fun MealsSettingsScreen(
     onBack: () -> Unit,
-    onMealCardSettings: () -> Unit,
+    onMealsCardSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MealsSettingsScreenViewModel = koinViewModel()
 ) {
@@ -77,7 +77,7 @@ internal fun MealsSettingsScreen(
         else -> MealsSettingsScreen(
             meals = meals,
             onBack = onBack,
-            onMealCardSettings = onMealCardSettings,
+            onMealsCardSettings = onMealsCardSettings,
             onCreateMeal = remember(viewModel) { viewModel::createMeal },
             onUpdateMeal = remember(viewModel) { viewModel::updateMeal },
             onDeleteMeal = remember(viewModel) { viewModel::deleteMeal },
@@ -92,7 +92,7 @@ internal fun MealsSettingsScreen(
 private fun MealsSettingsScreen(
     meals: List<Meal>,
     onBack: () -> Unit,
-    onMealCardSettings: () -> Unit,
+    onMealsCardSettings: () -> Unit,
     onCreateMeal: (String, LocalTime, LocalTime) -> Unit,
     onUpdateMeal: (Meal) -> Unit,
     onDeleteMeal: (Meal) -> Unit,
@@ -297,7 +297,7 @@ private fun MealsSettingsScreen(
                     headlineContent = {
                         Text(stringResource(Res.string.headline_meals_cards_settings))
                     },
-                    modifier = Modifier.clickable { onMealCardSettings() }
+                    modifier = Modifier.clickable { onMealsCardSettings() }
                 )
             }
         }
