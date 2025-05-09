@@ -15,11 +15,13 @@ data object MealCardSettings
 fun NavGraphBuilder.mealGraph(
     onMealsSettingsBack: () -> Unit,
     onMealsSettings: () -> Unit,
+    onMealCardSettings: () -> Unit,
     onMealCardSettingsBack: () -> Unit
 ) {
     forwardBackwardComposable<MealsSettings> {
         MealsSettingsScreen(
-            onBack = onMealsSettingsBack
+            onBack = onMealsSettingsBack,
+            onMealCardSettings = onMealCardSettings
         )
     }
     forwardBackwardComposable<MealCardSettings> {

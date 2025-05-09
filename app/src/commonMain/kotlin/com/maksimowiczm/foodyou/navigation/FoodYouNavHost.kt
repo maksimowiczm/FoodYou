@@ -134,6 +134,11 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
+            onMealCardSettings = {
+                navController.navigate(MealCardSettings) {
+                    launchSingleTop = true
+                }
+            },
             onMealCardSettingsBack = {
                 navController.popBackStack<MealCardSettings>(inclusive = true)
             }

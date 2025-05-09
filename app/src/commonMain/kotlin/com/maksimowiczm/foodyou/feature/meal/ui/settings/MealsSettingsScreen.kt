@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,15 +17,14 @@ import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
@@ -56,7 +54,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.Meal
-import com.maksimowiczm.foodyou.core.ui.ext.performToggle
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
@@ -68,29 +65,23 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 internal fun MealsSettingsScreen(
     onBack: () -> Unit,
+    onMealCardSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MealsSettingsScreenViewModel = koinViewModel()
 ) {
     val meals by viewModel.sortedMeals.collectAsStateWithLifecycle()
-    val useTimeBasedSorting by viewModel.useTimeBasedSorting.collectAsStateWithLifecycle()
-    val includeAllDayMeals by viewModel.includeAllDayMeals.collectAsStateWithLifecycle()
 
     // TODO shimmer?
     when (val meals = meals) {
         null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
         else -> MealsSettingsScreen(
             meals = meals,
-            useTimeBasedSorting = useTimeBasedSorting,
-            includeAllDayMeals = includeAllDayMeals,
             onBack = onBack,
+            onMealCardSettings = onMealCardSettings,
             onCreateMeal = remember(viewModel) { viewModel::createMeal },
             onUpdateMeal = remember(viewModel) { viewModel::updateMeal },
             onDeleteMeal = remember(viewModel) { viewModel::deleteMeal },
             onSaveMealOrder = remember(viewModel) { viewModel::updateMealsRanks },
-            onToggleTimeBasedSorting = remember(viewModel) { viewModel::toggleTimeBasedSorting },
-            onToggleIncludeAllDayMeals = remember(viewModel) {
-                viewModel::toggleIncludeAllDayMeals
-            },
             modifier = modifier
         )
     }
@@ -100,15 +91,12 @@ internal fun MealsSettingsScreen(
 @Composable
 private fun MealsSettingsScreen(
     meals: List<Meal>,
-    useTimeBasedSorting: Boolean,
-    includeAllDayMeals: Boolean,
     onBack: () -> Unit,
+    onMealCardSettings: () -> Unit,
     onCreateMeal: (String, LocalTime, LocalTime) -> Unit,
     onUpdateMeal: (Meal) -> Unit,
     onDeleteMeal: (Meal) -> Unit,
     onSaveMealOrder: (List<Meal>) -> Unit,
-    onToggleTimeBasedSorting: (Boolean) -> Unit,
-    onToggleIncludeAllDayMeals: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     hapticFeedback: HapticFeedback = LocalHapticFeedback.current
 ) {
@@ -304,83 +292,10 @@ private fun MealsSettingsScreen(
             }
 
             item {
-                Spacer(Modifier.height(8.dp))
-            }
-
-            item {
-                Text(
-                    text = stringResource(Res.string.headline_time_based_ordering),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                val toggleTimeBased = { newState: Boolean ->
-                    onToggleTimeBasedSorting(newState)
-                    hapticFeedback.performToggle(newState)
-                }
-
+                HorizontalDivider()
                 ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(Res.string.action_use_time_based_ordering)
-                        )
-                    },
-                    modifier = Modifier.clickable { toggleTimeBased(!useTimeBasedSorting) },
-                    supportingContent = {
-                        Text(
-                            text = stringResource(
-                                Res.string.description_time_based_meals_sorting
-                            )
-                        )
-                    },
-                    trailingContent = {
-                        Switch(
-                            checked = useTimeBasedSorting,
-                            onCheckedChange = toggleTimeBased
-                        )
-                    }
-                )
-
-                val toggleIncludeAllDayMeals = { newState: Boolean ->
-                    onToggleIncludeAllDayMeals(newState)
-                    hapticFeedback.performToggle(newState)
-                }
-
-                val contentColor = if (useTimeBasedSorting) {
-                    MaterialTheme.colorScheme.onSurface
-                } else {
-                    MaterialTheme.colorScheme.outline
-                }
-                ListItem(
-                    headlineContent = {
-                        Text(
-                            text = stringResource(Res.string.action_include_all_day_meals)
-                        )
-                    },
-                    modifier = Modifier.clickable(
-                        enabled = useTimeBasedSorting
-                    ) {
-                        toggleIncludeAllDayMeals(!includeAllDayMeals)
-                    },
-                    supportingContent = {
-                        Text(
-                            text = stringResource(
-                                Res.string.description_action_include_all_day_meals
-                            )
-                        )
-                    },
-                    trailingContent = {
-                        Switch(
-                            checked = includeAllDayMeals,
-                            onCheckedChange = toggleIncludeAllDayMeals,
-                            enabled = useTimeBasedSorting
-                        )
-                    },
-                    colors = ListItemDefaults.colors(
-                        headlineColor = contentColor,
-                        supportingColor = contentColor
-                    )
+                    headlineContent = { Text("Meal card settings") },
+                    modifier = Modifier.clickable { onMealCardSettings() }
                 )
             }
         }
