@@ -92,7 +92,7 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
-            onMealCardSettings = {
+            onMealsCardSettings = {
                 navController.navigate(MealCardSettings) {
                     launchSingleTop = true
                 }

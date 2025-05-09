@@ -16,7 +16,7 @@ fun NavGraphBuilder.settingsGraph(
     onBack: () -> Unit,
     onHomeSettings: () -> Unit,
     onMealsSettings: () -> Unit,
-    onMealCardSettings: () -> Unit,
+    onMealsCardSettings: () -> Unit,
     onGoalsSettings: () -> Unit,
     onAbout: () -> Unit,
     onLanguage: () -> Unit
@@ -34,7 +34,7 @@ fun NavGraphBuilder.settingsGraph(
     forwardBackwardComposable<HomeSettings> {
         HomeSettingsScreen(
             onBack = onBack,
-            onMealsSettings = onMealCardSettings
+            onMealsSettings = onMealsCardSettings
         )
     }
 }
