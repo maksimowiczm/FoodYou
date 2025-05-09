@@ -25,7 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun LayoutPicker(
     layout: MealCardsLayout,
     onLayoutChange: (MealCardsLayout) -> Unit,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
@@ -35,7 +35,7 @@ internal fun LayoutPicker(
             onLayoutChange = { onLayoutChange(MealCardsLayout.Horizontal) }
         ) {
             LayoutHorizontal()
-            Spacer(Modifier.Companion.height(8.dp))
+            Spacer(Modifier.height(8.dp))
             Text(
                 text = stringResource(Res.string.headline_horizontal),
                 style = MaterialTheme.typography.labelLarge
@@ -50,7 +50,7 @@ internal fun LayoutPicker(
             onLayoutChange = { onLayoutChange(MealCardsLayout.Vertical) }
         ) {
             LayoutVertical()
-            Spacer(Modifier.Companion.height(8.dp))
+            Spacer(Modifier.height(8.dp))
             Text(
                 text = stringResource(Res.string.headline_vertical),
                 style = MaterialTheme.typography.labelLarge
@@ -66,7 +66,7 @@ internal fun LayoutPicker(
 @Composable
 private fun LayoutContainer(
     onLayoutChange: () -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Column(
@@ -74,7 +74,7 @@ private fun LayoutContainer(
             .clip(MaterialTheme.shapes.medium)
             .clickable { onLayoutChange() }
             .padding(8.dp),
-        horizontalAlignment = Alignment.Companion.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         content()
     }
