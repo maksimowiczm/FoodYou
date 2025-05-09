@@ -47,6 +47,7 @@ import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import com.maksimowiczm.foodyou.core.ui.motion.crossfadeIn
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.feature.meal.data.MealCardsLayout
 import com.maksimowiczm.foodyou.feature.meal.domain.MealWithSummary
 import com.maksimowiczm.foodyou.feature.meal.ui.card.MealCardTransitionSpecs.overlayClipFromCardToScreen
 import com.maksimowiczm.foodyou.feature.meal.ui.component.MealHeader
@@ -72,23 +73,28 @@ internal fun MealsCard(
     viewModel: MealsCardViewModel = koinViewModel()
 ) {
     val meals by viewModel.observeMeals(homeState.selectedDate).collectAsStateWithLifecycle(null)
+    val layout by viewModel.layout.collectAsStateWithLifecycle()
 
-    MealsCard(
-        meals = meals,
-        onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
-        onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
-        onLongClick = onLongClick,
-        animatedVisibilityScope = animatedVisibilityScope,
-        epochDay = homeState.selectedDate.toEpochDays(),
-        contentPadding = contentPadding,
-        modifier = modifier,
-        shimmer = homeState.shimmer
-    )
+    when (layout) {
+        MealCardsLayout.Horizontal -> HorizontalMealsCard(
+            meals = meals,
+            onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
+            onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
+            onLongClick = onLongClick,
+            animatedVisibilityScope = animatedVisibilityScope,
+            epochDay = homeState.selectedDate.toEpochDays(),
+            contentPadding = contentPadding,
+            modifier = modifier,
+            shimmer = homeState.shimmer
+        )
+
+        MealCardsLayout.Vertical -> Unit
+    }
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalAnimationApi::class)
 @Composable
-private fun MealsCard(
+private fun HorizontalMealsCard(
     meals: List<MealWithSummary>?,
     onMealClick: (mealId: Long) -> Unit,
     onAddClick: (mealId: Long) -> Unit,
@@ -100,7 +106,7 @@ private fun MealsCard(
     shimmer: Shimmer = rememberShimmer(
         shimmerBounds = ShimmerBounds.Window
     )
-) {
+) = with(LocalNavigationSharedTransitionScope.current ?: error("SharedTransitionScope not found")) {
     // Must be same as meals count or more but since we don't have meals count yet set it to some
     // extreme value. If it is less than actual meals count pager will scroll back to the
     // last item which is annoying for the user.
@@ -109,55 +115,50 @@ private fun MealsCard(
         pageCount = { meals?.size ?: 20 }
     )
 
-    val sharedTransitionScope =
-        LocalNavigationSharedTransitionScope.current ?: error("SharedTransitionScope not found")
-
     val transition = updateTransition(meals)
 
-    with(sharedTransitionScope) {
-        HorizontalPager(
-            state = pagerState,
-            modifier = modifier.animateContentSize(),
-            contentPadding = PaddingValues(
-                start = contentPadding.calculateStartPadding(LocalLayoutDirection.current),
-                end = 24.dp,
-                top = contentPadding.calculateTopPadding(),
-                bottom = contentPadding.calculateBottomPadding()
-            )
-        ) { page ->
-            val pageOffset = pagerState.currentPage - page + pagerState.currentPageOffsetFraction
-            val fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
-            val meal = meals?.getOrNull(page)
+    HorizontalPager(
+        state = pagerState,
+        modifier = modifier.animateContentSize(),
+        contentPadding = PaddingValues(
+            start = contentPadding.calculateStartPadding(LocalLayoutDirection.current),
+            end = 24.dp,
+            top = contentPadding.calculateTopPadding(),
+            bottom = contentPadding.calculateBottomPadding()
+        )
+    ) { page ->
+        val pageOffset = pagerState.currentPage - page + pagerState.currentPageOffsetFraction
+        val fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
+        val meal = meals?.getOrNull(page)
 
-            transition.Crossfade(
-                contentKey = { it != null },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 2.dp)
-                    .scale(
-                        scaleX = 1f,
-                        scaleY = lerp(0.9f, 1f, fraction)
-                    )
-            ) {
-                if (it != null && meal != null) {
-                    MealCard(
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        epochDay = epochDay,
-                        meal = meal,
-                        isEmpty = meal.isEmpty,
-                        totalCalories = meal.calories,
-                        totalProteins = meal.proteins,
-                        totalCarbohydrates = meal.carbohydrates,
-                        totalFats = meal.fats,
-                        onMealClick = { onMealClick(meal.id) },
-                        onAddClick = { onAddClick(meal.id) },
-                        onLongClick = onLongClick
-                    )
-                } else {
-                    MealCardSkeleton(
-                        shimmer = shimmer
-                    )
-                }
+        transition.Crossfade(
+            contentKey = { it != null },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 2.dp)
+                .scale(
+                    scaleX = 1f,
+                    scaleY = lerp(0.9f, 1f, fraction)
+                )
+        ) {
+            if (it != null && meal != null) {
+                MealCard(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    epochDay = epochDay,
+                    meal = meal,
+                    isEmpty = meal.isEmpty,
+                    totalCalories = meal.calories,
+                    totalProteins = meal.proteins,
+                    totalCarbohydrates = meal.carbohydrates,
+                    totalFats = meal.fats,
+                    onMealClick = { onMealClick(meal.id) },
+                    onAddClick = { onAddClick(meal.id) },
+                    onLongClick = onLongClick
+                )
+            } else {
+                MealCardSkeleton(
+                    shimmer = shimmer
+                )
             }
         }
     }
@@ -369,41 +370,36 @@ private fun SharedTransitionScope.MealCard(
             }
         }
 
-        val sharedTransitionScope =
-            LocalNavigationSharedTransitionScope.current ?: error("SharedTransitionScope not found")
-
-        with(sharedTransitionScope) {
-            MealHeader(
-                headline = headline,
-                time = time,
-                modifier = Modifier.padding(16.dp),
-                nutrientsLayout = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        NutrientsLayout(
-                            caloriesLabel = caloriesLabel,
-                            proteinsLabel = proteinsLabel,
-                            carbohydratesLabel = carbohydratesLabel,
-                            fatsLabel = fatsLabel,
-                            modifier = Modifier.sharedElement(
-                                sharedContentState = rememberSharedContentState(
-                                    key = MealCardTransitionKeys.MealNutrients(
-                                        mealId = meal.id,
-                                        epochDay = epochDay
-                                    )
-                                ),
-                                animatedVisibilityScope = animatedVisibilityScope
-                            )
+        MealHeader(
+            headline = headline,
+            time = time,
+            modifier = Modifier.padding(16.dp),
+            nutrientsLayout = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    NutrientsLayout(
+                        caloriesLabel = caloriesLabel,
+                        proteinsLabel = proteinsLabel,
+                        carbohydratesLabel = carbohydratesLabel,
+                        fatsLabel = fatsLabel,
+                        modifier = Modifier.sharedElement(
+                            sharedContentState = rememberSharedContentState(
+                                key = MealCardTransitionKeys.MealNutrients(
+                                    mealId = meal.id,
+                                    epochDay = epochDay
+                                )
+                            ),
+                            animatedVisibilityScope = animatedVisibilityScope
                         )
+                    )
 
-                        Spacer(Modifier.weight(1f))
+                    Spacer(Modifier.weight(1f))
 
-                        actionButton()
-                    }
+                    actionButton()
                 }
-            )
-        }
+            }
+        )
     }
 }
