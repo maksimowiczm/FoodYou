@@ -11,7 +11,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LayoutHorizontal(modifier: Modifier = Modifier) {
+internal fun LayoutHorizontal(modifier: Modifier = Modifier) {
     Phone(modifier) {
         LazyRow(
             modifier = Modifier.fillMaxSize(),

@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MockCard(modifier: Modifier = Modifier) {
+internal fun MockCard(modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier.size(width = 80.dp, height = 50.dp),
         shape = MaterialTheme.shapes.medium,

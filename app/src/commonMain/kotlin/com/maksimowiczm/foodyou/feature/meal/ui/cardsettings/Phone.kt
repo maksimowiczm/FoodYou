@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Phone(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+internal fun Phone(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Surface(
         modifier = modifier.size(width = 120.dp, height = 100.dp),
         shape = RoundedCornerShape(

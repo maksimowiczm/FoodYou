@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LayoutVertical(modifier: Modifier = Modifier) {
+internal fun LayoutVertical(modifier: Modifier = Modifier) {
     Phone(modifier) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

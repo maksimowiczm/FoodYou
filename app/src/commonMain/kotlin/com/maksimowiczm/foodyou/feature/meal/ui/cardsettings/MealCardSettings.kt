@@ -48,7 +48,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun MealCardSettings(
+internal fun MealCardSettings(
     onMealsSettings: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -87,7 +87,7 @@ fun MealCardSettings(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MealCardSettings(
+internal fun MealCardSettings(
     layout: MealCardsLayout,
     onLayoutChange: (MealCardsLayout) -> Unit,
     useTimeBasedSorting: Boolean,
