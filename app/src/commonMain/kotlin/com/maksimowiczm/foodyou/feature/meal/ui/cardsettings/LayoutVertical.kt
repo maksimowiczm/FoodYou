@@ -1,0 +1,32 @@
+package com.maksimowiczm.foodyou.feature.meal.ui.cardsettings
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun LayoutVertical(modifier: Modifier = Modifier) {
+    Phone(modifier) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            userScrollEnabled = false
+        ) {
+            item {
+                MockCard()
+            }
+
+            item {
+                MockCard(Modifier.scale(.9f))
+            }
+        }
+    }
+}
