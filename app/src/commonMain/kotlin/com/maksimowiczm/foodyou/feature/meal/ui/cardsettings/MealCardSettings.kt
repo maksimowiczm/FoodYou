@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -26,6 +27,7 @@ import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.ext.performToggle
 import com.maksimowiczm.foodyou.feature.meal.data.MealPreferences
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
@@ -75,6 +77,7 @@ fun MealCardSettings(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
@@ -103,18 +106,23 @@ fun MealCardSettings(
             }
 
             item {
+                val toggle: (Boolean) -> Unit = {
+                    hapticFeedback.performToggle(it)
+                    toggleTimeBased(it)
+                }
+
                 ListItem(
                     headlineContent = {
                         Text(stringResource(Res.string.action_use_time_based_ordering))
                     },
-                    modifier = Modifier.clickable { toggleTimeBased(!useTimeBasedSorting) },
+                    modifier = Modifier.clickable { toggle(!useTimeBasedSorting) },
                     supportingContent = {
                         Text(stringResource(Res.string.description_time_based_meals_sorting))
                     },
                     trailingContent = {
                         Switch(
                             checked = useTimeBasedSorting,
-                            onCheckedChange = toggleTimeBased
+                            onCheckedChange = toggle
                         )
                     }
                 )
@@ -127,6 +135,11 @@ fun MealCardSettings(
                     MaterialTheme.colorScheme.outline
                 }
 
+                val toggle: (Boolean) -> Unit = {
+                    hapticFeedback.performToggle(it)
+                    toggleIncludeAllDayMeals(it)
+                }
+
                 ListItem(
                     headlineContent = {
                         Text(stringResource(Res.string.action_include_all_day_meals))
@@ -134,7 +147,7 @@ fun MealCardSettings(
                     modifier = Modifier.clickable(
                         enabled = useTimeBasedSorting
                     ) {
-                        toggleIncludeAllDayMeals(!includeAllDayMeals)
+                        toggle(!includeAllDayMeals)
                     },
                     supportingContent = {
                         Text(stringResource(Res.string.description_action_include_all_day_meals))
@@ -142,7 +155,7 @@ fun MealCardSettings(
                     trailingContent = {
                         Switch(
                             checked = includeAllDayMeals,
-                            onCheckedChange = toggleIncludeAllDayMeals,
+                            onCheckedChange = toggle,
                             enabled = useTimeBasedSorting
                         )
                     },
