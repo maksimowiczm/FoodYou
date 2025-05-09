@@ -27,16 +27,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ext.getBlocking
-import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
-import com.maksimowiczm.foodyou.data.HomePreferences
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
 import com.maksimowiczm.foodyou.feature.meal.MealsCard
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -51,10 +46,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     dataStore: DataStore<Preferences> = koinInject()
 ) {
-    val order by dataStore
-        .observe(HomePreferences.homeOrder)
-        .map { it.toHomeCards() }
-        .collectAsStateWithLifecycle(dataStore.getBlocking(HomePreferences.homeOrder).toHomeCards())
+    val order by dataStore.collectHomeCardsAsState()
 
     HomeScreen(
         animatedVisibilityScope = animatedVisibilityScope,

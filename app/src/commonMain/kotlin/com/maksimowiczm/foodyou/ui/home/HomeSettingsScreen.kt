@@ -52,18 +52,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ext.getBlocking
 import com.maksimowiczm.foodyou.core.ext.lambda
-import com.maksimowiczm.foodyou.core.ext.observe
-import com.maksimowiczm.foodyou.core.ext.set
-import com.maksimowiczm.foodyou.data.HomePreferences
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import sh.calvin.reorderable.ReorderableCollectionItemScope
@@ -81,17 +75,14 @@ fun HomeSettingsScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val order by dataStore
-        .observe(HomePreferences.homeOrder)
-        .map { it.toHomeCards() }
-        .collectAsStateWithLifecycle(dataStore.getBlocking(HomePreferences.homeOrder).toHomeCards())
+    val order by dataStore.collectHomeCardsAsState()
 
     HomeSettingsScreen(
         order = order,
         onBack = onBack,
         onMealsSettings = onMealsSettings,
         onReorder = coroutineScope.lambda<List<HomeCard>> {
-            dataStore.set(HomePreferences.homeOrder to it.string())
+            dataStore.updateHomeCards(it)
         },
         modifier = modifier
     )
