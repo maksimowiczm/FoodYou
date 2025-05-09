@@ -53,8 +53,6 @@ import com.maksimowiczm.foodyou.feature.meal.ui.card.MealCardTransitionSpecs.ove
 import com.maksimowiczm.foodyou.feature.meal.ui.component.MealHeader
 import com.maksimowiczm.foodyou.feature.meal.ui.component.NutrientsLayout
 import com.valentinilk.shimmer.Shimmer
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlin.math.absoluteValue
@@ -84,11 +82,21 @@ internal fun MealsCard(
             animatedVisibilityScope = animatedVisibilityScope,
             epochDay = homeState.selectedDate.toEpochDays(),
             contentPadding = contentPadding,
-            modifier = modifier,
-            shimmer = homeState.shimmer
+            shimmer = homeState.shimmer,
+            modifier = modifier
         )
 
-        MealCardsLayout.Vertical -> Unit
+        MealCardsLayout.Vertical -> VerticalMealsCard(
+            meals = meals,
+            onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
+            onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
+            onLongClick = onLongClick,
+            animatedVisibilityScope = animatedVisibilityScope,
+            epochDay = homeState.selectedDate.toEpochDays(),
+            contentPadding = contentPadding,
+            shimmer = homeState.shimmer,
+            modifier = modifier
+        )
     }
 }
 
@@ -102,10 +110,8 @@ private fun HorizontalMealsCard(
     animatedVisibilityScope: AnimatedVisibilityScope,
     epochDay: Int,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier,
-    shimmer: Shimmer = rememberShimmer(
-        shimmerBounds = ShimmerBounds.Window
-    )
+    shimmer: Shimmer,
+    modifier: Modifier = Modifier
 ) = with(LocalNavigationSharedTransitionScope.current ?: error("SharedTransitionScope not found")) {
     // Must be same as meals count or more but since we don't have meals count yet set it to some
     // extreme value. If it is less than actual meals count pager will scroll back to the
@@ -159,6 +165,56 @@ private fun HorizontalMealsCard(
                 MealCardSkeleton(
                     shimmer = shimmer
                 )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalAnimationApi::class)
+@Composable
+private fun VerticalMealsCard(
+    meals: List<MealWithSummary>?,
+    onMealClick: (mealId: Long) -> Unit,
+    onAddClick: (mealId: Long) -> Unit,
+    onLongClick: () -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    epochDay: Int,
+    contentPadding: PaddingValues,
+    shimmer: Shimmer,
+    modifier: Modifier = Modifier
+) = with(LocalNavigationSharedTransitionScope.current ?: error("SharedTransitionScope not found")) {
+    val transition = updateTransition(meals)
+
+    val meals = remember(meals) {
+        meals ?: List<MealWithSummary?>(4) { null }
+    }
+
+    Column(
+        modifier = modifier.padding(contentPadding),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        meals.forEachIndexed { i, meal ->
+            transition.Crossfade(
+                contentKey = { it != null },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if (it != null && meal != null) {
+                    MealCard(
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        epochDay = epochDay,
+                        meal = meal,
+                        isEmpty = meal.isEmpty,
+                        totalCalories = meal.calories,
+                        totalProteins = meal.proteins,
+                        totalCarbohydrates = meal.carbohydrates,
+                        totalFats = meal.fats,
+                        onMealClick = { onMealClick(meal.id) },
+                        onAddClick = { onAddClick(meal.id) },
+                        onLongClick = onLongClick
+                    )
+                } else {
+                    MealCardSkeleton(shimmer)
+                }
             }
         }
     }
