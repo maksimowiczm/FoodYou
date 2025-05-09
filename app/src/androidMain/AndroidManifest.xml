@@ -31,6 +31,7 @@
         <activity
             android:name=".infrastructure.android.FoodYouMainActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.FoodYou"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -38,6 +39,32 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="product"
+                    android:scheme="foodyou" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".infrastructure.android.ShareProductActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+
         </activity>
 
         <service

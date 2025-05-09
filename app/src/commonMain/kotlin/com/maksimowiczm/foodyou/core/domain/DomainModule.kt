@@ -8,6 +8,8 @@ import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepositoryImpl
 import com.maksimowiczm.foodyou.core.domain.repository.SearchRepository
 import com.maksimowiczm.foodyou.core.domain.repository.SearchRepositoryImpl
+import com.maksimowiczm.foodyou.core.domain.usecase.ExtractProductLinkFromTextUseCase
+import com.maksimowiczm.foodyou.core.domain.usecase.ExtractProductLinkFromTextUseCaseImpl
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -17,4 +19,7 @@ val domainModule = module {
     factoryOf(::MealRepositoryImpl).bind<MealRepository>()
     factoryOf(::MeasurementRepositoryImpl).bind<MeasurementRepository>()
     factoryOf(::SearchRepositoryImpl).bind<SearchRepository>()
+
+    // Use case
+    factoryOf(::ExtractProductLinkFromTextUseCaseImpl).bind<ExtractProductLinkFromTextUseCase>()
 }
