@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.meal.ui.cardsettings
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LargeTopAppBar
@@ -22,9 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +44,6 @@ import com.maksimowiczm.foodyou.feature.meal.data.MealPreferences
 import com.maksimowiczm.foodyou.feature.meal.data.collectMealCardsLayout
 import com.maksimowiczm.foodyou.feature.meal.data.setMealCardsLayout
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -164,77 +161,22 @@ fun MealCardSettings(
                 }
             }
 
-            item {
-                HorizontalDivider()
-            }
-
-            item {
-                Text(
-                    text = stringResource(Res.string.headline_time_based_ordering),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
-
-            item {
-                val toggle: (Boolean) -> Unit = {
-                    hapticFeedback.performToggle(it)
-                    toggleTimeBased(it)
+            if (layout == MealCardsLayout.Horizontal) {
+                item {
+                    HorizontalDivider()
                 }
 
-                ListItem(
-                    headlineContent = {
-                        Text(stringResource(Res.string.action_use_time_based_ordering))
+                horizontalLayoutSettings(
+                    useTimeBasedSorting = useTimeBasedSorting,
+                    toggleTimeBased = {
+                        hapticFeedback.performToggle(it)
+                        toggleTimeBased(it)
                     },
-                    modifier = Modifier.clickable { toggle(!useTimeBasedSorting) },
-                    supportingContent = {
-                        Text(stringResource(Res.string.description_time_based_meals_sorting))
-                    },
-                    trailingContent = {
-                        Switch(
-                            checked = useTimeBasedSorting,
-                            onCheckedChange = toggle
-                        )
+                    includeAllDayMeals = includeAllDayMeals,
+                    toggleIncludeAllDayMeals = {
+                        hapticFeedback.performToggle(it)
+                        toggleIncludeAllDayMeals(it)
                     }
-                )
-            }
-
-            item {
-                val contentColor = if (useTimeBasedSorting) {
-                    MaterialTheme.colorScheme.onSurface
-                } else {
-                    MaterialTheme.colorScheme.outline
-                }
-
-                val toggle: (Boolean) -> Unit = {
-                    hapticFeedback.performToggle(it)
-                    toggleIncludeAllDayMeals(it)
-                }
-
-                ListItem(
-                    headlineContent = {
-                        Text(stringResource(Res.string.action_include_all_day_meals))
-                    },
-                    modifier = Modifier.clickable(
-                        enabled = useTimeBasedSorting
-                    ) {
-                        toggle(!includeAllDayMeals)
-                    },
-                    supportingContent = {
-                        Text(stringResource(Res.string.description_action_include_all_day_meals))
-                    },
-                    trailingContent = {
-                        Switch(
-                            checked = includeAllDayMeals,
-                            onCheckedChange = toggle,
-                            enabled = useTimeBasedSorting
-                        )
-                    },
-                    colors = ListItemDefaults.colors(
-                        headlineColor = contentColor,
-                        supportingColor = contentColor
-                    )
                 )
             }
 
@@ -263,14 +205,77 @@ private fun LayoutContainer(
     Column(
         modifier = modifier
             .clip(MaterialTheme.shapes.medium)
-            .clickable(
-                indication = ripple(),
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = { onLayoutChange() }
-            )
+            .clickable { onLayoutChange() }
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         content()
+    }
+}
+
+private fun LazyListScope.horizontalLayoutSettings(
+    useTimeBasedSorting: Boolean,
+    toggleTimeBased: (Boolean) -> Unit,
+    includeAllDayMeals: Boolean,
+    toggleIncludeAllDayMeals: (Boolean) -> Unit
+) {
+    item {
+        Text(
+            text = stringResource(Res.string.headline_time_based_ordering),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+    }
+
+    item {
+        ListItem(
+            headlineContent = {
+                Text(stringResource(Res.string.action_use_time_based_ordering))
+            },
+            modifier = Modifier.clickable { toggleTimeBased(!useTimeBasedSorting) },
+            supportingContent = {
+                Text(stringResource(Res.string.description_time_based_meals_sorting))
+            },
+            trailingContent = {
+                Switch(
+                    checked = useTimeBasedSorting,
+                    onCheckedChange = toggleTimeBased
+                )
+            }
+        )
+    }
+
+    item {
+        val contentColor = if (useTimeBasedSorting) {
+            MaterialTheme.colorScheme.onSurface
+        } else {
+            MaterialTheme.colorScheme.outline
+        }
+
+        ListItem(
+            headlineContent = {
+                Text(stringResource(Res.string.action_include_all_day_meals))
+            },
+            modifier = Modifier.clickable(
+                enabled = useTimeBasedSorting
+            ) {
+                toggleIncludeAllDayMeals(!includeAllDayMeals)
+            },
+            supportingContent = {
+                Text(stringResource(Res.string.description_action_include_all_day_meals))
+            },
+            trailingContent = {
+                Switch(
+                    checked = includeAllDayMeals,
+                    onCheckedChange = toggleIncludeAllDayMeals,
+                    enabled = useTimeBasedSorting
+                )
+            },
+            colors = ListItemDefaults.colors(
+                headlineColor = contentColor,
+                supportingColor = contentColor
+            )
+        )
     }
 }
