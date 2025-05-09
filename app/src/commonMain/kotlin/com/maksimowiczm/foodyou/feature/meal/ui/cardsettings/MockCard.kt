@@ -28,7 +28,7 @@ fun MockCard(modifier: Modifier = Modifier) {
             Spacer(
                 Modifier
                     .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+                    .background(MaterialTheme.colorScheme.outline)
                     .width(32.dp)
                     .height(8.dp)
             )
@@ -38,8 +38,8 @@ fun MockCard(modifier: Modifier = Modifier) {
             Spacer(
                 Modifier
                     .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerLowest)
-                    .width(64.dp)
+                    .background(MaterialTheme.colorScheme.outlineVariant)
+                    .width(24.dp)
                     .height(4.dp)
             )
 
@@ -49,7 +49,7 @@ fun MockCard(modifier: Modifier = Modifier) {
                 Spacer(
                     Modifier
                         .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+                        .background(MaterialTheme.colorScheme.outlineVariant)
                         .width(40.dp)
                         .height(8.dp)
                 )
