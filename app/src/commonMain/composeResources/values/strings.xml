@@ -41,6 +41,9 @@
     <string name="headline_whats_new">What's new</string>
     <string name="headline_changelog">Changelog</string>
     <string name="headline_installed" description="Installed version of the app">Installed</string>
+    <string name="headline_home" description="Home screen">Home</string>
+    <string name="headline_home_settings" description="Home screen settings">Home settings</string>
+    <string name="headline_calendar">Calendar</string>
 
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
 
@@ -130,6 +133,8 @@
     <string name="action_copy">Copy</string>
     <string name="action_choose_other_date">Choose other date</string>
     <string name="action_choose_other_measurement">Choose other measurement</string>
+    <string name="action_edit_your_home_page">Edit your home page</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Show more</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -186,6 +191,7 @@
     <string name="description_translation_warning">Translations are created by volunteers. They may not be perfect and some translations may be missing. If you notice any mistakes don't hesitate to help improving them.</string>
     <string name="description_browse_open_food_facts">Open Food Facts website will be opened in your browser. You can search for the products there and copy the link to the product you want to add.</string>
     <string name="description_changelog">See what's new in the app</string>
+    <string name="description_home_settings">Customize your home page</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>

@@ -18,6 +18,7 @@ import com.maksimowiczm.foodyou.feature.goals.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.feature.meal.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.security.SecureScreenSettingsListItem
+import com.maksimowiczm.foodyou.ui.home.HomeSettingsListItem
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
@@ -26,6 +27,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onHomeSettings: () -> Unit,
     onMealsSettings: () -> Unit,
     onGoalsSettings: () -> Unit,
     onAbout: () -> Unit,
@@ -57,6 +59,11 @@ fun SettingsScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues
         ) {
+            item {
+                HomeSettingsListItem(
+                    onClick = onHomeSettings
+                )
+            }
             item {
                 MealsSettingsListItem(
                     onClick = onMealsSettings

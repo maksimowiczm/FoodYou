@@ -21,7 +21,9 @@ object Changelog {
         )
 
     val next = Version.next(
-        newFeatures = listOf(),
+        newFeatures = listOf(
+            "home page customization, edit the home page to your liking"
+        ),
         changes = listOf(
             "small visual adjustments made to the meal screen"
         ),

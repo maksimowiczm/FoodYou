@@ -19,6 +19,7 @@ import com.maksimowiczm.foodyou.feature.meal.MealsSettings
 import com.maksimowiczm.foodyou.feature.meal.mealGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
+import com.maksimowiczm.foodyou.ui.settings.HomeSettings
 import com.maksimowiczm.foodyou.ui.settings.Settings
 import com.maksimowiczm.foodyou.ui.settings.settingsGraph
 
@@ -74,6 +75,11 @@ fun FoodYouNavHost(
         settingsGraph(
             onBack = {
                 navController.popBackStack<Settings>(inclusive = true)
+            },
+            onHomeSettings = {
+                navController.navigate(HomeSettings) {
+                    launchSingleTop = true
+                }
             },
             onMealsSettings = {
                 navController.navigate(MealsSettings) {

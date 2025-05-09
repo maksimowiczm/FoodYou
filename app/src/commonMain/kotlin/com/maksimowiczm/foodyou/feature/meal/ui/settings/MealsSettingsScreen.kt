@@ -42,7 +42,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -63,6 +62,7 @@ import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.hapticDraggableHandle
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
@@ -116,26 +116,8 @@ private fun MealsSettingsScreen(
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        // Must subtract 1 because the first item isn't reorderable
         cardStates = cardStates.toMutableList().apply {
             add(to.index, removeAt(from.index))
-        }
-    }
-
-    LaunchedEffect(reorderableLazyListState) {
-        var previousState: Boolean? = null
-        snapshotFlow { reorderableLazyListState.isAnyItemDragging }.collect {
-            val type = when {
-                previousState == false && it -> HapticFeedbackType.GestureThresholdActivate
-                previousState == true && !it -> HapticFeedbackType.GestureEnd
-                else -> null
-            }
-
-            if (type != null) {
-                hapticFeedback.performHapticFeedback(type)
-            }
-
-            previousState = it
         }
     }
 
@@ -295,7 +277,7 @@ private fun MealsSettingsScreen(
                                     onClick = {},
                                     modifier = Modifier
                                         .clearAndSetSemantics { }
-                                        .draggableHandle()
+                                        .hapticDraggableHandle(this)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.DragHandle,

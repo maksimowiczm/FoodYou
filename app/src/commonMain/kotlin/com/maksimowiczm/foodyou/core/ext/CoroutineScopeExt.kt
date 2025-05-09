@@ -8,3 +8,9 @@ fun CoroutineScope.lambda(block: suspend CoroutineScope.() -> Unit): () -> Unit 
         block()
     }
 }
+
+fun <T> CoroutineScope.lambda(block: suspend CoroutineScope.(T) -> Unit): (T) -> Unit = {
+    launch {
+        block(it)
+    }
+}
