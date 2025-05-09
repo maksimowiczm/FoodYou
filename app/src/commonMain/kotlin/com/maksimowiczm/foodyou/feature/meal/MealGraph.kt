@@ -12,13 +12,24 @@ data object MealsSettings
 @Serializable
 data object MealCardSettings
 
-fun NavGraphBuilder.mealGraph(onMealsSettingsBack: () -> Unit) {
+fun NavGraphBuilder.mealGraph(
+    onMealsSettingsBack: () -> Unit,
+    onMealsSettings: () -> Unit,
+    onMealCardSettingsBack: () -> Unit
+) {
     forwardBackwardComposable<MealsSettings> {
         MealsSettingsScreen(
             onBack = onMealsSettingsBack
         )
     }
     forwardBackwardComposable<MealCardSettings> {
-        MealCardSettings()
+        MealCardSettings(
+            useTimeBasedSorting = false,
+            toggleTimeBased = {},
+            includeAllDayMeals = false,
+            toggleIncludeAllDayMeals = {},
+            onMealsSettings = onMealsSettings,
+            onBack = onMealCardSettingsBack
+        )
     }
 }
