@@ -85,14 +85,14 @@ internal class ObserveMealsWithSummaryUseCaseImpl(
         }.combine { it }
     }.flatMapLatest { meals ->
         combine(
-            dataStore.observe(MealPreferences.includeAllDayMeals).map { it ?: false },
+            dataStore.observe(MealPreferences.ignoreAllDayMeals).map { it ?: false },
             dataStore.observe(MealPreferences.timeBasedSorting).map { it ?: false },
             dateProvider.observeMinutes()
-        ) { includeAllDayMeals, timeBased, time ->
+        ) { ignoreAllDayMeals, timeBased, time ->
 
             meals.sortedBy { meal ->
                 if (timeBased) {
-                    if (shouldShowMeal(meal, time, includeAllDayMeals)) {
+                    if (shouldShowMeal(meal, time, ignoreAllDayMeals)) {
                         meal.rank
                     } else {
                         1_000_000 + meal.rank
@@ -107,9 +107,9 @@ internal class ObserveMealsWithSummaryUseCaseImpl(
     private fun shouldShowMeal(
         meal: MealWithSummary,
         time: LocalTime,
-        includeAllDayMeals: Boolean
+        ignoreAllDayMeals: Boolean
     ): Boolean = if (meal.isAllDay) {
-        includeAllDayMeals
+        !ignoreAllDayMeals
     } else if (meal.to < meal.from) {
         val minuteBeforeMidnight = LocalTime(23, 59, 59)
         val midnight = LocalTime(0, 0, 0)

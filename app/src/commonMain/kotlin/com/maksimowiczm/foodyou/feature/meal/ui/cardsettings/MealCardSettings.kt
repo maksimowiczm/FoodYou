@@ -61,7 +61,7 @@ fun MealCardSettings(
         .collectAsStateWithLifecycle(false).value ?: false
 
     val includeAllDayMeals = dataStore
-        .observe(MealPreferences.includeAllDayMeals)
+        .observe(MealPreferences.ignoreAllDayMeals)
         .collectAsStateWithLifecycle(false).value ?: false
 
     val layout = dataStore.collectMealCardsLayout().value
@@ -75,9 +75,9 @@ fun MealCardSettings(
         toggleTimeBased = coroutineScope.lambda<Boolean> {
             dataStore.set(MealPreferences.timeBasedSorting to it)
         },
-        includeAllDayMeals = includeAllDayMeals,
-        toggleIncludeAllDayMeals = coroutineScope.lambda<Boolean> {
-            dataStore.set(MealPreferences.includeAllDayMeals to it)
+        ignoreAllDayMeals = includeAllDayMeals,
+        toggleIgnoreAllDayMeals = coroutineScope.lambda<Boolean> {
+            dataStore.set(MealPreferences.ignoreAllDayMeals to it)
         },
         onMealsSettings = onMealsSettings,
         onBack = onBack,
@@ -92,8 +92,8 @@ fun MealCardSettings(
     onLayoutChange: (MealCardsLayout) -> Unit,
     useTimeBasedSorting: Boolean,
     toggleTimeBased: (Boolean) -> Unit,
-    includeAllDayMeals: Boolean,
-    toggleIncludeAllDayMeals: (Boolean) -> Unit,
+    ignoreAllDayMeals: Boolean,
+    toggleIgnoreAllDayMeals: (Boolean) -> Unit,
     onMealsSettings: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
@@ -161,24 +161,22 @@ fun MealCardSettings(
                 }
             }
 
-            if (layout == MealCardsLayout.Horizontal) {
-                item {
-                    HorizontalDivider()
-                }
-
-                horizontalLayoutSettings(
-                    useTimeBasedSorting = useTimeBasedSorting,
-                    toggleTimeBased = {
-                        hapticFeedback.performToggle(it)
-                        toggleTimeBased(it)
-                    },
-                    includeAllDayMeals = includeAllDayMeals,
-                    toggleIncludeAllDayMeals = {
-                        hapticFeedback.performToggle(it)
-                        toggleIncludeAllDayMeals(it)
-                    }
-                )
+            item {
+                HorizontalDivider()
             }
+
+            advancedLayoutSettings(
+                useTimeBasedSorting = useTimeBasedSorting,
+                toggleTimeBased = {
+                    hapticFeedback.performToggle(it)
+                    toggleTimeBased(it)
+                },
+                ignoreAllDayMeals = ignoreAllDayMeals,
+                toggleIgnoreAllDayMeals = {
+                    hapticFeedback.performToggle(it)
+                    toggleIgnoreAllDayMeals(it)
+                }
+            )
 
             item {
                 HorizontalDivider()
@@ -213,11 +211,11 @@ private fun LayoutContainer(
     }
 }
 
-private fun LazyListScope.horizontalLayoutSettings(
+private fun LazyListScope.advancedLayoutSettings(
     useTimeBasedSorting: Boolean,
     toggleTimeBased: (Boolean) -> Unit,
-    includeAllDayMeals: Boolean,
-    toggleIncludeAllDayMeals: (Boolean) -> Unit
+    ignoreAllDayMeals: Boolean,
+    toggleIgnoreAllDayMeals: (Boolean) -> Unit
 ) {
     item {
         Text(
@@ -255,20 +253,20 @@ private fun LazyListScope.horizontalLayoutSettings(
 
         ListItem(
             headlineContent = {
-                Text(stringResource(Res.string.action_include_all_day_meals))
+                Text(stringResource(Res.string.action_ignore_all_day_meals))
             },
             modifier = Modifier.clickable(
                 enabled = useTimeBasedSorting
             ) {
-                toggleIncludeAllDayMeals(!includeAllDayMeals)
+                toggleIgnoreAllDayMeals(!ignoreAllDayMeals)
             },
             supportingContent = {
-                Text(stringResource(Res.string.description_action_include_all_day_meals))
+                Text(stringResource(Res.string.description_action_ignore_all_day_meals))
             },
             trailingContent = {
                 Switch(
-                    checked = includeAllDayMeals,
-                    onCheckedChange = toggleIncludeAllDayMeals,
+                    checked = ignoreAllDayMeals,
+                    onCheckedChange = toggleIgnoreAllDayMeals,
                     enabled = useTimeBasedSorting
                 )
             },
