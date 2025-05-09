@@ -13,6 +13,7 @@ fun MealsCard(
     homeState: HomeState,
     onMealClick: (epochDay: Int, mealId: Long) -> Unit,
     onAddClick: (epochDay: Int, mealId: Long) -> Unit,
+    onLongClick: () -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -21,6 +22,7 @@ fun MealsCard(
         homeState = homeState,
         onMealClick = onMealClick,
         onAddClick = onAddClick,
+        onLongClick = onLongClick,
         contentPadding = contentPadding,
         modifier = modifier
     )

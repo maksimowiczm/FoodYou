@@ -25,6 +25,7 @@ class HomeScreenTest {
         onSettings: () -> Unit = {},
         onAbout: () -> Unit = {},
         onMealCardClick: (epochDay: Int, mealId: Long) -> Unit = { _, _ -> },
+        onMealLongClick: () -> Unit = {},
         onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit = { _, _ -> },
         onCaloriesCardClick: (epochDay: Int) -> Unit = {}
     ) {
@@ -38,6 +39,7 @@ class HomeScreenTest {
                     onSettings = onSettings,
                     onAbout = onAbout,
                     onMealCardClick = onMealCardClick,
+                    onMealCardLongClick = onMealLongClick,
                     onMealCardAddClick = onMealCardAddClick,
                     onCaloriesCardClick = onCaloriesCardClick,
                     modifier = modifier

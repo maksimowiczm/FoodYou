@@ -26,7 +26,7 @@ internal object MealCardTransitionKeys {
 
 internal object MealCardTransitionSpecs {
     val containerColor: Color
-        @Composable get() = FoodYouHomeCardDefaults.colors().containerColor
+        @Composable get() = FoodYouHomeCardDefaults.color
 
     val containerEnterTransition: EnterTransition = EnterTransition.None
     val containerExitTransition: ExitTransition = ExitTransition.None

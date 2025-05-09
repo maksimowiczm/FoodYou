@@ -66,6 +66,7 @@ internal fun MealsCard(
     homeState: HomeState,
     onMealClick: (epochDay: Int, mealId: Long) -> Unit,
     onAddClick: (epochDay: Int, mealId: Long) -> Unit,
+    onLongClick: () -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     viewModel: MealsCardViewModel = koinViewModel()
@@ -76,6 +77,7 @@ internal fun MealsCard(
         meals = meals,
         onMealClick = { onMealClick(homeState.selectedDate.toEpochDays(), it) },
         onAddClick = { onAddClick(homeState.selectedDate.toEpochDays(), it) },
+        onLongClick = onLongClick,
         animatedVisibilityScope = animatedVisibilityScope,
         epochDay = homeState.selectedDate.toEpochDays(),
         contentPadding = contentPadding,
@@ -90,6 +92,7 @@ private fun MealsCard(
     meals: List<MealWithSummary>?,
     onMealClick: (mealId: Long) -> Unit,
     onAddClick: (mealId: Long) -> Unit,
+    onLongClick: () -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     epochDay: Int,
     contentPadding: PaddingValues,
@@ -147,7 +150,8 @@ private fun MealsCard(
                         totalCarbohydrates = meal.carbohydrates,
                         totalFats = meal.fats,
                         onMealClick = { onMealClick(meal.id) },
-                        onAddClick = { onAddClick(meal.id) }
+                        onAddClick = { onAddClick(meal.id) },
+                        onLongClick = onLongClick
                     )
                 } else {
                     MealCardSkeleton(
@@ -234,6 +238,7 @@ private fun SharedTransitionScope.MealCard(
     totalFats: Int,
     onMealClick: () -> Unit,
     onAddClick: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dateFormatter = LocalDateFormatter.current
@@ -254,7 +259,8 @@ private fun SharedTransitionScope.MealCard(
             clipInOverlayDuringTransition = OverlayClip(
                 animatedVisibilityScope.overlayClipFromCardToScreen()
             )
-        )
+        ),
+        onLongClick = onLongClick
     ) {
         val headline = @Composable {
             Text(

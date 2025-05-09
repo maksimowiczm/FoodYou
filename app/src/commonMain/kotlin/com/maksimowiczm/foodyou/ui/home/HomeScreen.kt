@@ -41,6 +41,7 @@ fun HomeScreen(
     onSettings: () -> Unit,
     onAbout: () -> Unit,
     onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onCaloriesCardClick: (epochDay: Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -54,6 +55,7 @@ fun HomeScreen(
         onSettings = onSettings,
         onAbout = onAbout,
         onMealCardClick = onMealCardClick,
+        onMealCardLongClick = onMealCardLongClick,
         onMealCardAddClick = onMealCardAddClick,
         onCaloriesCardClick = onCaloriesCardClick,
         modifier = modifier
@@ -68,6 +70,7 @@ fun HomeScreen(
     onSettings: () -> Unit,
     onAbout: () -> Unit,
     onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onCaloriesCardClick: (epochDay: Int) -> Unit,
     modifier: Modifier = Modifier
@@ -129,6 +132,7 @@ fun HomeScreen(
                         homeState = homeState,
                         onMealClick = onMealCardClick,
                         onAddClick = onMealCardAddClick,
+                        onLongClick = onMealCardLongClick,
                         contentPadding = PaddingValues(horizontal = 8.dp),
                         modifier = Modifier.testTag(testTag)
                     )
