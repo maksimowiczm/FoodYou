@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
+import com.maksimowiczm.foodyou.core.data.dataModule
 import com.maksimowiczm.foodyou.core.domain.domainModule
 import com.maksimowiczm.foodyou.core.util.utilsModule
 import com.maksimowiczm.foodyou.feature.about.aboutModule
@@ -19,10 +20,10 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
 
     modules(
         databaseModule,
+        dataModule,
         dataStoreModule,
         domainModule,
         networkModule,
-        openFoodFactsModule,
         utilsModule
     )
 
