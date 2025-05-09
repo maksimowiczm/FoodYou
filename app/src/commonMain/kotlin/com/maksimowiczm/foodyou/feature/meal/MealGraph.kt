@@ -26,10 +26,6 @@ fun NavGraphBuilder.mealGraph(
     }
     forwardBackwardComposable<MealCardSettings> {
         MealCardSettings(
-            useTimeBasedSorting = false,
-            toggleTimeBased = {},
-            includeAllDayMeals = false,
-            toggleIncludeAllDayMeals = {},
             onMealsSettings = onMealsSettings,
             onBack = onMealCardSettingsBack
         )

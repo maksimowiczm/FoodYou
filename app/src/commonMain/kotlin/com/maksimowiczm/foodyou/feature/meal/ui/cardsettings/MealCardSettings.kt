@@ -15,10 +15,18 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.ext.observe
+import com.maksimowiczm.foodyou.core.ext.set
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.feature.meal.data.MealPreferences
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_include_all_day_meals
 import foodyou.app.generated.resources.action_use_time_based_ordering
@@ -27,6 +35,39 @@ import foodyou.app.generated.resources.description_time_based_meals_sorting
 import foodyou.app.generated.resources.headline_meals
 import foodyou.app.generated.resources.headline_time_based_ordering
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
+
+@Composable
+fun MealCardSettings(
+    onMealsSettings: () -> Unit,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    dataStore: DataStore<Preferences> = koinInject()
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val useTimeBasedSorting = dataStore
+        .observe(MealPreferences.timeBasedSorting)
+        .collectAsStateWithLifecycle(false).value ?: false
+
+    val includeAllDayMeals = dataStore
+        .observe(MealPreferences.includeAllDayMeals)
+        .collectAsStateWithLifecycle(false).value ?: false
+
+    MealCardSettings(
+        useTimeBasedSorting = useTimeBasedSorting,
+        toggleTimeBased = coroutineScope.lambda<Boolean> {
+            dataStore.set(MealPreferences.timeBasedSorting to it)
+        },
+        includeAllDayMeals = includeAllDayMeals,
+        toggleIncludeAllDayMeals = coroutineScope.lambda<Boolean> {
+            dataStore.set(MealPreferences.includeAllDayMeals to it)
+        },
+        onMealsSettings = onMealsSettings,
+        onBack = onBack,
+        modifier = modifier
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
