@@ -24,22 +24,22 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 
 @Composable
-internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier.Companion) {
+internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
     val headline = @Composable {
         Column {
             Box(
-                modifier = Modifier.Companion
+                modifier = Modifier
                     .shimmer(shimmer)
                     .size(140.dp, MaterialTheme.typography.headlineMedium.toDp() - 4.dp)
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
-            Spacer(Modifier.Companion.height(4.dp))
+            Spacer(Modifier.height(4.dp))
         }
     }
     val time = @Composable {
         Box(
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .shimmer(shimmer)
                 .size(60.dp, MaterialTheme.typography.labelLarge.toDp())
                 .clip(MaterialTheme.shapes.medium)
@@ -48,22 +48,22 @@ internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier.Co
     }
     val nutrientsLayout = @Composable {
         Row(
-            modifier = Modifier.Companion.fillMaxWidth(),
-            verticalAlignment = Alignment.Companion.CenterVertically
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
-                modifier = Modifier.Companion
+                modifier = Modifier
                     .shimmer(shimmer)
                     .size(120.dp, MaterialTheme.typography.labelMedium.toDp() * 2)
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
 
-            Spacer(Modifier.Companion.weight(1f))
+            Spacer(Modifier.weight(1f))
 
             FilledIconButton(
                 onClick = {},
-                modifier = Modifier.Companion.shimmer(shimmer),
+                modifier = Modifier.shimmer(shimmer),
                 colors = IconButtonDefaults.filledIconButtonColors(
                     disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
                 ),
@@ -77,7 +77,7 @@ internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier.Co
         modifier = modifier
     ) {
         MealHeader(
-            modifier = Modifier.Companion.padding(16.dp),
+            modifier = Modifier.padding(16.dp),
             headline = headline,
             time = time,
             nutrientsLayout = nutrientsLayout

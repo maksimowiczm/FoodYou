@@ -34,7 +34,7 @@ internal fun HorizontalMealsCard(
     epochDay: Int,
     contentPadding: PaddingValues,
     shimmer: Shimmer,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier
 ) = with(LocalNavigationSharedTransitionScope.current ?: error("SharedTransitionScope not found")) {
     // Must be same as meals count or more but since we don't have meals count yet set it to some
     // extreme value. If it is less than actual meals count pager will scroll back to the
@@ -62,7 +62,7 @@ internal fun HorizontalMealsCard(
 
         transition.Crossfade(
             contentKey = { it != null },
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 2.dp)
                 .scale(

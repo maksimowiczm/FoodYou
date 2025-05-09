@@ -50,7 +50,7 @@ internal fun SharedTransitionScope.MealCard(
     onMealClick: () -> Unit,
     onAddClick: () -> Unit,
     onLongClick: () -> Unit,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier
 ) {
     val dateFormatter = LocalDateFormatter.current
 
@@ -76,7 +76,7 @@ internal fun SharedTransitionScope.MealCard(
         val headline = @Composable {
             Text(
                 text = meal.name,
-                modifier = Modifier.Companion.sharedElement(
+                modifier = Modifier.sharedElement(
                     sharedContentState = rememberSharedContentState(
                         key = MealCardTransitionKeys.MealTitle(
                             mealId = meal.id,
@@ -90,7 +90,7 @@ internal fun SharedTransitionScope.MealCard(
         val time = @Composable {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.Companion.sharedElement(
+                modifier = Modifier.sharedElement(
                     sharedContentState = rememberSharedContentState(
                         key = MealCardTransitionKeys.MealTime(
                             mealId = meal.id,
@@ -165,7 +165,7 @@ internal fun SharedTransitionScope.MealCard(
             with(animatedVisibilityScope) {
                 FilledIconButton(
                     onClick = onAddClick,
-                    modifier = Modifier.Companion
+                    modifier = Modifier
                         .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
                         .animateEnterExit(
                             enter = crossfadeIn(),
@@ -183,18 +183,18 @@ internal fun SharedTransitionScope.MealCard(
         MealHeader(
             headline = headline,
             time = time,
-            modifier = Modifier.Companion.padding(16.dp),
+            modifier = Modifier.padding(16.dp),
             nutrientsLayout = {
                 Row(
-                    modifier = Modifier.Companion.fillMaxWidth(),
-                    verticalAlignment = Alignment.Companion.CenterVertically
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     NutrientsLayout(
                         caloriesLabel = caloriesLabel,
                         proteinsLabel = proteinsLabel,
                         carbohydratesLabel = carbohydratesLabel,
                         fatsLabel = fatsLabel,
-                        modifier = Modifier.Companion.sharedElement(
+                        modifier = Modifier.sharedElement(
                             sharedContentState = rememberSharedContentState(
                                 key = MealCardTransitionKeys.MealNutrients(
                                     mealId = meal.id,
@@ -205,7 +205,7 @@ internal fun SharedTransitionScope.MealCard(
                         )
                     )
 
-                    Spacer(Modifier.Companion.weight(1f))
+                    Spacer(Modifier.weight(1f))
 
                     actionButton()
                 }
