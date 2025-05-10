@@ -1,7 +1,7 @@
 ### Release Process
 
 1. Create a new branch: `chore/release-<version>`
-2. Update the `versionCode` and `versionName` in `build.gradle` to the new version.
+2. Update the `versionCode` and `versionName` in `libs.versions.toml` to the new version.
 3. Verify that the build is reproducible.
 4. Create a changelog for the new version in `metadata/en-US/changelog/<versionCode>.txt` and
    `app/src/commonMain/kotlin/com/maksimowiczm/foodyou/feature/changelog/Changelog.kt`, patch
