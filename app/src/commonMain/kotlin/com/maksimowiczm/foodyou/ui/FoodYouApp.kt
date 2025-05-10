@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.feature.changelog.AppUpdateChangelogModalBottomSheet
 import com.maksimowiczm.foodyou.feature.language.TranslationWarningStartupDialog
 import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
 
@@ -21,9 +22,11 @@ fun FoodYouApp() {
                     LocalNavigationSharedTransitionScope provides this
                 ) {
                     FoodYouNavHost()
-                    TranslationWarningStartupDialog()
                 }
             }
+
+            TranslationWarningStartupDialog()
+            AppUpdateChangelogModalBottomSheet()
         }
     }
 }
