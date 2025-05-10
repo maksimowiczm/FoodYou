@@ -14,13 +14,15 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_2_0,
             v2_1_1,
             v2_1_0,
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_2_0 = Version(
+        version = "2.2.0",
+        date = LocalDate(2025, 5, 10),
         newFeatures = listOf(
             "Home page customization, edit the home page to your liking",
             "Meals cards customization, use vertical or horizontal layout"
@@ -28,10 +30,7 @@ object Changelog {
         changes = listOf(
             "Small visual adjustments made to the meal screen",
             "Meals time-based ordering \"include all-day meals\" option changed to \"ignore all-day meals\". All-day meals are now included in the meal list by default."
-        ),
-        bugFixes = listOf(),
-        translations = listOf(),
-        notes = null
+        )
     )
 
     val v2_1_1 = Version(

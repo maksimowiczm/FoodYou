@@ -1,0 +1,7 @@
+New features
+- Home page customization, edit the home page to your liking
+- Meals cards customization, use vertical or horizontal layout
+
+Changes
+- Small visual adjustments made to the meal screen
+- Meals time-based ordering "include all-day meals" option changed to "ignore all-day meals". All-day meals are now included in the meal list by default.
