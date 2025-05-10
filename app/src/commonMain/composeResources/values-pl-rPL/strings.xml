@@ -36,6 +36,13 @@
     <string name="headline_whats_new">Co nowego</string>
     <string name="headline_changelog">Dziennik zmian</string>
     <string name="headline_installed" description="Installed version of the app">Zainstalowano</string>
+    <string name="headline_home" description="Home screen">Strona główna</string>
+    <string name="headline_home_settings" description="Home screen settings">Ustawienia strony głównej</string>
+    <string name="headline_calendar">Kalendarz</string>
+    <string name="headline_meals_settings">Ustawienia posiłków</string>
+    <string name="headline_meals_cards_settings">Ustawienia kart z posiłkami</string>
+    <string name="headline_horizontal">Poziomo</string>
+    <string name="headline_vertical">Pionowo</string>
     <string name="open_food_facts_disclaimer">Open Food Facts to projekt tworzony przez społeczność. Dane mogą być niekompletne, nieaktualne lub nieprecyzyjne. Ta aplikacja nie odpowiada za ich poprawność. Weryfikuj informacje przed użyciem.</string>
     <string name="weight">Waga</string>
     <string name="unit_calories">Kalorie</string>
@@ -109,7 +116,7 @@
     <string name="action_move_up" description="reorder list item up">Przesuń w górę</string>
     <string name="action_move_down" description="reorder list item down">Przesuń w dół</string>
     <string name="action_use_time_based_ordering">Używaj kolejności opartej na czasie</string>
-    <string name="action_include_all_day_meals">Uwzględnij całodniowe posiłki</string>
+    <string name="action_ignore_all_day_meals">Zignoruj ​​całodzienne posiłki</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Dodaj składnik</string>
     <string name="action_edit_ingredient_measurement">Zmień pomiar składnika</string>
     <string name="action_delete_ingredient">Usuń składnik</string>
@@ -118,6 +125,10 @@
     <string name="action_browse_open_food_facts">Przeglądaj Open Food Facts</string>
     <string name="action_open_browser">Otwórz przeglądarkę</string>
     <string name="action_copy">Kopiuj</string>
+    <string name="action_choose_other_date">Wybierz inną datę</string>
+    <string name="action_choose_other_measurement">Wybierz inny pomiar</string>
+    <string name="action_edit_your_home_page">Edytuj swoją stronę główną</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Pokaż więcej</string>
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
@@ -167,11 +178,12 @@
     <string name="description_show_some_love">Jeśli uważasz, że ten projekt jest pomocny, rozważ dodanie mu gwiazdki na GitHubie! Dzięki temu więcej osób go odkryje, a rozwój projektu będzie mógł trwać dalej.</string>
     <string name="description_share_your_thoughts">Jeśli masz jakiekolwiek uwagi, propozycje funkcji lub zgłoszenia błędów, daj mi znać! Chętnie wysłucham Twojej opinii.</string>
     <string name="description_time_based_meals_sorting">Gdy włączone, posiłki trwające w danym momencie będą wyświetlane jako pierwsze</string>
-    <string name="description_action_include_all_day_meals">Całodniowe posiłki zostaną uwzględnione w aktualnej liście posiłków</string>
+    <string name="description_action_ignore_all_day_meals">Całodzienne posiłki będą wyświetlane na końcu listy</string>
     <string name="description_incomplete_nutrition_data">Niektóre z używanych produktów nie mają tej wartości, dlatego wyświetlana wartość może być niedokładna</string>
     <string name="description_translation_warning">Tłumaczenia są tworzone przez wolontariuszy. Mogą nie być idealne, a niektóre tłumaczenia mogą być niekompletne. Jeśli zauważysz jakiekolwiek błędy, nie wahaj się pomóc w ich poprawie.</string>
     <string name="description_browse_open_food_facts">W twojej przeglądarce zostanie otwarta strona internetowa Open Food Facts. Możesz tam wyszukać produkty i skopiować link do produktu, który chcesz dodać.</string>
     <string name="description_changelog">Zobacz co nowego w aplikacji</string>
+    <string name="description_home_settings">Dostosuj swoją stronę główną</string>
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Zobacz inne świetne ikony tutaj</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://pl.openfoodfacts.org/</string>
