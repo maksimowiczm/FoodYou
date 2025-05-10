@@ -17,5 +17,5 @@ local.properties
 .idea
 *.keystore
 *.kdbx
-release.sh
-preview.sh
+*.apk
+*.idsig

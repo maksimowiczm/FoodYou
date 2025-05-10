@@ -8,35 +8,59 @@
   };
 
   outputs =
-    { self, nixpkgs, ... }@inputs:
+    {
+      self,
+      nixpkgs,
+      ktlint_1_5_0,
+      ...
+    }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+
+      pkgs = import nixpkgs {
+        system = system;
+        config.android_sdk.accept_license = true;
+        config.allowUnfree = true;
+      };
+
+      buildToolsVersion = "36.0.0";
+
+      androidComposition = pkgs.androidenv.composeAndroidPackages {
+        buildToolsVersions = [ buildToolsVersion ];
+        systemImageTypes = [ "google_apis_playstore" ];
+        abiVersions = [ "arm64-v8a" ];
+        includeNDK = false;
+        includeEmulator = false;
+        includeExtras = [ ];
+      };
+
+      ktlintComposeJar = pkgs.fetchurl {
+        url = "https://github.com/mrmans0n/compose-rules/releases/download/v0.4.22/ktlint-compose-0.4.22-all.jar";
+        sha256 = "98118356601fa5817145aebf3887bedd311791a4599ae644c602c52453d9dda2";
+      };
     in
     {
-      devShells.x86_64-linux.default =
-        let
-          ktlintComposeJar = pkgs.fetchurl {
-            url = "https://github.com/mrmans0n/compose-rules/releases/download/v0.4.22/ktlint-compose-0.4.22-all.jar";
-            sha256 = "98118356601fa5817145aebf3887bedd311791a4599ae644c602c52453d9dda2";
-          };
-        in
-        pkgs.mkShell {
-          KTLINT_COMPOSE_JAR = "${ktlintComposeJar}";
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = [
+          pkgs.just
+          pkgs.temurin-bin-17
+          androidComposition.androidsdk
+        ];
 
-          buildInputs = [
-            pkgs.just
-            pkgs.temurin-bin-17
-          ];
+        nativeBuildInputs = [
+          ktlint_1_5_0.legacyPackages.${system}.ktlint
+        ];
 
-          nativeBuildInputs = with pkgs; [
-            inputs.ktlint_1_5_0.legacyPackages.${system}.ktlint
-          ];
+        KTLINT_COMPOSE_JAR = "${ktlintComposeJar}";
+        ANDROID_HOME = "${androidComposition.androidsdk}/libexec/android-sdk";
+        ANDROID_SDK_ROOT = "${androidComposition.androidsdk}/libexec/android-sdk";
+        ANDROID_NDK_ROOT = "${androidComposition.androidsdk}/libexec/android-sdk/ndk-bundle";
 
-          shellHook = ''
-            alias format="just format"
-            echo "Welcome to Food You dev" | ${pkgs.lolcat}/bin/lolcat
-          '';
-        };
+        shellHook = ''
+          export PATH="$ANDROID_HOME/build-tools/${buildToolsVersion}:$PATH"
+          export PATH="$ANDROID_HOME/platform-tools:$PATH"
+          just | ${pkgs.lolcat}/bin/lolcat
+        '';
+      };
     };
 }
