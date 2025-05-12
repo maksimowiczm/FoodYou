@@ -77,7 +77,11 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
          * Remove OpenFoodFactsPagingKeyEntity
          */
         AutoMigration(from = 9, to = 10, spec = MIGRATION_9_10::class),
-        AutoMigration(from = 10, to = 11)
+        AutoMigration(from = 10, to = 11),
+        /**
+         * @see [MIGRATION_11_12]
+         * Fix sodium value in ProductEntity. Convert grams to milligrams.
+         */
     ]
 )
 @TypeConverters(
@@ -95,13 +99,14 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val foodDao: FoodDao
 
     companion object {
-        const val VERSION = 11
+        const val VERSION = 12
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,
             MIGRATION_2_3,
             MIGRATION_7_8,
-            MIGRATION_8_9
+            MIGRATION_8_9,
+            MIGRATION_11_12
         )
 
         fun Builder<FoodYouDatabase>.buildDatabase(
@@ -324,3 +329,15 @@ private val MIGRATION_8_9 = object : Migration(8, 9) {
     toColumnName = "sodiumMilli"
 )
 class MIGRATION_9_10 : AutoMigrationSpec
+
+private val MIGRATION_11_12 = object : Migration(11, 12) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            UPDATE ProductEntity 
+            SET sodiumMilli = sodiumMilli * 1000
+            WHERE sodiumMilli IS NOT NULL
+            """.trimIndent()
+        )
+    }
+}
