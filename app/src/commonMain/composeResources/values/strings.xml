@@ -59,6 +59,7 @@
     <string name="times_y" translatable="false">x %1$s</string>
     <string name="weight">Weight</string>
     <string name="unit_calories">Calories</string>
+    <string name="unit_energy" description="Energy as calories">Energy</string>
     <string name="unit_kcal">kcal</string>
     <string name="unit_gram_short" translatable="false">g</string>
     <string name="unit_milligram_short" translatable="false">mg</string>

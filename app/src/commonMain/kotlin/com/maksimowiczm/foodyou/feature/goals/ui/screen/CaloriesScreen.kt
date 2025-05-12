@@ -35,7 +35,7 @@ import com.maksimowiczm.foodyou.core.domain.model.sum
 import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
-import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
+import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.goals.model.DiaryDay
@@ -163,8 +163,8 @@ private fun CaloriesScreen(
                 }
 
                 item {
-                    NutrientsList(
-                        nutrients = diaryDay.meals
+                    NutritionFactsList(
+                        facts = diaryDay.meals
                             .filter { it in meals }
                             .flatMap { diaryDay.foods[it] ?: emptyList() }
                             .mapNotNull { it.realNutrients }

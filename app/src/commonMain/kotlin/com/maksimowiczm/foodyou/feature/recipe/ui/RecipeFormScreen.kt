@@ -58,7 +58,7 @@ import com.maksimowiczm.foodyou.core.domain.model.sum
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
-import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
+import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
 import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
@@ -339,7 +339,7 @@ internal fun RecipeFormScreen(
                 }
 
                 item {
-                    val nutrients = state.ingredients
+                    val nutritionFacts = state.ingredients
                         .map { it.product.nutritionFacts * (it.weight ?: 0f) / 100f }
                         .sum()
 
@@ -348,8 +348,8 @@ internal fun RecipeFormScreen(
                     }
 
                     Column {
-                        NutrientsList(
-                            nutrients = nutrients,
+                        NutritionFactsList(
+                            facts = nutritionFacts,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp)

@@ -16,10 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
 import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
-import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
+import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
 
 @Composable
-fun AdvancedMeasurementSummary(nutrients: NutritionFacts, modifier: Modifier = Modifier) {
+fun AdvancedMeasurementSummary(nutritionFacts: NutritionFacts, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -40,17 +40,17 @@ fun AdvancedMeasurementSummary(nutrients: NutritionFacts, modifier: Modifier = M
             }
 
             CaloriesProgressIndicator(
-                proteins = nutrients.proteins.value,
-                carbohydrates = nutrients.carbohydrates.value,
-                fats = nutrients.fats.value,
+                proteins = nutritionFacts.proteins.value,
+                carbohydrates = nutritionFacts.carbohydrates.value,
+                fats = nutritionFacts.fats.value,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(16.dp)
             )
         }
 
-        NutrientsList(
-            nutrients = nutrients
+        NutritionFactsList(
+            facts = nutritionFacts
         )
     }
 }
