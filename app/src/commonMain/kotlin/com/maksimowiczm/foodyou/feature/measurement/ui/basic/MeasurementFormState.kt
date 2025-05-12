@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import com.maksimowiczm.foodyou.core.domain.model.Food
-import com.maksimowiczm.foodyou.core.domain.model.Nutrients
+import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
 import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
@@ -66,7 +66,7 @@ fun rememberMeasurementFormState(
             servingInput,
             food.servingWeight,
             gramInput,
-            food.nutrients,
+            food.nutritionFacts,
             selected
         )
     }
@@ -106,7 +106,7 @@ fun rememberMeasurementFormState(
             servingInput,
             food.servingWeight,
             gramInput,
-            food.nutrients,
+            food.nutritionFacts,
             selected
         )
     }
@@ -119,6 +119,6 @@ class MeasurementFormState(
     val servingInput: FormField<Float, String>?,
     val servingWeight: PortionWeight.Serving?,
     val gramInput: FormField<Float, String>,
-    val nutrients: Nutrients,
+    val nutrients: NutritionFacts,
     val selected: MeasurementEnum?
 )

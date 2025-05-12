@@ -32,9 +32,9 @@ internal fun Ingredient.ListItem(modifier: Modifier = Modifier) {
         return
     }
 
-    val proteins = product.nutrients.proteins.value
-    val carbohydrates = product.nutrients.carbohydrates.value
-    val fats = product.nutrients.fats.value
+    val proteins = product.nutritionFacts.proteins.value
+    val carbohydrates = product.nutritionFacts.carbohydrates.value
+    val fats = product.nutritionFacts.fats.value
 
     ListItem(
         headlineContent = { Text(product.name) },
@@ -105,6 +105,6 @@ private val Ingredient.measurementString: String?
 
 private val Ingredient.caloriesString: String?
     @Composable get() = weight?.let {
-        val value = (it * product.nutrients.calories.value / 100).roundToInt()
+        val value = (it * product.nutritionFacts.calories.value / 100).roundToInt()
         "$value " + stringResource(Res.string.unit_kcal)
     }

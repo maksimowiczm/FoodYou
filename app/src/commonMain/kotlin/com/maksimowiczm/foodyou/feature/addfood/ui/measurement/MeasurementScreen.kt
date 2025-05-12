@@ -210,9 +210,9 @@ internal fun MeasurementScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     CaloriesProgressIndicator(
-                        proteins = food.nutrients.proteins.value,
-                        carbohydrates = food.nutrients.carbohydrates.value,
-                        fats = food.nutrients.fats.value,
+                        proteins = food.nutritionFacts.proteins.value,
+                        carbohydrates = food.nutritionFacts.carbohydrates.value,
+                        fats = food.nutritionFacts.fats.value,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(16.dp)
@@ -222,7 +222,7 @@ internal fun MeasurementScreen(
                     val nutrients by remember(chipsState.selectedFilter, food) {
                         derivedStateOf {
                             val weight = chipsState.selectedFilter.weight(food) ?: 100f
-                            food.nutrients * weight / 100f
+                            food.nutritionFacts * weight / 100f
                         }
                     }
 

@@ -38,16 +38,16 @@ internal class UpdateProductViewModel(
                 name = input(product.name),
                 brand = input(product.brand ?: ""),
                 barcode = input(product.barcode ?: ""),
-                proteins = input(product.nutrients.proteins.value.formatClipZeros()),
-                carbohydrates = input(product.nutrients.carbohydrates.value.formatClipZeros()),
-                fats = input(product.nutrients.fats.value.formatClipZeros()),
-                sugars = input(product.nutrients.sugars.value?.formatClipZeros() ?: ""),
+                proteins = input(product.nutritionFacts.proteins.value.formatClipZeros()),
+                carbohydrates = input(product.nutritionFacts.carbohydrates.value.formatClipZeros()),
+                fats = input(product.nutritionFacts.fats.value.formatClipZeros()),
+                sugars = input(product.nutritionFacts.sugars.value?.formatClipZeros() ?: ""),
                 saturatedFats = input(
-                    product.nutrients.saturatedFats.value?.formatClipZeros() ?: ""
+                    product.nutritionFacts.saturatedFats.value?.formatClipZeros() ?: ""
                 ),
-                salt = input(product.nutrients.salt.value?.formatClipZeros() ?: ""),
-                sodium = input(product.nutrients.sodium.value?.formatClipZeros() ?: ""),
-                fiber = input(product.nutrients.fiber.value?.formatClipZeros() ?: ""),
+                salt = input(product.nutritionFacts.salt.value?.formatClipZeros() ?: ""),
+                sodium = input(product.nutritionFacts.sodiumMilli.value?.formatClipZeros() ?: ""),
+                fiber = input(product.nutritionFacts.fiber.value?.formatClipZeros() ?: ""),
                 packageWeight = input(product.packageWeight?.weight?.formatClipZeros() ?: ""),
                 servingWeight = input(product.servingWeight?.weight?.formatClipZeros() ?: ""),
                 isModified = false
@@ -274,14 +274,14 @@ internal class UpdateProductViewModel(
         formState.name.value != product?.name -> true
         formState.brand.value != product?.brand -> true
         formState.barcode.value != product?.barcode -> true
-        formState.proteins.float() != product?.nutrients?.proteins?.value -> true
-        formState.carbohydrates.float() != product?.nutrients?.carbohydrates?.value -> true
-        formState.fats.float() != product?.nutrients?.fats?.value -> true
-        formState.sugars.float() != product?.nutrients?.sugars?.value -> true
-        formState.saturatedFats.float() != product?.nutrients?.saturatedFats?.value -> true
-        formState.salt.float() != product?.nutrients?.salt?.value -> true
-        formState.sodium.float() != product?.nutrients?.sodium?.value -> true
-        formState.fiber.float() != product?.nutrients?.fiber?.value -> true
+        formState.proteins.float() != product?.nutritionFacts?.proteins?.value -> true
+        formState.carbohydrates.float() != product?.nutritionFacts?.carbohydrates?.value -> true
+        formState.fats.float() != product?.nutritionFacts?.fats?.value -> true
+        formState.sugars.float() != product?.nutritionFacts?.sugars?.value -> true
+        formState.saturatedFats.float() != product?.nutritionFacts?.saturatedFats?.value -> true
+        formState.salt.float() != product?.nutritionFacts?.salt?.value -> true
+        formState.sodium.float() != product?.nutritionFacts?.sodiumMilli?.value -> true
+        formState.fiber.float() != product?.nutritionFacts?.fiber?.value -> true
         formState.packageWeight.float() != product?.packageWeight?.weight -> true
         formState.servingWeight.float() != product?.servingWeight?.weight -> true
         else -> false

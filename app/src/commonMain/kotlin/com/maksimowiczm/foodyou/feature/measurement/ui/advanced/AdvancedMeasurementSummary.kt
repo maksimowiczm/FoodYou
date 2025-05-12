@@ -14,12 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.domain.model.Nutrients
+import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
 import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
 
 @Composable
-fun AdvancedMeasurementSummary(nutrients: Nutrients, modifier: Modifier = Modifier) {
+fun AdvancedMeasurementSummary(nutrients: NutritionFacts, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)

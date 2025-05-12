@@ -340,11 +340,11 @@ internal fun RecipeFormScreen(
 
                 item {
                     val nutrients = state.ingredients
-                        .map { it.product.nutrients * (it.weight ?: 0f) / 100f }
+                        .map { it.product.nutritionFacts * (it.weight ?: 0f) / 100f }
                         .sum()
 
                     val anyProductIncomplete = state.ingredients.any {
-                        !it.product.nutrients.isComplete
+                        !it.product.nutritionFacts.isComplete
                     }
 
                     Column {

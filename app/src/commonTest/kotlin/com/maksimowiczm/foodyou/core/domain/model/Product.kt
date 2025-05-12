@@ -4,7 +4,7 @@ fun testProduct(
     id: FoodId.Product = FoodId.Product(1L),
     name: String = "Test Product",
     brand: String? = "Test Brand",
-    nutrients: Nutrients = testNutrients(),
+    nutritionFacts: NutritionFacts = testNutritionFacts(),
     barcode: String? = "1234567890123",
     packageWeight: PortionWeight.Package? = PortionWeight.Package(500f),
     servingWeight: PortionWeight.Serving? = PortionWeight.Serving(20f)
@@ -12,7 +12,7 @@ fun testProduct(
     id = id,
     name = name,
     brand = brand,
-    nutrients = nutrients,
+    nutritionFacts = nutritionFacts,
     barcode = barcode,
     packageWeight = packageWeight,
     servingWeight = servingWeight

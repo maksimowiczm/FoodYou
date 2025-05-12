@@ -11,7 +11,7 @@ object ProductMapper {
         name = name,
         brand = brand,
         barcode = barcode,
-        nutrients = with(NutrientsMapper) { nutrients.toModel() },
+        nutritionFacts = NutritionFactsMapper.toNutritionFacts(nutrients, vitamins, minerals),
         packageWeight = packageWeight?.let { PortionWeight.Package(it) },
         servingWeight = servingWeight?.let { PortionWeight.Serving(it) }
     )

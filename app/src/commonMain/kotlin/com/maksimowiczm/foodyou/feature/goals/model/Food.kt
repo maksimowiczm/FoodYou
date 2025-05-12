@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.goals.model
 
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.Nutrients
+import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
 import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 
 internal data class Food(
@@ -10,7 +10,7 @@ internal data class Food(
     val name: String,
     val packageWeight: PortionWeight.Package?,
     val servingWeight: PortionWeight.Serving?,
-    val nutrients: Nutrients,
+    val nutrients: NutritionFacts,
     val measurement: Measurement
 ) {
     /**
@@ -26,6 +26,6 @@ internal data class Food(
     /**
      * Nutrients for a given [weight]. If weight is null then nutrients are invalid.
      */
-    val realNutrients: Nutrients?
+    val realNutrients: NutritionFacts?
         get() = weight?.let { nutrients * (weight / 100f) }
 }

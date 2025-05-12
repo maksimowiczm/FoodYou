@@ -22,8 +22,8 @@ data class Recipe(
             return PortionWeight.Serving(weight / servings)
         }
 
-    override val nutrients: Nutrients
+    override val nutritionFacts: NutritionFacts
         get() = ingredients
-            .map { it.product.nutrients * (it.weight ?: 0f) }
+            .map { it.product.nutritionFacts * (it.weight ?: 0f) }
             .sum() / packageWeight.weight
 }

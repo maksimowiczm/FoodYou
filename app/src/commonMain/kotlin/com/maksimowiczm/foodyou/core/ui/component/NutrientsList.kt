@@ -15,7 +15,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.NutrientValue
-import com.maksimowiczm.foodyou.core.domain.model.Nutrients
+import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.Res
@@ -26,7 +26,6 @@ import foodyou.app.generated.resources.nutriment_fiber
 import foodyou.app.generated.resources.nutriment_proteins
 import foodyou.app.generated.resources.nutriment_salt
 import foodyou.app.generated.resources.nutriment_saturated_fats
-import foodyou.app.generated.resources.nutriment_sodium
 import foodyou.app.generated.resources.nutriment_sugars
 import foodyou.app.generated.resources.unit_calories
 import foodyou.app.generated.resources.unit_gram_short
@@ -35,7 +34,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NutrientsList(
-    nutrients: Nutrients,
+    nutrients: NutritionFacts,
     modifier: Modifier = Modifier,
     incompleteValue: (
         NutrientValue.Incomplete
@@ -203,27 +202,27 @@ fun NutrientsList(
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
-            HorizontalDivider(Modifier.padding(horizontal = 48.dp))
-
-            NutrientListItem(
-                label = {
-                    Text(
-                        text = stringResource(Res.string.nutriment_sodium)
-                    )
-                },
-                value = {
-                    val summary = nutrients.sodium
-                    when (summary) {
-                        is NutrientValue.Incomplete -> incompleteValue(summary)()
-                        is NutrientValue.Complete -> {
-                            val g = stringResource(Res.string.unit_gram_short)
-                            val value = summary.value.formatClipZeros()
-                            Text("$value $g")
-                        }
-                    }
-                },
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
+//            HorizontalDivider(Modifier.padding(horizontal = 48.dp))
+//
+//            NutrientListItem(
+//                label = {
+//                    Text(
+//                        text = stringResource(Res.string.nutriment_sodium)
+//                    )
+//                },
+//                value = {
+//                    val summary = nutrients.sodium
+//                    when (summary) {
+//                        is NutrientValue.Incomplete -> incompleteValue(summary)()
+//                        is NutrientValue.Complete -> {
+//                            val g = stringResource(Res.string.unit_gram_short)
+//                            val value = summary.value.formatClipZeros()
+//                            Text("$value $g")
+//                        }
+//                    }
+//                },
+//                modifier = Modifier.padding(vertical = 8.dp)
+//            )
         }
     }
 }

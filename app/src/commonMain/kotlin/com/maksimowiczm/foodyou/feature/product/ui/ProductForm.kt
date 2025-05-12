@@ -355,7 +355,7 @@ internal fun ProductForm(
             state = sodiumState,
             modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
             enabled = enabled,
-            label = { Text(stringResource(Res.string.nutriment_sodium)) },
+            label = { Text(stringResource(Res.string.mineral_sodium)) },
             suffix = { Text(stringResource(Res.string.unit_gram_short)) },
             isError = state.sodium.isInvalid,
             supportingText = {
