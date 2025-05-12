@@ -321,24 +321,25 @@ internal class CreateProductViewModel(
         viewModelScope.launch {
             _eventBus.send(ProductFormEvent.CreatingProduct)
 
-            val id = productRepository.createProduct(
-                name = name,
-                brand = brand,
-                barcode = barcode,
-                calories = calories,
-                proteins = proteins,
-                carbohydrates = carbohydrates,
-                fats = fats,
-                sugars = sugars,
-                saturatedFats = saturatedFats,
-                salt = salt,
-                sodium = sodium,
-                fiber = fiber,
-                packageWeight = packageWeight,
-                servingWeight = servingWeight
-            )
+            TODO()
+//            val id = productRepository.createProduct(
+//                name = name,
+//                brand = brand,
+//                barcode = barcode,
+//                calories = calories,
+//                proteins = proteins,
+//                carbohydrates = carbohydrates,
+//                fats = fats,
+//                sugars = sugars,
+//                saturatedFats = saturatedFats,
+//                salt = salt,
+//                sodium = sodium,
+//                fiber = fiber,
+//                packageWeight = packageWeight,
+//                servingWeight = servingWeight
+//            )
 
-            _eventBus.send(ProductFormEvent.ProductCreated(id))
+//            _eventBus.send(ProductFormEvent.ProductCreated(id))
         }
     }
 

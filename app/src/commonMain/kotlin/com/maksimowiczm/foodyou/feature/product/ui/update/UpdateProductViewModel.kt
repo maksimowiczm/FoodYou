@@ -322,25 +322,26 @@ internal class UpdateProductViewModel(
         viewModelScope.launch {
             _eventBus.send(ProductFormEvent.UpdatingProduct)
 
-            productRepository.updateProduct(
-                id = productId,
-                name = name,
-                brand = brand,
-                barcode = barcode,
-                calories = calories,
-                proteins = proteins,
-                carbohydrates = carbohydrates,
-                sugars = sugars,
-                fats = fats,
-                saturatedFats = saturatedFats,
-                salt = salt,
-                sodium = sodium,
-                fiber = fiber,
-                packageWeight = packageWeight,
-                servingWeight = servingWeight
-            )
-
-            _eventBus.send(ProductFormEvent.ProductUpdated(productId))
+            TODO()
+//            productRepository.updateProduct(
+//                id = productId,
+//                name = name,
+//                brand = brand,
+//                barcode = barcode,
+//                calories = calories,
+//                proteins = proteins,
+//                carbohydrates = carbohydrates,
+//                sugars = sugars,
+//                fats = fats,
+//                saturatedFats = saturatedFats,
+//                salt = salt,
+//                sodium = sodium,
+//                fiber = fiber,
+//                packageWeight = packageWeight,
+//                servingWeight = servingWeight
+//            )
+//
+//            _eventBus.send(ProductFormEvent.ProductUpdated(productId))
         }
     }
 }

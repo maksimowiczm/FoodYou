@@ -8,7 +8,7 @@ data class Nutrients(
     val fats: NutrientValue.Complete,
     val saturatedFats: NutrientValue,
     val salt: NutrientValue,
-    val sodium: NutrientValue,
+    val sodium: NutrientValue = NutrientValue.Incomplete(null),
     val fiber: NutrientValue
 ) {
     val isComplete: Boolean
@@ -16,7 +16,6 @@ data class Nutrients(
             sugars,
             saturatedFats,
             salt,
-            sodium,
             fiber
         ).all { it is NutrientValue.Complete }
 
@@ -28,7 +27,6 @@ data class Nutrients(
         fats = this.fats + other.fats,
         saturatedFats = this.saturatedFats + other.saturatedFats,
         salt = this.salt + other.salt,
-        sodium = this.sodium + other.sodium,
         fiber = this.fiber + other.fiber
     )
 

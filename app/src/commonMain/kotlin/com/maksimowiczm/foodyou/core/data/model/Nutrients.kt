@@ -1,13 +1,21 @@
 package com.maksimowiczm.foodyou.core.data.model
 
 data class Nutrients(
-    val calories: Float,
+    // Macronutrients
     val proteins: Float,
     val carbohydrates: Float,
-    val sugars: Float?,
     val fats: Float,
+    val calories: Float,
+    // Fats
     val saturatedFats: Float?,
+    val monounsaturatedFats: Float?,
+    val polyunsaturatedFats: Float?,
+    val omega3: Float?,
+    val omega6: Float?,
+    // Other
+    val sugars: Float?,
     val salt: Float?,
-    val sodium: Float?,
-    val fiber: Float?
+    val fiber: Float?,
+    val cholesterolMilli: Float?,
+    val caffeineMilli: Float?
 )

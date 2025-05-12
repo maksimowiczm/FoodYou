@@ -2,8 +2,10 @@ package com.maksimowiczm.foodyou.core.data.database
 
 import androidx.room.AutoMigration
 import androidx.room.Database
+import androidx.room.RenameColumn
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
@@ -65,7 +67,7 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
         AutoMigration(from = 5, to = 6),
-        AutoMigration(from = 6, to = 7)
+        AutoMigration(from = 6, to = 7),
         /**
          * @see [MIGRATION_7_8]
          * Remove unused products from OpenFoodFacts source
@@ -74,6 +76,8 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
          * @see [MIGRATION_8_9]
          * Remove OpenFoodFactsPagingKeyEntity
          */
+        AutoMigration(from = 9, to = 10, spec = MIGRATION_9_10::class),
+        AutoMigration(from = 10, to = 11)
     ]
 )
 @TypeConverters(
@@ -91,7 +95,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val foodDao: FoodDao
 
     companion object {
-        const val VERSION = 9
+        const val VERSION = 11
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,
@@ -312,3 +316,11 @@ private val MIGRATION_8_9 = object : Migration(8, 9) {
         )
     }
 }
+
+@Suppress("ClassName")
+@RenameColumn(
+    tableName = "ProductEntity",
+    fromColumnName = "sodium",
+    toColumnName = "sodiumMilli"
+)
+class MIGRATION_9_10 : AutoMigrationSpec

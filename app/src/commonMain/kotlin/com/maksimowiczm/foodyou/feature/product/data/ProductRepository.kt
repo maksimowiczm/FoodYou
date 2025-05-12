@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.feature.product.data
 
+import com.maksimowiczm.foodyou.core.data.model.Minerals
 import com.maksimowiczm.foodyou.core.data.model.Nutrients
+import com.maksimowiczm.foodyou.core.data.model.Vitamins
 import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
 import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
 import com.maksimowiczm.foodyou.core.domain.mapper.ProductMapper
@@ -23,28 +25,92 @@ internal class ProductRepository(private val localProductDataSource: ProductLoca
         name: String,
         brand: String?,
         barcode: String?,
-        calories: Float,
         proteins: Float,
         carbohydrates: Float,
-        sugars: Float?,
         fats: Float,
+        calories: Float,
         saturatedFats: Float?,
+        monounsaturatedFats: Float?,
+        polyunsaturatedFats: Float?,
+        omega3: Float?,
+        omega6: Float?,
+        sugars: Float?,
         salt: Float?,
-        sodium: Float?,
         fiber: Float?,
+        cholesterolMilli: Float?,
+        caffeineMilli: Float?,
+        vitaminAMicro: Float?,
+        vitaminB1Milli: Float?,
+        vitaminB2Milli: Float?,
+        vitaminB3Milli: Float?,
+        vitaminB5Milli: Float?,
+        vitaminB6Milli: Float?,
+        vitaminB7Micro: Float?,
+        vitaminB9Micro: Float?,
+        vitaminB12Micro: Float?,
+        vitaminCMilli: Float?,
+        vitaminDMicro: Float?,
+        vitaminEMilli: Float?,
+        vitaminKMicro: Float?,
+        manganeseMilli: Float?,
+        magnesiumMilli: Float?,
+        potassiumMilli: Float?,
+        calciumMilli: Float?,
+        copperMilli: Float?,
+        zincMilli: Float?,
+        sodiumMilli: Float?,
+        ironMilli: Float?,
+        phosphorusMilli: Float?,
+        seleniumMicro: Float?,
+        iodineMicro: Float?,
         packageWeight: Float?,
         servingWeight: Float?
     ): Long {
         val nutrients = Nutrients(
-            calories = calories,
             proteins = proteins,
             carbohydrates = carbohydrates,
-            sugars = sugars,
             fats = fats,
+            calories = calories,
             saturatedFats = saturatedFats,
+            monounsaturatedFats = monounsaturatedFats,
+            polyunsaturatedFats = polyunsaturatedFats,
+            omega3 = omega3,
+            omega6 = omega6,
+            sugars = sugars,
             salt = salt,
-            sodium = sodium,
-            fiber = fiber
+            fiber = fiber,
+            cholesterolMilli = cholesterolMilli,
+            caffeineMilli = caffeineMilli
+        )
+
+        val vitamins = Vitamins(
+            vitaminAMicro = vitaminAMicro,
+            vitaminB1Milli = vitaminB1Milli,
+            vitaminB2Milli = vitaminB2Milli,
+            vitaminB3Milli = vitaminB3Milli,
+            vitaminB5Milli = vitaminB5Milli,
+            vitaminB6Milli = vitaminB6Milli,
+            vitaminB7Micro = vitaminB7Micro,
+            vitaminB9Micro = vitaminB9Micro,
+            vitaminB12Micro = vitaminB12Micro,
+            vitaminCMilli = vitaminCMilli,
+            vitaminDMicro = vitaminDMicro,
+            vitaminEMilli = vitaminEMilli,
+            vitaminKMicro = vitaminKMicro
+        )
+
+        val minerals = Minerals(
+            manganeseMilli = manganeseMilli,
+            magnesiumMilli = magnesiumMilli,
+            potassiumMilli = potassiumMilli,
+            calciumMilli = calciumMilli,
+            copperMilli = copperMilli,
+            zincMilli = zincMilli,
+            sodiumMilli = sodiumMilli,
+            ironMilli = ironMilli,
+            phosphorusMilli = phosphorusMilli,
+            seleniumMicro = seleniumMicro,
+            iodineMicro = iodineMicro
         )
 
         val entity = ProductEntity(
@@ -52,6 +118,8 @@ internal class ProductRepository(private val localProductDataSource: ProductLoca
             brand = brand?.takeIf { it.isNotBlank() },
             barcode = barcode?.takeIf { it.isNotBlank() },
             nutrients = nutrients,
+            vitamins = vitamins,
+            minerals = minerals,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
             productSource = ProductSource.User
@@ -65,28 +133,92 @@ internal class ProductRepository(private val localProductDataSource: ProductLoca
         name: String,
         brand: String?,
         barcode: String?,
-        calories: Float,
         proteins: Float,
         carbohydrates: Float,
-        sugars: Float?,
         fats: Float,
+        calories: Float,
         saturatedFats: Float?,
+        monounsaturatedFats: Float?,
+        polyunsaturatedFats: Float?,
+        omega3: Float?,
+        omega6: Float?,
+        sugars: Float?,
         salt: Float?,
-        sodium: Float?,
         fiber: Float?,
+        cholesterolMilli: Float?,
+        caffeineMilli: Float?,
+        vitaminAMicro: Float?,
+        vitaminB1Milli: Float?,
+        vitaminB2Milli: Float?,
+        vitaminB3Milli: Float?,
+        vitaminB5Milli: Float?,
+        vitaminB6Milli: Float?,
+        vitaminB7Micro: Float?,
+        vitaminB9Micro: Float?,
+        vitaminB12Micro: Float?,
+        vitaminCMilli: Float?,
+        vitaminDMicro: Float?,
+        vitaminEMilli: Float?,
+        vitaminKMicro: Float?,
+        manganeseMilli: Float?,
+        magnesiumMilli: Float?,
+        potassiumMilli: Float?,
+        calciumMilli: Float?,
+        copperMilli: Float?,
+        zincMilli: Float?,
+        sodiumMilli: Float?,
+        ironMilli: Float?,
+        phosphorusMilli: Float?,
+        seleniumMicro: Float?,
+        iodineMicro: Float?,
         packageWeight: Float?,
         servingWeight: Float?
     ) {
         val nutrients = Nutrients(
-            calories = calories,
             proteins = proteins,
             carbohydrates = carbohydrates,
-            sugars = sugars,
             fats = fats,
+            calories = calories,
             saturatedFats = saturatedFats,
+            monounsaturatedFats = monounsaturatedFats,
+            polyunsaturatedFats = polyunsaturatedFats,
+            omega3 = omega3,
+            omega6 = omega6,
+            sugars = sugars,
             salt = salt,
-            sodium = sodium,
-            fiber = fiber
+            fiber = fiber,
+            cholesterolMilli = cholesterolMilli,
+            caffeineMilli = caffeineMilli
+        )
+
+        val vitamins = Vitamins(
+            vitaminAMicro = vitaminAMicro,
+            vitaminB1Milli = vitaminB1Milli,
+            vitaminB2Milli = vitaminB2Milli,
+            vitaminB3Milli = vitaminB3Milli,
+            vitaminB5Milli = vitaminB5Milli,
+            vitaminB6Milli = vitaminB6Milli,
+            vitaminB7Micro = vitaminB7Micro,
+            vitaminB9Micro = vitaminB9Micro,
+            vitaminB12Micro = vitaminB12Micro,
+            vitaminCMilli = vitaminCMilli,
+            vitaminDMicro = vitaminDMicro,
+            vitaminEMilli = vitaminEMilli,
+            vitaminKMicro = vitaminKMicro
+        )
+
+        val minerals = Minerals(
+            manganeseMilli = manganeseMilli,
+            magnesiumMilli = magnesiumMilli,
+            potassiumMilli = potassiumMilli,
+            calciumMilli = calciumMilli,
+            copperMilli = copperMilli,
+            zincMilli = zincMilli,
+            sodiumMilli = sodiumMilli,
+            ironMilli = ironMilli,
+            phosphorusMilli = phosphorusMilli,
+            seleniumMicro = seleniumMicro,
+            iodineMicro = iodineMicro
         )
 
         val entity = ProductEntity(
@@ -95,6 +227,8 @@ internal class ProductRepository(private val localProductDataSource: ProductLoca
             brand = brand?.takeIf { it.isNotBlank() },
             barcode = barcode?.takeIf { it.isNotBlank() },
             nutrients = nutrients,
+            vitamins = vitamins,
+            minerals = minerals,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
             productSource = ProductSource.User

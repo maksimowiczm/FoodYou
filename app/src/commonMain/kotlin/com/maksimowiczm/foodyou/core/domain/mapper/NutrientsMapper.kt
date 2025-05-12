@@ -13,7 +13,6 @@ object NutrientsMapper {
         fats = fats.toNutrientValue(),
         saturatedFats = saturatedFats.toNutrientValue(),
         salt = salt.toNutrientValue(),
-        sodium = sodium.toNutrientValue(),
         fiber = fiber.toNutrientValue()
     )
 }
