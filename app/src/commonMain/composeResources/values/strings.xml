@@ -48,6 +48,10 @@
     <string name="headline_meals_cards_settings">Meals cards settings</string>
     <string name="headline_horizontal">Horizontal</string>
     <string name="headline_vertical">Vertical</string>
+    <string name="headline_values_per">Values per</string>
+    <string name="headline_other">Other</string>
+    <string name="headline_vitamins">Vitamins</string>
+    <string name="headline_minerals">Minerals</string>
 
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
 
@@ -57,6 +61,8 @@
     <string name="unit_calories">Calories</string>
     <string name="unit_kcal">kcal</string>
     <string name="unit_gram_short" translatable="false">g</string>
+    <string name="unit_milligram_short" translatable="false">mg</string>
+    <string name="unit_microgram_short" translatable="false">µg</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
         <item quantity="other">grams</item>
@@ -86,9 +92,40 @@
     <string name="nutriment_fats">Fats</string>
     <string name="nutriment_fats_short">F</string>
     <string name="nutriment_saturated_fats">Saturated fats</string>
+    <string name="nutriment_polyunsaturated_fats">Polyunsaturated fats</string>
+    <string name="nutriment_monounsaturated_fats">Monounsaturated fats</string>
+    <string name="nutriment_omega_3">Omega-3 fatty acids</string>
+    <string name="nutriment_omega_6">Omega-6 fatty acids</string>
     <string name="nutriment_salt">Salt</string>
-    <string name="nutriment_sodium">Sodium</string>
     <string name="nutriment_fiber">Fiber</string>
+    <string name="nutriment_cholesterol">Cholesterol</string>
+    <string name="nutriment_caffeine">Caffeine</string>
+
+    <string name="vitamin_a">Vitamin A</string>
+    <string name="vitamin_b1">Vitamin B1</string>
+    <string name="vitamin_b2">Vitamin B2</string>
+    <string name="vitamin_b3">Vitamin B3</string>
+    <string name="vitamin_b5">Vitamin B5</string>
+    <string name="vitamin_b6">Vitamin B6</string>
+    <string name="vitamin_b7">Vitamin B7</string>
+    <string name="vitamin_b9">Vitamin B9</string>
+    <string name="vitamin_b12">Vitamin B12</string>
+    <string name="vitamin_c">Vitamin C</string>
+    <string name="vitamin_d">Vitamin D</string>
+    <string name="vitamin_e">Vitamin E</string>
+    <string name="vitamin_k">Vitamin K</string>
+
+    <string name="mineral_manganese">Manganese</string>
+    <string name="mineral_magnesium">Magnesium</string>
+    <string name="mineral_potassium">Potassium</string>
+    <string name="mineral_calcium">Calcium</string>
+    <string name="mineral_copper">Copper</string>
+    <string name="mineral_zinc">Zinc</string>
+    <string name="mineral_sodium">Sodium</string>
+    <string name="mineral_iron">Iron</string>
+    <string name="mineral_phosphorus">Phosphorus</string>
+    <string name="mineral_selenium">Selenium</string>
+    <string name="mineral_iodine">Iodine</string>
 
     <string name="action_search">Search</string>
     <string name="action_scan_barcode">Scan barcode</string>
@@ -173,6 +210,7 @@
     <string name="error_value_must_be_integer">Value must be an integer</string>
     <string name="error_sum_of_percentages_must_be_100">Sum of percentages must be 100</string>
     <string name="error_value_cannot_exceed_100">Value cannot exceed 100</string>
+    <string name="error_value_must_be_positive">Value must be positive</string>
 
     <string name="positive_goal_reached">Goal reached</string>
     <string name="positive_ok">OK</string>
