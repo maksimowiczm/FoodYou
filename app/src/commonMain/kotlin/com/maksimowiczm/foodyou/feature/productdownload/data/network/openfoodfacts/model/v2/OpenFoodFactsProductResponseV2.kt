@@ -1,0 +1,12 @@
+package com.maksimowiczm.foodyou.feature.productdownload.data.network.openfoodfacts.model.v2
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+internal data class OpenFoodFactsProductResponseV2(
+    @SerialName("code")
+    private val code: String,
+    @SerialName("product")
+    val product: OpenFoodFactsProductV2
+)
