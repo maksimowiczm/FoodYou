@@ -2,8 +2,10 @@ package com.maksimowiczm.foodyou.feature.product.ui.download
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,14 +16,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +45,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
@@ -98,7 +105,9 @@ internal fun DownloadProductScreen(
                 AnimatedContent(
                     targetState = isMutating,
                     modifier = Modifier.fillMaxWidth(),
-                    transitionSpec = { fadeIn() togetherWith fadeOut() }
+                    transitionSpec = {
+                        fadeIn() + expandVertically() togetherWith fadeOut() + shrinkVertically()
+                    }
                 ) {
                     if (it) {
                         LinearProgressIndicator(
@@ -126,10 +135,26 @@ internal fun DownloadProductScreen(
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth(),
                     enabled = !isMutating,
+                    trailingIcon = {
+                        if (textFieldState.text.isNotEmpty()) {
+                            IconButton(
+                                onClick = textFieldState::clearText
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Clear,
+                                    contentDescription = stringResource(Res.string.action_clear)
+                                )
+                            }
+                        }
+                    },
                     supportingText = {
                         Text(stringResource(Res.string.description_download_product_hint))
                     },
-                    placeholder = { Text(stringResource(Res.string.product_link)) }
+                    placeholder = { Text(stringResource(Res.string.product_link)) },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    onKeyboardAction = { onDownload() }
                 )
             }
 
