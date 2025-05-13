@@ -1,10 +1,10 @@
-package com.maksimowiczm.foodyou.feature.productredesign
+package com.maksimowiczm.foodyou.feature.product.ui
 
 import androidx.compose.runtime.Composable
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-enum class ProductFormFieldError {
+internal enum class ProductFormFieldError {
     Required,
     NotANumber,
     MustBePositive;

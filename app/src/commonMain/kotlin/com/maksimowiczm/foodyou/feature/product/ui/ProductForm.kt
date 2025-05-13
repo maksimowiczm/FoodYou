@@ -1,480 +1,442 @@
 package com.maksimowiczm.foodyou.feature.product.ui
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.input.Input
-import com.maksimowiczm.foodyou.core.ui.ext.toDp
-import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.ui.component.FullScreenDialog
+import com.maksimowiczm.foodyou.core.ui.res.stringResource
+import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
+import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.drop
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun ProductForm(
-    state: ProductFormState,
-    onNameChange: (String) -> Unit,
-    onBrandChange: (String) -> Unit,
-    onBarcodeChange: (String) -> Unit,
-    onProteinsChange: (String) -> Unit,
-    onCarbohydratesChange: (String) -> Unit,
-    onFatsChange: (String) -> Unit,
-    onSugarsChange: (String) -> Unit,
-    onSaturatedFatsChange: (String) -> Unit,
-    onSaltChange: (String) -> Unit,
-    onSodiumChange: (String) -> Unit,
-    onFiberChange: (String) -> Unit,
-    onPackageWeightChange: (String) -> Unit,
-    onServingWeightChange: (String) -> Unit,
-    onBarcodeScanner: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true
-) {
-    var fabHeight by remember { mutableIntStateOf(0) }
-    val sugarsRequester = remember { FocusRequester() }
+internal fun ProductForm(state: ProductFormState, modifier: Modifier = Modifier) {
+    var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
 
-    val height = LocalDensity.current.run { fabHeight.toDp() }
+    if (showBarcodeScanner) {
+        FullScreenDialog(
+            onDismissRequest = { showBarcodeScanner = false }
+        ) {
+            CameraBarcodeScannerScreen(
+                onBarcodeScan = {
+                    state.barcode.textFieldState.setTextAndPlaceCursorAtEnd(it)
+                    showBarcodeScanner = false
+                },
+                onClose = {
+                    showBarcodeScanner = false
+                }
+            )
+        }
+    }
 
     Column(
-        modifier = modifier.padding(bottom = height),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
             text = stringResource(Res.string.headline_general),
-            modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
         )
 
-        val nameState = rememberInputState(state.name.value) {
-            onNameChange(it)
-        }
-        TextField(
-            state = nameState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.product_name)) },
-            isError = state.name.isInvalid,
-            supportingText = {
-                val input = state.name
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    RequiredLabel()
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            )
+        state.name.TextField(
+            label = stringResource(Res.string.product_name),
+            required = true,
+            suffix = null
         )
 
-        val brandState = rememberInputState(state.brand.value) {
-            onBrandChange(it)
-        }
-        TextField(
-            state = brandState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.product_brand)) },
-            supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            )
+        state.brand.TextField(
+            label = stringResource(Res.string.product_brand),
+            suffix = null
         )
 
-        // Use string because barcode scanner will update it
-        // This is so spaghetti 💀
         TextField(
-            value = state.barcode.value,
-            onValueChange = onBarcodeChange,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
+            state = state.barcode.textFieldState,
+            modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(Res.string.product_barcode)) },
-            supportingText = { Spacer(Modifier.height(LocalTextStyle.current.toDp())) },
             trailingIcon = {
                 IconButton(
-                    onClick = onBarcodeScanner
+                    onClick = { showBarcodeScanner = true }
                 ) {
                     Icon(
                         imageVector = Icons.Default.QrCodeScanner,
-                        contentDescription = stringResource(Res.string.action_scan_barcode)
+                        contentDescription = null
                     )
                 }
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            )
-        )
-
-        Text(
-            text = stringResource(Res.string.neutral_all_values_per_x, "100 g"),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
-
-        Text(
-            text = stringResource(Res.string.headline_macronutrients),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelLarge
-        )
-
-        val proteinsState = rememberInputState(state.proteins.value) {
-            onProteinsChange(it)
-        }
-        TextField(
-            state = proteinsState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.nutriment_proteins)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isError =
-            state.proteins.isInvalid ||
-                state.error == ProductFormError.MacronutrientsExceeds100,
-            supportingText = {
-                val input = state.proteins
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    RequiredLabel()
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            )
-        )
-
-        val carbohydratesState = rememberInputState(state.carbohydrates.value) {
-            onCarbohydratesChange(it)
-        }
-        TextField(
-            state = carbohydratesState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.nutriment_carbohydrates)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isError =
-            state.carbohydrates.isInvalid ||
-                state.error == ProductFormError.MacronutrientsExceeds100,
-            supportingText = {
-                val input = state.carbohydrates
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    RequiredLabel()
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            )
-        )
-
-        val fatsState = rememberInputState(state.fats.value) {
-            onFatsChange(it)
-        }
-        TextField(
-            state = fatsState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.nutriment_fats)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isError =
-            state.fats.isInvalid ||
-                state.error == ProductFormError.MacronutrientsExceeds100,
-            supportingText = {
-                val input = state.fats
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    RequiredLabel()
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            ),
-            onKeyboardAction = {
-                sugarsRequester.requestFocus()
             }
         )
 
-        TextField(
-            value = state.calories?.formatClipZeros() ?: "",
-            onValueChange = {},
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            readOnly = true,
-            label = { Text(stringResource(Res.string.unit_calories)) },
-            supportingText = {
-                Text(stringResource(Res.string.neutral_calories_are_calculated))
-            },
-            isError = state.error == ProductFormError.MacronutrientsExceeds100,
-            suffix = { Text(stringResource(Res.string.unit_kcal)) }
+        ValuesPerPicker(
+            measurement = state.measurement,
+            onValueChange = { state.measurement = it },
+            modifier = Modifier.fillMaxWidth()
         )
 
-        AnimatedVisibility(
-            visible = state.error == ProductFormError.MacronutrientsExceeds100,
-            modifier = Modifier.padding(vertical = 8.dp)
+        state.packageWeight.TextField(
+            label = stringResource(Res.string.product_package_weight),
+            required = state.measurement is Measurement.Package
+        )
+
+        state.servingWeight.TextField(
+            label = stringResource(Res.string.product_serving_weight),
+            required = state.measurement is Measurement.Serving
+        )
+
+        Column(
+            modifier = Modifier.padding(vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = stringResource(
-                    Res.string.error_sum_of_macronutrients_cannot_exceed_100g
-                ),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.labelLarge
+                text = stringResource(Res.string.headline_macronutrients),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = stringResource(Res.string.neutral_calories_are_calculated),
+                style = MaterialTheme.typography.bodySmall
             )
         }
 
-        Text(
-            text = stringResource(Res.string.headline_nutrients),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelLarge
+        state.proteins.TextField(
+            label = stringResource(Res.string.nutriment_proteins),
+            required = true
         )
 
-        val sugarsState = rememberInputState(state.sugars.value) {
-            onSugarsChange(it)
-        }
-        TextField(
-            state = sugarsState,
-            modifier = Modifier
-                .widthIn(min = 300.dp)
-                .fillMaxWidth()
-                .focusRequester(sugarsRequester),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.nutriment_sugars)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isError = state.sugars.isInvalid,
-            supportingText = {
-                val input = state.sugars
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    Spacer(Modifier.height(LocalTextStyle.current.toDp()))
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            )
+        state.carbohydrates.TextField(
+            label = stringResource(Res.string.nutriment_carbohydrates),
+            required = true
         )
 
-        val saturatedFatsState = rememberInputState(state.saturatedFats.value) {
-            onSaturatedFatsChange(it)
-        }
-        TextField(
-            state = saturatedFatsState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.nutriment_saturated_fats)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isError = state.saturatedFats.isInvalid,
-            supportingText = {
-                val input = state.saturatedFats
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    Spacer(Modifier.height(LocalTextStyle.current.toDp()))
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            )
+        state.fats.TextField(
+            label = stringResource(Res.string.nutriment_fats),
+            required = true
         )
 
-        val saltState = rememberInputState(state.salt.value) {
-            onSaltChange(it)
-        }
-        TextField(
-            state = saltState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.nutriment_salt)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isError = state.salt.isInvalid,
-            supportingText = {
-                val input = state.salt
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    Spacer(Modifier.height(LocalTextStyle.current.toDp()))
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            )
-        )
-
-        val sodiumState = rememberInputState(state.sodium.value) {
-            onSodiumChange(it)
-        }
-        TextField(
-            state = sodiumState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.mineral_sodium)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isError = state.sodium.isInvalid,
-            supportingText = {
-                val input = state.sodium
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    Spacer(Modifier.height(LocalTextStyle.current.toDp()))
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            )
-        )
-
-        val fiberState = rememberInputState(state.fiber.value) {
-            onFiberChange(it)
-        }
-        TextField(
-            state = fiberState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.nutriment_fiber)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isError = state.fiber.isInvalid,
-            supportingText = {
-                val input = state.fiber
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    Spacer(Modifier.height(LocalTextStyle.current.toDp()))
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            )
+        state.calories.TextField(
+            label = stringResource(Res.string.unit_calories),
+            required = true
         )
 
         Text(
-            text = stringResource(Res.string.headline_product_serving_and_packaging),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelLarge
+            text = stringResource(Res.string.nutriment_fats),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
         )
 
-        val packageWeightState = rememberInputState(state.packageWeight.value) {
-            onPackageWeightChange(it)
-        }
-        TextField(
-            state = packageWeightState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.product_package_weight)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isError = state.packageWeight.isInvalid,
-            supportingText = {
-                val input = state.packageWeight
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    Spacer(Modifier.height(LocalTextStyle.current.toDp()))
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            )
+        state.saturatedFats.TextField(
+            label = stringResource(Res.string.nutriment_saturated_fats)
         )
 
-        val servingWeightState = rememberInputState(state.servingWeight.value) {
-            onServingWeightChange(it)
-        }
-        TextField(
-            state = servingWeightState,
-            modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(),
-            enabled = enabled,
-            label = { Text(stringResource(Res.string.product_serving_weight)) },
-            suffix = { Text(stringResource(Res.string.unit_gram_short)) },
-            isError = state.servingWeight.isInvalid,
-            supportingText = {
-                val input = state.servingWeight
-                if (input is Input.Invalid) {
-                    Text(input.errors.stringResource())
-                } else {
-                    Spacer(Modifier.height(LocalTextStyle.current.toDp()))
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Done
-            )
+        state.monounsaturatedFats.TextField(
+            label = stringResource(Res.string.nutriment_monounsaturated_fats)
+        )
+
+        state.polyunsaturatedFats.TextField(
+            label = stringResource(Res.string.nutriment_polyunsaturated_fats)
+        )
+
+        state.omega3.TextField(
+            label = stringResource(Res.string.nutriment_omega_3)
+        )
+
+        state.omega6.TextField(
+            label = stringResource(Res.string.nutriment_omega_6)
+        )
+
+        Text(
+            text = stringResource(Res.string.headline_other),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        state.sugars.TextField(
+            label = stringResource(Res.string.nutriment_sugars)
+        )
+
+        state.salt.TextField(
+            label = stringResource(Res.string.nutriment_salt)
+        )
+
+        state.fiber.TextField(
+            label = stringResource(Res.string.nutriment_fiber)
+        )
+
+        state.cholesterolMilli.TextField(
+            label = stringResource(Res.string.nutriment_cholesterol),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.caffeineMilli.TextField(
+            label = stringResource(Res.string.nutriment_caffeine),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        Text(
+            text = stringResource(Res.string.headline_vitamins),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        state.vitaminAMicro.TextField(
+            label = stringResource(Res.string.vitamin_a),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.vitaminB1Milli.TextField(
+            label = stringResource(Res.string.vitamin_b1),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminB2Milli.TextField(
+            label = stringResource(Res.string.vitamin_b2),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminB3Milli.TextField(
+            label = stringResource(Res.string.vitamin_b3),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminB5Milli.TextField(
+            label = stringResource(Res.string.vitamin_b5),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminB6Milli.TextField(
+            label = stringResource(Res.string.vitamin_b6),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminB7Micro.TextField(
+            label = stringResource(Res.string.vitamin_b7),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.vitaminB9Micro.TextField(
+            label = stringResource(Res.string.vitamin_b9),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.vitaminB12Micro.TextField(
+            label = stringResource(Res.string.vitamin_b12),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.vitaminCMilli.TextField(
+            label = stringResource(Res.string.vitamin_c),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminDMicro.TextField(
+            label = stringResource(Res.string.vitamin_d),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.vitaminEMilli.TextField(
+            label = stringResource(Res.string.vitamin_e),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminKMicro.TextField(
+            label = stringResource(Res.string.vitamin_k),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        Text(
+            text = stringResource(Res.string.headline_minerals),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        state.manganeseMilli.TextField(
+            label = stringResource(Res.string.mineral_manganese),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.magnesiumMilli.TextField(
+            label = stringResource(Res.string.mineral_magnesium),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.potassiumMilli.TextField(
+            label = stringResource(Res.string.mineral_potassium),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.calciumMilli.TextField(
+            label = stringResource(Res.string.mineral_calcium),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.copperMilli.TextField(
+            label = stringResource(Res.string.mineral_copper),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.zincMilli.TextField(
+            label = stringResource(Res.string.mineral_zinc),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.sodiumMilli.TextField(
+            label = stringResource(Res.string.mineral_sodium),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.ironMilli.TextField(
+            label = stringResource(Res.string.mineral_iron),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.phosphorusMilli.TextField(
+            label = stringResource(Res.string.mineral_phosphorus),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.seleniumMicro.TextField(
+            label = stringResource(Res.string.mineral_selenium),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.iodineMicro.TextField(
+            label = stringResource(Res.string.mineral_iodine),
+            suffix = stringResource(Res.string.unit_microgram_short),
+            imeAction = ImeAction.Done
         )
     }
 }
 
 @Composable
-private fun rememberInputState(
-    initialValue: String,
-    onValueChange: (String) -> Unit
-): TextFieldState {
-    val onValueChange by rememberUpdatedState(onValueChange)
-
-    return rememberTextFieldState(initialValue).also {
-        LaunchedEffect(it) {
-            snapshotFlow { it.text.toString() }
-                .drop(1)
-                .collectLatest { onValueChange(it) }
+internal inline fun <reified T> FormField<T, ProductFormFieldError>.TextField(
+    label: String,
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    required: Boolean = false,
+    imeAction: ImeAction? = null,
+    suffix: String? = stringResource(Res.string.unit_gram_short)
+) {
+    TextField(
+        state = textFieldState,
+        modifier = modifier,
+        label = { Text(label) },
+        supportingText = {
+            val error = this.error
+            if (error != null) {
+                Text(error.stringResource())
+            } else if (required) {
+                Text(stringResource(Res.string.neutral_required))
+            }
+        },
+        suffix = suffix?.let { { Text(suffix) } },
+        isError = error != null,
+        keyboardOptions = if (T::class == Float::class) {
+            KeyboardOptions(
+                keyboardType = KeyboardType.Decimal,
+                imeAction = imeAction ?: ImeAction.Next
+            )
+        } else {
+            KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = imeAction ?: ImeAction.Next
+            )
         }
-    }
-}
-
-@Composable
-private fun RequiredLabel(modifier: Modifier = Modifier) {
-    Text(
-        text = "* " + stringResource(Res.string.neutral_required),
-        modifier = modifier
     )
+}
+
+@Composable
+private fun ValuesPerPicker(
+    measurement: Measurement,
+    onValueChange: (Measurement) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    val possibleValues = remember {
+        listOf(
+            Measurement.Gram(100f),
+            Measurement.Serving(1f),
+            Measurement.Package(1f)
+        )
+    }
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(stringResource(Res.string.headline_values_per))
+
+        Box {
+            TextButton(
+                onClick = { expanded = true },
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                )
+            ) {
+                Text(measurement.stringResource())
+                Spacer(Modifier.width(8.dp))
+
+                val animatedRotation by animateFloatAsState(
+                    targetValue = if (expanded) 90f else 0f,
+                    animationSpec = tween(150)
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                    contentDescription = null,
+                    modifier = Modifier.graphicsLayer {
+                        rotationZ = animatedRotation
+                    }
+                )
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                possibleValues.forEach {
+                    DropdownMenuItem(
+                        text = { Text(it.stringResource()) },
+                        onClick = {
+                            expanded = false
+                            onValueChange(it)
+                        }
+                    )
+                }
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.product.data
+package com.maksimowiczm.foodyou.feature.product.domain
 
 import com.maksimowiczm.foodyou.core.data.model.Minerals
 import com.maksimowiczm.foodyou.core.data.model.Nutrients

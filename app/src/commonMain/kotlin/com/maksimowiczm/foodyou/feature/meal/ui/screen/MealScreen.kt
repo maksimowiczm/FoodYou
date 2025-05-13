@@ -580,9 +580,7 @@ private fun SharedTransitionScope.MealScreenFloatingActionButton(
                     ) {
                         Row {
                             Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(Res.string.action_add_food)
-                            )
+                            Text(stringResource(Res.string.action_add_food))
                         }
                     }
                 }
