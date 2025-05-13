@@ -1,8 +1,11 @@
 package com.maksimowiczm.foodyou.feature.product.domain
 
+import kotlinx.serialization.Serializable
+
 /**
  * Represents the nutritional facts of a 100 g of a product.
  */
+@Serializable
 data class RemoteNutritionFacts(
     // Macronutrients
     val proteins: Float?,

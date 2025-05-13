@@ -9,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import com.maksimowiczm.foodyou.feature.product.ui.create.CreateProductApp
 import com.maksimowiczm.foodyou.feature.product.ui.create.CreateProductEvent
-import com.maksimowiczm.foodyou.feature.product.ui.create.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.product.ui.create.CreateProductScreenViewModel
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
@@ -50,7 +50,7 @@ private fun CreateProductScreen(
         }
     }
 
-    CreateProductScreen(
+    CreateProductApp(
         onBack = onBack,
         onCreate = viewModel::onCreate,
         modifier = modifier

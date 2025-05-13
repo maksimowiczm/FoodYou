@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.feature.product.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class RemoteProduct(
     val name: String?,
     val brand: String?,
