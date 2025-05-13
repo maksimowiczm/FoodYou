@@ -2,16 +2,26 @@ package com.maksimowiczm.foodyou.feature.product
 
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreen
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun DownloadProductScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+fun DownloadProductScreen(
+    onBack: () -> Unit,
+    onDownload: (RemoteProduct) -> Unit,
+    modifier: Modifier = Modifier
+) {
     DownloadProductScreen(
         onBack = onBack,
+        onDownload = onDownload,
         modifier = modifier,
         viewModel = koinViewModel()
     )
@@ -20,12 +30,20 @@ fun DownloadProductScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 private fun DownloadProductScreen(
     onBack: () -> Unit,
+    onDownload: (RemoteProduct) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DownloadProductScreenViewModel = koinViewModel()
 ) {
     val isMutating = viewModel.isMutating.collectAsStateWithLifecycle().value
     val error = viewModel.error.collectAsStateWithLifecycle().value
     val textFieldState = rememberTextFieldState()
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner, viewModel) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.productEvent.collect(onDownload)
+        }
+    }
 
     DownloadProductScreen(
         isMutating = isMutating,

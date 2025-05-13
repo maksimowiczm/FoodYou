@@ -2,9 +2,11 @@ package com.maksimowiczm.foodyou.feature.product.ui.download
 
 import androidx.lifecycle.ViewModel
 import com.maksimowiczm.foodyou.core.ext.launch
+import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProductRequestFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 
 internal class DownloadProductScreenViewModel(
     private val requestFactory: RemoteProductRequestFactory
@@ -14,6 +16,9 @@ internal class DownloadProductScreenViewModel(
 
     private val _error = MutableStateFlow<DownloadError?>(null)
     val error = _error.asStateFlow()
+
+    private val _productEvent = MutableStateFlow<RemoteProduct?>(null)
+    val productEvent = _productEvent.filterNotNull()
 
     fun onDownload(text: String) = withMutateGuard {
         _error.emit(null)
@@ -37,7 +42,7 @@ internal class DownloadProductScreenViewModel(
             return@withMutateGuard
         }
 
-        // TODO handle product
+        _productEvent.emit(product)
     }
 
     private fun withMutateGuard(block: suspend () -> Unit) = launch {
