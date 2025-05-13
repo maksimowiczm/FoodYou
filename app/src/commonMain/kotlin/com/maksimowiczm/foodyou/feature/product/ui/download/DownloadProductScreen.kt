@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.product.ui.download
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
@@ -18,6 +19,7 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -46,7 +48,7 @@ import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun DownloadProductScreen(
     isMutating: Boolean,
@@ -67,24 +69,27 @@ internal fun DownloadProductScreen(
             )
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = onDownload
+            AnimatedVisibility(
+                visible = !isMutating
             ) {
-                Row {
-                    Icon(
-                        imageVector = Icons.Default.Download,
-                        contentDescription = null
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(Res.string.action_download))
+                ExtendedFloatingActionButton(
+                    onClick = onDownload,
+                    modifier = Modifier.testTag(DownloadProductScreenTestTags.FAB)
+                ) {
+                    Row {
+                        Icon(
+                            imageVector = Icons.Default.Download,
+                            contentDescription = null
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(Res.string.action_download))
+                    }
                 }
             }
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = paddingValues
         ) {
@@ -107,6 +112,7 @@ internal fun DownloadProductScreen(
             item {
                 Text(
                     text = stringResource(Res.string.description_download_product),
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -116,7 +122,9 @@ internal fun DownloadProductScreen(
                     state = textFieldState,
                     modifier = Modifier
                         .testTag(DownloadProductScreenTestTags.TEXT_FIELD)
+                        .padding(horizontal = 16.dp)
                         .fillMaxWidth(),
+                    enabled = !isMutating,
                     supportingText = {
                         Text(stringResource(Res.string.description_download_product_hint))
                     },
@@ -126,6 +134,7 @@ internal fun DownloadProductScreen(
 
             item {
                 Column(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
@@ -145,7 +154,8 @@ internal fun DownloadProductScreen(
             item {
                 ActionChips(
                     isMutating = isMutating,
-                    onPaste = { textFieldState.setTextAndPlaceCursorAtEnd(it) }
+                    onPaste = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
         }
