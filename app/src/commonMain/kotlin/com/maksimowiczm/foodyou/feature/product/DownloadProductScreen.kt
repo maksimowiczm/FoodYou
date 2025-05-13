@@ -9,10 +9,7 @@ import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScree
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun DownloadProductScreen(
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun DownloadProductScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     DownloadProductScreen(
         onBack = onBack,
         modifier = modifier,
