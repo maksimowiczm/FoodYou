@@ -16,7 +16,11 @@ import org.koin.dsl.module
 val productModule = module {
     // Open Food Facts
     factoryOf(::OpenFoodFactsRemoteDataSource)
-    factoryOf(::OpenFoodFactsFacade)
+    factory {
+        OpenFoodFactsFacade(
+            remoteDataSource = get()
+        )
+    }
 
     factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
 

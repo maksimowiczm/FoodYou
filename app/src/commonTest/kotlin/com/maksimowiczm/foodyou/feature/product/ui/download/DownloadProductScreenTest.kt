@@ -11,6 +11,7 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.ERROR_CARD
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.FAB
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.OPEN_FOOD_FACTS_CHIP
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.PASTE_URL_CHIP
@@ -25,6 +26,7 @@ class DownloadProductScreenTest {
     @Composable
     private fun DownloadProductScreen(
         modifier: Modifier = Modifier,
+        error: DownloadError? = null,
         isMutating: Boolean = false,
         textFieldState: TextFieldState = rememberTextFieldState(),
         onBack: () -> Unit = {},
@@ -32,6 +34,7 @@ class DownloadProductScreenTest {
     ) {
         com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreen(
             isMutating = isMutating,
+            error = error,
             textFieldState = textFieldState,
             onBack = onBack,
             onDownload = onDownload,
@@ -46,6 +49,7 @@ class DownloadProductScreenTest {
         }
 
         onNodeWithTag(PROGRESS_INDICATOR).assertDoesNotExist()
+        onNodeWithTag(ERROR_CARD).assertDoesNotExist()
         onNodeWithTag(TEXT_FIELD).assertIsDisplayed()
         onNodeWithTag(FAB).assertIsDisplayed()
         onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsEnabled()
@@ -59,9 +63,26 @@ class DownloadProductScreenTest {
         }
 
         onNodeWithTag(PROGRESS_INDICATOR).assertIsDisplayed()
+        onNodeWithTag(ERROR_CARD).assertDoesNotExist()
         onNodeWithTag(TEXT_FIELD).assertExists().assertIsNotEnabled()
         onNodeWithTag(FAB).assertIsNotDisplayed()
         onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsNotEnabled()
+        onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
+    }
+
+    @Test
+    fun errorState() = runComposeUiTest {
+        setContent {
+            DownloadProductScreen(
+                error = DownloadError.Custom("Error message")
+            )
+        }
+
+        onNodeWithTag(PROGRESS_INDICATOR).assertDoesNotExist()
+        onNodeWithTag(ERROR_CARD).assertIsDisplayed()
+        onNodeWithTag(TEXT_FIELD).assertExists().assertIsEnabled()
+        onNodeWithTag(FAB).assertIsDisplayed()
+        onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsEnabled()
         onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
     }
 }

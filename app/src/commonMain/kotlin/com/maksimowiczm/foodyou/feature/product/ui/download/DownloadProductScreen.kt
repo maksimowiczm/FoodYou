@@ -52,6 +52,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun DownloadProductScreen(
     isMutating: Boolean,
+    error: DownloadError?,
     textFieldState: TextFieldState,
     onBack: () -> Unit,
     onDownload: () -> Unit,
@@ -130,6 +131,18 @@ internal fun DownloadProductScreen(
                     },
                     placeholder = { Text(stringResource(Res.string.product_link)) }
                 )
+            }
+
+            item {
+                if (error != null) {
+                    DownloadErrorCard(
+                        error = error,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .testTag(DownloadProductScreenTestTags.ERROR_CARD)
+                    )
+                }
             }
 
             item {

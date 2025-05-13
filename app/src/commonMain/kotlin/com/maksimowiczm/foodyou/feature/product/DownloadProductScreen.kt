@@ -24,10 +24,12 @@ private fun DownloadProductScreen(
     viewModel: DownloadProductScreenViewModel = koinViewModel()
 ) {
     val isMutating = viewModel.isMutating.collectAsStateWithLifecycle().value
+    val error = viewModel.error.collectAsStateWithLifecycle().value
     val textFieldState = rememberTextFieldState()
 
     DownloadProductScreen(
         isMutating = isMutating,
+        error = error,
         textFieldState = textFieldState,
         onBack = onBack,
         onDownload = { viewModel.onDownload(textFieldState.text.toString()) },
