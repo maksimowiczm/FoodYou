@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -94,7 +95,9 @@ internal fun DownloadProductScreen(
                     transitionSpec = { fadeIn() togetherWith fadeOut() }
                 ) {
                     if (it) {
-                        LinearProgressIndicator()
+                        LinearProgressIndicator(
+                            Modifier.testTag(DownloadProductScreenTestTags.PROGRESS_INDICATOR)
+                        )
                     } else {
                         Spacer(Modifier.height(4.dp))
                     }
@@ -103,7 +106,7 @@ internal fun DownloadProductScreen(
 
             item {
                 Text(
-                    text = "Paste a link to a food product, and automatically fetch nutrition facts and product details.",
+                    text = stringResource(Res.string.description_download_product),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -111,9 +114,13 @@ internal fun DownloadProductScreen(
             item {
                 OutlinedTextField(
                     state = textFieldState,
-                    modifier = Modifier.fillMaxWidth(),
-                    supportingText = { Text("You can paste any text. First URL will be used.") },
-                    placeholder = { Text("Product link") }
+                    modifier = Modifier
+                        .testTag(DownloadProductScreenTestTags.TEXT_FIELD)
+                        .fillMaxWidth(),
+                    supportingText = {
+                        Text(stringResource(Res.string.description_download_product_hint))
+                    },
+                    placeholder = { Text(stringResource(Res.string.product_link)) }
                 )
             }
 
@@ -122,7 +129,7 @@ internal fun DownloadProductScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "Supported URLs",
+                        text = stringResource(Res.string.headline_supported_URLs),
                         style = MaterialTheme.typography.labelMedium
                     )
 

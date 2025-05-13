@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import foodyou.app.generated.resources.Res
@@ -59,9 +60,8 @@ private fun ActionChips(
                     onPaste(text)
                 }
             },
-            label = {
-                Text(stringResource(Res.string.action_paste_url))
-            },
+            modifier = Modifier.testTag(DownloadProductScreenTestTags.PASTE_URL_CHIP),
+            label = { Text(stringResource(Res.string.action_paste_url)) },
             enabled = !isMutating,
             leadingIcon = {
                 Icon(
@@ -73,6 +73,7 @@ private fun ActionChips(
         )
         AssistChip(
             onClick = onOpenFoodFacts,
+            modifier = Modifier.testTag(DownloadProductScreenTestTags.OPEN_FOOD_FACTS_CHIP),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,

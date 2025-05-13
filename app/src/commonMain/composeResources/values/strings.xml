@@ -52,6 +52,7 @@
     <string name="headline_other">Other</string>
     <string name="headline_vitamins">Vitamins</string>
     <string name="headline_minerals">Minerals</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">Supported URLs</string>
 
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
 
@@ -236,6 +237,8 @@
     <string name="description_browse_open_food_facts">Open Food Facts website will be opened in your browser. You can search for the products there and copy the link to the product you want to add.</string>
     <string name="description_changelog">See what's new in the app</string>
     <string name="description_home_settings">Customize your home page</string>
+    <string name="description_download_product">Paste a link to a food product, and automatically fetch nutrition facts and product details.</string>
+    <string name="description_download_product_hint">You can paste any text. First URL will be used.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
