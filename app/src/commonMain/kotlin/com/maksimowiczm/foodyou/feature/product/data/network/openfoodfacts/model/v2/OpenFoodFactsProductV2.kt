@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.model.v2
 
-import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 import kotlin.Float
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -21,21 +20,21 @@ private object FloatSerializer : JsonTransformingSerializer<Float>(serializer())
 @Serializable
 internal data class OpenFoodFactsProductV2(
     @SerialName("product_name")
-    override val name: String? = null,
+    val name: String? = null,
     @SerialName("brands")
-    val brands: String? = null,
+    val brand: String? = null,
     @SerialName("code")
-    val code: String? = null,
-    @SerialName("nutriments")
-    val nutrients: OpenFoodFactsNutrients? = null,
+    val barcode: String? = null,
     @Serializable(with = FloatSerializer::class)
     @SerialName("product_quantity")
-    val packageQuantity: Float? = null,
+    val packageWeight: Float? = null,
     @SerialName("product_quantity_unit")
     val packageQuantityUnit: String? = null,
     @Serializable(with = FloatSerializer::class)
     @SerialName("serving_quantity")
-    val servingQuantity: Float? = null,
+    val servingWeight: Float? = null,
     @SerialName("serving_quantity_unit")
-    val servingQuantityUnit: String? = null
-) : RemoteProduct
+    val servingQuantityUnit: String? = null,
+    @SerialName("nutriments")
+    val nutritionFacts: OpenFoodFactsNutrients? = null
+)

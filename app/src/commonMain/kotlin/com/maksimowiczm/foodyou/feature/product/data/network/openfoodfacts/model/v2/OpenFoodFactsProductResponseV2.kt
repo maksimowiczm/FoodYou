@@ -5,8 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class OpenFoodFactsProductResponseV2(
-    @SerialName("code")
-    private val code: String,
     @SerialName("product")
     val product: OpenFoodFactsProductV2
 )
