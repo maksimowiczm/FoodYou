@@ -1,7 +1,7 @@
-package com.maksimowiczm.foodyou.feature.productdownload.domain
+package com.maksimowiczm.foodyou.feature.product.domain
 
-import com.maksimowiczm.foodyou.feature.productdownload.data.network.openfoodfacts.OpenFoodFactsFacade
-import com.maksimowiczm.foodyou.feature.productdownload.data.network.openfoodfacts.OpenFoodFactsProductRequest
+import com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.OpenFoodFactsFacade
+import com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.OpenFoodFactsProductRequest
 
 interface RemoteProductRequestFactory {
     fun createFromUrl(url: String): RemoteProductRequest?

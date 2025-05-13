@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productdownload.domain
+package com.maksimowiczm.foodyou.feature.product.domain
 
 interface RemoteProductRequest {
     suspend fun getProduct(): Result<RemoteProduct>

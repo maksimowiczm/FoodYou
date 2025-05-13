@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productdownload.ui
+package com.maksimowiczm.foodyou.feature.product.ui.download
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn

@@ -1,6 +1,6 @@
-package com.maksimowiczm.foodyou.feature.productdownload.data.network.openfoodfacts
+package com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts
 
-import com.maksimowiczm.foodyou.feature.productdownload.domain.RemoteProductMatcher
+import com.maksimowiczm.foodyou.feature.product.domain.RemoteProductMatcher
 
 internal class OpenFoodFactsFacade(
     val remoteDataSource: OpenFoodFactsRemoteDataSource,

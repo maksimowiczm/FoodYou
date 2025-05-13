@@ -1,10 +1,10 @@
-package com.maksimowiczm.foodyou.feature.productdownload.data.network.openfoodfacts
+package com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts
 
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.BuildConfig
-import com.maksimowiczm.foodyou.feature.productdownload.data.ProductNotFoundException
-import com.maksimowiczm.foodyou.feature.productdownload.data.network.openfoodfacts.model.v2.OpenFoodFactsProductResponseV2
-import com.maksimowiczm.foodyou.feature.productdownload.data.network.openfoodfacts.model.v2.OpenFoodFactsProductV2
+import com.maksimowiczm.foodyou.feature.product.data.ProductNotFoundException
+import com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.model.v2.OpenFoodFactsProductResponseV2
+import com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.model.v2.OpenFoodFactsProductV2
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout

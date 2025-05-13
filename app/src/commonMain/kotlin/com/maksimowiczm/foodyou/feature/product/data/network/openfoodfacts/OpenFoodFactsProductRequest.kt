@@ -1,7 +1,7 @@
-package com.maksimowiczm.foodyou.feature.productdownload.data.network.openfoodfacts
+package com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts
 
-import com.maksimowiczm.foodyou.feature.productdownload.domain.RemoteProduct
-import com.maksimowiczm.foodyou.feature.productdownload.domain.RemoteProductRequest
+import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
+import com.maksimowiczm.foodyou.feature.product.domain.RemoteProductRequest
 
 internal class OpenFoodFactsProductRequest(
     private val dataSource: OpenFoodFactsRemoteDataSource,

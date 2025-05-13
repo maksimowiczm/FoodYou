@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.productdownload.ui
+package com.maksimowiczm.foodyou.feature.product.ui.download
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
