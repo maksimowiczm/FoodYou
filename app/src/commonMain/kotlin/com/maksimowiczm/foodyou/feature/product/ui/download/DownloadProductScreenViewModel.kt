@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.product.ui.download
 
 import androidx.lifecycle.ViewModel
 import com.maksimowiczm.foodyou.core.ext.launch
+import com.maksimowiczm.foodyou.feature.product.data.ProductNotFoundException
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProductRequestFactory
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +39,11 @@ internal class DownloadProductScreenViewModel(
         }
 
         val product = request.execute().getOrElse {
-            _error.emit(DownloadError.Custom(it.message?.toString()))
+            when (it) {
+                is ProductNotFoundException -> _error.emit(DownloadError.ProductNotFound)
+                else -> _error.emit(DownloadError.Custom(it.message?.toString()))
+            }
+
             return@withMutateGuard
         }
 

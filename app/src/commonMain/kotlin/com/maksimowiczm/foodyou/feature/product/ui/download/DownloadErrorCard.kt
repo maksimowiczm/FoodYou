@@ -22,6 +22,7 @@ internal fun DownloadErrorCard(error: DownloadError, modifier: Modifier = Modifi
     val errorText = when (error) {
         DownloadError.URLNotFound -> stringResource(Res.string.error_url_not_found)
         DownloadError.URLNotSupported -> stringResource(Res.string.error_url_is_not_supported)
+        DownloadError.ProductNotFound -> stringResource(Res.string.error_product_not_found)
         is DownloadError.Custom if (error.message != null) -> error.message
         is DownloadError.Custom -> null
     }
