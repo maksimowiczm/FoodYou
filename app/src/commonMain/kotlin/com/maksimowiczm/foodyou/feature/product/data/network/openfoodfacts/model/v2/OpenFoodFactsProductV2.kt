@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.model.v2
 
-import com.maksimowiczm.foodyou.core.domain.model.openfoodfacts.OpenFoodFactsNutrients
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 import kotlin.Float
 import kotlinx.serialization.SerialName
