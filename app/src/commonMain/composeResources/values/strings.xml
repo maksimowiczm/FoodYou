@@ -177,6 +177,7 @@
     <string name="action_choose_other_measurement">Choose other measurement</string>
     <string name="action_edit_your_home_page">Edit your home page</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Show more</string>
+    <string name="action_download_product">Download product</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
