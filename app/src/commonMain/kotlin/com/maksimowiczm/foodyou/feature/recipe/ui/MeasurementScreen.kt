@@ -31,7 +31,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -49,7 +48,7 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.Food
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
-import com.maksimowiczm.foodyou.core.ui.component.NutrientsList
+import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
 import com.maksimowiczm.foodyou.core.ui.ext.firstVisibleItemAlpha
 import com.maksimowiczm.foodyou.core.ui.res.Saver
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.WeightChips
@@ -58,13 +57,8 @@ import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementForm
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.rememberMeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.toEnum
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.value
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_cancel
-import foodyou.app.generated.resources.action_delete
-import foodyou.app.generated.resources.action_edit
-import foodyou.app.generated.resources.action_go_back
-import foodyou.app.generated.resources.description_delete_product
-import foodyou.app.generated.resources.headline_delete_product
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -212,24 +206,22 @@ internal fun MeasurementScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     CaloriesProgressIndicator(
-                        proteins = food.nutrients.proteins.value,
-                        carbohydrates = food.nutrients.carbohydrates.value,
-                        fats = food.nutrients.fats.value,
+                        proteins = food.nutritionFacts.proteins.value,
+                        carbohydrates = food.nutritionFacts.carbohydrates.value,
+                        fats = food.nutritionFacts.fats.value,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(16.dp)
                             .padding(horizontal = 16.dp)
                     )
 
-                    val nutrients by remember(chipsState.selectedFilter, food) {
-                        derivedStateOf {
-                            val weight = chipsState.selectedFilter.weight(food) ?: 100f
-                            food.nutrients * weight / 100f
-                        }
+                    val nutritionFacts = remember(chipsState.selectedFilter, food) {
+                        val weight = chipsState.selectedFilter.weight(food) ?: 100f
+                        food.nutritionFacts * weight / 100f
                     }
 
-                    NutrientsList(
-                        nutrients = nutrients,
+                    NutritionFactsList(
+                        facts = nutritionFacts,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }

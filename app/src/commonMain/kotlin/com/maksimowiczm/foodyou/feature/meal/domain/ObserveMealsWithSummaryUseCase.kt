@@ -54,19 +54,19 @@ internal class ObserveMealsWithSummaryUseCaseImpl(
 
                 val calories = measurements.mapNotNull {
                     val weight = it.weight ?: return@mapNotNull null
-                    it.food.nutrients.calories * weight / 100f
+                    it.food.nutritionFacts.calories * weight / 100f
                 }.sum()
                 val proteins = measurements.mapNotNull {
                     val weight = it.weight ?: return@mapNotNull null
-                    it.food.nutrients.proteins * weight / 100f
+                    it.food.nutritionFacts.proteins * weight / 100f
                 }.sum()
                 val carbohydrates = measurements.mapNotNull {
                     val weight = it.weight ?: return@mapNotNull null
-                    it.food.nutrients.carbohydrates * weight / 100f
+                    it.food.nutritionFacts.carbohydrates * weight / 100f
                 }.sum()
                 val fats = measurements.mapNotNull {
                     val weight = it.weight ?: return@mapNotNull null
-                    it.food.nutrients.fats * weight / 100f
+                    it.food.nutritionFacts.fats * weight / 100f
                 }.sum()
 
                 MealWithSummary(

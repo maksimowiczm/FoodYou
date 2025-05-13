@@ -3,50 +3,23 @@ package com.maksimowiczm.foodyou.core.ui.simpleform
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @Stable
 class FormField<T, E>(
     val textFieldState: TextFieldState,
-    initialValue: T,
-    initialError: E?,
-    coroutineScope: CoroutineScope,
-    private val parser: (String) -> ParseResult<T, E>,
-    private val validator: (T) -> E?
+    valueState: MutableState<T>,
+    errorState: MutableState<E?>
 ) {
-    var value by mutableStateOf(initialValue)
-        private set
+    val value by valueState
 
-    var error by mutableStateOf<E?>(initialError)
-        private set
-
-    init {
-        coroutineScope.launch {
-            snapshotFlow { textFieldState.text }.collectLatest {
-                val result = parser(it.toString())
-                when (result) {
-                    is ParseResult.Success -> {
-                        value = result.value
-                        error = validator(result.value)
-                    }
-
-                    is ParseResult.Failure -> {
-                        error = result.error
-                    }
-                }
-            }
-        }
-    }
+    val error by errorState
 }
 
 @Composable
@@ -55,38 +28,31 @@ fun <T, E> rememberFormField(
     parser: (String) -> ParseResult<T, E>,
     validator: (T) -> E? = { null },
     initialError: E? = null,
-    textFieldState: TextFieldState = rememberTextFieldState(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
-): FormField<T, E> = rememberSaveable(
-    textFieldState,
-    initialValue,
-    initialError,
-    saver = Saver(
-        save = {
-            arrayListOf<Any?>(
-                it.value,
-                it.error
-            )
-        },
-        restore = {
-            @Suppress("UNCHECKED_CAST")
-            FormField(
-                textFieldState = textFieldState,
-                initialValue = it[0] as T,
-                initialError = it[1] as E?,
-                coroutineScope = coroutineScope,
-                parser = parser,
-                validator = validator
-            )
+    textFieldState: TextFieldState = rememberTextFieldState()
+): FormField<T, E> {
+    var value = rememberSaveable { mutableStateOf(initialValue) }
+    var error = rememberSaveable { mutableStateOf(initialError) }
+
+    LaunchedEffect(textFieldState.text, parser, validator) {
+        val text = textFieldState.text.toString()
+        val result = parser(text)
+        when (result) {
+            is ParseResult.Success -> {
+                value.value = result.value
+                error.value = validator(result.value)
+            }
+
+            is ParseResult.Failure -> {
+                error.value = result.error
+            }
         }
-    )
-) {
-    FormField(
-        textFieldState = textFieldState,
-        initialValue = initialValue,
-        initialError = initialError,
-        coroutineScope = coroutineScope,
-        parser = parser,
-        validator = validator
-    )
+    }
+
+    return remember(textFieldState, value, error) {
+        FormField(
+            textFieldState = textFieldState,
+            valueState = value,
+            errorState = error
+        )
+    }
 }

@@ -14,11 +14,22 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_2_0,
             v2_1_1,
             v2_1_0,
             v2_0_0
         )
+
+    val next = Version.next(
+        newFeatures = listOf(
+            "Add new nutrition facts, such as caffeine, vitamins, minerals, and more"
+        ),
+        changes = listOf(),
+        bugFixes = listOf(),
+        translations = listOf(),
+        notes = null
+    )
 
     val v2_2_0 = Version(
         version = "2.2.0",

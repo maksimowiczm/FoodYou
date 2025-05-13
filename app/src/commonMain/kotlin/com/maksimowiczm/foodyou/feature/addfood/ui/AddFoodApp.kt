@@ -307,7 +307,7 @@ private fun AddFoodNavHost(
                 onBack = {
                     navController.popBackStack<CreateProduct>(inclusive = true)
                 },
-                onProductCreate = { productId ->
+                onCreate = { productId ->
                     navController.navigate(MeasureFood(productId = productId)) {
                         launchSingleTop = true
 
@@ -326,7 +326,7 @@ private fun AddFoodNavHost(
                 onBack = {
                     navController.popBackStack<UpdateProduct>(inclusive = true)
                 },
-                onProductUpdate = {
+                onUpdate = {
                     navController.navigate(MeasureFood(productId)) {
                         launchSingleTop = true
 

@@ -248,7 +248,7 @@ internal fun RecipeApp(
                 onBack = {
                     navController.popBackStack<CreateProduct>(inclusive = true)
                 },
-                onProductCreate = {
+                onCreate = {
                     navController.navigate(MeasureIngredient(it)) {
                         launchSingleTop = true
                     }
@@ -263,7 +263,7 @@ internal fun RecipeApp(
                 onBack = {
                     navController.popBackStack<UpdateProduct>(inclusive = true)
                 },
-                onProductUpdate = {
+                onUpdate = {
                     navController.popBackStack<UpdateProduct>(inclusive = true)
                 }
             )

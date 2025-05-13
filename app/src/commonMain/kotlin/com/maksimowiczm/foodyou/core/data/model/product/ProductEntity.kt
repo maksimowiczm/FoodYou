@@ -3,7 +3,9 @@ package com.maksimowiczm.foodyou.core.data.model.product
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.maksimowiczm.foodyou.core.data.model.Minerals
 import com.maksimowiczm.foodyou.core.data.model.Nutrients
+import com.maksimowiczm.foodyou.core.data.model.Vitamins
 
 @Entity
 data class ProductEntity(
@@ -14,6 +16,10 @@ data class ProductEntity(
     val barcode: String?,
     @Embedded
     val nutrients: Nutrients,
+    @Embedded
+    val vitamins: Vitamins,
+    @Embedded
+    val minerals: Minerals,
     val packageWeight: Float?,
     val servingWeight: Float?,
     val productSource: ProductSource

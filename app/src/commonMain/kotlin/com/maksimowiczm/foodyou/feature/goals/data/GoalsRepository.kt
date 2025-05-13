@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.core.data.model.diaryday.DiaryDay as DbDiaryDay
 import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
-import com.maksimowiczm.foodyou.core.domain.mapper.NutrientsMapper
+import com.maksimowiczm.foodyou.core.domain.mapper.NutritionFactsMapper
 import com.maksimowiczm.foodyou.core.domain.model.DailyGoals
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
@@ -105,7 +105,11 @@ private fun List<DbDiaryDay>.toFoods(): Map<Meal, List<Food>> = groupBy {
             name = it.foodName,
             packageWeight = it.packageWeight?.let { PortionWeight.Package(it) },
             servingWeight = it.servingWeight?.let { PortionWeight.Serving(it) },
-            nutrients = with(NutrientsMapper) { it.nutrients.toModel() },
+            nutrients = NutritionFactsMapper.toNutritionFacts(
+                it.nutrients,
+                it.vitamins,
+                it.minerals
+            ),
             measurement = with(MeasurementMapper) { it.toMeasurement() }
         )
     }

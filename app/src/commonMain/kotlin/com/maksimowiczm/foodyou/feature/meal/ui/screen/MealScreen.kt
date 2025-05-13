@@ -401,7 +401,7 @@ private fun SharedTransitionScope.MealScreenTopBar(
 
     val caloriesLabel = @Composable {
         val calories = foods
-            .sumOf { it.food.nutrients.calories.value * it.weight!! / 100f }
+            .sumOf { it.food.nutritionFacts.calories.value * it.weight!! / 100f }
             .roundToInt()
 
         Text(
@@ -415,7 +415,7 @@ private fun SharedTransitionScope.MealScreenTopBar(
 
     val proteinsLabel = @Composable {
         val proteins = foods
-            .sumOf { it.food.nutrients.proteins.value * it.weight!! / 100f }
+            .sumOf { it.food.nutritionFacts.proteins.value * it.weight!! / 100f }
             .roundToInt()
 
         Text(
@@ -429,7 +429,7 @@ private fun SharedTransitionScope.MealScreenTopBar(
 
     val carbohydratesLabel = @Composable {
         val carbohydrates = foods
-            .sumOf { it.food.nutrients.carbohydrates.value * it.weight!! / 100f }
+            .sumOf { it.food.nutritionFacts.carbohydrates.value * it.weight!! / 100f }
             .roundToInt()
 
         Text(
@@ -443,7 +443,7 @@ private fun SharedTransitionScope.MealScreenTopBar(
 
     val fatsLabel = @Composable {
         val fats = foods
-            .sumOf { it.food.nutrients.fats.value * it.weight!! / 100f }
+            .sumOf { it.food.nutritionFacts.fats.value * it.weight!! / 100f }
             .roundToInt()
 
         Text(
@@ -580,9 +580,7 @@ private fun SharedTransitionScope.MealScreenFloatingActionButton(
                     ) {
                         Row {
                             Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(Res.string.action_add_food)
-                            )
+                            Text(stringResource(Res.string.action_add_food))
                         }
                     }
                 }
@@ -686,7 +684,7 @@ private fun DeleteDialog(onDismissRequest: () -> Unit, onDeleteEntry: () -> Unit
 
 @Composable
 private fun FoodListItem(food: FoodWithMeasurement, modifier: Modifier = Modifier) {
-    val nutrients = food.food.nutrients
+    val nutrients = food.food.nutritionFacts
     val weight = food.weight!!
 
     ListItem(
@@ -755,6 +753,6 @@ private val FoodWithMeasurement.measurementString: String
 
 private val FoodWithMeasurement.caloriesString: String
     @Composable get() = weight?.let {
-        val value = (it * food.nutrients.calories.value / 100).roundToInt()
+        val value = (it * food.nutritionFacts.calories.value / 100).roundToInt()
         "$value " + stringResource(Res.string.unit_kcal)
     } ?: error("Food weight is unknown")

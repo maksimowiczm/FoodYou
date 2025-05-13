@@ -80,7 +80,7 @@ private fun CaloriesNavHost(
                 onBack = {
                     navController.popBackStack<UpdateProduct>(inclusive = true)
                 },
-                onProductUpdate = {
+                onUpdate = {
                     navController.popBackStack<UpdateProduct>(inclusive = true)
                 }
             )

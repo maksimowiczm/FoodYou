@@ -4,7 +4,7 @@ sealed interface Food {
     val id: FoodId
     val name: String
     val brand: String?
-    val nutrients: Nutrients
+    val nutritionFacts: NutritionFacts
     val packageWeight: PortionWeight.Package?
     val servingWeight: PortionWeight.Serving?
 }
