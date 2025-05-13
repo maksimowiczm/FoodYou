@@ -13,9 +13,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun DownloadErrorCard(error: DownloadError, modifier: Modifier = Modifier) {
+internal fun DownloadErrorCard(error: DownloadError, modifier: Modifier = Modifier) {
+    val errorText = when (error) {
+        DownloadError.URLNotFound -> stringResource(Res.string.error_url_not_found)
+        DownloadError.URLNotSupported -> stringResource(Res.string.error_url_is_not_supported)
+        is DownloadError.Custom if (error.message != null) -> error.message
+        is DownloadError.Custom -> null
+    }
+
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -32,16 +42,15 @@ fun DownloadErrorCard(error: DownloadError, modifier: Modifier = Modifier) {
                 contentDescription = null
             )
             Text(
-                text = "Failed to download product",
+                text = stringResource(Res.string.error_failed_to_download_product),
                 style = MaterialTheme.typography.titleMedium
             )
-            Text(
-                text = when (error) {
-                    DownloadError.URLNotFound -> "URL not found"
-                    DownloadError.URLNotSupported -> "URL is not supported"
-                    is DownloadError.Custom -> error.message
-                }
-            )
+            errorText?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
     }
 }

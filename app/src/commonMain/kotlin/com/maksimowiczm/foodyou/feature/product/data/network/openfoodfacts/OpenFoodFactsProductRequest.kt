@@ -7,5 +7,5 @@ internal class OpenFoodFactsProductRequest(
     private val dataSource: OpenFoodFactsRemoteDataSource,
     private val barcode: String
 ) : RemoteProductRequest {
-    override suspend fun getProduct(): Result<RemoteProduct> = dataSource.getProduct(barcode)
+    override suspend fun execute(): Result<RemoteProduct> = dataSource.getProduct(barcode)
 }

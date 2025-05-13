@@ -32,8 +32,8 @@ internal class DownloadProductScreenViewModel(
             return@withMutateGuard
         }
 
-        val product = request.getProduct().getOrElse {
-            // TODO handle error
+        val product = request.execute().getOrElse {
+            _error.emit(DownloadError.Custom(it.message?.toString()))
             return@withMutateGuard
         }
 

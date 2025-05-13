@@ -214,6 +214,9 @@
     <string name="error_sum_of_percentages_must_be_100">Sum of percentages must be 100</string>
     <string name="error_value_cannot_exceed_100">Value cannot exceed 100</string>
     <string name="error_value_must_be_positive">Value must be positive</string>
+    <string name="error_url_not_found">URL not found</string>
+    <string name="error_url_is_not_supported">URL is not supported</string>
+    <string name="error_failed_to_download_product">Failed to download product</string>
 
     <string name="positive_goal_reached">Goal reached</string>
     <string name="positive_ok">OK</string>
