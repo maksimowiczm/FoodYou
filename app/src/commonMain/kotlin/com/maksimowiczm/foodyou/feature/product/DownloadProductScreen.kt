@@ -18,31 +18,36 @@ import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun DownloadProductScreen(
+    text: String?,
     onBack: () -> Unit,
     onDownload: (RemoteProduct) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    DownloadProductScreen(
+    DownloadProductScreenImpl(
+        text = text,
         onBack = onBack,
         onDownload = onDownload,
-        modifier = modifier,
-        viewModel = koinViewModel()
+        modifier = modifier
     )
 }
 
 @Composable
-private fun DownloadProductScreen(
+private fun DownloadProductScreenImpl(
+    text: String?,
     onBack: () -> Unit,
     onDownload: (RemoteProduct) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: DownloadProductScreenViewModel = koinViewModel()
+    viewModel: DownloadProductScreenViewModel = koinViewModel(
+        parameters = { parametersOf(text) }
+    )
 ) {
     val isMutating = viewModel.isMutating.collectAsStateWithLifecycle().value
     val error = viewModel.error.collectAsStateWithLifecycle().value
-    val textFieldState = rememberTextFieldState()
+    val textFieldState = rememberTextFieldState(text ?: "")
 
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner, viewModel) {

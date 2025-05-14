@@ -20,22 +20,24 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun CreateProductScreen(
     onBack: () -> Unit,
     onCreate: (productId: Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    text: String? = null
 ) {
-    CreateProductScreen(
+    CreateProductScreenImpl(
         onBack = onBack,
         onCreate = onCreate,
         modifier = modifier,
-        viewModel = koinViewModel()
+        text = text
     )
 }
 
 @Composable
-private fun CreateProductScreen(
+private fun CreateProductScreenImpl(
     onBack: () -> Unit,
     onCreate: (productId: Long) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CreateProductScreenViewModel = koinViewModel()
+    viewModel: CreateProductScreenViewModel = koinViewModel(),
+    text: String? = null
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val latestOnCreate by rememberUpdatedState(onCreate)
@@ -53,6 +55,7 @@ private fun CreateProductScreen(
     CreateProductApp(
         onBack = onBack,
         onCreate = viewModel::onCreate,
-        modifier = modifier
+        modifier = modifier,
+        text = text
     )
 }

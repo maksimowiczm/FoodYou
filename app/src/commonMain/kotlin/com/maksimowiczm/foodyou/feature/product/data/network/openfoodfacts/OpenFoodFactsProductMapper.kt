@@ -50,8 +50,8 @@ internal object OpenFoodFactsProductMapper {
             seleniumMicro = product.nutritionFacts?.selenium.toMicrograms(),
             iodineMicro = product.nutritionFacts?.iodine.toMicrograms()
         ),
-        packageWeight = product.packageWeight,
-        servingWeight = product.servingWeight
+        packageWeight = product.packageWeight?.takeIf { it > 0 },
+        servingWeight = product.servingWeight?.takeIf { it > 0 }
     )
 
     private fun Double?.toMilligrams() = this?.let { it * 1_000 }?.toFloat()

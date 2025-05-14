@@ -23,14 +23,15 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(
-            "Add new nutrition facts, such as caffeine, vitamins, minerals, and more"
+            "Add new nutrition facts, such as caffeine, vitamins, minerals, and more",
+            "Share Open Food Facts product URL to add it to the app"
         ),
         changes = listOf(
             "Redesign the download product screen to be generic"
         ),
         bugFixes = listOf(),
         translations = listOf(),
-        notes = "You can suggest new external databases to download products from"
+        notes = "You can suggest new external databases to download products from on GitHub"
     )
 
     val v2_2_0 = Version(

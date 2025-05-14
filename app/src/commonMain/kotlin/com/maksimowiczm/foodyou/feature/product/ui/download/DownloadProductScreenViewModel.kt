@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 
 internal class DownloadProductScreenViewModel(
+    text: String?,
     private val requestFactory: RemoteProductRequestFactory
 ) : ViewModel() {
     private val _isMutating = MutableStateFlow(false)
@@ -20,6 +21,19 @@ internal class DownloadProductScreenViewModel(
 
     private val _productEvent = MutableStateFlow<RemoteProduct?>(null)
     val productEvent = _productEvent.filterNotNull()
+
+    private val linkRegex by lazy {
+        Regex(
+            "(https?://[\\w-]+(\\.[\\w-]+)+(/\\S*)?)",
+            RegexOption.IGNORE_CASE
+        )
+    }
+
+    init {
+        if (text != null) {
+            onDownload(text)
+        }
+    }
 
     fun onDownload(text: String) = withMutateGuard {
         _error.emit(null)
@@ -54,13 +68,6 @@ internal class DownloadProductScreenViewModel(
         _isMutating.emit(true)
         block()
         _isMutating.emit(false)
-    }
-
-    private val linkRegex by lazy {
-        Regex(
-            "(https?://[\\w-]+(\\.[\\w-]+)+(/\\S*)?)",
-            RegexOption.IGNORE_CASE
-        )
     }
 
     private fun extractFirstLink(text: String): String? = linkRegex.find(text)?.value

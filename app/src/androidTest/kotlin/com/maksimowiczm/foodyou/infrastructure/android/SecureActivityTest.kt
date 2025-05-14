@@ -12,13 +12,9 @@ import kotlinx.coroutines.yield
 import org.junit.Test
 import org.koin.android.ext.android.get
 
-class FoodYouMainActivityTest {
-    /**
-     * Integration test for the secure flag.
-     */
-    @Test
-    fun testSecureFlag() {
-        launchActivity<FoodYouMainActivity>().use {
+class SecureActivityTest {
+    private inline fun <reified A : FoodYouAbstractActivity> testSecureFlag() {
+        launchActivity<A>().use {
             it.onActivity { activity ->
                 with(activity) {
                     val dataStore = get<DataStore<Preferences>>()
@@ -43,4 +39,10 @@ class FoodYouMainActivityTest {
             }
         }
     }
+
+    @Test
+    fun testSecureMainActivity() = testSecureFlag<FoodYouMainActivity>()
+
+    @Test
+    fun testSecureShareProductActivity() = testSecureFlag<ShareProductActivity>()
 }
