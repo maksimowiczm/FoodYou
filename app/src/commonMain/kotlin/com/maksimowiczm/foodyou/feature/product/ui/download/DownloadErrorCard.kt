@@ -24,7 +24,7 @@ internal fun DownloadErrorCard(error: DownloadError, modifier: Modifier = Modifi
         DownloadError.URLNotSupported -> stringResource(Res.string.error_url_is_not_supported)
         DownloadError.ProductNotFound -> stringResource(Res.string.error_product_not_found)
         is DownloadError.Custom if (error.message != null) -> error.message
-        is DownloadError.Custom -> null
+        is DownloadError.Custom -> stringResource(Res.string.error_unknown_error)
     }
 
     Card(
@@ -46,12 +46,10 @@ internal fun DownloadErrorCard(error: DownloadError, modifier: Modifier = Modifi
                 text = stringResource(Res.string.error_failed_to_download_product),
                 style = MaterialTheme.typography.titleMedium
             )
-            errorText?.let {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+            Text(
+                text = errorText,
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }
