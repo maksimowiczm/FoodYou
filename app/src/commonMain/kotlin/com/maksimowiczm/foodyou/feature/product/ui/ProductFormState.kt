@@ -586,7 +586,7 @@ private fun rememberNotRequiredFormField(initialValue: Float? = null) =
         initialValue = initialValue,
         parser = nullableFloatParser,
         validator = nonNegativeFloatValidator(),
-        textFieldState = rememberTextFieldState(initialValue?.formatClipZeros() ?: "")
+        textFieldState = rememberTextFieldState(initialValue?.formatClipZeros("%.4f") ?: "")
     )
 
 @Composable
@@ -594,5 +594,5 @@ private fun rememberRequiredFormField(initialValue: Float? = null) = rememberFor
     initialValue = initialValue,
     parser = nullableFloatParser,
     validator = requireNonNegativeFloatValidator(),
-    textFieldState = rememberTextFieldState(initialValue?.formatClipZeros() ?: "")
+    textFieldState = rememberTextFieldState(initialValue?.formatClipZeros("%.4f") ?: "")
 )
