@@ -201,6 +201,7 @@
     <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_failed_to_download_the_product">Failed to download the product</string>
     <string name="neutral_copied">Info copied to clipboard</string>
+    <string name="neutral_product_created">Product created</string>
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>

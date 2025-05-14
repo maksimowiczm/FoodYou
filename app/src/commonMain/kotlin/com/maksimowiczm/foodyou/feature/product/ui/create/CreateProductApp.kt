@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.product.ui.create
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -19,7 +20,7 @@ internal fun CreateProductApp(
     onCreate: (ProductFormState) -> Unit,
     modifier: Modifier = Modifier,
     text: String? = null
-) {
+) = key(text) {
     val navController = rememberNavController()
 
     NavHost(
