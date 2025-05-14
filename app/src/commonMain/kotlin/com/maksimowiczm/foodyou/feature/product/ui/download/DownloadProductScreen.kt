@@ -13,6 +13,7 @@ import androidx.compose.animation.slideOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,23 +30,27 @@ import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumExtendedFloatingActionButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
@@ -58,6 +63,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.ext.add
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -74,6 +80,8 @@ internal fun DownloadProductScreen(
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    var fabHeightPx by remember { mutableIntStateOf(0) }
+    val fabHeightDp = with(LocalDensity.current) { fabHeightPx.toDp() }
 
     Scaffold(
         modifier = modifier,
@@ -87,6 +95,7 @@ internal fun DownloadProductScreen(
         floatingActionButton = {
             AnimatedVisibility(
                 visible = !isMutating,
+                modifier = Modifier.onGloballyPositioned { fabHeightPx = it.size.height },
                 enter = scaleIn() + slideIn { IntOffset(it.width / 2, it.height * 3 / 2) },
                 exit = scaleOut() + slideOut { IntOffset(it.width / 2, it.height * 3 / 2) }
             ) {
@@ -94,8 +103,12 @@ internal fun DownloadProductScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.End
                 ) {
-                    SmallFloatingActionButton(
-                        onClick = onPaste,
+                    FloatingActionButton(
+                        onClick = {
+                            if (!isMutating) {
+                                onPaste()
+                            }
+                        },
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ) {
@@ -105,7 +118,7 @@ internal fun DownloadProductScreen(
                         )
                     }
 
-                    ExtendedFloatingActionButton(
+                    MediumExtendedFloatingActionButton(
                         onClick = onDownload,
                         modifier = Modifier.testTag(DownloadProductScreenTestTags.FAB)
                     ) {
@@ -125,7 +138,7 @@ internal fun DownloadProductScreen(
         LazyColumn(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = paddingValues
+            contentPadding = paddingValues.add(PaddingValues(bottom = fabHeightDp + 16.dp))
         ) {
             stickyHeader {
                 AnimatedContent(
