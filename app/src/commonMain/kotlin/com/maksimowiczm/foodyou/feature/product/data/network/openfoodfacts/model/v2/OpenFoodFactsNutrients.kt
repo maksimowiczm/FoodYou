@@ -49,13 +49,13 @@ internal data class OpenFoodFactsNutrients(
     @SerialName("vitamin-k_100g")
     val vitaminK: Double? = null,
     // Minerals
-    @SerialName("potassium_100g")
+    @SerialName("manganese_100g")
     val manganese: Double? = null,
-    @SerialName("calcium_100g")
-    val magnesium: Double? = null,
-    @SerialName("phosphorus_100g")
-    val potassium: Double? = null,
     @SerialName("magnesium_100g")
+    val magnesium: Double? = null,
+    @SerialName("potassium_100g")
+    val potassium: Double? = null,
+    @SerialName("calcium_100g")
     val calcium: Double? = null,
     @SerialName("copper_100g")
     val copper: Double? = null,
@@ -65,7 +65,7 @@ internal data class OpenFoodFactsNutrients(
     val sodium: Double? = null,
     @SerialName("iron_100g")
     val iron: Double? = null,
-    @SerialName("fluoride_100g")
+    @SerialName("phosphorus_100g")
     val phosphorus: Double? = null,
     @SerialName("selenium_100g")
     val selenium: Double? = null,
