@@ -70,7 +70,7 @@ internal fun ActionChips(
                 )
             },
             label = {
-                Text(stringResource(Res.string.action_suggest_other_product_database))
+                Text(stringResource(Res.string.action_suggest_external_database))
             }
         )
     }
