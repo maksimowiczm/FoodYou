@@ -49,8 +49,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
         initialValue = product?.packageWeight?.weight,
         parser = nullableFloatParser,
         validator = when {
-            measurement.value is Measurement.Package -> valueRequiredValidator()
-            else -> allowAllValidator()
+            measurement.value is Measurement.Package -> requirePositiveFloatValidator()
+            else -> positiveFloatValidator()
         },
         textFieldState = rememberTextFieldState(
             product?.packageWeight?.weight?.formatClipZeros() ?: ""
@@ -61,8 +61,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
         initialValue = product?.servingWeight?.weight,
         parser = nullableFloatParser,
         validator = when {
-            measurement.value is Measurement.Serving -> valueRequiredValidator()
-            else -> allowAllValidator()
+            measurement.value is Measurement.Serving -> requirePositiveFloatValidator()
+            else -> positiveFloatValidator()
         },
         textFieldState = rememberTextFieldState(
             product?.servingWeight?.weight?.formatClipZeros() ?: ""
@@ -70,15 +70,9 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     )
 
     val proteins = rememberRequiredFormField(product?.nutritionFacts?.proteins?.value)
-    val carbohydrates = rememberRequiredFormField(
-        product?.nutritionFacts?.carbohydrates?.value
-    )
-    val fats = rememberRequiredFormField(
-        product?.nutritionFacts?.fats?.value
-    )
-    val calories = rememberRequiredFormField(
-        product?.nutritionFacts?.calories?.value
-    )
+    val carbohydrates = rememberRequiredFormField(product?.nutritionFacts?.carbohydrates?.value)
+    val fats = rememberRequiredFormField(product?.nutritionFacts?.fats?.value)
+    val calories = rememberRequiredFormField(product?.nutritionFacts?.calories?.value)
 
     LaunchedEffect(proteins.value, carbohydrates.value, fats.value) {
         val proteins = proteins.value
@@ -94,111 +88,45 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
         calories.textFieldState.setTextAndPlaceCursorAtEnd(text)
     }
 
-    val saturatedFats = rememberNotRequiredFormField(
-        product?.nutritionFacts?.saturatedFats?.value
-    )
-    val monounsaturatedFats = rememberNotRequiredFormField(
-        product?.nutritionFacts?.monounsaturatedFats?.value
-    )
-    val polyunsaturatedFats = rememberNotRequiredFormField(
-        product?.nutritionFacts?.polyunsaturatedFats?.value
-    )
-    val omega3 = rememberNotRequiredFormField(
-        product?.nutritionFacts?.omega3?.value
-    )
-    val omega6 = rememberNotRequiredFormField(
-        product?.nutritionFacts?.omega6?.value
-    )
+    val saturatedFats = rememberNotRequiredFormField(product?.nutritionFacts?.saturatedFats?.value)
+    val monounsaturatedFats =
+        rememberNotRequiredFormField(product?.nutritionFacts?.monounsaturatedFats?.value)
+    val polyunsaturatedFats =
+        rememberNotRequiredFormField(product?.nutritionFacts?.polyunsaturatedFats?.value)
+    val omega3 = rememberNotRequiredFormField(product?.nutritionFacts?.omega3?.value)
+    val omega6 = rememberNotRequiredFormField(product?.nutritionFacts?.omega6?.value)
 
-    val sugars = rememberNotRequiredFormField(
-        product?.nutritionFacts?.sugars?.value
-    )
-    val salt = rememberNotRequiredFormField(
-        product?.nutritionFacts?.salt?.value
-    )
-    val fiber = rememberNotRequiredFormField(
-        product?.nutritionFacts?.fiber?.value
-    )
-    val cholesterol = rememberNotRequiredFormField(
-        product?.nutritionFacts?.cholesterolMilli?.value
-    )
-    val caffeine = rememberNotRequiredFormField(
-        product?.nutritionFacts?.caffeineMilli?.value
-    )
+    val sugars = rememberNotRequiredFormField(product?.nutritionFacts?.sugars?.value)
+    val salt = rememberNotRequiredFormField(product?.nutritionFacts?.salt?.value)
+    val fiber = rememberNotRequiredFormField(product?.nutritionFacts?.fiber?.value)
+    val cholesterol = rememberNotRequiredFormField(product?.nutritionFacts?.cholesterolMilli?.value)
+    val caffeine = rememberNotRequiredFormField(product?.nutritionFacts?.caffeineMilli?.value)
 
-    val vitaminA = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminAMicro?.value
-    )
-    val vitaminB1 = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminB1Milli?.value
-    )
-    val vitaminB2 = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminB2Milli?.value
-    )
-    val vitaminB3 = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminB3Milli?.value
-    )
-    val vitaminB5 = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminB5Milli?.value
-    )
-    val vitaminB6 = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminB6Milli?.value
-    )
-    val vitaminB7 = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminB7Micro?.value
-    )
-    val vitaminB9 = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminB9Micro?.value
-    )
-    val vitaminB12 = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminB12Micro?.value
-    )
-    val vitaminC = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminCMilli?.value
-    )
-    val vitaminD = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminDMicro?.value
-    )
-    val vitaminE = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminEMilli?.value
-    )
-    val vitaminK = rememberNotRequiredFormField(
-        product?.nutritionFacts?.vitaminKMicro?.value
-    )
+    val vitaminA = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminAMicro?.value)
+    val vitaminB1 = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminB1Milli?.value)
+    val vitaminB2 = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminB2Milli?.value)
+    val vitaminB3 = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminB3Milli?.value)
+    val vitaminB5 = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminB5Milli?.value)
+    val vitaminB6 = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminB6Milli?.value)
+    val vitaminB7 = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminB7Micro?.value)
+    val vitaminB9 = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminB9Micro?.value)
+    val vitaminB12 = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminB12Micro?.value)
+    val vitaminC = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminCMilli?.value)
+    val vitaminD = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminDMicro?.value)
+    val vitaminE = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminEMilli?.value)
+    val vitaminK = rememberNotRequiredFormField(product?.nutritionFacts?.vitaminKMicro?.value)
 
-    val manganese = rememberNotRequiredFormField(
-        product?.nutritionFacts?.manganeseMilli?.value
-    )
-    val magnesium = rememberNotRequiredFormField(
-        product?.nutritionFacts?.magnesiumMilli?.value
-    )
-    val potassium = rememberNotRequiredFormField(
-        product?.nutritionFacts?.potassiumMilli?.value
-    )
-    val calcium = rememberNotRequiredFormField(
-        product?.nutritionFacts?.calciumMilli?.value
-    )
-    val copper = rememberNotRequiredFormField(
-        product?.nutritionFacts?.copperMilli?.value
-    )
-    val zinc = rememberNotRequiredFormField(
-        product?.nutritionFacts?.zincMilli?.value
-    )
-    val sodium = rememberNotRequiredFormField(
-        product?.nutritionFacts?.sodiumMilli?.value
-    )
-    val iron = rememberNotRequiredFormField(
-        product?.nutritionFacts?.ironMilli?.value
-    )
-    val phosphorus = rememberNotRequiredFormField(
-        product?.nutritionFacts?.phosphorusMilli?.value
-    )
-    val selenium = rememberNotRequiredFormField(
-        product?.nutritionFacts?.seleniumMicro?.value
-    )
-    val iodine = rememberNotRequiredFormField(
-        product?.nutritionFacts?.iodineMicro?.value
-    )
+    val manganese = rememberNotRequiredFormField(product?.nutritionFacts?.manganeseMilli?.value)
+    val magnesium = rememberNotRequiredFormField(product?.nutritionFacts?.magnesiumMilli?.value)
+    val potassium = rememberNotRequiredFormField(product?.nutritionFacts?.potassiumMilli?.value)
+    val calcium = rememberNotRequiredFormField(product?.nutritionFacts?.calciumMilli?.value)
+    val copper = rememberNotRequiredFormField(product?.nutritionFacts?.copperMilli?.value)
+    val zinc = rememberNotRequiredFormField(product?.nutritionFacts?.zincMilli?.value)
+    val sodium = rememberNotRequiredFormField(product?.nutritionFacts?.sodiumMilli?.value)
+    val iron = rememberNotRequiredFormField(product?.nutritionFacts?.ironMilli?.value)
+    val phosphorus = rememberNotRequiredFormField(product?.nutritionFacts?.phosphorusMilli?.value)
+    val selenium = rememberNotRequiredFormField(product?.nutritionFacts?.seleniumMicro?.value)
+    val iodine = rememberNotRequiredFormField(product?.nutritionFacts?.iodineMicro?.value)
 
     return remember(
         name,
@@ -409,25 +337,50 @@ private val nullableFloatParser: (String) -> ParseResult<Float?, ProductFormFiel
         val value = input.toFloatOrNull()
         if (value == null) {
             ParseResult.Failure(ProductFormFieldError.NotANumber)
-        } else if (value <= 0) {
-            ParseResult.Failure(ProductFormFieldError.MustBePositive)
         } else {
             ParseResult.Success(value)
         }
     }
 }
 
-private fun <T> valueRequiredValidator(): (T) -> ProductFormFieldError? =
-    { if (it == null) ProductFormFieldError.Required else null }
+private fun nonNegativeFloatValidator(): (Float?) -> ProductFormFieldError? = {
+    when {
+        it == null -> null
+        it < 0f -> ProductFormFieldError.Negative
+        else -> null
+    }
+}
 
-private fun <T> allowAllValidator(): (T) -> ProductFormFieldError? = { null }
+private fun requireNonNegativeFloatValidator(): (Float?) -> ProductFormFieldError? = {
+    when {
+        it == null -> ProductFormFieldError.Required
+        it < 0f -> ProductFormFieldError.Negative
+        else -> null
+    }
+}
+
+private fun positiveFloatValidator(): (Float?) -> ProductFormFieldError? = {
+    when {
+        it == null -> null
+        it <= 0f -> ProductFormFieldError.NotPositive
+        else -> null
+    }
+}
+
+private fun requirePositiveFloatValidator(): (Float?) -> ProductFormFieldError? = {
+    when {
+        it == null -> ProductFormFieldError.Required
+        it <= 0f -> ProductFormFieldError.NotPositive
+        else -> null
+    }
+}
 
 @Composable
 private fun rememberNotRequiredFormField(initialValue: Float? = null) =
     rememberFormField<Float?, ProductFormFieldError>(
         initialValue = initialValue,
         parser = nullableFloatParser,
-        validator = allowAllValidator(),
+        validator = nonNegativeFloatValidator(),
         textFieldState = rememberTextFieldState(initialValue?.formatClipZeros() ?: "")
     )
 
@@ -435,6 +388,6 @@ private fun rememberNotRequiredFormField(initialValue: Float? = null) =
 private fun rememberRequiredFormField(initialValue: Float? = null) = rememberFormField(
     initialValue = initialValue,
     parser = nullableFloatParser,
-    validator = valueRequiredValidator(),
+    validator = requireNonNegativeFloatValidator(),
     textFieldState = rememberTextFieldState(initialValue?.formatClipZeros() ?: "")
 )
