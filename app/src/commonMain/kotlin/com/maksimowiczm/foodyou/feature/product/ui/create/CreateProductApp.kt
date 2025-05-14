@@ -17,13 +17,18 @@ import kotlinx.serialization.json.Json
 internal fun CreateProductApp(
     onBack: () -> Unit,
     onCreate: (ProductFormState) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    text: String? = null
 ) {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Create(null),
+        startDestination = if (text != null) {
+            Download(text)
+        } else {
+            Create(null)
+        },
         modifier = modifier
     ) {
         forwardBackwardComposable<Create> {
@@ -44,13 +49,16 @@ internal fun CreateProductApp(
                 onBack = onBack,
                 onCreate = onCreate,
                 onDownload = {
-                    navController.navigate(Download) { launchSingleTop = true }
+                    navController.navigate(Download(null)) { launchSingleTop = true }
                 },
                 productFormState = state
             )
         }
         forwardBackwardComposable<Download> {
+            val (text) = it.toRoute<Download>()
+
             DownloadProductScreen(
+                text = text,
                 onBack = {
                     navController.popBackStack<Download>(inclusive = true)
                 },
@@ -69,7 +77,7 @@ internal fun CreateProductApp(
 }
 
 @Serializable
-private data object Download
+private data class Download(val link: String?)
 
 @Serializable
 private data class Create(val productJson: String?)

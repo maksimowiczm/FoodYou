@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.feature.product.ui.create.CreateProductScreenVie
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenViewModel
 import com.maksimowiczm.foodyou.feature.product.ui.update.UpdateProductScreenViewModel
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -28,5 +29,7 @@ val productModule = module {
 
     viewModelOf(::CreateProductScreenViewModel)
     viewModelOf(::UpdateProductScreenViewModel)
-    viewModelOf(::DownloadProductScreenViewModel)
+    viewModel { (text: String?) ->
+        DownloadProductScreenViewModel(text = text, requestFactory = get())
+    }
 }

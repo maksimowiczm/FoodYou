@@ -6,16 +6,10 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.feature.product.ui.create.CreateProductApp
 
 class ShareProductActivity : ComponentActivity() {
 
@@ -37,6 +31,7 @@ class ShareProductActivity : ComponentActivity() {
                 onBack = { finish() },
                 onCreate = {
                     Toast.makeText(this, "Product created", Toast.LENGTH_LONG).show()
+                    finish()
                 }
             )
         }
@@ -58,32 +53,10 @@ private class NoTextFoundException : Exception()
 @Composable
 private fun ShareProductApp(text: String, onBack: () -> Unit, onCreate: () -> Unit) {
     FoodYouTheme {
-        ShareProductNavHost(
-            text = text,
+        CreateProductApp(
             onBack = onBack,
-            onCreate = onCreate
+            onCreate = { onCreate() },
+            text = text
         )
-    }
-}
-
-@Composable
-private fun ShareProductNavHost(
-    text: String,
-    onBack: () -> Unit,
-    onCreate: () -> Unit,
-    modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
-) {
-    NavHost(
-        navController = navController,
-        startDestination = "share_product",
-        modifier = modifier
-    ) {
-        composable("share_product") {
-            Text(
-                text = text,
-                modifier = Modifier.safeContentPadding()
-            )
-        }
     }
 }
