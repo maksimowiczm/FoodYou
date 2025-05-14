@@ -23,7 +23,8 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(
-            "Add new nutrition facts, such as caffeine, vitamins, minerals, and more"
+            "Add new nutrition facts, such as caffeine, vitamins, minerals, and more",
+            "Added share option. You can now share Open Food Facts product URL to add it to the app"
         ),
         changes = listOf(
             "Redesign the download product screen to be generic"
