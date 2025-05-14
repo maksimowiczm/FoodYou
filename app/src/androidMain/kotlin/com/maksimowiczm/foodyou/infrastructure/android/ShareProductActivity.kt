@@ -4,9 +4,6 @@ import android.app.ComponentCaller
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
@@ -15,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.core.ui.utils.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
@@ -24,7 +20,7 @@ import org.jetbrains.compose.resources.getString as getStringRes
 
 // Use singleTop and mutable state because otherwise there are wierd behaviors with creating
 // multiple activities
-class ShareProductActivity : ComponentActivity() {
+class ShareProductActivity : FoodYouAbstractActivity() {
 
     private val sharedText = mutableStateOf<String?>(null)
 
@@ -44,17 +40,12 @@ class ShareProductActivity : ComponentActivity() {
             finish()
         }
 
-        enableEdgeToEdge()
         setContent {
-            ClipboardManagerProvider(
-                clipboardManager = AndroidClipboardManager(this)
-            ) {
-                ShareProductApp(
-                    text = sharedText.value,
-                    onBack = { finish() },
-                    onCreate = { onCreated() }
-                )
-            }
+            ShareProductApp(
+                text = sharedText.value,
+                onBack = { finish() },
+                onCreate = { onCreated() }
+            )
         }
     }
 
