@@ -5,7 +5,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +41,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
@@ -49,6 +55,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import foodyou.app.generated.resources.*
@@ -78,7 +85,9 @@ internal fun DownloadProductScreen(
         },
         floatingActionButton = {
             AnimatedVisibility(
-                visible = !isMutating
+                visible = !isMutating,
+                enter = scaleIn() + slideIn { IntOffset(it.width / 2, it.height * 3 / 2) },
+                exit = scaleOut() + slideOut { IntOffset(it.width / 2, it.height * 3 / 2) }
             ) {
                 ExtendedFloatingActionButton(
                     onClick = onDownload,
