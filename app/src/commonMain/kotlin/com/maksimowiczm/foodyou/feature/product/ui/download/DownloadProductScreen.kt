@@ -23,9 +23,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -37,11 +37,13 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
@@ -67,6 +69,8 @@ internal fun DownloadProductScreen(
     textFieldState: TextFieldState,
     onBack: () -> Unit,
     onDownload: () -> Unit,
+    onPaste: () -> Unit,
+    onOpenFoodFacts: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -86,17 +90,33 @@ internal fun DownloadProductScreen(
                 enter = scaleIn() + slideIn { IntOffset(it.width / 2, it.height * 3 / 2) },
                 exit = scaleOut() + slideOut { IntOffset(it.width / 2, it.height * 3 / 2) }
             ) {
-                ExtendedFloatingActionButton(
-                    onClick = onDownload,
-                    modifier = Modifier.testTag(DownloadProductScreenTestTags.FAB)
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.End
                 ) {
-                    Row {
+                    SmallFloatingActionButton(
+                        onClick = onPaste,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ) {
                         Icon(
-                            imageVector = Icons.Default.Download,
-                            contentDescription = null
+                            imageVector = Icons.Default.ContentPaste,
+                            contentDescription = stringResource(Res.string.action_paste_url)
                         )
-                        Spacer(Modifier.width(8.dp))
-                        Text(stringResource(Res.string.action_download))
+                    }
+
+                    ExtendedFloatingActionButton(
+                        onClick = onDownload,
+                        modifier = Modifier.testTag(DownloadProductScreenTestTags.FAB)
+                    ) {
+                        Row {
+                            Icon(
+                                imageVector = Icons.Default.Download,
+                                contentDescription = null
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(stringResource(Res.string.action_download))
+                        }
                     }
                 }
             }
@@ -198,7 +218,8 @@ internal fun DownloadProductScreen(
             item {
                 ActionChips(
                     isMutating = isMutating,
-                    onPaste = { textFieldState.setTextAndPlaceCursorAtEnd(it) },
+                    onPaste = onPaste,
+                    onOpenFoodFacts = onOpenFoodFacts,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
