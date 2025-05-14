@@ -70,6 +70,7 @@ internal fun DownloadProductScreen(
     onDownload: () -> Unit,
     onPaste: () -> Unit,
     onOpenFoodFacts: () -> Unit,
+    onSuggestDatabase: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -225,6 +226,7 @@ internal fun DownloadProductScreen(
                     isMutating = isMutating,
                     onPaste = onPaste,
                     onOpenFoodFacts = onOpenFoodFacts,
+                    onSuggestDatabase = onSuggestDatabase,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }

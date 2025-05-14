@@ -25,10 +25,12 @@ object Changelog {
         newFeatures = listOf(
             "Add new nutrition facts, such as caffeine, vitamins, minerals, and more"
         ),
-        changes = listOf(),
+        changes = listOf(
+            "Redesign the download product screen to be generic"
+        ),
         bugFixes = listOf(),
         translations = listOf(),
-        notes = null
+        notes = "You can suggest new external databases to download products from"
     )
 
     val v2_2_0 = Version(

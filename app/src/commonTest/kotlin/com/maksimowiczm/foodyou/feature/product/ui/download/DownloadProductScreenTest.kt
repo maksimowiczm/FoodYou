@@ -17,6 +17,7 @@ import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScree
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.PASTE_FAB
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.PASTE_URL_CHIP
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.PROGRESS_INDICATOR
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.SUGGEST_DATABASE_CHIP
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.TEXT_FIELD
 import kotlin.test.Test
 
@@ -33,7 +34,8 @@ class DownloadProductScreenTest {
         onBack: () -> Unit = {},
         onDownload: () -> Unit = {},
         onPaste: () -> Unit = {},
-        onOpenFoodFacts: () -> Unit = {}
+        onOpenFoodFacts: () -> Unit = {},
+        onSuggestDatabase: () -> Unit = {}
     ) {
         com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreen(
             isMutating = isMutating,
@@ -43,6 +45,7 @@ class DownloadProductScreenTest {
             onDownload = onDownload,
             onPaste = onPaste,
             onOpenFoodFacts = onOpenFoodFacts,
+            onSuggestDatabase = onSuggestDatabase,
             modifier = modifier
         )
     }
@@ -60,6 +63,7 @@ class DownloadProductScreenTest {
         onNodeWithTag(PASTE_FAB).assertIsDisplayed()
         onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsEnabled()
         onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(SUGGEST_DATABASE_CHIP).assertExists().assertIsEnabled()
     }
 
     @Test
@@ -75,6 +79,7 @@ class DownloadProductScreenTest {
         onNodeWithTag(PASTE_FAB).assertIsNotDisplayed()
         onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsNotEnabled()
         onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(SUGGEST_DATABASE_CHIP).assertExists().assertIsEnabled()
     }
 
     @Test
@@ -92,5 +97,6 @@ class DownloadProductScreenTest {
         onNodeWithTag(PASTE_FAB).assertIsDisplayed()
         onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsEnabled()
         onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(SUGGEST_DATABASE_CHIP).assertExists().assertIsEnabled()
     }
 }

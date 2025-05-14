@@ -54,6 +54,7 @@ private fun DownloadProductScreen(
     val clipboardManager = LocalClipboardManager.current
     val uriHandler = LocalUriHandler.current
     val openFoodFactsUrl = stringResource(Res.string.link_open_food_facts)
+    val suggestDatabaseUrl = stringResource(Res.string.link_github_issue)
 
     DownloadProductScreen(
         isMutating = isMutating,
@@ -68,6 +69,7 @@ private fun DownloadProductScreen(
                 ?.let { textFieldState.setTextAndPlaceCursorAtEnd(it) }
         },
         onOpenFoodFacts = { uriHandler.openUri(openFoodFactsUrl) },
+        onSuggestDatabase = { uriHandler.openUri(suggestDatabaseUrl) },
         modifier = modifier
     )
 }
