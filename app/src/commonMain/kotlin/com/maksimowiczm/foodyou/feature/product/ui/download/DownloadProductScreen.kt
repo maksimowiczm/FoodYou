@@ -14,7 +14,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,7 +33,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumExtendedFloatingActionButton
 import androidx.compose.material3.OutlinedTextField
@@ -53,16 +51,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ParagraphStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.text.style.TextIndent
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.component.unorderedList
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -123,14 +116,12 @@ internal fun DownloadProductScreen(
                         onClick = onDownload,
                         modifier = Modifier.testTag(DownloadProductScreenTestTags.DOWNLOAD_FAB)
                     ) {
-                        Row {
-                            Icon(
-                                imageVector = Icons.Default.Download,
-                                contentDescription = null
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(stringResource(Res.string.action_download))
-                        }
+                        Icon(
+                            imageVector = Icons.Default.Download,
+                            contentDescription = null
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(Res.string.action_download))
                     }
                 }
             }
@@ -221,7 +212,7 @@ internal fun DownloadProductScreen(
                     )
 
                     Text(
-                        text = makeBulletedList(
+                        text = unorderedList(
                             "Open Food Facts (world.openfoodfacts.org)"
                         ),
                         style = MaterialTheme.typography.bodySmall
@@ -236,27 +227,6 @@ internal fun DownloadProductScreen(
                     onOpenFoodFacts = onOpenFoodFacts,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun makeBulletedList(vararg items: String): AnnotatedString {
-    val bulletString = "\u2022\t\t"
-    val textStyle = LocalTextStyle.current
-    val textMeasurer = rememberTextMeasurer()
-    val bulletStringWidth = remember(textStyle, textMeasurer) {
-        textMeasurer.measure(text = bulletString, style = textStyle).size.width
-    }
-    val restLine = with(LocalDensity.current) { bulletStringWidth.toSp() }
-    val paragraphStyle = ParagraphStyle(textIndent = TextIndent(restLine = restLine))
-
-    return buildAnnotatedString {
-        items.forEach { text ->
-            withStyle(style = paragraphStyle) {
-                append(bulletString)
-                append(text)
             }
         }
     }
