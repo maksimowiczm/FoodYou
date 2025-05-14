@@ -23,7 +23,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -32,21 +31,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ParagraphStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextIndent
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.ui.component.unorderedList
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.changelog.Changelog
@@ -199,7 +191,7 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                         style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        text = makeBulletedList(version.newFeatures),
+                        text = unorderedList(version.newFeatures),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -212,7 +204,7 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                         style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        text = makeBulletedList(version.changes),
+                        text = unorderedList(version.changes),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -225,7 +217,7 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                         style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        text = makeBulletedList(version.bugFixes),
+                        text = unorderedList(version.bugFixes),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -238,7 +230,7 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                         style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        text = makeBulletedList(version.translations),
+                        text = unorderedList(version.translations),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -255,27 +247,6 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun makeBulletedList(items: List<String>): AnnotatedString {
-    val bulletString = "\u2022\t\t"
-    val textStyle = LocalTextStyle.current
-    val textMeasurer = rememberTextMeasurer()
-    val bulletStringWidth = remember(textStyle, textMeasurer) {
-        textMeasurer.measure(text = bulletString, style = textStyle).size.width
-    }
-    val restLine = with(LocalDensity.current) { bulletStringWidth.toSp() }
-    val paragraphStyle = ParagraphStyle(textIndent = TextIndent(restLine = restLine))
-
-    return buildAnnotatedString {
-        items.forEach { text ->
-            withStyle(style = paragraphStyle) {
-                append(bulletString)
-                append(text)
             }
         }
     }

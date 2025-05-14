@@ -17,6 +17,7 @@ import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
 import com.maksimowiczm.foodyou.core.ui.simpleform.ParseResult
 import com.maksimowiczm.foodyou.core.ui.simpleform.rememberFormField
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
+import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 
 @Composable
 internal fun rememberProductFormState(product: Product? = null): ProductFormState {
@@ -127,6 +128,210 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     val phosphorus = rememberNotRequiredFormField(product?.nutritionFacts?.phosphorusMilli?.value)
     val selenium = rememberNotRequiredFormField(product?.nutritionFacts?.seleniumMicro?.value)
     val iodine = rememberNotRequiredFormField(product?.nutritionFacts?.iodineMicro?.value)
+
+    return remember(
+        name,
+        brand,
+        barcode,
+        measurement,
+        packageWeight,
+        servingWeight,
+        proteins,
+        carbohydrates,
+        fats,
+        calories,
+        saturatedFats,
+        monounsaturatedFats,
+        polyunsaturatedFats,
+        omega3,
+        omega6,
+        sugars,
+        salt,
+        fiber,
+        cholesterol,
+        caffeine,
+        vitaminA,
+        vitaminB1,
+        vitaminB2,
+        vitaminB3,
+        vitaminB5,
+        vitaminB6,
+        vitaminB7,
+        vitaminB9,
+        vitaminB12,
+        vitaminC,
+        vitaminD,
+        vitaminE,
+        vitaminK,
+        manganese,
+        magnesium,
+        potassium,
+        calcium,
+        copper,
+        zinc,
+        sodium,
+        iron,
+        phosphorus,
+        selenium,
+        iodine
+    ) {
+        ProductFormState(
+            name = name,
+            brand = brand,
+            barcode = barcode,
+            measurementState = measurement,
+            packageWeight = packageWeight,
+            servingWeight = servingWeight,
+            proteins = proteins,
+            carbohydrates = carbohydrates,
+            fats = fats,
+            calories = calories,
+            saturatedFats = saturatedFats,
+            monounsaturatedFats = monounsaturatedFats,
+            polyunsaturatedFats = polyunsaturatedFats,
+            omega3 = omega3,
+            omega6 = omega6,
+            sugars = sugars,
+            salt = salt,
+            fiber = fiber,
+            cholesterolMilli = cholesterol,
+            caffeineMilli = caffeine,
+            vitaminAMicro = vitaminA,
+            vitaminB1Milli = vitaminB1,
+            vitaminB2Milli = vitaminB2,
+            vitaminB3Milli = vitaminB3,
+            vitaminB5Milli = vitaminB5,
+            vitaminB6Milli = vitaminB6,
+            vitaminB7Micro = vitaminB7,
+            vitaminB9Micro = vitaminB9,
+            vitaminB12Micro = vitaminB12,
+            vitaminCMilli = vitaminC,
+            vitaminDMicro = vitaminD,
+            vitaminEMilli = vitaminE,
+            vitaminKMicro = vitaminK,
+            manganeseMilli = manganese,
+            magnesiumMilli = magnesium,
+            potassiumMilli = potassium,
+            calciumMilli = calcium,
+            copperMilli = copper,
+            zincMilli = zinc,
+            sodiumMilli = sodium,
+            ironMilli = iron,
+            phosphorusMilli = phosphorus,
+            seleniumMicro = selenium,
+            iodineMicro = iodine
+        )
+    }
+}
+
+@Composable
+internal fun rememberProductFormState(product: RemoteProduct): ProductFormState {
+    val name = rememberFormField(
+        initialValue = product.name ?: "",
+        parser = { ParseResult.Success(it) },
+        validator = { if (it.isBlank()) ProductFormFieldError.Required else null },
+        textFieldState = rememberTextFieldState(product.name ?: "")
+    )
+
+    val brand = rememberFormField<String, ProductFormFieldError>(
+        initialValue = product.brand ?: "",
+        parser = { ParseResult.Success(it) },
+        textFieldState = rememberTextFieldState(product.brand ?: "")
+    )
+
+    val barcode = rememberFormField<String, ProductFormFieldError>(
+        initialValue = product.barcode ?: "",
+        parser = { ParseResult.Success(it) },
+        textFieldState = rememberTextFieldState(product.barcode ?: "")
+    )
+
+    val measurement = rememberSaveable(
+        stateSaver = Measurement.Saver
+    ) {
+        mutableStateOf(Measurement.Gram(100f))
+    }
+
+    val packageWeight = rememberFormField(
+        initialValue = product.packageWeight,
+        parser = nullableFloatParser,
+        validator = when {
+            measurement.value is Measurement.Package -> requirePositiveFloatValidator()
+            else -> positiveFloatValidator()
+        },
+        textFieldState = rememberTextFieldState(
+            product.packageWeight?.formatClipZeros() ?: ""
+        )
+    )
+
+    val servingWeight = rememberFormField(
+        initialValue = product.servingWeight,
+        parser = nullableFloatParser,
+        validator = when {
+            measurement.value is Measurement.Serving -> requirePositiveFloatValidator()
+            else -> positiveFloatValidator()
+        },
+        textFieldState = rememberTextFieldState(
+            product.servingWeight?.formatClipZeros() ?: ""
+        )
+    )
+
+    val proteins = rememberRequiredFormField(product.nutritionFacts.proteins)
+    val carbohydrates = rememberRequiredFormField(product.nutritionFacts.carbohydrates)
+    val fats = rememberRequiredFormField(product.nutritionFacts.fats)
+    val calories = rememberRequiredFormField(product.nutritionFacts.calories)
+
+    LaunchedEffect(proteins.value, carbohydrates.value, fats.value) {
+        val proteins = proteins.value
+        val carbohydrates = carbohydrates.value
+        val fats = fats.value
+
+        if (proteins == null || carbohydrates == null || fats == null) {
+            return@LaunchedEffect
+        }
+
+        val kcal = NutrientsHelper.calculateCalories(proteins, carbohydrates, fats)
+        val text = kcal.formatClipZeros()
+        calories.textFieldState.setTextAndPlaceCursorAtEnd(text)
+    }
+
+    val saturatedFats = rememberNotRequiredFormField(product.nutritionFacts.saturatedFats)
+    val monounsaturatedFats =
+        rememberNotRequiredFormField(product.nutritionFacts.monounsaturatedFats)
+    val polyunsaturatedFats =
+        rememberNotRequiredFormField(product.nutritionFacts.polyunsaturatedFats)
+    val omega3 = rememberNotRequiredFormField(product.nutritionFacts.omega3)
+    val omega6 = rememberNotRequiredFormField(product.nutritionFacts.omega6)
+    val sugars = rememberNotRequiredFormField(product.nutritionFacts.sugars)
+    val salt = rememberNotRequiredFormField(product.nutritionFacts.salt)
+    val fiber = rememberNotRequiredFormField(product.nutritionFacts.fiber)
+    val cholesterol = rememberNotRequiredFormField(product.nutritionFacts.cholesterolMilli)
+    val caffeine = rememberNotRequiredFormField(product.nutritionFacts.caffeineMilli)
+
+    val vitaminA = rememberNotRequiredFormField(product.nutritionFacts.vitaminAMicro)
+    val vitaminB1 = rememberNotRequiredFormField(product.nutritionFacts.vitaminB1Milli)
+    val vitaminB2 = rememberNotRequiredFormField(product.nutritionFacts.vitaminB2Milli)
+    val vitaminB3 = rememberNotRequiredFormField(product.nutritionFacts.vitaminB3Milli)
+    val vitaminB5 = rememberNotRequiredFormField(product.nutritionFacts.vitaminB5Milli)
+    val vitaminB6 = rememberNotRequiredFormField(product.nutritionFacts.vitaminB6Milli)
+    val vitaminB7 = rememberNotRequiredFormField(product.nutritionFacts.vitaminB7Micro)
+    val vitaminB9 = rememberNotRequiredFormField(product.nutritionFacts.vitaminB9Micro)
+    val vitaminB12 = rememberNotRequiredFormField(product.nutritionFacts.vitaminB12Micro)
+    val vitaminC = rememberNotRequiredFormField(product.nutritionFacts.vitaminCMilli)
+    val vitaminD = rememberNotRequiredFormField(product.nutritionFacts.vitaminDMicro)
+    val vitaminE = rememberNotRequiredFormField(product.nutritionFacts.vitaminEMilli)
+    val vitaminK = rememberNotRequiredFormField(product.nutritionFacts.vitaminKMicro)
+
+    val manganese = rememberNotRequiredFormField(product.nutritionFacts.manganeseMilli)
+    val magnesium = rememberNotRequiredFormField(product.nutritionFacts.magnesiumMilli)
+    val potassium = rememberNotRequiredFormField(product.nutritionFacts.potassiumMilli)
+    val calcium = rememberNotRequiredFormField(product.nutritionFacts.calciumMilli)
+    val copper = rememberNotRequiredFormField(product.nutritionFacts.copperMilli)
+    val zinc = rememberNotRequiredFormField(product.nutritionFacts.zincMilli)
+    val sodium = rememberNotRequiredFormField(product.nutritionFacts.sodiumMilli)
+    val iron = rememberNotRequiredFormField(product.nutritionFacts.ironMilli)
+    val phosphorus = rememberNotRequiredFormField(product.nutritionFacts.phosphorusMilli)
+    val selenium = rememberNotRequiredFormField(product.nutritionFacts.seleniumMicro)
+    val iodine = rememberNotRequiredFormField(product.nutritionFacts.iodineMicro)
 
     return remember(
         name,
@@ -381,7 +586,7 @@ private fun rememberNotRequiredFormField(initialValue: Float? = null) =
         initialValue = initialValue,
         parser = nullableFloatParser,
         validator = nonNegativeFloatValidator(),
-        textFieldState = rememberTextFieldState(initialValue?.formatClipZeros() ?: "")
+        textFieldState = rememberTextFieldState(initialValue?.formatClipZeros("%.4f") ?: "")
     )
 
 @Composable
@@ -389,5 +594,5 @@ private fun rememberRequiredFormField(initialValue: Float? = null) = rememberFor
     initialValue = initialValue,
     parser = nullableFloatParser,
     validator = requireNonNegativeFloatValidator(),
-    textFieldState = rememberTextFieldState(initialValue?.formatClipZeros() ?: "")
+    textFieldState = rememberTextFieldState(initialValue?.formatClipZeros("%.4f") ?: "")
 )

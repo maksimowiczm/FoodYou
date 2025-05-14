@@ -1,12 +1,17 @@
 package com.maksimowiczm.foodyou.feature.product.ui.create
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -36,9 +41,10 @@ import org.jetbrains.compose.resources.stringResource
 internal fun CreateProductScreen(
     onBack: () -> Unit,
     onCreate: (ProductFormState) -> Unit,
-    modifier: Modifier = Modifier
+    onDownload: () -> Unit,
+    modifier: Modifier = Modifier,
+    productFormState: ProductFormState = rememberProductFormState()
 ) {
-    val productFormState = rememberProductFormState()
     val listState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -90,9 +96,25 @@ internal fun CreateProductScreen(
             modifier = Modifier
                 .imePadding()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             state = listState,
             contentPadding = paddingValues
         ) {
+            item {
+                AssistChip(
+                    onClick = onDownload,
+                    label = { Text(stringResource(Res.string.action_download_product)) },
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Download,
+                            contentDescription = null,
+                            modifier = Modifier.size(AssistChipDefaults.IconSize)
+                        )
+                    }
+                )
+            }
+
             item {
                 ProductForm(
                     state = productFormState,

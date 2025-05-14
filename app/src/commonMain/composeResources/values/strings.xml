@@ -52,6 +52,7 @@
     <string name="headline_other">Other</string>
     <string name="headline_vitamins">Vitamins</string>
     <string name="headline_minerals">Minerals</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">Supported URLs</string>
 
     <string name="open_food_facts_disclaimer">Open Food Facts is a community-driven project. Data may be incomplete, outdated, or inaccurate. This app is not responsible for the validity of the information. Please verify before use.</string>
 
@@ -177,6 +178,7 @@
     <string name="action_choose_other_measurement">Choose other measurement</string>
     <string name="action_edit_your_home_page">Edit your home page</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Show more</string>
+    <string name="action_download_product">Download product</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -212,6 +214,11 @@
     <string name="error_sum_of_percentages_must_be_100">Sum of percentages must be 100</string>
     <string name="error_value_cannot_exceed_100">Value cannot exceed 100</string>
     <string name="error_value_must_be_positive">Value must be positive</string>
+    <string name="error_url_not_found">URL not found</string>
+    <string name="error_url_is_not_supported">URL is not supported</string>
+    <string name="error_failed_to_download_product">Failed to download product</string>
+    <string name="error_product_not_found">Product not found</string>
+    <string name="error_unknown_error">Unknown error</string>
 
     <string name="positive_goal_reached">Goal reached</string>
     <string name="positive_ok">OK</string>
@@ -235,6 +242,8 @@
     <string name="description_browse_open_food_facts">Open Food Facts website will be opened in your browser. You can search for the products there and copy the link to the product you want to add.</string>
     <string name="description_changelog">See what's new in the app</string>
     <string name="description_home_settings">Customize your home page</string>
+    <string name="description_download_product">Paste a link to a food product, and automatically fetch nutrition facts and product details.</string>
+    <string name="description_download_product_hint">You can paste any text. First URL will be used.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
