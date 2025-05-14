@@ -13,7 +13,7 @@ import androidx.compose.ui.text.withStyle
 
 @Composable
 fun unorderedList(items: List<String>, prefix: String = "\u2022\t\t") =
-    unorderedList(*items.toTypedArray(), prefix)
+    unorderedList(*items.toTypedArray(), prefix = prefix)
 
 @Composable
 fun unorderedList(vararg items: String, prefix: String = "\u2022\t\t"): AnnotatedString {
