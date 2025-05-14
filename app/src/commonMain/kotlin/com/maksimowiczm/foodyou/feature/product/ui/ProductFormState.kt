@@ -255,8 +255,8 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
         initialValue = product.packageWeight,
         parser = nullableFloatParser,
         validator = when {
-            measurement.value is Measurement.Package -> valueRequiredValidator()
-            else -> allowAllValidator()
+            measurement.value is Measurement.Package -> requirePositiveFloatValidator()
+            else -> positiveFloatValidator()
         },
         textFieldState = rememberTextFieldState(
             product.packageWeight?.formatClipZeros() ?: ""
@@ -267,8 +267,8 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
         initialValue = product.servingWeight,
         parser = nullableFloatParser,
         validator = when {
-            measurement.value is Measurement.Serving -> valueRequiredValidator()
-            else -> allowAllValidator()
+            measurement.value is Measurement.Serving -> requirePositiveFloatValidator()
+            else -> positiveFloatValidator()
         },
         textFieldState = rememberTextFieldState(
             product.servingWeight?.formatClipZeros() ?: ""
