@@ -109,6 +109,7 @@ internal fun DownloadProductScreen(
                                 onPaste()
                             }
                         },
+                        modifier = Modifier.testTag(DownloadProductScreenTestTags.PASTE_FAB),
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ) {
@@ -120,7 +121,7 @@ internal fun DownloadProductScreen(
 
                     MediumExtendedFloatingActionButton(
                         onClick = onDownload,
-                        modifier = Modifier.testTag(DownloadProductScreenTestTags.FAB)
+                        modifier = Modifier.testTag(DownloadProductScreenTestTags.DOWNLOAD_FAB)
                     ) {
                         Row {
                             Icon(

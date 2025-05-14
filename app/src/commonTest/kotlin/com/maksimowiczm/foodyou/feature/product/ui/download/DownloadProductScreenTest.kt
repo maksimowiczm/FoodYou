@@ -11,9 +11,10 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.DOWNLOAD_FAB
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.ERROR_CARD
-import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.FAB
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.OPEN_FOOD_FACTS_CHIP
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.PASTE_FAB
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.PASTE_URL_CHIP
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.PROGRESS_INDICATOR
 import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.TEXT_FIELD
@@ -26,11 +27,13 @@ class DownloadProductScreenTest {
     @Composable
     private fun DownloadProductScreen(
         modifier: Modifier = Modifier,
-        error: DownloadError? = null,
         isMutating: Boolean = false,
+        error: DownloadError? = null,
         textFieldState: TextFieldState = rememberTextFieldState(),
         onBack: () -> Unit = {},
-        onDownload: () -> Unit = {}
+        onDownload: () -> Unit = {},
+        onPaste: () -> Unit = {},
+        onOpenFoodFacts: () -> Unit = {}
     ) {
         com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreen(
             isMutating = isMutating,
@@ -38,6 +41,8 @@ class DownloadProductScreenTest {
             textFieldState = textFieldState,
             onBack = onBack,
             onDownload = onDownload,
+            onPaste = onPaste,
+            onOpenFoodFacts = onOpenFoodFacts,
             modifier = modifier
         )
     }
@@ -51,13 +56,14 @@ class DownloadProductScreenTest {
         onNodeWithTag(PROGRESS_INDICATOR).assertDoesNotExist()
         onNodeWithTag(ERROR_CARD).assertDoesNotExist()
         onNodeWithTag(TEXT_FIELD).assertIsDisplayed()
-        onNodeWithTag(FAB).assertIsDisplayed()
+        onNodeWithTag(DOWNLOAD_FAB).assertIsDisplayed()
+        onNodeWithTag(PASTE_FAB).assertIsDisplayed()
         onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsEnabled()
         onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
     }
 
     @Test
-    fun loadingState() = runComposeUiTest {
+    fun mutatingState() = runComposeUiTest {
         setContent {
             DownloadProductScreen(isMutating = true)
         }
@@ -65,7 +71,8 @@ class DownloadProductScreenTest {
         onNodeWithTag(PROGRESS_INDICATOR).assertIsDisplayed()
         onNodeWithTag(ERROR_CARD).assertDoesNotExist()
         onNodeWithTag(TEXT_FIELD).assertExists().assertIsNotEnabled()
-        onNodeWithTag(FAB).assertIsNotDisplayed()
+        onNodeWithTag(DOWNLOAD_FAB).assertIsNotDisplayed()
+        onNodeWithTag(PASTE_FAB).assertIsNotDisplayed()
         onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsNotEnabled()
         onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
     }
@@ -81,7 +88,8 @@ class DownloadProductScreenTest {
         onNodeWithTag(PROGRESS_INDICATOR).assertDoesNotExist()
         onNodeWithTag(ERROR_CARD).assertIsDisplayed()
         onNodeWithTag(TEXT_FIELD).assertExists().assertIsEnabled()
-        onNodeWithTag(FAB).assertIsDisplayed()
+        onNodeWithTag(DOWNLOAD_FAB).assertIsDisplayed()
+        onNodeWithTag(PASTE_FAB).assertIsDisplayed()
         onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsEnabled()
         onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
     }
