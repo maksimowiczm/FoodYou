@@ -7,9 +7,9 @@ import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 internal object OpenFoodFactsProductMapper {
 
     fun toRemoteProduct(product: OpenFoodFactsProductV2): RemoteProduct = RemoteProduct(
-        name = product.name,
-        brand = product.brand,
-        barcode = product.barcode,
+        name = product.name?.takeIf { it.isNotBlank() } ?: product.brand,
+        brand = product.brand?.takeIf { it.isNotBlank() },
+        barcode = product.barcode?.takeIf { it.isNotBlank() },
         nutritionFacts = RemoteNutritionFacts(
             proteins = product.nutritionFacts?.proteins?.toFloat(),
             carbohydrates = product.nutritionFacts?.carbohydrates?.toFloat(),
