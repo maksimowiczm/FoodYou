@@ -1,5 +1,5 @@
 package com.maksimowiczm.foodyou.feature.product.domain
 
-interface RemoteProductRequest {
+internal interface RemoteProductRequest {
     suspend fun execute(): Result<RemoteProduct>
 }

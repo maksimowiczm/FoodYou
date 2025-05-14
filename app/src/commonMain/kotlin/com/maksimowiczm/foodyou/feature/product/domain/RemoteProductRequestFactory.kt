@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.product.domain
 import com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.OpenFoodFactsFacade
 import com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.OpenFoodFactsProductRequest
 
-interface RemoteProductRequestFactory {
+internal interface RemoteProductRequestFactory {
     fun createFromUrl(url: String): RemoteProductRequest?
 }
 
