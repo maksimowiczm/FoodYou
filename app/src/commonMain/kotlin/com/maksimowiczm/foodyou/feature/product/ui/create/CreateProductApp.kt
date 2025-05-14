@@ -60,6 +60,10 @@ internal fun CreateProductApp(
             DownloadProductScreen(
                 text = text,
                 onBack = {
+                    if (text != null) {
+                        onBack()
+                    }
+
                     navController.popBackStack<Download>(inclusive = true)
                 },
                 onDownload = {

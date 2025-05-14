@@ -47,7 +47,7 @@ private fun DownloadProductScreenImpl(
 ) {
     val isMutating = viewModel.isMutating.collectAsStateWithLifecycle().value
     val error = viewModel.error.collectAsStateWithLifecycle().value
-    val textFieldState = rememberTextFieldState()
+    val textFieldState = rememberTextFieldState(text ?: "")
 
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner, viewModel) {

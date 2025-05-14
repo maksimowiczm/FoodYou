@@ -6,10 +6,11 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.feature.product.ui.create.CreateProductApp
+import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
 
 class ShareProductActivity : ComponentActivity() {
 
@@ -53,10 +54,12 @@ private class NoTextFoundException : Exception()
 @Composable
 private fun ShareProductApp(text: String, onBack: () -> Unit, onCreate: () -> Unit) {
     FoodYouTheme {
-        CreateProductApp(
-            onBack = onBack,
-            onCreate = { onCreate() },
-            text = text
-        )
+        Surface {
+            CreateProductScreen(
+                onBack = onBack,
+                onCreate = { onCreate() },
+                text = text
+            )
+        }
     }
 }
