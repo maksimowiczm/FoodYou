@@ -37,6 +37,7 @@ class ShareProductActivity : FoodYouAbstractActivity() {
         val onCreated = {
             val text = runBlocking { getStringRes(Res.string.neutral_product_created) }
             Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+            finish()
         }
 
         setContent {
