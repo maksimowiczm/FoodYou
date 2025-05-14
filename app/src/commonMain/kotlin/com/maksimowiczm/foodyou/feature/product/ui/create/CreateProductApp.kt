@@ -58,7 +58,7 @@ internal fun CreateProductApp(
                     val json = Json.encodeToString(it)
                     navController.navigate(Create(json)) {
                         launchSingleTop = true
-                        popUpTo<Download> {
+                        popUpTo<Create> {
                             inclusive = true
                         }
                     }
