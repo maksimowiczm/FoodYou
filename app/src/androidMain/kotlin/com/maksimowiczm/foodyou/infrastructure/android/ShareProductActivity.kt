@@ -37,7 +37,6 @@ class ShareProductActivity : FoodYouAbstractActivity() {
         val onCreated = {
             val text = runBlocking { getStringRes(Res.string.neutral_product_created) }
             Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-            finish()
         }
 
         setContent {
@@ -58,7 +57,6 @@ class ShareProductActivity : FoodYouAbstractActivity() {
             Logger.e("No text found in intent")
             val error = runBlocking { getStringRes(Res.string.error_unknown_error) }
             Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-            finish()
         }
     }
 }
