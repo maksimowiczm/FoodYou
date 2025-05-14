@@ -57,7 +57,7 @@ If you're looking for alternatives or inspiration, check out these open-source p
 
 You can help with translations on [Crowdin](https://crowdin.com/project/food-you)! If you'd like to
 be credited for your contributions, please add your name to
-the [Languages file](app/src/main/java/com/maksimowiczm/foodyou/feature/settings/language/ui/Languages.kt)
+the [Languages file](app/src/commonMain/kotlin/com/maksimowiczm/foodyou/feature/language/Languages.kt)
 or let me know, and I will add it for you.
 
 ### 💡 Credits
