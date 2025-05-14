@@ -26,7 +26,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun ActionChips(
     isMutating: Boolean,
     onPaste: (String) -> Unit,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier
 ) {
     val uriHandler = LocalUriHandler.current
     val openFoodFactsUrl = stringResource(Res.string.link_open_food_facts)
@@ -44,7 +44,7 @@ private fun ActionChips(
     isMutating: Boolean,
     onPaste: (String) -> Unit,
     onOpenFoodFacts: () -> Unit,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier
 ) {
     val clipboardManager = LocalClipboardManager.current
 
@@ -67,7 +67,7 @@ private fun ActionChips(
                 Icon(
                     imageVector = Icons.Default.ContentPaste,
                     contentDescription = null,
-                    modifier = Modifier.Companion.size(AssistChipDefaults.IconSize)
+                    modifier = Modifier.size(AssistChipDefaults.IconSize)
                 )
             }
         )
@@ -78,7 +78,7 @@ private fun ActionChips(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    modifier = Modifier.Companion.size(AssistChipDefaults.IconSize)
+                    modifier = Modifier.size(AssistChipDefaults.IconSize)
                 )
             },
             label = {
