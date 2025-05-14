@@ -31,9 +31,16 @@ internal fun ActionChips(
     val uriHandler = LocalUriHandler.current
     val openFoodFactsUrl = stringResource(Res.string.link_open_food_facts)
 
+    val clipboardManager = LocalClipboardManager.current
+
     ActionChips(
         isMutating = isMutating,
-        onPaste = onPaste,
+        onPaste = {
+            clipboardManager
+                .paste()
+                ?.takeIf { it.isNotEmpty() }
+                ?.let { onPaste(it) }
+        },
         onOpenFoodFacts = { uriHandler.openUri(openFoodFactsUrl) },
         modifier = modifier
     )
@@ -42,24 +49,17 @@ internal fun ActionChips(
 @Composable
 private fun ActionChips(
     isMutating: Boolean,
-    onPaste: (String) -> Unit,
+    onPaste: () -> Unit,
     onOpenFoodFacts: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val clipboardManager = LocalClipboardManager.current
-
     FlowRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         AssistChip(
-            onClick = {
-                val text = clipboardManager.paste()
-                if (text != null && text.isNotEmpty()) {
-                    onPaste(text)
-                }
-            },
+            onClick = onPaste,
             modifier = Modifier.testTag(DownloadProductScreenTestTags.PASTE_URL_CHIP),
             label = { Text(stringResource(Res.string.action_paste_url)) },
             enabled = !isMutating,
