@@ -18,7 +18,7 @@ internal class OpenFoodFactsRemoteDataSource(private val client: HttpClient) {
     suspend fun getProduct(
         barcode: String,
         countries: String? = null
-    ): Result<OpenFoodFactsProductV2> {
+    ): Result<OpenFoodFactsProductV2> = runCatching {
         val countries = countries?.lowercase()
         val url = "${BuildConfig.OPEN_FOOD_FACTS_URL}api/v2/product/$barcode"
 
