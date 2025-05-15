@@ -27,7 +27,7 @@
         android:roundIcon="${applicationRoundIcon}"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodYou"
-        tools:targetApi="33">
+        tools:targetApi="36">
         <activity
             android:name=".infrastructure.android.FoodYouMainActivity"
             android:exported="true"
