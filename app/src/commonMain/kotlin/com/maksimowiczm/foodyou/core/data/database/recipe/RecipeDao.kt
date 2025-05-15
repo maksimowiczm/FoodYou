@@ -42,6 +42,7 @@ abstract class RecipeDao : RecipeLocalDataSource {
             )
         ) AS pm ON p.id = pm.productId
         WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%' OR p.brand LIKE '%' || :query || '%')
+        ORDER BY p.name
         """
     )
     abstract override fun observeIngredientSuggestions(
