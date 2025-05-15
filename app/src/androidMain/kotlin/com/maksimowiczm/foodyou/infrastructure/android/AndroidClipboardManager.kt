@@ -30,7 +30,7 @@ class AndroidClipboardManager(private val context: Context) : ClipboardManager {
         }
     }
 
-    override fun paste(): String? {
+    override fun paste(): String? = runCatching {
         val clip = clipboard.primaryClip
 
         return if (clip != null && clip.itemCount > 0) {
@@ -38,5 +38,5 @@ class AndroidClipboardManager(private val context: Context) : ClipboardManager {
         } else {
             null
         }
-    }
+    }.getOrNull()
 }

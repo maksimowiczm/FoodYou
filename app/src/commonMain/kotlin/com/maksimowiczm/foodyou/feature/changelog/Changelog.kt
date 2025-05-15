@@ -8,18 +8,30 @@ import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.core.ext.now
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
+import kotlin.String
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_3_0,
             v2_2_0,
             v2_1_1,
             v2_1_0,
             v2_0_0
         )
+
+    val next = Version.next(
+        newFeatures = listOf(),
+        changes = listOf(),
+        bugFixes = listOf(
+            "App won't crash when the user attempts to paste with an empty clipboard"
+        ),
+        translations = listOf(),
+        notes = null
+    )
 
     val v2_3_0 = Version(
         version = "2.3.0",
