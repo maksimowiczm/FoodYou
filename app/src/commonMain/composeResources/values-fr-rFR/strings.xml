@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">N/A</string>
+    <string name="headline_create_product">Créer un produit</string>
+    <string name="headline_settings">Paramètres</string>
+    <string name="headline_calories_goal">Objectif calorique</string>
+    <string name="headline_daily_goals">Objectifs quotidiens</string>
+    <string name="headline_general">Général</string>
+    <string name="headline_macronutrients">Macronutriments</string>
+    <string name="headline_meals">Repas</string>
+    <string name="headline_delete_product">Supprimer un produit</string>
+    <string name="headline_edit_product">Modifier le produit</string>
+    <string name="headline_permission_required">Autorisation requise</string>
+    <string name="headline_language">Langue</string>
+    <string name="headline_authors">Auteurs</string>
+    <string name="headline_system">Système</string>
+    <string name="headline_system_language_settings">Paramètres de la langue du système</string>
+    <string name="headline_secure_screen">Écran sécurisé</string>
+    <string name="headline_about">A propos</string>
+    <string name="headline_miscellaneous">Divers</string>
+    <string name="headline_version">Version</string>
+    <string name="headline_share_your_thoughts">Faites part de vos réflexions</string>
+    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Montrer de l'amour</string>
+    <string name="headline_all_day" description="All-day (meal)">Toute la journée</string>
+    <string name="headline_time_based_ordering">Commande basée sur le temps</string>
+    <string name="headline_incomplete_products">Produits incomplets</string>
+    <string name="headline_product">Produit</string>
+    <string name="headline_recipe">Recette</string>
+    <string name="headline_create_recipe">Créer une recette</string>
+    <string name="headline_update_recipe">Mise à jour de la recette</string>
+    <string name="headline_ingredients" description="Recipe ingredients">Ingrédients</string>
+    <string name="headline_summary">Résumé</string>
+    <string name="headline_whats_new">Nouveautés</string>
+    <string name="headline_changelog">Journal des modifications</string>
+    <string name="headline_installed" description="Installed version of the app">Installé</string>
+    <string name="weight">Poids</string>
+    <string name="unit_calories">Calories</string>
+    <string name="unit_kcal">kcal</string>
+    <plurals name="unit_gram">
+        <item quantity="one">gramme</item>
+        <item quantity="other">grammes</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">millilitre</item>
+        <item quantity="other">millilitres</item>
+    </plurals>
+    <string name="product_package_weight">Poids de l'emballage</string>
+    <string name="product_package">Paquet</string>
+    <string name="product_serving_weight">Poids de la portion</string>
+    <string name="product_serving">Portion</string>
+    <string name="product_name">Nom</string>
+    <string name="product_brand">Marque</string>
+    <string name="product_barcode">Code-barre</string>
+    <string name="product_link">Lien vers le produit</string>
+    <string name="recipe_servings">Portion</string>
+    <string name="description_recipe_servings">Combien de portions cette recette donne-t-elle ?</string>
+    <string name="nutriment_proteins">Protéines</string>
+    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_carbohydrates">Glucides</string>
+    <string name="nutriment_carbohydrates_short">G</string>
+    <string name="nutriment_sugars">Sucres</string>
+    <string name="nutriment_fats">Lipides</string>
+    <string name="nutriment_fats_short">L</string>
+    <string name="nutriment_saturated_fats">Acide gras saturé</string>
+    <string name="nutriment_salt">Sel</string>
+    <string name="nutriment_fiber">Fibre</string>
+    <string name="action_search">Rechercher</string>
+    <string name="action_scan_barcode">Scanner un code barre</string>
+    <string name="action_add">Ajouter</string>
+    <string name="action_go_back">Retour</string>
+    <string name="action_tap_to_allow_access">Tapez sur pour autoriser l'accès</string>
+    <string name="action_create">Créer</string>
+    <string name="action_clear">Clair</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="action_go_to_settings">Aller dans les paramètres</string>
+    <string name="action_save">Sauvegarder</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="action_confirm">Confirmer</string>
+    <string name="action_add_meal">Ajouter un repas</string>
+    <string name="action_edit">Modifier </string>
+    <string name="action_insert_suggested_search">Insérer la recherche suggérée</string>
+    <string name="action_edit_entry">Modifier l'entrée</string>
+    <string name="action_delete_entry">Supprimer l'entrée</string>
+    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Ajouter de la nourriture</string>
+    <string name="action_undo">Annuler</string>
+    <string name="action_discard">Rejeter</string>
+    <string name="action_translate">Traduire</string>
+    <string name="action_enable_camera_flash">Activer le flash de l'appareil photo</string>
+    <string name="action_disable_camera_flash">Désactiver le flash de l'appareil photo</string>
+    <string name="action_prevent_screen_capture">Empêcher la capture d'écran</string>
+    <string name="action_go_to_today">Aller à aujourd'hui</string>
+    <string name="action_bug_report_on_github">Rapport de bug sur GitHub</string>
+    <string name="action_feature_request_on_github">Demande de fonctionnalité sur GitHub</string>
+    <string name="action_leave_a_star_on_github">Laisser une étoile sur GitHub</string>
+    <string name="action_show_calendar">Afficher le calendrier</string>
+    <string name="action_reorder">Réorganiser</string>
+    <string name="action_move_up" description="reorder list item up">Déplacer vers le haut</string>
+    <string name="action_move_down" description="reorder list item down">Déplacer vers le bas</string>
+    <string name="action_use_time_based_ordering">Classer en fonction de l'horaire</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Ajouter un ingrédient</string>
+    <string name="action_edit_ingredient_measurement">Modifier la quantité de l'ingrédient</string>
+    <string name="action_delete_ingredient">Supprimer l'ingrédient</string>
+    <string name="action_download">Télécharger</string>
+    <string name="action_paste_url">Coller l'URL</string>
+    <string name="action_browse_open_food_facts">Parcourir Open Food Facts</string>
+    <string name="action_copy">Copier</string>
+    <string name="neutral_barcode_scanner_camera_request">Autoriser l'accès à l'appareil photo pour scanner les codes-barres</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Vous devez autoriser l'accès pour pouvoir scanner les codes-barres.</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L'accès à la caméra est nécessaire pour scanner les codes-barres. Autorisez-le dans les paramètres.</string>
+    <string name="neutral_no_products_found">Aucun produit trouvé</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">%1$d calorie restante</item>
+        <item quantity="other">%1$d calories restantes</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Définir vos objectifs journaliers</string>
+    <string name="neutral_permanently_delete_meal">Supprimer définitivement le repas ?</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Le repas sera supprimé définitivement. Toutes les données associées seront perdues.</string>
+    <string name="neutral_required">Requis</string>
+    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Les calories sont calculées automatiquement à partir des macronutriments</string>
+    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Ce repas est vide. Ajoutez des aliments pour comptabiliser vos calories.</string>
+    <string name="neutral_entry_deleted">Entrée supprimée</string>
+    <string name="neutral_help_translating_the_app">Contribuer à la traduction de l'app</string>
+    <string name="neutral_copied">Info copiée dans le presse-papiers</string>
+    <string name="question_discard_product">Abandonner le produit ?</string>
+    <string name="question_discard_changes">Abandonner les modifications ?</string>
+    <string name="question_discard_recipe">Abandonner la recette ?</string>
+    <string name="error_this_field_is_required">Champ obligatoire</string>
+    <string name="error_invalid_number">Nombre invalide</string>
+    <string name="error_value_cannot_be_negative">Impossible d'utiliser une valeur négative</string>
+    <string name="error_value_must_be_less_than">La valeur doit être inférieure à %1$s</string>
+    <string name="error_value_must_be_integer">La valeur doit être un entier</string>
+    <string name="error_sum_of_percentages_must_be_100">La somme des pourcentages doit être égale à 100</string>
+    <string name="positive_goal_reached">Objectif atteint</string>
+    <string name="positive_ok">OK</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="one">Dépassé de %1$d calorie</item>
+        <item quantity="other">Dépassé de %1$d calories</item>
+    </plurals>
+    <string name="description_calories_goal">Définissez votre objectif quotidien de calories. Cela vous aidera à suivre vos progrès et à rester sur la bonne voie.</string>
+    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Le produit sera supprimé définitivement. Cette action est irréversible. Toutes les entrées du journal liées à ce produit seront également supprimées.</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Cette entrée sera supprimée de votre journal. Vous pourrez l'ajouter de nouveau à tout moment.</string>
+    <string name="description_README_setting">Consulter le README du projet sur GitHub</string>
+    <string name="description_about_setting">En savoir plus sur l'application</string>
+    <string name="description_show_some_love">Si vous trouvez ce projet utile, pensez à lui attribuer une étoile sur GitHub ! Cela aide d'autres personnes à le découvrir et soutient son développement.</string>
+    <string name="description_share_your_thoughts">Si vous avez des retours, des suggestions de fonctionnalités ou des rapports de bugs, n'hésitez pas à me le faire savoir ! J'adorerais avoir votre avis.</string>
+    <string name="description_time_based_meals_sorting">Les repas en cours seront affichés en haut lorsqu'elle est activée</string>
+    <string name="description_incomplete_nutrition_data">Certains produits utilisés n'ont pas cette valeur ; la valeur affichée pourrait donc être inexacte</string>
+    <string name="description_translation_warning">Les traductions sont réalisées par des bénévoles. Elles peuvent contenir des erreurs ou être incomplètes. Si vous remarquez des erreurs, n'hésitez pas à contribuer à leur amélioration.</string>
+    <string name="description_changelog">Voir les nouveautés de l'application</string>
+    <string name="headline_launcher_icon_by_icons8">Icône de démarrage fournie par Icons8</string>
+    <string name="neutral_see_other_awesome_icons_here">Découvrez d'autres superbes icônes ici</string>
+    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
+    <!-- Don't translate changelog strings -->
+</resources>
