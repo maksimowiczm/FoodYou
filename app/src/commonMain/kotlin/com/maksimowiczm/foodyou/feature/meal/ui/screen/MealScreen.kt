@@ -41,9 +41,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumExtendedFloatingActionButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -508,7 +508,7 @@ private fun SharedTransitionScope.MealScreenTopBar(
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SharedTransitionScope.MealScreenFloatingActionButton(
     screenScope: AnimatedVisibilityScope,
@@ -523,7 +523,7 @@ private fun SharedTransitionScope.MealScreenFloatingActionButton(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         with(screenScope) {
-            SmallFloatingActionButton(
+            FloatingActionButton(
                 onClick = onBarcodeScanner,
                 modifier = Modifier
                     .testTag(MealScreenTestTags.BARCODE_SCANNER_FAB)
@@ -540,7 +540,7 @@ private fun SharedTransitionScope.MealScreenFloatingActionButton(
             }
         }
 
-        FloatingActionButton(
+        MediumExtendedFloatingActionButton(
             onClick = onAddFood,
             modifier = Modifier
                 .testTag(MealScreenTestTags.ADD_FOOD_FAB)
@@ -567,7 +567,6 @@ private fun SharedTransitionScope.MealScreenFloatingActionButton(
                 )
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
