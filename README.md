@@ -16,6 +16,7 @@ A free and open-source calorie counter app
     <img src="metadata/en-US/images/phoneScreenshots/400_measure_product.png" width="30%"/>
     <img src="metadata/en-US/images/phoneScreenshots/201_diary_day_details.png" width="30%"/>
     <img src="metadata/en-US/images/phoneScreenshots/500_create_product.png" width="30%"/>
+    <img src="metadata/en-US/images/phoneScreenshots/525_download_product.png" width="30%"/>
     <img src="metadata/en-US/images/phoneScreenshots/550_create_recipe.png" width="30%"/>
     <img src="metadata/en-US/images/phoneScreenshots/600_settings.png" width="30%"/>
 </div>
@@ -25,8 +26,7 @@ A free and open-source calorie counter app
 ### 📌 What is this?
 
 **FoodYou** is a simple calorie-tracking app designed with [Material You](https://m3.material.io/)
-aesthetic - at least,
-that was the goal! Since I’m still learning, I can’t say for sure if it fully embraces the style. 😅
+aesthetic.
 
 ### ❓ Why does it exist?
 
@@ -57,7 +57,7 @@ If you're looking for alternatives or inspiration, check out these open-source p
 
 You can help with translations on [Crowdin](https://crowdin.com/project/food-you)! If you'd like to
 be credited for your contributions, please add your name to
-the [Languages file](app/src/main/java/com/maksimowiczm/foodyou/feature/settings/language/ui/Languages.kt)
+the [Languages file](app/src/commonMain/kotlin/com/maksimowiczm/foodyou/feature/language/Languages.kt)
 or let me know, and I will add it for you.
 
 ### 💡 Credits

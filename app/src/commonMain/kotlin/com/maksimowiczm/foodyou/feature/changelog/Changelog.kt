@@ -14,14 +14,16 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_3_0,
             v2_2_0,
             v2_1_1,
             v2_1_0,
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_3_0 = Version(
+        version = "2.3.0",
+        date = LocalDate(2025, 5, 15),
         newFeatures = listOf(
             "Add new nutrition facts, such as caffeine, vitamins, minerals, and more",
             "Share Open Food Facts product URL to add it to the app"
@@ -29,7 +31,6 @@ object Changelog {
         changes = listOf(
             "Redesign the download product screen to be generic"
         ),
-        bugFixes = listOf(),
         translations = listOf(
             """Fix \' strings. It now displays correctly without escaping.""",
             "Added French",
