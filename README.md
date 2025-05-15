@@ -26,8 +26,7 @@ A free and open-source calorie counter app
 ### 📌 What is this?
 
 **FoodYou** is a simple calorie-tracking app designed with [Material You](https://m3.material.io/)
-aesthetic - at least,
-that was the goal! Since I’m still learning, I can’t say for sure if it fully embraces the style. 😅
+aesthetic.
 
 ### ❓ Why does it exist?
 
