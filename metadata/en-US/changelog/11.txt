@@ -1,0 +1,9 @@
+New features
+- Add new nutrition facts, such as caffeine, vitamins, minerals, and more
+- Share Open Food Facts product URL to add it to the app
+
+Changes
+- Redesign the download product screen to be generic
+
+Notes
+You can suggest new external databases to download products from on GitHub
