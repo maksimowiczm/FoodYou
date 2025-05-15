@@ -162,7 +162,7 @@
     <string name="description_action_include_all_day_meals">Alle dagens måltider inkluderes på den aktuelle måltidsliste</string>
     <string name="description_incomplete_nutrition_data">Nogle af de brugte produkter mangler denne værdi; derfor er den viste værdi muligvis ikke akkurat</string>
     <string name="description_translation_warning">Oversættelserne er lavet af frivillige. De er måske ikke perfekte, og nogle oversættelser kan mangle. Hvis du opdager fejl, så hjælp gerne med at forbedre dem.</string>
-    <string name="description_browse_open_food_facts">Open Food Facts\' hjemmeside åbnes i din browser. Dér kan du søge efter produkter og kopiere linket til det produkt, du vil tilføje.</string>
+    <string name="description_browse_open_food_facts">Open Food Facts' hjemmeside åbnes i din browser. Dér kan du søge efter produkter og kopiere linket til det produkt, du vil tilføje.</string>
     <string name="description_changelog">Se, hvad der er nyt i appen</string>
     <string name="headline_launcher_icon_by_icons8">Launcher-ikon fra Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Se andre fantastiske ikoner her</string>

@@ -30,7 +30,9 @@ object Changelog {
             "Redesign the download product screen to be generic"
         ),
         bugFixes = listOf(),
-        translations = listOf(),
+        translations = listOf(
+            """Fix \' strings. It now displays correctly without escaping."""
+        ),
         notes = "You can suggest new external databases to download products from on GitHub"
     )
 
