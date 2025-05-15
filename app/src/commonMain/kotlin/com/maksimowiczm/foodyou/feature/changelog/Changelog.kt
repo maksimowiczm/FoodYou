@@ -32,7 +32,8 @@ object Changelog {
         bugFixes = listOf(),
         translations = listOf(
             """Fix \' strings. It now displays correctly without escaping.""",
-            "Added French"
+            "Added French",
+            "Added Ukrainian"
         ),
         notes = "You can suggest new external databases to download products from on GitHub"
     )

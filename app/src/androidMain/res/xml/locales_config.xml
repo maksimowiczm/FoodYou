@@ -9,5 +9,6 @@
     <locale android:name="pl-PL"/>
     <locale android:name="pt-BR"/>
     <locale android:name="ru-RU"/>
+    <locale android:name="uk-UA"/>
     <locale android:name="tr-TR"/>
 </locale-config>
