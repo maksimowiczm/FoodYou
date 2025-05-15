@@ -60,7 +60,7 @@ abstract class FoodDao : FoodLocalDataSource {
                 (m.productId IS NOT NULL AND m.productId = s.productId)
                 OR (m.recipeId IS NOT NULL AND m.recipeId = s.recipeId)
         )
-        ORDER BY name
+        ORDER BY name, brand
         """
     )
     abstract override fun queryFood(

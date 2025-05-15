@@ -26,7 +26,7 @@ object Changelog {
     val next = Version.next(
         newFeatures = listOf(),
         changes = listOf(
-            "Sort food by name in the food search screen"
+            "Sort food by name and brand in the food search screen"
         ),
         bugFixes = listOf(
             "App won't crash when the user attempts to paste with an empty clipboard"
