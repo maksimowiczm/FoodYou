@@ -5,10 +5,8 @@
     <string name="headline_settings">Ustawienia</string>
     <string name="headline_calories_goal">Cel kaloryczny</string>
     <string name="headline_daily_goals">Cele dzienne</string>
-    <string name="headline_product_serving_and_packaging">Porcja i opakowanie</string>
     <string name="headline_general">Ogólne</string>
     <string name="headline_macronutrients">Makroskładniki</string>
-    <string name="headline_nutrients">Składniki odżywcze</string>
     <string name="headline_meals">Posiłki</string>
     <string name="headline_delete_product">Usuń produkt</string>
     <string name="headline_edit_product">Edytuj produkt</string>
@@ -32,7 +30,6 @@
     <string name="headline_update_recipe">Edytuj przepis</string>
     <string name="headline_ingredients" description="Recipe ingredients">Składniki</string>
     <string name="headline_summary">Podsumowanie</string>
-    <string name="headline_example_links">Przykładowe linki</string>
     <string name="headline_whats_new">Co nowego</string>
     <string name="headline_changelog">Dziennik zmian</string>
     <string name="headline_installed" description="Installed version of the app">Zainstalowano</string>
@@ -43,9 +40,14 @@
     <string name="headline_meals_cards_settings">Ustawienia kart z posiłkami</string>
     <string name="headline_horizontal">Poziomo</string>
     <string name="headline_vertical">Pionowo</string>
-    <string name="open_food_facts_disclaimer">Open Food Facts to projekt tworzony przez społeczność. Dane mogą być niekompletne, nieaktualne lub nieprecyzyjne. Ta aplikacja nie odpowiada za ich poprawność. Weryfikuj informacje przed użyciem.</string>
+    <string name="headline_values_per">Wartości na</string>
+    <string name="headline_other">Inne</string>
+    <string name="headline_vitamins">Witaminy</string>
+    <string name="headline_minerals">Minerały</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">Obsługiwane adresy URL</string>
     <string name="weight">Waga</string>
     <string name="unit_calories">Kalorie</string>
+    <string name="unit_energy" description="Energy as calories">Energia</string>
     <string name="unit_kcal">kcal</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
@@ -77,9 +79,38 @@
     <string name="nutriment_fats">Tłuszcze</string>
     <string name="nutriment_fats_short">T</string>
     <string name="nutriment_saturated_fats">Kwasy tłuszczowe nasycone</string>
+    <string name="nutriment_polyunsaturated_fats">Tłuszcze wielonienasycone</string>
+    <string name="nutriment_monounsaturated_fats">Tłuszcze jednonienasycone</string>
+    <string name="nutriment_omega_3">Kwasy tłuszczowe omega-3</string>
+    <string name="nutriment_omega_6">Kwasy tłuszczowe omega-6</string>
     <string name="nutriment_salt">Sól</string>
-    <string name="nutriment_sodium">Sód</string>
     <string name="nutriment_fiber">Błonnik</string>
+    <string name="nutriment_cholesterol">Cholesterol</string>
+    <string name="nutriment_caffeine">Kofeina</string>
+    <string name="vitamin_a">Witamina A</string>
+    <string name="vitamin_b1">Witamina B1</string>
+    <string name="vitamin_b2">Witamina B2</string>
+    <string name="vitamin_b3">Witamina B3</string>
+    <string name="vitamin_b5">Witamina B5</string>
+    <string name="vitamin_b6">Witamina B6</string>
+    <string name="vitamin_b7">Witamina B7</string>
+    <string name="vitamin_b9">Witamina B9</string>
+    <string name="vitamin_b12">Witamina B12</string>
+    <string name="vitamin_c">Witamina C</string>
+    <string name="vitamin_d">Witamina D</string>
+    <string name="vitamin_e">Witamina E</string>
+    <string name="vitamin_k">Witamina K</string>
+    <string name="mineral_manganese">Mangan</string>
+    <string name="mineral_magnesium">Magnez</string>
+    <string name="mineral_potassium">Potas</string>
+    <string name="mineral_calcium">Wapń</string>
+    <string name="mineral_copper">Miedź</string>
+    <string name="mineral_zinc">Cynk</string>
+    <string name="mineral_sodium">Sód</string>
+    <string name="mineral_iron">Żelazo</string>
+    <string name="mineral_phosphorus">Fosfor</string>
+    <string name="mineral_selenium">Selen</string>
+    <string name="mineral_iodine">Jod</string>
     <string name="action_search">Szukaj</string>
     <string name="action_scan_barcode">Skanuj kod kreskowy</string>
     <string name="action_add">Dodaj</string>
@@ -101,13 +132,11 @@
     <string name="action_undo">Cofnij</string>
     <string name="action_close">Zamknij</string>
     <string name="action_discard">Odrzuć</string>
-    <string name="action_don_t_show_again">Nie pokazuj ponownie</string>
     <string name="action_translate">Przetłumacz</string>
     <string name="action_enable_camera_flash">Włącz lampę błyskową</string>
     <string name="action_disable_camera_flash">Wyłącz lampę błyskową</string>
     <string name="action_prevent_screen_capture">Zabezpiecz przed przechwytywaniem ekranu</string>
     <string name="action_go_to_today">Przejdź do dzisiaj</string>
-    <string name="action_use_open_food_facts_product">Używaj produktu Open Food Facts</string>
     <string name="action_bug_report_on_github">Zgłoś błąd na GitHubie</string>
     <string name="action_feature_request_on_github">Zgłoś sugestię na GitHubie</string>
     <string name="action_leave_a_star_on_github">Zostaw gwiazdkę na GitHubie</string>
@@ -123,12 +152,13 @@
     <string name="action_download">Pobierz</string>
     <string name="action_paste_url">Wklej URL</string>
     <string name="action_browse_open_food_facts">Przeglądaj Open Food Facts</string>
-    <string name="action_open_browser">Otwórz przeglądarkę</string>
     <string name="action_copy">Kopiuj</string>
     <string name="action_choose_other_date">Wybierz inną datę</string>
     <string name="action_choose_other_measurement">Wybierz inny pomiar</string>
     <string name="action_edit_your_home_page">Edytuj swoją stronę główną</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Pokaż więcej</string>
+    <string name="action_download_product">Pobierz produkt</string>
+    <string name="action_suggest_external_database">Zaproponuj zewnętrzną bazę danych</string>
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
@@ -140,7 +170,6 @@
         <item quantity="other">Pozostało %1$d kalorii</item>
     </plurals>
     <string name="neutral_set_your_daily_goals">Ustaw swoje cele</string>
-    <string name="neutral_all_values_per_x">Wszystkie wartości na %1$s</string>
     <string name="neutral_set_your_meal_schedule">Ustaw swój harmonogram posiłków</string>
     <string name="neutral_permanently_delete_meal">Usunąć posiłek?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Posiłek zostanie trwale usunięty. Wszystkie powiązane z nim dane zostaną utracone.</string>
@@ -149,19 +178,23 @@
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Wygląda na to, że ten posiłek jest pusty. Dodaj jedzenie, aby śledzić kalorie</string>
     <string name="neutral_entry_deleted">Wpis usunięty</string>
     <string name="neutral_help_translating_the_app">Pomóż w tłumaczeniu aplikacji</string>
-    <string name="neutral_failed_to_download_the_product">Nie udało się pobrać produktu</string>
     <string name="neutral_copied">Informacja skopiowana do schowka</string>
+    <string name="neutral_product_created">Produkt stworzony</string>
     <string name="question_discard_product">Odrzucić produkt?</string>
     <string name="question_discard_changes">Odrzucić zmiany?</string>
     <string name="question_discard_recipe">Odrzucić przepis?</string>
     <string name="error_this_field_is_required">To pole jest wymagane</string>
     <string name="error_invalid_number">Niepoprawna liczba</string>
     <string name="error_value_cannot_be_negative">Wartość nie może być ujemna</string>
-    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Suma makroskładników nie może przekraczać 100 g</string>
     <string name="error_value_must_be_less_than">Wartość musi być mniejsza niż %1$s</string>
     <string name="error_value_must_be_integer">Wartość musi być liczbą całkowitą</string>
     <string name="error_sum_of_percentages_must_be_100">Suma procentów musi wynosić 100</string>
-    <string name="error_value_cannot_exceed_100">Wartość nie może przekraczać 100</string>
+    <string name="error_value_must_be_positive">Wartość musi być dodatnia</string>
+    <string name="error_url_not_found">Nie znaleziono adresu URL</string>
+    <string name="error_url_is_not_supported">Adres URL nie jest obsługiwany</string>
+    <string name="error_failed_to_download_product">Nie udało się pobrać produktu</string>
+    <string name="error_product_not_found">Produkt nie został znaleziony</string>
+    <string name="error_unknown_error">Nieznany błąd</string>
     <string name="positive_goal_reached">Cel osiągnięty</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
@@ -181,9 +214,10 @@
     <string name="description_action_ignore_all_day_meals">Całodzienne posiłki będą wyświetlane na końcu listy</string>
     <string name="description_incomplete_nutrition_data">Niektóre z używanych produktów nie mają tej wartości, dlatego wyświetlana wartość może być niedokładna</string>
     <string name="description_translation_warning">Tłumaczenia są tworzone przez wolontariuszy. Mogą nie być idealne, a niektóre tłumaczenia mogą być niekompletne. Jeśli zauważysz jakiekolwiek błędy, nie wahaj się pomóc w ich poprawie.</string>
-    <string name="description_browse_open_food_facts">W twojej przeglądarce zostanie otwarta strona internetowa Open Food Facts. Możesz tam wyszukać produkty i skopiować link do produktu, który chcesz dodać.</string>
     <string name="description_changelog">Zobacz co nowego w aplikacji</string>
     <string name="description_home_settings">Dostosuj swoją stronę główną</string>
+    <string name="description_download_product">Wklej link do produktu spożywczego i pobierz informacje o wartościach odżywczych i szczegółach produktu.</string>
+    <string name="description_download_product_hint">Możesz wkleić dowolny tekst. Pierwszy adres URL zostanie użyty.</string>
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Zobacz inne świetne ikony tutaj</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://pl.openfoodfacts.org/</string>

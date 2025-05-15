@@ -5,10 +5,8 @@
     <string name="headline_settings">Настройки</string>
     <string name="headline_calories_goal">Цель по калорийности</string>
     <string name="headline_daily_goals">Дневные цели</string>
-    <string name="headline_product_serving_and_packaging">Порция и упаковка</string>
     <string name="headline_general">Общие</string>
     <string name="headline_macronutrients">Макронутриенты</string>
-    <string name="headline_nutrients">Питательные вещества</string>
     <string name="headline_meals">Приемы пищи</string>
     <string name="headline_delete_product">Удалить продукт</string>
     <string name="headline_edit_product">Изменить продукт</string>
@@ -32,7 +30,6 @@
     <string name="headline_update_recipe">Обновить рецепт</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ингридиенты</string>
     <string name="headline_summary">Итого</string>
-    <string name="open_food_facts_disclaimer">Open Food Facts — это общедоступный проект. Данные могут быть неполными, устаревшими или неточными. Это приложение не гарантирует достоверность информации. Пожалуйста, проверяйте данные перед использованием.</string>
     <string name="weight">Вес</string>
     <string name="unit_calories">Калории</string>
     <string name="unit_kcal">ккал</string>
@@ -66,7 +63,6 @@
     <string name="nutriment_fats_short">Ж</string>
     <string name="nutriment_saturated_fats">Насыщенные жиры</string>
     <string name="nutriment_salt">Соль</string>
-    <string name="nutriment_sodium">Натрий</string>
     <string name="nutriment_fiber">Клетчатка</string>
     <string name="action_search">Поиск</string>
     <string name="action_scan_barcode">Сканировать штрихкод</string>
@@ -89,7 +85,6 @@
     <string name="action_undo">Отменить</string>
     <string name="action_close">Закрыть</string>
     <string name="action_discard">Сбросить</string>
-    <string name="action_don_t_show_again">Больше не показывать</string>
     <string name="action_translate">Перевести</string>
     <string name="action_enable_camera_flash">Включить вспышку</string>
     <string name="action_disable_camera_flash">Выключить вспышку</string>
@@ -103,7 +98,6 @@
     <string name="action_move_up" description="reorder list item up">Вверх</string>
     <string name="action_move_down" description="reorder list item down">Вниз</string>
     <string name="action_use_time_based_ordering">Использовать сортировку по времени</string>
-    <string name="action_include_all_day_meals">Включать приемы пищи за весь день</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Добавить ингредиент</string>
     <string name="action_edit_ingredient_measurement">Изменить единицу измерения</string>
     <string name="action_delete_ingredient">Удалить ингредиент</string>
@@ -118,7 +112,6 @@
         <item quantity="other">Осталось %1$d калорий</item>
     </plurals>
     <string name="neutral_set_your_daily_goals">Установить дневные цели</string>
-    <string name="neutral_all_values_per_x">Все значения в %1$s</string>
     <string name="neutral_set_your_meal_schedule">Установите ваш распорядок питания</string>
     <string name="neutral_permanently_delete_meal">Удалить продукт навсегда?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Продукт будет удален навсегда. Все данные, связанные с этим продуктом будут утеряны.</string>
@@ -133,11 +126,9 @@
     <string name="error_this_field_is_required">Это обязательное поле</string>
     <string name="error_invalid_number">Неверное число</string>
     <string name="error_value_cannot_be_negative">Значение не может быть отрицательным</string>
-    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Сумма макронутриентов не должна превышать 100г</string>
     <string name="error_value_must_be_less_than">Значение должно быть меньше %1$s</string>
     <string name="error_value_must_be_integer">Значение должно быть целочисленным</string>
     <string name="error_sum_of_percentages_must_be_100">Сумма процентов должна равняться 100</string>
-    <string name="error_value_cannot_exceed_100">Значение не может превышать 100</string>
     <string name="positive_goal_reached">Цель достигнута</string>
     <string name="positive_ok">Хорошо</string>
     <plurals name="negative_exceeded_by_calories">
@@ -154,7 +145,6 @@
     <string name="description_show_some_love">Если вы нашли этот проект полезным, оставьте ему звезду на GitHub! Это поможет другим его найти и поддержит дальнейшую разработку.</string>
     <string name="description_share_your_thoughts">Если у вас есть отзывы, пожелания по новым функциям или сообщения об ошибках — обязательно напишите! Буду рад вашим предложениям.</string>
     <string name="description_time_based_meals_sorting">Когда включено, последние приемы будут отображаться первыми</string>
-    <string name="description_action_include_all_day_meals">Приемы пищи за весь день будут включены в текущий список</string>
     <string name="description_incomplete_nutrition_data">Некоторые использованные продукты не имеют этих значений; отображаемые данные могут быть некорректны</string>
     <string name="description_translation_warning">Переводы создаются добровольцами. Они могут быть неидеальными, а некоторые переводы могут отсутствовать. Если вы заметите какие-либо ошибки, не стесняйтесь помочь в их исправлении.</string>
     <string name="headline_launcher_icon_by_icons8">Иконка приложения от Icons8</string>

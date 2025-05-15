@@ -5,10 +5,8 @@
     <string name="headline_settings">Configurações</string>
     <string name="headline_calories_goal">Meta de calorias</string>
     <string name="headline_daily_goals">Metas diárias</string>
-    <string name="headline_product_serving_and_packaging">Serviço e embalagem</string>
     <string name="headline_general">Geral</string>
     <string name="headline_macronutrients">Macronutrientes</string>
-    <string name="headline_nutrients">Nutrientes</string>
     <string name="headline_meals">Refeições</string>
     <string name="headline_delete_product">Excluir produto</string>
     <string name="headline_edit_product">Editar produto</string>
@@ -32,11 +30,9 @@
     <string name="headline_update_recipe">Atualizar receita</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ingredientes</string>
     <string name="headline_summary">Resumo</string>
-    <string name="headline_example_links">Links de exemplo</string>
     <string name="headline_whats_new">O que há de novo</string>
     <string name="headline_changelog">Changelog</string>
     <string name="headline_installed" description="Installed version of the app">Instalado</string>
-    <string name="open_food_facts_disclaimer">O Open Food Facts é um projeto voltado para a comunidade. Os dados podem estar incompletos, desatualizados ou imprecisos. Este aplicativo não é responsável pela validade das informações. Por favor, verifique antes de usar.</string>
     <string name="weight">Peso</string>
     <string name="unit_calories">Calorias</string>
     <string name="unit_kcal">kcal</string>
@@ -67,7 +63,6 @@
     <string name="nutriment_fats_short">G</string>
     <string name="nutriment_saturated_fats">Gorduras saturadas</string>
     <string name="nutriment_salt">Sal</string>
-    <string name="nutriment_sodium">Sódio</string>
     <string name="nutriment_fiber">Fibra</string>
     <string name="action_search">Pesquisar</string>
     <string name="action_scan_barcode">Escanear código de barras</string>
@@ -90,13 +85,11 @@
     <string name="action_undo">Desfazer</string>
     <string name="action_close">Fechar</string>
     <string name="action_discard">Descartar</string>
-    <string name="action_don_t_show_again">Não mostrar novamente</string>
     <string name="action_translate">Traduzir</string>
     <string name="action_enable_camera_flash">Ativar o flash da câmera</string>
     <string name="action_disable_camera_flash">Desativar o flash da câmera</string>
     <string name="action_prevent_screen_capture">Impedir a captura de tela</string>
     <string name="action_go_to_today">Ir para hoje</string>
-    <string name="action_use_open_food_facts_product">Use o produto Open Food Facts</string>
     <string name="action_bug_report_on_github">Reportar erros no GitHub</string>
     <string name="action_feature_request_on_github">Solicitar recurso no GitHub</string>
     <string name="action_leave_a_star_on_github">Deixar uma estrela no GitHub</string>
@@ -105,14 +98,12 @@
     <string name="action_move_up" description="reorder list item up">Mover para cima</string>
     <string name="action_move_down" description="reorder list item down">Mover para baixo</string>
     <string name="action_use_time_based_ordering">Ordenar por tempo</string>
-    <string name="action_include_all_day_meals">Incluir refeições do dia todo</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Adicionar ingredientes</string>
     <string name="action_edit_ingredient_measurement">Alterar a quantidade do ingrediente</string>
     <string name="action_delete_ingredient">Excluir ingrediente</string>
     <string name="action_download">Download</string>
     <string name="action_paste_url">Colar URL</string>
     <string name="action_browse_open_food_facts">Navegue no Open Food Facts</string>
-    <string name="action_open_browser">Abrir navegador</string>
     <string name="action_copy">Copiar</string>
     <string name="neutral_barcode_scanner_camera_request">Permitir acesso à sua câmera para escanear códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Você deve permitir o acesso para digitalizar códigos de barras</string>
@@ -123,7 +114,6 @@
         <item quantity="other">%1$d calorias restantes</item>
     </plurals>
     <string name="neutral_set_your_daily_goals">Defina suas metas diárias</string>
-    <string name="neutral_all_values_per_x">Todos os valores por %1$s</string>
     <string name="neutral_set_your_meal_schedule">Defina sua programação de refeições</string>
     <string name="neutral_permanently_delete_meal">Excluir permanentemente a refeição?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">A refeição será excluída permanentemente. Todos os dados relacionados a essa refeição serão perdidos.</string>
@@ -132,7 +122,6 @@
     <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Parece que esta refeição está vazia. Adicione algum alimento para monitorar suas calorias.</string>
     <string name="neutral_entry_deleted">Entrada excluída</string>
     <string name="neutral_help_translating_the_app">Ajude a traduzir o aplicativo</string>
-    <string name="neutral_failed_to_download_the_product">Falha no download do produto</string>
     <string name="neutral_copied">Informações copiadas para a área de transferência</string>
     <string name="question_discard_product">Descartar o produto?</string>
     <string name="question_discard_changes">Descartar alterações?</string>
@@ -140,11 +129,9 @@
     <string name="error_this_field_is_required">Este campo é obrigatório</string>
     <string name="error_invalid_number">Número inválido</string>
     <string name="error_value_cannot_be_negative">O valor não pode ser negativo</string>
-    <string name="error_sum_of_macronutrients_cannot_exceed_100g">Soma dos macronutrientes não pode exceder 100 g</string>
     <string name="error_value_must_be_less_than">O valor deve ser menor que %1$s</string>
     <string name="error_value_must_be_integer">O valor deve ser um número inteiro</string>
     <string name="error_sum_of_percentages_must_be_100">A soma das porcentagens deve ser 100</string>
-    <string name="error_value_cannot_exceed_100">O valor não pode exceder 100</string>
     <string name="positive_goal_reached">Meta alcançada</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
@@ -159,10 +146,8 @@
     <string name="description_show_some_love">Se você achar este projeto útil, considere dar uma estrela a ele no GitHub! Isso ajuda outras pessoas a descobri-lo e mantém o desenvolvimento em andamento.</string>
     <string name="description_share_your_thoughts">Se você tiver algum feedback, solicitação de recursos ou relatório de bugs, entre em contato comigo! Gostaria muito de ouvir sua opinião.</string>
     <string name="description_time_based_meals_sorting">Quando ativado, as refeições que estão acontecendo no momento serão exibidas primeiro</string>
-    <string name="description_action_include_all_day_meals">As refeições do dia todo serão incluídas na lista de refeições atual</string>
     <string name="description_incomplete_nutrition_data">Alguns dos produtos usados não têm esse valor; portanto, o valor exibido pode não ser exato</string>
     <string name="description_translation_warning">As traduções são feitas por voluntários. Elas podem não ser perfeitas e podem estar faltando algumas traduções. Se você notar algum erro, não hesite em ajudar a melhorá-las.</string>
-    <string name="description_browse_open_food_facts">O site Open Food Facts será aberto no seu navegador. Você poderá pesquisar os produtos e copiar o link para o produto que deseja adicionar.</string>
     <string name="description_changelog">Veja o que há de novo no aplicativo</string>
     <string name="headline_launcher_icon_by_icons8">Ícone da aplicação por Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Veja outros ícones incríveis aqui</string>
