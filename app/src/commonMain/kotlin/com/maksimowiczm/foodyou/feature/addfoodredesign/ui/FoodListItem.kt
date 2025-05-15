@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.addfoodredesign.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 
@@ -30,7 +33,9 @@ fun FoodListItem(
     brand: (@Composable () -> Unit)? = null,
     trailingContent: (@Composable () -> Unit)? = null,
     containerColor: Color = Color.Transparent,
-    contentColor: Color = Color.Unspecified
+    contentColor: Color = Color.Unspecified,
+    shape: Shape = RectangleShape,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
@@ -89,10 +94,11 @@ fun FoodListItem(
     Surface(
         modifier = modifier,
         color = containerColor,
-        contentColor = contentColor
+        contentColor = contentColor,
+        shape = shape
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier.padding(contentPadding),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Column(

@@ -2,22 +2,35 @@ package com.maksimowiczm.foodyou.feature.addfoodredesign.ui
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.LunchDining
+import androidx.compose.material3.ExpandedFullScreenSearchBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleFloatingActionButton
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults
+import androidx.compose.material3.TopSearchBar
+import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -26,11 +39,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
+import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
+import com.maksimowiczm.foodyou.core.util.NutrientsHelper
+import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -79,7 +100,9 @@ fun AddFoodSearchScreen(
             )
         }
 
-        Content()
+        Content(
+            onBack = {}
+        )
     }
 }
 
@@ -154,14 +177,93 @@ private fun Fab(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Content(modifier: Modifier = Modifier) {
+private fun Content(onBack: () -> Unit, modifier: Modifier = Modifier) {
+    var searchState = rememberSearchBarState()
+
+    val textFieldState = rememberTextFieldState()
+    val inputField = @Composable {
+        SearchBarDefaults.InputField(
+            textFieldState = textFieldState,
+            searchBarState = searchState,
+            onSearch = {},
+            placeholder = { Text(stringResource(Res.string.action_search)) },
+            leadingIcon = {
+                IconButton(
+                    onClick = onBack
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(Res.string.action_go_back)
+                    )
+                }
+            }
+        )
+    }
+
+    ExpandedFullScreenSearchBar(
+        state = searchState,
+        inputField = inputField
+    ) {
+    }
+
     Scaffold(
+        topBar = {
+            TopSearchBar(
+                state = searchState,
+                inputField = inputField
+            )
+        },
         modifier = modifier
     ) { paddingValues ->
         LazyColumn(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
             contentPadding = paddingValues
         ) {
+            itemsIndexed(
+                items = List(100) { it }
+            ) { i, _ ->
+                var isSelected by rememberSaveable { mutableStateOf(false) }
+                AddFoodListItem(
+                    food = SearchFoodItem(
+                        foodId = FoodId.Product(0),
+                        name = "Food $i",
+                        brand = "Brand $i",
+                        calories = NutrientsHelper.calculateCalories(10f, 10f, 10f),
+                        proteins = 10f,
+                        carbohydrates = 10f,
+                        fats = 10f,
+                        packageWeight = PortionWeight.Package(100f),
+                        servingWeight = null,
+                        measurement = Measurement.Package(.5f),
+                        measurementId = if (isSelected) {
+                            MeasurementId.Product(0)
+                        } else {
+                            null
+                        },
+                        uniqueId = i.toString()
+                    ),
+                    onToggle = {
+                        isSelected = !isSelected
+                    },
+                    modifier = Modifier.clickable { },
+                    shape = if (i == 0) {
+                        MaterialTheme.shapes.large.copy(
+                            bottomEnd = CornerSize(0.dp),
+                            bottomStart = CornerSize(0.dp)
+                        )
+                    } else if (i == 99) {
+                        MaterialTheme.shapes.large.copy(
+                            topEnd = CornerSize(0.dp),
+                            topStart = CornerSize(0.dp)
+                        )
+                    } else {
+                        RectangleShape
+                    }
+                )
+            }
         }
     }
 }
