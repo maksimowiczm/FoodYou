@@ -3,11 +3,13 @@ package com.maksimowiczm.foodyou.core.data.database.food
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.RoomWarnings
 import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
 import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
 
 @Dao
 abstract class FoodDao : FoodLocalDataSource {
+    @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
     @Query(
         """
         WITH
@@ -138,6 +140,7 @@ abstract class FoodDao : FoodLocalDataSource {
         epochDay: Int
     ): PagingSource<Int, FoodSearchEntity>
 
+    @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
     @Query(
         """
         WITH
