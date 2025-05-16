@@ -162,7 +162,7 @@ android {
                 "proguard-rules.pro"
             )
         }
-        create("dev-release") {
+        create("devRelease") {
             initWith(getByName("release"))
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("debug")
