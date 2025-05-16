@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.LunchDining
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleFloatingActionButton
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults
@@ -36,6 +39,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -49,7 +53,9 @@ import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
+import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
+import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import foodyou.app.generated.resources.*
@@ -101,7 +107,8 @@ fun AddFoodSearchScreen(
         }
 
         Content(
-            onBack = {}
+            onBack = {},
+            onBarcodeScanner = {}
         )
     }
 }
@@ -179,10 +186,15 @@ private fun Fab(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Content(onBack: () -> Unit, modifier: Modifier = Modifier) {
+private fun Content(
+    onBack: () -> Unit,
+    onBarcodeScanner: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val coroutineScope = rememberCoroutineScope()
     var searchState = rememberSearchBarState()
-
     val textFieldState = rememberTextFieldState()
+
     val inputField = @Composable {
         SearchBarDefaults.InputField(
             textFieldState = textFieldState,
@@ -191,12 +203,34 @@ private fun Content(onBack: () -> Unit, modifier: Modifier = Modifier) {
             placeholder = { Text(stringResource(Res.string.action_search)) },
             leadingIcon = {
                 IconButton(
-                    onClick = onBack
+                    onClick = coroutineScope.lambda {
+                        if (searchState.currentValue == SearchBarValue.Expanded) {
+                            searchState.animateToCollapsed()
+                        } else {
+                            onBack()
+                        }
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(Res.string.action_go_back)
                     )
+                }
+            },
+            trailingIcon = {
+                if (textFieldState.text.isEmpty()) {
+                    BarcodeScannerIconButton(
+                        onClick = onBarcodeScanner
+                    )
+                } else {
+                    IconButton(
+                        onClick = { textFieldState.clearText() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = stringResource(Res.string.action_clear)
+                        )
+                    }
                 }
             }
         )
