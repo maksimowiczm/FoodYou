@@ -29,7 +29,8 @@ object Changelog {
             "Sort food by name and brand in the food search screen"
         ),
         bugFixes = listOf(
-            "App won't crash when the user attempts to paste with an empty clipboard"
+            "App won't crash when the user attempts to paste with an empty clipboard",
+            "Fix crashes when creating a new recipe"
         ),
         translations = listOf(),
         notes = null
