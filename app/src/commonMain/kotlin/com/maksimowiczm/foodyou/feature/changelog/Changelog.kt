@@ -33,7 +33,9 @@ object Changelog {
             "Fix crashes when creating a new recipe",
             "Display the correct suffix for calories in the product form"
         ),
-        translations = listOf(),
+        translations = listOf(
+            "Updated Italian"
+        ),
         notes = null
     )
 

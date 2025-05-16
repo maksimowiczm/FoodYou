@@ -40,8 +40,14 @@
     <string name="headline_meals_cards_settings">Impostazioni schede pasti</string>
     <string name="headline_horizontal">Orizzontale</string>
     <string name="headline_vertical">Verticale</string>
+    <string name="headline_values_per">Valori per</string>
+    <string name="headline_other">Altro</string>
+    <string name="headline_vitamins">Vitamine</string>
+    <string name="headline_minerals">Minerali</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">URL supportati</string>
     <string name="weight">Peso</string>
     <string name="unit_calories">Calorie</string>
+    <string name="unit_energy" description="Energy as calories">Energia</string>
     <string name="unit_kcal">kcal</string>
     <plurals name="unit_gram">
         <item quantity="one">grammo</item>
@@ -69,8 +75,38 @@
     <string name="nutriment_fats">Grassi</string>
     <string name="nutriment_fats_short">G</string>
     <string name="nutriment_saturated_fats">Grassi saturi</string>
+    <string name="nutriment_polyunsaturated_fats">Grassi polinsaturi</string>
+    <string name="nutriment_monounsaturated_fats">Grassi monoinsaturi</string>
+    <string name="nutriment_omega_3">Acidi grassi Omega-3</string>
+    <string name="nutriment_omega_6">Acidi grassi Omega-6</string>
     <string name="nutriment_salt">Sale</string>
     <string name="nutriment_fiber">Fibre</string>
+    <string name="nutriment_cholesterol">Colesterolo</string>
+    <string name="nutriment_caffeine">Caffeina</string>
+    <string name="vitamin_a">Vitamina A</string>
+    <string name="vitamin_b1">Vitamina B1</string>
+    <string name="vitamin_b2">Vitamina B2</string>
+    <string name="vitamin_b3">Vitamina B3</string>
+    <string name="vitamin_b5">Vitamina B5</string>
+    <string name="vitamin_b6">Vitamina B6</string>
+    <string name="vitamin_b7">Vitamina B7</string>
+    <string name="vitamin_b9">Vitamina B9</string>
+    <string name="vitamin_b12">Vitamina B12</string>
+    <string name="vitamin_c">Vitamina C</string>
+    <string name="vitamin_d">Vitamina D</string>
+    <string name="vitamin_e">Vitamina E</string>
+    <string name="vitamin_k">Vitamina K</string>
+    <string name="mineral_manganese">Manganese</string>
+    <string name="mineral_magnesium">Magnesio</string>
+    <string name="mineral_potassium">Potassio</string>
+    <string name="mineral_calcium">Calcio</string>
+    <string name="mineral_copper">Rame</string>
+    <string name="mineral_zinc">Zinco</string>
+    <string name="mineral_sodium">Sodio</string>
+    <string name="mineral_iron">Ferro</string>
+    <string name="mineral_phosphorus">Fosforo</string>
+    <string name="mineral_selenium">Selenio</string>
+    <string name="mineral_iodine">Iodio</string>
     <string name="action_search">Cerca</string>
     <string name="action_scan_barcode">Scansiona codice a barre</string>
     <string name="action_add">Aggiungi</string>
@@ -117,6 +153,8 @@
     <string name="action_choose_other_measurement">Scegli un'altra misurazione</string>
     <string name="action_edit_your_home_page">Modifica la tua pagina home</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mostra di più</string>
+    <string name="action_download_product">Scarica prodotto</string>
+    <string name="action_suggest_external_database">Suggerisci database esterno</string>
     <string name="neutral_barcode_scanner_camera_request">Permetti l'accesso alla tua fotocamera per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Devi permettere l'accesso per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L'autorizzazione alla fotocamera è necessaria per scansionare i codici a barre. Per favore, concedila nelle impostazioni dell'app.</string>
@@ -135,6 +173,7 @@
     <string name="neutral_entry_deleted">Voce eliminata</string>
     <string name="neutral_help_translating_the_app">Aiuta a tradurre l'app</string>
     <string name="neutral_copied">Informazioni copiate negli appunti</string>
+    <string name="neutral_product_created">Prodotto creato</string>
     <string name="question_discard_product">Abbandonare l'inserimento del prodotto?</string>
     <string name="question_discard_changes">Abbandonare le modifiche?</string>
     <string name="question_discard_recipe">Scartare la ricetta?</string>
@@ -144,6 +183,12 @@
     <string name="error_value_must_be_less_than">Il valore deve essere inferiore di %1$s</string>
     <string name="error_value_must_be_integer">Il valore deve essere un intero</string>
     <string name="error_sum_of_percentages_must_be_100">La somma delle percentuali deve essere 100</string>
+    <string name="error_value_must_be_positive">Il valore deve essere positivo</string>
+    <string name="error_url_not_found">URL non trovato</string>
+    <string name="error_url_is_not_supported">URL non supportato</string>
+    <string name="error_failed_to_download_product">Download del prodotto non riuscito</string>
+    <string name="error_product_not_found">Prodotto non trovato</string>
+    <string name="error_unknown_error">Errore sconosciuto</string>
     <string name="positive_goal_reached">Obiettivo raggiunto</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
@@ -163,6 +208,8 @@
     <string name="description_translation_warning">Le traduzioni sono create da volontari. Potrebbero non essere perfette e alcune traduzioni potrebbero mancare. Se noti degli errori, non esitare a contribuire per migliorarle.</string>
     <string name="description_changelog">Scopri le novità dell'app</string>
     <string name="description_home_settings">Personalizza la tua pagina home</string>
+    <string name="description_download_product">Incolla un link a un prodotto alimentare e recupera automaticamente i dati nutrizionali e i dettagli del prodotto.</string>
+    <string name="description_download_product_hint">Puoi incollare qualsiasi testo. Verrà utilizzato il primo URL.</string>
     <string name="headline_launcher_icon_by_icons8">Icona del launcher di Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Guarda altre fantastiche icone qui</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
