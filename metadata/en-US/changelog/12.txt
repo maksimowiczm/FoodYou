@@ -1,0 +1,14 @@
+Changes
+- Sort food by name and brand in the food search screen
+
+Bug Fixes
+- App won't crash when the user attempts to paste with an empty clipboard
+- Fix crashes when creating a new recipe
+- Display the correct suffix for calories in the product form
+- Move focus to the next field in barcode field in the product form
+
+Translations
+- Updated Italian
+
+Notes
+This is a hotfix release that addresses some issues with the previous version.
