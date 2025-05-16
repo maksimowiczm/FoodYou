@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -58,6 +59,7 @@ import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
+import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -108,7 +110,7 @@ fun AddFoodSearchScreen(
 
         Content(
             onBack = {},
-            onBarcodeScanner = {}
+            onSearch = {}
         )
     }
 }
@@ -186,12 +188,9 @@ private fun Fab(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Content(
-    onBack: () -> Unit,
-    onBarcodeScanner: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun Content(onBack: () -> Unit, onSearch: (String) -> Unit, modifier: Modifier = Modifier) {
     val coroutineScope = rememberCoroutineScope()
+    var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
     var searchState = rememberSearchBarState()
     val textFieldState = rememberTextFieldState()
 
@@ -199,7 +198,7 @@ private fun Content(
         SearchBarDefaults.InputField(
             textFieldState = textFieldState,
             searchBarState = searchState,
-            onSearch = {},
+            onSearch = onSearch,
             placeholder = { Text(stringResource(Res.string.action_search)) },
             leadingIcon = {
                 IconButton(
@@ -220,7 +219,10 @@ private fun Content(
             trailingIcon = {
                 if (textFieldState.text.isEmpty()) {
                     BarcodeScannerIconButton(
-                        onClick = onBarcodeScanner
+                        onClick = coroutineScope.lambda {
+                            showBarcodeScanner = true
+                            searchState.animateToCollapsed()
+                        }
                     )
                 } else {
                     IconButton(
@@ -233,6 +235,17 @@ private fun Content(
                     }
                 }
             }
+        )
+    }
+
+    if (showBarcodeScanner) {
+        FullScreenCameraBarcodeScanner(
+            onBarcodeScan = {
+                textFieldState.setTextAndPlaceCursorAtEnd(it)
+                onSearch(it)
+                showBarcodeScanner = false
+            },
+            onClose = { showBarcodeScanner = false }
         )
     }
 
