@@ -149,7 +149,8 @@ internal fun ProductForm(state: ProductFormState, modifier: Modifier = Modifier)
 
         state.calories.TextField(
             label = stringResource(Res.string.unit_calories),
-            required = true
+            required = true,
+            suffix = stringResource(Res.string.unit_kcal)
         )
 
         Text(

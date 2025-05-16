@@ -30,7 +30,8 @@ object Changelog {
         ),
         bugFixes = listOf(
             "App won't crash when the user attempts to paste with an empty clipboard",
-            "Fix crashes when creating a new recipe"
+            "Fix crashes when creating a new recipe",
+            "Display the correct suffix for calories in the product form"
         ),
         translations = listOf(),
         notes = null
