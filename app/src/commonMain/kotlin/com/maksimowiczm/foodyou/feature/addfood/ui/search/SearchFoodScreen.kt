@@ -59,6 +59,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
@@ -353,7 +354,10 @@ private fun Content(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             contentPadding = paddingValues
         ) {
-            items(pages.itemCount) { i ->
+            items(
+                count = pages.itemCount,
+                key = pages.itemKey { it.uniqueId }
+            ) { i ->
                 val food = pages[i]
 
                 val topStart = animateDpAsState(
@@ -383,6 +387,11 @@ private fun Content(
                         food = food,
                         onClick = { onFoodClick(food.foodId) },
                         onToggle = { onFoodToggle(it, food) },
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = null,
+                            placementSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+                            fadeOutSpec = null
+                        ),
                         shape = shape
                     )
                 }

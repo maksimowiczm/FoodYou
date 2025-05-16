@@ -127,7 +127,8 @@ private fun MeasurementMapper.toSearchFoodItem(entity: FoodSearchEntity) = with(
                 packageWeight = packageWeight?.let { PortionWeight.Package(it) },
                 servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
                 measurementId = measurementId,
-                measurement = with(MeasurementMapper) { toMeasurement() }
+                measurement = with(MeasurementMapper) { toMeasurement() },
+                uniqueId = uiId
             )
         }
 
@@ -146,7 +147,8 @@ private fun MeasurementMapper.toSearchFoodItem(entity: FoodSearchEntity) = with(
                 packageWeight = packageWeight?.let { PortionWeight.Package(it) },
                 servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
                 measurementId = measurementId,
-                measurement = with(MeasurementMapper) { toMeasurement() }
+                measurement = with(MeasurementMapper) { toMeasurement() },
+                uniqueId = uiId
             )
         }
 

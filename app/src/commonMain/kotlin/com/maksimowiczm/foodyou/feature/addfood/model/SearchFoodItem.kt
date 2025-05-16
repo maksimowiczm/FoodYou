@@ -23,7 +23,8 @@ internal data class SearchFoodItem(
     val servingWeight: PortionWeight.Serving?,
 
     val measurement: Measurement,
-    val measurementId: MeasurementId?
+    val measurementId: MeasurementId?,
+    val uniqueId: String
 ) {
     val isSelected: Boolean
         get() = measurementId != null
