@@ -56,7 +56,6 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
@@ -343,10 +342,7 @@ private fun Content(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             contentPadding = paddingValues
         ) {
-            items(
-                count = pages.itemCount,
-                key = pages.itemKey { it.uniqueId }
-            ) { i ->
+            items(pages.itemCount) { i ->
                 val food = pages[i]
 
                 if (food != null) {
