@@ -100,11 +100,11 @@ abstract class FoodDao : FoodLocalDataSource {
                 END
         )
         SELECT i.*,
-               CASE 
-                   WHEN i.measurementId IS NULL THEN NULL
-                   WHEN i.measurementId = g.minMeasurementId THEN 1
-                   ELSE 0
-               END AS isLowestMeasurementId
+            CASE 
+                WHEN i.measurementId IS NULL THEN NULL
+                WHEN i.measurementId = g.minMeasurementId THEN 1
+                ELSE 0
+            END AS isLowestMeasurementId
         FROM Intermediate i
         LEFT JOIN GroupMinValues g ON 
             (i.productId IS NOT NULL AND i.productId = g.groupId) OR
@@ -121,8 +121,7 @@ abstract class FoodDao : FoodLocalDataSource {
                 WHEN i.recipeId IS NOT NULL AND i.isLowestMeasurementId = 0 THEN i.recipeId || "-" || i.measurementId
                 ELSE NULL
             END AS uiId
-        FROM
-            IntermediateWithMin i
+        FROM IntermediateWithMin i
         JOIN Counted c 
             ON (i.productId IS NULL AND i.recipeId = c.recipeId) 
             OR (i.productId = c.productId AND i.recipeId IS NULL)
@@ -208,11 +207,11 @@ abstract class FoodDao : FoodLocalDataSource {
                 END
         )
         SELECT i.*,
-               CASE 
-                   WHEN i.measurementId IS NULL THEN NULL
-                   WHEN i.measurementId = g.minMeasurementId THEN 1
-                   ELSE 0
-               END AS isLowestMeasurementId
+            CASE 
+                WHEN i.measurementId IS NULL THEN NULL
+                WHEN i.measurementId = g.minMeasurementId THEN 1
+                ELSE 0
+            END AS isLowestMeasurementId
         FROM Intermediate i
         LEFT JOIN GroupMinValues g ON 
             (i.productId IS NOT NULL AND i.productId = g.groupId) OR
@@ -229,8 +228,7 @@ abstract class FoodDao : FoodLocalDataSource {
                 WHEN i.recipeId IS NOT NULL AND i.isLowestMeasurementId = 0 THEN i.recipeId || "-" || i.measurementId
                 ELSE NULL
             END AS uiId
-        FROM
-            IntermediateWithMin i
+        FROM IntermediateWithMin i
         JOIN Counted c 
             ON (i.productId IS NULL AND i.recipeId = c.recipeId) 
             OR (i.productId = c.productId AND i.recipeId IS NULL)
