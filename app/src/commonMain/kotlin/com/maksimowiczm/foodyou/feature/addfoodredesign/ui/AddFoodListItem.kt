@@ -14,9 +14,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
+import com.maksimowiczm.foodyou.core.ui.ext.performToggle
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import foodyou.app.generated.resources.*
@@ -38,6 +40,8 @@ internal fun AddFoodListItem(
         // TODO handle broken weight
         return
     }
+
+    val hapticFeedback = LocalHapticFeedback.current
 
     val verticalPadding by animateDpAsState(
         targetValue = if (food.isSelected) 8.dp else 0.dp,
@@ -89,7 +93,10 @@ internal fun AddFoodListItem(
         trailingContent = {
             ToggleButton(
                 checked = food.isSelected,
-                onCheckedChange = onToggle
+                onCheckedChange = {
+                    hapticFeedback.performToggle(it)
+                    onToggle(it)
+                }
             ) {
                 if (food.isSelected) {
                     Icon(
