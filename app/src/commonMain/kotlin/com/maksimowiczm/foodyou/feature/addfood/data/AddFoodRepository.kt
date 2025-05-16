@@ -126,8 +126,7 @@ private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
                 packageWeight = packageWeight?.let { PortionWeight.Package(it) },
                 servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
                 measurementId = measurementId,
-                measurement = with(MeasurementMapper) { toMeasurement() },
-                uniqueId = foodId.uniqueId(measurementId)
+                measurement = with(MeasurementMapper) { toMeasurement() }
             )
         }
 
@@ -146,27 +145,10 @@ private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
                 packageWeight = packageWeight?.let { PortionWeight.Package(it) },
                 servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
                 measurementId = measurementId,
-                measurement = with(MeasurementMapper) { toMeasurement() },
-                uniqueId = foodId.uniqueId(measurementId)
+                measurement = with(MeasurementMapper) { toMeasurement() }
             )
         }
 
         else -> error("Data inconsistency: productId and recipeId are null")
-    }
-}
-
-private fun FoodId.uniqueId(measurementId: MeasurementId?): String {
-    val measurementId = measurementId?.let {
-        when (it) {
-            is MeasurementId.Product -> it.id
-            is MeasurementId.Recipe -> it.id
-        }
-    }
-
-    return when (this) {
-        is FoodId.Product if (measurementId != null) -> "p_${id}_$measurementId"
-        is FoodId.Product -> "p_$id"
-        is FoodId.Recipe if (measurementId != null) -> "r_${id}_$measurementId"
-        is FoodId.Recipe -> "r_$id"
     }
 }

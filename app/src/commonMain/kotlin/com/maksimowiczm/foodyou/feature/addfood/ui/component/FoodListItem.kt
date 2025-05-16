@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfood.ui.searchredesign
+package com.maksimowiczm.foodyou.feature.addfood.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,7 @@ import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun FoodListItem(
+internal fun FoodListItem(
     name: @Composable () -> Unit,
     proteins: @Composable () -> Unit,
     carbohydrates: @Composable () -> Unit,

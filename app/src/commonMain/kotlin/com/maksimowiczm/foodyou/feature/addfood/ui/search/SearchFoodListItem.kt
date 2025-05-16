@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfood.ui.searchredesign
+package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
@@ -22,13 +22,14 @@ import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.core.ui.ext.performToggle
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
+import com.maksimowiczm.foodyou.feature.addfood.ui.component.FoodListItem
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun AddFoodListItem(
+internal fun SearchFoodListItem(
     food: SearchFoodItem,
     onClick: () -> Unit,
     onToggle: (Boolean) -> Unit,

@@ -21,9 +21,9 @@ import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.CreateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.UpdateMeasurementScreen
+import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.rememberSearchFoodScreenState
-import com.maksimowiczm.foodyou.feature.addfood.ui.searchredesign.AddFoodSearchScreen
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.meal.MealScreen
 import com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreenSharedTransition
@@ -101,7 +101,7 @@ private fun AddFoodNavHost(
                 ?: error("No add food shared transition scope")
 
             with(sts) {
-                AddFoodSearchScreen(
+                SearchFoodScreen(
                     onBack = {
                         // If stack is empty call outer on back otherwise pop search
                         if (navController.currentBackStack.value.size == 2) {
