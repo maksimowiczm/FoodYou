@@ -31,7 +31,8 @@ object Changelog {
         bugFixes = listOf(
             "App won't crash when the user attempts to paste with an empty clipboard",
             "Fix crashes when creating a new recipe",
-            "Display the correct suffix for calories in the product form"
+            "Display the correct suffix for calories in the product form",
+            "Move focus to the next field in barcode field in the product form"
         ),
         translations = listOf(
             "Updated Italian"

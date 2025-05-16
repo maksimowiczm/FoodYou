@@ -98,7 +98,10 @@ internal fun ProductForm(state: ProductFormState, modifier: Modifier = Modifier)
                         contentDescription = null
                     )
                 }
-            }
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            )
         )
 
         ValuesPerPicker(
