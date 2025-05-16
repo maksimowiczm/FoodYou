@@ -30,6 +30,7 @@ internal fun FoodListItem(
     calories: @Composable () -> Unit,
     measurement: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
     brand: (@Composable () -> Unit)? = null,
     trailingContent: (@Composable () -> Unit)? = null,
     containerColor: Color = Color.Transparent,
@@ -91,12 +92,7 @@ internal fun FoodListItem(
         }
     }
 
-    Surface(
-        modifier = modifier,
-        color = containerColor,
-        contentColor = contentColor,
-        shape = shape
-    ) {
+    val content = @Composable {
         Row(
             modifier = Modifier.padding(contentPadding),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -112,5 +108,24 @@ internal fun FoodListItem(
 
             trailingContent?.invoke()
         }
+    }
+
+    if (onClick != null) {
+        Surface(
+            onClick = onClick,
+            modifier = modifier,
+            color = containerColor,
+            contentColor = contentColor,
+            shape = shape,
+            content = content
+        )
+    } else {
+        Surface(
+            modifier = modifier,
+            color = containerColor,
+            contentColor = contentColor,
+            shape = shape,
+            content = content
+        )
     }
 }

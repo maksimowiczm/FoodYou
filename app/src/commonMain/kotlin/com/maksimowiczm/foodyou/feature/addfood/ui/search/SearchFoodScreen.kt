@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,7 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
@@ -50,7 +51,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.pointer.pointerInput
@@ -103,7 +103,7 @@ internal fun SearchFoodScreen(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun SearchFoodScreen(
+private fun SearchFoodScreen(
     state: SearchFoodScreenState,
     pages: LazyPagingItems<SearchFoodItem>,
     recentQueries: List<String>,
@@ -356,26 +356,34 @@ private fun Content(
             items(pages.itemCount) { i ->
                 val food = pages[i]
 
+                val topStart = animateDpAsState(
+                    targetValue = if (i == 0) 16.dp else 0.dp,
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
+
+                val topEnd = animateDpAsState(
+                    targetValue = if (i == 0) 16.dp else 0.dp,
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
+
+                val bottomStart = animateDpAsState(
+                    targetValue = if (i == pages.itemCount - 1) 16.dp else 0.dp,
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
+
+                val bottomEnd = animateDpAsState(
+                    targetValue = if (i == pages.itemCount - 1) 16.dp else 0.dp,
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
+
+                var shape = RoundedCornerShape(topStart, topEnd, bottomStart, bottomEnd)
+
                 if (food != null) {
                     SearchFoodListItem(
                         food = food,
-                        onClick = {
-                            onFoodClick(food.foodId)
-                        },
+                        onClick = { onFoodClick(food.foodId) },
                         onToggle = { onFoodToggle(it, food) },
-                        shape = if (i == 0) {
-                            MaterialTheme.shapes.large.copy(
-                                bottomEnd = CornerSize(0.dp),
-                                bottomStart = CornerSize(0.dp)
-                            )
-                        } else if (i == pages.itemCount - 1) {
-                            MaterialTheme.shapes.large.copy(
-                                topEnd = CornerSize(0.dp),
-                                topStart = CornerSize(0.dp)
-                            )
-                        } else {
-                            RectangleShape
-                        }
+                        shape = shape
                     )
                 }
             }

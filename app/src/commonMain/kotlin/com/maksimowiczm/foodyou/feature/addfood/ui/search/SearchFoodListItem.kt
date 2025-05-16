@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -87,12 +86,9 @@ internal fun SearchFoodListItem(
         },
         calories = { Text(caloriesString) },
         measurement = { Text(measurementString) },
+        modifier = modifier,
+        onClick = onClick,
         brand = food.brand?.let { { Text(it) } },
-        modifier = modifier.clickable { onClick() },
-        contentPadding = PaddingValues(
-            horizontal = 16.dp,
-            vertical = (12.dp + verticalPadding).coerceAtLeast(0.dp)
-        ),
         trailingContent = {
             ToggleButton(
                 checked = food.isSelected,
@@ -111,7 +107,11 @@ internal fun SearchFoodListItem(
         },
         containerColor = containerColor,
         contentColor = contentColor,
-        shape = shape
+        shape = shape,
+        contentPadding = PaddingValues(
+            horizontal = 16.dp,
+            vertical = (12.dp + verticalPadding).coerceAtLeast(0.dp)
+        )
     )
 }
 
