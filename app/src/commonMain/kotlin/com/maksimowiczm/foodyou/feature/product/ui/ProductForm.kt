@@ -14,12 +14,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
-import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -37,10 +35,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.ui.component.FullScreenDialog
+import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
 import com.maksimowiczm.foodyou.core.ui.res.stringResource
 import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
-import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
+import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -49,19 +47,15 @@ internal fun ProductForm(state: ProductFormState, modifier: Modifier = Modifier)
     var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
 
     if (showBarcodeScanner) {
-        FullScreenDialog(
-            onDismissRequest = { showBarcodeScanner = false }
-        ) {
-            CameraBarcodeScannerScreen(
-                onBarcodeScan = {
-                    state.barcode.textFieldState.setTextAndPlaceCursorAtEnd(it)
-                    showBarcodeScanner = false
-                },
-                onClose = {
-                    showBarcodeScanner = false
-                }
-            )
-        }
+        FullScreenCameraBarcodeScanner(
+            onBarcodeScan = {
+                state.barcode.textFieldState.setTextAndPlaceCursorAtEnd(it)
+                showBarcodeScanner = false
+            },
+            onClose = {
+                showBarcodeScanner = false
+            }
+        )
     }
 
     Column(
@@ -90,14 +84,9 @@ internal fun ProductForm(state: ProductFormState, modifier: Modifier = Modifier)
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(Res.string.product_barcode)) },
             trailingIcon = {
-                IconButton(
+                BarcodeScannerIconButton(
                     onClick = { showBarcodeScanner = true }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.QrCodeScanner,
-                        contentDescription = null
-                    )
-                }
+                )
             }
         )
 

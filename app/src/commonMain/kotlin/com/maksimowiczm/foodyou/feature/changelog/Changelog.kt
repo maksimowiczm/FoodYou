@@ -26,6 +26,7 @@ object Changelog {
     val next = Version.next(
         newFeatures = listOf(),
         changes = listOf(
+            "Update barcode scanner icon",
             "Sort food by name and brand in the food search screen"
         ),
         bugFixes = listOf(
