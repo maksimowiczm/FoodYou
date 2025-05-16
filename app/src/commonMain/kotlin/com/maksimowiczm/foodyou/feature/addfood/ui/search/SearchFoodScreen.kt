@@ -1,10 +1,7 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -53,7 +50,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -65,6 +61,7 @@ import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
+import com.maksimowiczm.foodyou.core.ui.component.Scrim
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import foodyou.app.generated.resources.*
@@ -118,7 +115,6 @@ private fun SearchFoodScreen(
     modifier: Modifier = Modifier
 ) {
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
-    val scrimAlpha by animateFloatAsState(if (fabExpanded) .5f else 0f)
 
     BackHandler(fabExpanded) { fabExpanded = false }
 
@@ -141,16 +137,11 @@ private fun SearchFoodScreen(
             )
         }
     ) {
-        if (fabExpanded) {
-            Spacer(
-                Modifier
-                    .fillMaxSize()
-                    .zIndex(10f)
-                    .graphicsLayer { alpha = scrimAlpha }
-                    .pointerInput(Unit) { detectTapGestures { fabExpanded = false } }
-                    .background(MaterialTheme.colorScheme.scrim)
-            )
-        }
+        Scrim(
+            visible = fabExpanded,
+            onDismiss = { fabExpanded = false },
+            modifier = Modifier.fillMaxSize().zIndex(10f)
+        )
 
         Content(
             state = state,
