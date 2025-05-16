@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -117,9 +118,7 @@ internal fun AddFoodSearchScreen(
     modifier: Modifier = Modifier
 ) {
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
-    val scrimAlpha by animateFloatAsState(
-        targetValue = if (fabExpanded) .5f else 0f
-    )
+    val scrimAlpha by animateFloatAsState(if (fabExpanded) .5f else 0f)
 
     BackHandler(fabExpanded) { fabExpanded = false }
 
@@ -381,6 +380,11 @@ private fun Content(
                         }
                     )
                 }
+            }
+
+            // FAB spacer
+            item {
+                Spacer(Modifier.padding(vertical = 16.dp).height(72.dp))
             }
         }
     }
