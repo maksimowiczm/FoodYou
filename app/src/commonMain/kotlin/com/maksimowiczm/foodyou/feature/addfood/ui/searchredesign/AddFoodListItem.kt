@@ -1,7 +1,8 @@
-package com.maksimowiczm.foodyou.feature.addfoodredesign.ui
+package com.maksimowiczm.foodyou.feature.addfood.ui.searchredesign
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -29,6 +30,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun AddFoodListItem(
     food: SearchFoodItem,
+    onClick: () -> Unit,
     onToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape
@@ -85,7 +87,7 @@ internal fun AddFoodListItem(
         calories = { Text(caloriesString) },
         measurement = { Text(measurementString) },
         brand = food.brand?.let { { Text(it) } },
-        modifier = modifier,
+        modifier = modifier.clickable { onClick() },
         contentPadding = PaddingValues(
             horizontal = 16.dp,
             vertical = (12.dp + verticalPadding).coerceAtLeast(0.dp)

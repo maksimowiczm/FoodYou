@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfoodredesign.ui
+package com.maksimowiczm.foodyou.feature.addfood.ui.searchredesign
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

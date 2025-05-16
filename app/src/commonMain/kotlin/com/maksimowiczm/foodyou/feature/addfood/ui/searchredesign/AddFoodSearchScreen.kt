@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfoodredesign.ui
+package com.maksimowiczm.foodyou.feature.addfood.ui.searchredesign
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -9,16 +9,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.LunchDining
+import androidx.compose.material.icons.filled.NorthWest
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -26,6 +27,8 @@ import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
@@ -34,7 +37,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleFloatingActionButton
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults
 import androidx.compose.material3.TopSearchBar
-import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -44,31 +46,73 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
-import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
-import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
+import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodScreenState
+import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun AddFoodSearchScreen(
+internal fun AddFoodSearchScreen(
+    onBack: () -> Unit,
     onProductAdd: () -> Unit,
     onRecipeAdd: () -> Unit,
+    onFoodClick: (FoodId) -> Unit,
+    state: SearchFoodScreenState,
+    viewModel: SearchFoodViewModel,
+    modifier: Modifier = Modifier
+) {
+    val pages = viewModel.pages.collectAsLazyPagingItems()
+    val recentQueries = viewModel.recentQueries.collectAsStateWithLifecycle().value
+
+    AddFoodSearchScreen(
+        state = state,
+        pages = pages,
+        recentQueries = recentQueries.map { it.query },
+        onBack = onBack,
+        onProductAdd = onProductAdd,
+        onRecipeAdd = onRecipeAdd,
+        onFoodClick = onFoodClick,
+        onFoodToggle = { state, food ->
+            when (state) {
+                true -> viewModel.onQuickAdd(food)
+                false -> viewModel.onQuickRemove(food)
+            }
+        },
+        onSearch = viewModel::onSearch,
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+internal fun AddFoodSearchScreen(
+    state: SearchFoodScreenState,
+    pages: LazyPagingItems<SearchFoodItem>,
+    recentQueries: List<String>,
+    onBack: () -> Unit,
+    onProductAdd: () -> Unit,
+    onRecipeAdd: () -> Unit,
+    onFoodClick: (FoodId) -> Unit,
+    onFoodToggle: (Boolean, SearchFoodItem) -> Unit,
+    onSearch: (String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
@@ -109,8 +153,13 @@ fun AddFoodSearchScreen(
         }
 
         Content(
-            onBack = {},
-            onSearch = {}
+            state = state,
+            pages = pages,
+            recentQueries = recentQueries,
+            onBack = onBack,
+            onFoodClick = onFoodClick,
+            onFoodToggle = onFoodToggle,
+            onSearch = onSearch
         )
     }
 }
@@ -188,23 +237,33 @@ private fun Fab(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Content(onBack: () -> Unit, onSearch: (String) -> Unit, modifier: Modifier = Modifier) {
+private fun Content(
+    state: SearchFoodScreenState,
+    pages: LazyPagingItems<SearchFoodItem>,
+    recentQueries: List<String>,
+    onFoodClick: (FoodId) -> Unit,
+    onFoodToggle: (Boolean, SearchFoodItem) -> Unit,
+    onBack: () -> Unit,
+    onSearch: (String?) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val coroutineScope = rememberCoroutineScope()
     var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
-    var searchState = rememberSearchBarState()
-    val textFieldState = rememberTextFieldState()
 
     val inputField = @Composable {
         SearchBarDefaults.InputField(
-            textFieldState = textFieldState,
-            searchBarState = searchState,
-            onSearch = onSearch,
+            textFieldState = state.textFieldState,
+            searchBarState = state.searchBarState,
+            onSearch = coroutineScope.lambda<String> {
+                onSearch(it)
+                state.searchBarState.animateToCollapsed()
+            },
             placeholder = { Text(stringResource(Res.string.action_search)) },
             leadingIcon = {
                 IconButton(
                     onClick = coroutineScope.lambda {
-                        if (searchState.currentValue == SearchBarValue.Expanded) {
-                            searchState.animateToCollapsed()
+                        if (state.searchBarState.currentValue == SearchBarValue.Expanded) {
+                            state.searchBarState.animateToCollapsed()
                         } else {
                             onBack()
                         }
@@ -217,16 +276,19 @@ private fun Content(onBack: () -> Unit, onSearch: (String) -> Unit, modifier: Mo
                 }
             },
             trailingIcon = {
-                if (textFieldState.text.isEmpty()) {
+                if (state.textFieldState.text.isEmpty()) {
                     BarcodeScannerIconButton(
                         onClick = coroutineScope.lambda {
                             showBarcodeScanner = true
-                            searchState.animateToCollapsed()
+                            state.searchBarState.animateToCollapsed()
                         }
                     )
                 } else {
                     IconButton(
-                        onClick = { textFieldState.clearText() }
+                        onClick = {
+                            state.textFieldState.clearText()
+                            onSearch(null)
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
@@ -241,7 +303,7 @@ private fun Content(onBack: () -> Unit, onSearch: (String) -> Unit, modifier: Mo
     if (showBarcodeScanner) {
         FullScreenCameraBarcodeScanner(
             onBarcodeScan = {
-                textFieldState.setTextAndPlaceCursorAtEnd(it)
+                state.textFieldState.setTextAndPlaceCursorAtEnd(it)
                 onSearch(it)
                 showBarcodeScanner = false
             },
@@ -250,15 +312,26 @@ private fun Content(onBack: () -> Unit, onSearch: (String) -> Unit, modifier: Mo
     }
 
     ExpandedFullScreenSearchBar(
-        state = searchState,
+        state = state.searchBarState,
         inputField = inputField
     ) {
+        ProductSearchBarSuggestions(
+            recentQueries = recentQueries,
+            onSearch = coroutineScope.lambda<String> {
+                onSearch(it)
+                state.textFieldState.setTextAndPlaceCursorAtEnd(it)
+                state.searchBarState.animateToCollapsed()
+            },
+            onFill = {
+                state.textFieldState.setTextAndPlaceCursorAtEnd(it)
+            }
+        )
     }
 
     Scaffold(
         topBar = {
             TopSearchBar(
-                state = searchState,
+                state = state.searchBarState,
                 inputField = inputField
             )
         },
@@ -266,51 +339,83 @@ private fun Content(onBack: () -> Unit, onSearch: (String) -> Unit, modifier: Mo
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.padding(horizontal = 8.dp),
+            state = state.lazyListState,
             verticalArrangement = Arrangement.spacedBy(2.dp),
             contentPadding = paddingValues
         ) {
-            itemsIndexed(
-                items = List(100) { it }
-            ) { i, _ ->
-                var isSelected by rememberSaveable { mutableStateOf(false) }
-                AddFoodListItem(
-                    food = SearchFoodItem(
-                        foodId = FoodId.Product(0),
-                        name = "Food $i",
-                        brand = "Brand $i",
-                        calories = NutrientsHelper.calculateCalories(10f, 10f, 10f),
-                        proteins = 10f,
-                        carbohydrates = 10f,
-                        fats = 10f,
-                        packageWeight = PortionWeight.Package(100f),
-                        servingWeight = null,
-                        measurement = Measurement.Package(.5f),
-                        measurementId = if (isSelected) {
-                            MeasurementId.Product(0)
-                        } else {
-                            null
+            items(
+                count = pages.itemCount,
+                key = pages.itemKey { it.uniqueId }
+            ) { i ->
+                val food = pages[i]
+
+                if (food != null) {
+                    AddFoodListItem(
+                        food = food,
+                        onClick = {
+                            onFoodClick(food.foodId)
                         },
-                        uniqueId = i.toString()
-                    ),
-                    onToggle = {
-                        isSelected = !isSelected
-                    },
-                    modifier = Modifier.clickable { },
-                    shape = if (i == 0) {
-                        MaterialTheme.shapes.large.copy(
-                            bottomEnd = CornerSize(0.dp),
-                            bottomStart = CornerSize(0.dp)
-                        )
-                    } else if (i == 99) {
-                        MaterialTheme.shapes.large.copy(
-                            topEnd = CornerSize(0.dp),
-                            topStart = CornerSize(0.dp)
-                        )
-                    } else {
-                        RectangleShape
-                    }
-                )
+                        onToggle = { onFoodToggle(it, food) },
+                        shape = if (i == 0) {
+                            MaterialTheme.shapes.large.copy(
+                                bottomEnd = CornerSize(0.dp),
+                                bottomStart = CornerSize(0.dp)
+                            )
+                        } else if (i == pages.itemCount - 1) {
+                            MaterialTheme.shapes.large.copy(
+                                topEnd = CornerSize(0.dp),
+                                topStart = CornerSize(0.dp)
+                            )
+                        } else {
+                            RectangleShape
+                        }
+                    )
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun ProductSearchBarSuggestions(
+    recentQueries: List<String>,
+    onSearch: (String) -> Unit,
+    onFill: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier
+    ) {
+        items(recentQueries) { query ->
+            ListItem(
+                modifier = Modifier.clickable {
+                    onSearch(query)
+                },
+                headlineContent = {
+                    Text(query)
+                },
+                colors = ListItemDefaults.colors(
+                    containerColor = Color.Transparent
+                ),
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.Schedule,
+                        contentDescription = stringResource(Res.string.action_search)
+                    )
+                },
+                trailingContent = {
+                    IconButton(
+                        onClick = { onFill(query) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.NorthWest,
+                            contentDescription = stringResource(
+                                Res.string.action_insert_suggested_search
+                            )
+                        )
+                    }
+                }
+            )
         }
     }
 }
