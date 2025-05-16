@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -197,7 +198,9 @@ private fun Fab(
                 )
             }
         },
-        modifier = modifier
+        // For whatever reason FloatingActionButtonMenu has default padding which makes scaffold fab
+        // position to be broken exactly by 16.dp
+        modifier = modifier.offset(x = 16.dp, y = 16.dp)
     ) {
         FloatingActionButtonMenuItem(
             onClick = onRecipeAdd,
