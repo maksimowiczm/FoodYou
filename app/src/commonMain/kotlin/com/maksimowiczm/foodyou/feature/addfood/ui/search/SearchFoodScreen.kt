@@ -57,6 +57,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -80,7 +81,7 @@ internal fun SearchFoodScreen(
     viewModel: SearchFoodViewModel,
     modifier: Modifier = Modifier
 ) {
-    val pages = viewModel.pages.collectAsLazyPagingItems()
+    val pages = viewModel.pages.collectAsLazyPagingItems(viewModel.viewModelScope.coroutineContext)
     val recentQueries = viewModel.recentQueries.collectAsStateWithLifecycle().value
 
     SearchFoodScreen(
