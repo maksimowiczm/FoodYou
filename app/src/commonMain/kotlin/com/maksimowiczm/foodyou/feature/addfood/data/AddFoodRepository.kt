@@ -26,7 +26,8 @@ import kotlinx.datetime.LocalDate
 internal class AddFoodRepository(
     private val searchLocalDataSource: SearchLocalDataSource,
     private val foodLocalDataSource: FoodLocalDataSource,
-    ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val measurementMapper: MeasurementMapper = MeasurementMapper
 ) {
     private val ioScope = CoroutineScope(ioDispatcher + SupervisorJob())
 
@@ -94,7 +95,7 @@ internal class AddFoodRepository(
                     epochDay = date.toEpochDays()
                 )
             }
-        }.flow.mapValues { it.toSearchFoodItem() }
+        }.flow.mapValues { measurementMapper.toSearchFoodItem(it) }
     }
 
     private suspend fun insertProductQueryWithCurrentTime(query: String) {
@@ -109,13 +110,13 @@ internal class AddFoodRepository(
     }
 }
 
-private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
+private fun MeasurementMapper.toSearchFoodItem(entity: FoodSearchEntity) = with(entity) {
     when {
         productId != null && recipeId == null -> {
             val foodId = FoodId.Product(productId)
             val measurementId = measurementId?.let { MeasurementId.Product(measurementId) }
 
-            return SearchFoodItem(
+            SearchFoodItem(
                 foodId = foodId,
                 name = name,
                 brand = brand,
@@ -127,7 +128,7 @@ private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
                 servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
                 measurementId = measurementId,
                 measurement = with(MeasurementMapper) { toMeasurement() },
-                uniqueId = foodId.uniqueId(measurementId)
+                uniqueId = uiId
             )
         }
 
@@ -135,7 +136,7 @@ private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
             val foodId = FoodId.Recipe(recipeId)
             val measurementId = measurementId?.let { MeasurementId.Recipe(measurementId) }
 
-            return SearchFoodItem(
+            SearchFoodItem(
                 foodId = foodId,
                 name = name,
                 brand = brand,
@@ -147,26 +148,10 @@ private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
                 servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
                 measurementId = measurementId,
                 measurement = with(MeasurementMapper) { toMeasurement() },
-                uniqueId = foodId.uniqueId(measurementId)
+                uniqueId = uiId
             )
         }
 
         else -> error("Data inconsistency: productId and recipeId are null")
-    }
-}
-
-private fun FoodId.uniqueId(measurementId: MeasurementId?): String {
-    val measurementId = measurementId?.let {
-        when (it) {
-            is MeasurementId.Product -> it.id
-            is MeasurementId.Recipe -> it.id
-        }
-    }
-
-    return when (this) {
-        is FoodId.Product if (measurementId != null) -> "p_${id}_$measurementId"
-        is FoodId.Product -> "p_$id"
-        is FoodId.Recipe if (measurementId != null) -> "r_${id}_$measurementId"
-        is FoodId.Recipe -> "r_$id"
     }
 }

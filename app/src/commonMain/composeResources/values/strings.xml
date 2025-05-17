@@ -176,6 +176,7 @@
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera permission is required to scan barcodes. Please allow it in the app settings.</string>
     <string name="neutral_no_products_found">No products found</string>
+    <string name="neutral_no_food_found">No food found</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d calorie left</item>
         <item quantity="other">%1$d calories left</item>

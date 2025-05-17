@@ -15,6 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_3_1,
             v2_3_0,
             v2_2_0,
@@ -23,10 +24,21 @@ object Changelog {
             v2_0_0
         )
 
+    val next = Version.next(
+        newFeatures = listOf(),
+        changes = listOf(
+            "Update food search screen"
+        ),
+        bugFixes = listOf(),
+        translations = listOf(),
+        notes = null
+    )
+
     val v2_3_1 = Version(
         version = "2.3.1",
         date = LocalDate(2025, 5, 17),
         changes = listOf(
+            "Update barcode scanner icon",
             "Sort food by name and brand in the food search screen"
         ),
         bugFixes = listOf(
