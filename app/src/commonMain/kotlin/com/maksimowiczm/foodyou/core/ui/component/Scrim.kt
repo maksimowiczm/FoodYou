@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -21,13 +23,18 @@ fun Scrim(visible: Boolean, onDismiss: () -> Unit, modifier: Modifier = Modifier
         animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()
     )
 
-    if (visible) {
+    val showScrim by remember {
+        derivedStateOf { scrimAlpha != 0f }
+    }
+
+    if (showScrim) {
         Box(modifier) {
             Spacer(
                 Modifier
                     .graphicsLayer { alpha = scrimAlpha }
-                    .pointerInput(onDismiss) { detectTapGestures { onDismiss() } }
                     .background(MaterialTheme.colorScheme.scrim)
+                    .matchParentSize()
+                    .pointerInput(onDismiss) { detectTapGestures { onDismiss() } }
             )
         }
     }
