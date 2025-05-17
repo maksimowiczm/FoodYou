@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class RecipeDao : RecipeLocalDataSource {
     @Query(
         """
-        SELECT 
+        SELECT DISTINCT
             p.*,
             CASE 
                 WHEN pm.measurement IS NOT NULL THEN pm.measurement

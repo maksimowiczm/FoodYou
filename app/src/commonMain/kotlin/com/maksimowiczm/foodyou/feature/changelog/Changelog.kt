@@ -16,6 +16,7 @@ object Changelog {
     val versions
         get() = listOf(
             next,
+            v2_3_1,
             v2_3_0,
             v2_2_0,
             v2_1_1,
@@ -27,14 +28,31 @@ object Changelog {
         newFeatures = listOf(),
         changes = listOf(
             "Update food search screen",
+        ),
+        bugFixes = listOf(),
+        translations = listOf(),
+        notes = null
+    )
+
+    val v2_3_1 = Version(
+        version = "2.3.1",
+        date = LocalDate(2025, 5, 17),
+        changes = listOf(
             "Update barcode scanner icon",
             "Sort food by name and brand in the food search screen"
         ),
         bugFixes = listOf(
-            "App won't crash when the user attempts to paste with an empty clipboard"
+            "App won't crash when the user attempts to paste with an empty clipboard",
+            "Fix crashes when creating a new recipe",
+            "Display the correct suffix for calories in the product form",
+            "Move focus to the next field in barcode field in the product form"
         ),
-        translations = listOf(),
-        notes = null
+        translations = listOf(
+            "Updated Italian"
+        ),
+        notes = """
+            This is a hotfix release that addresses some issues with the previous version.
+        """.trimIndent()
     )
 
     val v2_3_0 = Version(
