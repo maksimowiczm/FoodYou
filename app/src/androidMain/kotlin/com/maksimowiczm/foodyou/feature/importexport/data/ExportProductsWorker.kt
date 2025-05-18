@@ -13,12 +13,17 @@ import androidx.work.WorkerParameters
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.core.ext.notifyIfAllowed
+import com.maksimowiczm.foodyou.feature.importexport.domain.ExportProductsUseCase
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.getString
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class ExportProductsWorker(context: Context, workerParameters: WorkerParameters) :
-    CoroutineWorker(context, workerParameters) {
+    CoroutineWorker(context, workerParameters),
+    KoinComponent {
+
+    private val exportProductsUseCase: ExportProductsUseCase by inject()
 
     private val notificationManager by lazy { NotificationManagerCompat.from(context) }
 
@@ -57,10 +62,8 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
         } ?: return false
 
         return try {
-            val max = 15
-            for (i in 0..max) {
-                setForeground(createForegroundInfo(max = max, progress = i))
-                delay(1000L)
+            exportProductsUseCase(inputStream).collect {
+                setForeground(createForegroundInfo(it.total, it.progress))
             }
 
             true
