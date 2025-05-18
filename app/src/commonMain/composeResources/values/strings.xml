@@ -198,6 +198,8 @@
     <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_copied">Info copied to clipboard</string>
     <string name="neutral_product_created">Product created</string>
+    <string name="neutral_export_started">Export started</string>
+    <string name="neutral_import_started">Import started</string>
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>
