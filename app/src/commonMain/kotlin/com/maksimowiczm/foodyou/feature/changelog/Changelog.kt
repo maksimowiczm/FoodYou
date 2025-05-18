@@ -28,7 +28,7 @@ object Changelog {
         newFeatures = listOf(),
         changes = listOf(),
         bugFixes = listOf(
-            "Fix food search sorting by name and brand. Don't take letter case into account when sorting."
+            "Fix food search sorting by name and brand. Stop taking letter case into account."
         ),
         translations = listOf(
             "Added Hungarian",
