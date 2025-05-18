@@ -91,7 +91,7 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
         notificationManager.createNotificationChannel(channel)
 
         val builder = NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(getString(Res.string.notification_importing_products))
 
         return if (progress == null) {
@@ -111,7 +111,7 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
         notificationManager.createNotificationChannel(channel)
 
         return NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(getString(Res.string.notification_importing_products_success))
             .setOngoing(false)
             .setAutoCancel(true)
@@ -124,7 +124,7 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
         notificationManager.createNotificationChannel(channel)
 
         return NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(getString(Res.string.notification_importing_products_failure))
             .setOngoing(false)
             .setAutoCancel(true)
