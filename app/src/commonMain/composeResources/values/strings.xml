@@ -254,4 +254,8 @@
     <string name="changelog_translations" translatable="false">Translations</string>
     <string name="changelog_notes" translatable="false">Notes</string>
 
+    <string name="notification_export_channel_name">Data export</string>
+    <string name="notification_exporting_products">Exporting products</string>
+    <string name="notification_exporting_products_success">Exporting products finished</string>
+    <string name="notification_exporting_products_failure">Exporting products failed</string>
 </resources>
