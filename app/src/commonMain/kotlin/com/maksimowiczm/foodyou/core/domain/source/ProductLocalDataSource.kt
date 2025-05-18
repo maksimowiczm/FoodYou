@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
 import kotlinx.coroutines.flow.Flow
 
 interface ProductLocalDataSource {
+    suspend fun getProducts(): List<ProductEntity>
     suspend fun upsertProduct(product: ProductEntity): Long
     suspend fun insertOpenFoodFactsProducts(products: List<ProductEntity>)
     fun observeProduct(id: Long): Flow<ProductEntity?>

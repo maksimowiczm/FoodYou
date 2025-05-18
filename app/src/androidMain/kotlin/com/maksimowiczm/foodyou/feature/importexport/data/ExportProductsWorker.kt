@@ -54,15 +54,15 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
         val uriString = inputData.getString("uri") ?: return false
         val uri = uriString.toUri()
         val resolver = applicationContext.contentResolver
-        val inputStream = runCatching {
-            resolver.openInputStream(uri)
+        val outputStream = runCatching {
+            resolver.openOutputStream(uri)
         }.getOrElse {
             Logger.e(TAG, it) { "Error opening input stream" }
             return false
         } ?: return false
 
         return try {
-            exportProductsUseCase(inputStream).collect {
+            exportProductsUseCase(outputStream).collect {
                 setForeground(createForegroundInfo(it.total, it.progress))
             }
 
@@ -71,7 +71,7 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
             Logger.e(TAG, e) { "Error exporting products" }
             false
         } finally {
-            inputStream.close()
+            outputStream.close()
         }
     }
 

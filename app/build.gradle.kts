@@ -128,6 +128,9 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.serialization.kotlinx.json)
+
+            // CSV
+            implementation(libs.kotlin.csv)
         }
 
         commonTest.dependencies {

@@ -1,24 +1,39 @@
 package com.maksimowiczm.foodyou.feature.importexport.domain
 
-import java.io.InputStream
-import kotlinx.coroutines.delay
+import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
+import com.maksimowiczm.foodyou.core.data.model.product.ProductEntityField
+import com.maksimowiczm.foodyou.core.domain.source.ProductLocalDataSource
+import java.io.OutputStream
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 
-// Allow android imports because android source set
+// Allow android/java imports because android source set
 
 data class ExportProgress(val progress: Int, val total: Int)
 
 internal fun interface ExportProductsUseCase {
-    suspend operator fun invoke(stream: InputStream): Flow<ExportProgress>
+    suspend operator fun invoke(stream: OutputStream): Flow<ExportProgress>
 }
 
-internal class ExportProductsUseCaseImpl : ExportProductsUseCase {
-    override suspend fun invoke(stream: InputStream): Flow<ExportProgress> = flow {
-        val max = 15
-        for (i in 0..max) {
-            emit(ExportProgress(i, max))
-            delay(1000L)
+internal class ExportProductsUseCaseImpl(
+    private val productSource: ProductLocalDataSource,
+    private val mapper: ProductCsvMapper = ProductCsvMapper
+) : ExportProductsUseCase {
+    override suspend fun invoke(stream: OutputStream): Flow<ExportProgress> = channelFlow {
+        val products = productSource.getProducts()
+        val max = products.size
+
+        csvWriter().openAsync(stream) {
+            writeRow(ProductEntityField.entries.map { it.name })
+
+            products.forEachIndexed { index, product ->
+                val row =
+                    mapper.toStringMap(product).toList().sortedBy { it.first }.map { it.second }
+
+                writeRow(row)
+
+                send(ExportProgress(index, max))
+            }
         }
     }
 }

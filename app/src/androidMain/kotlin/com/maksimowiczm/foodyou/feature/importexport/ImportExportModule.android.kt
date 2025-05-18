@@ -14,5 +14,5 @@ actual val importExportModule = module {
 
     factoryOf(::BackupService)
 
-    factoryOf(::ExportProductsUseCaseImpl).bind<ExportProductsUseCase>()
+    factory { ExportProductsUseCaseImpl(get()) }.bind<ExportProductsUseCase>()
 }
