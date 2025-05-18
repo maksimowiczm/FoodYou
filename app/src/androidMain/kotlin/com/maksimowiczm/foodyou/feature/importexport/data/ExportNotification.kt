@@ -6,7 +6,7 @@ import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.getString
 
-object ExportNotification {
+internal object ExportNotification {
     const val CHANNEL_ID = "EXPORT_CHANNEL_ID"
 
     suspend fun getChannel() = NotificationChannel(

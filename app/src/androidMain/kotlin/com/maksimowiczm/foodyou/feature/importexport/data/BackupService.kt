@@ -6,8 +6,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 
-// Use android specific imports because this is an android source set
-class BackupService(private val context: Context) {
+internal class BackupService(private val context: Context) {
 
     private val workManager: WorkManager
         get() = WorkManager.getInstance(context)
