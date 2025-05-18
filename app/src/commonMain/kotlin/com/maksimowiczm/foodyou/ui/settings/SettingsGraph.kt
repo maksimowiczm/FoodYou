@@ -19,7 +19,8 @@ fun NavGraphBuilder.settingsGraph(
     onMealsCardSettings: () -> Unit,
     onGoalsSettings: () -> Unit,
     onAbout: () -> Unit,
-    onLanguage: () -> Unit
+    onLanguage: () -> Unit,
+    onImportExport: () -> Unit
 ) {
     crossfadeComposable<Settings> {
         SettingsScreen(
@@ -28,7 +29,8 @@ fun NavGraphBuilder.settingsGraph(
             onMealsSettings = onMealsSettings,
             onGoalsSettings = onGoalsSettings,
             onAbout = onAbout,
-            onLanguage = onLanguage
+            onLanguage = onLanguage,
+            onImportExport = onImportExport
         )
     }
     forwardBackwardComposable<HomeSettings> {
