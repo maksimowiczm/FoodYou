@@ -244,7 +244,7 @@
     <string name="description_import_and_export">Save your data</string>
     <string name="description_import_and_export_hint">All data sync operations are run in the background. You will be notified when they are completed.</string>
     <string name="description_experimental_feature">This is an experimental feature. It may change or be removed in future versions.</string>
-    <string name="description_notifications_permission_required_data_sync">Notifications permission is required to show notifications about data sync progress.</string>
+    <string name="description_notifications_permission_required_data_sync">Notifications permission is required to show data sync progress. Enable it in the app settings.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
