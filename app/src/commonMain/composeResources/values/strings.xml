@@ -259,4 +259,9 @@
     <string name="notification_exporting_products">Exporting products</string>
     <string name="notification_exporting_products_success">Exporting products finished</string>
     <string name="notification_exporting_products_failure">Exporting products failed</string>
+
+    <string name="notification_import_channel_name">Data import</string>
+    <string name="notification_importing_products">Importing products</string>
+    <string name="notification_importing_products_success">Importing products finished</string>
+    <string name="notification_importing_products_failure">Importing products failed</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.importexport.domain
 
+import com.maksimowiczm.foodyou.core.data.model.Minerals
 import com.maksimowiczm.foodyou.core.data.model.Nutrients
 import com.maksimowiczm.foodyou.core.data.model.Vitamins
 import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
@@ -10,7 +11,8 @@ internal object ProductCsvMapper {
     fun toStringMap(product: ProductEntity): Map<ProductEntityField, String?> =
         product.toStringMap()
 
-    fun toProductEntity(map: Map<String, String>): ProductEntity? = map.toProductEntity()
+    fun toProductEntity(map: Map<ProductEntityField, String>): ProductEntity? =
+        map.toProductEntity()
 }
 
 private fun ProductEntity.toStringMap(): Map<ProductEntityField, String?> = mapOf(
@@ -59,60 +61,70 @@ private fun ProductEntity.toStringMap(): Map<ProductEntityField, String?> = mapO
     ProductEntityField.SERVING_WEIGHT to servingWeight?.toString()
 )
 
-private fun Map<String, String>.toProductEntity(): ProductEntity? {
+private fun Map<ProductEntityField, String>.toProductEntity(): ProductEntity? {
+    val proteins = this[ProductEntityField.PROTEINS]?.toFloatOrNull() ?: return null
+    val carbohydrates = this[ProductEntityField.CARBOHYDRATES]?.toFloatOrNull() ?: return null
+    val fats = this[ProductEntityField.FATS]?.toFloatOrNull() ?: return null
+    val calories = this[ProductEntityField.CALORIES]?.toFloatOrNull() ?: return null
+
+    val nutrients = Nutrients(
+        proteins = proteins,
+        carbohydrates = carbohydrates,
+        fats = fats,
+        calories = calories,
+        saturatedFats = this[ProductEntityField.SATURATED_FATS]?.toFloatOrNull(),
+        monounsaturatedFats = this[ProductEntityField.MONOUNSATURATED_FATS]?.toFloatOrNull(),
+        polyunsaturatedFats = this[ProductEntityField.POLYUNSATURATED_FATS]?.toFloatOrNull(),
+        omega3 = this[ProductEntityField.OMEGA3]?.toFloatOrNull(),
+        omega6 = this[ProductEntityField.OMEGA6]?.toFloatOrNull(),
+        sugars = this[ProductEntityField.SUGARS]?.toFloatOrNull(),
+        salt = this[ProductEntityField.SALT]?.toFloatOrNull(),
+        fiber = this[ProductEntityField.FIBER]?.toFloatOrNull(),
+        cholesterolMilli = this[ProductEntityField.CHOLESTEROL_MILLI]?.toFloatOrNull(),
+        caffeineMilli = this[ProductEntityField.CAFFEINE_MILLI]?.toFloatOrNull()
+    )
+
+    val vitamins = Vitamins(
+        vitaminAMicro = this[ProductEntityField.VITAMIN_A_MICRO]?.toFloatOrNull(),
+        vitaminB1Milli = this[ProductEntityField.VITAMIN_B1_MILLI]?.toFloatOrNull(),
+        vitaminB2Milli = this[ProductEntityField.VITAMIN_B2_MILLI]?.toFloatOrNull(),
+        vitaminB3Milli = this[ProductEntityField.VITAMIN_B3_MILLI]?.toFloatOrNull(),
+        vitaminB5Milli = this[ProductEntityField.VITAMIN_B5_MILLI]?.toFloatOrNull(),
+        vitaminB6Milli = this[ProductEntityField.VITAMIN_B6_MILLI]?.toFloatOrNull(),
+        vitaminB7Micro = this[ProductEntityField.VITAMIN_B7_MICRO]?.toFloatOrNull(),
+        vitaminB9Micro = this[ProductEntityField.VITAMIN_B9_MICRO]?.toFloatOrNull(),
+        vitaminB12Micro = this[ProductEntityField.VITAMIN_B12_MICRO]?.toFloatOrNull(),
+        vitaminCMilli = this[ProductEntityField.VITAMIN_C_MILLI]?.toFloatOrNull(),
+        vitaminDMicro = this[ProductEntityField.VITAMIN_D_MICRO]?.toFloatOrNull(),
+        vitaminEMilli = this[ProductEntityField.VITAMIN_E_MILLI]?.toFloatOrNull(),
+        vitaminKMicro = this[ProductEntityField.VITAMIN_K_MICRO]?.toFloatOrNull()
+    )
+
+    val minerals = Minerals(
+        manganeseMilli = this[ProductEntityField.MANGANESE_MILLI]?.toFloatOrNull(),
+        magnesiumMilli = this[ProductEntityField.MAGNESIUM_MILLI]?.toFloatOrNull(),
+        potassiumMilli = this[ProductEntityField.POTASSIUM_MILLI]?.toFloatOrNull(),
+        calciumMilli = this[ProductEntityField.CALCIUM_MILLI]?.toFloatOrNull(),
+        copperMilli = this[ProductEntityField.COPPER_MILLI]?.toFloatOrNull(),
+        zincMilli = this[ProductEntityField.ZINC_MILLI]?.toFloatOrNull(),
+        sodiumMilli = this[ProductEntityField.SODIUM_MILLI]?.toFloatOrNull(),
+        ironMilli = this[ProductEntityField.IRON_MILLI]?.toFloatOrNull(),
+        phosphorusMilli = this[ProductEntityField.PHOSPHORUS_MILLI]?.toFloatOrNull(),
+        seleniumMicro = this[ProductEntityField.SELENIUM_MICRO]?.toFloatOrNull(),
+        iodineMicro = this[ProductEntityField.IODINE_MICRO]?.toFloatOrNull()
+    )
+
+    val name = this[ProductEntityField.NAME]?.toString() ?: return null
+
     return ProductEntity(
-        name = this[ProductEntityField.NAME.name].orEmpty(),
-        brand = this[ProductEntityField.BRAND.name],
-        barcode = this[ProductEntityField.BARCODE.name],
-        nutrients = Nutrients(
-            proteins = this[ProductEntityField.PROTEINS.name]?.toFloatOrNull() ?: return null,
-            carbohydrates =
-            this[ProductEntityField.CARBOHYDRATES.name]?.toFloatOrNull() ?: return null,
-            fats = this[ProductEntityField.FATS.name]?.toFloatOrNull() ?: return null,
-            calories = this[ProductEntityField.CALORIES.name]?.toFloatOrNull() ?: return null,
-            saturatedFats = this[ProductEntityField.SATURATED_FATS.name]?.toFloatOrNull(),
-            monounsaturatedFats =
-            this[ProductEntityField.MONOUNSATURATED_FATS.name]?.toFloatOrNull(),
-            polyunsaturatedFats =
-            this[ProductEntityField.POLYUNSATURATED_FATS.name]?.toFloatOrNull(),
-            omega3 = this[ProductEntityField.OMEGA3.name]?.toFloatOrNull(),
-            omega6 = this[ProductEntityField.OMEGA6.name]?.toFloatOrNull(),
-            sugars = this[ProductEntityField.SUGARS.name]?.toFloatOrNull(),
-            salt = this[ProductEntityField.SALT.name]?.toFloatOrNull(),
-            fiber = this[ProductEntityField.FIBER.name]?.toFloatOrNull(),
-            cholesterolMilli = this[ProductEntityField.CHOLESTEROL_MILLI.name]?.toFloatOrNull(),
-            caffeineMilli = this[ProductEntityField.CAFFEINE_MILLI.name]?.toFloatOrNull()
-        ),
-        vitamins = Vitamins(
-            vitaminAMicro = this[ProductEntityField.VITAMIN_A_MICRO.name]?.toFloatOrNull(),
-            vitaminB1Milli = this[ProductEntityField.VITAMIN_B1_MILLI.name]?.toFloatOrNull(),
-            vitaminB2Milli = this[ProductEntityField.VITAMIN_B2_MILLI.name]?.toFloatOrNull(),
-            vitaminB3Milli = this[ProductEntityField.VITAMIN_B3_MILLI.name]?.toFloatOrNull(),
-            vitaminB5Milli = this[ProductEntityField.VITAMIN_B5_MILLI.name]?.toFloatOrNull(),
-            vitaminB6Milli = this[ProductEntityField.VITAMIN_B6_MILLI.name]?.toFloatOrNull(),
-            vitaminB7Micro = this[ProductEntityField.VITAMIN_B7_MICRO.name]?.toFloatOrNull(),
-            vitaminB9Micro = this[ProductEntityField.VITAMIN_B9_MICRO.name]?.toFloatOrNull(),
-            vitaminB12Micro = this[ProductEntityField.VITAMIN_B12_MICRO.name]?.toFloatOrNull(),
-            vitaminCMilli = this[ProductEntityField.VITAMIN_C_MILLI.name]?.toFloatOrNull(),
-            vitaminDMicro = this[ProductEntityField.VITAMIN_D_MICRO.name]?.toFloatOrNull(),
-            vitaminEMilli = this[ProductEntityField.VITAMIN_E_MILLI.name]?.toFloatOrNull(),
-            vitaminKMicro = this[ProductEntityField.VITAMIN_K_MICRO.name]?.toFloatOrNull()
-        ),
-        minerals = com.maksimowiczm.foodyou.core.data.model.Minerals(
-            manganeseMilli = this[ProductEntityField.MANGANESE_MILLI.name]?.toFloatOrNull(),
-            magnesiumMilli = this[ProductEntityField.MAGNESIUM_MILLI.name]?.toFloatOrNull(),
-            potassiumMilli = this[ProductEntityField.POTASSIUM_MILLI.name]?.toFloatOrNull(),
-            calciumMilli = this[ProductEntityField.CALCIUM_MILLI.name]?.toFloatOrNull(),
-            copperMilli = this[ProductEntityField.COPPER_MILLI.name]?.toFloatOrNull(),
-            zincMilli = this[ProductEntityField.ZINC_MILLI.name]?.toFloatOrNull(),
-            sodiumMilli = this[ProductEntityField.SODIUM_MILLI.name]?.toFloatOrNull(),
-            ironMilli = this[ProductEntityField.IRON_MILLI.name]?.toFloatOrNull(),
-            phosphorusMilli = this[ProductEntityField.PHOSPHORUS_MILLI.name]?.toFloatOrNull(),
-            seleniumMicro = this[ProductEntityField.SELENIUM_MICRO.name]?.toFloatOrNull(),
-            iodineMicro = this[ProductEntityField.IODINE_MICRO.name]?.toFloatOrNull()
-        ),
-        packageWeight = this[ProductEntityField.PACKAGE_WEIGHT.name]?.toFloatOrNull(),
-        servingWeight = this[ProductEntityField.SERVING_WEIGHT.name]?.toFloatOrNull(),
+        name = name,
+        brand = this[ProductEntityField.BRAND],
+        barcode = this[ProductEntityField.BARCODE],
+        nutrients = nutrients,
+        vitamins = vitamins,
+        minerals = minerals,
+        packageWeight = this[ProductEntityField.PACKAGE_WEIGHT]?.toFloatOrNull(),
+        servingWeight = this[ProductEntityField.SERVING_WEIGHT]?.toFloatOrNull(),
         productSource = ProductSource.User
     )
 }
