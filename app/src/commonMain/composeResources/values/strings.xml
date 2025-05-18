@@ -51,6 +51,7 @@
     <string name="headline_minerals">Minerals</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">Supported URLs</string>
     <string name="headline_import_and_export">Import and export</string>
+    <string name="headline_experimental" description="Experimental features">Experimental</string>
 
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
     <string name="weight">Weight</string>
