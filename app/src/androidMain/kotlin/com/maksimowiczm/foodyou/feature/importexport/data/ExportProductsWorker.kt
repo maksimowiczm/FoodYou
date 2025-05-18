@@ -38,7 +38,7 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
             createFailureNotification()
         }
 
-        notificationManager.notifyIfAllowed(1_000, notification)
+        notificationManager.notifyIfAllowed(1_001, notification)
 
         return if (result) {
             Result.success()
