@@ -101,8 +101,7 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
 
     private suspend fun createProgressNotification(progress: Int?): Notification {
         val channelId = DataSyncProgressNotification.CHANNEL_ID
-        val channel = DataSyncProgressNotification.getChannel()
-        notificationManager.createNotificationChannel(channel)
+        notificationManager.createNotificationChannel(DataSyncProgressNotification.getChannel())
 
         val builder = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_notification)
@@ -121,8 +120,7 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
 
     private suspend fun createSuccessNotification(): Notification {
         val channelId = DataSyncNotification.CHANNEL_ID
-        val channel = DataSyncNotification.getChannel()
-        notificationManager.createNotificationChannel(channel)
+        notificationManager.createNotificationChannel(DataSyncNotification.getChannel())
 
         return NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_notification)
@@ -134,8 +132,7 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
 
     private suspend fun createFailureNotification(): Notification {
         val channelId = DataSyncNotification.CHANNEL_ID
-        val channel = DataSyncNotification.getChannel()
-        notificationManager.createNotificationChannel(channel)
+        notificationManager.createNotificationChannel(DataSyncNotification.getChannel())
 
         return NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_notification)

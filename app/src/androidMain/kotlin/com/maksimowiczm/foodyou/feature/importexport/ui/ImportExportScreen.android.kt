@@ -16,7 +16,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -65,11 +65,11 @@ private fun AndroidImportExportScreen(
         val formattedTime = dateFormatter.formatTime(time.time)
         val fileName = buildString {
             append(appName)
-            append(" ")
+            append("-")
             append(formattedDate)
-            append(" ")
+            append("-")
             append(formattedTime)
-        }.replace(" ", "-").replace(":", "-").replace(".", "-")
+        }.replace(":", "-").replace(".", "-")
 
         exportLauncher.launch("$fileName.csv")
     }
@@ -102,7 +102,7 @@ private fun Android33PermissionProxy(
 ) {
     val activity = LocalActivity.current
 
-    var requestInSettings by remember { mutableStateOf(false) }
+    var requestInSettings by rememberSaveable { mutableStateOf(false) }
     val importWithPermissionLauncher = rememberLauncherForNotificationPermission(
         onNotGranted = { requestInSettings = true },
         onGranted = { onImport() }
@@ -118,10 +118,7 @@ private fun Android33PermissionProxy(
     if (requestInSettings && !permissionState.status.isGranted) {
         AndroidNotificationsRedirectToSettingsAlertDialog(
             onDismissRequest = { requestInSettings = false },
-            onConfirm = {
-                activity?.let { redirectToNotificationsSettings(it) }
-                requestInSettings = false
-            }
+            onConfirm = { activity?.let { redirectToNotificationsSettings(it) } }
         )
     }
 
