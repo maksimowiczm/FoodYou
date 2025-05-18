@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.feature.about.aboutModule
 import com.maksimowiczm.foodyou.feature.addfood.addFoodModule
 import com.maksimowiczm.foodyou.feature.calendar.calendarModule
 import com.maksimowiczm.foodyou.feature.goals.goalsModule
+import com.maksimowiczm.foodyou.feature.importexport.importExportModule
 import com.maksimowiczm.foodyou.feature.language.languageModule
 import com.maksimowiczm.foodyou.feature.meal.mealModule
 import com.maksimowiczm.foodyou.feature.measurement.measurementModule
@@ -30,6 +31,7 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         addFoodModule,
         calendarModule,
         goalsModule,
+        importExportModule,
         languageModule,
         mealModule,
         measurementModule,
