@@ -15,7 +15,6 @@ import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.core.ext.notifyIfAllowed
 import com.maksimowiczm.foodyou.feature.importexport.domain.ExportProductsUseCase
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.getString
 import org.koin.core.component.KoinComponent
@@ -41,8 +40,6 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
         )
 
         val result = internalDoWork(notificationId)
-
-        delay(1_000)
 
         val notification = if (result) {
             createSuccessNotification()
