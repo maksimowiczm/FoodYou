@@ -29,6 +29,7 @@ object Changelog {
         changes = listOf(),
         bugFixes = listOf(),
         translations = listOf(
+            "Added Hungarian",
             "Updated German"
         ),
         notes = null

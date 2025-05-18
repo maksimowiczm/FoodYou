@@ -1,0 +1,15 @@
+A <b>FoodYou</b> egy modern kalóriaszámláló alkalmazás, amely a Material You dizájnt követi. Célja, hogy a kalória követése egyszerűbbé és látványosabbá váljon.
+
+<b>Jellemzők:</b>
+<ul>
+    <li><b>Material You dizájn:</b> Dinamikus témázás az egységes és esztétikus megjelenésért.</li>
+    <li><b>Interaktív kezdőlap:</b> Gyors hozzáférés a fő funkciókhoz a kártyaalapú felületen keresztül.</li>
+    <li><b>Open Food Facts integráció:</b> Pontos élelmiszeradatok a precíz kalóriaszámításhoz.</li>
+    <li><b>Széltől szélig tartó elrendezés:</b> Teljes képernyős dizájn a még magával ragadóbb élményért.</li>
+    <li><b>Prediktív visszalépés funkció:</b> Zökkenőmentes navigáció a visszalépési lehetőségek előrejelzésével.</li>
+    <li><b>Testreszabható & nyílt forráskódú:</b> Közösségi alapon fejleszthető, könnyen bővíthető és módosítható.</li>
+</ul>
+
+Kezdd el még ma nyomon követni a kalóriáid a FoodYou-val!
+
+Az indítási ikon az <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>-ról származik.
