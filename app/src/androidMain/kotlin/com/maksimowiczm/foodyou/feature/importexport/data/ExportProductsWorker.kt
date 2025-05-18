@@ -72,7 +72,7 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
         val outputStream = runCatching {
             resolver.openOutputStream(uri)
         }.getOrElse {
-            Logger.e(TAG, it) { "Error opening input stream" }
+            Logger.e(TAG, it) { "Error opening output stream" }
             return false
         } ?: return false
 
