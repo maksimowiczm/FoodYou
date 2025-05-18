@@ -38,7 +38,7 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
             createFailureNotification()
         }
 
-        notificationManager.notifyIfAllowed(10_001, notification)
+        notificationManager.notifyIfAllowed(1_000, notification)
 
         return if (result) {
             Result.success()
@@ -75,23 +75,19 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
         }
     }
 
-    private suspend fun createForegroundInfo(
-        max: Int?,
-        progress: Int?,
-        notificationId: Int = 10_000
-    ): ForegroundInfo {
+    private suspend fun createForegroundInfo(max: Int?, progress: Int?): ForegroundInfo {
         val notification = createProgressNotification(max, progress)
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ForegroundInfo(notificationId, notification, FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            ForegroundInfo(1_000, notification, FOREGROUND_SERVICE_TYPE_DATA_SYNC)
         } else {
-            ForegroundInfo(notificationId, notification)
+            ForegroundInfo(1_000, notification)
         }
     }
 
     private suspend fun createProgressNotification(max: Int?, progress: Int?): Notification {
-        val channelId = ExportNotification.CHANNEL_ID
-        val channel = ExportNotification.getChannel()
+        val channelId = DataSyncProgressNotification.CHANNEL_ID
+        val channel = DataSyncProgressNotification.getChannel()
         notificationManager.createNotificationChannel(channel)
 
         return if (max == null || progress == null) {
@@ -112,8 +108,8 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
     }
 
     private suspend fun createSuccessNotification(): Notification {
-        val channelId = ExportNotification.CHANNEL_ID
-        val channel = ExportNotification.getChannel()
+        val channelId = DataSyncNotification.CHANNEL_ID
+        val channel = DataSyncNotification.getChannel()
         notificationManager.createNotificationChannel(channel)
 
         return NotificationCompat.Builder(applicationContext, channelId)
@@ -125,8 +121,8 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
     }
 
     private suspend fun createFailureNotification(): Notification {
-        val channelId = ExportNotification.CHANNEL_ID
-        val channel = ExportNotification.getChannel()
+        val channelId = DataSyncNotification.CHANNEL_ID
+        val channel = DataSyncNotification.getChannel()
         notificationManager.createNotificationChannel(channel)
 
         return NotificationCompat.Builder(applicationContext, channelId)
