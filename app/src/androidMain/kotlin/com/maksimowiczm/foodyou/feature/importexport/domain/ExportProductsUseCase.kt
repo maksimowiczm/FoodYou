@@ -24,7 +24,7 @@ internal class ExportProductsUseCaseImpl(
         val max = products.size
 
         csvWriter().openAsync(stream) {
-            writeRow(ProductEntityField.entries.map { it.name })
+            writeRow(ProductEntityField.entries.map { it.name.lowercase() })
 
             products.forEachIndexed { index, product ->
                 val row =
