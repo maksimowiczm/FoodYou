@@ -16,6 +16,7 @@ import com.maksimowiczm.foodyou.core.ext.notifyIfAllowed
 import com.maksimowiczm.foodyou.feature.importexport.domain.ImportProductsUseCase
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.getString
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,9 +30,16 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
     private val notificationManager by lazy { NotificationManagerCompat.from(context) }
 
     override suspend fun doWork(): Result {
-        setForeground(createForegroundInfo(null))
+        val notificationId = 1_000
 
-        val result = internalDoWork()
+        setForeground(
+            createForegroundInfo(
+                progress = null,
+                notificationId = notificationId
+            )
+        )
+
+        val result = internalDoWork(notificationId)
 
         val notification = if (result) {
             createSuccessNotification()
@@ -39,7 +47,10 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
             createFailureNotification()
         }
 
-        notificationManager.notifyIfAllowed(1_001, notification)
+        notificationManager.notifyIfAllowed(
+            id = notificationId + 1,
+            notification = notification
+        )
 
         return if (result) {
             Result.success()
@@ -48,7 +59,7 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
         }
     }
 
-    suspend fun internalDoWork(): Boolean {
+    suspend fun internalDoWork(notificationId: Int): Boolean {
         val uriString = inputData.getString("uri") ?: return false
         val uri = uriString.toUri()
         val resolver = applicationContext.contentResolver
@@ -60,8 +71,11 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
         } ?: return false
 
         return try {
-            importProductsUseCase(inputStream).collect {
-                setForeground(createForegroundInfo(it))
+            importProductsUseCase(inputStream).collectLatest { progress ->
+                notificationManager.notifyIfAllowed(
+                    id = notificationId,
+                    notification = createProgressNotification(progress)
+                )
             }
 
             true
@@ -75,13 +89,13 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
         return false
     }
 
-    private suspend fun createForegroundInfo(progress: Int?): ForegroundInfo {
+    private suspend fun createForegroundInfo(progress: Int?, notificationId: Int): ForegroundInfo {
         val notification = createProgressNotification(progress)
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ForegroundInfo(1_000, notification, FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            ForegroundInfo(notificationId, notification, FOREGROUND_SERVICE_TYPE_DATA_SYNC)
         } else {
-            ForegroundInfo(1_000, notification)
+            ForegroundInfo(notificationId, notification)
         }
     }
 
