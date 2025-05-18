@@ -4,14 +4,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.FilePresent
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -37,7 +44,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal expect fun ImportExportScreen(onBack: () -> Unit, modifier: Modifier = Modifier)
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun ImportExportScreenImpl(
     onBack: () -> Unit,
@@ -62,51 +69,80 @@ internal fun ImportExportScreenImpl(
                 .padding(8.dp)
                 .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues,
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            contentPadding = paddingValues
         ) {
             item {
-                SettingsListItem(
-                    headlineContent = {
-                        Text(stringResource(Res.string.action_import_food_products))
-                    },
-                    supportingContent = {
-                        Text(stringResource(Res.string.action_import_food_products_from_csv))
-                    },
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.Outlined.FileOpen,
-                            contentDescription = null
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    SettingsListItem(
+                        headlineContent = {
+                            Text(stringResource(Res.string.action_import_food_products))
+                        },
+                        supportingContent = {
+                            Text(stringResource(Res.string.action_import_food_products_from_csv))
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = Icons.Outlined.FileOpen,
+                                contentDescription = null
+                            )
+                        },
+                        onClick = onImport,
+                        shape = MaterialTheme.shapes.medium.copy(
+                            bottomEnd = CornerSize(0),
+                            bottomStart = CornerSize(0)
                         )
-                    },
-                    onClick = onImport,
-                    shape = MaterialTheme.shapes.medium.copy(
-                        bottomEnd = CornerSize(0),
-                        bottomStart = CornerSize(0)
                     )
-                )
+                    SettingsListItem(
+                        headlineContent = {
+                            Text(stringResource(Res.string.action_export_food_products))
+                        },
+                        supportingContent = {
+                            Text(stringResource(Res.string.action_export_food_products_to_csv))
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = Icons.Outlined.FilePresent,
+                                contentDescription = null
+                            )
+                        },
+                        onClick = onExport,
+                        shape = MaterialTheme.shapes.medium.copy(
+                            topEnd = CornerSize(0),
+                            topStart = CornerSize(0)
+                        )
+                    )
+                }
             }
 
             item {
-                SettingsListItem(
-                    headlineContent = {
-                        Text(stringResource(Res.string.action_export_food_products))
-                    },
-                    supportingContent = {
-                        Text(stringResource(Res.string.action_export_food_products_to_csv))
-                    },
-                    leadingContent = {
+                Spacer(Modifier.height(8.dp))
+            }
+
+            item {
+                Card(
+                    modifier = Modifier,
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         Icon(
-                            imageVector = Icons.Outlined.FilePresent,
+                            imageVector = Icons.Outlined.Info,
                             contentDescription = null
                         )
-                    },
-                    onClick = onExport,
-                    shape = MaterialTheme.shapes.medium.copy(
-                        topEnd = CornerSize(0),
-                        topStart = CornerSize(0)
-                    )
-                )
+
+                        Text(
+                            text = stringResource(Res.string.description_import_and_export_hint),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
             }
         }
     }
