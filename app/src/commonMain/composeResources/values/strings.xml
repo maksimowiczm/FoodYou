@@ -220,6 +220,7 @@
     <string name="error_failed_to_download_product">Failed to download product</string>
     <string name="error_product_not_found">Product not found</string>
     <string name="error_unknown_error">Unknown error</string>
+    <string name="error_measurement_error">Measurement error, please check the serving and package weight</string>
 
     <string name="positive_goal_reached">Goal reached</string>
     <string name="positive_ok">OK</string>

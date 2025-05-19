@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -21,6 +22,7 @@ import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.core.ui.ext.performToggle
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
+import com.maksimowiczm.foodyou.feature.addfood.ui.component.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.addfood.ui.component.FoodListItem
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
@@ -39,7 +41,11 @@ internal fun SearchFoodListItem(
     val measurementString = food.measurementString
     val caloriesString = food.caloriesString
     if (weight == null || measurementString == null || caloriesString == null) {
-        // TODO handle broken weight
+        FoodErrorListItem(
+            name = food.name,
+            brand = food.brand,
+            modifier = modifier.clickable { onClick() }
+        )
         return
     }
 
