@@ -327,13 +327,7 @@ private fun AddFoodNavHost(
                     navController.popBackStack<UpdateProduct>(inclusive = true)
                 },
                 onUpdate = {
-                    navController.navigate(MeasureFood(productId)) {
-                        launchSingleTop = true
-
-                        popUpTo<SearchFood> {
-                            inclusive = false
-                        }
-                    }
+                    navController.popBackStack<UpdateProduct>(inclusive = true)
                 }
             )
         }
