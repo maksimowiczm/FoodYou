@@ -48,6 +48,10 @@ val languages = mapOf(
         tag = "it-IT",
         authorsStrings = emptyList()
     ),
+    "Magyar (Magyarország)" to Translation(
+        tag = "hu-HU",
+        authorsStrings = emptyList()
+    ),
     "Polski (Polska)" to Translation(
         tag = "pl-PL",
         authorsStrings = listOf(me)

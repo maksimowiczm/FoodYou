@@ -16,6 +16,7 @@ object Changelog {
     val versions
         get() = listOf(
             next,
+            v2_3_2,
             v2_3_1,
             v2_3_0,
             v2_2_0,
@@ -27,6 +28,7 @@ object Changelog {
     val next = Version.next(
         newFeatures = listOf(),
         changes = listOf(
+            "Update barcode scanner icon",
             "Update food search screen"
         ),
         bugFixes = listOf(),
@@ -34,11 +36,25 @@ object Changelog {
         notes = null
     )
 
+    val v2_3_2 = Version(
+        version = "2.3.2",
+        date = LocalDate(2025, 5, 19),
+        newFeatures = listOf(
+            "Sort food by name and brand in the meal screen"
+        ),
+        bugFixes = listOf(
+            "Fix food search sorting by name and brand. Stop taking letter case into account."
+        ),
+        translations = listOf(
+            "Added Hungarian",
+            "Updated German"
+        )
+    )
+
     val v2_3_1 = Version(
         version = "2.3.1",
         date = LocalDate(2025, 5, 17),
         changes = listOf(
-            "Update barcode scanner icon",
             "Sort food by name and brand in the food search screen"
         ),
         bugFixes = listOf(

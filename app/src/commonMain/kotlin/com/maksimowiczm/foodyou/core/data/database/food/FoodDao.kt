@@ -127,7 +127,7 @@ abstract class FoodDao : FoodLocalDataSource {
         JOIN Counted c 
             ON (i.productId IS NULL AND i.recipeId = c.recipeId) 
             OR (i.productId = c.productId AND i.recipeId IS NULL)
-        ORDER BY name, brand, measurementId
+        ORDER BY name COLLATE NOCASE, brand COLLATE NOCASE
         """
     )
     abstract override fun queryFood(
@@ -235,7 +235,7 @@ abstract class FoodDao : FoodLocalDataSource {
         JOIN Counted c 
             ON (i.productId IS NULL AND i.recipeId = c.recipeId) 
             OR (i.productId = c.productId AND i.recipeId IS NULL)
-        ORDER BY name, brand, measurementId
+        ORDER BY name COLLATE NOCASE, brand COLLATE NOCASE
         """
     )
     abstract override fun queryFoodByBarcode(
