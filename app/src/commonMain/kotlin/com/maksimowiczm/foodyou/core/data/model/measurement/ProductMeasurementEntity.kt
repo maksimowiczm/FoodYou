@@ -26,7 +26,8 @@ import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
     indices = [
         Index(value = ["productId"]),
         Index(value = ["isDeleted"]),
-        Index(value = ["mealId"])
+        Index(value = ["mealId"]),
+        Index(value = ["diaryEpochDay"])
     ]
 )
 data class ProductMeasurementEntity(

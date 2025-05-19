@@ -15,112 +15,106 @@ abstract class FoodDao : FoodLocalDataSource {
     @Query(
         """
         WITH
-        Suggestion AS (
-            SELECT *
-            FROM MeasurementSuggestionView s
-            WHERE :query IS NULL OR (name LIKE '%' || :query || '%' OR brand LIKE '%' || :query || '%')
-        ),
-        Measured AS (
-            SELECT *
-            FROM MeasuredFoodView
-            WHERE 
-                mealId = :mealId
-                AND epochDay = :epochDay
-                AND :query IS NULL OR (name LIKE '%' || :query || '%' OR brand LIKE '%' || :query || '%')
-        ),
-        Intermediate AS (
-            SELECT * FROM Measured
-            UNION
+        FilteredData AS (
             SELECT
-                s.productId AS productId,
-                s.recipeId AS recipeId,
+                s.productId,
+                s.recipeId,
                 :epochDay AS epochDay,
                 :mealId AS mealId,
-                s.name AS name,
-                s.brand AS brand,
-                s.barcode AS barcode,
-                s.calories AS calories,
-                s.proteins AS proteins,
-                s.carbohydrates AS carbohydrates,
-                s.fats AS fats,
-                s.packageWeight AS packageWeight,
-                s.servingWeight AS servingWeight,
+                s.name,
+                s.brand,
+                s.barcode,
+                s.calories,
+                s.proteins,
+                s.carbohydrates,
+                s.fats,
+                s.packageWeight,
+                s.servingWeight,
                 NULL AS measurementId,
-                s.measurement AS measurement,
-                s.quantity AS quantity
-            FROM Suggestion s
-            WHERE NOT EXISTS (
-                SELECT 1
-                FROM Measured m
-                WHERE 
-                    (m.productId IS NOT NULL AND m.productId = s.productId)
-                    OR (m.recipeId IS NOT NULL AND m.recipeId = s.recipeId)
-            )
-        ),
-        Counted AS (
+                s.measurement,
+                s.quantity,
+                0 AS isMeasured
+            FROM MeasurementSuggestionView s
+            WHERE (:query IS NULL OR (s.name LIKE '%' || :query || '%' OR s.brand LIKE '%' || :query || '%'))
+            
+            UNION ALL
+            
             SELECT 
-                productId AS productId,
-                recipeId AS recipeId,
-                COUNT(*) AS count
-            FROM Intermediate
+                m.productId,
+                m.recipeId,
+                m.epochDay,
+                m.mealId,
+                m.name,
+                m.brand,
+                m.barcode,
+                m.calories,
+                m.proteins,
+                m.carbohydrates,
+                m.fats,
+                m.packageWeight,
+                m.servingWeight,
+                m.measurementId,
+                m.measurement,
+                m.quantity,
+                1 AS isMeasured
+            FROM MeasuredFoodView m
+            WHERE 
+                m.mealId = :mealId
+                AND m.epochDay = :epochDay
+                AND (:query IS NULL OR (m.name LIKE '%' || :query || '%' OR m.brand LIKE '%' || :query || '%'))
+        ),
+        
+        -- Get min measurement ID for each product/recipe with separate columns
+        MinMeasurements AS (
+            SELECT
+                productId,
+                recipeId,
+                MIN(measurementId) AS minMeasurementId
+            FROM FilteredData
+            WHERE measurementId IS NOT NULL
             GROUP BY productId, recipeId
         ),
-        IntermediateWithMin AS (
-        -- Can't use window function when API < 30
---                SELECT *,
---                       CASE 
---                           WHEN measurementId IS NULL THEN NULL
---                           WHEN measurementId = MIN(measurementId) OVER (
---                               PARTITION BY 
---                                   CASE 
---                                       WHEN productId IS NOT NULL THEN productId
---                                       ELSE recipeId
---                                   END
---                           ) THEN 1
---                           ELSE 0
---                       END AS isLowestMeasurementId
---                FROM Intermediate
-            WITH GroupMinValues AS (
-            SELECT 
-                CASE 
-                    WHEN productId IS NOT NULL THEN productId
-                    ELSE recipeId
-                END AS groupId,
-                MIN(measurementId) AS minMeasurementId
-            FROM Intermediate
-            GROUP BY 
-                CASE 
-                    WHEN productId IS NOT NULL THEN productId
-                    ELSE recipeId
-                END
+        
+        -- Remove suggestions that have measured counterparts
+        FinalData AS (
+            SELECT fd.*
+            FROM FilteredData fd
+            WHERE 
+                fd.isMeasured = 1 
+                OR NOT EXISTS (
+                    SELECT 1 
+                    FROM FilteredData m 
+                    WHERE 
+                        m.isMeasured = 1
+                        AND ((fd.productId IS NOT NULL AND fd.productId = m.productId) 
+                        OR (fd.recipeId IS NOT NULL AND fd.recipeId = m.recipeId))
+                )
         )
-        SELECT i.*,
-            CASE 
-                WHEN i.measurementId IS NULL THEN NULL
-                WHEN i.measurementId = g.minMeasurementId THEN 1
-                ELSE 0
-            END AS isLowestMeasurementId
-        FROM Intermediate i
-        LEFT JOIN GroupMinValues g ON 
-            (i.productId IS NOT NULL AND i.productId = g.groupId) OR
-            (i.productId IS NULL AND i.recipeId = g.groupId)
-        )
+        
         SELECT 
-            i.*,
+            fd.*,
             CASE 
-                WHEN i.productId IS NOT NULL AND i.isLowestMeasurementId IS NULL THEN i.productId
-                WHEN i.recipeId IS NOT NULL AND i.isLowestMeasurementId IS NULL THEN i.recipeId
-                WHEN i.productId IS NOT NULL AND i.isLowestMeasurementId = 1 THEN i.productId
-                WHEN i.recipeId IS NOT NULL AND i.isLowestMeasurementId = 1 THEN i.recipeId
-                WHEN i.productId IS NOT NULL AND i.isLowestMeasurementId = 0 THEN i.productId || "-" || i.measurementId
-                WHEN i.recipeId IS NOT NULL AND i.isLowestMeasurementId = 0 THEN i.recipeId || "-" || i.measurementId
-                ELSE NULL
+                WHEN fd.measurementId IS NULL THEN 
+                    CASE 
+                        WHEN fd.productId IS NOT NULL THEN fd.productId 
+                        ELSE fd.recipeId 
+                    END
+                WHEN fd.measurementId = mm.minMeasurementId THEN
+                    CASE 
+                        WHEN fd.productId IS NOT NULL THEN fd.productId 
+                        ELSE fd.recipeId 
+                    END
+                ELSE
+                    CASE 
+                        WHEN fd.productId IS NOT NULL THEN fd.productId || '-' || fd.measurementId
+                        ELSE fd.recipeId || '-' || fd.measurementId
+                    END
             END AS uiId
-        FROM IntermediateWithMin i
-        JOIN Counted c 
-            ON (i.productId IS NULL AND i.recipeId = c.recipeId) 
-            OR (i.productId = c.productId AND i.recipeId IS NULL)
-        ORDER BY name COLLATE NOCASE, brand COLLATE NOCASE
+        FROM FinalData fd
+        LEFT JOIN MinMeasurements mm ON
+            (fd.productId IS NOT NULL AND fd.productId = mm.productId AND mm.recipeId IS NULL) OR
+            (fd.recipeId IS NOT NULL AND fd.recipeId = mm.recipeId AND mm.productId IS NULL)
+        ORDER BY fd.name COLLATE NOCASE, fd.brand COLLATE NOCASE
         """
     )
     abstract override fun queryFood(
@@ -133,98 +127,106 @@ abstract class FoodDao : FoodLocalDataSource {
     @Query(
         """
         WITH
-        Suggestion AS (
-            SELECT *
-            FROM MeasurementSuggestionView s
-            WHERE s.barcode = :barcode
-        ),
-        Measured AS (
-            SELECT *
-            FROM MeasuredFoodView
-            WHERE 
-                mealId = :mealId
-                AND epochDay = :epochDay
-                AND barcode = :barcode
-        ),
-        Intermediate AS (
-            SELECT * FROM Measured
-            UNION
+        FilteredData AS (
             SELECT
-                s.productId AS productId,
-                s.recipeId AS recipeId,
+                s.productId,
+                s.recipeId,
                 :epochDay AS epochDay,
                 :mealId AS mealId,
-                s.name AS name,
-                s.brand AS brand,
-                s.barcode AS barcode,
-                s.calories AS calories,
-                s.proteins AS proteins,
-                s.carbohydrates AS carbohydrates,
-                s.fats AS fats,
-                s.packageWeight AS packageWeight,
-                s.servingWeight AS servingWeight,
+                s.name,
+                s.brand,
+                s.barcode,
+                s.calories,
+                s.proteins,
+                s.carbohydrates,
+                s.fats,
+                s.packageWeight,
+                s.servingWeight,
                 NULL AS measurementId,
-                s.measurement AS measurement,
-                s.quantity AS quantity
-            FROM Suggestion s
-            WHERE NOT EXISTS (
-                SELECT 1
-                FROM Measured m
-                WHERE 
-                    (m.productId IS NOT NULL AND m.productId = s.productId)
-                    OR (m.recipeId IS NOT NULL AND m.recipeId = s.recipeId)
-            )
-        ),
-        Counted AS (
+                s.measurement,
+                s.quantity,
+                0 AS isMeasured
+            FROM MeasurementSuggestionView s
+            WHERE barcode = :barcode
+            
+            UNION ALL
+            
             SELECT 
-                productId AS productId,
-                recipeId AS recipeId,
-                COUNT(*) AS count
-            FROM Intermediate
+                m.productId,
+                m.recipeId,
+                m.epochDay,
+                m.mealId,
+                m.name,
+                m.brand,
+                m.barcode,
+                m.calories,
+                m.proteins,
+                m.carbohydrates,
+                m.fats,
+                m.packageWeight,
+                m.servingWeight,
+                m.measurementId,
+                m.measurement,
+                m.quantity,
+                1 AS isMeasured
+            FROM MeasuredFoodView m
+            WHERE 
+                m.mealId = :mealId
+                AND m.epochDay = :epochDay
+                AND m.barcode = :barcode
+        ),
+        
+        -- Get min measurement ID for each product/recipe with separate columns
+        MinMeasurements AS (
+            SELECT
+                productId,
+                recipeId,
+                MIN(measurementId) AS minMeasurementId
+            FROM FilteredData
+            WHERE measurementId IS NOT NULL
             GROUP BY productId, recipeId
         ),
-        IntermediateWithMin AS (
-            WITH GroupMinValues AS (
-            SELECT 
-                CASE 
-                    WHEN productId IS NOT NULL THEN productId
-                    ELSE recipeId
-                END AS groupId,
-                MIN(measurementId) AS minMeasurementId
-            FROM Intermediate
-            GROUP BY 
-                CASE 
-                    WHEN productId IS NOT NULL THEN productId
-                    ELSE recipeId
-                END
+        
+        -- Remove suggestions that have measured counterparts
+        FinalData AS (
+            SELECT fd.*
+            FROM FilteredData fd
+            WHERE 
+                fd.isMeasured = 1 
+                OR NOT EXISTS (
+                    SELECT 1 
+                    FROM FilteredData m 
+                    WHERE 
+                        m.isMeasured = 1
+                        AND ((fd.productId IS NOT NULL AND fd.productId = m.productId) 
+                        OR (fd.recipeId IS NOT NULL AND fd.recipeId = m.recipeId))
+                )
         )
-        SELECT i.*,
-            CASE 
-                WHEN i.measurementId IS NULL THEN NULL
-                WHEN i.measurementId = g.minMeasurementId THEN 1
-                ELSE 0
-            END AS isLowestMeasurementId
-        FROM Intermediate i
-        LEFT JOIN GroupMinValues g ON 
-            (i.productId IS NOT NULL AND i.productId = g.groupId) OR
-            (i.productId IS NULL AND i.recipeId = g.groupId)
-        )
+        
         SELECT 
-            i.*,
+            fd.*,
             CASE 
-                WHEN i.productId IS NOT NULL AND i.isLowestMeasurementId IS NULL THEN i.productId
-                WHEN i.recipeId IS NOT NULL AND i.isLowestMeasurementId IS NULL THEN i.recipeId
-                WHEN i.productId IS NOT NULL AND i.isLowestMeasurementId = 1 THEN i.productId
-                WHEN i.recipeId IS NOT NULL AND i.isLowestMeasurementId = 1 THEN i.recipeId
-                WHEN i.productId IS NOT NULL AND i.isLowestMeasurementId = 0 THEN i.productId || "-" || i.measurementId
-                WHEN i.recipeId IS NOT NULL AND i.isLowestMeasurementId = 0 THEN i.recipeId || "-" || i.measurementId
-                ELSE NULL
+                WHEN fd.measurementId IS NULL THEN 
+                    CASE 
+                        WHEN fd.productId IS NOT NULL THEN fd.productId 
+                        ELSE fd.recipeId 
+                    END
+                WHEN fd.measurementId = mm.minMeasurementId THEN
+                    CASE 
+                        WHEN fd.productId IS NOT NULL THEN fd.productId 
+                        ELSE fd.recipeId 
+                    END
+                ELSE
+                    CASE 
+                        WHEN fd.productId IS NOT NULL THEN fd.productId || '-' || fd.measurementId
+                        ELSE fd.recipeId || '-' || fd.measurementId
+                    END
             END AS uiId
-        FROM IntermediateWithMin i
-        JOIN Counted c 
-            ON (i.productId IS NULL AND i.recipeId = c.recipeId) 
-            OR (i.productId = c.productId AND i.recipeId IS NULL)
-        ORDER BY name COLLATE NOCASE, brand COLLATE NOCASE
+        FROM FinalData fd
+        LEFT JOIN MinMeasurements mm ON
+            (fd.productId IS NOT NULL AND fd.productId = mm.productId AND mm.recipeId IS NULL) OR
+            (fd.recipeId IS NOT NULL AND fd.recipeId = mm.recipeId AND mm.productId IS NULL)
+        ORDER BY fd.name COLLATE NOCASE, fd.brand COLLATE NOCASE
         """
     )
     abstract override fun queryFoodByBarcode(
