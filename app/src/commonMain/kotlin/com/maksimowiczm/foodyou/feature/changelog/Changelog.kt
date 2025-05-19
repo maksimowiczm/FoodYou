@@ -24,6 +24,16 @@ object Changelog {
             v2_0_0
         )
 
+    val next = Version.next(
+        newFeatures = listOf(
+            "Added experimental support for importing and exporting food products via CSV file"
+        ),
+        changes = listOf(),
+        bugFixes = listOf(),
+        translations = listOf(),
+        notes = null
+    )
+
     val v2_3_2 = Version(
         version = "2.3.2",
         date = LocalDate(2025, 5, 19),
