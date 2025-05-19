@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.data.model.product.csvHeader
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.component.ExperimentalFeatureCard
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
@@ -52,11 +54,11 @@ internal fun ImportExportScreenImpl(
     onBack: () -> Unit,
     onImport: () -> Unit,
     onExport: () -> Unit,
-    header: String,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val clipboardManager = LocalClipboardManager.current
+    val header = remember { csvHeader() }
 
     Scaffold(
         modifier = modifier,
