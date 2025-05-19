@@ -26,6 +26,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
+import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
@@ -79,6 +80,7 @@ private fun AndroidImportExportScreen(
             onBack = onBack,
             onImport = onImport,
             onExport = onExport,
+            events = viewModel.eventBus,
             modifier = modifier
         )
     } else {
@@ -86,6 +88,7 @@ private fun AndroidImportExportScreen(
             onBack = onBack,
             onImport = onImport,
             onExport = onExport,
+            events = viewModel.eventBus,
             modifier = modifier
         )
     }
@@ -98,6 +101,7 @@ private fun Android33PermissionProxy(
     onBack: () -> Unit,
     onImport: () -> Unit,
     onExport: () -> Unit,
+    events: Flow<ImportExportEvent>,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalActivity.current
@@ -138,6 +142,7 @@ private fun Android33PermissionProxy(
                 exportWithPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         },
+        events = events,
         modifier = modifier
     )
 }

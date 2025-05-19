@@ -23,11 +23,15 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,11 +42,16 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.maksimowiczm.foodyou.core.data.model.product.csvHeader
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.component.ExperimentalFeatureCard
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -54,11 +63,42 @@ internal fun ImportExportScreenImpl(
     onBack: () -> Unit,
     onImport: () -> Unit,
     onExport: () -> Unit,
+    events: Flow<ImportExportEvent>,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val clipboardManager = LocalClipboardManager.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val header = remember { csvHeader() }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val importStartedString = stringResource(Res.string.neutral_import_started)
+    val exportStartedString = stringResource(Res.string.neutral_export_started)
+    val unknownError = stringResource(Res.string.error_unknown_error)
+
+    LaunchedEffect(
+        events,
+        importStartedString,
+        unknownError,
+        exportStartedString,
+        snackbarHostState
+    ) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            events.collectLatest {
+                val message = when (it) {
+                    ImportExportEvent.ExportFailedToStart -> unknownError
+                    ImportExportEvent.ExportStarted -> exportStartedString
+                    ImportExportEvent.ImportFailedToStart -> unknownError
+                    ImportExportEvent.ImportStarted -> importStartedString
+                }
+
+                snackbarHostState.showSnackbar(
+                    message = message,
+                    duration = SnackbarDuration.Short
+                )
+            }
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -67,6 +107,11 @@ internal fun ImportExportScreenImpl(
                 title = { Text(stringResource(Res.string.headline_import_and_export)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 scrollBehavior = scrollBehavior
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
             )
         }
     ) { paddingValues ->

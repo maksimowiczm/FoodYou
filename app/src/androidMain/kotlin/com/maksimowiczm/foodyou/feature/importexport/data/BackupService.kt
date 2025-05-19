@@ -2,49 +2,48 @@ package com.maksimowiczm.foodyou.feature.importexport.data
 
 import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.await
 import androidx.work.workDataOf
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
-import kotlinx.coroutines.runBlocking
-import org.jetbrains.compose.resources.getString
 
 internal class BackupService(private val context: Context) {
 
     private val workManager: WorkManager
         get() = WorkManager.getInstance(context)
 
-    fun exportFoodProducts(path: Uri) {
+    /**
+     * @return true if the export was started successfully, false otherwise
+     */
+    suspend fun exportFoodProducts(path: Uri): Boolean {
         val uriString = workDataOf("uri" to path.toString())
 
         val request = OneTimeWorkRequestBuilder<ExportProductsWorker>()
             .setInputData(uriString)
             .build()
 
-        workManager.enqueue(request)
+        val res = runCatching {
+            workManager.enqueue(request).await()
+        }
 
-        Toast.makeText(
-            context,
-            runBlocking { getString(Res.string.neutral_export_started) },
-            Toast.LENGTH_SHORT
-        ).show()
+        return res.isSuccess
     }
 
-    fun importFoodProducts(path: Uri) {
+    /**
+     * @return true if the import was started successfully, false otherwise
+     */
+    suspend fun importFoodProducts(path: Uri): Boolean {
         val uriString = workDataOf("uri" to path.toString())
 
         val request = OneTimeWorkRequestBuilder<ImportProductsWorker>()
             .setInputData(uriString)
             .build()
 
-        workManager.enqueue(request)
+        val res = runCatching {
+            workManager.enqueue(request).await()
+        }
 
-        Toast.makeText(
-            context,
-            runBlocking { getString(Res.string.neutral_import_started) },
-            Toast.LENGTH_SHORT
-        ).show()
+        return res.isSuccess
     }
 }
