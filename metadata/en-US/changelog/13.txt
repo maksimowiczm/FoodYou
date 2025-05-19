@@ -1,0 +1,9 @@
+### New features
+- Sort food by name and brand in the meal screen
+
+### Bug fixes
+- Fix food search sorting by name and brand. Stop taking letter case into account.
+
+### Translations
+- Added Hungarian
+- Updated German

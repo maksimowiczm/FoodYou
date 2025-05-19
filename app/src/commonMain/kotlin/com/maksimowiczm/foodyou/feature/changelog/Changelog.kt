@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_3_2,
             v2_3_1,
             v2_3_0,
             v2_2_0,
@@ -24,19 +24,19 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_3_2 = Version(
+        version = "2.3.2",
+        date = LocalDate(2025, 5, 19),
         newFeatures = listOf(
             "Sort food by name and brand in the meal screen"
         ),
-        changes = listOf(),
         bugFixes = listOf(
             "Fix food search sorting by name and brand. Stop taking letter case into account."
         ),
         translations = listOf(
             "Added Hungarian",
             "Updated German"
-        ),
-        notes = null
+        )
     )
 
     val v2_3_1 = Version(
