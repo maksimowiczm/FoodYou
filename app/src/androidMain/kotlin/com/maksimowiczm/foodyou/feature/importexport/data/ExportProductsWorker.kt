@@ -1,8 +1,11 @@
 package com.maksimowiczm.foodyou.feature.importexport.data
 
 import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -30,6 +33,8 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
 
     override suspend fun doWork(): Result {
         val notificationId = 1_000
+        val uriString = inputData.getString("uri") ?: return Result.failure()
+        val uri = uriString.toUri()
 
         setForeground(
             createForegroundInfo(
@@ -39,10 +44,13 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
             )
         )
 
-        val result = internalDoWork(notificationId)
+        val result = internalDoWork(
+            notificationId = notificationId,
+            uri = uri
+        )
 
         val notification = if (result) {
-            createSuccessNotification()
+            createSuccessNotification(uri)
         } else {
             createFailureNotification()
         }
@@ -62,9 +70,7 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
     /**
      * @return true if the work was successful, false otherwise
      */
-    suspend fun internalDoWork(notificationId: Int): Boolean {
-        val uriString = inputData.getString("uri") ?: return false
-        val uri = uriString.toUri()
+    suspend fun internalDoWork(notificationId: Int, uri: Uri): Boolean {
         val resolver = applicationContext.contentResolver
         val outputStream = runCatching {
             resolver.openOutputStream(uri)
@@ -125,15 +131,30 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
         }
     }
 
-    private suspend fun createSuccessNotification(): Notification {
+    private suspend fun createSuccessNotification(uri: Uri): Notification {
         val channelId = DataSyncNotification.CHANNEL_ID
         notificationManager.createNotificationChannel(DataSyncNotification.getChannel())
+        val contentResolver = applicationContext.contentResolver
+        val mimeType = contentResolver.getType(uri) ?: "*/*"
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = mimeType
+            putExtra(Intent.EXTRA_STREAM, uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            0,
+            Intent.createChooser(shareIntent, ""),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         return NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(getString(Res.string.notification_exporting_products_success))
+            .addAction(R.drawable.ic_share, getString(Res.string.action_share), pendingIntent)
             .setOngoing(false)
-            .setAutoCancel(true)
             .build()
     }
 
