@@ -32,7 +32,9 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
     private val notificationManager by lazy { NotificationManagerCompat.from(context) }
 
     override suspend fun doWork(): Result {
-        val notificationId = 1_000
+        val timestamp = System.currentTimeMillis()
+        val notificationId = ((timestamp % Int.MAX_VALUE).toInt() - 1).coerceAtLeast(0)
+
         val uriString = inputData.getString("uri") ?: return Result.failure()
         val uri = uriString.toUri()
 
@@ -150,9 +152,13 @@ class ExportProductsWorker(context: Context, workerParameters: WorkerParameters)
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val content =
+            uri.path?.replace(uri.authority ?: "", "")?.replaceBefore(":", "")?.replace(":", "")
+
         return NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(getString(Res.string.notification_exporting_products_success))
+            .setContentText(content)
             .addAction(R.drawable.ic_share, getString(Res.string.action_share), pendingIntent)
             .setOngoing(false)
             .build()

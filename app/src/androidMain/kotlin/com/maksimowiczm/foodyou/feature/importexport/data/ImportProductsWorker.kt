@@ -30,7 +30,8 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
     private val notificationManager by lazy { NotificationManagerCompat.from(context) }
 
     override suspend fun doWork(): Result {
-        val notificationId = 1_000
+        val timestamp = System.currentTimeMillis()
+        val notificationId = ((timestamp % Int.MAX_VALUE).toInt() - 1).coerceAtLeast(0)
 
         setForeground(
             createForegroundInfo(
