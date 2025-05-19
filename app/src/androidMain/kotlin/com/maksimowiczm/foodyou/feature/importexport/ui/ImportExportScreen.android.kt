@@ -65,11 +65,11 @@ private fun AndroidImportExportScreen(
         val formattedTime = dateFormatter.formatTime(time.time)
         val fileName = buildString {
             append(appName)
-            append("-")
+            append("_")
             append(formattedDate)
-            append("-")
+            append("_")
             append(formattedTime)
-        }.replace(":", "-").replace(".", "-")
+        }.replace(" ", "-").replace(":", "-").replace(".", "-")
 
         exportLauncher.launch("$fileName.csv")
     }
