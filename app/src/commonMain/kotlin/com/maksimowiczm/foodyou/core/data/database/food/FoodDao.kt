@@ -7,6 +7,8 @@ import androidx.room.RoomWarnings
 import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
 import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
 
+// TODO: bro this is so slow
+
 @Dao
 abstract class FoodDao : FoodLocalDataSource {
     @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
