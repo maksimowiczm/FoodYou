@@ -5,11 +5,7 @@ import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
 
 interface FoodLocalDataSource {
     fun queryFood(
-        query1: String?,
-        query2: String?,
-        query3: String?,
-        query4: String?,
-        query5: String?,
+        query: String?,
         mealId: Long,
         epochDay: Int
     ): PagingSource<Int, FoodSearchEntity>

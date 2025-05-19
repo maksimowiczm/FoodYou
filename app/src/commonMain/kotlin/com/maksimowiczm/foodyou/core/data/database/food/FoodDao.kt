@@ -18,12 +18,7 @@ abstract class FoodDao : FoodLocalDataSource {
         Suggestion AS (
             SELECT *
             FROM MeasurementSuggestionView s
-            WHERE 1 = 1
-                AND (:query1 IS NULL OR (name LIKE '%' || :query1 || '%' OR brand LIKE '%' || :query1 || '%'))
-                AND (:query2 IS NULL OR (name LIKE '%' || :query2 || '%' OR brand LIKE '%' || :query2 || '%'))
-                AND (:query3 IS NULL OR (name LIKE '%' || :query3 || '%' OR brand LIKE '%' || :query3 || '%'))
-                AND (:query4 IS NULL OR (name LIKE '%' || :query4 || '%' OR brand LIKE '%' || :query4 || '%'))
-                AND (:query5 IS NULL OR (name LIKE '%' || :query5 || '%' OR brand LIKE '%' || :query5 || '%'))
+            WHERE :query IS NULL OR (name LIKE '%' || :query || '%' OR brand LIKE '%' || :query || '%')
         ),
         Measured AS (
             SELECT *
@@ -31,11 +26,7 @@ abstract class FoodDao : FoodLocalDataSource {
             WHERE 
                 mealId = :mealId
                 AND epochDay = :epochDay
-                AND (:query1 IS NULL OR (name LIKE '%' || :query1 || '%' OR brand LIKE '%' || :query1 || '%'))
-                AND (:query2 IS NULL OR (name LIKE '%' || :query2 || '%' OR brand LIKE '%' || :query2 || '%'))
-                AND (:query3 IS NULL OR (name LIKE '%' || :query3 || '%' OR brand LIKE '%' || :query3 || '%'))
-                AND (:query4 IS NULL OR (name LIKE '%' || :query4 || '%' OR brand LIKE '%' || :query4 || '%'))
-                AND (:query5 IS NULL OR (name LIKE '%' || :query5 || '%' OR brand LIKE '%' || :query5 || '%'))
+                AND :query IS NULL OR (name LIKE '%' || :query || '%' OR brand LIKE '%' || :query || '%')
         ),
         Intermediate AS (
             SELECT * FROM Measured
@@ -133,11 +124,7 @@ abstract class FoodDao : FoodLocalDataSource {
         """
     )
     abstract override fun queryFood(
-        query1: String?,
-        query2: String?,
-        query3: String?,
-        query4: String?,
-        query5: String?,
+        query: String?,
         mealId: Long,
         epochDay: Int
     ): PagingSource<Int, FoodSearchEntity>

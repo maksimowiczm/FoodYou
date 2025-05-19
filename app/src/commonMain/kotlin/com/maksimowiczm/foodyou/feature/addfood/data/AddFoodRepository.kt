@@ -33,40 +33,18 @@ internal class AddFoodRepository(
 
     @OptIn(ExperimentalPagingApi::class)
     fun queryFood(query: String?, mealId: Long, date: LocalDate): Flow<PagingData<SearchFoodItem>> {
-        // Handle different query formats
-        val (effectiveQuery, extractedBarcode) = when {
-            query == null -> null to null
-            query.all(Char::isDigit) -> null to query
-            query.contains("openfoodfacts.org/product/") -> {
-                // Extract barcode from product URL
-                val regex = "openfoodfacts\\.org/product/(\\d+)".toRegex()
-                val barcode = regex.find(query)?.groupValues?.getOrNull(1)
-                null to barcode
-            }
-
-            query.contains("openfoodfacts.org/cgi/search.pl") -> {
-                // Extract search terms from search URL
-                val regex = "search_terms=([^&]+)".toRegex()
-                val searchTerms = regex.find(query)?.groupValues?.getOrNull(1)?.replace("+", " ")
-                searchTerms to null
-            }
-
-            else -> query to null
-        }
-
-        val barcode = extractedBarcode
-        val searchQuery = effectiveQuery ?: query
+        val barcode = query?.takeIf { it.all { it.isDigit() } }
 
         // Insert query if it's not a barcode and not empty
-        if (barcode == null && searchQuery?.isNotBlank() == true) {
+        if (barcode == null && query?.isNotBlank() == true) {
             ioScope.launch {
-                insertProductQueryWithCurrentTime(searchQuery)
+                insertProductQueryWithCurrentTime(query)
             }
         }
 
         return Pager(
             config = PagingConfig(
-                pageSize = 30
+                pageSize = 20
             )
         ) {
             if (barcode != null) {
@@ -76,21 +54,8 @@ internal class AddFoodRepository(
                     epochDay = date.toEpochDays()
                 )
             } else {
-                val queryList = searchQuery
-                    ?.split(" ")
-                    ?.map { it.trim() }
-                    ?.filter { it.isNotEmpty() }
-                    ?.take(5)
-                    ?: emptyList()
-
-                val (query1, query2, query3, query4, query5) = queryList + List(5) { null }
-
                 foodLocalDataSource.queryFood(
-                    query1 = query1,
-                    query2 = query2,
-                    query3 = query3,
-                    query4 = query4,
-                    query5 = query5,
+                    query = query,
                     mealId = mealId,
                     epochDay = date.toEpochDays()
                 )
