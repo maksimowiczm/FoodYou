@@ -166,9 +166,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-
-            // Test minified version with debug signing config
-            // signingConfig = signingConfigs.getByName("debug")
+        }
+        create("devRelease") {
+            initWith(getByName("release"))
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
         }
         create("preview") {
             initWith(getByName("release"))

@@ -24,5 +24,15 @@ data class FoodSearchEntity(
     // Measurement
     val measurementId: Long?,
     override val measurement: Measurement,
-    override val quantity: Float
+    override val quantity: Float,
+
+    // UI id for add food screen. UI id must be unique for each food entity.
+    // Entity without measurement id must have same id as first entity with measurement id. Every
+    // other entity must have other id.
+    // Yes this is confusing and database shouldn't be responsible for this but it works.
+    /**
+     * @see [com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodScreen]
+     * @see [com.maksimowiczm.foodyou.core.data.database.food.FoodDao.queryFood]
+     */
+    val uiId: String
 ) : EntityWithMeasurement

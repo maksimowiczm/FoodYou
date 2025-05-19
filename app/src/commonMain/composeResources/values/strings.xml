@@ -185,6 +185,7 @@
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera permission is required to scan barcodes. Please allow it in the app settings.</string>
     <string name="neutral_no_products_found">No products found</string>
+    <string name="neutral_no_food_found">No food found</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d calorie left</item>
         <item quantity="other">%1$d calories left</item>
@@ -219,6 +220,7 @@
     <string name="error_failed_to_download_product">Failed to download product</string>
     <string name="error_product_not_found">Product not found</string>
     <string name="error_unknown_error">Unknown error</string>
+    <string name="error_measurement_error">Measurement error, please check the serving and package weight</string>
 
     <string name="positive_goal_reached">Goal reached</string>
     <string name="positive_ok">OK</string>

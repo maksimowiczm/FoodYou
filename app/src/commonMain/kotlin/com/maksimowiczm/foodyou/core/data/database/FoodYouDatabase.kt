@@ -77,11 +77,12 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
          * Remove OpenFoodFactsPagingKeyEntity
          */
         AutoMigration(from = 9, to = 10, spec = MIGRATION_9_10::class),
-        AutoMigration(from = 10, to = 11)
+        AutoMigration(from = 10, to = 11),
         /**
          * @see [MIGRATION_11_12]
          * Fix sodium value in ProductEntity. Convert grams to milligrams.
          */
+        AutoMigration(from = 12, to = 13)
     ]
 )
 @TypeConverters(
@@ -99,7 +100,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val foodDao: FoodDao
 
     companion object {
-        const val VERSION = 12
+        const val VERSION = 13
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,

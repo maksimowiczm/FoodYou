@@ -135,11 +135,7 @@ private fun AddFoodNavHost(
                             launchSingleTop = true
                         }
                     },
-                    onBarcodeScanner = {
-                        navController.navigate(SearchFoodBarcodeScanner) {
-                            launchSingleTop = true
-                        }
-                    },
+                    state = searchScreenState,
                     viewModel = searchViewModel,
                     modifier = Modifier
                         .sharedBounds(
@@ -157,8 +153,7 @@ private fun AddFoodNavHost(
                             animatedVisibilityScope = this@crossfadeComposable,
                             enter = MealScreenSharedTransition.screenContentEnterTransition,
                             exit = MealScreenSharedTransition.screenContentExitTransition
-                        ),
-                    state = searchScreenState
+                        )
                 )
             }
         }

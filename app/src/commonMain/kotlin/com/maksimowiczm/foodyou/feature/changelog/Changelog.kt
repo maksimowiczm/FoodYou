@@ -15,6 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_3_2,
             v2_3_1,
             v2_3_0,
@@ -28,7 +29,10 @@ object Changelog {
         newFeatures = listOf(
             "Added experimental support for importing and exporting food products via CSV file"
         ),
-        changes = listOf(),
+        changes = listOf(
+            "Updated barcode scanner icon",
+            "Updated food search screen"
+        ),
         bugFixes = listOf(),
         translations = listOf(),
         notes = null
