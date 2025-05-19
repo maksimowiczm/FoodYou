@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 abstract class ProductDao : ProductLocalDataSource {
 
+    @Query("SELECT * FROM productentity")
+    abstract override suspend fun getProducts(): List<ProductEntity>
+
     @Upsert
     protected abstract suspend fun upsertProducts(products: List<ProductEntity>)
 

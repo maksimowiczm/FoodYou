@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
 import com.maksimowiczm.foodyou.feature.goals.GoalsSettingsListItem
+import com.maksimowiczm.foodyou.feature.importexport.ImportExportSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.feature.meal.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.security.SecureScreenSettingsListItem
@@ -32,6 +33,7 @@ fun SettingsScreen(
     onGoalsSettings: () -> Unit,
     onAbout: () -> Unit,
     onLanguage: () -> Unit,
+    onImportExport: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -76,6 +78,11 @@ fun SettingsScreen(
             }
             item {
                 SecureScreenSettingsListItem()
+            }
+            item {
+                ImportExportSettingsListItem(
+                    onClick = onImportExport
+                )
             }
             item {
                 LanguageSettingsListItem(

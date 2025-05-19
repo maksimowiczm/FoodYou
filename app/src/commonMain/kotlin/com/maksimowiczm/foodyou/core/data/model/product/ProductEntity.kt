@@ -7,6 +7,9 @@ import com.maksimowiczm.foodyou.core.data.model.Minerals
 import com.maksimowiczm.foodyou.core.data.model.Nutrients
 import com.maksimowiczm.foodyou.core.data.model.Vitamins
 
+/**
+ * @see [ProductEntityField]
+ */
 @Entity
 data class ProductEntity(
     @PrimaryKey(autoGenerate = true)
