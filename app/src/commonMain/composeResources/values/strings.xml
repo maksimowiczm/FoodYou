@@ -179,6 +179,7 @@
     <string name="action_export_food_products">Export food products</string>
     <string name="action_export_food_products_to_csv">Export food products to CSV file</string>
     <string name="action_share">Share</string>
+    <string name="action_copy_header" description="Copy CSV file header">Copy header</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>

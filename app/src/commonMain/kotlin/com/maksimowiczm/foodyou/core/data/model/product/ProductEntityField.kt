@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.core.data.model.product
 
+internal fun csvHeader(): List<String> = ProductEntityField.entries.map { it.name.lowercase() }
+
 enum class ProductEntityField {
     NAME,
     BRAND,

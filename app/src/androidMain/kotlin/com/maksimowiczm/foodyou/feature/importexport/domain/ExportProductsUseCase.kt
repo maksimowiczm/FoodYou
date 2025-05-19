@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.importexport.domain
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
-import com.maksimowiczm.foodyou.core.data.model.product.ProductEntityField
+import com.maksimowiczm.foodyou.core.data.model.product.csvHeader
 import com.maksimowiczm.foodyou.core.domain.source.ProductLocalDataSource
 import java.io.OutputStream
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +24,7 @@ internal class ExportProductsUseCaseImpl(
         val max = products.size
 
         csvWriter().openAsync(stream) {
-            writeRow(ProductEntityField.entries.map { it.name.lowercase() })
+            writeRow(csvHeader())
 
             products.forEachIndexed { index, product ->
                 val row =

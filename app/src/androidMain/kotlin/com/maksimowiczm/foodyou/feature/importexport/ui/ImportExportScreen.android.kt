@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.maksimowiczm.foodyou.core.data.model.product.csvHeader
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
@@ -74,11 +75,14 @@ private fun AndroidImportExportScreen(
         exportLauncher.launch("$fileName.csv")
     }
 
+    val header = csvHeader().joinToString(",")
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         Android33PermissionProxy(
             onBack = onBack,
             onImport = onImport,
             onExport = onExport,
+            header = header,
             modifier = modifier
         )
     } else {
@@ -86,6 +90,7 @@ private fun AndroidImportExportScreen(
             onBack = onBack,
             onImport = onImport,
             onExport = onExport,
+            header = header,
             modifier = modifier
         )
     }
@@ -98,6 +103,7 @@ private fun Android33PermissionProxy(
     onBack: () -> Unit,
     onImport: () -> Unit,
     onExport: () -> Unit,
+    header: String,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalActivity.current
@@ -138,6 +144,7 @@ private fun Android33PermissionProxy(
                 exportWithPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         },
+        header = header,
         modifier = modifier
     )
 }

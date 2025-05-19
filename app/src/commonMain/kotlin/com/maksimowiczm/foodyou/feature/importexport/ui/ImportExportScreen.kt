@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.FilePresent
 import androidx.compose.material.icons.outlined.Info
@@ -34,9 +35,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.component.ExperimentalFeatureCard
+import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -49,9 +52,11 @@ internal fun ImportExportScreenImpl(
     onBack: () -> Unit,
     onImport: () -> Unit,
     onExport: () -> Unit,
+    header: String,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val clipboardManager = LocalClipboardManager.current
 
     Scaffold(
         modifier = modifier,
@@ -118,6 +123,29 @@ internal fun ImportExportScreenImpl(
                         )
                     )
                 }
+            }
+
+            item {
+                SettingsListItem(
+                    headlineContent = {
+                        Text(stringResource(Res.string.action_copy_header))
+                    },
+                    supportingContent = {
+                        Text(
+                            text = header,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1
+                        )
+                    },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Outlined.ContentCopy,
+                            contentDescription = null
+                        )
+                    },
+                    onClick = { clipboardManager.copy(header, header) },
+                    shape = MaterialTheme.shapes.medium
+                )
             }
 
             item {
