@@ -25,7 +25,9 @@ object Changelog {
         )
 
     val next = Version.next(
-        newFeatures = listOf(),
+        newFeatures = listOf(
+            "Sort food by name and brand in the meal screen"
+        ),
         changes = listOf(),
         bugFixes = listOf(
             "Fix food search sorting by name and brand. Stop taking letter case into account."
