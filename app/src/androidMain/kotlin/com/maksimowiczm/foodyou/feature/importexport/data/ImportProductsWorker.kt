@@ -12,6 +12,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.R
+import com.maksimowiczm.foodyou.core.data.createNotificationChannel
 import com.maksimowiczm.foodyou.core.ext.notifyIfAllowed
 import com.maksimowiczm.foodyou.feature.importexport.domain.ImportProductsUseCase
 import foodyou.app.generated.resources.*
@@ -101,8 +102,7 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
     }
 
     private suspend fun createProgressNotification(progress: Int?): Notification {
-        val channelId = DataSyncProgressNotification.CHANNEL_ID
-        notificationManager.createNotificationChannel(DataSyncProgressNotification.getChannel())
+        val channelId = notificationManager.createNotificationChannel(DataSyncProgressNotification)
 
         val builder = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_notification)
@@ -120,8 +120,7 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
     }
 
     private suspend fun createSuccessNotification(): Notification {
-        val channelId = DataSyncNotification.CHANNEL_ID
-        notificationManager.createNotificationChannel(DataSyncNotification.getChannel())
+        val channelId = notificationManager.createNotificationChannel(DataSyncNotification)
 
         return NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_notification)
@@ -132,8 +131,7 @@ class ImportProductsWorker(context: Context, workerParameters: WorkerParameters)
     }
 
     private suspend fun createFailureNotification(): Notification {
-        val channelId = DataSyncNotification.CHANNEL_ID
-        notificationManager.createNotificationChannel(DataSyncNotification.getChannel())
+        val channelId = notificationManager.createNotificationChannel(DataSyncNotification)
 
         return NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_notification)
