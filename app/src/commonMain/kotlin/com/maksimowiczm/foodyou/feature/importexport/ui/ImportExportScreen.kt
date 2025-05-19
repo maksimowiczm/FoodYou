@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.FileOpen
@@ -31,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
@@ -82,7 +82,8 @@ internal fun ImportExportScreenImpl(
 
             item {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    modifier = Modifier.clip(MaterialTheme.shapes.medium)
                 ) {
                     SettingsListItem(
                         headlineContent = {
@@ -97,11 +98,7 @@ internal fun ImportExportScreenImpl(
                                 contentDescription = null
                             )
                         },
-                        onClick = onImport,
-                        shape = MaterialTheme.shapes.medium.copy(
-                            bottomEnd = CornerSize(0),
-                            bottomStart = CornerSize(0)
-                        )
+                        onClick = onImport
                     )
                     SettingsListItem(
                         headlineContent = {
@@ -116,11 +113,7 @@ internal fun ImportExportScreenImpl(
                                 contentDescription = null
                             )
                         },
-                        onClick = onExport,
-                        shape = MaterialTheme.shapes.medium.copy(
-                            topEnd = CornerSize(0),
-                            topStart = CornerSize(0)
-                        )
+                        onClick = onExport
                     )
                 }
             }
