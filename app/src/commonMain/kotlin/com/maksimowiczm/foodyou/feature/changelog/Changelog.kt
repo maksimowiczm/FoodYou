@@ -27,7 +27,9 @@ object Changelog {
     val next = Version.next(
         newFeatures = listOf(),
         changes = listOf(),
-        bugFixes = listOf(),
+        bugFixes = listOf(
+            "Fix food search sorting by name and brand. Stop taking letter case into account."
+        ),
         translations = listOf(
             "Added Hungarian",
             "Updated German"

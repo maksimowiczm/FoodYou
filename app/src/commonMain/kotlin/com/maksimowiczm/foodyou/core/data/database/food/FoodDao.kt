@@ -60,7 +60,7 @@ abstract class FoodDao : FoodLocalDataSource {
                 (m.productId IS NOT NULL AND m.productId = s.productId)
                 OR (m.recipeId IS NOT NULL AND m.recipeId = s.recipeId)
         )
-        ORDER BY name, brand
+        ORDER BY name COLLATE NOCASE, brand COLLATE NOCASE
         """
     )
     abstract override fun queryFood(
@@ -113,6 +113,7 @@ abstract class FoodDao : FoodLocalDataSource {
             SELECT productId
             FROM Measured
         )
+        ORDER BY name COLLATE NOCASE, brand COLLATE NOCASE
         """
     )
     abstract override fun queryFoodByBarcode(
