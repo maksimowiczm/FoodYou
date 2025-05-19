@@ -68,37 +68,7 @@ internal fun ImportExportScreenImpl(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val clipboardManager = LocalClipboardManager.current
-    val lifecycleOwner = LocalLifecycleOwner.current
     val header = remember { csvHeader() }
-
-    val snackbarHostState = remember { SnackbarHostState() }
-    val importStartedString = stringResource(Res.string.neutral_import_started)
-    val exportStartedString = stringResource(Res.string.neutral_export_started)
-    val unknownError = stringResource(Res.string.error_unknown_error)
-
-    LaunchedEffect(
-        events,
-        importStartedString,
-        unknownError,
-        exportStartedString,
-        snackbarHostState
-    ) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-            events.collectLatest {
-                val message = when (it) {
-                    ImportExportEvent.ExportFailedToStart -> unknownError
-                    ImportExportEvent.ExportStarted -> exportStartedString
-                    ImportExportEvent.ImportFailedToStart -> unknownError
-                    ImportExportEvent.ImportStarted -> importStartedString
-                }
-
-                snackbarHostState.showSnackbar(
-                    message = message,
-                    duration = SnackbarDuration.Short
-                )
-            }
-        }
-    }
 
     Scaffold(
         modifier = modifier,
@@ -110,9 +80,7 @@ internal fun ImportExportScreenImpl(
             )
         },
         snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState
-            )
+            ImportExportSnackbarHost(events)
         }
     ) { paddingValues ->
         LazyColumn(
@@ -214,6 +182,42 @@ internal fun ImportExportScreenImpl(
             }
         }
     }
+}
+
+@Composable
+private fun ImportExportSnackbarHost(
+    events: Flow<ImportExportEvent>,
+    modifier: Modifier = Modifier
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val importStartedString = stringResource(Res.string.neutral_import_started)
+    val exportStartedString = stringResource(Res.string.neutral_export_started)
+    val unknownError = stringResource(Res.string.error_unknown_error)
+
+    LaunchedEffect(events) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            events.collectLatest {
+                val message = when (it) {
+                    ImportExportEvent.ExportFailedToStart -> unknownError
+                    ImportExportEvent.ExportStarted -> exportStartedString
+                    ImportExportEvent.ImportFailedToStart -> unknownError
+                    ImportExportEvent.ImportStarted -> importStartedString
+                }
+
+                snackbarHostState.showSnackbar(
+                    message = message,
+                    duration = SnackbarDuration.Short
+                )
+            }
+        }
+    }
+
+    SnackbarHost(
+        hostState = snackbarHostState,
+        modifier = modifier
+    )
 }
 
 @Composable
