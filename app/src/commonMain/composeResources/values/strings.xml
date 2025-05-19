@@ -243,10 +243,10 @@
     <string name="description_home_settings">Customize your home page</string>
     <string name="description_download_product">Paste a link to a food product, and automatically fetch nutrition facts and product details.</string>
     <string name="description_download_product_hint">You can paste any text. First URL will be used.</string>
-    <string name="description_import_and_export">Save your data</string>
-    <string name="description_import_and_export_hint">All data synchronization operations are run in the background. You will be notified when they are completed.</string>
+    <string name="description_import_and_export">Save and load your data</string>
+    <string name="description_import_and_export_hint">All data synchronization operations run in the background. You will be notified when they are complete.</string>
     <string name="description_experimental_feature">This is an experimental feature. It may change or be removed in future versions.</string>
-    <string name="description_notifications_permission_required_data_sync">Notifications permission is required to show data synchronization progress. Enable it in the app settings.</string>
+    <string name="description_notifications_permission_required_data_sync">Notification permission is required to display data synchronization progress. Please enable it in the app settings.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
