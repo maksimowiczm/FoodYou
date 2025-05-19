@@ -70,7 +70,9 @@ internal class MeasurementRepositoryImpl(
         observeRecipeMeasurements(date, mealId),
         observeProductMeasurements(date, mealId)
     ) { recipeMeasurements, productMeasurements ->
-        (recipeMeasurements + productMeasurements).sortedBy { it.measurementDate }
+        (recipeMeasurements + productMeasurements).sortedBy {
+            it.food.name.lowercase() + (it.food.brand?.lowercase() ?: "")
+        }
     }
 
     private fun observeProductMeasurements(date: LocalDate, mealId: Long) =
