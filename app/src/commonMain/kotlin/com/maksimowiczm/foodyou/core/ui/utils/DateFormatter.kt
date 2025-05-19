@@ -42,6 +42,12 @@ interface DateFormatter {
     fun formatDateShort(date: LocalDate): String
 
     /**
+     * Formats the specified [date] as a string in the "d.M.yy" format. This format uses digits
+     * only and does not include the month name.
+     */
+    fun formatDateSuperShort(date: LocalDate): String
+
+    /**
      * Formats the specified [time] as a string in the "hh:mm" format.
      *
      * The formatting respects the system's locale.
@@ -61,6 +67,8 @@ private val defaultDateFormatter: DateFormatter = object : DateFormatter {
     override fun formatDate(date: LocalDate): String = date.toString()
 
     override fun formatDateShort(date: LocalDate): String = date.toString()
+
+    override fun formatDateSuperShort(date: LocalDate): String = date.toString()
 
     override fun formatTime(time: LocalTime): String = time.toString()
 }

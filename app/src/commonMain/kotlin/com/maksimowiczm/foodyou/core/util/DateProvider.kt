@@ -16,6 +16,12 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 
 interface DateProvider {
+
+    /**
+     * Returns a [Flow] that emits the current date and time and updates it every second.
+     */
+    fun observeDateTime(): Flow<LocalDateTime>
+
     /**
      * Returns a [Flow] that emits the current date and updates it at midnight.
      */
@@ -28,6 +34,16 @@ interface DateProvider {
 }
 
 internal class DateProviderImpl : DateProvider {
+    override fun observeDateTime(): Flow<LocalDateTime> = flow {
+        while (true) {
+            val dateTime = getCurrentDateTime()
+            emit(dateTime)
+
+            val millisUntilNextSecond = 1000L - dateTime.nanosecond / 1_000_000
+            delay(millisUntilNextSecond)
+        }
+    }
+
     override fun observeDate(): Flow<LocalDate> = flow {
         var currentDate = getCurrentDateTime().date
 

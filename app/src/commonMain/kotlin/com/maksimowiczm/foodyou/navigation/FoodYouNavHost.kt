@@ -13,6 +13,8 @@ import com.maksimowiczm.foodyou.feature.addfood.addFoodGraph
 import com.maksimowiczm.foodyou.feature.goals.GoalsScreen
 import com.maksimowiczm.foodyou.feature.goals.GoalsSettings
 import com.maksimowiczm.foodyou.feature.goals.goalsGraph
+import com.maksimowiczm.foodyou.feature.importexport.ImportExport
+import com.maksimowiczm.foodyou.feature.importexport.importExportGraph
 import com.maksimowiczm.foodyou.feature.language.Language
 import com.maksimowiczm.foodyou.feature.language.languageGraph
 import com.maksimowiczm.foodyou.feature.meal.MealCardSettings
@@ -111,6 +113,11 @@ fun FoodYouNavHost(
                 navController.navigate(Language) {
                     launchSingleTop = true
                 }
+            },
+            onImportExport = {
+                navController.navigate(ImportExport) {
+                    launchSingleTop = true
+                }
             }
         )
         aboutGraph()
@@ -148,6 +155,11 @@ fun FoodYouNavHost(
             },
             onMealsCardSettingsBack = {
                 navController.popBackStack<MealCardSettings>(inclusive = true)
+            }
+        )
+        importExportGraph(
+            onBack = {
+                navController.popBackStack<ImportExport>(inclusive = true)
             }
         )
     }

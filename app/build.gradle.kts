@@ -70,6 +70,8 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
+            implementation(libs.androidx.work.runtime)
+
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.accompanist.permissions)
@@ -126,6 +128,9 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.serialization.kotlinx.json)
+
+            // CSV
+            implementation(libs.kotlin.csv)
         }
 
         commonTest.dependencies {

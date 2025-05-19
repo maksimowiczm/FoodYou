@@ -50,6 +50,9 @@
     <string name="headline_vitamins">Vitamins</string>
     <string name="headline_minerals">Minerals</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">Supported URLs</string>
+    <string name="headline_import_and_export">Import and export</string>
+    <string name="headline_experimental" description="Experimental feature">Experimental</string>
+    <string name="headline_experimental_feature">Experimental feature</string>
 
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
     <string name="weight">Weight</string>
@@ -171,6 +174,12 @@
     <string name="action_show_more" description="Show more settings/options/advanced settings">Show more</string>
     <string name="action_download_product">Download product</string>
     <string name="action_suggest_external_database">Suggest external database</string>
+    <string name="action_import_food_products">Import food products</string>
+    <string name="action_import_food_products_from_csv">Import food products from CSV file</string>
+    <string name="action_export_food_products">Export food products</string>
+    <string name="action_export_food_products_to_csv">Export food products to CSV file</string>
+    <string name="action_share">Share</string>
+    <string name="action_copy_header" description="Copy CSV file header">Copy header</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -192,6 +201,8 @@
     <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_copied">Info copied to clipboard</string>
     <string name="neutral_product_created">Product created</string>
+    <string name="neutral_export_started">Export started</string>
+    <string name="neutral_import_started">Import started</string>
 
     <string name="question_discard_product">Discard product?</string>
     <string name="question_discard_changes">Discard changes?</string>
@@ -233,6 +244,10 @@
     <string name="description_home_settings">Customize your home page</string>
     <string name="description_download_product">Paste a link to a food product, and automatically fetch nutrition facts and product details.</string>
     <string name="description_download_product_hint">You can paste any text. First URL will be used.</string>
+    <string name="description_import_and_export">Save and load your data</string>
+    <string name="description_import_and_export_hint">All data synchronization operations run in the background. You will be notified when they are complete.</string>
+    <string name="description_experimental_feature">This is an experimental feature. It may change or be removed in future versions.</string>
+    <string name="description_notifications_permission_required_data_sync">Notification permission is required to display data synchronization progress. Please enable it in the app settings.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
@@ -250,4 +265,14 @@
     <string name="changelog_translations" translatable="false">Translations</string>
     <string name="changelog_notes" translatable="false">Notes</string>
 
+    <string name="notification_exporting_products">Exporting products</string>
+    <string name="notification_exporting_products_success">Exporting products finished</string>
+    <string name="notification_exporting_products_failure">Exporting products failed</string>
+
+    <string name="notification_importing_products">Importing products</string>
+    <string name="notification_importing_products_success">Importing products finished</string>
+    <string name="notification_importing_products_failure">Importing products failed</string>
+
+    <string name="notification_data_sync_channel_name">Data synchronization</string>
+    <string name="notification_data_sync_progress_channel_name">Data synchronization progress</string>
 </resources>

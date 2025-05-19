@@ -26,10 +26,12 @@ object Changelog {
         )
 
     val next = Version.next(
-        newFeatures = listOf(),
+        newFeatures = listOf(
+            "Added experimental support for importing and exporting food products via CSV file"
+        ),
         changes = listOf(
-            "Update barcode scanner icon",
-            "Update food search screen"
+            "Updated barcode scanner icon",
+            "Updated food search screen"
         ),
         bugFixes = listOf(),
         translations = listOf(),
