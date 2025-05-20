@@ -53,7 +53,7 @@
     <string name="headline_import_and_export">Import and export</string>
     <string name="headline_experimental" description="Experimental feature">Experimental</string>
     <string name="headline_experimental_feature">Experimental feature</string>
-    <string name="headline_clone_recipe">Clone recipe</string>
+    <string name="headline_copy_recipe">copy recipe</string>
 
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
     <string name="weight">Weight</string>
@@ -181,7 +181,6 @@
     <string name="action_export_food_products_to_csv">Export food products to CSV file</string>
     <string name="action_share">Share</string>
     <string name="action_copy_header" description="Copy CSV file header">Copy header</string>
-    <string name="action_clone">Clone</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -249,7 +248,7 @@
     <string name="description_import_and_export_hint">All data synchronization operations run in the background. You will be notified when they are complete.</string>
     <string name="description_experimental_feature">This is an experimental feature. It may change or be removed in future versions.</string>
     <string name="description_notifications_permission_required_data_sync">Notification permission is required to display data synchronization progress. Please enable it in the app settings.</string>
-    <string name="description_clone_recipe">Recipe will be cloned into single product</string>
+    <string name="description_copy_recipe">Recipe will be copied into single product</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>

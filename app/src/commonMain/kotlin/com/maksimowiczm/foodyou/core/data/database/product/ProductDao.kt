@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.core.data.database.product
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -20,6 +21,9 @@ abstract class ProductDao : ProductLocalDataSource {
 
     @Upsert
     abstract override suspend fun upsertProduct(product: ProductEntity): Long
+
+    @Insert
+    abstract override suspend fun insertProduct(product: ProductEntity): Long
 
     @Query(
         """

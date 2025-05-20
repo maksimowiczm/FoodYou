@@ -50,6 +50,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.Food
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.model.Recipe
 import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
@@ -80,7 +81,7 @@ internal fun MeasurementScreen(
     onMeasurement: (Measurement) -> Unit,
     onEditFood: () -> Unit,
     onDeleteFood: () -> Unit,
-    onCloneRecipe: () -> Unit,
+    onCloneRecipe: (FoodId.Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedEnum by rememberSaveable { mutableStateOf(selected?.toEnum()) }
@@ -139,7 +140,12 @@ internal fun MeasurementScreen(
     if (showCloneDialog) {
         CloneRecipeDialog(
             onDismissRequest = { showCloneDialog = false },
-            onClone = onCloneRecipe
+            onClone = {
+                if (food is Recipe) {
+                    onCloneRecipe(food.id)
+                }
+                showCloneDialog = false
+            }
         )
     }
 
@@ -309,7 +315,7 @@ private fun Menu(
         ) {
             onClone?.let {
                 DropdownMenuItem(
-                    text = { Text(stringResource(Res.string.action_clone)) },
+                    text = { Text(stringResource(Res.string.action_copy)) },
                     onClick = {
                         expanded = false
                         it()
@@ -379,7 +385,7 @@ private fun CloneRecipeDialog(
             TextButton(
                 onClick = onClone
             ) {
-                Text(stringResource(Res.string.action_clone))
+                Text(stringResource(Res.string.action_copy))
             }
         },
         modifier = modifier,
@@ -391,10 +397,10 @@ private fun CloneRecipeDialog(
             }
         },
         title = {
-            Text(stringResource(Res.string.headline_clone_recipe))
+            Text(stringResource(Res.string.headline_copy_recipe))
         },
         text = {
-            Text(stringResource(Res.string.description_clone_recipe))
+            Text(stringResource(Res.string.description_copy_recipe))
         }
     )
 }
