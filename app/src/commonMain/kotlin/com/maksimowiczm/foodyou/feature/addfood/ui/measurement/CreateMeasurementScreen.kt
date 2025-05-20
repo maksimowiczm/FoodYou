@@ -54,6 +54,7 @@ internal fun CreateMeasurementScreen(
             onMeasurement = remember(viewModel) { viewModel::onConfirm },
             onEditFood = onEdit,
             onDeleteFood = { viewModel.onDeleteFood(foodId) },
+            onCloneRecipe = {},
             modifier = modifier
         )
     }
