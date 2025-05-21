@@ -28,7 +28,9 @@ object Changelog {
         newFeatures = listOf(
             "Added experimental support for importing and exporting food products via CSV file"
         ),
-        changes = listOf(),
+        changes = listOf(
+            "Updated home settings top bar to match the new design"
+        ),
         bugFixes = listOf(),
         translations = listOf(),
         notes = null

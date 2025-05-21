@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.MoreVert
@@ -24,10 +23,11 @@ import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -88,7 +89,11 @@ fun HomeSettingsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, FlowPreview::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    FlowPreview::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 @Composable
 fun HomeSettingsScreen(
     order: List<HomeCard>,
@@ -101,10 +106,9 @@ fun HomeSettingsScreen(
     var localOrder by rememberSaveable { mutableStateOf(order) }
 
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        // Must subtract 1 because the first item isn't reorderable
         localOrder = localOrder.toMutableList().apply {
-            val fromIndex = from.index - 1
-            val toIndex = to.index - 1
+            val fromIndex = from.index
+            val toIndex = to.index
 
             if (fromIndex != toIndex) {
                 add(toIndex, removeAt(fromIndex))
@@ -149,26 +153,17 @@ fun HomeSettingsScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(stringResource(Res.string.headline_home_settings))
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = onBack
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(Res.string.action_go_back)
-                        )
-                    }
-                },
+            MediumFlexibleTopAppBar(
+                title = { Text(stringResource(Res.string.headline_home_settings)) },
+                subtitle = { Text(stringResource(Res.string.description_home_settings)) },
+                navigationIcon = { ArrowBackIconButton(onBack) },
                 scrollBehavior = scrollBehavior
             )
         }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
+                .padding(8.dp)
                 .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .testTag(HomeSettingsScreenTestTags.CARDS_LIST),
@@ -176,14 +171,6 @@ fun HomeSettingsScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = paddingValues
         ) {
-            item {
-                Text(
-                    text = stringResource(Res.string.description_home_settings),
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-            }
-
             items(
                 items = localOrder,
                 key = { it.name }
@@ -194,9 +181,7 @@ fun HomeSettingsScreen(
                     draggableState = reorderableLazyListState,
                     moveUp = { moveUp(card) },
                     moveDown = { moveDown(card) },
-                    modifier = Modifier
-                        .testTag(testTag)
-                        .padding(horizontal = 8.dp)
+                    modifier = Modifier.testTag(testTag)
                 ) {
                     when (card) {
                         HomeCard.Calendar -> CalendarCardContent(it)
