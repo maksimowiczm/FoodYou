@@ -171,8 +171,6 @@ private fun LanguageScreen(
                         supportingContent = {
                             translation.authorsStrings.takeIf { it.isNotEmpty() }?.let {
                                 Column {
-                                    Text(stringResource(Res.string.headline_authors))
-
                                     it.forEach { author ->
                                         Text(author.toAnnotatedString())
                                     }
