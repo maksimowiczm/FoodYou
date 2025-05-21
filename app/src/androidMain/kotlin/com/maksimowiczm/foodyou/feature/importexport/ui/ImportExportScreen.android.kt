@@ -84,7 +84,7 @@ private fun AndroidImportExportScreen(
             modifier = modifier
         )
     } else {
-        ImportExportScreenImpl(
+        ImportExportScreen(
             onBack = onBack,
             onImport = onImport,
             onExport = onExport,
@@ -126,7 +126,7 @@ private fun Android33PermissionProxy(
         )
     }
 
-    ImportExportScreenImpl(
+    ImportExportScreen(
         onBack = onBack,
         onImport = {
             if (permissionState.status.isGranted) {
