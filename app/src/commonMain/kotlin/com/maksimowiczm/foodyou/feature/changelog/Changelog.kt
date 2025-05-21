@@ -15,6 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_3_2,
             v2_3_1,
             v2_3_0,
@@ -33,7 +34,9 @@ object Changelog {
             "Updated meals cards settings layout picker"
         ),
         bugFixes = listOf(),
-        translations = listOf(),
+        translations = listOf(
+            "Added Dutch (Thanks to GrizzleNL)"
+        ),
         notes = null
     )
 

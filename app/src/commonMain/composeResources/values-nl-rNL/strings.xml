@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">N/B</string>
+    <string name="headline_create_product">Product maken</string>
+    <string name="headline_settings">Instellingen</string>
+    <string name="headline_calories_goal">Caloriedoel</string>
+    <string name="headline_daily_goals">Dagelijkse doelen</string>
+    <string name="headline_general">Algemeen</string>
+    <string name="headline_macronutrients">Macronutriënten</string>
+    <string name="headline_meals">Maaltijden</string>
+    <string name="headline_delete_product">Product verwijderen</string>
+    <string name="headline_edit_product">Product aanpassen</string>
+    <string name="headline_permission_required">Toestemming vereist</string>
+    <string name="headline_language">Taal</string>
+    <string name="headline_authors">Auteurs</string>
+    <string name="headline_system">Systeem</string>
+    <string name="headline_system_language_settings">Systeemtaal instellingen</string>
+    <string name="headline_secure_screen">Voorkom schermafbeeldingen</string>
+    <string name="headline_about">Over</string>
+    <string name="headline_miscellaneous">Overige</string>
+    <string name="headline_version">Versie</string>
+    <string name="headline_share_your_thoughts">Deel je mening</string>
+    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Steun ons</string>
+    <string name="headline_all_day" description="All-day (meal)">Hele dag</string>
+    <string name="headline_time_based_ordering">Sorteren op tijd</string>
+    <string name="headline_incomplete_products">Onvolledige producten</string>
+    <string name="headline_product">Product</string>
+    <string name="headline_recipe">Recept</string>
+    <string name="headline_create_recipe">Maak recept</string>
+    <string name="headline_update_recipe">Recept bijwerken</string>
+    <string name="headline_ingredients" description="Recipe ingredients">Ingrediënten</string>
+    <string name="headline_summary">Samenvatting</string>
+    <string name="headline_whats_new">Wat is er nieuw</string>
+    <string name="headline_changelog">Wijzigingen</string>
+    <string name="headline_installed" description="Installed version of the app">Geïnstalleerd</string>
+    <string name="headline_home" description="Home screen">Voorpagina</string>
+    <string name="headline_home_settings" description="Home screen settings">Voorpagina instellingen</string>
+    <string name="headline_calendar">Kalender</string>
+    <string name="headline_meals_settings">Maaltijd instellingen</string>
+    <string name="headline_meals_cards_settings">Maaltijd kaart instellingen</string>
+    <string name="headline_horizontal">Horizontaal</string>
+    <string name="headline_vertical">Verticaal</string>
+    <string name="headline_values_per">Voedingswaarde per</string>
+    <string name="headline_other">Andere</string>
+    <string name="headline_vitamins">Vitamines</string>
+    <string name="headline_minerals">Mineralen</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">Ondersteunde URL's</string>
+    <string name="weight">Gewicht</string>
+    <string name="unit_calories">Caloriën</string>
+    <string name="unit_energy" description="Energy as calories">Energie</string>
+    <string name="unit_kcal">kcal</string>
+    <plurals name="unit_gram">
+        <item quantity="one">gram</item>
+        <item quantity="other">gram</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="one">milliliter</item>
+        <item quantity="other">milliliter</item>
+    </plurals>
+    <string name="product_package_weight">Verpakkingsgewicht</string>
+    <string name="product_package">Verpakking</string>
+    <string name="product_serving_weight">Portiegewicht</string>
+    <string name="product_serving">Portie</string>
+    <string name="product_name">Naam</string>
+    <string name="product_brand">Merk</string>
+    <string name="product_barcode">Barcode</string>
+    <string name="product_link">Productlink</string>
+    <string name="recipe_servings">Porties</string>
+    <string name="description_recipe_servings">Hoeveel porties zitten er in dit recept</string>
+    <string name="nutriment_proteins">Eiwitten</string>
+    <string name="nutriment_proteins_short">E</string>
+    <string name="nutriment_carbohydrates">Koolhydraten</string>
+    <string name="nutriment_carbohydrates_short">K</string>
+    <string name="nutriment_sugars">Suiker</string>
+    <string name="nutriment_fats">Vetten</string>
+    <string name="nutriment_fats_short">V</string>
+    <string name="nutriment_saturated_fats">Waarvan verzadigd</string>
+    <string name="nutriment_polyunsaturated_fats">Meervoudig onverzadigde vetten</string>
+    <string name="nutriment_monounsaturated_fats">Enkelvoudig onverzadigde vetten</string>
+    <string name="nutriment_omega_3">Omega 3-vetzuren</string>
+    <string name="nutriment_omega_6">Omega 6-vetzuren</string>
+    <string name="nutriment_salt">Zout</string>
+    <string name="nutriment_fiber">Vezels</string>
+    <string name="nutriment_cholesterol">Cholesterol</string>
+    <string name="nutriment_caffeine">Cafeïne</string>
+    <string name="vitamin_a">Vitamine A</string>
+    <string name="vitamin_b1">Vitamine B1</string>
+    <string name="vitamin_b2">Vitamine B2</string>
+    <string name="vitamin_b3">Vitamine B3</string>
+    <string name="vitamin_b5">Vitamine B5</string>
+    <string name="vitamin_b6">Vitamine B6</string>
+    <string name="vitamin_b7">Vitamine B7</string>
+    <string name="vitamin_b9">Vitamine B9</string>
+    <string name="vitamin_b12">Vitamine B12</string>
+    <string name="vitamin_c">Vitamine C</string>
+    <string name="vitamin_d">Vitamine D</string>
+    <string name="vitamin_e">Vitamine E</string>
+    <string name="vitamin_k">Vitamine K</string>
+    <string name="mineral_manganese">Mangaan</string>
+    <string name="mineral_magnesium">Magnesium</string>
+    <string name="mineral_potassium">Kalium</string>
+    <string name="mineral_calcium">Calcium</string>
+    <string name="mineral_copper">Koper</string>
+    <string name="mineral_zinc">Zink</string>
+    <string name="mineral_sodium">Natrium</string>
+    <string name="mineral_iron">IJzer</string>
+    <string name="mineral_phosphorus">Fosfor</string>
+    <string name="mineral_selenium">Selenium</string>
+    <string name="mineral_iodine">Jodium</string>
+    <string name="action_search">Zoeken</string>
+    <string name="action_scan_barcode">Scan barcode</string>
+    <string name="action_add">Toevoegen</string>
+    <string name="action_go_back">Terug</string>
+    <string name="action_tap_to_allow_access">Druk om toestemming te geven</string>
+    <string name="action_create">Aanmaken</string>
+    <string name="action_clear">Leegmaken</string>
+    <string name="action_cancel">Annuleren</string>
+    <string name="action_go_to_settings">Ga naar instellingen</string>
+    <string name="action_save">Opslaan</string>
+    <string name="action_delete">Verwijderen</string>
+    <string name="action_confirm">Bevestigen</string>
+    <string name="action_add_meal">Maaltijd toevoegen</string>
+    <string name="action_edit">Aanpassen</string>
+    <string name="action_edit_entry">Pas notitie aan</string>
+    <string name="action_delete_entry">Verwijder notitie</string>
+    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Voeg product toe</string>
+    <string name="action_undo">Ongedaan maken</string>
+    <string name="action_close">Sluiten</string>
+    <string name="action_discard">Annuleren</string>
+    <string name="action_translate">Vertalen</string>
+    <string name="action_enable_camera_flash">Camera flits inschakelen</string>
+    <string name="action_disable_camera_flash">Camera flits uitschakelen</string>
+    <string name="action_prevent_screen_capture">Schermopname blokkeren</string>
+    <string name="action_go_to_today">Ga naar vandaag</string>
+    <string name="action_bug_report_on_github">Rapporteer een probleem op GitHub</string>
+    <string name="action_feature_request_on_github">Verzoek een functie op GitHub</string>
+    <string name="action_leave_a_star_on_github">Laat een ster achter op GitHub</string>
+    <string name="action_show_calendar">Open kalender</string>
+    <string name="action_reorder">Rangschikken</string>
+    <string name="action_move_up" description="reorder list item up">Omhoog verplaatsen</string>
+    <string name="action_move_down" description="reorder list item down">Omlaag verplaatsen</string>
+    <string name="action_use_time_based_ordering">Gebruik tijd-gebaseerde rangschikking</string>
+    <string name="action_ignore_all_day_meals">Maaltijden zonder begin- of eindtijd negeren</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">Ingrediënt toevoegen</string>
+    <string name="action_edit_ingredient_measurement">Pas hoeveelheid aan</string>
+    <string name="action_delete_ingredient">Verwijder ingrediënt</string>
+    <string name="action_download">Downloaden</string>
+    <string name="action_paste_url">Plak URL</string>
+    <string name="action_browse_open_food_facts">Open Food Facts bekijken</string>
+    <string name="action_copy">Kopiëren</string>
+    <string name="action_choose_other_date">Kies een andere datum</string>
+    <string name="action_choose_other_measurement">Kies een andere hoeveelheid</string>
+    <string name="action_edit_your_home_page">Pas je voorpagina aan</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Laat meer zien</string>
+    <string name="action_download_product">Product downloaden</string>
+    <string name="action_suggest_external_database">Externe database voorstellen</string>
+    <string name="neutral_barcode_scanner_camera_request">Keur toegang tot camera goed om barcodes te scannen</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">Je moet toestemming verlenen om barcodes te scannen</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera toegang is nodig om barcodes te scannen. Sta dit toe bij systeeminstellingen.</string>
+    <string name="neutral_no_products_found">Geen producten gevonden</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="one">%1$d calorie over</item>
+        <item quantity="other">%1$d calorieën over</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">Stel je dagelijkse doel in</string>
+    <string name="neutral_set_your_meal_schedule">Stel de tijd in van je maaltijden</string>
+    <string name="neutral_permanently_delete_meal">Permanent deze maaltijd verwijderen?</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Deze maaltijd wordt permanent verwijderd. Alle data gerelateerd aan de maaltijd gaat verloren.</string>
+    <string name="neutral_required">Verplicht</string>
+    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calorieën worden automatisch berekend op basis van de macronutriënten</string>
+    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Deze maaltijd is leeg. Voeg producten toe om je calorieën te tellen.</string>
+    <string name="neutral_entry_deleted">Notitie verwijderd</string>
+    <string name="neutral_help_translating_the_app">Help de app te vertalen</string>
+    <string name="neutral_copied">Info naar klembord gekopieerd</string>
+    <string name="neutral_product_created">Product aangemaakt</string>
+    <string name="question_discard_product">Product verwijderen?</string>
+    <string name="question_discard_changes">Aanpassingen verwijderen?</string>
+    <string name="question_discard_recipe">Recept verwijderen?</string>
+    <string name="error_this_field_is_required">Dit veld is verplicht</string>
+    <string name="error_invalid_number">Ongeldig getal</string>
+    <string name="error_value_cannot_be_negative">Waarde mag niet negatief zijn</string>
+    <string name="error_value_must_be_less_than">Waarde moet minder dan %1$s zijn</string>
+    <string name="error_value_must_be_integer">Waarde moet een getal zijn</string>
+    <string name="error_sum_of_percentages_must_be_100">De som van percentages moet 100% zijn</string>
+    <string name="error_value_must_be_positive">Waarde moet positief zijn</string>
+    <string name="error_url_not_found">URL niet gevonden</string>
+    <string name="error_url_is_not_supported">URL wordt niet ondersteund</string>
+    <string name="error_failed_to_download_product">Niet gelukt product te downloaden</string>
+    <string name="error_product_not_found">Product niet gevonden</string>
+    <string name="error_unknown_error">Onbekende fout</string>
+    <string name="positive_goal_reached">Doel gehaald</string>
+    <string name="positive_ok">Oké</string>
+    <string name="description_calories_goal">Stel je dagelijkse calorie doel in. Dit helpt je om je voortgang bij te houden en je doel te halen.</string>
+    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Dit product wordt permanent verwijderd. Deze actie kan niet teruggedraaid worden. Alle dagboeknotities met dit product worden verwijderd.</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Deze notitie wordt verwijderd uit je dagboek. Je kan dit in de toekomst altijd weer toevoegen.</string>
+    <string name="description_README_setting">Open het README bestand op GitHub</string>
+    <string name="description_about_setting">Meer informatie over FoodYou</string>
+    <string name="description_show_some_love">Als FoodYou goed bevallen is, overweeg dan een ster te geven op GitHub! Dit helpt ons enorm met meer mensen bereiken en de ontwikkeling van de app gaande te houden.</string>
+    <string name="description_share_your_thoughts">Heb je feedback voor ons, een functie die je graag zou willen zien of een bug gevonden? Laat het ons weten! We horen graag van je.</string>
+    <string name="description_time_based_meals_sorting">Wanneer deze optie wordt geselecteerd, wordt de maaltijd die bezig is als eerste weergegeven</string>
+    <string name="description_action_ignore_all_day_meals">Maaltijden zonder begin- of eindtijd worden aan het einde van de lijst weergegeven</string>
+    <string name="description_incomplete_nutrition_data">Sommige van de producten, die gebruikt worden, hebben deze waarde niet, het totaal kan dus afwijken van de werkelijkheid</string>
+    <string name="description_translation_warning">Vertalingen worden gemaakt door vrijwilligers. Het kan voorkomen dat een vertaling niet klopt of ontbreekt. Wil je helpen met de vertaling van FoodYou? Dan stellen we dat zeer op prijs.</string>
+    <string name="description_changelog">Bekijk wat nieuw is</string>
+    <string name="description_home_settings">Pas je startpagina aan</string>
+    <string name="description_download_product">Vul een link naar een product in en haal automatisch voedingswaarde-informatie op.</string>
+    <string name="description_download_product_hint">Alle tekst wordt geaccepteerd, de eerste URL zal worden gebruikt.</string>
+    <string name="headline_launcher_icon_by_icons8">App icoon door Icons8</string>
+    <string name="neutral_see_other_awesome_icons_here">Bekijk andere fantastische iconen hier</string>
+    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
+    <!-- Don't translate changelog strings -->
+</resources>
