@@ -30,8 +30,8 @@ object Changelog {
             "Added experimental support for importing and exporting food products via CSV file"
         ),
         changes = listOf(
-            "Updated home settings top bar",
-            "Updated meals cards settings layout picker"
+            "Updated meals cards settings layout picker",
+            "Updated settings screen"
         ),
         bugFixes = listOf(
             "Open valid recipe when editing entry in the meal screen"
