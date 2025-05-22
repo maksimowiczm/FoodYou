@@ -15,6 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_3_2,
             v2_3_1,
             v2_3_0,
@@ -32,7 +33,9 @@ object Changelog {
             "Updated home settings top bar",
             "Updated meals cards settings layout picker"
         ),
-        bugFixes = listOf(),
+        bugFixes = listOf(
+            "Open valid recipe when editing entry in the meal screen"
+        ),
         translations = listOf(),
         notes = null
     )
