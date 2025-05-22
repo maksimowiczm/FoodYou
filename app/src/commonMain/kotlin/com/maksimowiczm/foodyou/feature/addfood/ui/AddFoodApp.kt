@@ -216,8 +216,13 @@ private fun AddFoodNavHost(
                 },
                 onEditMeasurement = {
                     val route = when (it) {
-                        is MeasurementId.Product -> UpdateMeasurement(it.id)
-                        is MeasurementId.Recipe -> UpdateMeasurement(it.id)
+                        is MeasurementId.Product -> UpdateMeasurement(
+                            productMeasurementId = it.id
+                        )
+
+                        is MeasurementId.Recipe -> UpdateMeasurement(
+                            recipeMeasurementId = it.id
+                        )
                     }
 
                     navController.navigate(route) { launchSingleTop = true }

@@ -15,6 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_3_2,
             v2_3_1,
             v2_3_0,
@@ -28,9 +29,16 @@ object Changelog {
         newFeatures = listOf(
             "Added experimental support for importing and exporting food products via CSV file"
         ),
-        changes = listOf(),
-        bugFixes = listOf(),
-        translations = listOf(),
+        changes = listOf(
+            "Updated meals cards settings layout picker",
+            "Updated settings screen"
+        ),
+        bugFixes = listOf(
+            "Open valid recipe when editing entry in the meal screen"
+        ),
+        translations = listOf(
+            "Added Dutch (Thanks to GrizzleNL)"
+        ),
         notes = null
     )
 
