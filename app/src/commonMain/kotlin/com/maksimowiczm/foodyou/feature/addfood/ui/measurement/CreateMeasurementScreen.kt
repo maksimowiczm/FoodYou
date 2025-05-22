@@ -11,8 +11,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_copy
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
@@ -50,7 +50,7 @@ internal fun CreateMeasurementScreen(
     val food by viewModel.food.collectAsStateWithLifecycle()
     val selectedMeasurement by viewModel.selectedMeasurement.collectAsStateWithLifecycle()
 
-    val suffix = stringResource(Res.string.action_copy)
+    val suffix = stringResource(Res.string.headline_copy)
 
     when (val food = food) {
         null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
