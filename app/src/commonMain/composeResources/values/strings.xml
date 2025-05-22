@@ -248,7 +248,7 @@
     <string name="description_import_and_export_hint">All data synchronization operations run in the background. You will be notified when they are complete.</string>
     <string name="description_experimental_feature">This is an experimental feature. It may change or be removed in future versions.</string>
     <string name="description_notifications_permission_required_data_sync">Notification permission is required to display data synchronization progress. Please enable it in the app settings.</string>
-    <string name="description_copy_recipe">Recipe will be copied into single product</string>
+    <string name="description_copy_recipe">Recipe will be copied into a single product</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
