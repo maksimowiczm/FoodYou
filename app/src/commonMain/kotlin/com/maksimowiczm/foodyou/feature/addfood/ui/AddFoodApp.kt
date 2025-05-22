@@ -271,8 +271,8 @@ private fun AddFoodNavHost(
                     navController.navigate(MeasureFood(productId = it.id)) {
                         launchSingleTop = true
 
-                        popUpTo<SearchFood> {
-                            inclusive = false
+                        popUpTo<MeasureFood> {
+                            inclusive = true
                         }
                     }
                 }
@@ -318,8 +318,8 @@ private fun AddFoodNavHost(
                     navController.navigate(MeasureFood(productId = it.id)) {
                         launchSingleTop = true
 
-                        popUpTo<SearchFood> {
-                            inclusive = false
+                        popUpTo<UpdateMeasurement> {
+                            inclusive = true
                         }
                     }
                 }
