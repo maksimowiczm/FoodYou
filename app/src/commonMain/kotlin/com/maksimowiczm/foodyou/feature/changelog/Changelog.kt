@@ -27,7 +27,8 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(
-            "Added experimental support for importing and exporting food products via CSV file"
+            "Added experimental support for importing and exporting food products via CSV file",
+            "Added copying recipe into product"
         ),
         changes = listOf(
             "Updated meals cards settings layout picker",
@@ -39,7 +40,7 @@ object Changelog {
         translations = listOf(
             "Added Dutch (Thanks to GrizzleNL)"
         ),
-        notes = null
+        notes = "Since recipes can't contain other recipes for now, copying a recipe serves as a workaround. This is currently limited to the search screen and is expected to be replaced with proper recipe support in the future."
     )
 
     val v2_3_2 = Version(

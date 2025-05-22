@@ -12,7 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -22,6 +25,7 @@ internal fun UpdateMeasurementScreen(
     onBack: () -> Unit,
     onDelete: () -> Unit,
     onEdit: (FoodId) -> Unit,
+    onCloneRecipe: (newId: FoodId.Product) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: UpdateMeasurementScreenViewModel = koinViewModel(
         parameters = { parametersOf(measurementId) }
@@ -29,18 +33,22 @@ internal fun UpdateMeasurementScreen(
 ) {
     val onBack by rememberUpdatedState(onBack)
     val onDelete by rememberUpdatedState(onDelete)
+    val onCloneRecipe by rememberUpdatedState(onCloneRecipe)
 
     LaunchedEffect(viewModel) {
         viewModel.eventBus.collectLatest {
             when (it) {
                 is MeasurementScreenEvent.Closed -> onBack()
                 is MeasurementScreenEvent.FoodDeleted -> onDelete()
+                is MeasurementScreenEvent.RecipeClonedIntoProduct -> onCloneRecipe(it.newId)
             }
         }
     }
 
     val food by viewModel.food.collectAsStateWithLifecycle()
     val selectedMeasurement by viewModel.selectedMeasurement.collectAsStateWithLifecycle()
+
+    val suffix = stringResource(Res.string.headline_copy)
 
     when (val food = food) {
         null -> Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
@@ -52,6 +60,7 @@ internal fun UpdateMeasurementScreen(
             onMeasurement = remember(viewModel) { viewModel::onConfirm },
             onEditFood = { onEdit(food.food.id) },
             onDeleteFood = { viewModel.onDeleteFood(food.food.id) },
+            onCloneRecipe = { viewModel.onCloneRecipe(it, suffix) },
             modifier = modifier
         )
     }

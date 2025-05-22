@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui.measurement
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,8 +17,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -46,7 +50,9 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.Food
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Recipe
 import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
 import com.maksimowiczm.foodyou.core.ui.ext.firstVisibleItemAlpha
@@ -75,6 +81,7 @@ internal fun MeasurementScreen(
     onMeasurement: (Measurement) -> Unit,
     onEditFood: () -> Unit,
     onDeleteFood: () -> Unit,
+    onCloneRecipe: (FoodId.Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedEnum by rememberSaveable { mutableStateOf(selected?.toEnum()) }
@@ -129,6 +136,19 @@ internal fun MeasurementScreen(
         )
     }
 
+    var showCloneDialog by rememberSaveable { mutableStateOf(false) }
+    if (showCloneDialog) {
+        CloneRecipeDialog(
+            onDismissRequest = { showCloneDialog = false },
+            onClone = {
+                if (food is Recipe) {
+                    onCloneRecipe(food.id)
+                }
+                showCloneDialog = false
+            }
+        )
+    }
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val lazyListState = rememberLazyListState()
     var headlineHeight by remember { mutableIntStateOf(0) }
@@ -155,6 +175,17 @@ internal fun MeasurementScreen(
                             contentDescription = stringResource(Res.string.action_go_back)
                         )
                     }
+                },
+                actions = {
+                    Menu(
+                        onEdit = onEditFood,
+                        onDelete = { showDeleteDialog = true },
+                        onClone = if (food is Recipe) {
+                            { showCloneDialog = true }
+                        } else {
+                            null
+                        }
+                    )
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -261,6 +292,55 @@ internal fun MeasurementScreen(
 }
 
 @Composable
+private fun Menu(
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    onClone: (() -> Unit)?,
+    modifier: Modifier = Modifier
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    Box(modifier) {
+        IconButton(
+            onClick = { expanded = true }
+        ) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = stringResource(Res.string.action_show_more)
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            onClone?.let {
+                DropdownMenuItem(
+                    text = { Text(stringResource(Res.string.action_copy)) },
+                    onClick = {
+                        expanded = false
+                        it()
+                    }
+                )
+            }
+            DropdownMenuItem(
+                text = { Text(stringResource(Res.string.action_edit)) },
+                onClick = {
+                    expanded = false
+                    onEdit()
+                }
+            )
+            DropdownMenuItem(
+                text = { Text(stringResource(Res.string.action_delete)) },
+                onClick = {
+                    expanded = false
+                    onDelete()
+                }
+            )
+        }
+    }
+}
+
+@Composable
 private fun DeleteDialog(onDismissRequest: () -> Unit, onDelete: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -289,6 +369,38 @@ private fun DeleteDialog(onDismissRequest: () -> Unit, onDelete: () -> Unit) {
         },
         text = {
             Text(stringResource(Res.string.description_delete_product))
+        }
+    )
+}
+
+@Composable
+private fun CloneRecipeDialog(
+    onDismissRequest: () -> Unit,
+    onClone: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(
+                onClick = onClone
+            ) {
+                Text(stringResource(Res.string.action_copy))
+            }
+        },
+        modifier = modifier,
+        dismissButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text(stringResource(Res.string.action_cancel))
+            }
+        },
+        title = {
+            Text(stringResource(Res.string.headline_copy_recipe))
+        },
+        text = {
+            Text(stringResource(Res.string.description_copy_recipe))
         }
     )
 }
