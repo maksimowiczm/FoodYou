@@ -1,0 +1,16 @@
+New features
+- Added experimental support for importing and exporting food products via CSV file
+- Added copying recipe into product
+
+Changes
+- Updated meals cards settings layout picker
+- Updated settings screen
+
+Bug fixes
+- Open valid recipe when editing entry in the meal screen
+
+Translations
+- Added Dutch (Thanks to GrizzleNL)
+
+Notes
+Since recipes can't contain other recipes for now, copying a recipe serves as a workaround. This is currently limited to the search screen and is expected to be replaced with proper recipe support in the future.
