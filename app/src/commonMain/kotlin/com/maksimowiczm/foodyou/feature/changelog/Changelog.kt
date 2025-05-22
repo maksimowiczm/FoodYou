@@ -36,7 +36,9 @@ object Changelog {
         bugFixes = listOf(
             "Open valid recipe when editing entry in the meal screen"
         ),
-        translations = listOf(),
+        translations = listOf(
+            "Added Dutch (Thanks to GrizzleNL)"
+        ),
         notes = null
     )
 
