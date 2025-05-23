@@ -27,7 +27,7 @@ object Changelog {
 
     val v2_4_0 = Version(
         version = "2.4.0",
-        date = LocalDate(2025, 5, 22),
+        date = LocalDate(2025, 5, 23),
         newFeatures = listOf(
             "Added experimental support for importing and exporting food products via CSV file",
             "Added copying recipe into product"
