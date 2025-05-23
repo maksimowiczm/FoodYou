@@ -32,7 +32,8 @@ object Changelog {
         ),
         changes = listOf(
             "Updated meals cards settings layout picker",
-            "Updated settings screen"
+            "Updated settings screen",
+            "Use custom tabs for Open Food Facts links if available"
         ),
         bugFixes = listOf(
             "Open valid recipe when editing entry in the meal screen"
