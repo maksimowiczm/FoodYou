@@ -12,7 +12,6 @@
     <string name="headline_edit_product">Redigér produkt</string>
     <string name="headline_permission_required">Tilladelse kræves</string>
     <string name="headline_language">Sprog</string>
-    <string name="headline_authors">Forfattere</string>
     <string name="headline_system">System</string>
     <string name="headline_system_language_settings">Systemsprogindstillinger</string>
     <string name="headline_secure_screen">Sikker skærm</string>
@@ -104,7 +103,7 @@
     <string name="action_download">Hent</string>
     <string name="action_paste_url">Indsæt URL</string>
     <string name="action_browse_open_food_facts">Udforsk Open Food facts</string>
-    <string name="action_copy">Kopiér</string>
+    <string name="action_copy" comment="A verb">Kopiér</string>
     <string name="neutral_barcode_scanner_camera_request">Tillad kameraadgang for at skanne stregkoder</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Adgang skal tildeles for at kunne skanne stregkoder</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Kameratilladelse kræves til stregkodeskanning. Tillad i app-indstillingerne.</string>

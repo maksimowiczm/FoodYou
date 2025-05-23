@@ -12,7 +12,6 @@
     <string name="headline_edit_product">Ürünü Düzenle</string>
     <string name="headline_permission_required">İzin Gerekiyor</string>
     <string name="headline_language">Dil</string>
-    <string name="headline_authors">Yazarlar</string>
     <string name="headline_system">Sistem</string>
     <string name="headline_system_language_settings">Sistem Dil Ayarları</string>
     <string name="headline_secure_screen">Güvenli Ekran</string>
@@ -148,7 +147,7 @@
     <string name="action_download">İndir</string>
     <string name="action_paste_url">URL Yapıştır</string>
     <string name="action_browse_open_food_facts">Open Food Facts'e Göz At</string>
-    <string name="action_copy">Kopyala</string>
+    <string name="action_copy" comment="A verb">Kopyala</string>
     <string name="action_choose_other_date">Başka Bir Tarih Seç</string>
     <string name="action_choose_other_measurement">Başka Bir Ölçü Seç</string>
     <string name="action_edit_your_home_page">Ana Sayfanızı Düzenleyin</string>

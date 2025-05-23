@@ -12,7 +12,6 @@
     <string name="headline_edit_product">Product aanpassen</string>
     <string name="headline_permission_required">Toestemming vereist</string>
     <string name="headline_language">Taal</string>
-    <string name="headline_authors">Auteurs</string>
     <string name="headline_system">Systeem</string>
     <string name="headline_system_language_settings">Systeemtaal instellingen</string>
     <string name="headline_secure_screen">Voorkom schermafbeeldingen</string>
@@ -147,7 +146,7 @@
     <string name="action_download">Downloaden</string>
     <string name="action_paste_url">Plak URL</string>
     <string name="action_browse_open_food_facts">Open Food Facts bekijken</string>
-    <string name="action_copy">Kopiëren</string>
+    <string name="action_copy" comment="A verb">Kopiëren</string>
     <string name="action_choose_other_date">Kies een andere datum</string>
     <string name="action_choose_other_measurement">Kies een andere hoeveelheid</string>
     <string name="action_edit_your_home_page">Pas je voorpagina aan</string>

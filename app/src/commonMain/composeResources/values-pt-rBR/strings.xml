@@ -12,7 +12,6 @@
     <string name="headline_edit_product">Editar produto</string>
     <string name="headline_permission_required">Permissão necessária</string>
     <string name="headline_language">Idioma</string>
-    <string name="headline_authors">Autores</string>
     <string name="headline_system">Sistema</string>
     <string name="headline_system_language_settings">Configurações de idioma do sistema</string>
     <string name="headline_secure_screen">Tela segura</string>
@@ -33,6 +32,11 @@
     <string name="headline_whats_new">O que há de novo</string>
     <string name="headline_changelog">Changelog</string>
     <string name="headline_installed" description="Installed version of the app">Instalado</string>
+    <string name="headline_import_and_export">Importar e Exportar</string>
+    <string name="headline_experimental" description="Experimental feature">Experimental</string>
+    <string name="headline_experimental_feature">Recurso experimental</string>
+    <string name="headline_copy_recipe">Copiar receita</string>
+    <string name="headline_copy" description="A noun, thing that is a copy" comment="A noun, thing that is a copy">Copiar</string>
     <string name="weight">Peso</string>
     <string name="unit_calories">Calorias</string>
     <string name="unit_kcal">kcal</string>
@@ -104,7 +108,13 @@
     <string name="action_download">Download</string>
     <string name="action_paste_url">Colar URL</string>
     <string name="action_browse_open_food_facts">Navegue no Open Food Facts</string>
-    <string name="action_copy">Copiar</string>
+    <string name="action_copy" comment="A verb">Copiar</string>
+    <string name="action_import_food_products">Importar produtos alimentícios</string>
+    <string name="action_import_food_products_from_csv">Importar produtos alimentícios de um arquivo CSV</string>
+    <string name="action_export_food_products">Exportar produtos alimentícios</string>
+    <string name="action_export_food_products_to_csv">Exportar produtos alimentícios para um arquivo CSV</string>
+    <string name="action_share">Compartilhar</string>
+    <string name="action_copy_header" description="Copy CSV file header">Copiar cabeçalho</string>
     <string name="neutral_barcode_scanner_camera_request">Permitir acesso à sua câmera para escanear códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Você deve permitir o acesso para digitalizar códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">A permissão da câmera é obrigatória para ler códigos de barras. Por favor, habilite essa função nas configurações do aplicativo.</string>
@@ -123,6 +133,8 @@
     <string name="neutral_entry_deleted">Entrada excluída</string>
     <string name="neutral_help_translating_the_app">Ajude a traduzir o aplicativo</string>
     <string name="neutral_copied">Informações copiadas para a área de transferência</string>
+    <string name="neutral_export_started">Exportação iniciada</string>
+    <string name="neutral_import_started">Importação iniciada</string>
     <string name="question_discard_product">Descartar o produto?</string>
     <string name="question_discard_changes">Descartar alterações?</string>
     <string name="question_discard_recipe">Descartar receita?</string>
@@ -149,8 +161,21 @@
     <string name="description_incomplete_nutrition_data">Alguns dos produtos usados não têm esse valor; portanto, o valor exibido pode não ser exato</string>
     <string name="description_translation_warning">As traduções são feitas por voluntários. Elas podem não ser perfeitas e podem estar faltando algumas traduções. Se você notar algum erro, não hesite em ajudar a melhorá-las.</string>
     <string name="description_changelog">Veja o que há de novo no aplicativo</string>
+    <string name="description_import_and_export">Salve e carregue seus dados</string>
+    <string name="description_import_and_export_hint">Todas as operações de sincronização de dados são executadas em segundo plano. Você será notificado quando forem concluídas.</string>
+    <string name="description_experimental_feature">Isto é um recurso experimental. Poderá ser alterado ou removido em versões futuras.</string>
+    <string name="description_notifications_permission_required_data_sync">A permissão de notificação é necessária para exibir o progresso da sincronização de dados. Por favor, habilite-a nas configurações do aplicativo.</string>
+    <string name="description_copy_recipe">A receita será copiada em um único produto</string>
     <string name="headline_launcher_icon_by_icons8">Ícone da aplicação por Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Veja outros ícones incríveis aqui</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
     <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">Exportando produtos</string>
+    <string name="notification_exporting_products_success">Exportação de produtos concluída</string>
+    <string name="notification_exporting_products_failure">Exportação de produtos falhou</string>
+    <string name="notification_importing_products">Importando produtos</string>
+    <string name="notification_importing_products_success">Importação de produtos concluída</string>
+    <string name="notification_importing_products_failure">Importação de produtos falhou</string>
+    <string name="notification_data_sync_channel_name">Sincronização de dados</string>
+    <string name="notification_data_sync_progress_channel_name">Progresso da sincronização de dados</string>
 </resources>

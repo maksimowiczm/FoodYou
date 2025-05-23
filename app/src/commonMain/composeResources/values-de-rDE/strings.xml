@@ -12,7 +12,6 @@
     <string name="headline_edit_product">Produkt bearbeiten</string>
     <string name="headline_permission_required">Berechtigung erforderlich</string>
     <string name="headline_language">Sprache</string>
-    <string name="headline_authors">Autor</string>
     <string name="headline_system">System</string>
     <string name="headline_system_language_settings">Systemspracheinstellungen</string>
     <string name="headline_secure_screen">Sicherer Bildschirm</string>
@@ -148,7 +147,7 @@
     <string name="action_download">Herunterladen</string>
     <string name="action_paste_url">URL einfügen</string>
     <string name="action_browse_open_food_facts">Open Food Facts durchsuchen</string>
-    <string name="action_copy">Kopieren</string>
+    <string name="action_copy" comment="A verb">Kopieren</string>
     <string name="action_choose_other_date">Anderes Datum auswählen</string>
     <string name="action_choose_other_measurement">Andere Menge auswählen</string>
     <string name="action_edit_your_home_page">Startseite bearbeiten</string>

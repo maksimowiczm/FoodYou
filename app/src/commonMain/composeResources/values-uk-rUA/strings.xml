@@ -12,7 +12,6 @@
     <string name="headline_edit_product">Редагувати продукт</string>
     <string name="headline_permission_required">Потрібен дозвіл</string>
     <string name="headline_language">Мова</string>
-    <string name="headline_authors">Автори</string>
     <string name="headline_system">Система</string>
     <string name="headline_system_language_settings">Системні налаштування мови</string>
     <string name="headline_secure_screen">Захистити екран</string>
@@ -108,7 +107,7 @@
     <string name="action_download">Завантажити</string>
     <string name="action_paste_url">Вставити посилання</string>
     <string name="action_browse_open_food_facts">Переглянути Open Food Facts</string>
-    <string name="action_copy">Скопіювати</string>
+    <string name="action_copy" comment="A verb">Скопіювати</string>
     <string name="neutral_barcode_scanner_camera_request">Надати доступ до вашої камери для сканування штрихкодів</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Ви маєте надати доступ, щоб мати змогу сканувати штрихкоди</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Доступ до камери необхідний для сканування штрихкодів. Надайте його в налаштуваннях додатку.</string>
