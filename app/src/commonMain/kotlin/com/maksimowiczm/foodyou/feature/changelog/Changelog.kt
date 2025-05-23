@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_4_0,
             v2_3_2,
             v2_3_1,
             v2_3_0,
@@ -25,7 +25,9 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_4_0 = Version(
+        version = "2.4.0",
+        date = LocalDate(2025, 5, 23),
         newFeatures = listOf(
             "Added experimental support for importing and exporting food products via CSV file",
             "Added copying recipe into product"
