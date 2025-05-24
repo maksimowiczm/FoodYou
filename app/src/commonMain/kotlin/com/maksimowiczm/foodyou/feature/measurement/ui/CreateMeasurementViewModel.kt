@@ -16,7 +16,7 @@ import kotlinx.datetime.LocalDate
 
 internal class CreateMeasurementViewModel(
     private val foodId: FoodId,
-    foodRepository: FoodRepository,
+    private val foodRepository: FoodRepository,
     mealsRepository: MealRepository,
     private val measurementRepository: MeasurementRepository
 ) : ViewModel() {
@@ -38,7 +38,7 @@ internal class CreateMeasurementViewModel(
         initialValue = null
     )
 
-    private val eventBus = Channel<Unit>()
+    private val eventBus = Channel<MeasurementScreenEvent>()
     val measurementCreatedEventBus = eventBus.receiveAsFlow()
 
     fun onCreateMeasurement(date: LocalDate, mealId: Long, measurement: Measurement) = launch {
@@ -48,6 +48,16 @@ internal class CreateMeasurementViewModel(
             foodId = foodId,
             measurement = measurement
         )
-        eventBus.send(Unit)
+        eventBus.send(MeasurementScreenEvent.Done)
+    }
+
+    fun onDeleteMeasurement() = launch {
+        foodRepository.deleteFood(id = foodId)
+        eventBus.send(MeasurementScreenEvent.Deleted)
+    }
+
+    fun onRecipeClone(recipeId: FoodId.Recipe, suffix: String) = launch {
+        val productId = foodRepository.cloneRecipeIntoProduct(id = recipeId, nameSuffix = suffix)
+        eventBus.send(MeasurementScreenEvent.RecipeCloned(productId))
     }
 }

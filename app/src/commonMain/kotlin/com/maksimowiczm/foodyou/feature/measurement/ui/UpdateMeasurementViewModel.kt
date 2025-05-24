@@ -2,9 +2,11 @@ package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
+import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
 import com.maksimowiczm.foodyou.core.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.ext.launch
@@ -21,7 +23,8 @@ import kotlinx.datetime.LocalDate
 internal class UpdateMeasurementViewModel(
     private val measurementId: MeasurementId,
     mealsRepository: MealRepository,
-    private val measurementRepository: MeasurementRepository
+    private val measurementRepository: MeasurementRepository,
+    private val foodRepository: FoodRepository
 ) : ViewModel() {
 
     val measurement: StateFlow<FoodWithMeasurement?> = measurementRepository
@@ -48,7 +51,7 @@ internal class UpdateMeasurementViewModel(
             initialValue = null
         )
 
-    private val eventBus = Channel<Unit>()
+    private val eventBus = Channel<MeasurementScreenEvent>()
     val measurementUpdatedEventBus = eventBus.receiveAsFlow()
 
     fun onUpdateMeasurement(date: LocalDate, mealId: Long, measurement: Measurement) = launch {
@@ -58,6 +61,19 @@ internal class UpdateMeasurementViewModel(
             mealId = mealId,
             measurement = measurement
         )
-        eventBus.send(Unit)
+        eventBus.send(MeasurementScreenEvent.Done)
+    }
+
+    fun onDeleteMeasurement() = launch {
+        val measurement = measurement.value ?: return@launch
+        val foodId = measurement.food.id
+
+        foodRepository.deleteFood(id = foodId)
+        eventBus.send(MeasurementScreenEvent.Deleted)
+    }
+
+    fun onRecipeClone(recipeId: FoodId.Recipe, suffix: String) = launch {
+        val productId = foodRepository.cloneRecipeIntoProduct(id = recipeId, nameSuffix = suffix)
+        eventBus.send(MeasurementScreenEvent.RecipeCloned(productId))
     }
 }

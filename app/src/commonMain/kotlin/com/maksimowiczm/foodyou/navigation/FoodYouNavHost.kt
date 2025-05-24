@@ -189,6 +189,12 @@ fun FoodYouNavHost(
             },
             updateMeasurementOnBack = {
                 navController.popBackStack<UpdateMeasurement>(inclusive = true)
+            },
+            onEditFood = {
+                // TODO
+            },
+            onRecipeClone = {
+                // TODO
             }
         )
     }

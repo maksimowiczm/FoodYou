@@ -12,9 +12,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.rememberAdvancedMeasurementFormState
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.headline_copy
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -24,6 +27,8 @@ internal fun CreateMeasurementScreen(
     mealId: Long?,
     date: LocalDate?,
     onBack: () -> Unit,
+    onEditFood: () -> Unit,
+    onRecipeClone: (FoodId.Product) -> Unit,
     modifier: Modifier = Modifier.Companion,
     viewModel: CreateMeasurementViewModel = koinViewModel(
         parameters = { parametersOf(foodId) }
@@ -36,10 +41,15 @@ internal fun CreateMeasurementScreen(
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
 
     val latestOnBack by rememberUpdatedState(onBack)
+    val latestOnRecipeCloned by rememberUpdatedState(onRecipeClone)
     LaunchedEffect(lifecycleOwner, viewModel) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-            viewModel.measurementCreatedEventBus.collectLatest {
-                latestOnBack()
+            viewModel.measurementCreatedEventBus.collectLatest { event ->
+                when (event) {
+                    MeasurementScreenEvent.Deleted -> latestOnBack()
+                    MeasurementScreenEvent.Done -> latestOnBack()
+                    is MeasurementScreenEvent.RecipeCloned -> latestOnRecipeCloned(event.productId)
+                }
             }
         }
     }
@@ -58,6 +68,8 @@ internal fun CreateMeasurementScreen(
         initialMeasurement = 0
     )
 
+    val copySuffix = stringResource(Res.string.headline_copy)
+
     MeasurementScreen(
         state = formState,
         food = food,
@@ -74,9 +86,13 @@ internal fun CreateMeasurementScreen(
                 )
             }
         },
-        onEditFood = { },
-        onDelete = { },
-        onClone = { },
+        onEditFood = onEditFood,
+        onDelete = viewModel::onDeleteMeasurement,
+        onClone = if (foodId is FoodId.Recipe) {
+            { viewModel.onRecipeClone(recipeId = foodId, suffix = copySuffix) }
+        } else {
+            null
+        },
         modifier = modifier
     )
 }
