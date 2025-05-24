@@ -59,12 +59,12 @@ internal fun MeasurementScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     var showCloneDialog by rememberSaveable { mutableStateOf(false) }
-    if (showCloneDialog) {
+    if (showCloneDialog && onClone != null) {
         CloneRecipeDialog(
             onDismissRequest = { showCloneDialog = false },
             onClone = {
                 showCloneDialog = false
-                onClone?.invoke()
+                onClone()
             }
         )
     }
@@ -90,7 +90,11 @@ internal fun MeasurementScreen(
                     Menu(
                         onEdit = onEditFood,
                         onDelete = { showDeleteDialog = true },
-                        onClone = { showCloneDialog = true }
+                        onClone = if (onClone != null) {
+                            { showCloneDialog = true }
+                        } else {
+                            null
+                        }
                     )
                 },
                 scrollBehavior = scrollBehavior

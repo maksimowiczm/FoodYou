@@ -20,9 +20,6 @@ import com.maksimowiczm.foodyou.feature.language.languageGraph
 import com.maksimowiczm.foodyou.feature.meal.MealCardSettings
 import com.maksimowiczm.foodyou.feature.meal.MealsSettings
 import com.maksimowiczm.foodyou.feature.meal.mealGraph
-import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurement
-import com.maksimowiczm.foodyou.feature.measurement.UpdateMeasurement
-import com.maksimowiczm.foodyou.feature.measurement.measurementGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.HomeSettings
@@ -128,24 +125,6 @@ fun FoodYouNavHost(
             onBack = {
                 navController.popBackStack<AddFoodSearchFood>(inclusive = true)
                 navController.popBackStack<AddFoodMeal>(inclusive = true)
-            },
-            onCreateMeasurement = { mealId, epochDay, foodId ->
-                navController.navigate(
-                    CreateMeasurement(
-                        foodId = foodId,
-                        mealId = mealId,
-                        epochDay = epochDay
-                    )
-                ) {
-                    launchSingleTop = true
-                }
-            },
-            onUpdateMeasurement = { measurementId ->
-                navController.navigate(
-                    UpdateMeasurement(measurementId)
-                ) {
-                    launchSingleTop = true
-                }
             }
         )
         goalsGraph(
@@ -181,20 +160,6 @@ fun FoodYouNavHost(
         importExportGraph(
             onBack = {
                 navController.popBackStack<ImportExport>(inclusive = true)
-            }
-        )
-        measurementGraph(
-            createMeasurementOnBack = {
-                navController.popBackStack<CreateMeasurement>(inclusive = true)
-            },
-            updateMeasurementOnBack = {
-                navController.popBackStack<UpdateMeasurement>(inclusive = true)
-            },
-            onEditFood = {
-                // TODO
-            },
-            onRecipeClone = {
-                // TODO
             }
         )
     }

@@ -14,7 +14,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
@@ -25,6 +24,9 @@ import com.maksimowiczm.foodyou.feature.addfood.ui.search.rememberSearchFoodScre
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.meal.MealScreen
 import com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreenSharedTransition
+import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurement
+import com.maksimowiczm.foodyou.feature.measurement.UpdateMeasurement
+import com.maksimowiczm.foodyou.feature.measurement.measurementGraph
 import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
@@ -44,8 +46,6 @@ internal fun AddFoodApp(
     mealId: Long,
     epochDay: Int,
     skipToSearch: Boolean,
-    onCreateMeasurement: (mealId: Long, epochDay: Int, foodId: FoodId) -> Unit,
-    onUpdateMeasurement: (MeasurementId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     SharedTransitionLayout {
@@ -58,8 +58,6 @@ internal fun AddFoodApp(
                 mealId = mealId,
                 epochDay = epochDay,
                 skipToSearch = skipToSearch,
-                onCreateMeasurement = onCreateMeasurement,
-                onUpdateMeasurement = onUpdateMeasurement,
                 modifier = modifier
             )
         }
@@ -75,8 +73,6 @@ private fun AddFoodNavHost(
     mealId: Long,
     epochDay: Int,
     skipToSearch: Boolean,
-    onCreateMeasurement: (mealId: Long, epochDay: Int, foodId: FoodId) -> Unit,
-    onUpdateMeasurement: (MeasurementId) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -124,7 +120,17 @@ private fun AddFoodNavHost(
                             launchSingleTop = true
                         }
                     },
-                    onFoodClick = { onCreateMeasurement(mealId, epochDay, it) },
+                    onFoodClick = {
+                        navController.navigate(
+                            CreateMeasurement(
+                                foodId = it,
+                                mealId = mealId,
+                                epochDay = epochDay
+                            )
+                        ) {
+                            launchSingleTop = true
+                        }
+                    },
                     onBarcodeScanner = {
                         navController.navigate(SearchFoodBarcodeScanner) {
                             launchSingleTop = true
@@ -205,7 +211,13 @@ private fun AddFoodNavHost(
                     }
                 },
                 onEditMeasurement = {
-                    onUpdateMeasurement(it)
+                    navController.navigate(UpdateMeasurement(it)) {
+                        launchSingleTop = true
+
+                        popUpTo<CreateProduct> {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -215,8 +227,19 @@ private fun AddFoodNavHost(
                     navController.popBackStack<CreateProduct>(inclusive = true)
                 },
                 onCreate = { productId ->
-                    navController.popBackStack<CreateProduct>(inclusive = true)
-                    onCreateMeasurement(mealId, epochDay, FoodId.Product(productId))
+                    navController.navigate(
+                        CreateMeasurement(
+                            foodId = FoodId.Product(productId),
+                            mealId = mealId,
+                            epochDay = epochDay
+                        )
+                    ) {
+                        launchSingleTop = true
+
+                        popUpTo<CreateProduct> {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -238,14 +261,75 @@ private fun AddFoodNavHost(
                 navController.popBackStack<CreateRecipe>(inclusive = true)
             },
             onCreate = {
-                navController.popBackStack<CreateRecipe>(inclusive = true)
-                onCreateMeasurement(mealId, epochDay, FoodId.Recipe(it))
+                navController.navigate(
+                    CreateMeasurement(
+                        foodId = FoodId.Recipe(it),
+                        mealId = mealId,
+                        epochDay = epochDay
+                    )
+                ) {
+                    launchSingleTop = true
+
+                    popUpTo<CreateRecipe> {
+                        inclusive = true
+                    }
+                }
             },
             onUpdateClose = {
                 navController.popBackStack<UpdateRecipe>(inclusive = true)
             },
             onUpdate = {
                 navController.popBackStack<UpdateRecipe>(inclusive = true)
+            }
+        )
+        measurementGraph(
+            createMeasurementOnBack = {
+                navController.popBackStack<CreateMeasurement>(inclusive = true)
+            },
+            updateMeasurementOnBack = {
+                navController.popBackStack<UpdateMeasurement>(inclusive = true)
+            },
+            onEditFood = {
+                when (it) {
+                    is FoodId.Product -> navController.navigate(UpdateProduct(it.id)) {
+                        launchSingleTop = true
+                    }
+
+                    is FoodId.Recipe -> navController.navigate(UpdateRecipe(it.id)) {
+                        launchSingleTop = true
+                    }
+                }
+            },
+            // Okay this is a bit akward
+            createMeasurementOnRecipeClone = {
+                navController.navigate(
+                    CreateMeasurement(
+                        foodId = it,
+                        mealId = mealId,
+                        epochDay = epochDay
+                    )
+                ) {
+                    launchSingleTop = true
+
+                    popUpTo<CreateMeasurement> {
+                        inclusive = true
+                    }
+                }
+            },
+            updateMeasurementOnRecipeClone = {
+                navController.navigate(
+                    CreateMeasurement(
+                        foodId = it,
+                        mealId = mealId,
+                        epochDay = epochDay
+                    )
+                ) {
+                    launchSingleTop = true
+
+                    popUpTo<UpdateMeasurement> {
+                        inclusive = true
+                    }
+                }
             }
         )
     }
