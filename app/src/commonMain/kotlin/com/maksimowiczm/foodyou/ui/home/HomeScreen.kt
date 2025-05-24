@@ -129,13 +129,11 @@ fun HomeScreen(
                     )
 
                     HomeCard.Meals -> MealsCards(
-//                        animatedVisibilityScope = animatedVisibilityScope,
                         homeState = homeState,
-//                        onMealClick = onMealCardClick,
                         onAdd = onMealCardAddClick,
-//                        onLongClick = onMealCardLongClick,
-//                        contentPadding = PaddingValues(horizontal = 8.dp),
-                        modifier = Modifier.testTag(testTag).padding(horizontal = 8.dp)
+                        onLongClick = onMealCardLongClick,
+                        contentPadding = PaddingValues(horizontal = 8.dp),
+                        modifier = Modifier.testTag(testTag)
                     )
 
                     HomeCard.Calories -> CaloriesCard(

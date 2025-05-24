@@ -150,7 +150,8 @@ fun FoodListErrorItem(headline: String, onMore: () -> Unit, modifier: Modifier =
             }
         },
         modifier = modifier,
-        color = MaterialTheme.colorScheme.errorContainer
+        color = MaterialTheme.colorScheme.errorContainer,
+        contentColor = MaterialTheme.colorScheme.onErrorContainer
     )
 }
 
@@ -161,11 +162,13 @@ private fun FoodListItem(
     supportingContent: @Composable () -> Unit,
     trailingContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.surfaceVariant
+    color: Color = MaterialTheme.colorScheme.surfaceVariant,
+    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
 ) {
     Surface(
         modifier = modifier,
-        color = color
+        color = color,
+        contentColor = contentColor
     ) {
         Row(
             modifier = Modifier
