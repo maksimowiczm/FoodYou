@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.feature.measurement.ui.MeasurementScreen
+import com.maksimowiczm.foodyou.feature.measurement.ui.CreateMeasurementScreen
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -28,7 +28,7 @@ fun NavGraphBuilder.measurementGraph(measurementOnBack: () -> Unit) {
     forwardBackwardComposable<FoodMeasurement> {
         val route = it.toRoute<FoodMeasurement>()
 
-        MeasurementScreen(
+        CreateMeasurementScreen(
             foodId = remember { route.foodId },
             mealId = remember { route.mealId },
             date = remember { LocalDate.fromEpochDays(route.epochDay) },

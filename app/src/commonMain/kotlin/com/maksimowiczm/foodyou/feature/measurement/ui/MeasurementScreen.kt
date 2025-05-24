@@ -19,70 +19,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.Food
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementForm
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementSummary
-import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.rememberAdvancedMeasurementFormState
 import foodyou.app.generated.resources.*
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
-
-@Composable
-internal fun MeasurementScreen(
-    foodId: FoodId,
-    mealId: Long?,
-    date: LocalDate?,
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: MeasurementViewModel = koinViewModel(
-        parameters = { parametersOf(foodId) }
-    )
-) {
-    val food = viewModel.food.collectAsStateWithLifecycle().value
-    val meals = viewModel.meals.collectAsStateWithLifecycle().value
-    val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
-
-    if (food == null || meals == null || suggestions == null) {
-        // TODO
-        return
-    }
-
-    val formState = rememberAdvancedMeasurementFormState(
-        food = food,
-        initialDate = date ?: LocalDate.now(TimeZone.currentSystemDefault()),
-        meals = meals,
-        measurements = suggestions,
-        initialMeal = mealId?.let { meals.indexOfFirst { meal -> meal.id == it } },
-        initialMeasurement = null
-    )
-
-    MeasurementScreen(
-        state = formState,
-        food = food,
-        onBack = onBack,
-        onSave = {},
-        modifier = modifier
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun MeasurementScreen(
+internal fun CreateMeasurementScreen(
     state: AdvancedMeasurementFormState,
     food: Food,
     onBack: () -> Unit,
