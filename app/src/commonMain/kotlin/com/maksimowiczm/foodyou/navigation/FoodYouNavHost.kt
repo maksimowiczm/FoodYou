@@ -1,10 +1,12 @@
 package com.maksimowiczm.foodyou.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodMeal
@@ -20,17 +22,32 @@ import com.maksimowiczm.foodyou.feature.language.languageGraph
 import com.maksimowiczm.foodyou.feature.meal.MealCardSettings
 import com.maksimowiczm.foodyou.feature.meal.MealsSettings
 import com.maksimowiczm.foodyou.feature.meal.mealGraph
+import com.maksimowiczm.foodyou.feature.measurement.FoodMeasurement
+import com.maksimowiczm.foodyou.feature.measurement.measurementGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.HomeSettings
 import com.maksimowiczm.foodyou.ui.settings.Settings
 import com.maksimowiczm.foodyou.ui.settings.settingsGraph
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 
 @Composable
 fun FoodYouNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
+    LaunchedEffect(Unit) {
+        navController.navigate(
+            FoodMeasurement(
+                productId = 1L,
+                recipeId = null,
+                mealId = 1L,
+                epochDay = LocalDate.now(TimeZone.currentSystemDefault()).toEpochDays()
+            )
+        )
+    }
+
     NavHost(
         navController = navController,
         startDestination = Home,
@@ -160,6 +177,11 @@ fun FoodYouNavHost(
         importExportGraph(
             onBack = {
                 navController.popBackStack<ImportExport>(inclusive = true)
+            }
+        )
+        measurementGraph(
+            measurementOnBack = {
+                navController.popBackStack<FoodMeasurement>(inclusive = true)
             }
         )
     }

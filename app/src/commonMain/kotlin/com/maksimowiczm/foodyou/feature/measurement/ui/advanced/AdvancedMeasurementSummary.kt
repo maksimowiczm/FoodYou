@@ -22,7 +22,7 @@ import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
 fun AdvancedMeasurementSummary(nutritionFacts: NutritionFacts, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
