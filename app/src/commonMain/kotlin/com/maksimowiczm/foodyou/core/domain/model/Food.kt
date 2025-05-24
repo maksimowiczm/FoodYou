@@ -7,4 +7,7 @@ sealed interface Food {
     val nutritionFacts: NutritionFacts
     val packageWeight: PortionWeight.Package?
     val servingWeight: PortionWeight.Serving?
+
+    val headline: String
+        get() = if (brand.isNullOrBlank()) name else "$name ($brand)"
 }

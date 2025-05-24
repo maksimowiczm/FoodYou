@@ -18,6 +18,7 @@ interface DiaryDay : EntityWithMeasurement {
     val productId: Long?
     val recipeId: Long?
     val foodName: String
+    val foodBrand: String?
 
     val nutrients: Nutrients
     val vitamins: Vitamins

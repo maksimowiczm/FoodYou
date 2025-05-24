@@ -37,9 +37,8 @@ internal fun Ingredient.ListItem(modifier: Modifier = Modifier) {
     val fats = product.nutritionFacts.fats.value
 
     ListItem(
-        headlineContent = { Text(product.name) },
+        headlineContent = { Text(product.headline) },
         modifier = modifier,
-        overlineContent = product.brand?.let { { Text(it) } },
         supportingContent = {
             Column {
                 val proteins = (proteins * weight / 100f).roundToInt()
