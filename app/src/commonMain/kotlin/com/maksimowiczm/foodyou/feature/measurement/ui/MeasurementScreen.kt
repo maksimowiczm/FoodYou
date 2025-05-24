@@ -34,7 +34,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun CreateMeasurementScreen(
+internal fun MeasurementScreen(
     state: AdvancedMeasurementFormState,
     food: Food,
     onBack: () -> Unit,

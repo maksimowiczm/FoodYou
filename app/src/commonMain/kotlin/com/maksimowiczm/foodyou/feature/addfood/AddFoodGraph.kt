@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.addfood
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.feature.addfood.ui.AddFoodApp
 import kotlinx.serialization.Serializable
@@ -15,7 +16,8 @@ data class AddFoodMeal(val mealId: Long, val epochDay: Int)
 
 fun NavGraphBuilder.addFoodGraph(
     onBack: () -> Unit,
-    onCreateMeasurement: (mealId: Long, epochDay: Int, foodId: FoodId) -> Unit
+    onCreateMeasurement: (mealId: Long, epochDay: Int, foodId: FoodId) -> Unit,
+    onUpdateMeasurement: (MeasurementId) -> Unit
 ) {
     crossfadeComposable<AddFoodSearchFood> {
         val (mealId, epochDay) = it.toRoute<AddFoodSearchFood>()
@@ -26,7 +28,8 @@ fun NavGraphBuilder.addFoodGraph(
             mealId = mealId,
             epochDay = epochDay,
             skipToSearch = true,
-            onCreateMeasurement = onCreateMeasurement
+            onCreateMeasurement = onCreateMeasurement,
+            onUpdateMeasurement = onUpdateMeasurement
         )
     }
     crossfadeComposable<AddFoodMeal> {
@@ -38,7 +41,8 @@ fun NavGraphBuilder.addFoodGraph(
             mealId = mealId,
             epochDay = epochDay,
             skipToSearch = false,
-            onCreateMeasurement = onCreateMeasurement
+            onCreateMeasurement = onCreateMeasurement,
+            onUpdateMeasurement = onUpdateMeasurement
         )
     }
 }

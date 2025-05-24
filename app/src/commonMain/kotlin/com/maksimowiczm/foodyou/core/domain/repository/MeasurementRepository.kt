@@ -51,7 +51,12 @@ interface MeasurementRepository {
         measurement: Measurement
     )
 
-    suspend fun updateMeasurement(measurementId: MeasurementId, measurement: Measurement)
+    suspend fun updateMeasurement(
+        measurementId: MeasurementId,
+        date: LocalDate,
+        mealId: Long,
+        measurement: Measurement
+    )
 
     suspend fun removeMeasurement(measurementId: MeasurementId)
 
@@ -171,7 +176,12 @@ internal class MeasurementRepositoryImpl(
         }
     }
 
-    override suspend fun updateMeasurement(measurementId: MeasurementId, measurement: Measurement) {
+    override suspend fun updateMeasurement(
+        measurementId: MeasurementId,
+        date: LocalDate,
+        mealId: Long,
+        measurement: Measurement
+    ) {
         val type = with(MeasurementMapper) { measurement.toEntity() }
 
         val quantity = when (measurement) {
@@ -186,7 +196,9 @@ internal class MeasurementRepositoryImpl(
                     .getProductMeasurement(measurementId.id)
                     ?.copy(
                         measurement = type,
-                        quantity = quantity
+                        quantity = quantity,
+                        mealId = mealId,
+                        diaryEpochDay = date.toEpochDays()
                     )
 
                 if (entity == null) {
@@ -202,7 +214,9 @@ internal class MeasurementRepositoryImpl(
                     .getRecipeMeasurement(measurementId.id)
                     ?.copy(
                         measurement = type,
-                        quantity = quantity
+                        quantity = quantity,
+                        mealId = mealId,
+                        epochDay = date.toEpochDays()
                     )
 
                 if (entity == null) {

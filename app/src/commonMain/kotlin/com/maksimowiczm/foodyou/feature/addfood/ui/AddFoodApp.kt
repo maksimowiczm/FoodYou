@@ -19,7 +19,6 @@ import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
-import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.UpdateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.rememberSearchFoodScreenState
@@ -46,6 +45,7 @@ internal fun AddFoodApp(
     epochDay: Int,
     skipToSearch: Boolean,
     onCreateMeasurement: (mealId: Long, epochDay: Int, foodId: FoodId) -> Unit,
+    onUpdateMeasurement: (MeasurementId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     SharedTransitionLayout {
@@ -59,6 +59,7 @@ internal fun AddFoodApp(
                 epochDay = epochDay,
                 skipToSearch = skipToSearch,
                 onCreateMeasurement = onCreateMeasurement,
+                onUpdateMeasurement = onUpdateMeasurement,
                 modifier = modifier
             )
         }
@@ -75,6 +76,7 @@ private fun AddFoodNavHost(
     epochDay: Int,
     skipToSearch: Boolean,
     onCreateMeasurement: (mealId: Long, epochDay: Int, foodId: FoodId) -> Unit,
+    onUpdateMeasurement: (MeasurementId) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -203,58 +205,7 @@ private fun AddFoodNavHost(
                     }
                 },
                 onEditMeasurement = {
-                    val route = when (it) {
-                        is MeasurementId.Product -> UpdateMeasurement(
-                            productMeasurementId = it.id
-                        )
-
-                        is MeasurementId.Recipe -> UpdateMeasurement(
-                            recipeMeasurementId = it.id
-                        )
-                    }
-
-                    navController.navigate(route) { launchSingleTop = true }
-                }
-            )
-        }
-        crossfadeComposable<UpdateMeasurement>(
-            popEnterTransition = {
-                if (initialState.destination.hasRoute<UpdateRecipe>()) {
-                    fadeIn(snap())
-                } else {
-                    CrossFadeComposableDefaults.enterTransition()
-                }
-            }
-        ) {
-            val (productMeasurement, recipeMeasurement) = it.toRoute<UpdateMeasurement>()
-
-            val measurementId = when {
-                productMeasurement != null -> MeasurementId.Product(productMeasurement)
-                recipeMeasurement != null -> MeasurementId.Recipe(recipeMeasurement)
-                else -> error("Either productMeasurement or recipeMeasurement must be provided")
-            }
-
-            UpdateMeasurementScreen(
-                measurementId = measurementId,
-                onBack = {
-                    navController.popBackStack<UpdateMeasurement>(inclusive = true)
-                },
-                onDelete = {
-                    navController.popBackStack<UpdateMeasurement>(inclusive = true)
-                },
-                onEdit = {
-                    when (it) {
-                        is FoodId.Product -> navController.navigate(UpdateProduct(it.id)) {
-                            launchSingleTop = true
-                        }
-
-                        is FoodId.Recipe -> navController.navigate(UpdateRecipe(it.id)) {
-                            launchSingleTop = true
-                        }
-                    }
-                },
-                onCloneRecipe = {
-                    onCreateMeasurement(mealId, epochDay, FoodId.Recipe(it.id))
+                    onUpdateMeasurement(it)
                 }
             )
         }
@@ -312,15 +263,3 @@ private data object CreateProduct
 
 @Serializable
 private data class UpdateProduct(val productId: Long)
-
-@Serializable
-private data class UpdateMeasurement(
-    val productMeasurementId: Long? = null,
-    val recipeMeasurementId: Long? = null
-) {
-    init {
-        if (productMeasurementId == null && recipeMeasurementId == null) {
-            error("Either productMeasurementId or recipeMeasurementId must be provided")
-        }
-    }
-}

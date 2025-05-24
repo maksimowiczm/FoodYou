@@ -9,65 +9,61 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.rememberAdvancedMeasurementFormState
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-internal fun CreateMeasurementScreen(
-    foodId: FoodId,
-    mealId: Long?,
-    date: LocalDate?,
+internal fun UpdateMeasurementScreen(
+    measurementId: MeasurementId,
     onBack: () -> Unit,
     modifier: Modifier = Modifier.Companion,
-    viewModel: CreateMeasurementViewModel = koinViewModel(
-        parameters = { parametersOf(foodId) }
+    viewModel: UpdateMeasurementViewModel = koinViewModel(
+        parameters = { parametersOf(measurementId) }
     )
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    val food = viewModel.food.collectAsStateWithLifecycle().value
+    val measurement = viewModel.measurement.collectAsStateWithLifecycle().value
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
+
+    if (measurement == null || meals == null || suggestions == null) {
+        // TODO
+        return
+    }
 
     val latestOnBack by rememberUpdatedState(onBack)
     LaunchedEffect(lifecycleOwner, viewModel) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-            viewModel.measurementCreatedEventBus.collectLatest {
+            viewModel.measurementUpdatedEventBus.collectLatest {
                 latestOnBack()
             }
         }
     }
 
-    if (food == null || meals == null || suggestions == null) {
-        // TODO
-        return
-    }
-
     val formState = rememberAdvancedMeasurementFormState(
-        food = food,
-        initialDate = date ?: LocalDate.Companion.now(TimeZone.Companion.currentSystemDefault()),
+        food = measurement.food,
+        initialDate = measurement.measurementDate.date,
         meals = meals,
-        measurements = suggestions,
-        initialMeal = mealId?.let { meals.indexOfFirst { meal -> meal.id == it } },
+        measurements = (listOf(measurement.measurement) + suggestions).distinct(),
+        // TODO initialMeal
+        initialMeal = 0,
         initialMeasurement = 0
     )
 
     MeasurementScreen(
         state = formState,
-        food = food,
+        food = measurement.food,
         onBack = onBack,
         onSave = {
             val measurement = formState.measurement
             val mealId = formState.meal?.id
 
             if (measurement != null && mealId != null) {
-                viewModel.onCreateMeasurement(
+                viewModel.onUpdateMeasurement(
                     date = formState.date,
                     mealId = mealId,
                     measurement = measurement

@@ -4,8 +4,10 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.measurement.ui.CreateMeasurementScreen
+import com.maksimowiczm.foodyou.feature.measurement.ui.UpdateMeasurementScreen
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -43,7 +45,31 @@ data class CreateMeasurement(
         }
 }
 
-fun NavGraphBuilder.measurementGraph(measurementOnBack: () -> Unit) {
+@Serializable
+data class UpdateMeasurement(val productMeasurementId: Long?, val recipeMeasurementId: Long?) {
+    val measurementId: MeasurementId
+        get() = when {
+            productMeasurementId != null -> MeasurementId.Product(productMeasurementId)
+            recipeMeasurementId != null -> MeasurementId.Recipe(recipeMeasurementId)
+            else -> error("Either productMeasurementId or recipeMeasurementId must be provided")
+        }
+
+    constructor(measurementId: MeasurementId) : this(
+        productMeasurementId = when (measurementId) {
+            is MeasurementId.Product -> measurementId.id
+            is MeasurementId.Recipe -> null
+        },
+        recipeMeasurementId = when (measurementId) {
+            is MeasurementId.Recipe -> measurementId.id
+            is MeasurementId.Product -> null
+        }
+    )
+}
+
+fun NavGraphBuilder.measurementGraph(
+    createMeasurementOnBack: () -> Unit,
+    updateMeasurementOnBack: () -> Unit
+) {
     forwardBackwardComposable<CreateMeasurement> {
         val route = it.toRoute<CreateMeasurement>()
 
@@ -51,7 +77,15 @@ fun NavGraphBuilder.measurementGraph(measurementOnBack: () -> Unit) {
             foodId = remember { route.foodId },
             mealId = remember { route.mealId },
             date = remember { LocalDate.fromEpochDays(route.epochDay) },
-            onBack = measurementOnBack
+            onBack = createMeasurementOnBack
+        )
+    }
+    forwardBackwardComposable<UpdateMeasurement> {
+        val route = it.toRoute<UpdateMeasurement>()
+
+        UpdateMeasurementScreen(
+            measurementId = remember { route.measurementId },
+            onBack = updateMeasurementOnBack
         )
     }
 }

@@ -53,10 +53,7 @@ internal class UpdateMeasurementScreenViewModel(
             // Make it no faster than 100ms
             awaitAll(
                 async {
-                    measurementRepository.updateMeasurement(
-                        measurementId = measurementId,
-                        measurement = measurement
-                    )
+                    // TODO
                 },
                 async {
                     delay(100)

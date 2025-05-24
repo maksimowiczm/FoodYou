@@ -21,6 +21,7 @@ import com.maksimowiczm.foodyou.feature.meal.MealCardSettings
 import com.maksimowiczm.foodyou.feature.meal.MealsSettings
 import com.maksimowiczm.foodyou.feature.meal.mealGraph
 import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurement
+import com.maksimowiczm.foodyou.feature.measurement.UpdateMeasurement
 import com.maksimowiczm.foodyou.feature.measurement.measurementGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
@@ -138,6 +139,13 @@ fun FoodYouNavHost(
                 ) {
                     launchSingleTop = true
                 }
+            },
+            onUpdateMeasurement = { measurementId ->
+                navController.navigate(
+                    UpdateMeasurement(measurementId)
+                ) {
+                    launchSingleTop = true
+                }
             }
         )
         goalsGraph(
@@ -176,8 +184,11 @@ fun FoodYouNavHost(
             }
         )
         measurementGraph(
-            measurementOnBack = {
+            createMeasurementOnBack = {
                 navController.popBackStack<CreateMeasurement>(inclusive = true)
+            },
+            updateMeasurementOnBack = {
+                navController.popBackStack<UpdateMeasurement>(inclusive = true)
             }
         )
     }
