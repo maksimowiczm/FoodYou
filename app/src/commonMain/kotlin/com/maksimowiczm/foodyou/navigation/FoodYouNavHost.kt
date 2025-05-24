@@ -45,7 +45,9 @@ fun FoodYouNavHost(
                 mealId = 1L,
                 epochDay = LocalDate.now(TimeZone.currentSystemDefault()).toEpochDays()
             )
-        )
+        ) {
+            launchSingleTop = true
+        }
     }
 
     NavHost(

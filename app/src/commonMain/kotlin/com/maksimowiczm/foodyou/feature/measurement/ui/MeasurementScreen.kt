@@ -45,7 +45,7 @@ internal fun MeasurementScreen(
     val food = viewModel.food.collectAsStateWithLifecycle().value
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
 
-    if (food == null) {
+    if (food == null || meals == null) {
         // TODO
         return
     }

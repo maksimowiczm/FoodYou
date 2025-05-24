@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.measurement
 
+import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
@@ -27,12 +28,10 @@ fun NavGraphBuilder.measurementGraph(measurementOnBack: () -> Unit) {
     forwardBackwardComposable<FoodMeasurement> {
         val route = it.toRoute<FoodMeasurement>()
 
-        val date = LocalDate.fromEpochDays(route.epochDay)
-
         MeasurementScreen(
-            foodId = route.foodId,
-            mealId = route.mealId,
-            date = date,
+            foodId = remember { route.foodId },
+            mealId = remember { route.mealId },
+            date = remember { LocalDate.fromEpochDays(route.epochDay) },
             onBack = measurementOnBack
         )
     }

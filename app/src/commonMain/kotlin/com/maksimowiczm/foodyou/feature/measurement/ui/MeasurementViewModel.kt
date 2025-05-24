@@ -15,13 +15,13 @@ internal class MeasurementViewModel(
 ) : ViewModel() {
     val food = foodRepository.observeFood(foodId).stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
+        started = SharingStarted.WhileSubscribed(5_000),
         initialValue = null
     )
 
     val meals = mealsRepository.observeMeals().stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = emptyList()
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = null
     )
 }
