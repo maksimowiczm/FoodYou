@@ -55,7 +55,7 @@ internal fun CreateMeasurementScreen(
         meals = meals,
         measurements = suggestions,
         initialMeal = mealId?.let { meals.indexOfFirst { meal -> meal.id == it } },
-        initialMeasurement = null
+        initialMeasurement = 0
     )
 
     CreateMeasurementScreen(
