@@ -4,15 +4,24 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MediumExtendedFloatingActionButton
 import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -26,8 +35,10 @@ import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurem
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementSummary
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.rememberAdvancedMeasurementFormState
+import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -57,13 +68,14 @@ internal fun MeasurementScreen(
         meals = meals,
         measurements = suggestions,
         initialMeal = mealId?.let { meals.indexOfFirst { meal -> meal.id == it } },
-        initialMeasurement = 0
+        initialMeasurement = null
     )
 
     MeasurementScreen(
         state = formState,
         food = food,
         onBack = onBack,
+        onSave = {},
         modifier = modifier
     )
 }
@@ -74,6 +86,7 @@ internal fun MeasurementScreen(
     state: AdvancedMeasurementFormState,
     food: Food,
     onBack: () -> Unit,
+    onSave: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -86,6 +99,26 @@ internal fun MeasurementScreen(
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 scrollBehavior = scrollBehavior
             )
+        },
+        floatingActionButton = {
+            MediumExtendedFloatingActionButton(
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = state.isValid,
+                    alignment = Alignment.BottomEnd
+                ),
+                onClick = {
+                    if (state.isValid) {
+                        onSave()
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = null
+                )
+                Spacer(Modifier.width(12.dp))
+                Text(stringResource(Res.string.action_save))
+            }
         }
     ) { paddingValues ->
         LazyColumn(
@@ -121,6 +154,10 @@ internal fun MeasurementScreen(
                     nutritionFacts = nutritionFacts,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
+            }
+
+            item {
+                Spacer(Modifier.height(8.dp + 80.dp + 16.dp))
             }
         }
     }

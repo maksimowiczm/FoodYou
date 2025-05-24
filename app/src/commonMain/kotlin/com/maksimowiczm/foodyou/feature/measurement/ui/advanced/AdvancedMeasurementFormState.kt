@@ -129,4 +129,7 @@ class AdvancedMeasurementFormState(
         measurements = (measurements + measurement).distinct()
         selectedMeasurement = measurements.indexOf(measurement)
     }
+
+    val isValid: Boolean
+        get() = selectedMeal != null && selectedMeasurement != null
 }
