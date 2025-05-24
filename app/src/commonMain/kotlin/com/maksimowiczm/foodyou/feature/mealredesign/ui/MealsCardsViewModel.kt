@@ -1,73 +1,54 @@
 package com.maksimowiczm.foodyou.feature.mealredesign.ui
 
 import androidx.lifecycle.ViewModel
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
-import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
-import com.maksimowiczm.foodyou.core.domain.model.Product
-import com.maksimowiczm.foodyou.core.domain.model.ProductWithMeasurement
+import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.core.domain.repository.MealRepository
+import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
+import com.maksimowiczm.foodyou.core.ext.combine
+import com.maksimowiczm.foodyou.core.ext.launch
 import com.maksimowiczm.foodyou.feature.mealredesign.domain.Meal
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
 
-internal class MealsCardsViewModel : ViewModel() {
+internal class MealsCardsViewModel(
+    private val mealRepository: MealRepository,
+    private val measurementRepository: MeasurementRepository
+) : ViewModel() {
 
-    fun observeMeals(date: LocalDate): Flow<List<Meal>> = flowOf(
-        listOf(
-            Meal(
-                id = 1L,
-                name = "Breakfast",
-                from = LocalTime(6, 0),
-                to = LocalTime(10, 0),
-                food = listOf(
-                    ProductWithMeasurement(
-                        measurementId = MeasurementId.Product(1L),
-                        measurement = Measurement.Gram(100f),
-                        measurementDate = LocalDateTime(2025, 5, 24, 13, 15),
-                        product = Product(
-                            id = FoodId.Product(1L),
-                            name = "Oatmeal",
-                            brand = "Brand A",
-                            nutritionFacts = testNutritionFacts(),
-                            barcode = null,
-                            packageWeight = null,
-                            servingWeight = null
-                        )
-                    ),
-                    ProductWithMeasurement(
-                        measurementId = MeasurementId.Product(1L),
-                        measurement = Measurement.Serving(1f),
-                        measurementDate = LocalDateTime(2025, 5, 24, 13, 15),
-                        product = Product(
-                            id = FoodId.Product(1L),
-                            name = "Yogurt",
-                            brand = "Brand B",
-                            nutritionFacts = testNutritionFacts(),
-                            barcode = null,
-                            packageWeight = null,
-                            servingWeight = PortionWeight.Serving(100f)
-                        )
+    private val dateState = MutableStateFlow<LocalDate?>(null)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val meals = dateState.filterNotNull().flatMapLatest { date ->
+        mealRepository.observeMeals().flatMapLatest { meals ->
+            meals.map { meal ->
+                measurementRepository.observeMeasurements(
+                    mealId = meal.id,
+                    date = date
+                ).map { food ->
+                    Meal(
+                        id = meal.id,
+                        name = meal.name,
+                        from = meal.from,
+                        to = meal.to,
+                        rank = meal.rank,
+                        food = food
                     )
-//            ProductWithMeasurement(
-//                measurementId = MeasurementId.Product(1L),
-//                measurement = Measurement.Serving(1f),
-//                measurementDate = LocalDateTime(2025, 5, 24, 13, 15),
-//                product = Product(
-//                    id = FoodId.Product(1L),
-//                    name = "Yogurt",
-//                    brand = "Brand B",
-//                    nutritionFacts = testNutritionFacts(),
-//                    barcode = null,
-//                    packageWeight = null,
-//                    servingWeight = null
-//                )
-//            )
-                )
-            )
-        )
+                }
+            }.combine { it.toList() }
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(60_000),
+        initialValue = null
     )
+
+    fun setDate(date: LocalDate) = launch {
+        dateState.value = date
+    }
 }

@@ -18,6 +18,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,12 +27,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
-import com.maksimowiczm.foodyou.core.domain.model.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.feature.meal.ui.card.MealCardSkeleton
 import com.maksimowiczm.foodyou.feature.mealredesign.domain.Meal
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -43,24 +44,29 @@ internal fun MealsCards(
     modifier: Modifier = Modifier,
     viewModel: MealsCardsViewModel = koinViewModel()
 ) {
-    val meals =
-        viewModel.observeMeals(homeState.selectedDate).collectAsStateWithLifecycle(null).value
+    val meals = viewModel.meals.collectAsStateWithLifecycle().value
 
-    if (meals == null) {
-        return
+    LaunchedEffect(homeState.selectedDate, viewModel) {
+        viewModel.setDate(homeState.selectedDate)
     }
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        meals.forEach { meal ->
-            MealCard(
-                meal = meal,
-                onAddFood = {
-                    onAdd(homeState.selectedDate.toEpochDays(), meal.id)
-                }
-            )
+        if (meals == null) {
+            repeat(4) {
+                MealCardSkeleton(shimmer = homeState.shimmer)
+            }
+        } else {
+            meals.forEach { meal ->
+                MealCard(
+                    meal = remember { derivedStateOf { meal } }.value,
+                    onAddFood = {
+                        onAdd(homeState.selectedDate.toEpochDays(), meal.id)
+                    }
+                )
+            }
         }
     }
 }
@@ -204,83 +210,3 @@ private fun ValueColumn(label: String, value: Int, color: Color, modifier: Modif
         }
     }
 }
-
-fun testNutritionFacts(
-    proteins: Float = 10f,
-    carbohydrates: Float = 15f,
-    fats: Float = 5f,
-    calories: Float = 145f,
-    saturatedFats: Float? = 2f,
-    monounsaturatedFats: Float? = 1f,
-    polyunsaturatedFats: Float? = 1f,
-    omega3: Float? = 0.5f,
-    omega6: Float? = 0.5f,
-    sugars: Float? = 5f,
-    salt: Float? = 0.5f,
-    fiber: Float? = 3f,
-    cholesterolMilli: Float? = 0.1f,
-    caffeineMilli: Float? = 0.1f,
-    vitaminAMicro: Float? = 0.1f,
-    vitaminB1Milli: Float? = 0.1f,
-    vitaminB2Milli: Float? = 0.1f,
-    vitaminB3Milli: Float? = 0.1f,
-    vitaminB5Milli: Float? = 0.1f,
-    vitaminB6Milli: Float? = 0.1f,
-    vitaminB7Micro: Float? = 0.1f,
-    vitaminB9Micro: Float? = 0.1f,
-    vitaminB12Micro: Float? = 0.1f,
-    vitaminCMilli: Float? = 0.1f,
-    vitaminDMicro: Float? = 0.1f,
-    vitaminEMilli: Float? = 0.1f,
-    vitaminKMicro: Float? = 0.1f,
-    manganeseMilli: Float? = 0.1f,
-    magnesiumMilli: Float? = 0.1f,
-    potassiumMilli: Float? = 0.1f,
-    calciumMilli: Float? = 0.1f,
-    copperMilli: Float? = 0.1f,
-    zincMilli: Float? = 0.1f,
-    sodiumMilli: Float? = 0.1f,
-    ironMilli: Float? = 0.1f,
-    phosphorusMilli: Float? = 0.1f,
-    seleniumMicro: Float? = 0.1f,
-    iodineMicro: Float? = 0.1f
-) = NutritionFacts(
-    proteins = proteins.toNutrientValue(),
-    carbohydrates = carbohydrates.toNutrientValue(),
-    fats = fats.toNutrientValue(),
-    calories = calories.toNutrientValue(),
-    saturatedFats = saturatedFats.toNutrientValue(),
-    monounsaturatedFats = monounsaturatedFats.toNutrientValue(),
-    polyunsaturatedFats = polyunsaturatedFats.toNutrientValue(),
-    omega3 = omega3.toNutrientValue(),
-    omega6 = omega6.toNutrientValue(),
-    sugars = sugars.toNutrientValue(),
-    salt = salt.toNutrientValue(),
-    fiber = fiber.toNutrientValue(),
-    cholesterolMilli = cholesterolMilli.toNutrientValue(),
-    caffeineMilli = caffeineMilli.toNutrientValue(),
-    vitaminAMicro = vitaminAMicro.toNutrientValue(),
-    vitaminB1Milli = vitaminB1Milli.toNutrientValue(),
-    vitaminB2Milli = vitaminB2Milli.toNutrientValue(),
-    vitaminB3Milli = vitaminB3Milli.toNutrientValue(),
-    vitaminB5Milli = vitaminB5Milli.toNutrientValue(),
-    vitaminB6Milli = vitaminB6Milli.toNutrientValue(),
-    vitaminB7Micro = vitaminB7Micro.toNutrientValue(),
-    vitaminB9Micro = vitaminB9Micro.toNutrientValue(),
-    vitaminB12Micro = vitaminB12Micro.toNutrientValue(),
-    vitaminCMilli = vitaminCMilli.toNutrientValue(),
-    vitaminDMicro = vitaminDMicro.toNutrientValue(),
-    vitaminEMilli = vitaminEMilli.toNutrientValue(),
-    vitaminKMicro = vitaminKMicro.toNutrientValue(),
-    manganeseMilli = manganeseMilli.toNutrientValue(),
-    magnesiumMilli = magnesiumMilli.toNutrientValue(),
-    potassiumMilli = potassiumMilli.toNutrientValue(),
-    calciumMilli = calciumMilli.toNutrientValue(),
-    copperMilli = copperMilli.toNutrientValue(),
-    zincMilli = zincMilli.toNutrientValue(),
-    sodiumMilli = sodiumMilli.toNutrientValue(),
-    ironMilli = ironMilli.toNutrientValue(),
-    phosphorusMilli = phosphorusMilli.toNutrientValue(),
-    seleniumMicro = seleniumMicro.toNutrientValue(),
-    iodineMicro = iodineMicro.toNutrientValue()
-)

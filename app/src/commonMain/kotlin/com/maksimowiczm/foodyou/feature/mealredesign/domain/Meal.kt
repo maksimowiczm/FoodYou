@@ -10,6 +10,7 @@ data class Meal(
     val name: String,
     val from: LocalTime,
     val to: LocalTime,
+    val rank: Int,
     val food: List<FoodWithMeasurement>
 ) {
     val isAllDay: Boolean
