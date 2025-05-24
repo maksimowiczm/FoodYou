@@ -688,7 +688,7 @@ private fun FoodListItem(food: FoodWithMeasurement, modifier: Modifier = Modifie
     val weight = food.weight!!
 
     ListItem(
-        headlineContent = { Text(food.food.name) },
+        headlineContent = { Text(food.food.headline) },
         modifier = modifier,
         supportingContent = {
             Column {
@@ -711,7 +711,6 @@ private fun FoodListItem(food: FoodWithMeasurement, modifier: Modifier = Modifie
                 )
             }
         },
-        overlineContent = food.food.brand?.let { { Text(it) } },
         colors = ListItemDefaults.colors(
             containerColor = Color.Transparent
         )

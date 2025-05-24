@@ -142,7 +142,7 @@ internal fun MeasurementScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = food.name,
+                        text = food.headline,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.graphicsLayer { alpha = headlineAlpha }
@@ -172,7 +172,7 @@ internal fun MeasurementScreen(
         ) {
             item {
                 Text(
-                    text = food.name,
+                    text = food.headline,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .onSizeChanged { headlineHeight = it.height }

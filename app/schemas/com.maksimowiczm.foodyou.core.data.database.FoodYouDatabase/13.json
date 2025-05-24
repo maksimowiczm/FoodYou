@@ -1,0 +1,703 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 13,
+    "identityHash": "c0dd601c968954a68a11a3bae0b3ccb4",
+    "entities": [
+      {
+        "tableName": "MealEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `fromHour` INTEGER NOT NULL, `fromMinute` INTEGER NOT NULL, `toHour` INTEGER NOT NULL, `toMinute` INTEGER NOT NULL, `rank` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromHour",
+            "columnName": "fromHour",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromMinute",
+            "columnName": "fromMinute",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toHour",
+            "columnName": "toHour",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toMinute",
+            "columnName": "toMinute",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rank",
+            "columnName": "rank",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "ProductEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `productSource` INTEGER NOT NULL, `proteins` REAL NOT NULL, `carbohydrates` REAL NOT NULL, `fats` REAL NOT NULL, `calories` REAL NOT NULL, `saturatedFats` REAL, `monounsaturatedFats` REAL, `polyunsaturatedFats` REAL, `omega3` REAL, `omega6` REAL, `sugars` REAL, `salt` REAL, `fiber` REAL, `cholesterolMilli` REAL, `caffeineMilli` REAL, `vitaminAMicro` REAL, `vitaminB1Milli` REAL, `vitaminB2Milli` REAL, `vitaminB3Milli` REAL, `vitaminB5Milli` REAL, `vitaminB6Milli` REAL, `vitaminB7Micro` REAL, `vitaminB9Micro` REAL, `vitaminB12Micro` REAL, `vitaminCMilli` REAL, `vitaminDMicro` REAL, `vitaminEMilli` REAL, `vitaminKMicro` REAL, `manganeseMilli` REAL, `magnesiumMilli` REAL, `potassiumMilli` REAL, `calciumMilli` REAL, `copperMilli` REAL, `zincMilli` REAL, `sodiumMilli` REAL, `ironMilli` REAL, `phosphorusMilli` REAL, `seleniumMicro` REAL, `iodineMicro` REAL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "brand",
+            "columnName": "brand",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "barcode",
+            "columnName": "barcode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "packageWeight",
+            "columnName": "packageWeight",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "servingWeight",
+            "columnName": "servingWeight",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "productSource",
+            "columnName": "productSource",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.proteins",
+            "columnName": "proteins",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.carbohydrates",
+            "columnName": "carbohydrates",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.fats",
+            "columnName": "fats",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.calories",
+            "columnName": "calories",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.saturatedFats",
+            "columnName": "saturatedFats",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.monounsaturatedFats",
+            "columnName": "monounsaturatedFats",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.polyunsaturatedFats",
+            "columnName": "polyunsaturatedFats",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.omega3",
+            "columnName": "omega3",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.omega6",
+            "columnName": "omega6",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.sugars",
+            "columnName": "sugars",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.salt",
+            "columnName": "salt",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.fiber",
+            "columnName": "fiber",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.cholesterolMilli",
+            "columnName": "cholesterolMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.caffeineMilli",
+            "columnName": "caffeineMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminAMicro",
+            "columnName": "vitaminAMicro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB1Milli",
+            "columnName": "vitaminB1Milli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB2Milli",
+            "columnName": "vitaminB2Milli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB3Milli",
+            "columnName": "vitaminB3Milli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB5Milli",
+            "columnName": "vitaminB5Milli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB6Milli",
+            "columnName": "vitaminB6Milli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB7Micro",
+            "columnName": "vitaminB7Micro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB9Micro",
+            "columnName": "vitaminB9Micro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB12Micro",
+            "columnName": "vitaminB12Micro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminCMilli",
+            "columnName": "vitaminCMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminDMicro",
+            "columnName": "vitaminDMicro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminEMilli",
+            "columnName": "vitaminEMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminKMicro",
+            "columnName": "vitaminKMicro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.manganeseMilli",
+            "columnName": "manganeseMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.magnesiumMilli",
+            "columnName": "magnesiumMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.potassiumMilli",
+            "columnName": "potassiumMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.calciumMilli",
+            "columnName": "calciumMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.copperMilli",
+            "columnName": "copperMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.zincMilli",
+            "columnName": "zincMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.sodiumMilli",
+            "columnName": "sodiumMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.ironMilli",
+            "columnName": "ironMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.phosphorusMilli",
+            "columnName": "phosphorusMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.seleniumMicro",
+            "columnName": "seleniumMicro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.iodineMicro",
+            "columnName": "iodineMicro",
+            "affinity": "REAL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "ProductMeasurementEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mealId` INTEGER NOT NULL, `diaryEpochDay` INTEGER NOT NULL, `productId` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, `createdAt` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, FOREIGN KEY(`productId`) REFERENCES `ProductEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`mealId`) REFERENCES `MealEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mealId",
+            "columnName": "mealId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diaryEpochDay",
+            "columnName": "diaryEpochDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "productId",
+            "columnName": "productId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "measurement",
+            "columnName": "measurement",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "isDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_ProductMeasurementEntity_productId",
+            "unique": false,
+            "columnNames": [
+              "productId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ProductMeasurementEntity_productId` ON `${TABLE_NAME}` (`productId`)"
+          },
+          {
+            "name": "index_ProductMeasurementEntity_isDeleted",
+            "unique": false,
+            "columnNames": [
+              "isDeleted"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ProductMeasurementEntity_isDeleted` ON `${TABLE_NAME}` (`isDeleted`)"
+          },
+          {
+            "name": "index_ProductMeasurementEntity_mealId",
+            "unique": false,
+            "columnNames": [
+              "mealId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ProductMeasurementEntity_mealId` ON `${TABLE_NAME}` (`mealId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "ProductEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "productId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "MealEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "mealId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "SearchQueryEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`query` TEXT NOT NULL, `epochSeconds` INTEGER NOT NULL, PRIMARY KEY(`query`))",
+        "fields": [
+          {
+            "fieldPath": "query",
+            "columnName": "query",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "epochSeconds",
+            "columnName": "epochSeconds",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "query"
+          ]
+        }
+      },
+      {
+        "tableName": "RecipeEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `servings` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "servings",
+            "columnName": "servings",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "RecipeIngredientEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recipeId` INTEGER NOT NULL, `productId` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, FOREIGN KEY(`recipeId`) REFERENCES `RecipeEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`productId`) REFERENCES `ProductEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recipeId",
+            "columnName": "recipeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "productId",
+            "columnName": "productId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "measurement",
+            "columnName": "measurement",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_RecipeIngredientEntity_recipeId",
+            "unique": false,
+            "columnNames": [
+              "recipeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeIngredientEntity_recipeId` ON `${TABLE_NAME}` (`recipeId`)"
+          },
+          {
+            "name": "index_RecipeIngredientEntity_productId",
+            "unique": false,
+            "columnNames": [
+              "productId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeIngredientEntity_productId` ON `${TABLE_NAME}` (`productId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "RecipeEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "recipeId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "ProductEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "productId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "RecipeMeasurementEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mealId` INTEGER NOT NULL, `epochDay` INTEGER NOT NULL, `recipeId` INTEGER NOT NULL, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, `createdAt` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, FOREIGN KEY(`recipeId`) REFERENCES `RecipeEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`mealId`) REFERENCES `MealEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mealId",
+            "columnName": "mealId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "epochDay",
+            "columnName": "epochDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recipeId",
+            "columnName": "recipeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "measurement",
+            "columnName": "measurement",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "isDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_RecipeMeasurementEntity_recipeId",
+            "unique": false,
+            "columnNames": [
+              "recipeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeMeasurementEntity_recipeId` ON `${TABLE_NAME}` (`recipeId`)"
+          },
+          {
+            "name": "index_RecipeMeasurementEntity_isDeleted",
+            "unique": false,
+            "columnNames": [
+              "isDeleted"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeMeasurementEntity_isDeleted` ON `${TABLE_NAME}` (`isDeleted`)"
+          },
+          {
+            "name": "index_RecipeMeasurementEntity_mealId",
+            "unique": false,
+            "columnNames": [
+              "mealId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeMeasurementEntity_mealId` ON `${TABLE_NAME}` (`mealId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "RecipeEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "recipeId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "MealEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "mealId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [
+      {
+        "viewName": "RecipeWeightView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH TotalWeight AS (\n        SELECT \n            r.id AS recipeId,\n            SUM(\n                CASE \n                    WHEN ri.measurement = 0 THEN ri.quantity\n                    WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN ri.quantity * p.servingWeight\n                    WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN ri.quantity * p.packageWeight\n                    ELSE 0\n                END\n            ) AS totalWeight\n        FROM RecipeEntity r\n        JOIN RecipeIngredientEntity ri ON r.id = ri.recipeId\n        JOIN ProductEntity p ON ri.productId = p.id\n        GROUP BY r.id\n    ) \n    SELECT\n        r.id AS recipeId,\n        tw.totalWeight AS totalWeight,\n        tw.totalWeight / r.servings AS servingWeight\n    FROM RecipeEntity r\n    JOIN TotalWeight tw ON r.id = tw.recipeId"
+      },
+      {
+        "viewName": "RecipeIngredientProductDetails",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT\n        p.id AS p_id,\n        p.name AS p_name,\n        p.brand AS p_brand,\n        p.barcode AS p_barcode,\n        p.proteins AS p_proteins,\n        p.carbohydrates AS p_carbohydrates,\n        p.fats AS p_fats,\n        p.calories AS p_calories,\n        p.saturatedFats AS p_saturatedFats,\n        p.monounsaturatedFats AS p_monounsaturatedFats,\n        p.polyunsaturatedFats AS p_polyunsaturatedFats,\n        p.omega3 AS p_omega3,\n        p.omega6 AS p_omega6,\n        p.sugars AS p_sugars,\n        p.salt AS p_salt,\n        p.fiber AS p_fiber,\n        p.cholesterolMilli AS p_cholesterolMilli,\n        p.caffeineMilli AS p_caffeineMilli,\n        p.vitaminAMicro AS p_vitaminAMicro,\n        p.vitaminB1Milli AS p_vitaminB1Milli,\n        p.vitaminB2Milli AS p_vitaminB2Milli,\n        p.vitaminB3Milli AS p_vitaminB3Milli,\n        p.vitaminB5Milli AS p_vitaminB5Milli,\n        p.vitaminB6Milli AS p_vitaminB6Milli,\n        p.vitaminB7Micro AS p_vitaminB7Micro,\n        p.vitaminB9Micro AS p_vitaminB9Micro,\n        p.vitaminB12Micro AS p_vitaminB12Micro,\n        p.vitaminCMilli AS p_vitaminCMilli,\n        p.vitaminDMicro AS p_vitaminDMicro,\n        p.vitaminEMilli AS p_vitaminEMilli,\n        p.vitaminKMicro AS p_vitaminKMicro,\n        p.manganeseMilli AS p_manganeseMilli,\n        p.magnesiumMilli AS p_magnesiumMilli,\n        p.potassiumMilli AS p_potassiumMilli,\n        p.calciumMilli AS p_calciumMilli,\n        p.copperMilli AS p_copperMilli,\n        p.zincMilli AS p_zincMilli,\n        p.sodiumMilli AS p_sodiumMilli,\n        p.ironMilli AS p_ironMilli,\n        p.phosphorusMilli AS p_phosphorusMilli,\n        p.seleniumMicro AS p_seleniumMicro,\n        p.iodineMicro AS p_iodineMicro,\n        p.packageWeight AS p_packageWeight,\n        p.servingWeight AS p_servingWeight,\n        p.productSource AS p_productSource,\n        i.id AS r_id,\n        i.recipeId AS r_recipeId,\n        i.productId AS r_productId,\n        i.measurement AS r_measurement,\n        i.quantity AS r_quantity\n    FROM RecipeIngredientEntity i\n    JOIN ProductEntity p ON i.productId = p.id"
+      },
+      {
+        "viewName": "RecipeNutritionView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT \n        r.id AS recipeId,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.calories * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.calories * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.calories * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS calories,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.proteins * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.proteins * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.proteins * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS proteins,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.carbohydrates * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.carbohydrates * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.carbohydrates * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS carbohydrates,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.fats * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.fats * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.fats * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS fats,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.saturatedFats * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.saturatedFats * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.saturatedFats * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS saturatedFats,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.monounsaturatedFats * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.monounsaturatedFats * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.monounsaturatedFats * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS monounsaturatedFats,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.polyunsaturatedFats * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.polyunsaturatedFats * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.polyunsaturatedFats * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS polyunsaturatedFats,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.omega3 * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.omega3 * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.omega3 * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS omega3,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.omega6 * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.omega6 * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.omega6 * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS omega6,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.sugars * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.sugars * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.sugars * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS sugars,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.salt * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.salt * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.salt * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS salt,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.fiber * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.fiber * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.fiber * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS fiber,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.cholesterolMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.cholesterolMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.cholesterolMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS cholesterolMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.caffeineMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.caffeineMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.caffeineMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS caffeineMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminAMicro * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminAMicro * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminAMicro * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminAMicro,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminB1Milli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminB1Milli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminB1Milli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminB1Milli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminB2Milli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminB2Milli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminB2Milli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminB2Milli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminB3Milli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminB3Milli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminB3Milli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminB3Milli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminB5Milli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminB5Milli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminB5Milli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminB5Milli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminB6Milli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminB6Milli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminB6Milli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminB6Milli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminB7Micro * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminB7Micro * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminB7Micro * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminB7Micro,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminB9Micro * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminB9Micro * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminB9Micro * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminB9Micro,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminB12Micro * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminB12Micro * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminB12Micro * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminB12Micro,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminCMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminCMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminCMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminCMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminDMicro * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminDMicro * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminDMicro * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminDMicro,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminEMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminEMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminEMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminEMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.vitaminKMicro * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.vitaminKMicro * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.vitaminKMicro * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS vitaminKMicro,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.manganeseMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.manganeseMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.manganeseMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS manganeseMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.magnesiumMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.magnesiumMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.magnesiumMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS magnesiumMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.potassiumMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.potassiumMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.potassiumMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS potassiumMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.calciumMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.calciumMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.calciumMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS calciumMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.copperMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.copperMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.copperMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS copperMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.zincMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.zincMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.zincMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS zincMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.sodiumMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.sodiumMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.sodiumMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS sodiumMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.ironMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.ironMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.ironMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS ironMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.phosphorusMilli * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.phosphorusMilli * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.phosphorusMilli * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS phosphorusMilli,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.seleniumMicro * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.seleniumMicro * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.seleniumMicro * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS seleniumMicro,\n        SUM(\n            CASE \n                WHEN ri.measurement = 0 THEN p.iodineMicro * (ri.quantity / 100.0)\n                WHEN ri.measurement = 1 AND p.packageWeight IS NOT NULL THEN p.iodineMicro * (ri.quantity * p.packageWeight / 100.0)\n                WHEN ri.measurement = 2 AND p.servingWeight IS NOT NULL THEN p.iodineMicro * (ri.quantity * p.servingWeight / 100.0)\n                ELSE 0 \n            END\n        ) * 100 / rw.totalWeight AS iodineMicro\n    FROM RecipeEntity r\n    JOIN RecipeIngredientEntity ri ON r.id = ri.recipeId\n    JOIN ProductEntity p ON ri.productId = p.id\n    JOIN RecipeWeightView rw ON r.id = rw.recipeId\n    GROUP BY r.id"
+      },
+      {
+        "viewName": "DiaryDayView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH Product AS (\n        SELECT\n            diaryEpochDay AS epochDay,\n            pm.mealId AS mealId,\n            m.name AS mealName,\n            pm.productId AS productId,\n            NULL AS recipeId,\n            p.name AS foodName,\n            p.brand AS foodBrand,\n            p.proteins AS proteins,\n            p.carbohydrates AS carbohydrates,\n            p.fats AS fats,\n            p.calories AS calories,\n            p.saturatedFats AS saturatedFats,\n            p.monounsaturatedFats AS monounsaturatedFats,\n            p.polyunsaturatedFats AS polyunsaturatedFats,\n            p.omega3 AS omega3,\n            p.omega6 AS omega6,\n            p.sugars AS sugars,\n            p.salt AS salt,\n            p.fiber AS fiber,\n            p.cholesterolMilli AS cholesterolMilli,\n            p.caffeineMilli AS caffeineMilli,\n            p.vitaminAMicro AS vitaminAMicro,\n            p.vitaminB1Milli AS vitaminB1Milli,\n            p.vitaminB2Milli AS vitaminB2Milli,\n            p.vitaminB3Milli AS vitaminB3Milli,\n            p.vitaminB5Milli AS vitaminB5Milli,\n            p.vitaminB6Milli AS vitaminB6Milli,\n            p.vitaminB7Micro AS vitaminB7Micro,\n            p.vitaminB9Micro AS vitaminB9Micro,\n            p.vitaminB12Micro AS vitaminB12Micro,\n            p.vitaminCMilli AS vitaminCMilli,\n            p.vitaminDMicro AS vitaminDMicro,\n            p.vitaminEMilli AS vitaminEMilli,\n            p.vitaminKMicro AS vitaminKMicro,\n            p.manganeseMilli AS manganeseMilli,\n            p.magnesiumMilli AS magnesiumMilli,\n            p.potassiumMilli AS potassiumMilli,\n            p.calciumMilli AS calciumMilli,\n            p.copperMilli AS copperMilli,\n            p.zincMilli AS zincMilli,\n            p.sodiumMilli AS sodiumMilli,\n            p.ironMilli AS ironMilli,\n            p.phosphorusMilli AS phosphorusMilli,\n            p.seleniumMicro AS seleniumMicro,\n            p.iodineMicro AS iodineMicro,\n            p.packageWeight AS packageWeight,\n            p.servingWeight AS servingWeight,\n            pm.id AS measurementId,\n            pm.measurement AS measurement,\n            pm.quantity AS quantity\n        FROM ProductMeasurementEntity pm\n        JOIN ProductEntity p ON pm.productId = p.id\n        JOIN MealEntity m ON pm.mealId = m.id\n        WHERE pm.isDeleted = 0\n    ),\n    Recipe AS (\n        SELECT\n            epochDay AS epochDay,\n            rm.mealId AS mealId,\n            m.name AS mealName,\n            NULL AS foodBrand,\n            NULL AS productId,\n            r.id AS recipeId,\n            r.name AS foodName,\n            rn.proteins AS proteins,\n            rn.carbohydrates AS carbohydrates,\n            rn.fats AS fats,\n            rn.calories AS calories,\n            rn.saturatedFats AS saturatedFats,\n            rn.monounsaturatedFats AS monounsaturatedFats,\n            rn.polyunsaturatedFats AS polyunsaturatedFats,\n            rn.omega3 AS omega3,\n            rn.omega6 AS omega6,\n            rn.sugars AS sugars,\n            rn.salt AS salt,\n            rn.fiber AS fiber,\n            rn.cholesterolMilli AS cholesterolMilli,\n            rn.caffeineMilli AS caffeineMilli,\n            rn.vitaminAMicro AS vitaminAMicro,\n            rn.vitaminB1Milli AS vitaminB1Milli,\n            rn.vitaminB2Milli AS vitaminB2Milli,\n            rn.vitaminB3Milli AS vitaminB3Milli,\n            rn.vitaminB5Milli AS vitaminB5Milli,\n            rn.vitaminB6Milli AS vitaminB6Milli,\n            rn.vitaminB7Micro AS vitaminB7Micro,\n            rn.vitaminB9Micro AS vitaminB9Micro,\n            rn.vitaminB12Micro AS vitaminB12Micro,\n            rn.vitaminCMilli AS vitaminCMilli,\n            rn.vitaminDMicro AS vitaminDMicro,\n            rn.vitaminEMilli AS vitaminEMilli,\n            rn.vitaminKMicro AS vitaminKMicro,\n            rn.manganeseMilli AS manganeseMilli,\n            rn.magnesiumMilli AS magnesiumMilli,\n            rn.potassiumMilli AS potassiumMilli,\n            rn.calciumMilli AS calciumMilli,\n            rn.copperMilli AS copperMilli,\n            rn.zincMilli AS zincMilli,\n            rn.sodiumMilli AS sodiumMilli,\n            rn.ironMilli AS ironMilli,\n            rn.phosphorusMilli AS phosphorusMilli,\n            rn.seleniumMicro AS seleniumMicro,\n            rn.iodineMicro AS iodineMicro,\n            rw.totalWeight AS packageWeight,\n            rw.servingWeight AS servingWeight,\n            rm.id AS measurementId,\n            rm.measurement AS measurement,\n            rm.quantity AS quantity\n        FROM RecipeMeasurementEntity rm\n        JOIN RecipeEntity r ON rm.recipeId = r.id\n        JOIN RecipeNutritionView rn ON r.id = rn.recipeId\n        JOIN RecipeWeightView rw ON r.id = rw.recipeId\n        JOIN MealEntity m ON rm.mealId = m.id\n        WHERE rm.isDeleted = 0\n    )\n    SELECT * FROM Product\n    UNION ALL\n    SELECT * FROM Recipe"
+      },
+      {
+        "viewName": "MeasuredFoodView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH Product AS (\n        SELECT\n            p.id AS productId,\n            NULL AS recipeId,\n            pm.diaryEpochDay AS epochDay,\n            pm.mealId AS mealId,\n            p.name AS name,\n            p.brand AS brand,\n            p.barcode AS barcode,\n            p.calories AS calories,\n            p.proteins AS proteins,\n            p.carbohydrates AS carbohydrates,\n            p.fats AS fats,\n            p.packageWeight AS packageWeight,\n            p.servingWeight AS servingWeight,\n            pm.id AS measurementId,\n            pm.measurement AS measurement,\n            pm.quantity AS quantity\n        FROM ProductEntity p\n        JOIN ProductMeasurementEntity pm ON p.id = pm.productId\n        WHERE pm.isDeleted = 0\n    ),\n    Recipe AS (\n        SELECT\n            NULL AS productId,\n            r.id AS recipeId,\n            rm.epochDay AS epochDay,\n            rm.mealId AS mealId,\n            r.name AS name,\n            NULL AS brand,\n            NULL AS barcode,\n            rn.calories AS calories,\n            rn.proteins AS proteins,\n            rn.carbohydrates AS carbohydrates,\n            rn.fats AS fats,\n            rw.totalWeight AS packageWeight,\n            rw.servingWeight AS servingWeight,\n            rm.id AS measurementId,\n            rm.measurement AS measurement,\n            rm.quantity AS quantity\n        FROM RecipeEntity r\n        JOIN RecipeMeasurementEntity rm ON r.id = rm.recipeId\n        JOIN RecipeNutritionView rn ON r.id = rn.recipeId\n        JOIN RecipeWeightView rw ON r.id = rw.recipeId\n        WHERE rm.isDeleted = 0\n    )\n    SELECT * FROM Product\n    UNION ALL\n    SELECT * FROM Recipe"
+      },
+      {
+        "viewName": "MeasurementSuggestionView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH Product AS (\n        SELECT\n            p.id AS productId,\n            NULL AS recipeId,\n            p.name AS name,\n            p.brand AS brand,\n            p.barcode AS barcode,\n            p.calories AS calories,\n            p.proteins AS proteins,\n            p.carbohydrates AS carbohydrates,\n            p.fats AS fats,\n            p.packageWeight AS packageWeight,\n            p.servingWeight AS servingWeight,\n\n            CASE \n                WHEN pm.measurement IS NOT NULL THEN pm.measurement\n                WHEN p.servingWeight IS NOT NULL THEN 2\n                WHEN p.packageWeight IS NOT NULL THEN 1\n                ELSE 0\n            END AS measurement,\n\n            CASE \n                WHEN pm.quantity IS NOT NULL THEN pm.quantity\n                WHEN p.servingWeight IS NOT NULL THEN 1\n                WHEN p.packageWeight IS NOT NULL THEN 1\n                ELSE 100\n            END AS quantity\n\n        FROM ProductEntity p\n        LEFT JOIN ProductMeasurementEntity pm ON p.id = pm.productId\n        WHERE \n            pm.createdAt IS NULL \n            OR pm.createdAt = (\n                SELECT MAX(createdAt)\n                FROM ProductMeasurementEntity\n                WHERE productId = pm.productId\n            )\n    ),\n    Recipe AS (\n        SELECT\n            NULL AS productId,\n            r.id AS recipeId,\n            r.name AS name,\n            NULL AS brand,\n            NULL AS barcode,\n            rn.calories AS calories,\n            rn.proteins AS proteins,\n            rn.carbohydrates AS carbohydrates,\n            rn.fats AS fats,\n            rw.totalWeight AS packageWeight,\n            rw.servingWeight AS servingWeight,\n            CASE \n                WHEN rm.measurement IS NOT NULL THEN rm.measurement\n                ELSE 2\n            END AS measurement,\n\n            CASE \n                WHEN rm.quantity IS NOT NULL THEN rm.quantity\n                ELSE 1\n            END AS quantity\n            \n        FROM RecipeEntity r\n        LEFT JOIN RecipeMeasurementEntity rm ON r.id = rm.recipeId\n        LEFT JOIN RecipeNutritionView rn ON r.id = rn.recipeId\n        LEFT JOIN RecipeWeightView rw ON r.id = rw.recipeId\n        WHERE\n            rm.createdAt IS NULL \n            OR rm.createdAt = (\n                SELECT MAX(createdAt)\n                FROM RecipeMeasurementEntity\n                WHERE recipeId = rm.recipeId\n            )\n    )\n    SELECT * FROM Product p\n    UNION ALL\n    SELECT * FROM Recipe r"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c0dd601c968954a68a11a3bae0b3ccb4')"
+    ]
+  }
+}

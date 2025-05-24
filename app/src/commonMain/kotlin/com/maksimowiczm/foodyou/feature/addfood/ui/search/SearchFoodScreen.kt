@@ -393,9 +393,8 @@ private fun SearchFoodItem.ListItem(onToggle: (Boolean) -> Unit, modifier: Modif
     }
 
     ListItem(
-        headlineContent = { Text(name) },
+        headlineContent = { Text(headline) },
         modifier = modifier,
-        overlineContent = brand?.let { { Text(it) } },
         supportingContent = {
             Column {
                 val proteins = (proteins * weight / 100f).roundToInt()

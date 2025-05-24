@@ -362,7 +362,7 @@ internal fun RecipeFormScreen(
                                     .map {
                                         IncompleteFoodData(
                                             foodId = it.product.id,
-                                            name = it.product.name
+                                            name = it.product.headline
                                         )
                                     },
                                 onFoodClick = {
