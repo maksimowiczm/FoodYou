@@ -215,6 +215,7 @@ private fun AddFoodNavHost(
                     navController.popBackStack<CreateProduct>(inclusive = true)
                 },
                 onCreate = { productId ->
+                    navController.popBackStack<CreateProduct>(inclusive = true)
                     onCreateMeasurement(mealId, epochDay, FoodId.Product(productId))
                 }
             )
@@ -237,6 +238,7 @@ private fun AddFoodNavHost(
                 navController.popBackStack<CreateRecipe>(inclusive = true)
             },
             onCreate = {
+                navController.popBackStack<CreateRecipe>(inclusive = true)
                 onCreateMeasurement(mealId, epochDay, FoodId.Recipe(it))
             },
             onUpdateClose = {
