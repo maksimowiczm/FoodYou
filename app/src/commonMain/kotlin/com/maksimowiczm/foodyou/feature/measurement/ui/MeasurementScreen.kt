@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.Food
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementForm
+import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementSummary
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.rememberAdvancedMeasurementFormState
 import kotlinx.datetime.LocalDate
@@ -50,11 +50,17 @@ internal fun MeasurementScreen(
         return
     }
 
-    MeasurementScreen(
+    val formState = rememberAdvancedMeasurementFormState(
         food = food,
-        mealId = mealId,
-        date = date ?: LocalDate.now(TimeZone.currentSystemDefault()),
+        initialDate = date ?: LocalDate.now(TimeZone.currentSystemDefault()),
         meals = meals,
+        measurements = emptyList(),
+        initialMeal = mealId?.let { meals.indexOfFirst { meal -> meal.id == it } }
+    )
+
+    MeasurementScreen(
+        state = formState,
+        food = food,
         onBack = onBack,
         modifier = modifier
     )
@@ -63,21 +69,11 @@ internal fun MeasurementScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun MeasurementScreen(
+    state: AdvancedMeasurementFormState,
     food: Food,
-    mealId: Long?,
-    date: LocalDate,
-    meals: List<Meal>,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val formState = rememberAdvancedMeasurementFormState(
-        food = food,
-        initialDate = date,
-        meals = meals,
-        measurements = emptyList(),
-        initialMeal = mealId?.let { meals.indexOfFirst { meal -> meal.id == it } }
-    )
-
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
@@ -102,7 +98,7 @@ internal fun MeasurementScreen(
 
             item {
                 AdvancedMeasurementForm(
-                    state = formState
+                    state = state
                 )
             }
 
@@ -115,7 +111,7 @@ internal fun MeasurementScreen(
             }
 
             item {
-                val measurement = formState.measurement ?: Measurement.Gram(100f)
+                val measurement = state.measurement ?: Measurement.Gram(100f)
                 val weight = measurement.weight(food) ?: 100f
                 val nutritionFacts = food.nutritionFacts * weight / 100f
 
