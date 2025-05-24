@@ -18,4 +18,16 @@ sealed interface FoodWithMeasurement {
             is Measurement.Package -> food.packageWeight?.weight?.let { it * measurement.quantity }
             is Measurement.Serving -> food.servingWeight?.weight?.let { it * measurement.quantity }
         }
+
+    val proteins: Float?
+        get() = weight?.let { food.nutritionFacts.proteins.value * it / 100f }
+
+    val carbohydrates: Float?
+        get() = weight?.let { food.nutritionFacts.carbohydrates.value * it / 100f }
+
+    val fats: Float?
+        get() = weight?.let { food.nutritionFacts.fats.value * it / 100f }
+
+    val calories: Float?
+        get() = weight?.let { food.nutritionFacts.calories.value * it / 100f }
 }
