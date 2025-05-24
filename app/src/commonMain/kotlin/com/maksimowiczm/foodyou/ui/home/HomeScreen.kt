@@ -133,6 +133,7 @@ fun HomeScreen(
                         onAdd = onMealCardAddClick,
                         onLongClick = onMealCardLongClick,
                         contentPadding = PaddingValues(horizontal = 8.dp),
+                        onEditMeasurement = {},
                         modifier = Modifier.testTag(testTag)
                     )
 

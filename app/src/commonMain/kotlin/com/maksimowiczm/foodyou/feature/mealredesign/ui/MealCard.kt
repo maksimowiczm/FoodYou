@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.mealredesign.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,35 +9,47 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
+import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreenTestTags
 import com.maksimowiczm.foodyou.feature.mealredesign.domain.Meal
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_add
-import foodyou.app.generated.resources.em_dash
-import foodyou.app.generated.resources.en_dash
-import foodyou.app.generated.resources.headline_all_day
-import foodyou.app.generated.resources.nutriment_carbohydrates_short
-import foodyou.app.generated.resources.nutriment_fats_short
-import foodyou.app.generated.resources.nutriment_proteins_short
-import foodyou.app.generated.resources.unit_kcal
+import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -45,6 +58,8 @@ internal fun MealCard(
     meal: Meal,
     onAddFood: () -> Unit,
     onLongClick: () -> Unit,
+    onEditMeasurement: (MeasurementId) -> Unit,
+    onDeleteEntry: (MeasurementId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
@@ -91,6 +106,8 @@ internal fun MealCard(
             if (meal.food.isNotEmpty()) {
                 FoodContainer(
                     food = meal.food,
+                    onEditMeasurement = onEditMeasurement,
+                    onDeleteEntry = onDeleteEntry,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -103,24 +120,28 @@ internal fun MealCard(
                 ValueColumn(
                     label = stringResource(Res.string.unit_kcal),
                     value = meal.calories,
+                    suffix = null,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
                 ValueColumn(
                     label = stringResource(Res.string.nutriment_proteins_short),
                     value = meal.proteins,
+                    suffix = stringResource(Res.string.unit_gram_short),
                     color = nutrientsPalette.proteinsOnSurfaceContainer
                 )
 
                 ValueColumn(
                     label = stringResource(Res.string.nutriment_carbohydrates_short),
                     value = meal.carbohydrates,
+                    suffix = stringResource(Res.string.unit_gram_short),
                     color = nutrientsPalette.carbohydratesOnSurfaceContainer
                 )
 
                 ValueColumn(
                     label = stringResource(Res.string.nutriment_fats_short),
                     value = meal.fats,
+                    suffix = stringResource(Res.string.unit_gram_short),
                     color = nutrientsPalette.fatsOnSurfaceContainer
                 )
 
@@ -141,7 +162,12 @@ internal fun MealCard(
 }
 
 @Composable
-private fun FoodContainer(food: List<FoodWithMeasurement>, modifier: Modifier = Modifier) {
+private fun FoodContainer(
+    food: List<FoodWithMeasurement>,
+    onEditMeasurement: (MeasurementId) -> Unit,
+    onDeleteEntry: (MeasurementId) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium
@@ -150,18 +176,64 @@ private fun FoodContainer(food: List<FoodWithMeasurement>, modifier: Modifier = 
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             food.forEach { foodWithMeasurement ->
-                FoodListItem(
+                FoodContainerItem(
                     foodWithMeasurement = foodWithMeasurement,
-                    onMore = {},
-                    modifier = Modifier.fillMaxWidth()
+                    onEditMeasurement = onEditMeasurement,
+                    onDeleteEntry = onDeleteEntry
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ValueColumn(label: String, value: Int, color: Color, modifier: Modifier = Modifier) {
+private fun FoodContainerItem(
+    foodWithMeasurement: FoodWithMeasurement,
+    onEditMeasurement: (MeasurementId) -> Unit,
+    onDeleteEntry: (MeasurementId) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
+    if (showBottomSheet) {
+        val sheetState = rememberModalBottomSheetState()
+
+        ModalBottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+            sheetState = sheetState
+        ) {
+            BottomSheetContent(
+                food = foodWithMeasurement,
+                onEdit = coroutineScope.lambda {
+                    sheetState.hide()
+                    onEditMeasurement(foodWithMeasurement.measurementId)
+                    showBottomSheet = false
+                },
+                onDelete = coroutineScope.lambda {
+                    sheetState.hide()
+                    onDeleteEntry(foodWithMeasurement.measurementId)
+                    showBottomSheet = false
+                }
+            )
+        }
+    }
+
+    FoodListItem(
+        foodWithMeasurement = foodWithMeasurement,
+        modifier = modifier.clickable { showBottomSheet = true }
+    )
+}
+
+@Composable
+private fun ValueColumn(
+    label: String,
+    value: Int,
+    suffix: String?,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -180,9 +252,106 @@ private fun ValueColumn(label: String, value: Int, color: Color, modifier: Modif
                 text = if (value == 0) {
                     stringResource(Res.string.em_dash)
                 } else {
-                    value.toString()
+                    value.toString() + (suffix?.let { " $suffix" } ?: "")
                 }
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BottomSheetContent(
+    food: FoodWithMeasurement,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        DeleteDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            onDeleteEntry = {
+                onDelete()
+                showDeleteDialog = false
+            }
+        )
+    }
+
+    Column(
+        modifier = modifier
+    ) {
+        FoodListItem(
+            foodWithMeasurement = food,
+            color = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        )
+        HorizontalDivider(Modifier.padding(horizontal = 16.dp))
+        ListItem(
+            headlineContent = {
+                Text(stringResource(Res.string.action_edit_entry))
+            },
+            modifier = Modifier.clickable { onEdit() },
+            leadingContent = {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = null
+                )
+            },
+            colors = ListItemDefaults.colors(
+                containerColor = Color.Transparent
+            )
+        )
+        ListItem(
+            headlineContent = {
+                Text(stringResource(Res.string.action_delete_entry))
+            },
+            modifier = Modifier
+                .testTag(MealScreenTestTags.DELETE_ENTRY_BUTTON)
+                .clickable { showDeleteDialog = true },
+            leadingContent = {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = null
+                )
+            },
+            colors = ListItemDefaults.colors(
+                headlineColor = MaterialTheme.colorScheme.error,
+                leadingIconColor = MaterialTheme.colorScheme.error,
+                containerColor = Color.Transparent
+            )
+        )
+    }
+}
+
+@Composable
+private fun DeleteDialog(onDismissRequest: () -> Unit, onDeleteEntry: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(
+                onClick = onDeleteEntry,
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Text(stringResource(Res.string.action_delete))
+            }
+        },
+        modifier = Modifier.testTag(MealScreenTestTags.DELETE_DIALOG),
+        dismissButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text(stringResource(Res.string.action_cancel))
+            }
+        },
+        title = {
+            Text(stringResource(Res.string.action_delete_entry))
+        },
+        text = {
+            Text(stringResource(Res.string.description_delete_product_entry))
+        }
+    )
 }

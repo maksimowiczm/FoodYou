@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import com.maksimowiczm.foodyou.feature.meal.data.MealCardsLayout
 import org.koin.compose.viewmodel.koinViewModel
@@ -14,6 +15,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun MealsCards(
     homeState: HomeState,
     onAdd: (epochDay: Int, mealId: Long) -> Unit,
+    onEditMeasurement: (MeasurementId) -> Unit,
     onLongClick: () -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
@@ -34,6 +36,8 @@ internal fun MealsCards(
             onLongClick = onLongClick,
             shimmer = homeState.shimmer,
             contentPadding = contentPadding,
+            onEditMeasurement = onEditMeasurement,
+            onDeleteEntry = viewModel::onDeleteMeasurement,
             modifier = modifier
         )
 
@@ -43,6 +47,8 @@ internal fun MealsCards(
             onLongClick = onLongClick,
             shimmer = homeState.shimmer,
             contentPadding = contentPadding,
+            onEditMeasurement = onEditMeasurement,
+            onDeleteEntry = viewModel::onDeleteMeasurement,
             modifier = modifier
         )
     }

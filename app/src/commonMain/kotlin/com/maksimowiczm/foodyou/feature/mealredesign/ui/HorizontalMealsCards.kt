@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.meal.ui.card.MealCardSkeleton
 import com.maksimowiczm.foodyou.feature.mealredesign.domain.Meal
 import com.valentinilk.shimmer.Shimmer
@@ -26,6 +27,8 @@ import com.valentinilk.shimmer.Shimmer
 internal fun HorizontalMealsCards(
     meals: List<Meal>?,
     onAdd: (mealId: Long) -> Unit,
+    onEditMeasurement: (MeasurementId) -> Unit,
+    onDeleteEntry: (MeasurementId) -> Unit,
     onLongClick: () -> Unit,
     shimmer: Shimmer,
     contentPadding: PaddingValues,
@@ -66,6 +69,8 @@ internal fun HorizontalMealsCards(
                 MealCard(
                     meal = meal,
                     onAddFood = { onAdd(meal.id) },
+                    onEditMeasurement = onEditMeasurement,
+                    onDeleteEntry = onDeleteEntry,
                     onLongClick = onLongClick
                 )
             } else {

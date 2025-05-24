@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.domain.repository.MealRepository
 import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.ext.combine
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.runBlocking
@@ -38,6 +40,10 @@ internal class MealsCardsViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val meals = dateState.filterNotNull().flatMapLatest { date ->
         mealRepository.observeMeals().flatMapLatest { meals ->
+            if (meals.isEmpty()) {
+                return@flatMapLatest flowOf(emptyList())
+            }
+
             meals.map { meal ->
                 measurementRepository.observeMeasurements(
                     mealId = meal.id,
@@ -62,5 +68,9 @@ internal class MealsCardsViewModel(
 
     fun setDate(date: LocalDate) = launch {
         dateState.value = date
+    }
+
+    fun onDeleteMeasurement(measurementId: MeasurementId) = launch {
+        measurementRepository.removeMeasurement(measurementId)
     }
 }

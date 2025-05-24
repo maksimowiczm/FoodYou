@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.feature.meal.ui.card.MealCardSkeleton
 import com.maksimowiczm.foodyou.feature.mealredesign.domain.Meal
 import com.valentinilk.shimmer.Shimmer
@@ -17,6 +16,8 @@ import com.valentinilk.shimmer.Shimmer
 internal fun VerticalMealsCards(
     meals: List<Meal>?,
     onAdd: (mealId: Long) -> Unit,
+    onEditMeasurement: (MeasurementId) -> Unit,
+    onDeleteEntry: (MeasurementId) -> Unit,
     onLongClick: () -> Unit,
     shimmer: Shimmer,
     contentPadding: PaddingValues,
@@ -33,8 +34,10 @@ internal fun VerticalMealsCards(
         } else {
             meals.forEach { meal ->
                 MealCard(
-                    meal = remember { derivedStateOf { meal } }.value,
+                    meal = meal,
                     onAddFood = { onAdd(meal.id) },
+                    onEditMeasurement = onEditMeasurement,
+                    onDeleteEntry = onDeleteEntry,
                     onLongClick = onLongClick
                 )
             }

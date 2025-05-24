@@ -3,20 +3,15 @@ package com.maksimowiczm.foodyou.feature.mealredesign.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -25,7 +20,6 @@ import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_show_more
 import foodyou.app.generated.resources.error_measurement_error
 import foodyou.app.generated.resources.product_package
 import foodyou.app.generated.resources.product_serving
@@ -39,8 +33,9 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun FoodListItem(
     foodWithMeasurement: FoodWithMeasurement,
-    onMore: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.surfaceVariant,
+    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
@@ -68,7 +63,6 @@ fun FoodListItem(
     ) {
         FoodListErrorItem(
             headline = foodWithMeasurement.food.headline,
-            onMore = onMore,
             modifier = modifier
         )
     } else {
@@ -105,24 +99,16 @@ fun FoodListItem(
                     Text(text = measurementString)
                 }
             },
-            trailingContent = {
-                IconButton(
-                    onClick = onMore
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(Res.string.action_show_more)
-                    )
-                }
-            },
-            modifier = modifier
+            modifier = modifier,
+            color = color,
+            contentColor = contentColor
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun FoodListErrorItem(headline: String, onMore: () -> Unit, modifier: Modifier = Modifier) {
+fun FoodListErrorItem(headline: String, modifier: Modifier = Modifier) {
     FoodListItem(
         headlineContent = {
             Text(
@@ -136,19 +122,6 @@ fun FoodListErrorItem(headline: String, onMore: () -> Unit, modifier: Modifier =
                 color = MaterialTheme.colorScheme.onErrorContainer
             )
         },
-        trailingContent = {
-            IconButton(
-                onClick = onMore,
-                colors = IconButtonDefaults.iconButtonColors(
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = stringResource(Res.string.action_show_more)
-                )
-            }
-        },
         modifier = modifier,
         color = MaterialTheme.colorScheme.errorContainer,
         contentColor = MaterialTheme.colorScheme.onErrorContainer
@@ -160,7 +133,6 @@ fun FoodListErrorItem(headline: String, onMore: () -> Unit, modifier: Modifier =
 private fun FoodListItem(
     headlineContent: @Composable () -> Unit,
     supportingContent: @Composable () -> Unit,
-    trailingContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -170,30 +142,24 @@ private fun FoodListItem(
         color = color,
         contentColor = contentColor
     ) {
-        Row(
+        Column(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(vertical = 8.dp)
                 .padding(start = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
             ) {
-                CompositionLocalProvider(
-                    LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
-                ) {
-                    headlineContent()
-                }
-
-                CompositionLocalProvider(
-                    LocalTextStyle provides MaterialTheme.typography.bodySmall
-                ) {
-                    supportingContent()
-                }
+                headlineContent()
             }
 
-            trailingContent()
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.bodySmall
+            ) {
+                supportingContent()
+            }
         }
     }
 }
