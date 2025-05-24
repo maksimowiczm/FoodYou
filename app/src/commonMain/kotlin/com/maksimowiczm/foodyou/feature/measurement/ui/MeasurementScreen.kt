@@ -44,8 +44,9 @@ internal fun MeasurementScreen(
 ) {
     val food = viewModel.food.collectAsStateWithLifecycle().value
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
+    val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
 
-    if (food == null || meals == null) {
+    if (food == null || meals == null || suggestions == null) {
         // TODO
         return
     }
@@ -54,8 +55,9 @@ internal fun MeasurementScreen(
         food = food,
         initialDate = date ?: LocalDate.now(TimeZone.currentSystemDefault()),
         meals = meals,
-        measurements = emptyList(),
-        initialMeal = mealId?.let { meals.indexOfFirst { meal -> meal.id == it } }
+        measurements = suggestions,
+        initialMeal = mealId?.let { meals.indexOfFirst { meal -> meal.id == it } },
+        initialMeasurement = 0
     )
 
     MeasurementScreen(
