@@ -110,7 +110,8 @@ class AdvancedMeasurementFormState(
     /**
      * The selected measurement.
      */
-    val date = selectedDate
+    val date
+        get() = selectedDate
 
     /**
      * The selected meal.

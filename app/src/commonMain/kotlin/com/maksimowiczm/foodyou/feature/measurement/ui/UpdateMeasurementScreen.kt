@@ -49,8 +49,7 @@ internal fun UpdateMeasurementScreen(
         initialDate = measurement.measurementDate.date,
         meals = meals,
         measurements = (listOf(measurement.measurement) + suggestions).distinct(),
-        // TODO initialMeal
-        initialMeal = 0,
+        initialMeal = measurement.mealId.let { meals.indexOfFirst { meal -> meal.id == it } },
         initialMeasurement = 0
     )
 
@@ -59,12 +58,13 @@ internal fun UpdateMeasurementScreen(
         food = measurement.food,
         onBack = onBack,
         onSave = {
+            val date = formState.date
             val measurement = formState.measurement
             val mealId = formState.meal?.id
 
             if (measurement != null && mealId != null) {
                 viewModel.onUpdateMeasurement(
-                    date = formState.date,
+                    date = date,
                     mealId = mealId,
                     measurement = measurement
                 )

@@ -268,6 +268,7 @@ private fun ProductWithMeasurementEntity.toProductWithMeasurement(): ProductWith
         measurementId = MeasurementId.Product(measurement.id),
         measurement = with(MeasurementMapper) { measurement.toMeasurement() },
         measurementDate = date,
+        mealId = measurement.mealId,
         product = with(ProductMapper) { product.toModel() }
     )
 }
@@ -281,6 +282,7 @@ private fun RecipeWithMeasurementEntity.toRecipeWithMeasurement(): RecipeWithMea
         recipe = with(RecipeMapper) { toModel() },
         measurementId = MeasurementId.Recipe(this.measurement.id),
         measurement = with(MeasurementMapper) { measurement.toMeasurement() },
+        mealId = measurement.mealId,
         measurementDate = date
     )
 }
