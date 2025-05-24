@@ -117,8 +117,7 @@ private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
 
             return SearchFoodItem(
                 foodId = foodId,
-                name = name,
-                brand = brand,
+                headline = brand?.let { "$name ($brand)" } ?: name,
                 calories = calories,
                 proteins = proteins,
                 carbohydrates = carbohydrates,
@@ -137,8 +136,7 @@ private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
 
             return SearchFoodItem(
                 foodId = foodId,
-                name = name,
-                brand = brand,
+                headline = brand?.let { "$name ($brand)" } ?: name,
                 calories = calories,
                 proteins = proteins,
                 carbohydrates = carbohydrates,

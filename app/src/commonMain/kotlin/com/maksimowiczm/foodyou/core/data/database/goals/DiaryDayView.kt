@@ -18,6 +18,7 @@ import com.maksimowiczm.foodyou.core.data.model.measurement.Measurement
             pm.productId AS productId,
             NULL AS recipeId,
             p.name AS foodName,
+            p.brand AS foodBrand,
             p.proteins AS proteins,
             p.carbohydrates AS carbohydrates,
             p.fats AS fats,
@@ -71,6 +72,7 @@ import com.maksimowiczm.foodyou.core.data.model.measurement.Measurement
             epochDay AS epochDay,
             rm.mealId AS mealId,
             m.name AS mealName,
+            NULL AS foodBrand,
             NULL AS productId,
             r.id AS recipeId,
             r.name AS foodName,
@@ -141,6 +143,7 @@ data class DiaryDayView(
     override val productId: Long?,
     override val recipeId: Long?,
     override val foodName: String,
+    override val foodBrand: String?,
     @Embedded
     override val nutrients: Nutrients,
     @Embedded
