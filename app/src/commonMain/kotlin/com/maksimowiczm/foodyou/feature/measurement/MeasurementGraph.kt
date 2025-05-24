@@ -10,12 +10,31 @@ import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FoodMeasurement(
+data class CreateMeasurement(
     val productId: Long?,
     val recipeId: Long?,
     val mealId: Long?,
     val epochDay: Int
 ) {
+    constructor(
+        foodId: FoodId?,
+        mealId: Long?,
+        epochDay: Int
+    ) : this(
+        productId = when (foodId) {
+            is FoodId.Product -> foodId.id
+            is FoodId.Recipe -> null
+            null -> null
+        },
+        recipeId = when (foodId) {
+            is FoodId.Recipe -> foodId.id
+            is FoodId.Product -> null
+            null -> null
+        },
+        mealId = mealId,
+        epochDay = epochDay
+    )
+
     val foodId: FoodId
         get() = when {
             productId != null -> FoodId.Product(productId)
@@ -25,8 +44,8 @@ data class FoodMeasurement(
 }
 
 fun NavGraphBuilder.measurementGraph(measurementOnBack: () -> Unit) {
-    forwardBackwardComposable<FoodMeasurement> {
-        val route = it.toRoute<FoodMeasurement>()
+    forwardBackwardComposable<CreateMeasurement> {
+        val route = it.toRoute<CreateMeasurement>()
 
         CreateMeasurementScreen(
             foodId = remember { route.foodId },
