@@ -70,6 +70,9 @@ internal fun UpdateMeasurementScreen(
                 )
             }
         },
+        onEditFood = { },
+        onDelete = { },
+        onClone = { },
         modifier = modifier
     )
 }

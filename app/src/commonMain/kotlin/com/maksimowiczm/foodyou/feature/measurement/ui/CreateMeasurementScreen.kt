@@ -74,6 +74,9 @@ internal fun CreateMeasurementScreen(
                 )
             }
         },
+        onEditFood = { },
+        onDelete = { },
+        onClone = { },
         modifier = modifier
     )
 }
