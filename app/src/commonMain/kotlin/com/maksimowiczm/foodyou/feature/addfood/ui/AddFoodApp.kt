@@ -205,13 +205,7 @@ private fun AddFoodNavHost(
                     }
                 },
                 onEditMeasurement = {
-                    navController.navigate(UpdateMeasurement(it)) {
-                        launchSingleTop = true
-
-                        popUpTo<CreateProduct> {
-                            inclusive = true
-                        }
-                    }
+                    navController.navigate(UpdateMeasurement(it)) { launchSingleTop = true }
                 }
             )
         }
@@ -248,7 +242,7 @@ private fun AddFoodNavHost(
                     navController.navigate(MeasureFood(productId = it.id)) {
                         launchSingleTop = true
 
-                        popUpTo<UpdateMeasurement> {
+                        popUpTo<MeasureFood> {
                             inclusive = true
                         }
                     }
