@@ -16,17 +16,18 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
+import com.maksimowiczm.foodyou.core.navigation.ForwardBackwardComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
-import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.CreateMeasurementScreen
-import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.UpdateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.rememberSearchFoodScreenState
 import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.meal.MealScreen
 import com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreenSharedTransition
+import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurementScreen
+import com.maksimowiczm.foodyou.feature.measurement.UpdateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
@@ -121,17 +122,7 @@ private fun AddFoodNavHost(
                         }
                     },
                     onFoodClick = {
-                        val route = when (it) {
-                            is FoodId.Product -> MeasureFood(
-                                productId = it.id
-                            )
-
-                            is FoodId.Recipe -> MeasureFood(
-                                recipeId = it.id
-                            )
-                        }
-
-                        navController.navigate(route) {
+                        navController.navigate(MeasureFood(it)) {
                             launchSingleTop = true
                         }
                     },
@@ -215,95 +206,36 @@ private fun AddFoodNavHost(
                     }
                 },
                 onEditMeasurement = {
-                    val route = when (it) {
-                        is MeasurementId.Product -> UpdateMeasurement(
-                            productMeasurementId = it.id
-                        )
-
-                        is MeasurementId.Recipe -> UpdateMeasurement(
-                            recipeMeasurementId = it.id
-                        )
-                    }
-
-                    navController.navigate(route) { launchSingleTop = true }
+                    navController.navigate(UpdateMeasurement(it)) { launchSingleTop = true }
                 }
             )
         }
-        crossfadeComposable<MeasureFood>(
+        forwardBackwardComposable<MeasureFood>(
             popEnterTransition = {
                 if (initialState.destination.hasRoute<UpdateRecipe>()) {
                     fadeIn(snap())
                 } else {
-                    CrossFadeComposableDefaults.enterTransition()
+                    ForwardBackwardComposableDefaults.popEnterTransition()
+                }
+            },
+            exitTransition = {
+                if (targetState.destination.hasRoute<UpdateRecipe>()) {
+                    CrossFadeComposableDefaults.exitTransition()
+                } else {
+                    ForwardBackwardComposableDefaults.exitTransition()
                 }
             }
         ) {
-            val (productId, recipeId) = it.toRoute<MeasureFood>()
-
-            val foodId = when {
-                productId != null -> FoodId.Product(productId)
-                recipeId != null -> FoodId.Recipe(recipeId)
-                else -> error("Either productId or recipeId must be provided")
-            }
+            val route = it.toRoute<MeasureFood>()
 
             CreateMeasurementScreen(
+                foodId = route.foodId,
                 mealId = mealId,
                 date = date,
-                foodId = foodId,
                 onBack = {
                     navController.popBackStack<MeasureFood>(inclusive = true)
                 },
-                onDelete = {
-                    navController.popBackStack<MeasureFood>(inclusive = true)
-                },
-                onEdit = {
-                    when (foodId) {
-                        is FoodId.Product -> navController.navigate(UpdateProduct(foodId.id)) {
-                            launchSingleTop = true
-                        }
-
-                        is FoodId.Recipe -> navController.navigate(UpdateRecipe(foodId.id)) {
-                            launchSingleTop = true
-                        }
-                    }
-                },
-                onCloneRecipe = {
-                    navController.navigate(MeasureFood(productId = it.id)) {
-                        launchSingleTop = true
-
-                        popUpTo<MeasureFood> {
-                            inclusive = true
-                        }
-                    }
-                }
-            )
-        }
-        crossfadeComposable<UpdateMeasurement>(
-            popEnterTransition = {
-                if (initialState.destination.hasRoute<UpdateRecipe>()) {
-                    fadeIn(snap())
-                } else {
-                    CrossFadeComposableDefaults.enterTransition()
-                }
-            }
-        ) {
-            val (productMeasurement, recipeMeasurement) = it.toRoute<UpdateMeasurement>()
-
-            val measurementId = when {
-                productMeasurement != null -> MeasurementId.Product(productMeasurement)
-                recipeMeasurement != null -> MeasurementId.Recipe(recipeMeasurement)
-                else -> error("Either productMeasurement or recipeMeasurement must be provided")
-            }
-
-            UpdateMeasurementScreen(
-                measurementId = measurementId,
-                onBack = {
-                    navController.popBackStack<UpdateMeasurement>(inclusive = true)
-                },
-                onDelete = {
-                    navController.popBackStack<UpdateMeasurement>(inclusive = true)
-                },
-                onEdit = {
+                onEditFood = {
                     when (it) {
                         is FoodId.Product -> navController.navigate(UpdateProduct(it.id)) {
                             launchSingleTop = true
@@ -314,15 +246,62 @@ private fun AddFoodNavHost(
                         }
                     }
                 },
-                onCloneRecipe = {
+                onRecipeClone = {
                     navController.navigate(MeasureFood(productId = it.id)) {
+                        launchSingleTop = true
+
+                        popUpTo<MeasureFood> {
+                            inclusive = true
+                        }
+                    }
+                },
+                animatedVisibilityScope = this
+            )
+        }
+        forwardBackwardComposable<UpdateMeasurement>(
+            popEnterTransition = {
+                if (initialState.destination.hasRoute<UpdateRecipe>()) {
+                    fadeIn(snap())
+                } else {
+                    ForwardBackwardComposableDefaults.popEnterTransition()
+                }
+            },
+            exitTransition = {
+                if (targetState.destination.hasRoute<UpdateRecipe>()) {
+                    CrossFadeComposableDefaults.exitTransition()
+                } else {
+                    ForwardBackwardComposableDefaults.exitTransition()
+                }
+            }
+        ) {
+            val route = it.toRoute<UpdateMeasurement>()
+
+            UpdateMeasurementScreen(
+                measurementId = route.measurementId,
+                onBack = {
+                    navController.popBackStack<UpdateMeasurement>(inclusive = true)
+                },
+                onEditFood = { foodId ->
+                    when (foodId) {
+                        is FoodId.Product -> navController.navigate(UpdateProduct(foodId.id)) {
+                            launchSingleTop = true
+                        }
+
+                        is FoodId.Recipe -> navController.navigate(UpdateRecipe(foodId.id)) {
+                            launchSingleTop = true
+                        }
+                    }
+                },
+                onRecipeClone = { productId ->
+                    navController.navigate(MeasureFood(productId = productId.id)) {
                         launchSingleTop = true
 
                         popUpTo<UpdateMeasurement> {
                             inclusive = true
                         }
                     }
-                }
+                },
+                animatedVisibilityScope = this
             )
         }
         forwardBackwardComposable<CreateProduct> {
@@ -331,11 +310,11 @@ private fun AddFoodNavHost(
                     navController.popBackStack<CreateProduct>(inclusive = true)
                 },
                 onCreate = { productId ->
-                    navController.navigate(MeasureFood(productId = productId)) {
+                    navController.navigate(MeasureFood(FoodId.Product(productId))) {
                         launchSingleTop = true
 
-                        popUpTo<SearchFood> {
-                            inclusive = false
+                        popUpTo<CreateProduct> {
+                            inclusive = true
                         }
                     }
                 }
@@ -359,11 +338,11 @@ private fun AddFoodNavHost(
                 navController.popBackStack<CreateRecipe>(inclusive = true)
             },
             onCreate = {
-                navController.navigate(MeasureFood(recipeId = it)) {
+                navController.navigate(MeasureFood(FoodId.Recipe(it))) {
                     launchSingleTop = true
 
-                    popUpTo<SearchFood> {
-                        inclusive = false
+                    popUpTo<CreateRecipe> {
+                        inclusive = true
                     }
                 }
             },
@@ -397,6 +376,24 @@ private data class UpdateMeasurement(
     val productMeasurementId: Long? = null,
     val recipeMeasurementId: Long? = null
 ) {
+    constructor(measurementId: MeasurementId) : this(
+        productMeasurementId = when (measurementId) {
+            is MeasurementId.Product -> measurementId.id
+            is MeasurementId.Recipe -> null
+        },
+        recipeMeasurementId = when (measurementId) {
+            is MeasurementId.Recipe -> measurementId.id
+            is MeasurementId.Product -> null
+        }
+    )
+
+    val measurementId: MeasurementId
+        get() = when {
+            productMeasurementId != null -> MeasurementId.Product(productMeasurementId)
+            recipeMeasurementId != null -> MeasurementId.Recipe(recipeMeasurementId)
+            else -> error("Either productMeasurementId or recipeMeasurementId must be provided")
+        }
+
     init {
         if (productMeasurementId == null && recipeMeasurementId == null) {
             error("Either productMeasurementId or recipeMeasurementId must be provided")
@@ -406,6 +403,24 @@ private data class UpdateMeasurement(
 
 @Serializable
 private data class MeasureFood(val productId: Long? = null, val recipeId: Long? = null) {
+    constructor(foodId: FoodId) : this(
+        productId = when (foodId) {
+            is FoodId.Product -> foodId.id
+            is FoodId.Recipe -> null
+        },
+        recipeId = when (foodId) {
+            is FoodId.Recipe -> foodId.id
+            is FoodId.Product -> null
+        }
+    )
+
+    val foodId: FoodId
+        get() = when {
+            productId != null -> FoodId.Product(productId)
+            recipeId != null -> FoodId.Recipe(recipeId)
+            else -> error("Either productId or recipeId must be provided")
+        }
+
     init {
         if (productId == null && recipeId == null) {
             error("Either productId or recipeId must be provided")

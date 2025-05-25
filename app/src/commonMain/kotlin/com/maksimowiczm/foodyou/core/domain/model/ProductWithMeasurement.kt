@@ -6,6 +6,7 @@ data class ProductWithMeasurement(
     override val measurementId: MeasurementId.Product,
     override val measurement: Measurement,
     override val measurementDate: LocalDateTime,
+    override val mealId: Long,
     val product: Product
 ) : FoodWithMeasurement {
     override val food: Food

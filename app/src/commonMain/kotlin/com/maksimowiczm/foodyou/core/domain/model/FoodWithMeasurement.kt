@@ -6,6 +6,7 @@ sealed interface FoodWithMeasurement {
     val measurementId: MeasurementId
     val measurement: Measurement
     val measurementDate: LocalDateTime
+    val mealId: Long
     val food: Food
 
     /**
