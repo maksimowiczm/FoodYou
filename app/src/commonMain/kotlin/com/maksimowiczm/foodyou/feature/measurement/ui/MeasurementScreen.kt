@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.measurement.ui
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,7 +55,8 @@ internal fun MeasurementScreen(
     onEditFood: () -> Unit,
     onDelete: () -> Unit,
     onClone: (() -> Unit)?,
-    modifier: Modifier = Modifier
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -103,7 +105,7 @@ internal fun MeasurementScreen(
         floatingActionButton = {
             MediumExtendedFloatingActionButton(
                 modifier = Modifier.animateFloatingActionButton(
-                    visible = state.isValid,
+                    visible = !animatedVisibilityScope.transition.isRunning && state.isValid,
                     alignment = Alignment.BottomEnd
                 ),
                 onClick = {

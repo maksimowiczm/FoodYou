@@ -82,7 +82,8 @@ fun NavGraphBuilder.measurementGraph(
             date = LocalDate.fromEpochDays(route.epochDay),
             onBack = createMeasurementOnBack,
             onEditFood = { onEditFood(route.foodId) },
-            onRecipeClone = createMeasurementOnRecipeClone
+            onRecipeClone = createMeasurementOnRecipeClone,
+            animatedVisibilityScope = this
         )
     }
     forwardBackwardComposable<UpdateMeasurement> {
@@ -92,7 +93,8 @@ fun NavGraphBuilder.measurementGraph(
             measurementId = remember { route.measurementId },
             onBack = updateMeasurementOnBack,
             onEditFood = onEditFood,
-            onRecipeClone = updateMeasurementOnRecipeClone
+            onRecipeClone = updateMeasurementOnRecipeClone,
+            animatedVisibilityScope = this
         )
     }
 }

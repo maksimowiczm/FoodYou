@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.measurement.ui
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,7 +30,8 @@ internal fun CreateMeasurementScreen(
     onBack: () -> Unit,
     onEditFood: () -> Unit,
     onRecipeClone: (FoodId.Product) -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    modifier: Modifier = Modifier,
     viewModel: CreateMeasurementViewModel = koinViewModel(
         parameters = { parametersOf(foodId) }
     )
@@ -61,7 +63,7 @@ internal fun CreateMeasurementScreen(
 
     val formState = rememberAdvancedMeasurementFormState(
         food = food,
-        initialDate = date ?: LocalDate.Companion.now(TimeZone.Companion.currentSystemDefault()),
+        initialDate = date ?: LocalDate.now(TimeZone.currentSystemDefault()),
         meals = meals,
         measurements = suggestions,
         initialMeal = mealId?.let { meals.indexOfFirst { meal -> meal.id == it } },
@@ -93,6 +95,7 @@ internal fun CreateMeasurementScreen(
         } else {
             null
         },
+        animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
     )
 }
