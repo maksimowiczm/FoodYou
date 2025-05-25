@@ -1,6 +1,10 @@
 package com.maksimowiczm.foodyou.feature.measurement.ui.advanced
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,7 +32,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AdvancedMeasurementForm(state: AdvancedMeasurementFormState, modifier: Modifier = Modifier) {
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
@@ -92,7 +97,12 @@ fun AdvancedMeasurementForm(state: AdvancedMeasurementFormState, modifier: Modif
         )
         HorizontalDivider()
         AnimatedContent(
-            targetState = state.selectedMeasurement == null
+            targetState = state.selectedMeasurement == null,
+            transitionSpec = {
+                val enter = fadeIn() + slideIntoContainer(SlideDirection.Right)
+                val exit = fadeOut() + slideOutOfContainer(SlideDirection.Right)
+                enter togetherWith exit
+            }
         ) {
             if (it) {
                 MeasurementForm(
