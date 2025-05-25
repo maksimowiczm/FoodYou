@@ -31,7 +31,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun AdvancedMeasurementForm(state: AdvancedMeasurementFormState, modifier: Modifier = Modifier) {
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
-    var showAdvancedMeasurement by rememberSaveable { mutableStateOf(false) }
 
     if (showDatePicker) {
         val datePickerState = rememberDatePickerState()
@@ -93,14 +92,13 @@ fun AdvancedMeasurementForm(state: AdvancedMeasurementFormState, modifier: Modif
         )
         HorizontalDivider()
         AnimatedContent(
-            targetState = showAdvancedMeasurement || state.selectedMeasurement == null
+            targetState = state.selectedMeasurement == null
         ) {
             if (it) {
                 MeasurementForm(
                     state = state.formState,
                     onMeasurement = {
                         state.addMeasurement(it)
-                        showAdvancedMeasurement = false
                     },
                     contentPadding = PaddingValues(8.dp)
                 )
@@ -109,7 +107,7 @@ fun AdvancedMeasurementForm(state: AdvancedMeasurementFormState, modifier: Modif
                     measurements = state.measurements.map { it.stringResource() },
                     selectedMeasurement = state.selectedMeasurement,
                     onMeasurementSelect = { state.selectedMeasurement = it },
-                    onChooseOtherMeasurement = { showAdvancedMeasurement = true },
+                    onChooseOtherMeasurement = { state.selectedMeasurement = null },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
