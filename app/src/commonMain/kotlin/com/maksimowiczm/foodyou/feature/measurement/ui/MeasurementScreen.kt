@@ -20,7 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MediumExtendedFloatingActionButton
+import androidx.compose.material3.LargeExtendedFloatingActionButton
 import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -108,7 +108,7 @@ internal fun MeasurementScreen(
             )
         },
         floatingActionButton = {
-            MediumExtendedFloatingActionButton(
+            LargeExtendedFloatingActionButton(
                 modifier = Modifier.animateFloatingActionButton(
                     visible = !animatedVisibilityScope.transition.isRunning && state.isValid,
                     alignment = Alignment.BottomEnd
@@ -123,7 +123,7 @@ internal fun MeasurementScreen(
                     imageVector = Icons.Default.Edit,
                     contentDescription = null
                 )
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(16.dp))
                 Text(stringResource(Res.string.action_save))
             }
         }
@@ -178,7 +178,7 @@ internal fun MeasurementScreen(
             }
 
             item {
-                Spacer(Modifier.height(8.dp + 80.dp + 16.dp))
+                Spacer(Modifier.height(16.dp + 96.dp + 16.dp))
             }
         }
     }
