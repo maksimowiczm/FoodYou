@@ -16,6 +16,7 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
+import com.maksimowiczm.foodyou.core.navigation.ForwardBackwardComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
@@ -209,12 +210,19 @@ private fun AddFoodNavHost(
                 }
             )
         }
-        crossfadeComposable<MeasureFood>(
+        forwardBackwardComposable<MeasureFood>(
             popEnterTransition = {
                 if (initialState.destination.hasRoute<UpdateRecipe>()) {
                     fadeIn(snap())
                 } else {
-                    CrossFadeComposableDefaults.enterTransition()
+                    ForwardBackwardComposableDefaults.popEnterTransition()
+                }
+            },
+            exitTransition = {
+                if (targetState.destination.hasRoute<UpdateRecipe>()) {
+                    CrossFadeComposableDefaults.exitTransition()
+                } else {
+                    ForwardBackwardComposableDefaults.exitTransition()
                 }
             }
         ) {
@@ -250,12 +258,19 @@ private fun AddFoodNavHost(
                 animatedVisibilityScope = this
             )
         }
-        crossfadeComposable<UpdateMeasurement>(
+        forwardBackwardComposable<UpdateMeasurement>(
             popEnterTransition = {
                 if (initialState.destination.hasRoute<UpdateRecipe>()) {
                     fadeIn(snap())
                 } else {
-                    CrossFadeComposableDefaults.enterTransition()
+                    ForwardBackwardComposableDefaults.popEnterTransition()
+                }
+            },
+            exitTransition = {
+                if (targetState.destination.hasRoute<UpdateRecipe>()) {
+                    CrossFadeComposableDefaults.exitTransition()
+                } else {
+                    ForwardBackwardComposableDefaults.exitTransition()
                 }
             }
         ) {
