@@ -1,6 +1,9 @@
 package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -8,7 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.domain.model.Recipe
-import com.maksimowiczm.foodyou.core.ui.ext.collectWithLifecycle
+import com.maksimowiczm.foodyou.core.ui.ext.collectLatestWithLifecycle
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.rememberAdvancedMeasurementFormState
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.headline_copy
@@ -33,7 +36,8 @@ internal fun UpdateMeasurementScreen(
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
 
     if (measurement == null || meals == null || suggestions == null) {
-        // TODO
+        // TODO loading state
+        Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
         return
     }
 
@@ -46,7 +50,7 @@ internal fun UpdateMeasurementScreen(
             }
         }
     }
-    viewModel.measurementUpdatedEventBus.collectWithLifecycle { onEvent(it) }
+    viewModel.measurementUpdatedEventBus.collectLatestWithLifecycle { onEvent(it) }
 
     val formState = rememberAdvancedMeasurementFormState(
         food = measurement.food,
