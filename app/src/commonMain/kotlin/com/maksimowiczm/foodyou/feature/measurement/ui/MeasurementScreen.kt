@@ -37,8 +37,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.Food
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Recipe
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
+import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementForm
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementSummary
@@ -55,8 +59,9 @@ internal fun MeasurementScreen(
     onEditFood: () -> Unit,
     onDelete: () -> Unit,
     onClone: (() -> Unit)?,
+    onIngredientClick: (FoodId) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -156,6 +161,20 @@ internal fun MeasurementScreen(
                     nutritionFacts = nutritionFacts,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
+            }
+
+            if (food is Recipe) {
+                val incompleteFoods = food.ingredients
+                    .filter { !it.product.nutritionFacts.isComplete }
+                    .map { IncompleteFoodData(it.product.id, it.product.headline) }
+
+                item {
+                    IncompleteFoodsList(
+                        foods = incompleteFoods,
+                        onFoodClick = onIngredientClick,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
             }
 
             item {

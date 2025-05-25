@@ -28,7 +28,7 @@ internal fun CreateMeasurementScreen(
     mealId: Long?,
     date: LocalDate?,
     onBack: () -> Unit,
-    onEditFood: () -> Unit,
+    onEditFood: (FoodId) -> Unit,
     onRecipeClone: (FoodId.Product) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
@@ -88,13 +88,14 @@ internal fun CreateMeasurementScreen(
                 )
             }
         },
-        onEditFood = onEditFood,
+        onEditFood = { onEditFood(foodId) },
         onDelete = viewModel::onDeleteMeasurement,
         onClone = if (foodId is FoodId.Recipe) {
             { viewModel.onRecipeClone(recipeId = foodId, suffix = copySuffix) }
         } else {
             null
         },
+        onIngredientClick = { onEditFood(it) },
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
     )

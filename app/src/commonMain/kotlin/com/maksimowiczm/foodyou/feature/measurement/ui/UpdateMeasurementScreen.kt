@@ -98,6 +98,7 @@ internal fun UpdateMeasurementScreen(
         } else {
             null
         },
+        onIngredientClick = { onEditFood(it) },
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
     )
