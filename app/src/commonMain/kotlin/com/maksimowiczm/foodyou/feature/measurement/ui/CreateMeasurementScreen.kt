@@ -2,20 +2,16 @@ package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.core.ui.ext.collectWithLifecycle
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.rememberAdvancedMeasurementFormState
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.headline_copy
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
@@ -36,25 +32,20 @@ internal fun CreateMeasurementScreen(
         parameters = { parametersOf(foodId) }
     )
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-
     val food = viewModel.food.collectAsStateWithLifecycle().value
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
 
-    val latestOnBack by rememberUpdatedState(onBack)
-    val latestOnRecipeCloned by rememberUpdatedState(onRecipeClone)
-    LaunchedEffect(lifecycleOwner, viewModel) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-            viewModel.measurementCreatedEventBus.collectLatest { event ->
-                when (event) {
-                    MeasurementScreenEvent.Deleted -> latestOnBack()
-                    MeasurementScreenEvent.Done -> latestOnBack()
-                    is MeasurementScreenEvent.RecipeCloned -> latestOnRecipeCloned(event.productId)
-                }
+    val onEvent: (MeasurementScreenEvent) -> Unit = remember(onBack, onRecipeClone) {
+        {
+            when (it) {
+                MeasurementScreenEvent.Deleted -> onBack()
+                MeasurementScreenEvent.Done -> onBack()
+                is MeasurementScreenEvent.RecipeCloned -> onRecipeClone(it.productId)
             }
         }
     }
+    viewModel.measurementCreatedEventBus.collectWithLifecycle { onEvent(it) }
 
     if (food == null || meals == null || suggestions == null) {
         // TODO
