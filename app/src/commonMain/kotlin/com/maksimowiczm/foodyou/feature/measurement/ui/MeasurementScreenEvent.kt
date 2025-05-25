@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 
-sealed interface MeasurementScreenEvent {
+internal sealed interface MeasurementScreenEvent {
     /**
      * Work here is done and the screen should be closed.
      */
