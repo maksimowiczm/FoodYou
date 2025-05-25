@@ -27,7 +27,9 @@ object Changelog {
         )
 
     val next = Version.next(
-        newFeatures = listOf(),
+        newFeatures = listOf(
+            "Added a new screen for food measurement"
+        ),
         changes = listOf(
             "Display the brand name after the product name"
         ),

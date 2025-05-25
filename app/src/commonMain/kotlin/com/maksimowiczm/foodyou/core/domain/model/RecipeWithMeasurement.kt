@@ -6,6 +6,7 @@ data class RecipeWithMeasurement(
     override val measurementId: MeasurementId.Recipe,
     override val measurement: Measurement,
     override val measurementDate: LocalDateTime,
+    override val mealId: Long,
     val recipe: Recipe
 ) : FoodWithMeasurement {
     override val food: Food

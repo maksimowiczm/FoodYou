@@ -127,7 +127,6 @@ abstract class ProductMeasurementDao : ProductMeasurementLocalDataSource {
         WHERE NOT EXISTS (
             SELECT 1 FROM LatestMeasurements lm WHERE lm.measurement = d.measurement
         )
-        ORDER BY measurement
         """
     )
     abstract override fun observeProductMeasurementSuggestions(
