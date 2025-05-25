@@ -31,7 +31,8 @@ object Changelog {
             "Added a new screen for food measurement"
         ),
         changes = listOf(
-            "Display the brand name after the product name"
+            "Display the brand name after the product name",
+            "Update barcode scanner icon"
         ),
         bugFixes = listOf(
             "Fix empty recipes, app won't crash when the recipe has no ingredients"

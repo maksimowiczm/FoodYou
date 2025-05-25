@@ -30,7 +30,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -78,6 +77,7 @@ import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ext.sumOf
+import com.maksimowiczm.foodyou.core.ui.component.BarcodeScanner
 import com.maksimowiczm.foodyou.core.ui.component.MeasurementSummary
 import com.maksimowiczm.foodyou.core.ui.component.NutrientsRow
 import com.maksimowiczm.foodyou.core.ui.ext.add
@@ -94,6 +94,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -534,7 +535,7 @@ private fun SharedTransitionScope.MealScreenFloatingActionButton(
                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer
             ) {
                 Icon(
-                    imageVector = Icons.Default.QrCodeScanner,
+                    painter = painterResource(Icons.BarcodeScanner),
                     contentDescription = stringResource(Res.string.action_scan_barcode)
                 )
             }
