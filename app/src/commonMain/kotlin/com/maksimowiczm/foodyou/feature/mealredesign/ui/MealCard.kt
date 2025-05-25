@@ -1,11 +1,16 @@
 package com.maksimowiczm.foodyou.feature.mealredesign.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -31,6 +36,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -45,6 +51,7 @@ import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
+import com.maksimowiczm.foodyou.core.ui.modifier.animatePlacement
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreenTestTags
@@ -87,29 +94,38 @@ internal fun MealCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(16.dp)
         ) {
-            Column {
-                Text(
-                    text = meal.name,
-                    style = MaterialTheme.typography.headlineMediumEmphasized,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = timeString,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            Text(
+                text = meal.name,
+                style = MaterialTheme.typography.headlineMediumEmphasized,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = timeString,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
-            if (meal.food.isNotEmpty()) {
-                FoodContainer(
-                    food = meal.food,
-                    onEditMeasurement = onEditMeasurement,
-                    onDeleteEntry = onDeleteEntry,
-                    modifier = Modifier.fillMaxWidth()
+            Spacer(Modifier.height(16.dp))
+
+            FoodContainer(
+                food = meal.food,
+                onEditMeasurement = onEditMeasurement,
+                onDeleteEntry = onDeleteEntry,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            AnimatedVisibility(
+                visible = meal.food.isNotEmpty(),
+                enter = expandVertically(
+                    animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
+                ),
+                exit = shrinkVertically(
+                    animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
                 )
+            ) {
+                Spacer(Modifier.height(16.dp))
             }
 
             Row(
@@ -161,6 +177,7 @@ internal fun MealCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun FoodContainer(
     food: List<FoodWithMeasurement>,
@@ -173,14 +190,20 @@ private fun FoodContainer(
         shape = MaterialTheme.shapes.medium
     ) {
         Column(
+            modifier = Modifier.animateContentSize(
+                animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
+            ),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             food.forEach { foodWithMeasurement ->
-                FoodContainerItem(
-                    foodWithMeasurement = foodWithMeasurement,
-                    onEditMeasurement = onEditMeasurement,
-                    onDeleteEntry = onDeleteEntry
-                )
+                key(foodWithMeasurement.measurementId) {
+                    FoodContainerItem(
+                        foodWithMeasurement = foodWithMeasurement,
+                        onEditMeasurement = onEditMeasurement,
+                        onDeleteEntry = onDeleteEntry,
+                        modifier = Modifier.animatePlacement()
+                    )
+                }
             }
         }
     }
