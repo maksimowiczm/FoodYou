@@ -23,7 +23,11 @@ data class Recipe(
         }
 
     override val nutritionFacts: NutritionFacts
-        get() = ingredients
-            .map { it.product.nutritionFacts * (it.weight ?: 0f) }
-            .sum() / packageWeight.weight
+        get() = if (ingredients.isEmpty()) {
+            NutritionFacts.Empty
+        } else {
+            ingredients
+                .map { it.product.nutritionFacts * (it.weight ?: 0f) }
+                .sum() / packageWeight.weight
+        }
 }

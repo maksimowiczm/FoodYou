@@ -209,47 +209,50 @@ data class NutritionFacts(
         seleniumMicro = this.seleniumMicro / divisor,
         iodineMicro = this.iodineMicro / divisor
     )
+
+    companion object {
+        val Empty = NutritionFacts(
+            proteins = NutrientValue.Complete(0f),
+            carbohydrates = NutrientValue.Complete(0f),
+            fats = NutrientValue.Complete(0f),
+            calories = NutrientValue.Complete(0f),
+            saturatedFats = NutrientValue.Complete(0f),
+            monounsaturatedFats = NutrientValue.Complete(0f),
+            polyunsaturatedFats = NutrientValue.Complete(0f),
+            omega3 = NutrientValue.Complete(0f),
+            omega6 = NutrientValue.Complete(0f),
+            sugars = NutrientValue.Complete(0f),
+            salt = NutrientValue.Complete(0f),
+            fiber = NutrientValue.Complete(0f),
+            cholesterolMilli = NutrientValue.Complete(0f),
+            caffeineMilli = NutrientValue.Complete(0f),
+            vitaminAMicro = NutrientValue.Complete(0f),
+            vitaminB1Milli = NutrientValue.Complete(0f),
+            vitaminB2Milli = NutrientValue.Complete(0f),
+            vitaminB3Milli = NutrientValue.Complete(0f),
+            vitaminB5Milli = NutrientValue.Complete(0f),
+            vitaminB6Milli = NutrientValue.Complete(0f),
+            vitaminB7Micro = NutrientValue.Complete(0f),
+            vitaminB9Micro = NutrientValue.Complete(0f),
+            vitaminB12Micro = NutrientValue.Complete(0f),
+            vitaminCMilli = NutrientValue.Complete(0f),
+            vitaminDMicro = NutrientValue.Complete(0f),
+            vitaminEMilli = NutrientValue.Complete(0f),
+            vitaminKMicro = NutrientValue.Complete(0f),
+            manganeseMilli = NutrientValue.Complete(0f),
+            magnesiumMilli = NutrientValue.Complete(0f),
+            potassiumMilli = NutrientValue.Complete(0f),
+            calciumMilli = NutrientValue.Complete(0f),
+            copperMilli = NutrientValue.Complete(0f),
+            zincMilli = NutrientValue.Complete(0f),
+            sodiumMilli = NutrientValue.Complete(0f),
+            ironMilli = NutrientValue.Complete(0f),
+            phosphorusMilli = NutrientValue.Complete(0f),
+            seleniumMicro = NutrientValue.Complete(0f),
+            iodineMicro = NutrientValue.Complete(0f)
+        )
+    }
 }
 
-fun Iterable<NutritionFacts>.sum(): NutritionFacts = fold(
-    NutritionFacts(
-        proteins = NutrientValue.Complete(0f),
-        carbohydrates = NutrientValue.Complete(0f),
-        fats = NutrientValue.Complete(0f),
-        calories = NutrientValue.Complete(0f),
-        saturatedFats = NutrientValue.Complete(0f),
-        monounsaturatedFats = NutrientValue.Complete(0f),
-        polyunsaturatedFats = NutrientValue.Complete(0f),
-        omega3 = NutrientValue.Complete(0f),
-        omega6 = NutrientValue.Complete(0f),
-        sugars = NutrientValue.Complete(0f),
-        salt = NutrientValue.Complete(0f),
-        fiber = NutrientValue.Complete(0f),
-        cholesterolMilli = NutrientValue.Complete(0f),
-        caffeineMilli = NutrientValue.Complete(0f),
-        vitaminAMicro = NutrientValue.Complete(0f),
-        vitaminB1Milli = NutrientValue.Complete(0f),
-        vitaminB2Milli = NutrientValue.Complete(0f),
-        vitaminB3Milli = NutrientValue.Complete(0f),
-        vitaminB5Milli = NutrientValue.Complete(0f),
-        vitaminB6Milli = NutrientValue.Complete(0f),
-        vitaminB7Micro = NutrientValue.Complete(0f),
-        vitaminB9Micro = NutrientValue.Complete(0f),
-        vitaminB12Micro = NutrientValue.Complete(0f),
-        vitaminCMilli = NutrientValue.Complete(0f),
-        vitaminDMicro = NutrientValue.Complete(0f),
-        vitaminEMilli = NutrientValue.Complete(0f),
-        vitaminKMicro = NutrientValue.Complete(0f),
-        manganeseMilli = NutrientValue.Complete(0f),
-        magnesiumMilli = NutrientValue.Complete(0f),
-        potassiumMilli = NutrientValue.Complete(0f),
-        calciumMilli = NutrientValue.Complete(0f),
-        copperMilli = NutrientValue.Complete(0f),
-        zincMilli = NutrientValue.Complete(0f),
-        sodiumMilli = NutrientValue.Complete(0f),
-        ironMilli = NutrientValue.Complete(0f),
-        phosphorusMilli = NutrientValue.Complete(0f),
-        seleniumMicro = NutrientValue.Complete(0f),
-        iodineMicro = NutrientValue.Complete(0f)
-    )
-) { acc, nutrients -> acc + nutrients }
+fun Iterable<NutritionFacts>.sum(): NutritionFacts =
+    fold(NutritionFacts.Empty) { acc, nutrients -> acc + nutrients }

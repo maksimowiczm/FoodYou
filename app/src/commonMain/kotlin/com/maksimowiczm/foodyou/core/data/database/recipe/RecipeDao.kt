@@ -122,7 +122,7 @@ abstract class RecipeDao : RecipeLocalDataSource {
         """
         SELECT r.*
         FROM RecipeEntity r
-        JOIN RecipeIngredientProductDetails ri ON r.id = ri.r_recipeId
+        LEFT JOIN RecipeIngredientProductDetails ri ON r.id = ri.r_recipeId
         WHERE r.id = :id
         """
     )
@@ -133,7 +133,7 @@ abstract class RecipeDao : RecipeLocalDataSource {
         """
         SELECT r.*
         FROM RecipeEntity r
-        JOIN RecipeIngredientProductDetails ri ON r.id = ri.r_recipeId
+        LEFT JOIN RecipeIngredientProductDetails ri ON r.id = ri.r_recipeId
         WHERE r.id = :id
         """
     )

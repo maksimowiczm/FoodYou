@@ -31,7 +31,9 @@ object Changelog {
         changes = listOf(
             "Display the brand name after the product name"
         ),
-        bugFixes = listOf(),
+        bugFixes = listOf(
+            "Fix empty recipes, app won't crash when the recipe has no ingredients"
+        ),
         translations = listOf(),
         notes = null
     )
