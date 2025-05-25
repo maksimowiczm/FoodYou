@@ -29,7 +29,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -44,6 +43,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -113,7 +113,10 @@ internal fun MealCard(
                 food = meal.food,
                 onEditMeasurement = onEditMeasurement,
                 onDeleteEntry = onDeleteEntry,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.medium)
+                    .animateContentSize(MaterialTheme.motionScheme.defaultSpatialSpec())
             )
 
             AnimatedVisibility(
@@ -185,25 +188,18 @@ private fun FoodContainer(
     onDeleteEntry: (MeasurementId) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
+    Column(
         modifier = modifier,
-        shape = MaterialTheme.shapes.medium
+        verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        Column(
-            modifier = Modifier.animateContentSize(
-                animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
-            ),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            food.forEach { foodWithMeasurement ->
-                key(foodWithMeasurement.measurementId) {
-                    FoodContainerItem(
-                        foodWithMeasurement = foodWithMeasurement,
-                        onEditMeasurement = onEditMeasurement,
-                        onDeleteEntry = onDeleteEntry,
-                        modifier = Modifier.animatePlacement()
-                    )
-                }
+        food.forEach { foodWithMeasurement ->
+            key(foodWithMeasurement.measurementId) {
+                FoodContainerItem(
+                    foodWithMeasurement = foodWithMeasurement,
+                    onEditMeasurement = onEditMeasurement,
+                    onDeleteEntry = onDeleteEntry,
+                    modifier = Modifier.animatePlacement()
+                )
             }
         }
     }
@@ -245,7 +241,9 @@ private fun FoodContainerItem(
 
     FoodListItem(
         foodWithMeasurement = foodWithMeasurement,
-        modifier = modifier.clickable { showBottomSheet = true }
+        modifier = modifier.clickable { showBottomSheet = true },
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        contentColor = MaterialTheme.colorScheme.onSurface
     )
 }
 

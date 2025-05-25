@@ -33,9 +33,9 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun FoodListItem(
     foodWithMeasurement: FoodWithMeasurement,
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.surfaceVariant,
-    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
+    color: Color,
+    contentColor: Color,
+    modifier: Modifier = Modifier
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
@@ -133,9 +133,9 @@ fun FoodListErrorItem(headline: String, modifier: Modifier = Modifier) {
 private fun FoodListItem(
     headlineContent: @Composable () -> Unit,
     supportingContent: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.surfaceVariant,
-    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
+    color: Color,
+    contentColor: Color,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier,
