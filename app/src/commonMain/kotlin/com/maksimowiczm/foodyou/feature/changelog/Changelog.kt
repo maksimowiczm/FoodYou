@@ -27,10 +27,11 @@ object Changelog {
         )
 
     val next = Version.next(
-        newFeatures = listOf(),
+        newFeatures = listOf(
+            "Added a new screen for food measurement"
+        ),
         changes = listOf(
-            "Display the brand name after the product name",
-            "Added a new measurement screen, which allows for more measurement changes"
+            "Display the brand name after the product name"
         ),
         bugFixes = listOf(
             "Fix empty recipes, app won't crash when the recipe has no ingredients"
