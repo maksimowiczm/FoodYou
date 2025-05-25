@@ -67,12 +67,13 @@ internal fun CreateMeasurementScreen(
         food = food,
         onBack = onBack,
         onSave = {
+            val date = formState.date
             val measurement = formState.measurement
             val mealId = formState.meal?.id
 
             if (measurement != null && mealId != null) {
                 viewModel.onCreateMeasurement(
-                    date = formState.date,
+                    date = date,
                     mealId = mealId,
                     measurement = measurement
                 )

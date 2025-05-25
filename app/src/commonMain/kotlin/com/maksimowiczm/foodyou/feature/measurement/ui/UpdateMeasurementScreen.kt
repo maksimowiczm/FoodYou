@@ -58,6 +58,7 @@ internal fun UpdateMeasurementScreen(
     )
 
     val copySuffix = stringResource(Res.string.headline_copy)
+    val food = measurement.food
 
     MeasurementScreen(
         state = formState,
@@ -76,15 +77,10 @@ internal fun UpdateMeasurementScreen(
                 )
             }
         },
-        onEditFood = { onEditFood(measurement.food.id) },
+        onEditFood = { onEditFood(food.id) },
         onDelete = viewModel::onDeleteMeasurement,
-        onClone = if (measurement.food is Recipe) {
-            {
-                viewModel.onRecipeClone(
-                    recipeId = (measurement.food as Recipe).id,
-                    suffix = copySuffix
-                )
-            }
+        onClone = if (food is Recipe) {
+            { viewModel.onRecipeClone(recipeId = food.id, suffix = copySuffix) }
         } else {
             null
         },
