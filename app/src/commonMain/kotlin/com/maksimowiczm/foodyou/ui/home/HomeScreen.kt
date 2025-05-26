@@ -139,9 +139,11 @@ fun HomeScreen(
                     )
 
                     HomeCard.Calories -> GoalsCard(
-//                        animatedVisibilityScope = animatedVisibilityScope,
                         homeState = homeState,
-//                        onClick = onCaloriesCardClick,
+                        onClick = {
+                            onCaloriesCardClick(homeState.selectedDate.toEpochDays())
+                        },
+                        onLongClick = {},
                         modifier = Modifier
                             .testTag(testTag)
                             .padding(horizontal = 8.dp)

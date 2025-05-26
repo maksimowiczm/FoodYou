@@ -38,6 +38,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun GoalsCard(
     homeState: HomeState,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GoalsCardViewModel = koinViewModel()
 ) {
@@ -66,14 +68,45 @@ internal fun GoalsCard(
             proteinsPercentage = proteinsPercentage,
             carbsPercentage = carbsPercentage,
             fatsPercentage = fatsPercentage,
+            onClick = onClick,
+            onLongClick = onLongClick,
             modifier = modifier
+        )
+    }
+}
+
+@Composable
+private fun GoalsCard(
+    calories: Int,
+    caloriesGoal: Int,
+    proteinsPercentage: Float,
+    carbsPercentage: Float,
+    fatsPercentage: Float,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FoodYouHomeCard(
+        modifier = modifier,
+        onClick = onClick,
+        onLongClick = onLongClick
+    ) {
+        GoalsCardContent(
+            calories = calories,
+            caloriesGoal = caloriesGoal,
+            proteinsPercentage = proteinsPercentage,
+            carbsPercentage = carbsPercentage,
+            fatsPercentage = fatsPercentage,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun GoalsCard(
+private fun GoalsCardContent(
     calories: Int,
     caloriesGoal: Int,
     proteinsPercentage: Float,
@@ -112,79 +145,69 @@ private fun GoalsCard(
         caloriesGoal - calories
     }
 
-    FoodYouHomeCard(
-        modifier = modifier
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = caloriesString,
-                    style = typography.headlineLargeEmphasized
+            Text(
+                text = caloriesString,
+                style = typography.headlineLargeEmphasized
+            )
+
+            when {
+                left > 0 -> Text(
+                    text = pluralStringResource(Res.plurals.neutral_remaining_calories, left, left),
+                    color = MaterialTheme.colorScheme.outline,
+                    style = MaterialTheme.typography.bodyMediumEmphasized
                 )
 
-                when {
-                    left > 0 -> Text(
-                        text = pluralStringResource(
-                            Res.plurals.neutral_remaining_calories,
-                            left,
-                            left
-                        ),
-                        color = MaterialTheme.colorScheme.outline,
-                        style = MaterialTheme.typography.bodyMediumEmphasized
-                    )
-
-                    left == 0 -> Text(
-                        text = stringResource(Res.string.positive_goal_reached),
-                        color = MaterialTheme.colorScheme.outline,
-                        style = MaterialTheme.typography.bodyMediumEmphasized
-                    )
-
-                    else -> Text(
-                        text = pluralStringResource(
-                            Res.plurals.negative_exceeded_by_calories,
-                            -left,
-                            -left
-                        ),
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMediumEmphasized
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier.height(64.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                MacroBar(
-                    progress = proteinsPercentage,
-                    containerColor = nutrientsPalette.proteinsOnSurfaceContainer.copy(
-                        alpha = .25f
-                    ),
-                    barColor = nutrientsPalette.proteinsOnSurfaceContainer
+                left == 0 -> Text(
+                    text = stringResource(Res.string.positive_goal_reached),
+                    color = MaterialTheme.colorScheme.outline,
+                    style = MaterialTheme.typography.bodyMediumEmphasized
                 )
-                MacroBar(
-                    progress = carbsPercentage,
-                    containerColor = nutrientsPalette.carbohydratesOnSurfaceContainer.copy(
-                        alpha = .25f
+
+                else -> Text(
+                    text = pluralStringResource(
+                        Res.plurals.negative_exceeded_by_calories,
+                        -left,
+                        -left
                     ),
-                    barColor = nutrientsPalette.carbohydratesOnSurfaceContainer
-                )
-                MacroBar(
-                    progress = fatsPercentage,
-                    containerColor = nutrientsPalette.fatsOnSurfaceContainer.copy(
-                        alpha = .25f
-                    ),
-                    barColor = nutrientsPalette.fatsOnSurfaceContainer
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMediumEmphasized
                 )
             }
+        }
+
+        Row(
+            modifier = Modifier.height(64.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            MacroBar(
+                progress = proteinsPercentage,
+                containerColor = nutrientsPalette.proteinsOnSurfaceContainer.copy(
+                    alpha = .25f
+                ),
+                barColor = nutrientsPalette.proteinsOnSurfaceContainer
+            )
+            MacroBar(
+                progress = carbsPercentage,
+                containerColor = nutrientsPalette.carbohydratesOnSurfaceContainer.copy(
+                    alpha = .25f
+                ),
+                barColor = nutrientsPalette.carbohydratesOnSurfaceContainer
+            )
+            MacroBar(
+                progress = fatsPercentage,
+                containerColor = nutrientsPalette.fatsOnSurfaceContainer.copy(
+                    alpha = .25f
+                ),
+                barColor = nutrientsPalette.fatsOnSurfaceContainer
+            )
         }
     }
 }
