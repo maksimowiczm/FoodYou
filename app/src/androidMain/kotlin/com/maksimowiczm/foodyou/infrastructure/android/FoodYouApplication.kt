@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Build
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.infrastructure.di.initKoin
-import kotlin.system.exitProcess
 import org.koin.android.ext.koin.androidContext
 
 class FoodYouApplication : Application() {
@@ -17,9 +16,10 @@ class FoodYouApplication : Application() {
             androidContext(this@FoodYouApplication)
         }
 
-        Thread.setDefaultUncaughtExceptionHandler { _, e ->
+        val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { t, e ->
             handleUncaughtException(e)
-            exitProcess(1)
+            defaultHandler?.uncaughtException(t, e)
         }
     }
 
