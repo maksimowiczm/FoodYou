@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.infrastructure.di.initKoin
+import kotlin.system.exitProcess
 import org.koin.android.ext.koin.androidContext
 
 class FoodYouApplication : Application() {
@@ -17,11 +18,12 @@ class FoodYouApplication : Application() {
         }
 
         Thread.setDefaultUncaughtExceptionHandler { _, e ->
-            handlerUncaughtException(e)
+            handleUncaughtException(e)
+            exitProcess(1)
         }
     }
 
-    private fun handlerUncaughtException(e: Throwable) {
+    private fun handleUncaughtException(e: Throwable) {
         val intent = Intent(this, CrashReportActivity::class.java)
 
         val report = buildString {
