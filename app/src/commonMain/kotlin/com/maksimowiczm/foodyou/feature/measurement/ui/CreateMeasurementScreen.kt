@@ -27,7 +27,7 @@ internal fun CreateMeasurementScreen(
     date: LocalDate?,
     onBack: () -> Unit,
     onEditFood: (FoodId) -> Unit,
-    onRecipeClone: (FoodId.Product) -> Unit,
+    onRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
     viewModel: CreateMeasurementViewModel = koinViewModel(
@@ -37,13 +37,18 @@ internal fun CreateMeasurementScreen(
     val food = viewModel.food.collectAsStateWithLifecycle().value
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
+    val date = date ?: LocalDate.now(TimeZone.currentSystemDefault())
 
     val onEvent: (MeasurementScreenEvent) -> Unit = remember(onBack, onRecipeClone) {
         {
             when (it) {
                 MeasurementScreenEvent.Deleted -> onBack()
                 MeasurementScreenEvent.Done -> onBack()
-                is MeasurementScreenEvent.RecipeCloned -> onRecipeClone(it.productId)
+                is MeasurementScreenEvent.RecipeCloned -> onRecipeClone(
+                    it.productId,
+                    mealId,
+                    date.toEpochDays()
+                )
             }
         }
     }
@@ -57,7 +62,7 @@ internal fun CreateMeasurementScreen(
 
     val formState = rememberAdvancedMeasurementFormState(
         food = food,
-        initialDate = date ?: LocalDate.now(TimeZone.currentSystemDefault()),
+        initialDate = date,
         meals = meals,
         measurements = suggestions,
         initialMeal = mealId?.let { meals.indexOfFirst { meal -> meal.id == it } },

@@ -246,7 +246,7 @@ private fun AddFoodNavHost(
                         }
                     }
                 },
-                onRecipeClone = {
+                onRecipeClone = { it, _, _ ->
                     navController.navigate(MeasureFood(productId = it.id)) {
                         launchSingleTop = true
 
@@ -292,8 +292,8 @@ private fun AddFoodNavHost(
                         }
                     }
                 },
-                onRecipeClone = { productId ->
-                    navController.navigate(MeasureFood(productId = productId.id)) {
+                onRecipeClone = { it, _, _ ->
+                    navController.navigate(MeasureFood(productId = it.id)) {
                         launchSingleTop = true
 
                         popUpTo<UpdateMeasurement> {

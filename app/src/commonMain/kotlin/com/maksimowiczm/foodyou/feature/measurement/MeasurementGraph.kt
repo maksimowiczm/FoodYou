@@ -12,7 +12,8 @@ fun NavGraphBuilder.measurementGraph(
     createOnBack: () -> Unit,
     updateOnBack: () -> Unit,
     onEditFood: (FoodId) -> Unit,
-    onRecipeClone: (FoodId.Product) -> Unit
+    createOnRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit,
+    updateOnRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit
 ) {
     forwardBackwardComposable<CreateMeasurement> {
         val route = it.toRoute<CreateMeasurement>()
@@ -24,7 +25,7 @@ fun NavGraphBuilder.measurementGraph(
             date = date,
             onBack = createOnBack,
             onEditFood = onEditFood,
-            onRecipeClone = onRecipeClone,
+            onRecipeClone = createOnRecipeClone,
             animatedVisibilityScope = this
         )
     }
@@ -35,7 +36,7 @@ fun NavGraphBuilder.measurementGraph(
             measurementId = route.measurementId,
             onBack = updateOnBack,
             onEditFood = onEditFood,
-            onRecipeClone = onRecipeClone,
+            onRecipeClone = updateOnRecipeClone,
             animatedVisibilityScope = this
         )
     }

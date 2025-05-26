@@ -13,7 +13,7 @@ fun CreateMeasurementScreen(
     date: LocalDate?,
     onBack: () -> Unit,
     onEditFood: (FoodId) -> Unit,
-    onRecipeClone: (FoodId.Product) -> Unit,
+    onRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
