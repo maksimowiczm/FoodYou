@@ -8,8 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
-import com.maksimowiczm.foodyou.feature.addfood.AddFoodMeal
-import com.maksimowiczm.foodyou.feature.addfood.AddFoodSearchFood
+import com.maksimowiczm.foodyou.feature.addfood.AddFood
 import com.maksimowiczm.foodyou.feature.addfood.addFoodGraph
 import com.maksimowiczm.foodyou.feature.goals.GoalsScreen
 import com.maksimowiczm.foodyou.feature.goals.GoalsSettings
@@ -69,7 +68,7 @@ fun FoodYouNavHost(
             },
             onMealCardAddClick = { epochDay, mealId ->
                 navController.navigate(
-                    AddFoodSearchFood(
+                    AddFood(
                         mealId = mealId,
                         epochDay = epochDay
                     )
@@ -128,8 +127,7 @@ fun FoodYouNavHost(
         aboutGraph()
         addFoodGraph(
             onBack = {
-                navController.popBackStack<AddFoodSearchFood>(inclusive = true)
-                navController.popBackStack<AddFoodMeal>(inclusive = true)
+                navController.popBackStack<AddFood>(inclusive = true)
             }
         )
         goalsGraph(
