@@ -56,10 +56,12 @@ import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.modifier.animatePlacement
+import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.meal.domain.Meal
 import foodyou.app.generated.resources.*
+import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -141,28 +143,28 @@ internal fun MealCard(
             ) {
                 ValueColumn(
                     label = stringResource(Res.string.unit_kcal),
-                    value = meal.calories,
+                    value = meal.calories.roundToInt().toString(),
                     suffix = null,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
                 ValueColumn(
                     label = stringResource(Res.string.nutriment_proteins_short),
-                    value = meal.proteins,
+                    value = meal.proteins.formatClipZeros(),
                     suffix = stringResource(Res.string.unit_gram_short),
                     color = nutrientsPalette.proteinsOnSurfaceContainer
                 )
 
                 ValueColumn(
                     label = stringResource(Res.string.nutriment_carbohydrates_short),
-                    value = meal.carbohydrates,
+                    value = meal.carbohydrates.formatClipZeros(),
                     suffix = stringResource(Res.string.unit_gram_short),
                     color = nutrientsPalette.carbohydratesOnSurfaceContainer
                 )
 
                 ValueColumn(
                     label = stringResource(Res.string.nutriment_fats_short),
-                    value = meal.fats,
+                    value = meal.fats.formatClipZeros(),
                     suffix = stringResource(Res.string.unit_gram_short),
                     color = nutrientsPalette.fatsOnSurfaceContainer
                 )
@@ -283,7 +285,7 @@ private fun FoodContainerItem(
 @Composable
 private fun ValueColumn(
     label: String,
-    value: Int,
+    value: String,
     suffix: String?,
     color: Color,
     modifier: Modifier = Modifier
@@ -303,7 +305,7 @@ private fun ValueColumn(
             )
 
             Text(
-                text = if (value == 0) {
+                text = if (value == "0") {
                     stringResource(Res.string.em_dash)
                 } else {
                     value.toString() + (suffix?.let { " $suffix" } ?: "")

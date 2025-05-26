@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.meal.domain
 
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.ext.sumOf
-import kotlin.math.roundToInt
 import kotlinx.datetime.LocalTime
 
 internal data class Meal(
@@ -16,19 +15,15 @@ internal data class Meal(
     val isAllDay: Boolean
         get() = from == to
 
-    val calories: Int = food
+    val calories: Float = food
         .sumOf { it.food.nutritionFacts.calories.value * (it.weight ?: 0f) / 100f }
-        .roundToInt()
 
-    val proteins: Int = food
+    val proteins: Float = food
         .sumOf { it.food.nutritionFacts.proteins.value * (it.weight ?: 0f) / 100f }
-        .roundToInt()
 
-    val carbohydrates: Int = food
+    val carbohydrates: Float = food
         .sumOf { it.food.nutritionFacts.carbohydrates.value * (it.weight ?: 0f) / 100f }
-        .roundToInt()
 
-    val fats: Int = food
+    val fats: Float = food
         .sumOf { it.food.nutritionFacts.fats.value * (it.weight ?: 0f) / 100f }
-        .roundToInt()
 }
