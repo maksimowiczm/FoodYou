@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
 import kotlinx.coroutines.flow.map
 
-enum class MealCardsLayout {
+internal enum class MealCardsLayout {
     Horizontal,
     Vertical
 }
@@ -20,12 +20,12 @@ private fun Boolean?.toMealCardsLayout(): MealCardsLayout = if (this == true) {
     MealCardsLayout.Horizontal
 }
 
-suspend fun DataStore<Preferences>.setMealCardsLayout(layout: MealCardsLayout) =
+internal suspend fun DataStore<Preferences>.setMealCardsLayout(layout: MealCardsLayout) =
     set(MealPreferences.useVerticalLayout to (layout == MealCardsLayout.Vertical))
 
-fun DataStore<Preferences>.observeMealCardsLayout() = observe(MealPreferences.useVerticalLayout)
-    .map { it.toMealCardsLayout() }
+internal fun DataStore<Preferences>.observeMealCardsLayout() =
+    observe(MealPreferences.useVerticalLayout).map { it.toMealCardsLayout() }
 
 @Composable
-fun DataStore<Preferences>.collectMealCardsLayout() = observeMealCardsLayout()
+internal fun DataStore<Preferences>.collectMealCardsLayout() = observeMealCardsLayout()
     .collectAsStateWithLifecycle(getBlocking(MealPreferences.useVerticalLayout).toMealCardsLayout())

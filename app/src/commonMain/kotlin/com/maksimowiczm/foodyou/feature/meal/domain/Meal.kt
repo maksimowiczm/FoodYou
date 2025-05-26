@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.core.ext.sumOf
 import kotlin.math.roundToInt
 import kotlinx.datetime.LocalTime
 
-data class Meal(
+internal data class Meal(
     val id: Long,
     val name: String,
     val from: LocalTime,

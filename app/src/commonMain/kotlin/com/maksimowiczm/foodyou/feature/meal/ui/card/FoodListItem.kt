@@ -31,7 +31,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun FoodListItem(
+internal fun FoodListItem(
     foodWithMeasurement: FoodWithMeasurement,
     color: Color,
     contentColor: Color,
@@ -108,7 +108,7 @@ fun FoodListItem(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun FoodListErrorItem(headline: String, modifier: Modifier = Modifier) {
+internal fun FoodListErrorItem(headline: String, modifier: Modifier = Modifier) {
     FoodListItem(
         headlineContent = {
             Text(
