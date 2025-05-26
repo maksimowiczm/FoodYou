@@ -1,12 +1,10 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
@@ -31,31 +29,15 @@ import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-// I had to create separate shared transition scope for AddFood
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun AddFoodApp(
-    outerOnBack: () -> Unit,
+    onBack: () -> Unit,
     mealId: Long,
     epochDay: Int,
     modifier: Modifier = Modifier
 ) {
-    AddFoodNavHost(
-        outerOnBack = outerOnBack,
-        mealId = mealId,
-        epochDay = epochDay,
-        modifier = modifier
-    )
-}
+    val navController = rememberNavController()
 
-@Composable
-private fun AddFoodNavHost(
-    outerOnBack: () -> Unit,
-    mealId: Long,
-    epochDay: Int,
-    modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
-) {
     val date = LocalDate.fromEpochDays(epochDay)
     val searchViewModel = koinViewModel<SearchFoodViewModel>(
         parameters = { parametersOf(mealId, date) }
@@ -69,14 +51,7 @@ private fun AddFoodNavHost(
     ) {
         crossfadeComposable<SearchFood> {
             SearchFoodScreen(
-                onBack = {
-                    // If stack is empty call outer on back otherwise pop search
-                    if (navController.currentBackStack.value.size == 2) {
-                        outerOnBack()
-                    } else {
-                        navController.popBackStack<SearchFood>(inclusive = true)
-                    }
-                },
+                onBack = onBack,
                 onProductAdd = {
                     navController.navigate(CreateProduct) {
                         launchSingleTop = true

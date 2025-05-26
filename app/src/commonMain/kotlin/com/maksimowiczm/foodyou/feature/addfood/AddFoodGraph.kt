@@ -14,7 +14,7 @@ fun NavGraphBuilder.addFoodGraph(onBack: () -> Unit) {
         val (mealId, epochDay) = it.toRoute<AddFood>()
 
         AddFoodApp(
-            outerOnBack = onBack,
+            onBack = onBack,
             mealId = mealId,
             epochDay = epochDay
         )
