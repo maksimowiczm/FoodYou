@@ -45,7 +45,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
@@ -54,7 +53,6 @@ import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.modifier.animatePlacement
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
-import com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreenTestTags
 import com.maksimowiczm.foodyou.feature.mealredesign.domain.Meal
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -328,9 +326,7 @@ private fun BottomSheetContent(
             headlineContent = {
                 Text(stringResource(Res.string.action_delete_entry))
             },
-            modifier = Modifier
-                .testTag(MealScreenTestTags.DELETE_ENTRY_BUTTON)
-                .clickable { showDeleteDialog = true },
+            modifier = Modifier.clickable { showDeleteDialog = true },
             leadingContent = {
                 Icon(
                     imageVector = Icons.Default.Delete,
@@ -360,7 +356,6 @@ private fun DeleteDialog(onDismissRequest: () -> Unit, onDeleteEntry: () -> Unit
                 Text(stringResource(Res.string.action_delete))
             }
         },
-        modifier = Modifier.testTag(MealScreenTestTags.DELETE_DIALOG),
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest
