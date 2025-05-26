@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
@@ -35,6 +36,7 @@ internal fun FoodListItem(
     foodWithMeasurement: FoodWithMeasurement,
     color: Color,
     contentColor: Color,
+    shape: Shape,
     modifier: Modifier = Modifier
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
@@ -63,6 +65,7 @@ internal fun FoodListItem(
     ) {
         FoodListErrorItem(
             headline = foodWithMeasurement.food.headline,
+            shape = shape,
             modifier = modifier
         )
     } else {
@@ -101,14 +104,15 @@ internal fun FoodListItem(
             },
             modifier = modifier,
             color = color,
-            contentColor = contentColor
+            contentColor = contentColor,
+            shape = shape
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun FoodListErrorItem(headline: String, modifier: Modifier = Modifier) {
+internal fun FoodListErrorItem(headline: String, shape: Shape, modifier: Modifier = Modifier) {
     FoodListItem(
         headlineContent = {
             Text(
@@ -124,6 +128,7 @@ internal fun FoodListErrorItem(headline: String, modifier: Modifier = Modifier) 
         },
         modifier = modifier,
         color = MaterialTheme.colorScheme.errorContainer,
+        shape = shape,
         contentColor = MaterialTheme.colorScheme.onErrorContainer
     )
 }
@@ -135,10 +140,12 @@ private fun FoodListItem(
     supportingContent: @Composable () -> Unit,
     color: Color,
     contentColor: Color,
+    shape: Shape,
     modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier,
+        shape = shape,
         color = color,
         contentColor = contentColor
     ) {

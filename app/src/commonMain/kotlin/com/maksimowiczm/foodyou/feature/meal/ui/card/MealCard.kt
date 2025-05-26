@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.meal.ui.card
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -45,6 +47,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
@@ -178,7 +183,6 @@ internal fun MealCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun FoodContainer(
     food: List<FoodWithMeasurement>,
@@ -190,12 +194,19 @@ private fun FoodContainer(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        food.forEach { foodWithMeasurement ->
+        food.forEachIndexed { i, foodWithMeasurement ->
             key(foodWithMeasurement.measurementId) {
+                val topStart = food.animateTopCornerRadius(i)
+                val topEnd = food.animateTopCornerRadius(i)
+                val bottomStart = food.animateBottomCornerRadius(i)
+                val bottomEnd = food.animateBottomCornerRadius(i)
+                val shape = RoundedCornerShape(topStart, topEnd, bottomStart, bottomEnd)
+
                 FoodContainerItem(
                     foodWithMeasurement = foodWithMeasurement,
                     onEditMeasurement = onEditMeasurement,
                     onDeleteEntry = onDeleteEntry,
+                    shape = shape,
                     modifier = Modifier.animatePlacement()
                 )
             }
@@ -203,12 +214,35 @@ private fun FoodContainer(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun <T> List<T>.animateTopCornerRadius(index: Int, defaultRadius: Dp = 12.dp): Dp =
+    animateDpAsState(
+        targetValue = when (index) {
+            0 -> defaultRadius
+            else -> 0.dp
+        },
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+    ).value.coerceAtLeast(0.dp)
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun <T> List<T>.animateBottomCornerRadius(index: Int, defaultRadius: Dp = 12.dp): Dp =
+    animateDpAsState(
+        targetValue = when (index) {
+            lastIndex -> defaultRadius
+            else -> 0.dp
+        },
+        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+    ).value.coerceAtLeast(0.dp)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FoodContainerItem(
     foodWithMeasurement: FoodWithMeasurement,
     onEditMeasurement: (MeasurementId) -> Unit,
     onDeleteEntry: (MeasurementId) -> Unit,
+    shape: Shape,
     modifier: Modifier = Modifier
 ) {
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -241,7 +275,8 @@ private fun FoodContainerItem(
         foodWithMeasurement = foodWithMeasurement,
         modifier = modifier.clickable { showBottomSheet = true },
         color = MaterialTheme.colorScheme.surfaceVariant,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        shape = shape
     )
 }
 
@@ -304,7 +339,8 @@ private fun BottomSheetContent(
         FoodListItem(
             foodWithMeasurement = food,
             color = Color.Transparent,
-            contentColor = MaterialTheme.colorScheme.onSurface
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            shape = RectangleShape
         )
         HorizontalDivider(Modifier.padding(horizontal = 16.dp))
         ListItem(
