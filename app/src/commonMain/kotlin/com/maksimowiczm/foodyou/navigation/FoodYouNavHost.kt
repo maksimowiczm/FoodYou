@@ -20,6 +20,9 @@ import com.maksimowiczm.foodyou.feature.language.languageGraph
 import com.maksimowiczm.foodyou.feature.meal.MealCardSettings
 import com.maksimowiczm.foodyou.feature.meal.MealsSettings
 import com.maksimowiczm.foodyou.feature.meal.mealGraph
+import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurement
+import com.maksimowiczm.foodyou.feature.measurement.UpdateMeasurement
+import com.maksimowiczm.foodyou.feature.measurement.measurementGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.HomeSettings
@@ -47,13 +50,8 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
-            onMealCardClick = { epochDay, mealId ->
-                navController.navigate(
-                    AddFoodMeal(
-                        mealId = mealId,
-                        epochDay = epochDay
-                    )
-                ) {
+            onEditMeasurement = {
+                navController.navigate(UpdateMeasurement(it)) {
                     launchSingleTop = true
                 }
             },
@@ -160,6 +158,20 @@ fun FoodYouNavHost(
         importExportGraph(
             onBack = {
                 navController.popBackStack<ImportExport>(inclusive = true)
+            }
+        )
+        measurementGraph(
+            createOnBack = {
+                navController.popBackStack<CreateMeasurement>(inclusive = true)
+            },
+            updateOnBack = {
+                navController.popBackStack<UpdateMeasurement>(inclusive = true)
+            },
+            onEditFood = { foodId ->
+                // TODO
+            },
+            onRecipeClone = { foodId ->
+                // TODO
             }
         )
     }

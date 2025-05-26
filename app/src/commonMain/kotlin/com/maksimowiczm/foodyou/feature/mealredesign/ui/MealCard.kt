@@ -226,8 +226,8 @@ private fun FoodContainerItem(
             BottomSheetContent(
                 food = foodWithMeasurement,
                 onEdit = coroutineScope.lambda {
-                    sheetState.hide()
                     onEditMeasurement(foodWithMeasurement.measurementId)
+                    sheetState.hide()
                     showBottomSheet = false
                 },
                 onDelete = coroutineScope.lambda {
