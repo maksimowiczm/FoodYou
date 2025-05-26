@@ -150,21 +150,21 @@ internal fun MealCard(
 
                 ValueColumn(
                     label = stringResource(Res.string.nutriment_proteins_short),
-                    value = meal.proteins.formatClipZeros(),
+                    value = meal.proteins.formatClipZeros("%.1f"),
                     suffix = stringResource(Res.string.unit_gram_short),
                     color = nutrientsPalette.proteinsOnSurfaceContainer
                 )
 
                 ValueColumn(
                     label = stringResource(Res.string.nutriment_carbohydrates_short),
-                    value = meal.carbohydrates.formatClipZeros(),
+                    value = meal.carbohydrates.formatClipZeros("%.1f"),
                     suffix = stringResource(Res.string.unit_gram_short),
                     color = nutrientsPalette.carbohydratesOnSurfaceContainer
                 )
 
                 ValueColumn(
                     label = stringResource(Res.string.nutriment_fats_short),
-                    value = meal.fats.formatClipZeros(),
+                    value = meal.fats.formatClipZeros("%.1f"),
                     suffix = stringResource(Res.string.unit_gram_short),
                     color = nutrientsPalette.fatsOnSurfaceContainer
                 )

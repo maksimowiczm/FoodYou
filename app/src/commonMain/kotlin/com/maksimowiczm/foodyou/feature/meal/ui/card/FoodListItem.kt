@@ -42,15 +42,15 @@ internal fun FoodListItem(
     val nutrientsPalette = LocalNutrientsPalette.current
 
     val proteinsString = foodWithMeasurement.proteins?.let {
-        it.formatClipZeros() + " " + stringResource(Res.string.unit_gram_short)
+        it.formatClipZeros("%.1f") + " " + stringResource(Res.string.unit_gram_short)
     }
 
     val carbohydratesString = foodWithMeasurement.carbohydrates?.let {
-        it.formatClipZeros() + " " + stringResource(Res.string.unit_gram_short)
+        it.formatClipZeros("%.1f") + " " + stringResource(Res.string.unit_gram_short)
     }
 
     val fatsString = foodWithMeasurement.fats?.let {
-        it.formatClipZeros() + " " + stringResource(Res.string.unit_gram_short)
+        it.formatClipZeros("%.1f") + " " + stringResource(Res.string.unit_gram_short)
     }
 
     val caloriesString = foodWithMeasurement.caloriesString
