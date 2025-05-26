@@ -9,6 +9,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.ext.AnimatedSharedTransitionLayout
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
@@ -24,8 +25,8 @@ class HomeScreenTest {
         order: List<HomeCard> = HomeCard.entries,
         onSettings: () -> Unit = {},
         onAbout: () -> Unit = {},
-        onMealCardClick: (epochDay: Int, mealId: Long) -> Unit = { _, _ -> },
-        onMealLongClick: () -> Unit = {},
+        onEditMeasurement: (MeasurementId) -> Unit = {},
+        onMealCardLongClick: () -> Unit = {},
         onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit = { _, _ -> },
         onCaloriesCardClick: (epochDay: Int) -> Unit = {}
     ) {
@@ -38,8 +39,8 @@ class HomeScreenTest {
                     order = order,
                     onSettings = onSettings,
                     onAbout = onAbout,
-                    onMealCardClick = onMealCardClick,
-                    onMealCardLongClick = onMealLongClick,
+                    onEditMeasurement = onEditMeasurement,
+                    onMealCardLongClick = onMealCardLongClick,
                     onMealCardAddClick = onMealCardAddClick,
                     onCaloriesCardClick = onCaloriesCardClick,
                     modifier = modifier
