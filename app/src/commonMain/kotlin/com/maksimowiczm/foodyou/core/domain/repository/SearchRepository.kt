@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.core.domain.repository
 
 import com.maksimowiczm.foodyou.core.domain.model.SearchQuery
 import com.maksimowiczm.foodyou.core.domain.source.SearchLocalDataSource
-import com.maksimowiczm.foodyou.core.ext.mapValues
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapValues
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

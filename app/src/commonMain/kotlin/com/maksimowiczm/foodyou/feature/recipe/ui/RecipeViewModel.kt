@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.model.Product
 import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
 import com.maksimowiczm.foodyou.core.domain.repository.SearchRepository
-import com.maksimowiczm.foodyou.core.ext.combine
 import com.maksimowiczm.foodyou.core.input.Form
 import com.maksimowiczm.foodyou.core.input.ValidationStrategy
 import com.maksimowiczm.foodyou.core.input.dsl.input
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf

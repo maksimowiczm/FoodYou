@@ -1,27 +1,24 @@
 package com.maksimowiczm.foodyou.feature.meal
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
-import com.maksimowiczm.foodyou.feature.meal.ui.card.MealsCard
 
 @Composable
-fun MealsCard(
-    animatedVisibilityScope: AnimatedVisibilityScope,
+fun MealsCards(
     homeState: HomeState,
-    onMealClick: (epochDay: Int, mealId: Long) -> Unit,
-    onAddClick: (epochDay: Int, mealId: Long) -> Unit,
+    onAdd: (epochDay: Int, mealId: Long) -> Unit,
+    onEditMeasurement: (MeasurementId) -> Unit,
     onLongClick: () -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
-    MealsCard(
-        animatedVisibilityScope = animatedVisibilityScope,
+    com.maksimowiczm.foodyou.feature.meal.ui.card.MealsCards(
         homeState = homeState,
-        onMealClick = onMealClick,
-        onAddClick = onAddClick,
+        onAdd = onAdd,
+        onEditMeasurement = onEditMeasurement,
         onLongClick = onLongClick,
         contentPadding = contentPadding,
         modifier = modifier

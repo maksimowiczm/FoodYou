@@ -24,7 +24,7 @@ internal fun UpdateMeasurementScreen(
     measurementId: MeasurementId,
     onBack: () -> Unit,
     onEditFood: (FoodId) -> Unit,
-    onRecipeClone: (FoodId.Product) -> Unit,
+    onRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
     viewModel: UpdateMeasurementViewModel = koinViewModel(
@@ -46,7 +46,11 @@ internal fun UpdateMeasurementScreen(
             when (it) {
                 MeasurementScreenEvent.Deleted -> onBack()
                 MeasurementScreenEvent.Done -> onBack()
-                is MeasurementScreenEvent.RecipeCloned -> onRecipeClone(it.productId)
+                is MeasurementScreenEvent.RecipeCloned -> onRecipeClone(
+                    it.productId,
+                    measurement.mealId,
+                    measurement.measurementDate.date.toEpochDays()
+                )
             }
         }
     }

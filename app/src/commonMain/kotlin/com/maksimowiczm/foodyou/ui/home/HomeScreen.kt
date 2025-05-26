@@ -27,11 +27,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
-import com.maksimowiczm.foodyou.feature.meal.MealsCard
+import com.maksimowiczm.foodyou.feature.meal.MealsCards
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -41,7 +42,7 @@ fun HomeScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     onSettings: () -> Unit,
     onAbout: () -> Unit,
-    onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onEditMeasurement: (MeasurementId) -> Unit,
     onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onCaloriesCardClick: (epochDay: Int) -> Unit,
@@ -55,7 +56,7 @@ fun HomeScreen(
         order = order,
         onSettings = onSettings,
         onAbout = onAbout,
-        onMealCardClick = onMealCardClick,
+        onEditMeasurement = onEditMeasurement,
         onMealCardLongClick = onMealCardLongClick,
         onMealCardAddClick = onMealCardAddClick,
         onCaloriesCardClick = onCaloriesCardClick,
@@ -70,7 +71,7 @@ fun HomeScreen(
     order: List<HomeCard>,
     onSettings: () -> Unit,
     onAbout: () -> Unit,
-    onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onEditMeasurement: (MeasurementId) -> Unit,
     onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onCaloriesCardClick: (epochDay: Int) -> Unit,
@@ -128,13 +129,12 @@ fun HomeScreen(
                             .padding(horizontal = 8.dp)
                     )
 
-                    HomeCard.Meals -> MealsCard(
-                        animatedVisibilityScope = animatedVisibilityScope,
+                    HomeCard.Meals -> MealsCards(
                         homeState = homeState,
-                        onMealClick = onMealCardClick,
-                        onAddClick = onMealCardAddClick,
+                        onAdd = onMealCardAddClick,
                         onLongClick = onMealCardLongClick,
                         contentPadding = PaddingValues(horizontal = 8.dp),
+                        onEditMeasurement = onEditMeasurement,
                         modifier = Modifier.testTag(testTag)
                     )
 

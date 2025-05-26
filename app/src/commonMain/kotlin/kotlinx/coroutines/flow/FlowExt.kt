@@ -1,8 +1,4 @@
-package com.maksimowiczm.foodyou.core.ext
-
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+package kotlinx.coroutines.flow
 
 inline fun <reified T, R> Iterable<Flow<T>>.combine(
     crossinline transform: suspend (Array<T>) -> R

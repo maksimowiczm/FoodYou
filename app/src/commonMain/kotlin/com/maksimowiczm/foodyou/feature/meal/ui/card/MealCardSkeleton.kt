@@ -19,68 +19,57 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.feature.meal.ui.component.MealHeader
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 
 @Composable
 internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
-    val headline = @Composable {
-        Column {
+    FoodYouHomeCard(modifier) {
+        Column(Modifier.padding(16.dp)) {
             Box(
-                modifier = Modifier
+                Modifier
                     .shimmer(shimmer)
                     .size(140.dp, MaterialTheme.typography.headlineMedium.toDp() - 4.dp)
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
+
             Spacer(Modifier.height(4.dp))
-        }
-    }
-    val time = @Composable {
-        Box(
-            modifier = Modifier
-                .shimmer(shimmer)
-                .size(60.dp, MaterialTheme.typography.labelLarge.toDp())
-                .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-        )
-    }
-    val nutrientsLayout = @Composable {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+
             Box(
-                modifier = Modifier
+                Modifier
                     .shimmer(shimmer)
-                    .size(120.dp, MaterialTheme.typography.labelMedium.toDp() * 2)
+                    .size(60.dp, MaterialTheme.typography.labelLarge.toDp())
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
 
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.height(8.dp))
 
-            FilledIconButton(
-                onClick = {},
-                modifier = Modifier.shimmer(shimmer),
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                ),
-                enabled = false,
-                content = {}
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    Modifier
+                        .shimmer(shimmer)
+                        .size(120.dp, MaterialTheme.typography.labelMedium.toDp() * 2)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                )
+
+                Spacer(Modifier.weight(1f))
+
+                FilledIconButton(
+                    onClick = {},
+                    modifier = Modifier.shimmer(shimmer),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                    ),
+                    enabled = false,
+                    content = {}
+                )
+            }
         }
-    }
-
-    FoodYouHomeCard(
-        modifier = modifier
-    ) {
-        MealHeader(
-            modifier = Modifier.padding(16.dp),
-            headline = headline,
-            time = time,
-            nutrientsLayout = nutrientsLayout
-        )
     }
 }

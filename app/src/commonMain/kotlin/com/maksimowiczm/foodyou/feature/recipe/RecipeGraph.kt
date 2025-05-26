@@ -5,7 +5,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.core.navigation.fullScreenDialogComposable
+import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.recipe.ui.RecipeApp
 import kotlinx.serialization.Serializable
 
@@ -21,7 +21,7 @@ fun NavGraphBuilder.recipeGraph(
     onUpdateClose: () -> Unit,
     onUpdate: (recipeId: Long) -> Unit
 ) {
-    fullScreenDialogComposable<CreateRecipe> {
+    forwardBackwardComposable<CreateRecipe> {
         Surface(
             shadowElevation = 6.dp,
             shape = MaterialTheme.shapes.medium
@@ -32,7 +32,7 @@ fun NavGraphBuilder.recipeGraph(
             )
         }
     }
-    fullScreenDialogComposable<UpdateRecipe> {
+    forwardBackwardComposable<UpdateRecipe> {
         val (recipeId) = it.toRoute<UpdateRecipe>()
 
         Surface(
