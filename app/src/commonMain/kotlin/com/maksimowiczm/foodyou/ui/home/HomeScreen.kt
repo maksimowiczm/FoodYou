@@ -31,7 +31,7 @@ import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
-import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
+import com.maksimowiczm.foodyou.feature.goals.GoalsCard
 import com.maksimowiczm.foodyou.feature.meal.MealsCards
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -138,10 +138,10 @@ fun HomeScreen(
                         modifier = Modifier.testTag(testTag)
                     )
 
-                    HomeCard.Calories -> CaloriesCard(
-                        animatedVisibilityScope = animatedVisibilityScope,
+                    HomeCard.Calories -> GoalsCard(
+//                        animatedVisibilityScope = animatedVisibilityScope,
                         homeState = homeState,
-                        onClick = onCaloriesCardClick,
+//                        onClick = onCaloriesCardClick,
                         modifier = Modifier
                             .testTag(testTag)
                             .padding(horizontal = 8.dp)
