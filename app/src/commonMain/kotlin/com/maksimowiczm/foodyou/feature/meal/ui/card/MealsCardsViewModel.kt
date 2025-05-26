@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.mealredesign.ui
+package com.maksimowiczm.foodyou.feature.meal.ui.card
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.ext.launch
 import com.maksimowiczm.foodyou.feature.meal.data.observeMealCardsLayout
-import com.maksimowiczm.foodyou.feature.mealredesign.domain.ObserveMealsUseCase
+import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

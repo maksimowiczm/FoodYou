@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.mealredesign.domain
+package com.maksimowiczm.foodyou.feature.meal.domain
 
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.ext.sumOf

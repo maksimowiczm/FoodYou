@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.feature.meal.ui.component.MealHeader
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 

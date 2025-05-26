@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.mealredesign.domain
+package com.maksimowiczm.foodyou.feature.meal.domain
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

@@ -32,7 +32,7 @@ import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
-import com.maksimowiczm.foodyou.feature.mealredesign.ui.MealsCards
+import com.maksimowiczm.foodyou.feature.meal.ui.card.MealsCards
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject

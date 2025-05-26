@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.mealredesign.ui
+package com.maksimowiczm.foodyou.feature.meal.ui.card
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable

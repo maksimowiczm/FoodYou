@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.mealredesign.ui
+package com.maksimowiczm.foodyou.feature.meal.ui.card
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,8 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
-import com.maksimowiczm.foodyou.feature.meal.ui.card.MealCardSkeleton
-import com.maksimowiczm.foodyou.feature.mealredesign.domain.Meal
+import com.maksimowiczm.foodyou.feature.meal.domain.Meal
 import com.valentinilk.shimmer.Shimmer
 
 @Composable

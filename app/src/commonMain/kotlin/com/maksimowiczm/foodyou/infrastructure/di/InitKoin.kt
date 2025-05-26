@@ -34,7 +34,6 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         importExportModule,
         languageModule,
         mealModule,
-        com.maksimowiczm.foodyou.feature.mealredesign.mealModule,
         measurementModule,
         productModule,
         recipeModule
