@@ -86,7 +86,7 @@ internal fun MealCard(
 
     FoodYouHomeCard(
         modifier = modifier,
-        onClick = {},
+        onClick = onAddFood,
         onLongClick = onLongClick
     ) {
         Column(
