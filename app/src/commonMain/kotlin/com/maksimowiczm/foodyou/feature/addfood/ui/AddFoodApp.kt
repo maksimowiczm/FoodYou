@@ -1,11 +1,9 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
@@ -42,22 +40,14 @@ internal fun AddFoodApp(
     epochDay: Int,
     modifier: Modifier = Modifier
 ) {
-    SharedTransitionLayout {
-        CompositionLocalProvider(
-            LocalAddFoodSharedTransitionScope provides this
-        ) {
-            AddFoodNavHost(
-                outerOnBack = outerOnBack,
-                mealId = mealId,
-                epochDay = epochDay,
-                modifier = modifier
-            )
-        }
-    }
+    AddFoodNavHost(
+        outerOnBack = outerOnBack,
+        mealId = mealId,
+        epochDay = epochDay,
+        modifier = modifier
+    )
 }
 
-// I had to scope search view model and list state to whole NavHost
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun AddFoodNavHost(
     outerOnBack: () -> Unit,
@@ -78,43 +68,38 @@ private fun AddFoodNavHost(
         modifier = modifier
     ) {
         crossfadeComposable<SearchFood> {
-            val sts = LocalAddFoodSharedTransitionScope.current
-                ?: error("No add food shared transition scope")
-
-            with(sts) {
-                SearchFoodScreen(
-                    onBack = {
-                        // If stack is empty call outer on back otherwise pop search
-                        if (navController.currentBackStack.value.size == 2) {
-                            outerOnBack()
-                        } else {
-                            navController.popBackStack<SearchFood>(inclusive = true)
-                        }
-                    },
-                    onProductAdd = {
-                        navController.navigate(CreateProduct) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onRecipeAdd = {
-                        navController.navigate(CreateRecipe) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onFoodClick = {
-                        navController.navigate(MeasureFood(it)) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onBarcodeScanner = {
-                        navController.navigate(SearchFoodBarcodeScanner) {
-                            launchSingleTop = true
-                        }
-                    },
-                    viewModel = searchViewModel,
-                    state = searchScreenState
-                )
-            }
+            SearchFoodScreen(
+                onBack = {
+                    // If stack is empty call outer on back otherwise pop search
+                    if (navController.currentBackStack.value.size == 2) {
+                        outerOnBack()
+                    } else {
+                        navController.popBackStack<SearchFood>(inclusive = true)
+                    }
+                },
+                onProductAdd = {
+                    navController.navigate(CreateProduct) {
+                        launchSingleTop = true
+                    }
+                },
+                onRecipeAdd = {
+                    navController.navigate(CreateRecipe) {
+                        launchSingleTop = true
+                    }
+                },
+                onFoodClick = {
+                    navController.navigate(MeasureFood(it)) {
+                        launchSingleTop = true
+                    }
+                },
+                onBarcodeScanner = {
+                    navController.navigate(SearchFoodBarcodeScanner) {
+                        launchSingleTop = true
+                    }
+                },
+                viewModel = searchViewModel,
+                state = searchScreenState
+            )
         }
         crossfadeComposable<SearchFoodBarcodeScanner> {
             CameraBarcodeScannerScreen(
