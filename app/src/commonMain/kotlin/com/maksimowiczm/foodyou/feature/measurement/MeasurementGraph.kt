@@ -17,12 +17,11 @@ fun NavGraphBuilder.measurementGraph(
 ) {
     forwardBackwardComposable<CreateMeasurement> {
         val route = it.toRoute<CreateMeasurement>()
-        val date = LocalDate.fromEpochDays(route.epochDay)
 
         CreateMeasurementScreen(
             foodId = route.foodId,
             mealId = route.mealId,
-            date = date,
+            date = route.date,
             onBack = createOnBack,
             onEditFood = onEditFood,
             onRecipeClone = createOnRecipeClone,
@@ -105,4 +104,7 @@ data class CreateMeasurement(
             recipeId != null -> FoodId.Recipe(recipeId)
             else -> error("Either productId or recipeId must be provided")
         }
+
+    val date: LocalDate
+        get() = LocalDate.fromEpochDays(epochDay)
 }
