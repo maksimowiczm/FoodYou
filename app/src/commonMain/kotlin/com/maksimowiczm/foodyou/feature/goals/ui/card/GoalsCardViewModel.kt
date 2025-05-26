@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui.cardredesign
+package com.maksimowiczm.foodyou.feature.goals.ui.card
 
 import androidx.lifecycle.ViewModel
 import com.maksimowiczm.foodyou.feature.goals.data.GoalsRepository

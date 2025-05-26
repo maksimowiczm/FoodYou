@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui.cardredesign
+package com.maksimowiczm.foodyou.feature.goals.ui.card
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas

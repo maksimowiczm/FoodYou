@@ -6,7 +6,7 @@ import com.maksimowiczm.foodyou.core.ui.home.HomeState
 
 @Composable
 fun GoalsCard(homeState: HomeState, modifier: Modifier = Modifier) {
-    com.maksimowiczm.foodyou.feature.goals.ui.cardredesign.GoalsCard(
+    com.maksimowiczm.foodyou.feature.goals.ui.card.GoalsCard(
         homeState = homeState,
         modifier = modifier
     )
