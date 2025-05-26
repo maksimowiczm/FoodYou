@@ -24,14 +24,10 @@ import com.valentinilk.shimmer.shimmer
 
 @Composable
 internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
-    FoodYouHomeCard(
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+    FoodYouHomeCard(modifier) {
+        Column(Modifier.padding(16.dp)) {
             Box(
-                modifier = Modifier
+                Modifier
                     .shimmer(shimmer)
                     .size(140.dp, MaterialTheme.typography.headlineMedium.toDp() - 4.dp)
                     .clip(MaterialTheme.shapes.medium)
@@ -41,7 +37,7 @@ internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
             Spacer(Modifier.height(4.dp))
 
             Box(
-                modifier = Modifier
+                Modifier
                     .shimmer(shimmer)
                     .size(60.dp, MaterialTheme.typography.labelLarge.toDp())
                     .clip(MaterialTheme.shapes.medium)
@@ -55,7 +51,7 @@ internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
-                    modifier = Modifier
+                    Modifier
                         .shimmer(shimmer)
                         .size(120.dp, MaterialTheme.typography.labelMedium.toDp() * 2)
                         .clip(MaterialTheme.shapes.medium)
