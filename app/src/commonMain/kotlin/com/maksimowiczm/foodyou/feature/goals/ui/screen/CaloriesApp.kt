@@ -1,17 +1,13 @@
 package com.maksimowiczm.foodyou.feature.goals.ui.screen
 
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
@@ -47,15 +43,7 @@ private fun CaloriesNavHost(
         startDestination = CaloriesScreen,
         modifier = modifier
     ) {
-        crossfadeComposable<CaloriesScreen>(
-            popEnterTransition = {
-                if (initialState.destination.hasRoute<UpdateRecipe>() == true) {
-                    fadeIn(snap())
-                } else {
-                    CrossFadeComposableDefaults.enterTransition()
-                }
-            }
-        ) {
+        crossfadeComposable<CaloriesScreen> {
             CaloriesScreen(
                 date = date,
                 animatedVisibilityScope = outerAnimatedScope,
