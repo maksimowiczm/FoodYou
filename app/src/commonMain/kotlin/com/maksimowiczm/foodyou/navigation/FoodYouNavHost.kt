@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
 import com.maksimowiczm.foodyou.feature.addfood.AddFoodMeal
@@ -23,6 +24,12 @@ import com.maksimowiczm.foodyou.feature.meal.mealGraph
 import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurement
 import com.maksimowiczm.foodyou.feature.measurement.UpdateMeasurement
 import com.maksimowiczm.foodyou.feature.measurement.measurementGraph
+import com.maksimowiczm.foodyou.feature.product.CreateProduct
+import com.maksimowiczm.foodyou.feature.product.UpdateProduct
+import com.maksimowiczm.foodyou.feature.product.productGraph
+import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
+import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
+import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.HomeSettings
@@ -160,6 +167,34 @@ fun FoodYouNavHost(
                 navController.popBackStack<ImportExport>(inclusive = true)
             }
         )
+        recipeGraph(
+            onCreateClose = {
+                navController.popBackStack<CreateRecipe>(inclusive = true)
+            },
+            onCreate = {
+                navController.popBackStack<CreateRecipe>(inclusive = true)
+            },
+            onUpdateClose = {
+                navController.popBackStack<UpdateRecipe>(inclusive = true)
+            },
+            onUpdate = {
+                navController.popBackStack<UpdateRecipe>(inclusive = true)
+            }
+        )
+        productGraph(
+            createOnBack = {
+                navController.popBackStack<CreateProduct>(inclusive = true)
+            },
+            updateOnBack = {
+                navController.popBackStack<UpdateProduct>(inclusive = true)
+            },
+            onCreateProduct = {
+                navController.popBackStack<CreateProduct>(inclusive = true)
+            },
+            onUpdateProduct = {
+                navController.popBackStack<UpdateProduct>(inclusive = true)
+            }
+        )
         measurementGraph(
             createOnBack = {
                 navController.popBackStack<CreateMeasurement>(inclusive = true)
@@ -167,8 +202,15 @@ fun FoodYouNavHost(
             updateOnBack = {
                 navController.popBackStack<UpdateMeasurement>(inclusive = true)
             },
-            onEditFood = { foodId ->
-                // TODO
+            onEditFood = {
+                val route = when (it) {
+                    is FoodId.Product -> UpdateProduct(it.id)
+                    is FoodId.Recipe -> UpdateRecipe(it.id)
+                }
+
+                navController.navigate(route) {
+                    launchSingleTop = true
+                }
             },
             createOnRecipeClone = { foodId, mealId, epochDay ->
                 navController.navigate(

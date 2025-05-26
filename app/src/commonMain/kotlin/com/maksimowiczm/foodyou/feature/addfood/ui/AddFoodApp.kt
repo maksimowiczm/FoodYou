@@ -28,8 +28,9 @@ import com.maksimowiczm.foodyou.feature.meal.MealScreen
 import com.maksimowiczm.foodyou.feature.meal.ui.screen.MealScreenSharedTransition
 import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.measurement.UpdateMeasurementScreen
-import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
-import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
+import com.maksimowiczm.foodyou.feature.product.CreateProduct
+import com.maksimowiczm.foodyou.feature.product.UpdateProduct
+import com.maksimowiczm.foodyou.feature.product.productGraph
 import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
@@ -304,35 +305,32 @@ private fun AddFoodNavHost(
                 animatedVisibilityScope = this
             )
         }
-        forwardBackwardComposable<CreateProduct> {
-            CreateProductScreen(
-                onBack = {
-                    navController.popBackStack<CreateProduct>(inclusive = true)
-                },
-                onCreate = { productId ->
-                    navController.navigate(MeasureFood(FoodId.Product(productId))) {
-                        launchSingleTop = true
+        productGraph(
+            createOnBack = {
+                navController.popBackStack<CreateProduct>(inclusive = true)
+            },
+            updateOnBack = {
+                navController.popBackStack<UpdateProduct>(inclusive = true)
+            },
+            onCreateProduct = { foodId ->
+                navController.navigate(MeasureFood(foodId)) {
+                    launchSingleTop = true
 
-                        popUpTo<CreateProduct> {
-                            inclusive = true
-                        }
+                    popUpTo<CreateProduct> {
+                        inclusive = true
                     }
                 }
-            )
-        }
-        forwardBackwardComposable<UpdateProduct> {
-            val (productId) = it.toRoute<UpdateProduct>()
+            },
+            onUpdateProduct = { foodId ->
+                navController.navigate(MeasureFood(foodId)) {
+                    launchSingleTop = true
 
-            UpdateProductScreen(
-                productId = productId,
-                onBack = {
-                    navController.popBackStack<UpdateProduct>(inclusive = true)
-                },
-                onUpdate = {
-                    navController.popBackStack<UpdateProduct>(inclusive = true)
+                    popUpTo<UpdateProduct> {
+                        inclusive = true
+                    }
                 }
-            )
-        }
+            }
+        )
         recipeGraph(
             onCreateClose = {
                 navController.popBackStack<CreateRecipe>(inclusive = true)
@@ -364,12 +362,6 @@ private data object SearchFoodBarcodeScanner
 
 @Serializable
 private data object Meal
-
-@Serializable
-private data object CreateProduct
-
-@Serializable
-private data class UpdateProduct(val productId: Long)
 
 @Serializable
 private data class UpdateMeasurement(
