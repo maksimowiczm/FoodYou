@@ -28,7 +28,8 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(
-            "Added a new screen for food measurement"
+            "Added a new screen for food measurement",
+            "Added crash handler to display a crash report screen when the app crashes"
         ),
         changes = listOf(
             "Display the brand name after the product name",

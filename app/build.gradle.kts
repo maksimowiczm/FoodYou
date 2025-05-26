@@ -174,6 +174,10 @@ android {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("debug")
         }
+        create("miniDevRelease") {
+            initWith(getByName("devRelease"))
+            isMinifyEnabled = true
+        }
         create("preview") {
             initWith(getByName("release"))
             applicationIdSuffix = ".preview"
