@@ -31,7 +31,6 @@ internal fun FoodListItem(
     measurement: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    brand: (@Composable () -> Unit)? = null,
     trailingContent: (@Composable () -> Unit)? = null,
     containerColor: Color = Color.Transparent,
     contentColor: Color = Color.Unspecified,
@@ -40,19 +39,9 @@ internal fun FoodListItem(
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
-    val overlineContent = brand?.let {
-        @Composable {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.labelMedium
-            ) {
-                brand()
-            }
-        }
-    }
-
     val headlineContent = @Composable {
         CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.titleLargeEmphasized
+            LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
         ) {
             name()
         }
@@ -60,7 +49,7 @@ internal fun FoodListItem(
 
     val supportingContent = @Composable {
         CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.bodyLarge
+            LocalTextStyle provides MaterialTheme.typography.bodyMedium
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth()
@@ -101,7 +90,6 @@ internal fun FoodListItem(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                overlineContent?.invoke()
                 headlineContent()
                 supportingContent()
             }
