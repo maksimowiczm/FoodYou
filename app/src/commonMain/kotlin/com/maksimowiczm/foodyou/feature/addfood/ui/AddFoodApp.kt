@@ -16,7 +16,6 @@ import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodScreen
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.rememberSearchFoodScreenState
-import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.product.UpdateProduct
@@ -67,39 +66,8 @@ internal fun AddFoodApp(
                         launchSingleTop = true
                     }
                 },
-                onBarcodeScanner = {
-                    navController.navigate(SearchFoodBarcodeScanner) {
-                        launchSingleTop = true
-                    }
-                },
                 viewModel = searchViewModel,
                 state = searchScreenState
-            )
-        }
-        crossfadeComposable<SearchFoodBarcodeScanner> {
-            CameraBarcodeScannerScreen(
-                onClose = {
-                    navController.navigate(SearchFood) {
-                        popUpTo<SearchFoodBarcodeScanner> {
-                            inclusive = true
-                        }
-                        popUpTo<SearchFood> {
-                            inclusive = true
-                        }
-                    }
-                },
-                onBarcodeScan = {
-                    searchViewModel.onSearch(it)
-
-                    navController.navigate(SearchFood) {
-                        popUpTo<SearchFoodBarcodeScanner> {
-                            inclusive = true
-                        }
-                        popUpTo<SearchFood> {
-                            inclusive = true
-                        }
-                    }
-                }
             )
         }
         forwardBackwardComposable<MeasureFood>(
@@ -201,9 +169,6 @@ internal fun AddFoodApp(
 
 @Serializable
 private data object SearchFood
-
-@Serializable
-private data object SearchFoodBarcodeScanner
 
 @Serializable
 private data class MeasureFood(val productId: Long? = null, val recipeId: Long? = null) {

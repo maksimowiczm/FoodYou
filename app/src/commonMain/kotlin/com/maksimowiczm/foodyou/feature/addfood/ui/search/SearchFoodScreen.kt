@@ -1,42 +1,49 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.LunchDining
-import androidx.compose.material.icons.filled.RamenDining
+import androidx.compose.material.icons.filled.NorthWest
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonMenu
+import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
+import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleFloatingActionButton
+import androidx.compose.material3.ToggleFloatingActionButtonDefaults
+import androidx.compose.material3.TopSearchBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -46,42 +53,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.SearchQuery
-import com.maksimowiczm.foodyou.core.ui.component.FloatingActionButtonWithActions
-import com.maksimowiczm.foodyou.core.ui.component.FoodListItemSkeleton
-import com.maksimowiczm.foodyou.core.ui.component.MeasurementSummary
-import com.maksimowiczm.foodyou.core.ui.component.NutrientsRow
-import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
-import com.maksimowiczm.foodyou.core.ui.ext.throwable
-import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.ui.component.BackHandler
+import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
+import com.maksimowiczm.foodyou.core.ui.component.Scrim
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
-import com.maksimowiczm.foodyou.feature.addfood.ui.component.ProductSearchBarSuggestions
-import com.maksimowiczm.foodyou.feature.addfood.ui.component.SearchScreen
-import com.valentinilk.shimmer.Shimmer
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
-import com.valentinilk.shimmer.shimmer
+import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
-import kotlin.math.roundToInt
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.transform
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -90,410 +86,397 @@ internal fun SearchFoodScreen(
     onProductAdd: () -> Unit,
     onRecipeAdd: () -> Unit,
     onFoodClick: (FoodId) -> Unit,
-    onBarcodeScanner: () -> Unit,
+    state: SearchFoodScreenState,
     viewModel: SearchFoodViewModel,
-    modifier: Modifier = Modifier,
-    state: SearchFoodScreenState = rememberSearchFoodScreenState()
+    modifier: Modifier = Modifier
 ) {
-    val pages = viewModel.pages.collectAsLazyPagingItems(
-        viewModel.viewModelScope.coroutineContext
-    )
-    val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
-
-    LaunchedEffect(viewModel) {
-        viewModel.searchQuery.collectLatest {
-            when (it) {
-                null -> state.textFieldState.clearText()
-                else -> state.textFieldState.setTextAndPlaceCursorAtEnd(it)
-            }
-        }
-    }
+    val pages = viewModel.pages.collectAsLazyPagingItems(viewModel.viewModelScope.coroutineContext)
+    val recentQueries = viewModel.recentQueries.collectAsStateWithLifecycle().value
 
     SearchFoodScreen(
+        state = state,
         pages = pages,
-        recentQueries = recentQueries,
+        recentQueries = recentQueries.map { it.query },
         onBack = onBack,
-        onSearch = remember(viewModel) { viewModel::onSearch },
-        onSearchClear = remember(viewModel) { { viewModel.onSearch(null) } },
-        onBarcodeScanner = onBarcodeScanner,
         onProductAdd = onProductAdd,
         onRecipeAdd = onRecipeAdd,
         onFoodClick = onFoodClick,
-        onFoodToggle = remember(viewModel) {
-            { state, food ->
-                when (state) {
-                    true -> viewModel.onQuickAdd(food)
-                    false -> viewModel.onQuickRemove(food)
-                }
+        onFoodToggle = { state, food ->
+            when (state) {
+                true -> viewModel.onQuickAdd(food)
+                false -> viewModel.onQuickRemove(food)
             }
         },
-        modifier = modifier,
-        state = state
+        onSearch = viewModel::onSearch,
+        modifier = modifier
     )
 }
 
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3ExpressiveApi::class,
-    ExperimentalAnimationApi::class
-)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun SearchFoodScreen(
+    state: SearchFoodScreenState,
     pages: LazyPagingItems<SearchFoodItem>,
-    recentQueries: List<SearchQuery>,
+    recentQueries: List<String>,
     onBack: () -> Unit,
-    onSearch: (String) -> Unit,
-    onSearchClear: () -> Unit,
-    onBarcodeScanner: () -> Unit,
     onProductAdd: () -> Unit,
     onRecipeAdd: () -> Unit,
     onFoodClick: (FoodId) -> Unit,
     onFoodToggle: (Boolean, SearchFoodItem) -> Unit,
-    modifier: Modifier = Modifier,
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    state: SearchFoodScreenState = rememberSearchFoodScreenState(),
-    shimmer: Shimmer = rememberShimmer(ShimmerBounds.Window)
+    onSearch: (String?) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val isEmpty by remember(pages.loadState) {
-        derivedStateOf { pages.itemCount == 0 }
-    }
-
-    val showEmptyLabel by remember(pages.loadState) {
-        derivedStateOf {
-            isEmpty &&
-                pages.loadState.append !is LoadState.Loading &&
-                pages.loadState.refresh !is LoadState.Loading
-        }
-    }
-
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
-    val scrimAlpha by animateFloatAsState(
-        targetValue = if (fabExpanded) .5f else 0f
-    )
 
-    val fab = @Composable {
-        FloatingActionButtonWithActions(
-            expanded = fabExpanded,
-            actions = listOf(
-                {
-                    Surface(
-                        onClick = {
-                            onRecipeAdd()
-                            fabExpanded = false
-                        },
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.headline_recipe),
-                                style = MaterialTheme.typography.titleSmall
-                            )
-                            Icon(
-                                imageVector = Icons.Default.RamenDining,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                },
-                {
-                    Surface(
-                        onClick = {
-                            fabExpanded = false
-                            onProductAdd()
-                        },
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.headline_product),
-                                style = MaterialTheme.typography.titleSmall
-                            )
-                            Icon(
-                                imageVector = Icons.Default.LunchDining,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
-            ),
-            fab = {
-                FloatingActionButton(
-                    onClick = { fabExpanded = !fabExpanded }
-                ) {
-                    val rotation by animateFloatAsState(
-                        targetValue = if (fabExpanded) 45f else 0f
-                    )
-
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = if (fabExpanded) {
-                            stringResource(Res.string.action_close)
-                        } else {
-                            stringResource(Res.string.action_create)
-                        },
-                        modifier = Modifier.graphicsLayer {
-                            rotationZ = rotation
-                        }
-                    )
-                }
-            },
-            modifier = Modifier.zIndex(2f)
-        )
-    }
-
-    val fullScreenContent = @Composable {
-        ProductSearchBarSuggestions(
-            recentQueries = recentQueries.map { it.query },
-            onSearch = {
-                onSearch(it)
-                state.textFieldState.setTextAndPlaceCursorAtEnd(it)
-                coroutineScope.launch {
-                    state.searchBarState.animateToCollapsed()
-                }
-            },
-            onFill = {
-                state.textFieldState.setTextAndPlaceCursorAtEnd(it)
-                onSearch(it)
-            }
-        )
-    }
+    BackHandler(fabExpanded) { fabExpanded = false }
 
     Scaffold(
-        floatingActionButton = fab,
-        modifier = modifier
-    ) {
-        if (fabExpanded) {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .zIndex(1f)
-                    .graphicsLayer {
-                        alpha = scrimAlpha
-                    }
-                    .pointerInput(Unit) {
-                        detectTapGestures {
-                            fabExpanded = false
-                        }
-                    }
-                    .background(MaterialTheme.colorScheme.scrim)
+        modifier = modifier,
+        floatingActionButton = {
+            Fab(
+                expanded = fabExpanded,
+                onExpandedChange = { expanded ->
+                    fabExpanded = expanded
+                },
+                onRecipeAdd = {
+                    onRecipeAdd()
+                    fabExpanded = false
+                },
+                onProductAdd = {
+                    onProductAdd()
+                    fabExpanded = false
+                }
             )
         }
+    ) {
+        Scrim(
+            visible = fabExpanded,
+            onDismiss = { fabExpanded = false },
+            modifier = Modifier.fillMaxSize().zIndex(10f)
+        )
 
-        SearchScreen(
+        Content(
+            state = state,
             pages = pages,
-            onSearch = onSearch,
-            onClear = onSearchClear,
+            recentQueries = recentQueries,
             onBack = onBack,
-            onBarcodeScanner = onBarcodeScanner,
-            textFieldState = state.textFieldState,
-            searchBarState = state.searchBarState,
-            coroutineScope = coroutineScope,
-            topBar = null,
-            floatingActionButton = {},
-            fullScreenSearchBarContent = fullScreenContent,
-            errorCard = {
-                val error by remember(pages.loadState) {
-                    derivedStateOf { pages.throwable }
-                }
-            },
-            hintCard = {
-            }
-        ) { paddingValues ->
-            if (showEmptyLabel) {
-                Text(
-                    text = stringResource(Res.string.neutral_no_products_found),
-                    modifier = Modifier
-                        .safeContentPadding()
-                        .align(Alignment.Center)
-                )
-            }
-
-            LazyColumn(
-                contentPadding = paddingValues,
-                state = state.lazyListState
-            ) {
-                items(
-                    count = pages.itemCount,
-                    key = pages.itemKey { it.uniqueId }
-                ) {
-                    val item = pages[it]
-                    val transition = updateTransition(item)
-
-                    transition.Crossfade(
-                        contentKey = { it != null },
-                        modifier = Modifier.animateItem(
-                            fadeInSpec = null,
-                            fadeOutSpec = null
-                        )
-                    ) { item ->
-                        when (item) {
-                            null -> ListItemSkeleton(shimmer)
-                            else -> item.ListItem(
-                                onToggle = { onFoodToggle(it, item) },
-                                modifier = Modifier.clickable {
-                                    onFoodClick(item.foodId)
-                                }
-                            )
-                        }
-                    }
-                }
-
-                if (pages.loadState.append == LoadState.Loading) {
-                    items(
-                        count = 3,
-                        key = { "skeleton-append-$it" }
-                    ) {
-                        ListItemSkeleton(shimmer)
-                    }
-                }
-
-                // FAB spacer
-                item {
-                    Spacer(Modifier.height(8.dp))
-                    Spacer(Modifier.height(56.dp))
-                    Spacer(Modifier.height(16.dp))
-                }
-            }
-        }
+            onFoodClick = onFoodClick,
+            onFoodToggle = onFoodToggle,
+            onSearch = onSearch
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun SearchFoodItem.ListItem(onToggle: (Boolean) -> Unit, modifier: Modifier = Modifier) {
-    val containerColor = if (isSelected) {
-        MaterialTheme.colorScheme.secondaryContainer
-    } else {
-        MaterialTheme.colorScheme.surface
-    }
-    val contentColor = if (isSelected) {
-        MaterialTheme.colorScheme.onSecondaryContainer
-    } else {
-        MaterialTheme.colorScheme.onSurface
-    }
-
-    val weight = weight
-    val measurementString = measurementString
-    val caloriesString = caloriesString
-    if (weight == null || measurementString == null || caloriesString == null) {
-        // TODO handle broken weight
-        return
-    }
-
-    ListItem(
-        headlineContent = { Text(headline) },
-        modifier = modifier,
-        supportingContent = {
-            Column {
-                val proteins = (proteins * weight / 100f).roundToInt()
-                val carbohydrates = (carbohydrates * weight / 100f).roundToInt()
-                val fats = (fats * weight / 100f).roundToInt()
-
-                NutrientsRow(
-                    proteins = proteins,
-                    carbohydrates = carbohydrates,
-                    fats = fats,
-                    modifier = Modifier.fillMaxWidth()
+private fun Fab(
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    onRecipeAdd: () -> Unit,
+    onProductAdd: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FloatingActionButtonMenu(
+        expanded = expanded,
+        button = {
+            ToggleFloatingActionButton(
+                checked = expanded,
+                onCheckedChange = onExpandedChange,
+                containerColor = ToggleFloatingActionButtonDefaults.containerColor(
+                    initialColor = MaterialTheme.colorScheme.secondaryContainer,
+                    finalColor = MaterialTheme.colorScheme.secondary
                 )
-                MeasurementSummary(
-                    measurementString = measurementString,
-                    measurementStringShort = measurementStringShort,
-                    caloriesString = caloriesString,
-                    modifier = Modifier.fillMaxWidth()
+            ) {
+                val rotation by remember {
+                    derivedStateOf { checkedProgress * 45f }
+                }
+
+                val tintColor = lerp(
+                    start = MaterialTheme.colorScheme.onSecondaryContainer,
+                    stop = MaterialTheme.colorScheme.onSecondary,
+                    fraction = checkedProgress
+                )
+
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = if (expanded) {
+                        stringResource(Res.string.action_close)
+                    } else {
+                        stringResource(Res.string.action_create)
+                    },
+                    tint = tintColor,
+                    modifier = Modifier.graphicsLayer { rotationZ = rotation }
                 )
             }
         },
-        trailingContent = {
-            ToggleButton(
-                checked = isSelected,
-                onCheckedChange = onToggle
-            ) {
-                if (isSelected) {
+        // For whatever reason FloatingActionButtonMenu has default padding which makes scaffold fab
+        // position to be broken exactly by 16.dp
+        modifier = modifier.offset(x = 16.dp, y = 16.dp)
+    ) {
+        FloatingActionButtonMenuItem(
+            onClick = onRecipeAdd,
+            text = { Text(stringResource(Res.string.headline_recipe)) },
+            icon = {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_skillet),
+                    contentDescription = null
+                )
+            },
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+        FloatingActionButtonMenuItem(
+            onClick = onProductAdd,
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.LunchDining,
+                    contentDescription = null
+                )
+            },
+            text = { Text(stringResource(Res.string.headline_product)) },
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun Content(
+    state: SearchFoodScreenState,
+    pages: LazyPagingItems<SearchFoodItem>,
+    recentQueries: List<String>,
+    onFoodClick: (FoodId) -> Unit,
+    onFoodToggle: (Boolean, SearchFoodItem) -> Unit,
+    onBack: () -> Unit,
+    onSearch: (String?) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val coroutineScope = rememberCoroutineScope()
+    var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
+
+    var showLoadingIndicator by remember { mutableStateOf(true) }
+    LaunchedEffect(pages) {
+        snapshotFlow { pages.loadState }.transform {
+            if (it.isIdle) {
+                emit(it)
+            } else {
+                delay(200)
+                emit(it)
+            }
+        }.collectLatest {
+            showLoadingIndicator = !it.isIdle
+        }
+    }
+
+    val inputField = @Composable {
+        SearchBarDefaults.InputField(
+            textFieldState = state.textFieldState,
+            searchBarState = state.searchBarState,
+            onSearch = coroutineScope.lambda<String> {
+                onSearch(it)
+                state.searchBarState.animateToCollapsed()
+            },
+            placeholder = { Text(stringResource(Res.string.action_search)) },
+            leadingIcon = {
+                IconButton(
+                    onClick = coroutineScope.lambda {
+                        if (state.searchBarState.currentValue == SearchBarValue.Expanded) {
+                            state.searchBarState.animateToCollapsed()
+                        } else {
+                            onBack()
+                        }
+                    }
+                ) {
                     Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = null
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(Res.string.action_go_back)
+                    )
+                }
+            },
+            trailingIcon = {
+                if (state.textFieldState.text.isEmpty()) {
+                    BarcodeScannerIconButton(
+                        onClick = coroutineScope.lambda {
+                            showBarcodeScanner = true
+                            state.searchBarState.animateToCollapsed()
+                        }
+                    )
+                } else {
+                    IconButton(
+                        onClick = {
+                            state.textFieldState.clearText()
+                            onSearch(null)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = stringResource(Res.string.action_clear)
+                        )
+                    }
+                }
+            }
+        )
+    }
+
+    if (showBarcodeScanner) {
+        FullScreenCameraBarcodeScanner(
+            onBarcodeScan = {
+                state.textFieldState.setTextAndPlaceCursorAtEnd(it)
+                onSearch(it)
+                showBarcodeScanner = false
+            },
+            onClose = { showBarcodeScanner = false }
+        )
+    }
+
+    ExpandedFullScreenSearchBar(
+        state = state.searchBarState,
+        inputField = inputField
+    ) {
+        ProductSearchBarSuggestions(
+            recentQueries = recentQueries,
+            onSearch = coroutineScope.lambda<String> {
+                onSearch(it)
+                state.textFieldState.setTextAndPlaceCursorAtEnd(it)
+                state.searchBarState.animateToCollapsed()
+            },
+            onFill = {
+                state.textFieldState.setTextAndPlaceCursorAtEnd(it)
+            }
+        )
+    }
+
+    Scaffold(
+        topBar = {
+            TopSearchBar(
+                state = state.searchBarState,
+                inputField = inputField
+            )
+        },
+        modifier = modifier
+    ) { paddingValues ->
+        if (pages.itemCount == 0) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(Res.string.neutral_no_food_found),
+                    style = MaterialTheme.typography.bodyLargeEmphasized
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = showLoadingIndicator,
+            modifier = Modifier
+                .zIndex(5f)
+                .fillMaxWidth()
+                .padding(top = paddingValues.calculateTopPadding()),
+            enter = expandVertically(),
+            exit = shrinkVertically() + fadeOut()
+        ) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                LoadingIndicator(Modifier)
+            }
+        }
+
+        LazyColumn(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            state = state.lazyListState,
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            contentPadding = paddingValues
+        ) {
+            items(
+                count = pages.itemCount,
+                key = pages.itemKey { it.uniqueId }
+            ) { i ->
+                val food = pages[i]
+
+                val topStart = animateDpAsState(
+                    targetValue = if (i == 0) 16.dp else 0.dp,
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
+
+                val topEnd = animateDpAsState(
+                    targetValue = if (i == 0) 16.dp else 0.dp,
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
+
+                val bottomStart = animateDpAsState(
+                    targetValue = if (i == pages.itemCount - 1) 16.dp else 0.dp,
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
+
+                val bottomEnd = animateDpAsState(
+                    targetValue = if (i == pages.itemCount - 1) 16.dp else 0.dp,
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
+
+                var shape = RoundedCornerShape(topStart, topEnd, bottomStart, bottomEnd)
+
+                if (food != null) {
+                    SearchFoodListItem(
+                        food = food,
+                        onClick = { onFoodClick(food.foodId) },
+                        onToggle = { onFoodToggle(it, food) },
+                        shape = shape
                     )
                 }
             }
-        },
-        colors = ListItemDefaults.colors(
-            containerColor = containerColor,
-            headlineColor = contentColor,
-            overlineColor = contentColor,
-            supportingColor = contentColor,
-            trailingIconColor = contentColor
-        )
-    )
+
+            // FAB spacer
+            item {
+                Spacer(Modifier.padding(vertical = 16.dp).height(72.dp))
+            }
+        }
+    }
 }
 
 @Composable
-private fun ListItemSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
-    FoodListItemSkeleton(
-        shimmer = shimmer,
+private fun ProductSearchBarSuggestions(
+    recentQueries: List<String>,
+    onSearch: (String) -> Unit,
+    onFill: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
         modifier = modifier
     ) {
-        Box(
-            modifier = Modifier.size(48.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Spacer(
-                Modifier
-                    .shimmer(shimmer)
-                    .size(24.dp)
-                    .clip(MaterialTheme.shapes.extraSmall)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+        items(recentQueries) { query ->
+            ListItem(
+                modifier = Modifier.clickable {
+                    onSearch(query)
+                },
+                headlineContent = {
+                    Text(query)
+                },
+                colors = ListItemDefaults.colors(
+                    containerColor = Color.Transparent
+                ),
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.Schedule,
+                        contentDescription = stringResource(Res.string.action_search)
+                    )
+                },
+                trailingContent = {
+                    IconButton(
+                        onClick = { onFill(query) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.NorthWest,
+                            contentDescription = stringResource(
+                                Res.string.action_insert_suggested_search
+                            )
+                        )
+                    }
+                }
             )
         }
     }
 }
-
-private val SearchFoodItem.measurementStringShort: String
-    @Composable get() = with(measurement) {
-        when (this) {
-            is Measurement.Package -> stringResource(
-                Res.string.x_times_y,
-                quantity.formatClipZeros(),
-                stringResource(Res.string.product_package)
-            )
-
-            is Measurement.Serving -> stringResource(
-                Res.string.x_times_y,
-                quantity.formatClipZeros(),
-                stringResource(Res.string.product_serving)
-            )
-
-            is Measurement.Gram -> "${value.formatClipZeros()} " +
-                stringResource(Res.string.unit_gram_short)
-        }
-    }
-
-private val SearchFoodItem.measurementString: String?
-    @Composable get() {
-        val short = measurementStringShort
-        val weight = weight?.formatClipZeros() ?: return null
-
-        return when (measurement) {
-            is Measurement.Gram -> short
-            is Measurement.Package,
-            is Measurement.Serving ->
-                "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
-        }
-    }
-
-private val SearchFoodItem.caloriesString: String?
-    @Composable get() = weight?.let {
-        val value = (it * calories / 100).roundToInt()
-        "$value " + stringResource(Res.string.unit_kcal)
-    }

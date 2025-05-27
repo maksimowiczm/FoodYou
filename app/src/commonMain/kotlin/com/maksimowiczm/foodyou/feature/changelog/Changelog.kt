@@ -35,9 +35,11 @@ object Changelog {
         changes = listOf(
             "Display the brand name after the product name",
             "Updated barcode scanner icon",
+            "Updated recipe icon",
             "Removed meal screen; all meal items are now displayed directly on the home screen",
             "Renamed calories card to goals card",
-            "Reset home screen cards order. Default order is now Calendar, Goals, Meals"
+            "Reset home screen cards order. Default order is now Calendar, Goals, Meals",
+            "Updated food search screen"
         ),
         bugFixes = listOf(
             "Fixed empty recipes, app won't crash when the recipe has no ingredients",

@@ -26,46 +26,25 @@ import kotlinx.datetime.LocalDate
 internal class AddFoodRepository(
     private val searchLocalDataSource: SearchLocalDataSource,
     private val foodLocalDataSource: FoodLocalDataSource,
-    ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val measurementMapper: MeasurementMapper = MeasurementMapper
 ) {
     private val ioScope = CoroutineScope(ioDispatcher + SupervisorJob())
 
     @OptIn(ExperimentalPagingApi::class)
     fun queryFood(query: String?, mealId: Long, date: LocalDate): Flow<PagingData<SearchFoodItem>> {
-        // Handle different query formats
-        val (effectiveQuery, extractedBarcode) = when {
-            query == null -> null to null
-            query.all(Char::isDigit) -> null to query
-            query.contains("openfoodfacts.org/product/") -> {
-                // Extract barcode from product URL
-                val regex = "openfoodfacts\\.org/product/(\\d+)".toRegex()
-                val barcode = regex.find(query)?.groupValues?.getOrNull(1)
-                null to barcode
-            }
-
-            query.contains("openfoodfacts.org/cgi/search.pl") -> {
-                // Extract search terms from search URL
-                val regex = "search_terms=([^&]+)".toRegex()
-                val searchTerms = regex.find(query)?.groupValues?.getOrNull(1)?.replace("+", " ")
-                searchTerms to null
-            }
-
-            else -> query to null
-        }
-
-        val barcode = extractedBarcode
-        val searchQuery = effectiveQuery ?: query
+        val barcode = query?.takeIf { it.all { it.isDigit() } }
 
         // Insert query if it's not a barcode and not empty
-        if (barcode == null && searchQuery?.isNotBlank() == true) {
+        if (barcode == null && query?.isNotBlank() == true) {
             ioScope.launch {
-                insertProductQueryWithCurrentTime(searchQuery)
+                insertProductQueryWithCurrentTime(query)
             }
         }
 
         return Pager(
             config = PagingConfig(
-                pageSize = 30
+                pageSize = 20
             )
         ) {
             if (barcode != null) {
@@ -75,26 +54,13 @@ internal class AddFoodRepository(
                     epochDay = date.toEpochDays()
                 )
             } else {
-                val queryList = searchQuery
-                    ?.split(" ")
-                    ?.map { it.trim() }
-                    ?.filter { it.isNotEmpty() }
-                    ?.take(5)
-                    ?: emptyList()
-
-                val (query1, query2, query3, query4, query5) = queryList + List(5) { null }
-
                 foodLocalDataSource.queryFood(
-                    query1 = query1,
-                    query2 = query2,
-                    query3 = query3,
-                    query4 = query4,
-                    query5 = query5,
+                    query = query,
                     mealId = mealId,
                     epochDay = date.toEpochDays()
                 )
             }
-        }.flow.mapValues { it.toSearchFoodItem() }
+        }.flow.mapValues { measurementMapper.toSearchFoodItem(it) }
     }
 
     private suspend fun insertProductQueryWithCurrentTime(query: String) {
@@ -109,13 +75,13 @@ internal class AddFoodRepository(
     }
 }
 
-private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
+private fun MeasurementMapper.toSearchFoodItem(entity: FoodSearchEntity) = with(entity) {
     when {
         productId != null && recipeId == null -> {
             val foodId = FoodId.Product(productId)
             val measurementId = measurementId?.let { MeasurementId.Product(measurementId) }
 
-            return SearchFoodItem(
+            SearchFoodItem(
                 foodId = foodId,
                 headline = brand?.let { "$name ($brand)" } ?: name,
                 calories = calories,
@@ -126,7 +92,7 @@ private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
                 servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
                 measurementId = measurementId,
                 measurement = with(MeasurementMapper) { toMeasurement() },
-                uniqueId = foodId.uniqueId(measurementId)
+                uniqueId = uiId
             )
         }
 
@@ -134,7 +100,7 @@ private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
             val foodId = FoodId.Recipe(recipeId)
             val measurementId = measurementId?.let { MeasurementId.Recipe(measurementId) }
 
-            return SearchFoodItem(
+            SearchFoodItem(
                 foodId = foodId,
                 headline = brand?.let { "$name ($brand)" } ?: name,
                 calories = calories,
@@ -145,26 +111,10 @@ private fun FoodSearchEntity.toSearchFoodItem(): SearchFoodItem {
                 servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
                 measurementId = measurementId,
                 measurement = with(MeasurementMapper) { toMeasurement() },
-                uniqueId = foodId.uniqueId(measurementId)
+                uniqueId = uiId
             )
         }
 
         else -> error("Data inconsistency: productId and recipeId are null")
-    }
-}
-
-private fun FoodId.uniqueId(measurementId: MeasurementId?): String {
-    val measurementId = measurementId?.let {
-        when (it) {
-            is MeasurementId.Product -> it.id
-            is MeasurementId.Recipe -> it.id
-        }
-    }
-
-    return when (this) {
-        is FoodId.Product if (measurementId != null) -> "p_${id}_$measurementId"
-        is FoodId.Product -> "p_$id"
-        is FoodId.Recipe if (measurementId != null) -> "r_${id}_$measurementId"
-        is FoodId.Recipe -> "r_$id"
     }
 }
