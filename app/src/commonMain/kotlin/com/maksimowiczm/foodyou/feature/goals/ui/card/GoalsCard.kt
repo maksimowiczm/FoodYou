@@ -137,7 +137,7 @@ private fun GoalsCardContent(
     val kcal = stringResource(Res.string.unit_kcal)
     val outlineColor = MaterialTheme.colorScheme.outline
 
-    val caloriesString = remember(calories, caloriesGoal, kcal, typography) {
+    val caloriesString = remember(calories, caloriesGoal, kcal, typography, colorScheme) {
         buildAnnotatedString {
             withStyle(
                 typography.headlineLargeEmphasized.merge(
@@ -311,54 +311,48 @@ private fun ExpandedCardContent(
     val nutrientsPalette = LocalNutrientsPalette.current
     val gramShort = stringResource(Res.string.unit_gram_short)
 
-    val proteinsString = remember(proteinsGrams, proteinsGoalGrams) {
-        buildAnnotatedString {
-            val color = if (proteinsGrams > proteinsGoalGrams) {
-                colorScheme.error
-            } else {
-                nutrientsPalette.proteinsOnSurfaceContainer
-            }
+    val proteinsString = buildAnnotatedString {
+        val color = if (proteinsGrams > proteinsGoalGrams) {
+            colorScheme.error
+        } else {
+            nutrientsPalette.proteinsOnSurfaceContainer
+        }
 
-            withStyle(typography.headlineSmall.merge(color).toSpanStyle()) {
-                append(" $proteinsGrams ")
-            }
-            withStyle(typography.bodyMedium.merge(colorScheme.outline).toSpanStyle()) {
-                append("/ $proteinsGoalGrams $gramShort")
-            }
+        withStyle(typography.headlineSmall.merge(color).toSpanStyle()) {
+            append(" $proteinsGrams ")
+        }
+        withStyle(typography.bodyMedium.merge(colorScheme.outline).toSpanStyle()) {
+            append("/ $proteinsGoalGrams $gramShort")
         }
     }
 
-    val carbohydratesString = remember(carbohydratesGrams, carbohydratesGoalGrams) {
-        buildAnnotatedString {
-            val color = if (carbohydratesGrams > carbohydratesGoalGrams) {
-                colorScheme.error
-            } else {
-                nutrientsPalette.carbohydratesOnSurfaceContainer
-            }
+    val carbohydratesString = buildAnnotatedString {
+        val color = if (carbohydratesGrams > carbohydratesGoalGrams) {
+            colorScheme.error
+        } else {
+            nutrientsPalette.carbohydratesOnSurfaceContainer
+        }
 
-            withStyle(typography.headlineSmall.merge(color).toSpanStyle()) {
-                append(" $carbohydratesGrams ")
-            }
-            withStyle(typography.bodyMedium.merge(colorScheme.outline).toSpanStyle()) {
-                append("/ $carbohydratesGoalGrams $gramShort")
-            }
+        withStyle(typography.headlineSmall.merge(color).toSpanStyle()) {
+            append(" $carbohydratesGrams ")
+        }
+        withStyle(typography.bodyMedium.merge(colorScheme.outline).toSpanStyle()) {
+            append("/ $carbohydratesGoalGrams $gramShort")
         }
     }
 
-    val fatsString = remember(fatsGrams, fatsGoalGrams) {
-        buildAnnotatedString {
-            val color = if (fatsGrams > fatsGoalGrams) {
-                colorScheme.error
-            } else {
-                nutrientsPalette.fatsOnSurfaceContainer
-            }
+    val fatsString = buildAnnotatedString {
+        val color = if (fatsGrams > fatsGoalGrams) {
+            colorScheme.error
+        } else {
+            nutrientsPalette.fatsOnSurfaceContainer
+        }
 
-            withStyle(typography.headlineSmall.merge(color).toSpanStyle()) {
-                append(" $fatsGrams ")
-            }
-            withStyle(typography.bodyMedium.merge(colorScheme.outline).toSpanStyle()) {
-                append("/ $fatsGoalGrams $gramShort")
-            }
+        withStyle(typography.headlineSmall.merge(color).toSpanStyle()) {
+            append(" $fatsGrams ")
+        }
+        withStyle(typography.bodyMedium.merge(colorScheme.outline).toSpanStyle()) {
+            append("/ $fatsGoalGrams $gramShort")
         }
     }
 
