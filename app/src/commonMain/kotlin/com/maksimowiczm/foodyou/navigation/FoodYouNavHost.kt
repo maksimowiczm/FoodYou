@@ -85,8 +85,11 @@ fun FoodYouNavHost(
             }
         )
         settingsGraph(
-            onBack = {
+            settingsOnBack = {
                 navController.popBackStack<Settings>(inclusive = true)
+            },
+            homeSettingsOnBack = {
+                navController.popBackStack<HomeSettings>(inclusive = true)
             },
             onHomeSettings = {
                 navController.navigate(HomeSettings) {

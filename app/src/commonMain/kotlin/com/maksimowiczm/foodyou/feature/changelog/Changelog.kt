@@ -34,10 +34,11 @@ object Changelog {
         changes = listOf(
             "Display the brand name after the product name",
             "Update barcode scanner icon",
-            "Removed meal screen; all meal items are now displayed directly on the home screen."
+            "Removed meal screen; all meal items are now displayed directly on the home screen"
         ),
         bugFixes = listOf(
-            "Fix empty recipes, app won't crash when the recipe has no ingredients"
+            "Fix empty recipes, app won't crash when the recipe has no ingredients",
+            "Fix home settings back navigation; it now returns to settings instead of home screen"
         ),
         translations = listOf(),
         notes = null
