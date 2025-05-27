@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.goals.ui.card
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,6 +46,12 @@ internal fun GoalsCard(
     modifier: Modifier = Modifier,
     viewModel: GoalsCardViewModel = koinViewModel()
 ) {
+    // TODO
+    //  expand on click
+    //  settings
+    //  never expand
+    //  always expanded
+
     val diaryDay =
         viewModel.observeDiaryDay(homeState.selectedDate).collectAsStateWithLifecycle(null).value
 
@@ -366,13 +371,13 @@ private fun ExpandedCardContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             RoundedSquare(
-                color = LocalNutrientsPalette.current.proteinsOnSurfaceContainer,
+                color = LocalNutrientsPalette.current.proteinsOnSurfaceContainer
             )
 
             Text(
                 text = stringResource(Res.string.nutriment_proteins),
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.labelLarge
             )
 
             Text(
@@ -387,13 +392,13 @@ private fun ExpandedCardContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             RoundedSquare(
-                color = LocalNutrientsPalette.current.carbohydratesOnSurfaceContainer,
+                color = LocalNutrientsPalette.current.carbohydratesOnSurfaceContainer
             )
 
             Text(
                 text = stringResource(Res.string.nutriment_carbohydrates),
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.labelLarge
             )
 
             Text(
@@ -408,13 +413,13 @@ private fun ExpandedCardContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             RoundedSquare(
-                color = LocalNutrientsPalette.current.fatsOnSurfaceContainer,
+                color = LocalNutrientsPalette.current.fatsOnSurfaceContainer
             )
 
             Text(
                 text = stringResource(Res.string.nutriment_fats),
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.labelLarge
             )
 
             Text(
@@ -426,10 +431,7 @@ private fun ExpandedCardContent(
 }
 
 @Composable
-private fun RoundedSquare(
-    color: Color,
-    modifier: Modifier = Modifier
-) {
+private fun RoundedSquare(color: Color, modifier: Modifier = Modifier) {
     Canvas(
         modifier = modifier
             .size(16.dp)
