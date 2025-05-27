@@ -16,6 +16,7 @@ object Changelog {
     val versions
         get() = listOf(
             next,
+            v2_4_0,
             v2_3_2,
             v2_3_1,
             v2_3_0,
@@ -27,15 +28,44 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(
-            "Added experimental support for importing and exporting food products via CSV file"
+            "Added a new screen for food measurement",
+            "Added crash handler to display a crash report screen when the app crashes",
+            "Added goals card settings"
         ),
         changes = listOf(
+            "Display the brand name after the product name",
             "Updated barcode scanner icon",
-            "Updated food search screen"
+            "Removed meal screen; all meal items are now displayed directly on the home screen",
+            "Renamed calories card to goals card",
+            "Reset home screen cards order. Default order is now Calendar, Goals, Meals"
         ),
-        bugFixes = listOf(),
+        bugFixes = listOf(
+            "Fixed empty recipes, app won't crash when the recipe has no ingredients",
+            "Fixed home settings back navigation; it now returns to settings instead of home screen"
+        ),
         translations = listOf(),
         notes = null
+    )
+
+    val v2_4_0 = Version(
+        version = "2.4.0",
+        date = LocalDate(2025, 5, 23),
+        newFeatures = listOf(
+            "Added experimental support for importing and exporting food products via CSV file",
+            "Added copying recipe into product"
+        ),
+        changes = listOf(
+            "Updated meals cards settings layout picker",
+            "Updated settings screen",
+            "Use custom tabs for Open Food Facts links if available"
+        ),
+        bugFixes = listOf(
+            "Open valid recipe when editing entry in the meal screen"
+        ),
+        translations = listOf(
+            "Added Dutch (Thanks to GrizzleNL)"
+        ),
+        notes = "Since recipes can't contain other recipes for now, copying a recipe serves as a workaround. This is currently limited to the search screen and is expected to be replaced with proper recipe support in the future."
     )
 
     val v2_3_2 = Version(

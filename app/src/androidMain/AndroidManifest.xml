@@ -15,6 +15,10 @@
         <intent>
             <action android:name="android.settings.APP_LOCALE_SETTINGS" />
         </intent>
+
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
     </queries>
 
     <application
@@ -57,6 +61,12 @@
             </intent-filter>
 
         </activity>
+
+        <activity
+            android:name=".infrastructure.android.CrashReportActivity"
+            android:exported="false"
+            android:label="CrashReportActivity"
+            android:theme="@style/Theme.FoodYou" />
 
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"

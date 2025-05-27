@@ -85,6 +85,8 @@ kotlin {
 
             // Ktor
             implementation(libs.ktor.client.okhttp)
+
+            implementation(libs.androidx.browser)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -171,6 +173,10 @@ android {
             initWith(getByName("release"))
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("debug")
+        }
+        create("miniDevRelease") {
+            initWith(getByName("devRelease"))
+            isMinifyEnabled = true
         }
         create("preview") {
             initWith(getByName("release"))

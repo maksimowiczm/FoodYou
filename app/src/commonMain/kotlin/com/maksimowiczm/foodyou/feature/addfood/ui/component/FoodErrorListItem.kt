@@ -11,11 +11,10 @@ import foodyou.app.generated.resources.error_measurement_error
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun FoodErrorListItem(name: String, brand: String?, modifier: Modifier = Modifier) {
+fun FoodErrorListItem(headline: String, modifier: Modifier = Modifier) {
     ListItem(
-        headlineContent = { Text(name) },
+        headlineContent = { Text(headline) },
         modifier = modifier,
-        overlineContent = brand?.let { { Text(it) } },
         supportingContent = { Text(stringResource(Res.string.error_measurement_error)) },
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.errorContainer,

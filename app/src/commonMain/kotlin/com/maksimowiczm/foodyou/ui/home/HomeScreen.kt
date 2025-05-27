@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.ui.home
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -27,38 +26,39 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
-import com.maksimowiczm.foodyou.feature.goals.CaloriesCard
-import com.maksimowiczm.foodyou.feature.meal.MealsCard
+import com.maksimowiczm.foodyou.feature.goals.GoalsCard
+import com.maksimowiczm.foodyou.feature.meal.MealsCards
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
 fun HomeScreen(
-    animatedVisibilityScope: AnimatedVisibilityScope,
     onSettings: () -> Unit,
     onAbout: () -> Unit,
-    onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onEditMeasurement: (MeasurementId) -> Unit,
     onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
-    onCaloriesCardClick: (epochDay: Int) -> Unit,
+    onGoalsCardClick: (epochDay: Int) -> Unit,
+    onGoalsCardLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     dataStore: DataStore<Preferences> = koinInject()
 ) {
     val order by dataStore.collectHomeCardsAsState()
 
     HomeScreen(
-        animatedVisibilityScope = animatedVisibilityScope,
         order = order,
         onSettings = onSettings,
         onAbout = onAbout,
-        onMealCardClick = onMealCardClick,
+        onEditMeasurement = onEditMeasurement,
         onMealCardLongClick = onMealCardLongClick,
         onMealCardAddClick = onMealCardAddClick,
-        onCaloriesCardClick = onCaloriesCardClick,
+        onGoalsCardClick = onGoalsCardClick,
+        onGoalsCardLongClick = onGoalsCardLongClick,
         modifier = modifier
     )
 }
@@ -66,14 +66,14 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
-    animatedVisibilityScope: AnimatedVisibilityScope,
     order: List<HomeCard>,
     onSettings: () -> Unit,
     onAbout: () -> Unit,
-    onMealCardClick: (epochDay: Int, mealId: Long) -> Unit,
+    onEditMeasurement: (MeasurementId) -> Unit,
     onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
-    onCaloriesCardClick: (epochDay: Int) -> Unit,
+    onGoalsCardClick: (epochDay: Int) -> Unit,
+    onGoalsCardLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -128,20 +128,21 @@ fun HomeScreen(
                             .padding(horizontal = 8.dp)
                     )
 
-                    HomeCard.Meals -> MealsCard(
-                        animatedVisibilityScope = animatedVisibilityScope,
+                    HomeCard.Meals -> MealsCards(
                         homeState = homeState,
-                        onMealClick = onMealCardClick,
-                        onAddClick = onMealCardAddClick,
+                        onAdd = onMealCardAddClick,
                         onLongClick = onMealCardLongClick,
                         contentPadding = PaddingValues(horizontal = 8.dp),
+                        onEditMeasurement = onEditMeasurement,
                         modifier = Modifier.testTag(testTag)
                     )
 
-                    HomeCard.Calories -> CaloriesCard(
-                        animatedVisibilityScope = animatedVisibilityScope,
+                    HomeCard.Goals -> GoalsCard(
                         homeState = homeState,
-                        onClick = onCaloriesCardClick,
+                        onClick = {
+                            onGoalsCardClick(homeState.selectedDate.toEpochDays())
+                        },
+                        onLongClick = onGoalsCardLongClick,
                         modifier = Modifier
                             .testTag(testTag)
                             .padding(horizontal = 8.dp)

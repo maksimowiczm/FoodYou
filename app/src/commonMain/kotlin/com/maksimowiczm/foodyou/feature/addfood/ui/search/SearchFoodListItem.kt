@@ -42,8 +42,7 @@ internal fun SearchFoodListItem(
     val caloriesString = food.caloriesString
     if (weight == null || measurementString == null || caloriesString == null) {
         FoodErrorListItem(
-            name = food.name,
-            brand = food.brand,
+            headline = food.headline,
             modifier = modifier.clickable { onClick() }
         )
         return
@@ -77,7 +76,7 @@ internal fun SearchFoodListItem(
     val g = stringResource(Res.string.unit_gram_short)
 
     FoodListItem(
-        name = { Text(food.name) },
+        name = { Text(food.headline) },
         proteins = {
             val proteins = (food.proteins * weight / 100f).roundToInt()
             Text("$proteins $g")
@@ -94,7 +93,6 @@ internal fun SearchFoodListItem(
         measurement = { Text(measurementString) },
         modifier = modifier,
         onClick = onClick,
-        brand = food.brand?.let { { Text(it) } },
         trailingContent = {
             ToggleButton(
                 checked = food.isSelected,

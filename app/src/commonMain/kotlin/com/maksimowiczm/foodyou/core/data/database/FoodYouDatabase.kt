@@ -82,7 +82,9 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
          * @see [MIGRATION_11_12]
          * Fix sodium value in ProductEntity. Convert grams to milligrams.
          */
-        AutoMigration(from = 12, to = 13)
+        AutoMigration(from = 12, to = 13),
+        AutoMigration(from = 13, to = 14),
+        AutoMigration(from = 14, to = 15)
     ]
 )
 @TypeConverters(
@@ -100,7 +102,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val foodDao: FoodDao
 
     companion object {
-        const val VERSION = 13
+        const val VERSION = 15
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,

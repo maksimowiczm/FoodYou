@@ -36,9 +36,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
+import com.maksimowiczm.foodyou.core.ui.component.FullScreenDialog
 import com.maksimowiczm.foodyou.core.ui.res.stringResource
 import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
-import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -47,15 +48,19 @@ internal fun ProductForm(state: ProductFormState, modifier: Modifier = Modifier)
     var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
 
     if (showBarcodeScanner) {
-        FullScreenCameraBarcodeScanner(
-            onBarcodeScan = {
-                state.barcode.textFieldState.setTextAndPlaceCursorAtEnd(it)
-                showBarcodeScanner = false
-            },
-            onClose = {
-                showBarcodeScanner = false
-            }
-        )
+        FullScreenDialog(
+            onDismissRequest = { showBarcodeScanner = false }
+        ) {
+            CameraBarcodeScannerScreen(
+                onBarcodeScan = {
+                    state.barcode.textFieldState.setTextAndPlaceCursorAtEnd(it)
+                    showBarcodeScanner = false
+                },
+                onClose = {
+                    showBarcodeScanner = false
+                }
+            )
+        }
     }
 
     Column(

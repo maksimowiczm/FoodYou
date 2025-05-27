@@ -12,7 +12,6 @@
     <string name="headline_edit_product">Edytuj produkt</string>
     <string name="headline_permission_required">Wymagane uprawnienia</string>
     <string name="headline_language">Język</string>
-    <string name="headline_authors">Autorzy</string>
     <string name="headline_system">System</string>
     <string name="headline_system_language_settings">Ustawienia języka systemowego</string>
     <string name="headline_secure_screen">Zabezpieczony ekran</string>
@@ -45,6 +44,11 @@
     <string name="headline_vitamins">Witaminy</string>
     <string name="headline_minerals">Minerały</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">Obsługiwane adresy URL</string>
+    <string name="headline_import_and_export">Import i eksport</string>
+    <string name="headline_experimental" description="Experimental feature">Eksperymentalne</string>
+    <string name="headline_experimental_feature">Eksperymentalna funkcja</string>
+    <string name="headline_copy_recipe">Kopiuj przepis</string>
+    <string name="headline_copy" description="A noun, thing that is a copy" comment="A noun, thing that is a copy">Kopia</string>
     <string name="weight">Waga</string>
     <string name="unit_calories">Kalorie</string>
     <string name="unit_energy" description="Energy as calories">Energia</string>
@@ -152,13 +156,19 @@
     <string name="action_download">Pobierz</string>
     <string name="action_paste_url">Wklej URL</string>
     <string name="action_browse_open_food_facts">Przeglądaj Open Food Facts</string>
-    <string name="action_copy">Kopiuj</string>
+    <string name="action_copy" comment="A verb">Kopiuj</string>
     <string name="action_choose_other_date">Wybierz inną datę</string>
     <string name="action_choose_other_measurement">Wybierz inny pomiar</string>
     <string name="action_edit_your_home_page">Edytuj swoją stronę główną</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Pokaż więcej</string>
     <string name="action_download_product">Pobierz produkt</string>
     <string name="action_suggest_external_database">Zaproponuj zewnętrzną bazę danych</string>
+    <string name="action_import_food_products">Import produktów spożywczych</string>
+    <string name="action_import_food_products_from_csv">Importuj produkty spożywcze z pliku CSV</string>
+    <string name="action_export_food_products">Eksportuj produkty spożywcze</string>
+    <string name="action_export_food_products_to_csv">Eksportuj produkty spożywcze do pliku CSV</string>
+    <string name="action_share">Udostępnij</string>
+    <string name="action_copy_header" description="Copy CSV file header">Kopiuj nagłówek</string>
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
@@ -180,6 +190,8 @@
     <string name="neutral_help_translating_the_app">Pomóż w tłumaczeniu aplikacji</string>
     <string name="neutral_copied">Informacja skopiowana do schowka</string>
     <string name="neutral_product_created">Produkt stworzony</string>
+    <string name="neutral_export_started">Rozpoczęto eksportowanie</string>
+    <string name="neutral_import_started">Rozpoczęto importowanie</string>
     <string name="question_discard_product">Odrzucić produkt?</string>
     <string name="question_discard_changes">Odrzucić zmiany?</string>
     <string name="question_discard_recipe">Odrzucić przepis?</string>
@@ -218,8 +230,21 @@
     <string name="description_home_settings">Dostosuj swoją stronę główną</string>
     <string name="description_download_product">Wklej link do produktu spożywczego i pobierz informacje o wartościach odżywczych i szczegółach produktu.</string>
     <string name="description_download_product_hint">Możesz wkleić dowolny tekst. Pierwszy adres URL zostanie użyty.</string>
+    <string name="description_import_and_export">Zapisz i wczytaj swoje dane</string>
+    <string name="description_import_and_export_hint">Wszystkie operacje synchronizacji danych wykonują się w tle. Zostaniesz powiadomiony, gdy zostaną zakończone.</string>
+    <string name="description_experimental_feature">Jest to funkcja eksperymentalna. Może ulec zmianie lub zostać usunięta w przyszłych wersjach.</string>
+    <string name="description_notifications_permission_required_data_sync">Wymagane jest pozwolenie na powiadomienia, aby wyświetlić postęp synchronizacji danych. Włącz je w ustawieniach aplikacji.</string>
+    <string name="description_copy_recipe">Przepis zostanie skopiowany do pojedynczego produktu</string>
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Zobacz inne świetne ikony tutaj</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://pl.openfoodfacts.org/</string>
     <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">Eksportuje produkty</string>
+    <string name="notification_exporting_products_success">Eksportowanie produktów zakończone</string>
+    <string name="notification_exporting_products_failure">Eksportowanie produktów nie powiodło się</string>
+    <string name="notification_importing_products">Importuje produkty</string>
+    <string name="notification_importing_products_success">Importowanie produktów zakończone</string>
+    <string name="notification_importing_products_failure">Importowanie produktów nie powiodło się</string>
+    <string name="notification_data_sync_channel_name">Synchronizacja danych</string>
+    <string name="notification_data_sync_progress_channel_name">Postęp synchronizacji danych</string>
 </resources>

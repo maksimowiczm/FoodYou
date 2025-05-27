@@ -1,11 +1,12 @@
 package com.maksimowiczm.foodyou.core.ui.modifier
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.AnimationVector2D
-import androidx.compose.animation.core.Spring.StiffnessMediumLow
 import androidx.compose.animation.core.VectorConverter
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.offset
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,8 +21,12 @@ import androidx.compose.ui.unit.round
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun Modifier.animatePlacement(scope: CoroutineScope = rememberCoroutineScope()): Modifier {
+fun Modifier.animatePlacement(
+    scope: CoroutineScope = rememberCoroutineScope(),
+    animationSpec: AnimationSpec<IntOffset> = MaterialTheme.motionScheme.defaultSpatialSpec()
+): Modifier {
     var targetOffset by remember { mutableStateOf(IntOffset.Zero) }
     var animatable by remember {
         mutableStateOf<Animatable<IntOffset, AnimationVector2D>?>(null)
@@ -45,7 +50,7 @@ fun Modifier.animatePlacement(scope: CoroutineScope = rememberCoroutineScope()):
         } else {
             if (anim.targetValue != targetOffset) {
                 scope.launch {
-                    anim.animateTo(targetOffset, spring(stiffness = StiffnessMediumLow))
+                    anim.animateTo(targetOffset, animationSpec)
                 }
             }
 

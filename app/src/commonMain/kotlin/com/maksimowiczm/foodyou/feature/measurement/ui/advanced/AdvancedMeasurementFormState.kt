@@ -110,7 +110,8 @@ class AdvancedMeasurementFormState(
     /**
      * The selected measurement.
      */
-    val date = selectedDate
+    val date
+        get() = selectedDate
 
     /**
      * The selected meal.
@@ -129,4 +130,7 @@ class AdvancedMeasurementFormState(
         measurements = (measurements + measurement).distinct()
         selectedMeasurement = measurements.indexOf(measurement)
     }
+
+    val isValid: Boolean
+        get() = selectedMeal != null && selectedMeasurement != null
 }

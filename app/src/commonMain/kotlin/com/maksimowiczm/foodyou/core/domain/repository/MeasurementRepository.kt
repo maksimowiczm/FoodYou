@@ -16,11 +16,11 @@ import com.maksimowiczm.foodyou.core.domain.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.RecipeWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
-import com.maksimowiczm.foodyou.core.ext.mapValues
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapValues
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -51,7 +51,12 @@ interface MeasurementRepository {
         measurement: Measurement
     )
 
-    suspend fun updateMeasurement(measurementId: MeasurementId, measurement: Measurement)
+    suspend fun updateMeasurement(
+        measurementId: MeasurementId,
+        date: LocalDate,
+        mealId: Long,
+        measurement: Measurement
+    )
 
     suspend fun removeMeasurement(measurementId: MeasurementId)
 
@@ -171,7 +176,12 @@ internal class MeasurementRepositoryImpl(
         }
     }
 
-    override suspend fun updateMeasurement(measurementId: MeasurementId, measurement: Measurement) {
+    override suspend fun updateMeasurement(
+        measurementId: MeasurementId,
+        date: LocalDate,
+        mealId: Long,
+        measurement: Measurement
+    ) {
         val type = with(MeasurementMapper) { measurement.toEntity() }
 
         val quantity = when (measurement) {
@@ -186,7 +196,9 @@ internal class MeasurementRepositoryImpl(
                     .getProductMeasurement(measurementId.id)
                     ?.copy(
                         measurement = type,
-                        quantity = quantity
+                        quantity = quantity,
+                        mealId = mealId,
+                        diaryEpochDay = date.toEpochDays()
                     )
 
                 if (entity == null) {
@@ -202,7 +214,9 @@ internal class MeasurementRepositoryImpl(
                     .getRecipeMeasurement(measurementId.id)
                     ?.copy(
                         measurement = type,
-                        quantity = quantity
+                        quantity = quantity,
+                        mealId = mealId,
+                        epochDay = date.toEpochDays()
                     )
 
                 if (entity == null) {
@@ -254,6 +268,7 @@ private fun ProductWithMeasurementEntity.toProductWithMeasurement(): ProductWith
         measurementId = MeasurementId.Product(measurement.id),
         measurement = with(MeasurementMapper) { measurement.toMeasurement() },
         measurementDate = date,
+        mealId = measurement.mealId,
         product = with(ProductMapper) { product.toModel() }
     )
 }
@@ -267,6 +282,7 @@ private fun RecipeWithMeasurementEntity.toRecipeWithMeasurement(): RecipeWithMea
         recipe = with(RecipeMapper) { toModel() },
         measurementId = MeasurementId.Recipe(this.measurement.id),
         measurement = with(MeasurementMapper) { measurement.toMeasurement() },
+        mealId = measurement.mealId,
         measurementDate = date
     )
 }

@@ -3,9 +3,9 @@ package com.maksimowiczm.foodyou.core.domain.repository
 import com.maksimowiczm.foodyou.core.data.model.meal.MealEntity
 import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.domain.source.MealLocalDataSource
-import com.maksimowiczm.foodyou.core.ext.mapValues
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapValues
 import kotlinx.datetime.LocalTime
 
 interface MealRepository {

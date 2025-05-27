@@ -45,4 +45,7 @@ class SecureActivityTest {
 
     @Test
     fun testSecureShareProductActivity() = testSecureFlag<ShareProductActivity>()
+
+    @Test
+    fun testSecureCrashReportActivity() = testSecureFlag<CrashReportActivity>()
 }

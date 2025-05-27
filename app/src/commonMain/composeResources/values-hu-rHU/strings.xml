@@ -12,7 +12,6 @@
     <string name="headline_edit_product">Termék szerkesztése</string>
     <string name="headline_permission_required">Engedély szükséges</string>
     <string name="headline_language">Nyelv</string>
-    <string name="headline_authors">Készítők</string>
     <string name="headline_system">Rendszer</string>
     <string name="headline_system_language_settings">Rendszer nyelvi beállításai</string>
     <string name="headline_secure_screen">Védett képernyő</string>
@@ -148,7 +147,7 @@
     <string name="action_download">Letöltés</string>
     <string name="action_paste_url">URL beillesztése</string>
     <string name="action_browse_open_food_facts">Open Food Facts böngészése</string>
-    <string name="action_copy">Másolás</string>
+    <string name="action_copy" comment="A verb">Másolás</string>
     <string name="action_choose_other_date">Másik dátum választása</string>
     <string name="action_choose_other_measurement">Másik mérték választása</string>
     <string name="action_edit_your_home_page">Kezdőlapod szerkesztése</string>

@@ -10,9 +10,8 @@
     <string name="headline_meals">Repas</string>
     <string name="headline_delete_product">Supprimer un produit</string>
     <string name="headline_edit_product">Modifier le produit</string>
-    <string name="headline_permission_required">Autorisation requise</string>
-    <string name="headline_language">Langue</string>
-    <string name="headline_authors">Auteurs</string>
+    <string name="headline_permission_required">Autorisation nécessaire</string>
+    <string name="headline_language">Langues</string>
     <string name="headline_system">Système</string>
     <string name="headline_system_language_settings">Paramètres de la langue du système</string>
     <string name="headline_secure_screen">Écran sécurisé</string>
@@ -33,8 +32,18 @@
     <string name="headline_whats_new">Nouveautés</string>
     <string name="headline_changelog">Journal des modifications</string>
     <string name="headline_installed" description="Installed version of the app">Installé</string>
+    <string name="headline_home" description="Home screen">Accueil</string>
+    <string name="headline_home_settings" description="Home screen settings">Paramètres d'accueil</string>
+    <string name="headline_calendar">Calendrier</string>
+    <string name="headline_meals_settings">Paramètres des repas</string>
+    <string name="headline_other">Autre</string>
+    <string name="headline_vitamins">Vitamines</string>
+    <string name="headline_minerals">Minéraux</string>
+    <string name="headline_copy_recipe">Copier la recette</string>
+    <string name="headline_copy" description="A noun, thing that is a copy" comment="A noun, thing that is a copy">Copier</string>
     <string name="weight">Poids</string>
     <string name="unit_calories">Calories</string>
+    <string name="unit_energy" description="Energy as calories">Énergie</string>
     <string name="unit_kcal">kcal</string>
     <plurals name="unit_gram">
         <item quantity="one">gramme</item>
@@ -62,8 +71,38 @@
     <string name="nutriment_fats">Lipides</string>
     <string name="nutriment_fats_short">L</string>
     <string name="nutriment_saturated_fats">Acide gras saturé</string>
+    <string name="nutriment_polyunsaturated_fats">Acides gras polyinsaturés</string>
+    <string name="nutriment_monounsaturated_fats">Acides gras monoinsaturés</string>
+    <string name="nutriment_omega_3">Acides gras oméga-3</string>
+    <string name="nutriment_omega_6">Acides gras oméga-6</string>
     <string name="nutriment_salt">Sel</string>
     <string name="nutriment_fiber">Fibre</string>
+    <string name="nutriment_cholesterol">Cholestérol</string>
+    <string name="nutriment_caffeine">Cafféine</string>
+    <string name="vitamin_a">Vitamine A</string>
+    <string name="vitamin_b1">Vitamine B1</string>
+    <string name="vitamin_b2">Vitamine B2</string>
+    <string name="vitamin_b3">Vitamine B3</string>
+    <string name="vitamin_b5">Vitamine B5</string>
+    <string name="vitamin_b6">Vitamine B6</string>
+    <string name="vitamin_b7">Vitamine B7</string>
+    <string name="vitamin_b9">Vitamine B9</string>
+    <string name="vitamin_b12">Vitamine B12</string>
+    <string name="vitamin_c">Vitamine C</string>
+    <string name="vitamin_d">Vitamine D</string>
+    <string name="vitamin_e">Vitamine E</string>
+    <string name="vitamin_k">Vitamine K</string>
+    <string name="mineral_manganese">Manganèse</string>
+    <string name="mineral_magnesium">Magnésium</string>
+    <string name="mineral_potassium">Potassium</string>
+    <string name="mineral_calcium">Calcium</string>
+    <string name="mineral_copper">Cuivre</string>
+    <string name="mineral_zinc">Zinc</string>
+    <string name="mineral_sodium">Sodium</string>
+    <string name="mineral_iron">Fer</string>
+    <string name="mineral_phosphorus">Phosphore</string>
+    <string name="mineral_selenium">Sélénium</string>
+    <string name="mineral_iodine">Iode</string>
     <string name="action_search">Rechercher</string>
     <string name="action_scan_barcode">Scanner un code barre</string>
     <string name="action_add">Ajouter</string>
@@ -83,6 +122,7 @@
     <string name="action_delete_entry">Supprimer l'entrée</string>
     <string name="action_add_food" description="Should be short. Can be single 'Add'.">Ajouter de la nourriture</string>
     <string name="action_undo">Annuler</string>
+    <string name="action_close">Fermer</string>
     <string name="action_discard">Rejeter</string>
     <string name="action_translate">Traduire</string>
     <string name="action_enable_camera_flash">Activer le flash de l'appareil photo</string>
@@ -97,13 +137,16 @@
     <string name="action_move_up" description="reorder list item up">Déplacer vers le haut</string>
     <string name="action_move_down" description="reorder list item down">Déplacer vers le bas</string>
     <string name="action_use_time_based_ordering">Classer en fonction de l'horaire</string>
+    <string name="action_ignore_all_day_meals">Ignorer les repas de la journée</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Ajouter un ingrédient</string>
     <string name="action_edit_ingredient_measurement">Modifier la quantité de l'ingrédient</string>
     <string name="action_delete_ingredient">Supprimer l'ingrédient</string>
     <string name="action_download">Télécharger</string>
     <string name="action_paste_url">Coller l'URL</string>
     <string name="action_browse_open_food_facts">Parcourir Open Food Facts</string>
-    <string name="action_copy">Copier</string>
+    <string name="action_copy" comment="A verb">Copier</string>
+    <string name="action_edit_your_home_page">Modifiez votre page d'accueil</string>
+    <string name="action_download_product">Télécharger le produit</string>
     <string name="neutral_barcode_scanner_camera_request">Autoriser l'accès à l'appareil photo pour scanner les codes-barres</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Vous devez autoriser l'accès pour pouvoir scanner les codes-barres.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L'accès à la caméra est nécessaire pour scanner les codes-barres. Autorisez-le dans les paramètres.</string>
@@ -151,4 +194,5 @@
     <string name="neutral_see_other_awesome_icons_here">Découvrez d'autres superbes icônes ici</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
     <!-- Don't translate changelog strings -->
+    <string name="notification_data_sync_progress_channel_name">Progression de la synchronisation des données</string>
 </resources>

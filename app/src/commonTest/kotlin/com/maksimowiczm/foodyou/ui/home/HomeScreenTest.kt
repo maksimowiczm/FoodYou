@@ -2,15 +2,13 @@ package com.maksimowiczm.foodyou.ui.home
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
-import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
-import com.maksimowiczm.foodyou.ext.AnimatedSharedTransitionLayout
+import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
 import kotlin.test.Test
 
@@ -24,28 +22,23 @@ class HomeScreenTest {
         order: List<HomeCard> = HomeCard.entries,
         onSettings: () -> Unit = {},
         onAbout: () -> Unit = {},
-        onMealCardClick: (epochDay: Int, mealId: Long) -> Unit = { _, _ -> },
-        onMealLongClick: () -> Unit = {},
+        onEditMeasurement: (MeasurementId) -> Unit = {},
+        onMealCardLongClick: () -> Unit = {},
         onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit = { _, _ -> },
-        onCaloriesCardClick: (epochDay: Int) -> Unit = {}
+        onGoalsCardClick: (epochDay: Int) -> Unit = {},
+        onGoalsCardLongClick: () -> Unit = {}
     ) {
-        AnimatedSharedTransitionLayout {
-            CompositionLocalProvider(
-                LocalNavigationSharedTransitionScope provides sharedTransitionScope
-            ) {
-                HomeScreen(
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    order = order,
-                    onSettings = onSettings,
-                    onAbout = onAbout,
-                    onMealCardClick = onMealCardClick,
-                    onMealCardLongClick = onMealLongClick,
-                    onMealCardAddClick = onMealCardAddClick,
-                    onCaloriesCardClick = onCaloriesCardClick,
-                    modifier = modifier
-                )
-            }
-        }
+        com.maksimowiczm.foodyou.ui.home.HomeScreen(
+            order = order,
+            onSettings = onSettings,
+            onAbout = onAbout,
+            onEditMeasurement = onEditMeasurement,
+            onMealCardLongClick = onMealCardLongClick,
+            onMealCardAddClick = onMealCardAddClick,
+            onGoalsCardClick = onGoalsCardClick,
+            onGoalsCardLongClick = onGoalsCardLongClick,
+            modifier = modifier
+        )
     }
 
     fun verify_layout(order: List<HomeCard>) = runComposeUiTest {

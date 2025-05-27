@@ -102,7 +102,7 @@ private fun List<DbDiaryDay>.toFoods(): Map<Meal, List<Food>> = groupBy {
 
         Food(
             foodId = id,
-            name = it.foodName,
+            name = it.foodBrand?.let { brand -> it.foodName + " ($brand)" } ?: it.foodName,
             packageWeight = it.packageWeight?.let { PortionWeight.Package(it) },
             servingWeight = it.servingWeight?.let { PortionWeight.Serving(it) },
             nutrients = NutritionFactsMapper.toNutritionFacts(

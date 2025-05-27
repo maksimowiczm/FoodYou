@@ -11,8 +11,7 @@ import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 @Immutable
 internal data class SearchFoodItem(
     val foodId: FoodId,
-    val name: String,
-    val brand: String?,
+    val headline: String,
 
     val calories: Float,
     val proteins: Float,
