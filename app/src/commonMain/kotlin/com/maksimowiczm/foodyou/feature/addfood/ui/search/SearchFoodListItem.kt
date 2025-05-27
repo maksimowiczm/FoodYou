@@ -81,15 +81,15 @@ internal fun SearchFoodListItem(
     FoodListItem(
         name = { Text(food.headline) },
         proteins = {
-            val proteins = (food.proteins * weight / 100f).roundToInt()
+            val proteins = (food.proteins * weight / 100f).formatClipZeros("%.1f")
             Text("$proteins $g")
         },
         carbohydrates = {
-            val carbohydrates = (food.carbohydrates * weight / 100f).roundToInt()
+            val carbohydrates = (food.carbohydrates * weight / 100f).formatClipZeros("%.1f")
             Text("$carbohydrates $g")
         },
         fats = {
-            val fats = (food.fats * weight / 100f).roundToInt()
+            val fats = (food.fats * weight / 100f).formatClipZeros("%.1f")
             Text("$fats $g")
         },
         calories = { Text(caloriesString) },
