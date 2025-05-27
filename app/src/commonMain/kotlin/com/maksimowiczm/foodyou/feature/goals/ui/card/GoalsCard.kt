@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,9 +33,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.DailyGoals
+import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.negative_exceeded_by_calories
 import foodyou.app.generated.resources.neutral_remaining_calories
@@ -62,7 +66,15 @@ internal fun GoalsCard(
 
     val expand = viewModel.expand.collectAsStateWithLifecycle().value
 
-    if (diaryDay != null) {
+    if (diaryDay == null) {
+        GoalsCardSkeleton(
+            shimmer = homeState.shimmer,
+            expand = expand,
+            onClick = onClick,
+            onLongClick = onLongClick,
+            modifier = modifier
+        )
+    } else {
         GoalsCard(
             expand = expand,
             totalCalories = diaryDay.totalCalories,
@@ -201,7 +213,11 @@ private fun GoalsCardContent(
 
             when {
                 left > 0 -> Text(
-                    text = pluralStringResource(Res.plurals.neutral_remaining_calories, left, left),
+                    text = pluralStringResource(
+                        Res.plurals.neutral_remaining_calories,
+                        left,
+                        left
+                    ),
                     color = MaterialTheme.colorScheme.outline,
                     style = MaterialTheme.typography.bodyMediumEmphasized
                 )
@@ -457,5 +473,179 @@ private fun RoundedSquare(color: Color, modifier: Modifier = Modifier) {
             .clip(MaterialTheme.shapes.extraSmall)
     ) {
         drawRect(color = color, size = size)
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun GoalsCardSkeleton(
+    shimmer: Shimmer,
+    expand: Boolean,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FoodYouHomeCard(
+        modifier = modifier,
+        onClick = onClick,
+        onLongClick = onLongClick
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Spacer(
+                        Modifier
+                            .shimmer(shimmer)
+                            .width(60.dp)
+                            .height(MaterialTheme.typography.headlineLargeEmphasized.toDp())
+                            .clip(MaterialTheme.shapes.medium)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                    )
+
+                    Spacer(
+                        Modifier
+                            .shimmer(shimmer)
+                            .size(120.dp, MaterialTheme.typography.bodyMediumEmphasized.toDp())
+                            .clip(MaterialTheme.shapes.medium)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.height(64.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    MacroBar(
+                        progress = 1f,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        barColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        modifier = Modifier.shimmer(shimmer)
+                    )
+
+                    MacroBar(
+                        progress = 1f,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        barColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        modifier = Modifier.shimmer(shimmer)
+                    )
+
+                    MacroBar(
+                        progress = 1f,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        barColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        modifier = Modifier.shimmer(shimmer)
+                    )
+                }
+            }
+
+            AnimatedVisibility(
+                visible = expand,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                Column {
+                    Spacer(Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        RoundedSquare(
+                            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            modifier = Modifier.shimmer(shimmer)
+                        )
+
+                        Spacer(
+                            Modifier
+                                .shimmer(shimmer)
+                                .width(100.dp)
+                                .height(MaterialTheme.typography.labelLarge.toDp())
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        )
+
+                        Spacer(Modifier.weight(1f))
+
+                        Spacer(
+                            Modifier
+                                .shimmer(shimmer)
+                                .size(80.dp, MaterialTheme.typography.headlineSmall.toDp() - 4.dp)
+                                .padding(vertical = 2.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        RoundedSquare(
+                            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            modifier = Modifier.shimmer(shimmer)
+                        )
+
+                        Spacer(
+                            Modifier
+                                .shimmer(shimmer)
+                                .width(100.dp)
+                                .height(MaterialTheme.typography.labelLarge.toDp())
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        )
+
+                        Spacer(Modifier.weight(1f))
+
+                        Spacer(
+                            Modifier
+                                .shimmer(shimmer)
+                                .size(80.dp, MaterialTheme.typography.headlineSmall.toDp() - 4.dp)
+                                .padding(vertical = 2.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        RoundedSquare(
+                            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            modifier = Modifier.shimmer(shimmer)
+                        )
+
+                        Spacer(
+                            Modifier
+                                .shimmer(shimmer)
+                                .width(100.dp)
+                                .height(MaterialTheme.typography.labelLarge.toDp())
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        )
+
+                        Spacer(Modifier.weight(1f))
+
+                        Spacer(
+                            Modifier
+                                .shimmer(shimmer)
+                                .size(80.dp, MaterialTheme.typography.headlineSmall.toDp() - 4.dp)
+                                .padding(vertical = 2.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        )
+                    }
+                }
+            }
+        }
     }
 }
