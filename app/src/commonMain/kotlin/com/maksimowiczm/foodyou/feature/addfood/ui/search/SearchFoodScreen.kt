@@ -424,11 +424,6 @@ private fun Content(
                         food = food,
                         onClick = { onFoodClick(food.foodId) },
                         onToggle = { onFoodToggle(it, food) },
-                        modifier = Modifier.animateItem(
-                            fadeInSpec = null,
-                            placementSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
-                            fadeOutSpec = null
-                        ),
                         shape = shape
                     )
                 }
