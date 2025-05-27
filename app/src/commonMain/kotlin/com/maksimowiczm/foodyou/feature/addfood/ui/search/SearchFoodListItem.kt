@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -43,7 +44,9 @@ internal fun SearchFoodListItem(
     if (weight == null || measurementString == null || caloriesString == null) {
         FoodErrorListItem(
             headline = food.headline,
-            modifier = modifier.clickable { onClick() }
+            modifier = modifier
+                .clip(shape)
+                .clickable { onClick() }
         )
         return
     }
