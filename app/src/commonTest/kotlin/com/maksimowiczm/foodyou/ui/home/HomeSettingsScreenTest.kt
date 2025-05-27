@@ -21,12 +21,14 @@ class HomeSettingsScreenTest {
         order: List<HomeCard> = HomeCard.entries,
         onBack: () -> Unit = {},
         onMealsSettings: () -> Unit = {},
+        onGoalsSettings: () -> Unit = {},
         onReorder: (List<HomeCard>) -> Unit = {}
     ) {
         com.maksimowiczm.foodyou.ui.home.HomeSettingsScreen(
             order = order,
             onBack = onBack,
             onMealsSettings = onMealsSettings,
+            onGoalsSettings = onGoalsSettings,
             onReorder = onReorder,
             modifier = modifier
         )

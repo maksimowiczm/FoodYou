@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
 import com.maksimowiczm.foodyou.feature.addfood.AddFood
 import com.maksimowiczm.foodyou.feature.addfood.addFoodGraph
+import com.maksimowiczm.foodyou.feature.goals.GoalsCardSettings
 import com.maksimowiczm.foodyou.feature.goals.GoalsScreen
 import com.maksimowiczm.foodyou.feature.goals.GoalsSettings
 import com.maksimowiczm.foodyou.feature.goals.goalsGraph
@@ -76,10 +77,15 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
-            onCaloriesCardClick = { epochDay ->
+            onGoalsCardClick = { epochDay ->
                 navController.navigate(
                     GoalsScreen(epochDay)
                 ) {
+                    launchSingleTop = true
+                }
+            },
+            onGoalsCardLongClick = {
+                navController.navigate(GoalsCardSettings) {
                     launchSingleTop = true
                 }
             }
@@ -111,6 +117,11 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
+            onGoalsCardSettings = {
+                navController.navigate(GoalsCardSettings) {
+                    launchSingleTop = true
+                }
+            },
             onAbout = {
                 navController.navigate(About) {
                     launchSingleTop = true
@@ -134,8 +145,17 @@ fun FoodYouNavHost(
             }
         )
         goalsGraph(
+            onGoalsSettings = {
+                navController.navigate(GoalsSettings) {
+                    launchSingleTop = true
+                    popUpTo<GoalsSettings>()
+                }
+            },
             onGoalsSettingsBack = {
                 navController.popBackStack<GoalsSettings>(inclusive = true)
+            },
+            onGoalsCardSettingsBack = {
+                navController.popBackStack<GoalsCardSettings>(inclusive = true)
             }
         )
         languageGraph(

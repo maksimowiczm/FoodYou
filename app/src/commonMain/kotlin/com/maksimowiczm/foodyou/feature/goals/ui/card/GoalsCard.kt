@@ -1,6 +1,9 @@
 package com.maksimowiczm.foodyou.feature.goals.ui.card
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,11 +31,19 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.domain.model.DailyGoals
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
-import com.maksimowiczm.foodyou.feature.goals.model.DiaryDay
-import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.negative_exceeded_by_calories
+import foodyou.app.generated.resources.neutral_remaining_calories
+import foodyou.app.generated.resources.nutriment_carbohydrates
+import foodyou.app.generated.resources.nutriment_fats
+import foodyou.app.generated.resources.nutriment_proteins
+import foodyou.app.generated.resources.positive_goal_reached
+import foodyou.app.generated.resources.unit_gram_short
+import foodyou.app.generated.resources.unit_kcal
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -46,18 +57,19 @@ internal fun GoalsCard(
     modifier: Modifier = Modifier,
     viewModel: GoalsCardViewModel = koinViewModel()
 ) {
-    // TODO
-    //  expand on click
-    //  settings
-    //  never expand
-    //  always expanded
-
     val diaryDay =
         viewModel.observeDiaryDay(homeState.selectedDate).collectAsStateWithLifecycle(null).value
 
+    val expand = viewModel.expand.collectAsStateWithLifecycle().value
+
     if (diaryDay != null) {
         GoalsCard(
-            diaryDay = diaryDay,
+            expand = expand,
+            totalCalories = diaryDay.totalCalories,
+            totalProteins = diaryDay.totalProteins,
+            totalCarbohydrates = diaryDay.totalCarbohydrates,
+            totalFats = diaryDay.totalFats,
+            dailyGoals = diaryDay.dailyGoals,
             onClick = onClick,
             onLongClick = onLongClick,
             modifier = modifier
@@ -67,24 +79,29 @@ internal fun GoalsCard(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun GoalsCard(
-    diaryDay: DiaryDay,
+internal fun GoalsCard(
+    expand: Boolean,
+    totalCalories: Int,
+    totalProteins: Int,
+    totalCarbohydrates: Int,
+    totalFats: Int,
+    dailyGoals: DailyGoals,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val proteinsPercentage = animateFloatAsState(
-        targetValue = diaryDay.totalProteins / diaryDay.dailyGoals.proteinsAsGrams,
+        targetValue = totalProteins / dailyGoals.proteinsAsGrams,
         animationSpec = MaterialTheme.motionScheme.slowEffectsSpec()
     ).value
 
     val carbsPercentage = animateFloatAsState(
-        targetValue = diaryDay.totalCarbohydrates / diaryDay.dailyGoals.carbohydratesAsGrams,
+        targetValue = totalCarbohydrates / dailyGoals.carbohydratesAsGrams,
         animationSpec = MaterialTheme.motionScheme.slowEffectsSpec()
     ).value
 
     val fatsPercentage = animateFloatAsState(
-        targetValue = diaryDay.totalFats / diaryDay.dailyGoals.fatsAsGrams,
+        targetValue = totalFats / dailyGoals.fatsAsGrams,
         animationSpec = MaterialTheme.motionScheme.slowEffectsSpec()
     ).value
 
@@ -97,25 +114,33 @@ private fun GoalsCard(
             modifier = Modifier.padding(16.dp)
         ) {
             GoalsCardContent(
-                calories = diaryDay.totalCalories,
-                caloriesGoal = diaryDay.dailyGoals.calories,
+                calories = totalCalories,
+                caloriesGoal = dailyGoals.calories,
                 proteinsPercentage = proteinsPercentage,
                 carbsPercentage = carbsPercentage,
                 fatsPercentage = fatsPercentage,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(Modifier.height(16.dp))
+            AnimatedVisibility(
+                visible = expand,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                Column {
+                    Spacer(Modifier.height(16.dp))
 
-            ExpandedCardContent(
-                proteinsGrams = diaryDay.totalProteins,
-                proteinsGoalGrams = diaryDay.dailyGoals.proteinsAsGrams.roundToInt(),
-                carbohydratesGrams = diaryDay.totalCarbohydrates,
-                carbohydratesGoalGrams = diaryDay.dailyGoals.carbohydratesAsGrams.roundToInt(),
-                fatsGrams = diaryDay.totalFats,
-                fatsGoalGrams = diaryDay.dailyGoals.fatsAsGrams.roundToInt(),
-                modifier = Modifier.fillMaxWidth()
-            )
+                    ExpandedCardContent(
+                        proteinsGrams = totalProteins,
+                        proteinsGoalGrams = dailyGoals.proteinsAsGrams.roundToInt(),
+                        carbohydratesGrams = totalCarbohydrates,
+                        carbohydratesGoalGrams = dailyGoals.carbohydratesAsGrams.roundToInt(),
+                        fatsGrams = totalFats,
+                        fatsGoalGrams = dailyGoals.fatsAsGrams.roundToInt(),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
         }
     }
 }
@@ -253,24 +278,24 @@ private fun MacroBar(
             .width(24.dp)
     ) {
         if (overflowFraction > 0f) {
-            val remainingProgress = progress - overflowFraction
+            val barHeight = 1 - overflowFraction
 
             drawRect(
                 color = barColor,
                 size = Size(
                     width = size.width,
-                    height = size.height * overflowFraction - 1.dp.toPx()
+                    height = size.height * barHeight - 1.dp.toPx()
                 )
             )
             drawRect(
                 color = overflowColor,
                 topLeft = Offset(
                     x = 0f,
-                    y = size.height * overflowFraction + 1.dp.toPx()
+                    y = size.height * barHeight + 1.dp.toPx()
                 ),
                 size = Size(
                     width = size.width,
-                    height = size.height * remainingProgress - 1.dp.toPx()
+                    height = size.height * overflowFraction - 1.dp.toPx()
                 )
             )
         } else {

@@ -14,17 +14,18 @@ fun NavGraphBuilder.homeGraph(
     onEditMeasurement: (MeasurementId) -> Unit,
     onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
-    onCaloriesCardClick: (epochDay: Int) -> Unit
+    onGoalsCardClick: (epochDay: Int) -> Unit,
+    onGoalsCardLongClick: () -> Unit
 ) {
     crossfadeComposable<Home> {
         HomeScreen(
-            animatedVisibilityScope = this,
             onSettings = onSettings,
             onAbout = onAbout,
             onEditMeasurement = onEditMeasurement,
             onMealCardAddClick = onMealCardAddClick,
             onMealCardLongClick = onMealCardLongClick,
-            onCaloriesCardClick = onCaloriesCardClick
+            onGoalsCardClick = onGoalsCardClick,
+            onGoalsCardLongClick = onGoalsCardLongClick
         )
     }
 }

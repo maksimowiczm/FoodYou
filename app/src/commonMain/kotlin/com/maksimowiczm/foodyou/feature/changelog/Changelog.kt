@@ -29,16 +29,19 @@ object Changelog {
     val next = Version.next(
         newFeatures = listOf(
             "Added a new screen for food measurement",
-            "Added crash handler to display a crash report screen when the app crashes"
+            "Added crash handler to display a crash report screen when the app crashes",
+            "Added goals card settings"
         ),
         changes = listOf(
             "Display the brand name after the product name",
-            "Update barcode scanner icon",
-            "Removed meal screen; all meal items are now displayed directly on the home screen"
+            "Updated barcode scanner icon",
+            "Removed meal screen; all meal items are now displayed directly on the home screen",
+            "Renamed calories card to goals card",
+            "Reset home screen cards order. Default order is now Calendar, Goals, Meals"
         ),
         bugFixes = listOf(
-            "Fix empty recipes, app won't crash when the recipe has no ingredients",
-            "Fix home settings back navigation; it now returns to settings instead of home screen"
+            "Fixed empty recipes, app won't crash when the recipe has no ingredients",
+            "Fixed home settings back navigation; it now returns to settings instead of home screen"
         ),
         translations = listOf(),
         notes = null

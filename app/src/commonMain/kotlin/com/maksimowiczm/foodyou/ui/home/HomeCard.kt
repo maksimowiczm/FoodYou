@@ -13,7 +13,15 @@ import kotlinx.coroutines.flow.map
 enum class HomeCard {
     Calendar,
     Meals,
-    Calories
+    Goals;
+
+    companion object {
+        val defaultOrder = listOf(
+            Calendar,
+            Goals,
+            Meals
+        )
+    }
 }
 
 private fun String?.toHomeCards() = runCatching {
@@ -21,8 +29,8 @@ private fun String?.toHomeCards() = runCatching {
         ?.split(",")
         ?.map { it.trim() }
         ?.map { HomeCard.entries[it.toInt()] }
-        ?: HomeCard.entries
-}.getOrElse { HomeCard.entries }
+        ?: HomeCard.defaultOrder
+}.getOrElse { HomeCard.defaultOrder }
 
 private fun List<HomeCard>.string() = joinToString(",") { it.ordinal.toString() }
 

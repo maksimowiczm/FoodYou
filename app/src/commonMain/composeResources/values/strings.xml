@@ -55,6 +55,7 @@
     <string name="headline_copy_recipe">Copy recipe</string>
     <string name="headline_copy" description="A noun, thing that is a copy">Copy</string>
     <string name="headline_something_went_wrong">Oops! Something went wrong</string>
+    <string name="headline_daily_goals_settings">Daily goals settings</string>
 
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
     <string name="weight">Weight</string>
@@ -183,6 +184,7 @@
     <string name="action_share">Share</string>
     <string name="action_copy_header" description="Copy CSV file header">Copy header</string>
     <string name="action_copy_and_open_bug_report">Copy and open bug report</string>
+    <string name="action_show_details">Show details</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -252,6 +254,7 @@
     <string name="description_experimental_feature">This is an experimental feature. It may change or be removed in future versions.</string>
     <string name="description_notifications_permission_required_data_sync">Notification permission is required to display data synchronization progress. Please enable it in the app settings.</string>
     <string name="description_copy_recipe">Recipe will be copied into a single product</string>
+    <string name="description_show_macronutrients_goals">Show macronutrients goals</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>

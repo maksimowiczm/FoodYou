@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.ui.home
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -39,27 +38,27 @@ import org.koin.compose.koinInject
 
 @Composable
 fun HomeScreen(
-    animatedVisibilityScope: AnimatedVisibilityScope,
     onSettings: () -> Unit,
     onAbout: () -> Unit,
     onEditMeasurement: (MeasurementId) -> Unit,
     onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
-    onCaloriesCardClick: (epochDay: Int) -> Unit,
+    onGoalsCardClick: (epochDay: Int) -> Unit,
+    onGoalsCardLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     dataStore: DataStore<Preferences> = koinInject()
 ) {
     val order by dataStore.collectHomeCardsAsState()
 
     HomeScreen(
-        animatedVisibilityScope = animatedVisibilityScope,
         order = order,
         onSettings = onSettings,
         onAbout = onAbout,
         onEditMeasurement = onEditMeasurement,
         onMealCardLongClick = onMealCardLongClick,
         onMealCardAddClick = onMealCardAddClick,
-        onCaloriesCardClick = onCaloriesCardClick,
+        onGoalsCardClick = onGoalsCardClick,
+        onGoalsCardLongClick = onGoalsCardLongClick,
         modifier = modifier
     )
 }
@@ -67,14 +66,14 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
-    animatedVisibilityScope: AnimatedVisibilityScope,
     order: List<HomeCard>,
     onSettings: () -> Unit,
     onAbout: () -> Unit,
     onEditMeasurement: (MeasurementId) -> Unit,
     onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
-    onCaloriesCardClick: (epochDay: Int) -> Unit,
+    onGoalsCardClick: (epochDay: Int) -> Unit,
+    onGoalsCardLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -138,12 +137,12 @@ fun HomeScreen(
                         modifier = Modifier.testTag(testTag)
                     )
 
-                    HomeCard.Calories -> GoalsCard(
+                    HomeCard.Goals -> GoalsCard(
                         homeState = homeState,
                         onClick = {
-                            onCaloriesCardClick(homeState.selectedDate.toEpochDays())
+                            onGoalsCardClick(homeState.selectedDate.toEpochDays())
                         },
-                        onLongClick = {},
+                        onLongClick = onGoalsCardLongClick,
                         modifier = Modifier
                             .testTag(testTag)
                             .padding(horizontal = 8.dp)

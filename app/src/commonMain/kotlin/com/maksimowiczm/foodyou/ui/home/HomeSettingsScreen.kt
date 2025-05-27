@@ -16,11 +16,11 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -71,6 +71,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun HomeSettingsScreen(
     onBack: () -> Unit,
     onMealsSettings: () -> Unit,
+    onGoalsSettings: () -> Unit,
     modifier: Modifier = Modifier,
     dataStore: DataStore<Preferences> = koinInject()
 ) {
@@ -82,6 +83,7 @@ fun HomeSettingsScreen(
         order = order,
         onBack = onBack,
         onMealsSettings = onMealsSettings,
+        onGoalsSettings = onGoalsSettings,
         onReorder = coroutineScope.lambda<List<HomeCard>> {
             dataStore.updateHomeCards(it)
         },
@@ -99,6 +101,7 @@ fun HomeSettingsScreen(
     order: List<HomeCard>,
     onBack: () -> Unit,
     onMealsSettings: () -> Unit,
+    onGoalsSettings: () -> Unit,
     onReorder: (List<HomeCard>) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -190,7 +193,10 @@ fun HomeSettingsScreen(
                             onMore = onMealsSettings
                         )
 
-                        HomeCard.Calories -> CaloriesCardContent(it)
+                        HomeCard.Goals -> GoalsCardContent(
+                            rs = it,
+                            onMore = onGoalsSettings
+                        )
                     }
                 }
             }
@@ -260,7 +266,7 @@ private fun ReorderableCollectionItemScope.CalendarCardContent(rs: RowScope) = w
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            imageVector = Icons.Default.CalendarMonth,
+            imageVector = Icons.Outlined.CalendarMonth,
             contentDescription = null
         )
     }
@@ -280,7 +286,7 @@ private fun ReorderableCollectionItemScope.MealsCardContent(rs: RowScope, onMore
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = Icons.Default.Restaurant,
+                imageVector = Icons.Outlined.Restaurant,
                 contentDescription = null
             )
         }
@@ -301,23 +307,32 @@ private fun ReorderableCollectionItemScope.MealsCardContent(rs: RowScope, onMore
     }
 
 @Composable
-private fun ReorderableCollectionItemScope.CaloriesCardContent(rs: RowScope) = with(rs) {
-    Box(
-        modifier = Modifier.size(48.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Flag,
-            contentDescription = null
+private fun ReorderableCollectionItemScope.GoalsCardContent(rs: RowScope, onMore: () -> Unit) =
+    with(rs) {
+        Box(
+            modifier = Modifier.size(48.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Flag,
+                contentDescription = null
+            )
+        }
+        Spacer(Modifier.width(16.dp))
+        Text(stringResource(Res.string.headline_daily_goals))
+        Spacer(Modifier.weight(1f))
+        IconButton(
+            onClick = onMore
+        ) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = stringResource(Res.string.action_show_more)
+            )
+        }
+        DragHandle(
+            modifier = Modifier.hapticDraggableHandle(this@GoalsCardContent)
         )
     }
-    Spacer(Modifier.width(16.dp))
-    Text(stringResource(Res.string.unit_calories))
-    Spacer(Modifier.weight(1f))
-    DragHandle(
-        modifier = Modifier.hapticDraggableHandle(this@CaloriesCardContent)
-    )
-}
 
 @Composable
 private fun DragHandle(modifier: Modifier = Modifier) {
