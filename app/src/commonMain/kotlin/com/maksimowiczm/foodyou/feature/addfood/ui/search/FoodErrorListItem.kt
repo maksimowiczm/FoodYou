@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfood.ui.component
+package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults

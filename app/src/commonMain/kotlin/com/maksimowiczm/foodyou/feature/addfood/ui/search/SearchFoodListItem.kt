@@ -23,8 +23,6 @@ import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.core.ui.ext.performToggle
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
-import com.maksimowiczm.foodyou.feature.addfood.ui.component.FoodErrorListItem
-import com.maksimowiczm.foodyou.feature.addfood.ui.component.FoodListItem
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
