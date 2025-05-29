@@ -1,64 +1,24 @@
 package com.maksimowiczm.foodyou.feature.reciperedesign.ui.search
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.Recipe
-import com.maksimowiczm.foodyou.core.domain.model.RecipeIngredient
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.Ingredient
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.testNutritionFacts
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.testProduct
+import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.feature.reciperedesign.domain.Ingredient
+import com.maksimowiczm.foodyou.feature.reciperedesign.domain.RecipeRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flatMapLatest
 
-internal class IngredientsSearchViewModel : ViewModel() {
+internal class IngredientsSearchViewModel(private val recipeRepository: RecipeRepository) :
+    ViewModel() {
     private val searchQuery = MutableStateFlow<String?>(null)
 
-    val pages: Flow<PagingData<Ingredient>> = flowOf(
-        PagingData.Companion.from(
-            listOf(
-                Ingredient.Product(
-                    uniqueId = "1",
-                    food = testProduct(),
-                    measurement = Measurement.Gram(100f)
-                ),
-                Ingredient.Product(
-                    uniqueId = "2",
-                    food = testProduct(
-                        name = "Another Product",
-                        brand = "Brand B",
-                        nutritionFacts = testNutritionFacts(
-                            sodiumMilli = null
-                        )
-                    ),
-                    measurement = Measurement.Serving(2f)
-                ),
-                Ingredient.Recipe(
-                    uniqueId = "3",
-                    food = Recipe(
-                        id = FoodId.Recipe(1L),
-                        name = "Test Recipe",
-                        servings = 4,
-                        ingredients = listOf(
-                            RecipeIngredient(
-                                food = testProduct(
-                                    name = "Another Product",
-                                    brand = "Brand B",
-                                    nutritionFacts = testNutritionFacts(
-                                        sodiumMilli = null
-                                    )
-                                ),
-                                measurement = Measurement.Gram(150f)
-                            )
-                        )
-                    ),
-                    measurement = Measurement.Package(1f)
-                )
-            )
-        )
-    )
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pages: Flow<PagingData<Ingredient>> = searchQuery
+        .flatMapLatest { query -> recipeRepository.queryIngredients(query) }
+        .cachedIn(viewModelScope)
 
     fun onSearch(query: String?) {
         searchQuery.value = query

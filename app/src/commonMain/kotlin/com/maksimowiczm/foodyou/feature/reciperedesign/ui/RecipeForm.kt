@@ -32,6 +32,8 @@ import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
 import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
+import com.maksimowiczm.foodyou.feature.reciperedesign.domain.Ingredient
+import com.maksimowiczm.foodyou.feature.reciperedesign.domain.nutritionFacts
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

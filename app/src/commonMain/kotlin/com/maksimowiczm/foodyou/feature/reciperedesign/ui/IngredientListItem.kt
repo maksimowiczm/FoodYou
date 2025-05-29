@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.component.FoodErrorListItem
 import com.maksimowiczm.foodyou.core.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.feature.reciperedesign.domain.Ingredient
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.product_package
 import foodyou.app.generated.resources.product_serving

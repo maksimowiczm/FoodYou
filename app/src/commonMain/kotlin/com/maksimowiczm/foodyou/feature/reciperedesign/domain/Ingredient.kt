@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui
+package com.maksimowiczm.foodyou.feature.reciperedesign.domain
 
 import androidx.compose.runtime.Immutable
 import com.maksimowiczm.foodyou.core.domain.model.Food
