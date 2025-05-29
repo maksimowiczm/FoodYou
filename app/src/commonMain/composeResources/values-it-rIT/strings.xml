@@ -44,6 +44,12 @@
     <string name="headline_vitamins">Vitamine</string>
     <string name="headline_minerals">Minerali</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">URL supportati</string>
+    <string name="headline_import_and_export">Importa ed esporta</string>
+    <string name="headline_experimental" description="Experimental feature">Sperimentale</string>
+    <string name="headline_experimental_feature">Funzionalità sperimentale</string>
+    <string name="headline_copy_recipe">Copia ricetta</string>
+    <string name="headline_copy" description="A noun, thing that is a copy">Copia</string>
+    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">In %1$s</string>
     <string name="weight">Peso</string>
     <string name="unit_calories">Calorie</string>
     <string name="unit_energy" description="Energy as calories">Energia</string>
@@ -147,13 +153,19 @@
     <string name="action_download">Scarica</string>
     <string name="action_paste_url">Incolla URL</string>
     <string name="action_browse_open_food_facts">Esplora Open Food Facts</string>
-    <string name="action_copy" comment="A verb">Copia</string>
+    <string name="action_copy">Copia</string>
     <string name="action_choose_other_date">Scegli un'altra data</string>
     <string name="action_choose_other_measurement">Scegli un'altra misurazione</string>
     <string name="action_edit_your_home_page">Modifica la tua pagina home</string>
     <string name="action_show_more" description="Show more settings/options/advanced settings">Mostra di più</string>
     <string name="action_download_product">Scarica prodotto</string>
     <string name="action_suggest_external_database">Suggerisci database esterno</string>
+    <string name="action_import_food_products">Importa prodotti alimentari</string>
+    <string name="action_import_food_products_from_csv">Importa prodotti alimentari da un file CSV</string>
+    <string name="action_export_food_products">Esporta prodotti alimentari</string>
+    <string name="action_export_food_products_to_csv">Esporta prodotti alimentari in un file CSV</string>
+    <string name="action_share">Condividi</string>
+    <string name="action_copy_header" description="Copy CSV file header">Copia intestazione</string>
     <string name="neutral_barcode_scanner_camera_request">Permetti l'accesso alla tua fotocamera per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Devi permettere l'accesso per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L'autorizzazione alla fotocamera è necessaria per scansionare i codici a barre. Per favore, concedila nelle impostazioni dell'app.</string>
@@ -173,6 +185,8 @@
     <string name="neutral_help_translating_the_app">Aiuta a tradurre l'app</string>
     <string name="neutral_copied">Informazioni copiate negli appunti</string>
     <string name="neutral_product_created">Prodotto creato</string>
+    <string name="neutral_export_started">Esportazione avviata</string>
+    <string name="neutral_import_started">Importazione avviata</string>
     <string name="question_discard_product">Abbandonare l'inserimento del prodotto?</string>
     <string name="question_discard_changes">Abbandonare le modifiche?</string>
     <string name="question_discard_recipe">Scartare la ricetta?</string>
@@ -209,8 +223,21 @@
     <string name="description_home_settings">Personalizza la tua pagina home</string>
     <string name="description_download_product">Incolla un link a un prodotto alimentare e recupera automaticamente i dati nutrizionali e i dettagli del prodotto.</string>
     <string name="description_download_product_hint">Puoi incollare qualsiasi testo. Verrà utilizzato il primo URL.</string>
+    <string name="description_import_and_export">Salva e carica i tuoi dati</string>
+    <string name="description_import_and_export_hint">Tutte le operazioni di sincronizzazione dei dati vengono eseguite in background. Riceverai una notifica quando sono terminate.</string>
+    <string name="description_experimental_feature">Questa è una funzionalità sperimentale. Potrebbe cambiare o essere rimossa in versioni future.</string>
+    <string name="description_notifications_permission_required_data_sync">L'autorizzazione alle notifiche è necessaria per mostrare l'avanzamento della sincronizzazione dei dati. Abilitala nelle impostazioni dell'app.</string>
+    <string name="description_copy_recipe">La ricetta verrà copiata in un singolo prodotto</string>
     <string name="headline_launcher_icon_by_icons8">Icona del launcher di Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Guarda altre fantastiche icone qui</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
     <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">Esportazione prodotti</string>
+    <string name="notification_exporting_products_success">Esportazione prodotti completata</string>
+    <string name="notification_exporting_products_failure">Esportazione prodotti fallita</string>
+    <string name="notification_importing_products">Importazione prodotti</string>
+    <string name="notification_importing_products_success">Importazione prodotti completata</string>
+    <string name="notification_importing_products_failure">Importazione prodotti fallita</string>
+    <string name="notification_data_sync_channel_name">Sincronizzazione dei dati</string>
+    <string name="notification_data_sync_progress_channel_name">Avanzamento della sincronizzazione dei dati</string>
 </resources>

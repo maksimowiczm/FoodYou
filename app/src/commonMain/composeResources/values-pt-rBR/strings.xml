@@ -36,7 +36,10 @@
     <string name="headline_experimental" description="Experimental feature">Experimental</string>
     <string name="headline_experimental_feature">Recurso experimental</string>
     <string name="headline_copy_recipe">Copiar receita</string>
-    <string name="headline_copy" description="A noun, thing that is a copy" comment="A noun, thing that is a copy">Copiar</string>
+    <string name="headline_copy" description="A noun, thing that is a copy">Copiar</string>
+    <string name="headline_something_went_wrong">Opa! Algo deu errado</string>
+    <string name="headline_daily_goals_settings">Configurações de objetivos diários</string>
+    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">Em %1$s</string>
     <string name="weight">Peso</string>
     <string name="unit_calories">Calorias</string>
     <string name="unit_kcal">kcal</string>
@@ -108,17 +111,20 @@
     <string name="action_download">Download</string>
     <string name="action_paste_url">Colar URL</string>
     <string name="action_browse_open_food_facts">Navegue no Open Food Facts</string>
-    <string name="action_copy" comment="A verb">Copiar</string>
+    <string name="action_copy">Copiar</string>
     <string name="action_import_food_products">Importar produtos alimentícios</string>
     <string name="action_import_food_products_from_csv">Importar produtos alimentícios de um arquivo CSV</string>
     <string name="action_export_food_products">Exportar produtos alimentícios</string>
     <string name="action_export_food_products_to_csv">Exportar produtos alimentícios para um arquivo CSV</string>
     <string name="action_share">Compartilhar</string>
     <string name="action_copy_header" description="Copy CSV file header">Copiar cabeçalho</string>
+    <string name="action_copy_and_open_bug_report">Copiar e abrir relatório de erro</string>
+    <string name="action_show_details">Mostrar detalhes</string>
     <string name="neutral_barcode_scanner_camera_request">Permitir acesso à sua câmera para escanear códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Você deve permitir o acesso para digitalizar códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">A permissão da câmera é obrigatória para ler códigos de barras. Por favor, habilite essa função nas configurações do aplicativo.</string>
     <string name="neutral_no_products_found">Nenhum produto encontrado</string>
+    <string name="neutral_no_food_found">Alimento não encontrado</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d caloria restante</item>
         <item quantity="other">%1$d calorias restantes</item>
@@ -144,6 +150,7 @@
     <string name="error_value_must_be_less_than">O valor deve ser menor que %1$s</string>
     <string name="error_value_must_be_integer">O valor deve ser um número inteiro</string>
     <string name="error_sum_of_percentages_must_be_100">A soma das porcentagens deve ser 100</string>
+    <string name="error_measurement_error">Erro de medição, verifique a porção e o peso da embalagem</string>
     <string name="positive_goal_reached">Meta alcançada</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
@@ -166,6 +173,7 @@
     <string name="description_experimental_feature">Isto é um recurso experimental. Poderá ser alterado ou removido em versões futuras.</string>
     <string name="description_notifications_permission_required_data_sync">A permissão de notificação é necessária para exibir o progresso da sincronização de dados. Por favor, habilite-a nas configurações do aplicativo.</string>
     <string name="description_copy_recipe">A receita será copiada em um único produto</string>
+    <string name="description_show_macronutrients_goals">Mostrar os objetivos de macronutrientes</string>
     <string name="headline_launcher_icon_by_icons8">Ícone da aplicação por Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Veja outros ícones incríveis aqui</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>

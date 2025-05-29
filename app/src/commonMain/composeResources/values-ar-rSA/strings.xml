@@ -29,6 +29,7 @@
     <string name="headline_update_recipe">تحديث وصفة</string>
     <string name="headline_ingredients" description="Recipe ingredients">المكونات</string>
     <string name="headline_summary">ملخص</string>
+    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">في %1$s</string>
     <string name="weight">الوزن</string>
     <string name="unit_calories">السعرات الحرارية</string>
     <string name="unit_kcal">كيلو سعرة حرارية</string>

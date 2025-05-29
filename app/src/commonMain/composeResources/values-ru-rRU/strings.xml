@@ -29,6 +29,7 @@
     <string name="headline_update_recipe">Обновить рецепт</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ингридиенты</string>
     <string name="headline_summary">Итого</string>
+    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">В %1$s</string>
     <string name="weight">Вес</string>
     <string name="unit_calories">Калории</string>
     <string name="unit_kcal">ккал</string>

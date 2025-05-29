@@ -40,7 +40,7 @@
     <string name="headline_vitamins">Vitamines</string>
     <string name="headline_minerals">Minéraux</string>
     <string name="headline_copy_recipe">Copier la recette</string>
-    <string name="headline_copy" description="A noun, thing that is a copy" comment="A noun, thing that is a copy">Copier</string>
+    <string name="headline_copy" description="A noun, thing that is a copy">Copier</string>
     <string name="weight">Poids</string>
     <string name="unit_calories">Calories</string>
     <string name="unit_energy" description="Energy as calories">Énergie</string>
@@ -144,7 +144,7 @@
     <string name="action_download">Télécharger</string>
     <string name="action_paste_url">Coller l'URL</string>
     <string name="action_browse_open_food_facts">Parcourir Open Food Facts</string>
-    <string name="action_copy" comment="A verb">Copier</string>
+    <string name="action_copy">Copier</string>
     <string name="action_edit_your_home_page">Modifiez votre page d'accueil</string>
     <string name="action_download_product">Télécharger le produit</string>
     <string name="neutral_barcode_scanner_camera_request">Autoriser l'accès à l'appareil photo pour scanner les codes-barres</string>

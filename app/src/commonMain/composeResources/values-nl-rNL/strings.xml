@@ -146,7 +146,7 @@
     <string name="action_download">Downloaden</string>
     <string name="action_paste_url">Plak URL</string>
     <string name="action_browse_open_food_facts">Open Food Facts bekijken</string>
-    <string name="action_copy" comment="A verb">Kopiëren</string>
+    <string name="action_copy">Kopiëren</string>
     <string name="action_choose_other_date">Kies een andere datum</string>
     <string name="action_choose_other_measurement">Kies een andere hoeveelheid</string>
     <string name="action_edit_your_home_page">Pas je voorpagina aan</string>

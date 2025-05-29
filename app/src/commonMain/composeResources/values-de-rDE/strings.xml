@@ -44,6 +44,7 @@
     <string name="headline_vitamins">Vitamine</string>
     <string name="headline_minerals">Mineralstoffe</string>
     <string name="headline_supported_URLs" description="URLs that can be used to add products">Unterstützte URLs</string>
+    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">In %1$s</string>
     <string name="weight">Gewicht</string>
     <string name="unit_calories">Kalorien</string>
     <string name="unit_energy" description="Energy as calories">Brennwert in Kalorien</string>
@@ -147,7 +148,7 @@
     <string name="action_download">Herunterladen</string>
     <string name="action_paste_url">URL einfügen</string>
     <string name="action_browse_open_food_facts">Open Food Facts durchsuchen</string>
-    <string name="action_copy" comment="A verb">Kopieren</string>
+    <string name="action_copy">Kopieren</string>
     <string name="action_choose_other_date">Anderes Datum auswählen</string>
     <string name="action_choose_other_measurement">Andere Menge auswählen</string>
     <string name="action_edit_your_home_page">Startseite bearbeiten</string>

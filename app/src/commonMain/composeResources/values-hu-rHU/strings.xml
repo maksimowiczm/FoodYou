@@ -147,7 +147,7 @@
     <string name="action_download">Letöltés</string>
     <string name="action_paste_url">URL beillesztése</string>
     <string name="action_browse_open_food_facts">Open Food Facts böngészése</string>
-    <string name="action_copy" comment="A verb">Másolás</string>
+    <string name="action_copy">Másolás</string>
     <string name="action_choose_other_date">Másik dátum választása</string>
     <string name="action_choose_other_measurement">Másik mérték választása</string>
     <string name="action_edit_your_home_page">Kezdőlapod szerkesztése</string>
