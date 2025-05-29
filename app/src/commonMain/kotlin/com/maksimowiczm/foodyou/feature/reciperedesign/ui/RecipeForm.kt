@@ -41,6 +41,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun RecipeForm(
     ingredients: List<Ingredient>,
     onAddIngredient: () -> Unit,
+    onIngredientClick: (index: Int) -> Unit,
     modifier: Modifier = Modifier,
     formState: RecipeFormState = rememberRecipeFormState(),
     contentPadding: PaddingValues = PaddingValues()
@@ -104,13 +105,11 @@ internal fun RecipeForm(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            ingredients.forEach {
+            ingredients.forEachIndexed { index, it ->
                 key(it.uniqueId) {
                     IngredientListItem(
                         ingredient = it,
-                        onClick = {
-                            // TODO
-                        }
+                        onClick = { onIngredientClick(index) }
                     )
                 }
             }

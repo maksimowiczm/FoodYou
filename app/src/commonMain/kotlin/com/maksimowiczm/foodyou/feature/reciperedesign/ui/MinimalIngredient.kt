@@ -42,21 +42,21 @@ internal data class MinimalIngredient(val foodId: FoodId, val measurement: Measu
                     }
                 }
             )
+
+        private val foodIdSaver: Saver<FoodId, ArrayList<Any>> = Saver(
+            save = {
+                when (it) {
+                    is FoodId.Product -> arrayListOf(0, it.id)
+                    is FoodId.Recipe -> arrayListOf(1, it.id)
+                }
+            },
+            restore = {
+                when (it[0] as Int) {
+                    0 -> FoodId.Product(it[1] as Long)
+                    1 -> FoodId.Recipe(it[1] as Long)
+                    else -> error("Invalid foodId type")
+                }
+            }
+        )
     }
 }
-
-private val foodIdSaver: Saver<FoodId, ArrayList<Any>> = Saver(
-    save = {
-        when (it) {
-            is FoodId.Product -> arrayListOf(0, it.id)
-            is FoodId.Recipe -> arrayListOf(1, it.id)
-        }
-    },
-    restore = {
-        when (it[0] as Int) {
-            0 -> FoodId.Product(it[1] as Long)
-            1 -> FoodId.Recipe(it[1] as Long)
-            else -> error("Invalid foodId type")
-        }
-    }
-)

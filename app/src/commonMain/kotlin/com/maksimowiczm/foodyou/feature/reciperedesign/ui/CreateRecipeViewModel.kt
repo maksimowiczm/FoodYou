@@ -8,11 +8,16 @@ import com.maksimowiczm.foodyou.feature.reciperedesign.domain.Ingredient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 internal class CreateRecipeViewModel(val foodRepository: FoodRepository) : ViewModel() {
 
     fun observeIngredients(minimalIngredients: List<MinimalIngredient>): Flow<List<Ingredient>> {
+        if (minimalIngredients.isEmpty()) {
+            return flowOf(emptyList())
+        }
+
         val flows = minimalIngredients.map { internalIngredient ->
             foodRepository
                 .observeFood(internalIngredient.foodId)

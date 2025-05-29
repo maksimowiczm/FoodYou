@@ -20,7 +20,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun IngredientListItem(
     ingredient: IngredientSearchItem,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     containerColor: Color = Color.Transparent,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
@@ -104,7 +104,7 @@ private val IngredientSearchItem.caloriesString: String?
 @Composable
 internal fun IngredientListItem(
     ingredient: Ingredient,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     containerColor: Color = Color.Transparent,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
