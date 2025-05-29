@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.core.data.database.food
 
 import androidx.room.DatabaseView
+import com.maksimowiczm.foodyou.core.data.model.abstraction.EntityWithMeasurement
 import com.maksimowiczm.foodyou.core.data.model.measurement.Measurement
 
 @DatabaseView(
@@ -102,6 +103,6 @@ data class MeasurementSuggestionView(
     val servingWeight: Float?,
 
     // Measurement
-    val measurement: Measurement?,
-    val quantity: Float?
-)
+    override val measurement: Measurement,
+    override val quantity: Float
+) : EntityWithMeasurement

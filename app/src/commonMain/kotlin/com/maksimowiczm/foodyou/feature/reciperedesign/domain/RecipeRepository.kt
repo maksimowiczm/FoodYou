@@ -1,57 +1,54 @@
 package com.maksimowiczm.foodyou.feature.reciperedesign.domain
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.maksimowiczm.foodyou.core.data.database.food.MeasurementSuggestionView
+import com.maksimowiczm.foodyou.core.data.database.recipe.RecipeDao
+import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.Recipe
-import com.maksimowiczm.foodyou.core.domain.model.RecipeIngredient
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.testNutritionFacts
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.testProduct
+import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
+import com.maksimowiczm.foodyou.core.ext.mapValues
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
-internal class RecipeRepository {
-    fun queryIngredients(query: String?): Flow<PagingData<Ingredient>> = flowOf(
-        PagingData.from(
-            listOf(
-                Ingredient.Product(
-                    uniqueId = "1",
-                    food = testProduct(),
-                    measurement = Measurement.Gram(100f)
-                ),
-                Ingredient.Product(
-                    uniqueId = "2",
-                    food = testProduct(
-                        name = "Another Product",
-                        brand = "Brand B",
-                        nutritionFacts = testNutritionFacts(
-                            sodiumMilli = null
-                        )
-                    ),
-                    measurement = Measurement.Serving(2f)
-                ),
-                Ingredient.Recipe(
-                    uniqueId = "3",
-                    food = Recipe(
-                        id = FoodId.Recipe(1L),
-                        name = "Test Recipe",
-                        servings = 4,
-                        ingredients = listOf(
-                            RecipeIngredient(
-                                food = testProduct(
-                                    name = "Another Product",
-                                    brand = "Brand B",
-                                    nutritionFacts = testNutritionFacts(
-                                        sodiumMilli = null
-                                    )
-                                ),
-                                measurement = Measurement.Gram(150f)
-                            )
-                        )
-                    ),
-                    measurement = Measurement.Package(1f)
-                )
+internal class RecipeRepository(
+    // TODO replace with interface
+    private val recipeLocalDataSource: RecipeDao,
+    private val measurementMapper: MeasurementMapper = MeasurementMapper
+) {
+    fun queryIngredients(query: String?): Flow<PagingData<IngredientSearchItem>> {
+        val barcode = query?.takeIf { it.isNotBlank() }?.takeIf { it.all { it.isDigit() } }
+        val realQuery = query?.takeIf { barcode == null }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30
             )
-        )
+        ) {
+            recipeLocalDataSource.queryIngredients(realQuery, barcode)
+        }.flow.mapValues {
+            with(measurementMapper) { toSearchFoodItem(it) }
+        }
+    }
+}
+
+private fun MeasurementMapper.toSearchFoodItem(entity: MeasurementSuggestionView) = with(entity) {
+    val foodId = when {
+        productId != null && recipeId == null -> FoodId.Product(productId)
+        recipeId != null && productId == null -> FoodId.Recipe(recipeId)
+        else -> error("Data inconsistency: productId and recipeId are null")
+    }
+
+    IngredientSearchItem(
+        foodId = foodId,
+        headline = brand?.let { "$name ($brand)" } ?: name,
+        calories = calories,
+        proteins = proteins,
+        carbohydrates = carbohydrates,
+        fats = fats,
+        packageWeight = packageWeight?.let { PortionWeight.Package(it) },
+        servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
+        measurement = toMeasurement(),
+        uniqueId = foodId.toString()
     )
 }

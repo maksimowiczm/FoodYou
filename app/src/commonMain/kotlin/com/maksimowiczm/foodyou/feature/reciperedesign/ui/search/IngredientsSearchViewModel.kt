@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.feature.reciperedesign.domain.Ingredient
+import com.maksimowiczm.foodyou.feature.reciperedesign.domain.IngredientSearchItem
 import com.maksimowiczm.foodyou.feature.reciperedesign.domain.RecipeRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,7 @@ internal class IngredientsSearchViewModel(private val recipeRepository: RecipeRe
     private val searchQuery = MutableStateFlow<String?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pages: Flow<PagingData<Ingredient>> = searchQuery
+    val pages: Flow<PagingData<IngredientSearchItem>> = searchQuery
         .flatMapLatest { query -> recipeRepository.queryIngredients(query) }
         .cachedIn(viewModelScope)
 

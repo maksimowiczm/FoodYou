@@ -41,7 +41,7 @@ import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.plus
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
-import com.maksimowiczm.foodyou.feature.reciperedesign.domain.Ingredient
+import com.maksimowiczm.foodyou.feature.reciperedesign.domain.IngredientSearchItem
 import com.maksimowiczm.foodyou.feature.reciperedesign.ui.IngredientListItem
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_clear
@@ -55,7 +55,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun IngredientsSearchScreen(
     onBack: () -> Unit,
-    onIngredient: (Ingredient) -> Unit,
+    onIngredient: (IngredientSearchItem) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: IngredientsSearchViewModel = koinViewModel()
 ) {
@@ -77,10 +77,10 @@ internal fun IngredientsSearchScreen(
 )
 @Composable
 private fun IngredientsSearchScreen(
-    pages: LazyPagingItems<Ingredient>,
+    pages: LazyPagingItems<IngredientSearchItem>,
     onBack: () -> Unit,
     onSearch: (String?) -> Unit,
-    onIngredient: (Ingredient) -> Unit,
+    onIngredient: (IngredientSearchItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
