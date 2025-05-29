@@ -94,18 +94,18 @@ abstract class FoodDao : FoodLocalDataSource {
             CASE 
                 WHEN fd.measurementId IS NULL THEN 
                     CASE 
-                        WHEN fd.productId IS NOT NULL THEN fd.productId 
-                        ELSE fd.recipeId 
+                        WHEN fd.productId IS NOT NULL THEN 'p' || fd.productId 
+                        ELSE 'r' || fd.recipeId
                     END
                 WHEN fd.measurementId = mm.minMeasurementId THEN
                     CASE 
-                        WHEN fd.productId IS NOT NULL THEN fd.productId 
-                        ELSE fd.recipeId 
+                        WHEN fd.productId IS NOT NULL THEN 'p' || fd.productId 
+                        ELSE 'r' || fd.recipeId
                     END
                 ELSE
                     CASE 
-                        WHEN fd.productId IS NOT NULL THEN fd.productId || '-' || fd.measurementId
-                        ELSE fd.recipeId || '-' || fd.measurementId
+                        WHEN fd.productId IS NOT NULL THEN 'p' || fd.productId || '-' || fd.measurementId
+                        ELSE 'r' || fd.recipeId || '-' || fd.measurementId
                     END
             END AS uiId
         FROM FinalData fd
@@ -206,18 +206,18 @@ abstract class FoodDao : FoodLocalDataSource {
             CASE 
                 WHEN fd.measurementId IS NULL THEN 
                     CASE 
-                        WHEN fd.productId IS NOT NULL THEN fd.productId 
-                        ELSE fd.recipeId 
+                        WHEN fd.productId IS NOT NULL THEN 'p' || fd.productId 
+                        ELSE 'r' || fd.recipeId
                     END
                 WHEN fd.measurementId = mm.minMeasurementId THEN
                     CASE 
-                        WHEN fd.productId IS NOT NULL THEN fd.productId 
-                        ELSE fd.recipeId 
+                        WHEN fd.productId IS NOT NULL THEN 'p' || fd.productId 
+                        ELSE 'r' || fd.recipeId
                     END
                 ELSE
                     CASE 
-                        WHEN fd.productId IS NOT NULL THEN fd.productId || '-' || fd.measurementId
-                        ELSE fd.recipeId || '-' || fd.measurementId
+                        WHEN fd.productId IS NOT NULL THEN 'p' || fd.productId || '-' || fd.measurementId
+                        ELSE 'r' || fd.recipeId || '-' || fd.measurementId
                     END
             END AS uiId
         FROM FinalData fd
