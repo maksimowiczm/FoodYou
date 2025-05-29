@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_5_0,
             v2_4_0,
             v2_3_2,
             v2_3_1,
@@ -26,7 +26,9 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_5_0 = Version(
+        version = "2.5.0",
+        date = LocalDate(2025, 5, 29),
         newFeatures = listOf(
             "Added a new screen for food measurement",
             "Added crash handler to display a crash report screen when the app crashes",
@@ -46,7 +48,6 @@ object Changelog {
             "Fixed empty recipes, app won't crash when the recipe has no ingredients",
             "Fixed home settings back navigation; it now returns to settings instead of home screen"
         ),
-        translations = listOf(),
         notes = null
     )
 
