@@ -158,6 +158,7 @@ internal fun MeasurementScreen(
                 val nutritionFacts = food.nutritionFacts * weight / 100f
 
                 AdvancedMeasurementSummary(
+                    measurement = measurement,
                     nutritionFacts = nutritionFacts,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )

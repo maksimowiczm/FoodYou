@@ -57,6 +57,7 @@
     <string name="headline_something_went_wrong">Oops! Something went wrong</string>
     <string name="headline_daily_goals_settings">Daily goals settings</string>
 
+    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">In %1$s</string>
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
     <string name="weight">Weight</string>
     <string name="unit_calories">Calories</string>

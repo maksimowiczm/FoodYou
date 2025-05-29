@@ -10,16 +10,27 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
 import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
+import com.maksimowiczm.foodyou.core.ui.res.stringResource
+import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AdvancedMeasurementSummary(nutritionFacts: NutritionFacts, modifier: Modifier = Modifier) {
+fun AdvancedMeasurementSummary(
+    measurement: Measurement,
+    nutritionFacts: NutritionFacts,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -48,6 +59,11 @@ fun AdvancedMeasurementSummary(nutritionFacts: NutritionFacts, modifier: Modifie
                     .height(16.dp)
             )
         }
+
+        Text(
+            text = stringResource(Res.string.in_x, measurement.stringResource()),
+            style = MaterialTheme.typography.labelLarge
+        )
 
         NutritionFactsList(
             facts = nutritionFacts
