@@ -1,0 +1,176 @@
+package com.maksimowiczm.foodyou.feature.reciperedesign.ui
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+internal fun RecipeForm(
+    onAddIngredient: () -> Unit,
+    modifier: Modifier = Modifier,
+    formState: RecipeFormState = rememberRecipeFormState(),
+    contentPadding: PaddingValues = PaddingValues()
+) {
+    val layoutDirection = LocalLayoutDirection.current
+
+    val horizontalPadding = PaddingValues(
+        start = contentPadding.calculateStartPadding(layoutDirection),
+        end = contentPadding.calculateStartPadding(layoutDirection)
+    )
+
+    val verticalPadding = PaddingValues(
+        top = contentPadding.calculateTopPadding(),
+        bottom = contentPadding.calculateBottomPadding()
+    )
+
+    Column(
+        modifier = modifier.padding(verticalPadding),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = stringResource(Res.string.headline_general),
+            modifier = Modifier.padding(horizontalPadding),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelLarge
+        )
+
+        NameTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontalPadding),
+            state = formState.nameState
+        )
+
+        ServingsTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontalPadding),
+            state = formState.servingsState
+        )
+
+        HorizontalDivider()
+
+        Text(
+            text = stringResource(Res.string.headline_ingredients),
+            modifier = Modifier.padding(horizontalPadding),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelLarge
+        )
+
+        AddIngredientButton(
+            onAddIngredient = onAddIngredient,
+            contentPadding = horizontalPadding,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+private fun NameTextField(
+    modifier: Modifier = Modifier,
+    state: FormField<String, RecipeFormFieldError>
+) {
+    OutlinedTextField(
+        modifier = modifier,
+        state = state.textFieldState,
+        label = {
+            Text(stringResource(Res.string.product_name))
+        },
+        supportingText = {
+            Text(stringResource(Res.string.neutral_required))
+        },
+        isError = state.error != null,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next
+        )
+    )
+}
+
+@Composable
+private fun ServingsTextField(
+    modifier: Modifier = Modifier,
+    state: FormField<Int, RecipeFormFieldError>
+) {
+    OutlinedTextField(
+        modifier = modifier,
+        state = state.textFieldState,
+        label = {
+            Text(stringResource(Res.string.recipe_servings))
+        },
+        supportingText = {
+            val error = state.error
+
+            if (error != null) {
+                Text(error.stringResource())
+            } else {
+                Text(stringResource(Res.string.description_recipe_servings))
+            }
+        },
+        isError = state.error != null,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Done
+        )
+    )
+}
+
+@Composable
+private fun AddIngredientButton(
+    onAddIngredient: () -> Unit,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .clickable { onAddIngredient() }
+            .padding(contentPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        FilledTonalIconButton(
+            onClick = onAddIngredient,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .clearAndSetSemantics { }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null
+            )
+        }
+
+        Spacer(Modifier.width(8.dp))
+
+        Text(
+            text = stringResource(Res.string.action_add_ingredient),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
