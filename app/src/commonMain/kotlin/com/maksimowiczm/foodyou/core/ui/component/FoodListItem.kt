@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -28,6 +30,9 @@ import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.error_measurement_error
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -125,6 +130,21 @@ internal fun FoodListItem(
             content = content
         )
     }
+}
+
+@Composable
+fun FoodErrorListItem(headline: String, modifier: Modifier = Modifier) {
+    ListItem(
+        headlineContent = { Text(headline) },
+        modifier = modifier,
+        supportingContent = { Text(stringResource(Res.string.error_measurement_error)) },
+        colors = ListItemDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            headlineColor = MaterialTheme.colorScheme.onErrorContainer,
+            supportingColor = MaterialTheme.colorScheme.onErrorContainer,
+            overlineColor = MaterialTheme.colorScheme.onErrorContainer
+        )
+    )
 }
 
 // TODO
