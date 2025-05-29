@@ -15,8 +15,8 @@ internal data class Ingredient(val product: Product, val measurement: Measuremen
         get() = with(product) {
             when (measurement) {
                 is Gram -> measurement.value
-                is Measurement.Package -> packageWeight?.let { measurement.weight(packageWeight) }
-                is Serving -> servingWeight?.let { measurement.weight(servingWeight) }
+                is Measurement.Package -> packageWeight?.let { measurement.weight(it) }
+                is Serving -> servingWeight?.let { measurement.weight(it) }
             }
         }
 }

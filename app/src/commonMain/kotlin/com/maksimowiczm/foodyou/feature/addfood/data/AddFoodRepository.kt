@@ -76,10 +76,13 @@ internal class AddFoodRepository(
 }
 
 private fun MeasurementMapper.toSearchFoodItem(entity: FoodSearchEntity) = with(entity) {
+    val productId = productId
+    val recipeId = recipeId
+
     when {
         productId != null && recipeId == null -> {
             val foodId = FoodId.Product(productId)
-            val measurementId = measurementId?.let { MeasurementId.Product(measurementId) }
+            val measurementId = measurementId?.let { MeasurementId.Product(it) }
 
             SearchFoodItem(
                 foodId = foodId,
@@ -98,7 +101,7 @@ private fun MeasurementMapper.toSearchFoodItem(entity: FoodSearchEntity) = with(
 
         recipeId != null && productId == null -> {
             val foodId = FoodId.Recipe(recipeId)
-            val measurementId = measurementId?.let { MeasurementId.Recipe(measurementId) }
+            val measurementId = measurementId?.let { MeasurementId.Recipe(it) }
 
             SearchFoodItem(
                 foodId = foodId,

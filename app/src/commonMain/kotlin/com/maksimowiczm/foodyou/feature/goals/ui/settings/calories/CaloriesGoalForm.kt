@@ -35,7 +35,7 @@ private fun FormFieldWithTextFieldValue<Int, GoalsFormInputError>.TextField(
         isError = error != null,
         supportingText = {
             error?.let {
-                Text(error.stringResource())
+                Text(it.stringResource())
             }
         },
         suffix = suffix,
@@ -63,7 +63,7 @@ private fun FormFieldWithTextFieldValue<Float, GoalsFormInputError>.FloatTextFie
         isError = error != null,
         supportingText = {
             error?.let {
-                Text(error.stringResource())
+                Text(it.stringResource())
             }
         },
         suffix = suffix,

@@ -89,6 +89,8 @@ kotlin {
             implementation(libs.androidx.browser)
         }
         commonMain.dependencies {
+            implementation(project(":core"))
+
             implementation(compose.runtime)
             implementation(compose.foundation)
 //            implementation(compose.material3)
@@ -96,7 +98,6 @@ kotlin {
             implementation(compose.material3AdaptiveNavigationSuite)
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
-            implementation(compose.components.resources)
             implementation(libs.navigation.compose)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)

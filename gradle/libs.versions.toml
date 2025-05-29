@@ -1,4 +1,6 @@
 [versions]
+appcompatVersion = "1.7.0"
+kotlinxCoroutinesCore = "1.10.2"
 version-name = "2.5.0"
 android-versionCode = "15"
 android-compileSdk = "36"
@@ -29,10 +31,21 @@ reorderable = "2.4.3"
 room = "2.7.1"
 workRuntime = "2.10.1"
 zxingAndroidEmbedded = "4.3.0"
+kotlinStdlib = "2.1.20"
+kotlinTest = "2.1.20"
+runner = "1.6.2"
+core = "1.6.1"
+junit = "1.2.1"
+coreKtx = "1.16.0"
+junitVersion = "4.13.2"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+material = "1.10.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
@@ -52,6 +65,7 @@ koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 kotlin-csv = { module = "com.jsoizo:kotlin-csv-jvm", version.ref = "kotlinCsvJvm" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
@@ -61,6 +75,8 @@ ktor-client-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -72,3 +88,5 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
