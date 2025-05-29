@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui
+package com.maksimowiczm.foodyou.feature.reciperedesign.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
@@ -6,6 +6,9 @@ import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.model.Recipe
 import com.maksimowiczm.foodyou.core.domain.model.RecipeIngredient
+import com.maksimowiczm.foodyou.feature.reciperedesign.ui.Ingredient
+import com.maksimowiczm.foodyou.feature.reciperedesign.ui.testNutritionFacts
+import com.maksimowiczm.foodyou.feature.reciperedesign.ui.testProduct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -14,7 +17,7 @@ internal class IngredientsSearchViewModel : ViewModel() {
     private val searchQuery = MutableStateFlow<String?>(null)
 
     val pages: Flow<PagingData<Ingredient>> = flowOf(
-        PagingData.from(
+        PagingData.Companion.from(
             listOf(
                 Ingredient.Product(
                     uniqueId = "1",

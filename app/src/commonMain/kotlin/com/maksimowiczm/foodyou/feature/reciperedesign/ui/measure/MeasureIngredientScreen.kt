@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui
+package com.maksimowiczm.foodyou.feature.reciperedesign.ui.measure
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

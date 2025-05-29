@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.feature.reciperedesign
 
 import com.maksimowiczm.foodyou.feature.reciperedesign.ui.CreateRecipeViewModel
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.IngredientsSearchViewModel
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.MeasureIngredientViewModel
+import com.maksimowiczm.foodyou.feature.reciperedesign.ui.measure.MeasureIngredientViewModel
+import com.maksimowiczm.foodyou.feature.reciperedesign.ui.search.IngredientsSearchViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

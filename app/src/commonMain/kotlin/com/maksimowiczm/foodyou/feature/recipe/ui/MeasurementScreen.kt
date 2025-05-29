@@ -55,8 +55,8 @@ import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementForm
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.rememberMeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.toEnum
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.value
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.WeightChips
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.rememberWeightChipsState
+import com.maksimowiczm.foodyou.feature.reciperedesign.ui.measure.WeightChips
+import com.maksimowiczm.foodyou.feature.reciperedesign.ui.measure.rememberWeightChipsState
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.flow.collectLatest
