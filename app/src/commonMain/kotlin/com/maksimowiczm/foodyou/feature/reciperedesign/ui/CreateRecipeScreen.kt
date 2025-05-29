@@ -14,6 +14,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -27,9 +29,7 @@ import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.feature.reciperedesign.domain.Ingredient
 import com.maksimowiczm.foodyou.feature.reciperedesign.ui.measure.MeasureIngredientScreen
 import com.maksimowiczm.foodyou.feature.reciperedesign.ui.search.IngredientsSearchScreen
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_save
-import foodyou.app.generated.resources.headline_create_recipe
+import foodyou.app.generated.resources.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -43,8 +43,16 @@ internal fun CreateRecipeScreen(
 ) {
     val navController = rememberNavController()
 
+    var ingredientsState = rememberSaveable(
+        stateSaver = MinimalIngredient.ListSaver
+    ) {
+        mutableStateOf<List<MinimalIngredient>>(emptyList())
+    }
+
     val formState = rememberRecipeFormState()
-    val ingredients = viewModel.ingredients.collectAsStateWithLifecycle().value
+    val ingredients = viewModel
+        .observeIngredients(ingredientsState.value)
+        .collectAsStateWithLifecycle(emptyList()).value
 
     NavHost(
         navController = navController,
@@ -95,7 +103,10 @@ internal fun CreateRecipeScreen(
                     navController.popBackStack<Measure>(inclusive = true)
                 },
                 onMeasurement = { measurement ->
-                    viewModel.addIngredient(foodId, measurement)
+                    ingredientsState.value = ingredientsState.value + MinimalIngredient(
+                        foodId = foodId,
+                        measurement = measurement
+                    )
                     navController.popBackStack<Search>(inclusive = true)
                 }
             )
