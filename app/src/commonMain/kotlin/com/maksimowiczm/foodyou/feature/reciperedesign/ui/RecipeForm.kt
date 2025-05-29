@@ -106,7 +106,9 @@ internal fun RecipeForm(
                 key(it.uniqueId) {
                     IngredientListItem(
                         ingredient = it,
-                        modifier = Modifier.clickable { }
+                        onClick = {
+                            // TODO
+                        }
                     )
                 }
             }

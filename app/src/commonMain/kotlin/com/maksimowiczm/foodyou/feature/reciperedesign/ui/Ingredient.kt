@@ -8,7 +8,7 @@ import com.maksimowiczm.foodyou.core.domain.model.Product as DomainProduct
 import com.maksimowiczm.foodyou.core.domain.model.Recipe as DomainRecipe
 
 @Immutable
-sealed interface Ingredient {
+internal sealed interface Ingredient {
 
     val uniqueId: String
 
@@ -45,6 +45,6 @@ sealed interface Ingredient {
     ) : Ingredient
 }
 
-fun Iterable<Ingredient>.nutritionFacts() = fold(NutritionFacts.Empty) { acc, ingredient ->
+internal fun Iterable<Ingredient>.nutritionFacts() = fold(NutritionFacts.Empty) { acc, ingredient ->
     acc + ingredient.food.nutritionFacts * (ingredient.weight ?: 0f) / 100f
 }

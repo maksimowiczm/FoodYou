@@ -5,6 +5,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.component.FoodErrorListItem
 import com.maksimowiczm.foodyou.core.ui.component.FoodListItem
@@ -19,7 +21,14 @@ import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun IngredientListItem(ingredient: Ingredient, modifier: Modifier = Modifier) {
+internal fun IngredientListItem(
+    ingredient: Ingredient,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    containerColor: Color = Color.Transparent,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    shape: Shape = RectangleShape
+) {
     val weight = ingredient.weight
     val proteins = ingredient.proteins
     val carbohydrates = ingredient.carbohydrates
@@ -61,8 +70,10 @@ fun IngredientListItem(ingredient: Ingredient, modifier: Modifier = Modifier) {
         calories = { Text(caloriesString) },
         measurement = { Text(measurementString) },
         modifier = modifier,
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        onClick = onClick,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        shape = shape
     )
 }
 

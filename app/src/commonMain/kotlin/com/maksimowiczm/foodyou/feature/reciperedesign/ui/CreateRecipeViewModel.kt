@@ -37,7 +37,7 @@ internal class CreateRecipeViewModel : ViewModel() {
     }
 }
 
-private fun testProduct(
+fun testProduct(
     id: FoodId.Product = FoodId.Product(1L),
     name: String = "Test Product",
     brand: String? = "Test Brand",
@@ -55,7 +55,7 @@ private fun testProduct(
     servingWeight = servingWeight
 )
 
-private fun testNutritionFacts(
+fun testNutritionFacts(
     proteins: Float = 10f,
     carbohydrates: Float = 15f,
     fats: Float = 5f,

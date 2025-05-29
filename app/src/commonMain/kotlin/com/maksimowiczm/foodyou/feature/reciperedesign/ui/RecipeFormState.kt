@@ -13,7 +13,7 @@ import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
-enum class RecipeFormFieldError {
+internal enum class RecipeFormFieldError {
     Required,
     NotAInteger,
     NotPositive;
@@ -27,7 +27,10 @@ enum class RecipeFormFieldError {
 }
 
 @Composable
-fun rememberRecipeFormState(initialName: String = "", initialServings: Int = 1): RecipeFormState {
+internal fun rememberRecipeFormState(
+    initialName: String = "",
+    initialServings: Int = 1
+): RecipeFormState {
     val nameState = rememberFormField(
         initialValue = initialName,
         parser = { ParseResult.Success(it) },
@@ -68,7 +71,7 @@ fun rememberRecipeFormState(initialName: String = "", initialServings: Int = 1):
 }
 
 @Stable
-class RecipeFormState(
+internal class RecipeFormState(
     val nameState: FormField<String, RecipeFormFieldError>,
     val servingsState: FormField<Int, RecipeFormFieldError>
 ) {

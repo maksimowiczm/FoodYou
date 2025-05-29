@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.core.ui.LocalNavigationSharedTransitionScope
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.feature.changelog.AppUpdateChangelogModalBottomSheet
 import com.maksimowiczm.foodyou.feature.language.TranslationWarningStartupDialog
-import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
+import com.maksimowiczm.foodyou.feature.reciperedesign.ui.CreateRecipeScreen
 
 @Suppress("ktlint:compose:modifier-missing-check")
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -21,7 +21,11 @@ fun FoodYouApp() {
                 CompositionLocalProvider(
                     LocalNavigationSharedTransitionScope provides this
                 ) {
-                    FoodYouNavHost()
+//                    FoodYouNavHost()
+
+                    CreateRecipeScreen(
+                        onBack = {}
+                    )
                 }
             }
 

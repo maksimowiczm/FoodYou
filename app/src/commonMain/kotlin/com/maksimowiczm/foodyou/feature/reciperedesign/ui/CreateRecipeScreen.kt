@@ -65,7 +65,9 @@ internal fun CreateRecipeScreen(
                 onBack = {
                     navController.popBackStack("search", inclusive = true)
                 },
-                onSearch = {}
+                onIngredient = {
+                    // TODO
+                }
             )
         }
     }
