@@ -39,6 +39,7 @@ object Changelog {
             "Removed meal screen; all meal items are now displayed directly on the home screen",
             "Renamed calories card to goals card",
             "Reset home screen cards order. Default order is now Calendar, Goals, Meals",
+            "Reset meal cards layout; default is now vertical",
             "Updated food search screen"
         ),
         bugFixes = listOf(

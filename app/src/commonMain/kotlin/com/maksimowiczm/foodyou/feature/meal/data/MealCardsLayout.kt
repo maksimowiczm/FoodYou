@@ -14,18 +14,20 @@ internal enum class MealCardsLayout {
     Vertical
 }
 
-private fun Boolean?.toMealCardsLayout(): MealCardsLayout = if (this == true) {
-    MealCardsLayout.Vertical
-} else {
+private fun Boolean?.toMealCardsLayout(): MealCardsLayout = if (this == false) {
     MealCardsLayout.Horizontal
+} else {
+    MealCardsLayout.Vertical
 }
 
 internal suspend fun DataStore<Preferences>.setMealCardsLayout(layout: MealCardsLayout) =
-    set(MealPreferences.useVerticalLayout to (layout == MealCardsLayout.Vertical))
+    set(MealPreferences.useHorizontalLayout to (layout == MealCardsLayout.Vertical))
 
 internal fun DataStore<Preferences>.observeMealCardsLayout() =
-    observe(MealPreferences.useVerticalLayout).map { it.toMealCardsLayout() }
+    observe(MealPreferences.useHorizontalLayout).map { it.toMealCardsLayout() }
 
 @Composable
 internal fun DataStore<Preferences>.collectMealCardsLayout() = observeMealCardsLayout()
-    .collectAsStateWithLifecycle(getBlocking(MealPreferences.useVerticalLayout).toMealCardsLayout())
+    .collectAsStateWithLifecycle(
+        getBlocking(MealPreferences.useHorizontalLayout).toMealCardsLayout()
+    )
