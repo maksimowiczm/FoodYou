@@ -2,7 +2,10 @@ package com.maksimowiczm.foodyou.feature.reciperedesign.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.Recipe
+import com.maksimowiczm.foodyou.core.domain.model.RecipeIngredient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -28,6 +31,27 @@ internal class IngredientsSearchViewModel : ViewModel() {
                         )
                     ),
                     measurement = Measurement.Serving(2f)
+                ),
+                Ingredient.Recipe(
+                    uniqueId = "3",
+                    food = Recipe(
+                        id = FoodId.Recipe(1L),
+                        name = "Test Recipe",
+                        servings = 4,
+                        ingredients = listOf(
+                            RecipeIngredient(
+                                food = testProduct(
+                                    name = "Another Product",
+                                    brand = "Brand B",
+                                    nutritionFacts = testNutritionFacts(
+                                        sodiumMilli = null
+                                    )
+                                ),
+                                measurement = Measurement.Gram(150f)
+                            )
+                        )
+                    ),
+                    measurement = Measurement.Package(1f)
                 )
             )
         )

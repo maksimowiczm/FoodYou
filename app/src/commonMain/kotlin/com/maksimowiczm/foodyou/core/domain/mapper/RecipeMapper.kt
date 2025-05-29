@@ -17,7 +17,7 @@ object RecipeMapper {
                 with(MeasurementMapper) { ingredient.recipeIngredientEntity.toMeasurement() }
 
             RecipeIngredient(
-                product = product,
+                food = product,
                 measurement = measurement
             )
         }
@@ -36,7 +36,7 @@ object RecipeMapper {
             val measurement = with(MeasurementMapper) { it.recipeIngredientEntity.toMeasurement() }
 
             RecipeIngredient(
-                product = product,
+                food = product,
                 measurement = measurement
             )
         }

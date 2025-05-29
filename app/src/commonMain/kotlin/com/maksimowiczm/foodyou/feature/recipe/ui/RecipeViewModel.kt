@@ -51,7 +51,7 @@ internal class RecipeViewModel(
         recipe?.ingredients?.map {
             IngredientInternal(
                 measurement = it.measurement,
-                productId = it.product.id
+                productId = it.food.id
             )
         } ?: emptyList()
     )

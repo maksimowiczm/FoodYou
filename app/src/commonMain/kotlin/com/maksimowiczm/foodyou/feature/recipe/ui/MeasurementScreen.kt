@@ -51,12 +51,12 @@ import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
 import com.maksimowiczm.foodyou.core.ui.ext.firstVisibleItemAlpha
 import com.maksimowiczm.foodyou.core.ui.res.Saver
-import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.WeightChips
-import com.maksimowiczm.foodyou.feature.addfood.ui.measurement.rememberWeightChipsState
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementForm
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.rememberMeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.toEnum
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.value
+import com.maksimowiczm.foodyou.feature.reciperedesign.ui.WeightChips
+import com.maksimowiczm.foodyou.feature.reciperedesign.ui.rememberWeightChipsState
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.flow.collectLatest

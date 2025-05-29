@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.addfood.ui.measurement
+package com.maksimowiczm.foodyou.feature.reciperedesign.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

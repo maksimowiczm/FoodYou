@@ -7,6 +7,8 @@ import com.maksimowiczm.foodyou.core.domain.model.NutrientValue.Companion.toNutr
 import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
 import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 import com.maksimowiczm.foodyou.core.domain.model.Product
+import com.maksimowiczm.foodyou.core.domain.model.Recipe
+import com.maksimowiczm.foodyou.core.domain.model.RecipeIngredient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -32,8 +34,33 @@ internal class CreateRecipeViewModel : ViewModel() {
                     )
                 ),
                 measurement = Measurement.Serving(2f)
+            ),
+            Ingredient.Recipe(
+                uniqueId = "3",
+                food = Recipe(
+                    id = FoodId.Recipe(1L),
+                    name = "Test Recipe",
+                    servings = 4,
+                    ingredients = listOf(
+                        RecipeIngredient(
+                            food = testProduct(
+                                name = "Another Product",
+                                brand = "Brand B",
+                                nutritionFacts = testNutritionFacts(
+                                    sodiumMilli = null
+                                )
+                            ),
+                            measurement = Measurement.Gram(150f)
+                        )
+                    )
+                ),
+                measurement = Measurement.Package(1f)
             )
         )
+    }
+
+    fun addIngredient(foodId: FoodId, measurement: Measurement) {
+        // TODO
     }
 }
 

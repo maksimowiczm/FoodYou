@@ -27,7 +27,7 @@ data class Recipe(
             NutritionFacts.Empty
         } else {
             ingredients
-                .map { it.product.nutritionFacts * (it.weight ?: 0f) }
+                .map { it.food.nutritionFacts * (it.weight ?: 0f) }
                 .sum() / packageWeight.weight
         }
 }

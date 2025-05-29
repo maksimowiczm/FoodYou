@@ -20,11 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_save
 import foodyou.app.generated.resources.headline_create_recipe
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -42,16 +45,16 @@ internal fun CreateRecipeScreen(
 
     NavHost(
         navController = navController,
-        startDestination = "form",
+        startDestination = Form,
         modifier = modifier
     ) {
-        forwardBackwardComposable("form") {
+        forwardBackwardComposable<Form> {
             FormContent(
                 ingredients = ingredients,
                 formState = formState,
                 onBack = onBack,
                 onAddIngredient = {
-                    navController.navigate("search") {
+                    navController.navigate(Search) {
                         launchSingleTop = true
                     }
                 },
@@ -60,17 +63,68 @@ internal fun CreateRecipeScreen(
                 }
             )
         }
-        forwardBackwardComposable("search") {
+        forwardBackwardComposable<Search> {
             IngredientsSearchScreen(
                 onBack = {
                     navController.popBackStack("search", inclusive = true)
                 },
                 onIngredient = {
-                    // TODO
+                    val route = Measure(it.food.id)
+
+                    navController.navigate(route) {
+                        launchSingleTop = true
+
+                        popUpTo<Search> {
+                            saveState = true
+                        }
+                    }
+                }
+            )
+        }
+        forwardBackwardComposable<Measure> {
+            val route = it.toRoute<Measure>()
+            val foodId = route.foodId
+
+            MeasureIngredientScreen(
+                foodId = route.foodId,
+                selected = null,
+                onBack = {
+                    navController.popBackStack<Measure>(inclusive = true)
+                },
+                onMeasurement = { measurement ->
+                    viewModel.addIngredient(foodId, measurement)
+                    navController.popBackStack<Search>(inclusive = true)
                 }
             )
         }
     }
+}
+
+@Serializable
+private data object Form
+
+@Serializable
+private data object Search
+
+@Serializable
+data class Measure(val productId: Long?, val recipeId: Long?) {
+    constructor(foodId: FoodId) : this(
+        productId = (foodId as? FoodId.Product)?.id,
+        recipeId = (foodId as? FoodId.Recipe)?.id
+    )
+
+    init {
+        require(productId != null || recipeId != null) {
+            "Either productId or recipeId must be provided"
+        }
+    }
+
+    val foodId
+        get() = when {
+            productId != null -> FoodId.Product(productId)
+            recipeId != null -> FoodId.Recipe(recipeId)
+            else -> error("Either productId or recipeId must be provided")
+        }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

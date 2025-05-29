@@ -31,7 +31,7 @@ internal fun List<Ingredient>.compare(other: List<RecipeIngredient>): Boolean {
     if (this.size != other.size) return false
 
     val thisMap = this.associateBy { it.product.id }
-    val otherMap = other.associateBy { it.product.id }
+    val otherMap = other.associateBy { it.food.id }
 
     return thisMap.all { (key, value) ->
         val otherValue = otherMap[key]

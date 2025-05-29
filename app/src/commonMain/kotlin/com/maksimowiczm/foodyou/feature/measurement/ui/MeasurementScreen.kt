@@ -166,8 +166,8 @@ internal fun MeasurementScreen(
 
             if (food is Recipe) {
                 val incompleteFoods = food.ingredients
-                    .filter { !it.product.nutritionFacts.isComplete }
-                    .map { IncompleteFoodData(it.product.id, it.product.headline) }
+                    .filter { !it.food.nutritionFacts.isComplete }
+                    .map { IncompleteFoodData(it.food.id, it.food.headline) }
 
                 item {
                     IncompleteFoodsList(
