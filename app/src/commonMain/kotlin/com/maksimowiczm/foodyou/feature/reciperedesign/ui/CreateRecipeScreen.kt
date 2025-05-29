@@ -17,17 +17,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_save
 import foodyou.app.generated.resources.headline_create_recipe
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun CreateRecipeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+internal fun CreateRecipeScreen(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: CreateRecipeViewModel = koinInject()
+) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val formState = rememberRecipeFormState()
+
+    val ingredients = viewModel.ingredients.collectAsStateWithLifecycle().value
 
     Scaffold(
         modifier = modifier,
@@ -44,7 +52,7 @@ internal fun CreateRecipeScreen(onBack: () -> Unit, modifier: Modifier = Modifie
                         onClick = {
                             // TODO
                         },
-                        enabled = formState.isValid
+                        enabled = formState.isValid && ingredients.isNotEmpty()
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Save,
@@ -64,6 +72,7 @@ internal fun CreateRecipeScreen(onBack: () -> Unit, modifier: Modifier = Modifie
         ) {
             item {
                 RecipeForm(
+                    ingredients = ingredients,
                     onAddIngredient = {},
                     formState = formState,
                     contentPadding = PaddingValues(horizontal = 16.dp)

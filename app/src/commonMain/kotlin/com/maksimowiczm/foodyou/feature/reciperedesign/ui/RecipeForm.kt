@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -27,12 +28,16 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
+import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
+import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
 import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun RecipeForm(
+    ingredients: List<Ingredient>,
     onAddIngredient: () -> Unit,
     modifier: Modifier = Modifier,
     formState: RecipeFormState = rememberRecipeFormState(),
@@ -51,51 +56,108 @@ internal fun RecipeForm(
     )
 
     Column(
-        modifier = modifier.padding(verticalPadding),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = modifier.padding(verticalPadding)
     ) {
-        Text(
-            text = stringResource(Res.string.headline_general),
-            modifier = Modifier.padding(horizontalPadding),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelLarge
-        )
+        Column(
+            modifier = Modifier.padding(vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = stringResource(Res.string.headline_general),
+                modifier = Modifier.padding(horizontalPadding),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelLarge
+            )
 
-        NameTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontalPadding),
-            state = formState.nameState
-        )
+            NameTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontalPadding),
+                state = formState.nameState
+            )
 
-        ServingsTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontalPadding),
-            state = formState.servingsState
-        )
+            ServingsTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontalPadding),
+                state = formState.servingsState
+            )
+        }
 
         HorizontalDivider()
 
         Text(
             text = stringResource(Res.string.headline_ingredients),
-            modifier = Modifier.padding(horizontalPadding),
+            modifier = Modifier
+                .padding(horizontalPadding)
+                .padding(vertical = 8.dp),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.labelLarge
         )
 
-        AddIngredientButton(
-            onAddIngredient = onAddIngredient,
-            contentPadding = horizontalPadding,
-            modifier = Modifier.fillMaxWidth()
-        )
+        Column {
+            AddIngredientButton(
+                onAddIngredient = onAddIngredient,
+                contentPadding = horizontalPadding,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            ingredients.forEach {
+                key(it.uniqueId) {
+                    IngredientListItem(
+                        ingredient = it,
+                        modifier = Modifier.clickable { }
+                    )
+                }
+            }
+        }
+
+        if (ingredients.isNotEmpty()) {
+            HorizontalDivider()
+
+            Text(
+                text = stringResource(Res.string.headline_summary),
+                modifier = Modifier
+                    .padding(horizontalPadding)
+                    .padding(vertical = 8.dp),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelLarge
+            )
+
+            NutritionFactsList(
+                facts = ingredients.nutritionFacts(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontalPadding)
+            )
+
+            val incompleteIngredients = ingredients.filter { !it.food.nutritionFacts.isComplete }
+
+            if (incompleteIngredients.isNotEmpty()) {
+                IncompleteFoodsList(
+                    foods = incompleteIngredients.map {
+                        IncompleteFoodData(
+                            foodId = it.food.id,
+                            name = it.food.headline
+                        )
+                    },
+                    onFoodClick = {
+                        // TODO
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontalPadding)
+                        .padding(vertical = 8.dp)
+                )
+            }
+        }
     }
 }
 
 @Composable
 private fun NameTextField(
-    modifier: Modifier = Modifier,
-    state: FormField<String, RecipeFormFieldError>
+    state: FormField<String, RecipeFormFieldError>,
+    modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         modifier = modifier,
@@ -115,8 +177,8 @@ private fun NameTextField(
 
 @Composable
 private fun ServingsTextField(
-    modifier: Modifier = Modifier,
-    state: FormField<Int, RecipeFormFieldError>
+    state: FormField<Int, RecipeFormFieldError>,
+    modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         modifier = modifier,
