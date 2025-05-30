@@ -38,15 +38,6 @@ abstract class ProductMeasurementDao : ProductMeasurementLocalDataSource {
     )
     abstract override suspend fun deleteProductMeasurement(id: Long)
 
-    @Query(
-        """
-        UPDATE ProductMeasurementEntity
-        SET isDeleted = 0
-        WHERE id = :id
-        """
-    )
-    abstract override suspend fun restoreProductMeasurement(id: Long)
-
     @Transaction
     @Query(
         """
@@ -145,4 +136,21 @@ abstract class ProductMeasurementDao : ProductMeasurementLocalDataSource {
     abstract override fun observeLatestProductMeasurementSuggestion(
         productId: Long
     ): Flow<MeasurementSuggestion?>
+
+    @Query(
+        """
+        SELECT *
+        FROM ProductMeasurementEntity
+        WHERE productId = :productId
+        AND mealId = :mealId
+        AND diaryEpochDay = :epochDay
+        AND isDeleted = 0
+        ORDER BY createdAt DESC
+        """
+    )
+    abstract override fun observeMeasurementsByProductMealDay(
+        productId: Long,
+        mealId: Long,
+        epochDay: Int
+    ): Flow<List<ProductWithMeasurement>>
 }

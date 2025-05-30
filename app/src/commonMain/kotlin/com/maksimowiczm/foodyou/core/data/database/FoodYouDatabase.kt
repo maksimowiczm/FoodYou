@@ -10,8 +10,6 @@ import androidx.room.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
 import com.maksimowiczm.foodyou.core.data.database.food.FoodDao
-import com.maksimowiczm.foodyou.core.data.database.food.MeasuredFoodView
-import com.maksimowiczm.foodyou.core.data.database.food.MeasurementSuggestionView
 import com.maksimowiczm.foodyou.core.data.database.goals.DiaryDayDao
 import com.maksimowiczm.foodyou.core.data.database.goals.DiaryDayView
 import com.maksimowiczm.foodyou.core.data.database.meal.InitializeMealsCallback
@@ -47,8 +45,6 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
     ],
     views = [
         DiaryDayView::class,
-        MeasuredFoodView::class,
-        MeasurementSuggestionView::class,
         RecipeNutritionView::class,
         RecipeWeightView::class,
         RecipeIngredientProductDetails::class
@@ -84,7 +80,8 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
          */
         AutoMigration(from = 12, to = 13),
         AutoMigration(from = 13, to = 14),
-        AutoMigration(from = 14, to = 15)
+        AutoMigration(from = 14, to = 15),
+        AutoMigration(from = 15, to = 16)
     ]
 )
 @TypeConverters(
@@ -102,7 +99,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val foodDao: FoodDao
 
     companion object {
-        const val VERSION = 15
+        const val VERSION = 16
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,

@@ -125,7 +125,7 @@ internal class ProductRepository(private val localProductDataSource: ProductLoca
             productSource = ProductSource.User
         )
 
-        return localProductDataSource.upsertProduct(entity)
+        return localProductDataSource.insertProduct(entity)
     }
 
     suspend fun updateProduct(
@@ -234,6 +234,6 @@ internal class ProductRepository(private val localProductDataSource: ProductLoca
             productSource = ProductSource.User
         )
 
-        localProductDataSource.upsertProduct(entity)
+        localProductDataSource.updateProduct(entity)
     }
 }

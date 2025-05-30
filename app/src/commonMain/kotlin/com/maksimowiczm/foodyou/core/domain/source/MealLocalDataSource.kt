@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface MealLocalDataSource {
     fun observeMeals(): Flow<List<MealEntity>>
-    fun observeMeal(id: Long): Flow<MealEntity?>
     suspend fun getMealById(id: Long): MealEntity?
     suspend fun insertWithLastRank(meal: MealEntity)
     suspend fun update(meal: MealEntity)

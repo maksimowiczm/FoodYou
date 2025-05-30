@@ -15,6 +15,6 @@ import org.koin.dsl.module
 val domainModule = module {
     factory { FoodRepositoryImpl(get(), get()) }.bind<FoodRepository>()
     factoryOf(::MealRepositoryImpl).bind<MealRepository>()
-    factoryOf(::MeasurementRepositoryImpl).bind<MeasurementRepository>()
+    factory { MeasurementRepositoryImpl(get(), get()) }.bind<MeasurementRepository>()
     factoryOf(::SearchRepositoryImpl).bind<SearchRepository>()
 }

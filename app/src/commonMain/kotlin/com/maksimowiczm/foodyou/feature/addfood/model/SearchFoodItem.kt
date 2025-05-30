@@ -1,30 +1,34 @@
 package com.maksimowiczm.foodyou.feature.addfood.model
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.domain.model.Food
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.model.Measurement.Gram
 import com.maksimowiczm.foodyou.core.domain.model.Measurement.Serving
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
-import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 
 @Immutable
 internal data class SearchFoodItem(
-    val foodId: FoodId,
-    val headline: String,
-
-    val calories: Float,
-    val proteins: Float,
-    val carbohydrates: Float,
-    val fats: Float,
-
-    val packageWeight: PortionWeight.Package?,
-    val servingWeight: PortionWeight.Serving?,
-
+    val food: Food,
     val measurement: Measurement,
     val measurementId: MeasurementId?,
     val uniqueId: String
 ) {
+    val headline: String
+        get() = food.headline
+
+    val proteins: Float
+        get() = food.nutritionFacts.proteins.value
+
+    val carbohydrates: Float
+        get() = food.nutritionFacts.carbohydrates.value
+
+    val fats: Float
+        get() = food.nutritionFacts.fats.value
+
+    val calories: Float
+        get() = food.nutritionFacts.calories.value
+
     val isSelected: Boolean
         get() = measurementId != null
 
@@ -32,8 +36,8 @@ internal data class SearchFoodItem(
         get() = with(measurement) {
             when (this) {
                 is Gram -> value
-                is Measurement.Package -> packageWeight?.let { weight(packageWeight) }
-                is Serving -> servingWeight?.let { weight(servingWeight) }
+                is Measurement.Package -> food.packageWeight?.let { weight(it) }
+                is Serving -> food.servingWeight?.let { weight(it) }
             }
         }
 }

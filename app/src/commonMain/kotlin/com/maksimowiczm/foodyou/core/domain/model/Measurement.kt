@@ -25,5 +25,11 @@ sealed interface Measurement {
         fun weight(unit: PortionWeight.Serving) = unit.weight * quantity
     }
 
-    companion object
+    companion object {
+        fun defaultForFood(food: Food): Measurement = when {
+            food.servingWeight != null -> Serving(1f)
+            food.packageWeight != null -> Package(1f)
+            else -> Gram(100f)
+        }
+    }
 }

@@ -35,7 +35,7 @@ internal class ImportProductsUseCaseImpl(
                     return@forEachIndexed
                 }
 
-                productSource.upsertProduct(product)
+                productSource.insertProduct(product)
 
                 count++
                 send(count)

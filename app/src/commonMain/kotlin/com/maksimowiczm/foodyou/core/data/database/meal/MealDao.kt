@@ -16,9 +16,6 @@ abstract class MealDao : MealLocalDataSource {
     abstract override fun observeMeals(): Flow<List<MealEntity>>
 
     @Query("SELECT * FROM MealEntity WHERE id = :id")
-    abstract override fun observeMeal(id: Long): Flow<MealEntity?>
-
-    @Query("SELECT * FROM MealEntity WHERE id = :id")
     abstract override suspend fun getMealById(id: Long): MealEntity?
 
     @Insert
