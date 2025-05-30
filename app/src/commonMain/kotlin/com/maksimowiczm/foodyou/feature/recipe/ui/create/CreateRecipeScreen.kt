@@ -106,7 +106,7 @@ internal fun CreateRecipeScreen(
                     navController.popBackStack(Search, inclusive = true)
                 },
                 onIngredient = {
-                    val route = Measure(it.foodId)
+                    val route = Measure(it.food.id)
 
                     navController.navigate(route) {
                         launchSingleTop = true

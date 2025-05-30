@@ -39,7 +39,7 @@ internal fun IngredientListItem(
     }
 
     FoodListItem(
-        name = { Text(ingredient.headline) },
+        name = { Text(ingredient.food.headline) },
         proteins = {
             val proteins = (ingredient.proteins * weight / 100f).formatClipZeros("%.1f")
             Text("$proteins " + stringResource(Res.string.unit_gram_short))

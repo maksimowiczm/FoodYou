@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -34,9 +35,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.plus
@@ -59,10 +58,10 @@ internal fun IngredientsSearchScreen(
     modifier: Modifier = Modifier,
     viewModel: IngredientsSearchViewModel = koinViewModel()
 ) {
-    val pages = viewModel.pages.collectAsLazyPagingItems()
+    val ingredients = viewModel.ingredients.collectAsStateWithLifecycle().value
 
     IngredientsSearchScreen(
-        pages = pages,
+        ingredients = ingredients,
         onBack = onBack,
         onSearch = viewModel::onSearch,
         onIngredient = onIngredient,
@@ -77,7 +76,7 @@ internal fun IngredientsSearchScreen(
 )
 @Composable
 private fun IngredientsSearchScreen(
-    pages: LazyPagingItems<IngredientSearchItem>,
+    ingredients: List<IngredientSearchItem>?,
     onBack: () -> Unit,
     onSearch: (String?) -> Unit,
     onIngredient: (IngredientSearchItem) -> Unit,
@@ -144,48 +143,48 @@ private fun IngredientsSearchScreen(
             }
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp),
-            contentPadding = paddingValues + PaddingValues(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            items(
-                count = pages.itemCount,
-                key = pages.itemKey { it.uniqueId }
-            ) { i ->
-                val ingredient = pages[i] ?: return@items
+        if (ingredients != null) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp),
+                contentPadding = paddingValues + PaddingValues(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                itemsIndexed(
+                    items = ingredients,
+                    key = { _, item -> item.uniqueId }
+                ) { i, ingredient ->
+                    val topStart = animateDpAsState(
+                        targetValue = if (i == 0) 16.dp else 0.dp,
+                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                    ).value.coerceAtLeast(0.dp)
 
-                val topStart = animateDpAsState(
-                    targetValue = if (i == 0) 16.dp else 0.dp,
-                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                ).value.coerceAtLeast(0.dp)
+                    val topEnd = animateDpAsState(
+                        targetValue = if (i == 0) 16.dp else 0.dp,
+                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                    ).value.coerceAtLeast(0.dp)
 
-                val topEnd = animateDpAsState(
-                    targetValue = if (i == 0) 16.dp else 0.dp,
-                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                ).value.coerceAtLeast(0.dp)
+                    val bottomStart = animateDpAsState(
+                        targetValue = if (i == ingredients.size - 1) 16.dp else 0.dp,
+                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                    ).value.coerceAtLeast(0.dp)
 
-                val bottomStart = animateDpAsState(
-                    targetValue = if (i == pages.itemCount - 1) 16.dp else 0.dp,
-                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                ).value.coerceAtLeast(0.dp)
+                    val bottomEnd = animateDpAsState(
+                        targetValue = if (i == ingredients.size - 1) 16.dp else 0.dp,
+                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                    ).value.coerceAtLeast(0.dp)
 
-                val bottomEnd = animateDpAsState(
-                    targetValue = if (i == pages.itemCount - 1) 16.dp else 0.dp,
-                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                ).value.coerceAtLeast(0.dp)
+                    var shape = RoundedCornerShape(topStart, topEnd, bottomStart, bottomEnd)
 
-                var shape = RoundedCornerShape(topStart, topEnd, bottomStart, bottomEnd)
-
-                IngredientListItem(
-                    ingredient = ingredient,
-                    onClick = { onIngredient(ingredient) },
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
-                    shape = shape
-                )
+                    IngredientListItem(
+                        ingredient = ingredient,
+                        onClick = { onIngredient(ingredient) },
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        shape = shape
+                    )
+                }
             }
         }
     }

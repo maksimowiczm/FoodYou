@@ -1,53 +1,109 @@
 package com.maksimowiczm.foodyou.feature.recipe.domain
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import com.maksimowiczm.foodyou.core.data.database.food.MeasurementSuggestionView
+import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
 import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
+import com.maksimowiczm.foodyou.core.domain.mapper.RecipeMapper
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
+import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
+import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
+import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.RecipeLocalDataSource
-import com.maksimowiczm.foodyou.core.ext.mapValues
+import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 
 internal class RecipeRepository(
+    private val foodRepository: FoodRepository,
+    private val foodLocalDataSource: FoodLocalDataSource,
     private val recipeLocalDataSource: RecipeLocalDataSource,
-    private val measurementMapper: MeasurementMapper = MeasurementMapper
+    private val productMeasurementLocalDataSource: ProductMeasurementLocalDataSource,
+    private val recipeMeasurementLocalDataSource: RecipeMeasurementLocalDataSource,
+    private val measurementMapper: MeasurementMapper = MeasurementMapper,
+    private val recipeMapper: RecipeMapper = RecipeMapper
 ) {
-    fun queryIngredients(query: String?): Flow<PagingData<IngredientSearchItem>> {
-        val barcode = query?.takeIf { it.isNotBlank() }?.takeIf { it.all { it.isDigit() } }
-        val realQuery = query?.takeIf { barcode == null }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun queryIngredients(query: String?): Flow<List<IngredientSearchItem>> {
+        val barcode = query?.takeIf { it.all { it.isDigit() } }
 
-        return Pager(
-            config = PagingConfig(
-                pageSize = 30
-            )
-        ) {
-            recipeLocalDataSource.queryIngredientsSuggestions(realQuery, barcode)
-        }.flow.mapValues {
-            with(measurementMapper) { toSearchFoodItem(it) }
+        val queryFlow = if (barcode != null) {
+            foodLocalDataSource.queryFoodByBarcode(barcode)
+        } else {
+            foodLocalDataSource.queryFood(query)
+        }
+
+        return queryFlow.flatMapLatest { searchList ->
+            if (searchList.isEmpty()) {
+                return@flatMapLatest flowOf(emptyList())
+            }
+
+            val itemFlows = searchList.mapNotNull { entity ->
+                return@mapNotNull when {
+                    entity.productId != null -> mapToProduct(entity)
+                    entity.recipeId != null -> mapToRecipe(entity)
+                    else -> null
+                }
+            }
+
+            combine(itemFlows) { it.toList() }
         }
     }
-}
 
-private fun MeasurementMapper.toSearchFoodItem(entity: MeasurementSuggestionView) = with(entity) {
-    val foodId = when {
-        productId != null && recipeId == null -> FoodId.Product(productId)
-        recipeId != null && productId == null -> FoodId.Recipe(recipeId)
-        else -> error("Data inconsistency: productId and recipeId are null")
+    private fun mapToProduct(entity: FoodSearchEntity): Flow<IngredientSearchItem>? {
+        val productId = entity.productId ?: return null
+
+        val suggestionFlow =
+            productMeasurementLocalDataSource.observeLatestProductMeasurementSuggestion(
+                productId = productId
+            )
+
+        val productFlow = foodRepository.observeFood(FoodId.Product(productId)).filterNotNull()
+
+        return combine(
+            productFlow,
+            suggestionFlow
+        ) { product, suggestion ->
+            val measurement = suggestion
+                ?.let { measurementMapper.toMeasurement(suggestion) }
+                ?: Measurement.defaultForFood(product)
+
+            IngredientSearchItem(
+                food = product,
+                measurement = measurement,
+                uniqueId = product.id.toString()
+            )
+        }
     }
 
-    IngredientSearchItem(
-        foodId = foodId,
-        headline = brand?.let { "$name ($brand)" } ?: name,
-        calories = calories,
-        proteins = proteins,
-        carbohydrates = carbohydrates,
-        fats = fats,
-        packageWeight = packageWeight?.let { PortionWeight.Package(it) },
-        servingWeight = servingWeight?.let { PortionWeight.Serving(it) },
-        measurement = toMeasurement(),
-        uniqueId = foodId.toString()
-    )
+    private fun mapToRecipe(entity: FoodSearchEntity): Flow<IngredientSearchItem>? {
+        val recipeId = entity.recipeId ?: return null
+
+        val suggestionFlow =
+            recipeMeasurementLocalDataSource.observeLatestRecipeMeasurementSuggestion(
+                recipeId = recipeId
+            )
+
+        val recipeFlow = recipeLocalDataSource.observeRecipe(recipeId).filterNotNull()
+
+        return combine(
+            recipeFlow,
+            suggestionFlow
+        ) { recipe, suggestion ->
+            val recipe = recipeMapper.toModel(recipe)
+
+            val measurement = suggestion
+                ?.let { measurementMapper.toMeasurement(suggestion) }
+                ?: Measurement.defaultForFood(recipe)
+
+            IngredientSearchItem(
+                food = recipe,
+                measurement = measurement,
+                uniqueId = recipe.id.toString()
+            )
+        }
+    }
 }

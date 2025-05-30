@@ -10,6 +10,10 @@ import org.koin.dsl.module
 val recipeModule = module {
     factory {
         RecipeRepository(
+            get(),
+            get(),
+            get(),
+            get(),
             get()
         )
     }

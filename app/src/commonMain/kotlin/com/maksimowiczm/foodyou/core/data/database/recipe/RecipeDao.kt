@@ -1,11 +1,9 @@
 package com.maksimowiczm.foodyou.core.data.database.recipe
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
-import com.maksimowiczm.foodyou.core.data.database.food.MeasurementSuggestionView
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeWithIngredients
@@ -56,18 +54,4 @@ abstract class RecipeDao : RecipeLocalDataSource {
         """
     )
     abstract override suspend fun getRecipe(id: Long): RecipeWithIngredients?
-
-    @Query(
-        """
-        SELECT *
-        FROM MeasurementSuggestionView s
-        WHERE
-            (:query IS NULL OR s.name LIKE '%' || :query || '%' OR s.brand LIKE '%' || :query || '%')
-             AND (:barcode IS NULL OR s.barcode = :barcode)
-        """
-    )
-    abstract override fun queryIngredientsSuggestions(
-        query: String?,
-        barcode: String?
-    ): PagingSource<Int, MeasurementSuggestionView>
 }
