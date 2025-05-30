@@ -5,22 +5,23 @@ import com.maksimowiczm.foodyou.core.data.model.measurement.Measurement as Measu
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 
 object MeasurementMapper {
-    @JvmName("toMeasurementFromEntityWithMeasurement")
-    fun toMeasurement(entityWithMeasurement: EntityWithMeasurement): Measurement =
-        entityWithMeasurement.toMeasurement()
-
-    fun EntityWithMeasurement.toMeasurement(): Measurement = when (measurement) {
-        MeasurementEntity.Gram -> Measurement.Gram(quantity)
-        MeasurementEntity.Package -> Measurement.Package(quantity)
-        MeasurementEntity.Serving -> Measurement.Serving(quantity)
+    fun toMeasurement(entityWithMeasurement: EntityWithMeasurement) = with(entityWithMeasurement) {
+        when (measurement) {
+            MeasurementEntity.Gram -> Measurement.Gram(quantity)
+            MeasurementEntity.Package -> Measurement.Package(quantity)
+            MeasurementEntity.Serving -> Measurement.Serving(quantity)
+        }
     }
 
-    @JvmName("toEntityFromMeasurement")
-    fun toEntity(measurement: Measurement): MeasurementEntity = measurement.toEntity()
-
-    fun Measurement.toEntity(): MeasurementEntity = when (this) {
+    fun toEntity(measurement: Measurement): MeasurementEntity = when (measurement) {
         is Measurement.Gram -> MeasurementEntity.Gram
         is Measurement.Package -> MeasurementEntity.Package
         is Measurement.Serving -> MeasurementEntity.Serving
+    }
+
+    fun toQuantity(measurement: Measurement): Float = when (measurement) {
+        is Measurement.Gram -> measurement.value
+        is Measurement.Package -> measurement.quantity
+        is Measurement.Serving -> measurement.quantity
     }
 }

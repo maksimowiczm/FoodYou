@@ -2,9 +2,11 @@ package com.maksimowiczm.foodyou.core.data.database.recipe
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeEntity
+import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeWithIngredients
 import com.maksimowiczm.foodyou.core.domain.source.RecipeLocalDataSource
 import kotlinx.coroutines.flow.Flow
@@ -45,4 +47,33 @@ abstract class RecipeDao : RecipeLocalDataSource {
         """
     )
     abstract override suspend fun getRecipe(id: Long): RecipeWithIngredients?
+
+    @Insert
+    protected abstract suspend fun createRecipeEntity(recipeEntity: RecipeEntity): Long
+
+    @Insert
+    protected abstract suspend fun createRecipeIngredientEntity(
+        ingredient: RecipeIngredientEntity
+    ): Long
+
+    @Transaction
+    override suspend fun createRecipeWithIngredients(
+        name: String,
+        servings: Int,
+        ingredients: List<RecipeIngredientEntity>
+    ): Long {
+        val recipeEntity = RecipeEntity(
+            name = name,
+            servings = servings
+        )
+
+        val recipeId = createRecipeEntity(recipeEntity)
+
+        ingredients.forEach { ingredient ->
+            val recipeIngredientEntity = ingredient.copy(recipeId = recipeId)
+            createRecipeIngredientEntity(recipeIngredientEntity)
+        }
+
+        return recipeId
+    }
 }

@@ -97,6 +97,11 @@ internal fun CreateRecipeScreen(
                     }
                 },
                 onSave = {
+                    viewModel.onSave(
+                        name = formState.nameState.value,
+                        servings = formState.servingsState.value,
+                        ingredients = ingredients.toList()
+                    )
                 }
             )
         }

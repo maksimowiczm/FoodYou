@@ -263,18 +263,18 @@ internal class MeasurementRepositoryImpl(
     private companion object {
         const val TAG = "MeasurementRepositoryImpl"
     }
-}
 
-private fun ProductWithMeasurementEntity.toProductWithMeasurement(): ProductWithMeasurement {
-    val date = Instant
-        .fromEpochSeconds(measurement.createdAt)
-        .toLocalDateTime(TimeZone.currentSystemDefault())
+    private fun ProductWithMeasurementEntity.toProductWithMeasurement(): ProductWithMeasurement {
+        val date = Instant
+            .fromEpochSeconds(measurement.createdAt)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
 
-    return ProductWithMeasurement(
-        measurementId = MeasurementId.Product(measurement.id),
-        measurement = with(MeasurementMapper) { measurement.toMeasurement() },
-        measurementDate = date,
-        mealId = measurement.mealId,
-        product = with(ProductMapper) { product.toModel() }
-    )
+        return ProductWithMeasurement(
+            measurementId = MeasurementId.Product(measurement.id),
+            measurement = measurementMapper.toMeasurement(measurement),
+            measurementDate = date,
+            mealId = measurement.mealId,
+            product = with(ProductMapper) { product.toModel() }
+        )
+    }
 }

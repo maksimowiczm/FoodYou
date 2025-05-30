@@ -38,7 +38,7 @@ import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
 data class RecipeIngredientEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val recipeId: Long,
+    val recipeId: Long = 0,
 
     // Ingredient
     val productId: Long?,
