@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.feature.goals.model
 
 import androidx.compose.runtime.Immutable
 import com.maksimowiczm.foodyou.core.domain.model.DailyGoals
+import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
+import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.ext.sumOf
 import kotlin.math.roundToInt
 import kotlinx.datetime.LocalDate
@@ -9,14 +11,14 @@ import kotlinx.datetime.LocalDate
 @Immutable
 internal data class DiaryDay(
     val date: LocalDate,
-    val foods: Map<Meal, List<Food>>,
+    val foods: Map<Meal, List<FoodWithMeasurement>>,
     val dailyGoals: DailyGoals
 ) {
     val totalCalories: Int
         get() = foods.values.sumOf {
             it.sumOf {
                 val weight = it.weight ?: return@sumOf 0f
-                weight * it.nutrients.calories.value / 100f
+                weight * it.food.nutritionFacts.calories.value / 100f
             }
         }.roundToInt()
 
@@ -24,7 +26,7 @@ internal data class DiaryDay(
         get() = foods.values.sumOf {
             it.sumOf {
                 val weight = it.weight ?: return@sumOf 0f
-                weight * it.nutrients.proteins.value / 100f
+                weight * it.food.nutritionFacts.proteins.value / 100f
             }
         }.roundToInt()
 
@@ -32,7 +34,7 @@ internal data class DiaryDay(
         get() = foods.values.sumOf {
             it.sumOf {
                 val weight = it.weight ?: return@sumOf 0f
-                weight * it.nutrients.carbohydrates.value / 100f
+                weight * it.food.nutritionFacts.carbohydrates.value / 100f
             }
         }.roundToInt()
 
@@ -40,9 +42,12 @@ internal data class DiaryDay(
         get() = foods.values.sumOf {
             it.sumOf {
                 val weight = it.weight ?: return@sumOf 0f
-                weight * it.nutrients.fats.value / 100f
+                weight * it.food.nutritionFacts.fats.value / 100f
             }
         }.roundToInt()
 
-    val meals = foods.keys.toList()
+    private val meals = foods.keys.toList()
+
+    val nonEmptyMeals: List<Meal>
+        get() = meals.filter { foods[it].orEmpty().isNotEmpty() }
 }

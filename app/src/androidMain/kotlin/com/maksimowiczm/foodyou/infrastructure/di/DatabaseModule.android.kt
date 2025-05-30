@@ -5,7 +5,6 @@ import androidx.room.RoomDatabase
 import com.maksimowiczm.foodyou.core.data.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.core.data.database.FoodYouDatabase.Companion.buildDatabase
 import com.maksimowiczm.foodyou.core.data.database.meal.InitializeMealsCallback
-import com.maksimowiczm.foodyou.core.domain.source.DiaryDayLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.MealLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.ProductLocalDataSource
@@ -30,7 +29,6 @@ actual val databaseModule = module {
         builder.buildDatabase(InitializeMealsCallback(androidContext()))
     }
 
-    factory { database.diaryDayDao }.bind<DiaryDayLocalDataSource>()
     factory { database.foodDao }.bind<FoodLocalDataSource>()
     factory { database.mealDao }.bind<MealLocalDataSource>()
     factory { database.productDao }.bind<ProductLocalDataSource>()

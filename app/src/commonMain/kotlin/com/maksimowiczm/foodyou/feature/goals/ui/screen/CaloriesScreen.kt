@@ -83,10 +83,10 @@ private fun CaloriesScreen(
 ) {
     val dateFormatter = LocalDateFormatter.current
 
-    val filterState = rememberMealsFilterState(diaryDay.meals.toSet())
+    val filterState = rememberMealsFilterState(diaryDay.nonEmptyMeals.toSet())
     val meals by remember(filterState.selectedMeals) {
         derivedStateOf {
-            diaryDay.meals.filter { it.id in filterState.selectedMeals }
+            diaryDay.nonEmptyMeals.filter { it.id in filterState.selectedMeals }
         }
     }
 
@@ -164,10 +164,14 @@ private fun CaloriesScreen(
 
                 item {
                     NutritionFactsList(
-                        facts = diaryDay.meals
+                        facts = diaryDay.nonEmptyMeals
                             .filter { it in meals }
                             .flatMap { diaryDay.foods[it] ?: emptyList() }
-                            .mapNotNull { it.realNutrients }
+                            .mapNotNull {
+                                val weight = it.weight ?: return@mapNotNull null
+
+                                it.food.nutritionFacts * weight / 100f
+                            }
                             .sum(),
                         incompleteValue = {
                             {
@@ -184,22 +188,22 @@ private fun CaloriesScreen(
                 }
 
                 item {
-                    val foods = diaryDay.meals
+                    val foods = diaryDay.nonEmptyMeals
                         .filter { it in meals }
                         .flatMap { diaryDay.foods[it] ?: emptyList() }
 
-                    val anyProductIncomplete = foods.any { !it.nutrients.isComplete }
+                    val anyProductIncomplete = foods.any { !it.food.nutritionFacts.isComplete }
 
                     // Display incomplete products
                     if (anyProductIncomplete) {
                         IncompleteFoodsList(
                             foods = foods
-                                .distinctBy { it.foodId }
-                                .filter { !it.nutrients.isComplete }
+                                .distinctBy { it.food.id }
+                                .filter { !it.food.nutritionFacts.isComplete }
                                 .map {
                                     IncompleteFoodData(
-                                        foodId = it.foodId,
-                                        name = it.name
+                                        foodId = it.food.id,
+                                        name = it.food.headline
                                     )
                                 },
                             onFoodClick = onFoodClick,

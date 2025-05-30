@@ -5,23 +5,24 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import com.maksimowiczm.foodyou.core.domain.model.Meal
+import com.maksimowiczm.foodyou.core.domain.model.testMeal
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
-import com.maksimowiczm.foodyou.feature.goals.model.Meal
 import org.junit.Test
 
 @OptIn(ExperimentalTestApi::class)
 class MealFilterTest {
-    private val breakfast = Meal(
+    private val breakfast = testMeal(
         id = 1,
         name = "Breakfast"
     )
 
-    private val lunch = Meal(
+    private val lunch = testMeal(
         id = 2,
         name = "Lunch"
     )
 
-    private val dinner = Meal(
+    private val dinner = testMeal(
         id = 3,
         name = "Dinner"
     )

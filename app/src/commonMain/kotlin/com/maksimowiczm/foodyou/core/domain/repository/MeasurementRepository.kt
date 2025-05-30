@@ -16,7 +16,6 @@ import com.maksimowiczm.foodyou.core.domain.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.RecipeWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -79,14 +78,12 @@ internal class MeasurementRepositoryImpl(
             mealId = mealId
         ).mapValues { it.toProductWithMeasurement() }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeRecipeMeasurements(date: LocalDate, mealId: Long) =
         recipeMeasurementDao.observeRecipeMeasurements(
             epochDay = date.toEpochDays(),
             mealId = mealId
         ).mapValues { it.toRecipeWithMeasurement() }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?> =
         when (measurementId) {
             is MeasurementId.Product ->

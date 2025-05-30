@@ -10,8 +10,6 @@ import androidx.room.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
 import com.maksimowiczm.foodyou.core.data.database.food.FoodDao
-import com.maksimowiczm.foodyou.core.data.database.goals.DiaryDayDao
-import com.maksimowiczm.foodyou.core.data.database.goals.DiaryDayView
 import com.maksimowiczm.foodyou.core.data.database.meal.InitializeMealsCallback
 import com.maksimowiczm.foodyou.core.data.database.meal.MealDao
 import com.maksimowiczm.foodyou.core.data.database.measurement.MeasurementTypeConverter
@@ -21,8 +19,6 @@ import com.maksimowiczm.foodyou.core.data.database.product.ProductDao
 import com.maksimowiczm.foodyou.core.data.database.product.ProductSourceConverter
 import com.maksimowiczm.foodyou.core.data.database.product.ProductSourceSQLConstants.OPEN_FOOD_FACTS
 import com.maksimowiczm.foodyou.core.data.database.recipe.RecipeDao
-import com.maksimowiczm.foodyou.core.data.database.recipe.RecipeNutritionView
-import com.maksimowiczm.foodyou.core.data.database.recipe.RecipeWeightView
 import com.maksimowiczm.foodyou.core.data.database.search.SearchDao
 import com.maksimowiczm.foodyou.core.data.model.meal.MealEntity
 import com.maksimowiczm.foodyou.core.data.model.measurement.ProductMeasurementEntity
@@ -44,9 +40,6 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
         RecipeMeasurementEntity::class
     ],
     views = [
-        DiaryDayView::class,
-        RecipeNutritionView::class,
-        RecipeWeightView::class,
         RecipeIngredientProductDetails::class
     ],
     version = FoodYouDatabase.VERSION,
@@ -81,7 +74,8 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
         AutoMigration(from = 12, to = 13),
         AutoMigration(from = 13, to = 14),
         AutoMigration(from = 14, to = 15),
-        AutoMigration(from = 15, to = 16)
+        AutoMigration(from = 15, to = 16),
+        AutoMigration(from = 16, to = 17)
     ]
 )
 @TypeConverters(
@@ -94,12 +88,11 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val productMeasurementDao: ProductMeasurementDao
     abstract val productDao: ProductDao
     abstract val searchDao: SearchDao
-    abstract val diaryDayDao: DiaryDayDao
     abstract val recipeDao: RecipeDao
     abstract val foodDao: FoodDao
 
     companion object {
-        const val VERSION = 16
+        const val VERSION = 17
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,

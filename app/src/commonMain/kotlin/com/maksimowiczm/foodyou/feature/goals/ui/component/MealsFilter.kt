@@ -22,8 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.ui.modifier.animatePlacement
-import com.maksimowiczm.foodyou.feature.goals.model.Meal
 
 @Composable
 internal fun MealsFilter(state: MealsFilterState, modifier: Modifier = Modifier) {
