@@ -16,7 +16,6 @@ import com.maksimowiczm.foodyou.core.domain.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.RecipeWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -38,12 +37,6 @@ interface MeasurementRepository {
      */
     fun observeSuggestions(foodId: FoodId): Flow<List<Measurement>>
 
-    /**
-     * Get the latest suggestion for the measurement depending on previous measurements.
-     * If there are no previous measurements then return null.
-     */
-    fun observeLatestSuggestion(foodId: FoodId): Flow<Measurement?>
-
     suspend fun addMeasurement(
         date: LocalDate,
         mealId: Long,
@@ -59,13 +52,12 @@ interface MeasurementRepository {
     )
 
     suspend fun removeMeasurement(measurementId: MeasurementId)
-
-    suspend fun restoreMeasurement(measurementId: MeasurementId)
 }
 
 internal class MeasurementRepositoryImpl(
     private val recipeMeasurementDao: RecipeMeasurementLocalDataSource,
-    private val productMeasurementDao: ProductMeasurementLocalDataSource
+    private val productMeasurementDao: ProductMeasurementLocalDataSource,
+    private val measurementMapper: MeasurementMapper = MeasurementMapper
 ) : MeasurementRepository {
 
     override fun observeMeasurements(
@@ -86,14 +78,12 @@ internal class MeasurementRepositoryImpl(
             mealId = mealId
         ).mapValues { it.toProductWithMeasurement() }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeRecipeMeasurements(date: LocalDate, mealId: Long) =
         recipeMeasurementDao.observeRecipeMeasurements(
             epochDay = date.toEpochDays(),
             mealId = mealId
         ).mapValues { it.toRecipeWithMeasurement() }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?> =
         when (measurementId) {
             is MeasurementId.Product ->
@@ -111,24 +101,12 @@ internal class MeasurementRepositoryImpl(
         is FoodId.Product ->
             productMeasurementDao
                 .observeProductMeasurementSuggestions(foodId.id)
-                .mapValues { with(MeasurementMapper) { it.toMeasurement() } }
+                .mapValues { measurementMapper.toMeasurement(it) }
 
         is FoodId.Recipe ->
             recipeMeasurementDao
                 .observeRecipeMeasurementSuggestions(foodId.id)
-                .mapValues { with(MeasurementMapper) { it.toMeasurement() } }
-    }
-
-    override fun observeLatestSuggestion(foodId: FoodId): Flow<Measurement?> = when (foodId) {
-        is FoodId.Product ->
-            productMeasurementDao
-                .observeLatestProductMeasurementSuggestion(foodId.id)
-                .map { with(MeasurementMapper) { it?.toMeasurement() } }
-
-        is FoodId.Recipe ->
-            recipeMeasurementDao
-                .observeLatestRecipeMeasurementSuggestion(foodId.id)
-                .map { with(MeasurementMapper) { it?.toMeasurement() } }
+                .mapValues { measurementMapper.toMeasurement(it) }
     }
 
     override suspend fun addMeasurement(
@@ -137,7 +115,7 @@ internal class MeasurementRepositoryImpl(
         foodId: FoodId,
         measurement: Measurement
     ) {
-        val type = with(MeasurementMapper) { measurement.toEntity() }
+        val type = measurementMapper.toEntity(measurement)
 
         val quantity = when (measurement) {
             is Measurement.Gram -> measurement.value
@@ -182,7 +160,7 @@ internal class MeasurementRepositoryImpl(
         mealId: Long,
         measurement: Measurement
     ) {
-        val type = with(MeasurementMapper) { measurement.toEntity() }
+        val type = measurementMapper.toEntity(measurement)
 
         val quantity = when (measurement) {
             is Measurement.Gram -> measurement.value
@@ -240,17 +218,6 @@ internal class MeasurementRepositoryImpl(
                 val entity = recipeMeasurementDao.getRecipeMeasurement(measurementId.id) ?: return
                 recipeMeasurementDao.deleteRecipeMeasurement(entity.id)
             }
-        }
-    }
-
-    override suspend fun restoreMeasurement(measurementId: MeasurementId) {
-        when (measurementId) {
-            is MeasurementId.Product ->
-                productMeasurementDao.restoreProductMeasurement(measurementId.id)
-
-            is MeasurementId.Recipe -> recipeMeasurementDao.restoreRecipeMeasurement(
-                measurementId.id
-            )
         }
     }
 

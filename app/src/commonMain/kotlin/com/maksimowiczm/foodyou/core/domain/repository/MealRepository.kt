@@ -4,13 +4,10 @@ import com.maksimowiczm.foodyou.core.data.model.meal.MealEntity
 import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.domain.source.MealLocalDataSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapValues
 import kotlinx.datetime.LocalTime
 
 interface MealRepository {
-
-    fun observeMeal(id: Long): Flow<Meal?>
 
     fun observeMeals(): Flow<List<Meal>>
 
@@ -29,18 +26,6 @@ interface MealRepository {
 }
 
 internal class MealRepositoryImpl(private val mealDao: MealLocalDataSource) : MealRepository {
-
-    override fun observeMeal(id: Long): Flow<Meal?> = mealDao.observeMeal(id).map { entity ->
-        entity?.let {
-            Meal(
-                id = entity.id,
-                name = entity.name,
-                from = LocalTime(entity.fromHour, entity.fromMinute),
-                to = LocalTime(entity.toHour, entity.toMinute),
-                rank = entity.rank
-            )
-        }
-    }
 
     override fun observeMeals(): Flow<List<Meal>> = mealDao.observeMeals().mapValues { entity ->
         Meal(

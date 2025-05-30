@@ -10,9 +10,14 @@ interface RecipeMeasurementLocalDataSource {
     suspend fun updateRecipeMeasurement(entity: RecipeMeasurementEntity)
     suspend fun getRecipeMeasurement(id: Long): RecipeMeasurementEntity?
     suspend fun deleteRecipeMeasurement(id: Long)
-    suspend fun restoreRecipeMeasurement(id: Long)
     fun observeRecipeMeasurements(epochDay: Int, mealId: Long): Flow<List<RecipeWithMeasurement>>
     fun observeRecipeMeasurement(measurementId: Long): Flow<RecipeWithMeasurement?>
     fun observeRecipeMeasurementSuggestions(recipeId: Long): Flow<List<MeasurementSuggestion>>
     fun observeLatestRecipeMeasurementSuggestion(recipeId: Long): Flow<MeasurementSuggestion?>
+
+    fun observeMeasurementsByRecipeMealDay(
+        recipeId: Long,
+        mealId: Long,
+        epochDay: Int
+    ): Flow<List<RecipeMeasurementEntity>>
 }

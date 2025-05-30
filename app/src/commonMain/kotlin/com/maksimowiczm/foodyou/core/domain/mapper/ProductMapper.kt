@@ -10,6 +10,9 @@ import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
 import com.maksimowiczm.foodyou.core.domain.model.Product
 
 object ProductMapper {
+    @JvmName("toModelFromEntity")
+    fun toModel(entity: ProductEntity): Product = entity.toModel()
+
     fun ProductEntity.toModel() = Product(
         id = FoodId.Product(id),
         name = name,

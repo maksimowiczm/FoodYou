@@ -15,6 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_5_0,
             v2_4_0,
             v2_3_2,
@@ -25,6 +26,16 @@ object Changelog {
             v2_1_0,
             v2_0_0
         )
+
+    val next = Version.next(
+        newFeatures = listOf(),
+        changes = listOf(
+            "Limit food search results to 100 items. If you need more results, please refine your search query."
+        ),
+        bugFixes = listOf(),
+        translations = listOf(),
+        notes = null
+    )
 
     val v2_5_0 = Version(
         version = "2.5.0",

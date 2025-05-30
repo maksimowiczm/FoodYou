@@ -9,9 +9,6 @@ val addFoodModule = module {
     viewModelOf(::SearchFoodViewModel)
 
     factory {
-        AddFoodRepository(
-            searchLocalDataSource = get(),
-            foodLocalDataSource = get()
-        )
+        AddFoodRepository(get(), get(), get(), get(), get())
     }
 }

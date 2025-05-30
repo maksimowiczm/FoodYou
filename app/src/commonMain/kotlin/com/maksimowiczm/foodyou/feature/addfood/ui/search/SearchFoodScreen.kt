@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -45,7 +46,6 @@ import androidx.compose.material3.ToggleFloatingActionButton
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults
 import androidx.compose.material3.TopSearchBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,7 +53,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,10 +61,6 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
@@ -74,9 +69,6 @@ import com.maksimowiczm.foodyou.core.ui.component.Scrim
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.transform
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -90,12 +82,12 @@ internal fun SearchFoodScreen(
     viewModel: SearchFoodViewModel,
     modifier: Modifier = Modifier
 ) {
-    val pages = viewModel.pages.collectAsLazyPagingItems(viewModel.viewModelScope.coroutineContext)
+    val foods = viewModel.foods.collectAsStateWithLifecycle().value
     val recentQueries = viewModel.recentQueries.collectAsStateWithLifecycle().value
 
     SearchFoodScreen(
         state = state,
-        pages = pages,
+        foods = foods,
         recentQueries = recentQueries.map { it.query },
         onBack = onBack,
         onProductAdd = onProductAdd,
@@ -116,7 +108,7 @@ internal fun SearchFoodScreen(
 @Composable
 private fun SearchFoodScreen(
     state: SearchFoodScreenState,
-    pages: LazyPagingItems<SearchFoodItem>,
+    foods: List<SearchFoodItem>?,
     recentQueries: List<String>,
     onBack: () -> Unit,
     onProductAdd: () -> Unit,
@@ -157,7 +149,7 @@ private fun SearchFoodScreen(
 
         Content(
             state = state,
-            pages = pages,
+            foods = foods,
             recentQueries = recentQueries,
             onBack = onBack,
             onFoodClick = onFoodClick,
@@ -244,7 +236,7 @@ private fun Fab(
 @Composable
 private fun Content(
     state: SearchFoodScreenState,
-    pages: LazyPagingItems<SearchFoodItem>,
+    foods: List<SearchFoodItem>?,
     recentQueries: List<String>,
     onFoodClick: (FoodId) -> Unit,
     onFoodToggle: (Boolean, SearchFoodItem) -> Unit,
@@ -255,19 +247,22 @@ private fun Content(
     val coroutineScope = rememberCoroutineScope()
     var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
 
-    var showLoadingIndicator by remember { mutableStateOf(true) }
-    LaunchedEffect(pages) {
-        snapshotFlow { pages.loadState }.transform {
-            if (it.isIdle) {
-                emit(it)
-            } else {
-                delay(200)
-                emit(it)
-            }
-        }.collectLatest {
-            showLoadingIndicator = !it.isIdle
-        }
+//    var showLoadingIndicator by remember { mutableStateOf(true) }
+    val showLoadingIndicator = remember(foods) {
+        foods == null
     }
+//    LaunchedEffect(pages) {
+//        snapshotFlow { pages.loadState }.transform {
+//            if (it.isIdle) {
+//                emit(it)
+//            } else {
+//                delay(200)
+//                emit(it)
+//            }
+//        }.collectLatest {
+//            showLoadingIndicator = !it.isIdle
+//        }
+//    }
 
     val inputField = @Composable {
         SearchBarDefaults.InputField(
@@ -356,7 +351,7 @@ private fun Content(
         },
         modifier = modifier
     ) { paddingValues ->
-        if (pages.itemCount == 0) {
+        if (foods?.isEmpty() == true) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -385,53 +380,51 @@ private fun Content(
             }
         }
 
-        LazyColumn(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            state = state.lazyListState,
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            contentPadding = paddingValues
-        ) {
-            items(
-                count = pages.itemCount,
-                key = pages.itemKey { it.uniqueId }
-            ) { i ->
-                val food = pages[i]
+        if (foods != null) {
+            LazyColumn(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                state = state.lazyListState,
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                contentPadding = paddingValues
+            ) {
+                itemsIndexed(
+                    items = foods,
+                    key = { _, food -> food.uniqueId }
+                ) { i, food ->
+                    val topStart = animateDpAsState(
+                        targetValue = if (i == 0) 16.dp else 0.dp,
+                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                    ).value.coerceAtLeast(0.dp)
 
-                val topStart = animateDpAsState(
-                    targetValue = if (i == 0) 16.dp else 0.dp,
-                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                ).value.coerceAtLeast(0.dp)
+                    val topEnd = animateDpAsState(
+                        targetValue = if (i == 0) 16.dp else 0.dp,
+                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                    ).value.coerceAtLeast(0.dp)
 
-                val topEnd = animateDpAsState(
-                    targetValue = if (i == 0) 16.dp else 0.dp,
-                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                ).value.coerceAtLeast(0.dp)
+                    val bottomStart = animateDpAsState(
+                        targetValue = if (i == foods.size - 1) 16.dp else 0.dp,
+                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                    ).value.coerceAtLeast(0.dp)
 
-                val bottomStart = animateDpAsState(
-                    targetValue = if (i == pages.itemCount - 1) 16.dp else 0.dp,
-                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                ).value.coerceAtLeast(0.dp)
+                    val bottomEnd = animateDpAsState(
+                        targetValue = if (i == foods.size - 1) 16.dp else 0.dp,
+                        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                    ).value.coerceAtLeast(0.dp)
 
-                val bottomEnd = animateDpAsState(
-                    targetValue = if (i == pages.itemCount - 1) 16.dp else 0.dp,
-                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                ).value.coerceAtLeast(0.dp)
+                    var shape = RoundedCornerShape(topStart, topEnd, bottomStart, bottomEnd)
 
-                var shape = RoundedCornerShape(topStart, topEnd, bottomStart, bottomEnd)
-
-                if (food != null) {
                     SearchFoodListItem(
                         food = food,
-                        onClick = { onFoodClick(food.foodId) },
+                        onClick = { onFoodClick(food.food.id) },
                         onToggle = { onFoodToggle(it, food) },
                         shape = shape
                     )
                 }
-            }
 
-            // FAB spacer
-            item {
-                Spacer(Modifier.padding(vertical = 16.dp).height(72.dp))
+                // FAB spacer
+                item {
+                    Spacer(Modifier.padding(vertical = 16.dp).height(72.dp))
+                }
             }
         }
     }

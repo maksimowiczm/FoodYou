@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
 import com.maksimowiczm.foodyou.core.domain.repository.SearchRepository
 import com.maksimowiczm.foodyou.feature.addfood.data.AddFoodRepository
@@ -31,13 +30,17 @@ internal class SearchFoodViewModel(
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pages = mutableSearchQuery.flatMapLatest { query ->
+    val foods = mutableSearchQuery.flatMapLatest { query ->
         addFoodRepository.queryFood(
             query = query,
             mealId = mealId,
             date = date
         )
-    }.cachedIn(viewModelScope)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(30_000L),
+        initialValue = null
+    )
 
     fun onSearch(query: String?) {
         viewModelScope.launch {
@@ -50,7 +53,7 @@ internal class SearchFoodViewModel(
             measurementRepository.addMeasurement(
                 date = date,
                 mealId = mealId,
-                foodId = item.foodId,
+                foodId = item.food.id,
                 measurement = item.measurement
             )
         }

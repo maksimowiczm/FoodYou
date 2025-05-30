@@ -1,14 +1,14 @@
 package com.maksimowiczm.foodyou.core.domain.source
 
-import androidx.paging.PagingSource
 import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
+import kotlinx.coroutines.flow.Flow
 
 interface FoodLocalDataSource {
-    fun queryFood(query: String?, mealId: Long, epochDay: Int): PagingSource<Int, FoodSearchEntity>
+    fun queryFood(query: String?, limit: Int = 100, offset: Int = 0): Flow<List<FoodSearchEntity>>
 
     fun queryFoodByBarcode(
         barcode: String,
-        mealId: Long,
-        epochDay: Int
-    ): PagingSource<Int, FoodSearchEntity>
+        limit: Int = 100,
+        offset: Int = 0
+    ): Flow<List<FoodSearchEntity>>
 }

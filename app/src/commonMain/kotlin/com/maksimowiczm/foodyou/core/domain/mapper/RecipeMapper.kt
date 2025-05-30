@@ -7,6 +7,10 @@ import com.maksimowiczm.foodyou.core.domain.model.Recipe
 import com.maksimowiczm.foodyou.core.domain.model.RecipeIngredient
 
 object RecipeMapper {
+    @JvmName("toRecipeModel")
+    fun toModel(recipeWithIngredients: RecipeWithIngredients): Recipe =
+        recipeWithIngredients.toModel()
+
     fun RecipeWithIngredients.toModel(): Recipe {
         val (recipeEntity, ingredients) = this
 
