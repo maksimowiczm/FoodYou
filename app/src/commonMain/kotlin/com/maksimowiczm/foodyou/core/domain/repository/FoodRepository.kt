@@ -1,10 +1,8 @@
 package com.maksimowiczm.foodyou.core.domain.repository
 
 import com.maksimowiczm.foodyou.core.domain.mapper.ProductMapper
-import com.maksimowiczm.foodyou.core.domain.mapper.RecipeMapper
 import com.maksimowiczm.foodyou.core.domain.model.Food
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.Product
 import com.maksimowiczm.foodyou.core.domain.source.ProductLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.RecipeLocalDataSource
 import kotlinx.coroutines.flow.Flow
@@ -19,8 +17,7 @@ interface FoodRepository {
 internal class FoodRepositoryImpl(
     private val productLocalDataSource: ProductLocalDataSource,
     private val recipeLocalDataSource: RecipeLocalDataSource,
-    private val recipeMapper: RecipeMapper = RecipeMapper,
-    private val productMapper: ProductMapper = ProductMapper
+    private val recipeRepository: RecipeRepository
 ) : FoodRepository {
     override fun observeFood(id: FoodId): Flow<Food?> = when (id) {
         is FoodId.Product ->
@@ -28,10 +25,7 @@ internal class FoodRepositoryImpl(
                 .observeProduct(id.id)
                 .map { with(ProductMapper) { it?.toModel() } }
 
-        is FoodId.Recipe ->
-            recipeLocalDataSource
-                .observeRecipe(id.id)
-                .map { with(RecipeMapper) { it?.toModel() } }
+        is FoodId.Recipe -> recipeRepository.observeRecipe(id)
     }
 
     override suspend fun deleteFood(id: FoodId) {
@@ -51,22 +45,24 @@ internal class FoodRepositoryImpl(
             error("Recipe not found")
         }
 
-        val recipe = with(recipeMapper) { recipeEntity.toModel() }
+//        val recipe = with(recipeMapper) { recipeEntity.toModel() }
+//
+//        val product = Product(
+//            id = FoodId.Product(0),
+//            name = recipe.name + "($nameSuffix)",
+//            brand = null,
+//            barcode = null,
+//            nutritionFacts = recipe.nutritionFacts,
+//            packageWeight = recipe.packageWeight,
+//            servingWeight = recipe.servingWeight
+//        )
+//
+//        val productEntity = with(productMapper) { product.toEntity() }.copy(id = 0)
+//
+//        val productId = productLocalDataSource.insertProduct(productEntity)
+//
+//        return FoodId.Product(productId)
 
-        val product = Product(
-            id = FoodId.Product(0),
-            name = recipe.name + "($nameSuffix)",
-            brand = null,
-            barcode = null,
-            nutritionFacts = recipe.nutritionFacts,
-            packageWeight = recipe.packageWeight,
-            servingWeight = recipe.servingWeight
-        )
-
-        val productEntity = with(productMapper) { product.toEntity() }.copy(id = 0)
-
-        val productId = productLocalDataSource.insertProduct(productEntity)
-
-        return FoodId.Product(productId)
+        TODO()
     }
 }

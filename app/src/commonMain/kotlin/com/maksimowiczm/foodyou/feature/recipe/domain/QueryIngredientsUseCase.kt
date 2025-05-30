@@ -2,13 +2,12 @@ package com.maksimowiczm.foodyou.feature.recipe.domain
 
 import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
 import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
-import com.maksimowiczm.foodyou.core.domain.mapper.RecipeMapper
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
+import com.maksimowiczm.foodyou.core.domain.repository.RecipeRepository as RealRecipeRepository
 import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
-import com.maksimowiczm.foodyou.core.domain.source.RecipeLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -17,14 +16,13 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 
-internal class RecipeRepository(
+internal class QueryIngredientsUseCase(
     private val foodRepository: FoodRepository,
     private val foodLocalDataSource: FoodLocalDataSource,
-    private val recipeLocalDataSource: RecipeLocalDataSource,
     private val productMeasurementLocalDataSource: ProductMeasurementLocalDataSource,
     private val recipeMeasurementLocalDataSource: RecipeMeasurementLocalDataSource,
-    private val measurementMapper: MeasurementMapper = MeasurementMapper,
-    private val recipeMapper: RecipeMapper = RecipeMapper
+    private val recipeRepository: RealRecipeRepository,
+    private val measurementMapper: MeasurementMapper = MeasurementMapper
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun queryIngredients(query: String?): Flow<List<IngredientSearchItem>> {
@@ -87,13 +85,12 @@ internal class RecipeRepository(
                 recipeId = recipeId
             )
 
-        val recipeFlow = recipeLocalDataSource.observeRecipe(recipeId).filterNotNull()
+        val recipeFlow = recipeRepository.observeRecipe(FoodId.Recipe(recipeId)).filterNotNull()
 
         return combine(
             recipeFlow,
             suggestionFlow
         ) { recipe, suggestion ->
-            val recipe = recipeMapper.toModel(recipe)
 
             val measurement = suggestion
                 ?.let { measurementMapper.toMeasurement(suggestion) }

@@ -3,14 +3,12 @@ package com.maksimowiczm.foodyou.core.data.database.measurement
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import com.maksimowiczm.foodyou.core.data.database.measurement.MeasurementSQLConstants.GRAM
 import com.maksimowiczm.foodyou.core.data.database.measurement.MeasurementSQLConstants.PACKAGE
 import com.maksimowiczm.foodyou.core.data.database.measurement.MeasurementSQLConstants.SERVING
 import com.maksimowiczm.foodyou.core.data.model.measurement.MeasurementSuggestion
 import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeMeasurementEntity
-import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
 import kotlinx.coroutines.flow.Flow
 
@@ -41,59 +39,29 @@ abstract class RecipeMeasurementDao : RecipeMeasurementLocalDataSource {
     )
     abstract override suspend fun deleteRecipeMeasurement(id: Long)
 
-    @Transaction
     @Query(
         """
-        SELECT DISTINCT
-            r.id AS r_id,
-            r.name AS r_name,
-            r.servings AS r_servings,
-            m.id AS m_id,
-            m.mealId AS m_mealId,
-            m.epochDay AS m_epochDay,
-            m.recipeId AS m_recipeId,
-            m.measurement AS m_measurement,
-            m.quantity AS m_quantity,
-            m.createdAt AS m_createdAt,
-            m.isDeleted AS m_isDeleted
-        FROM RecipeEntity r
-        LEFT JOIN RecipeMeasurementEntity m ON r.id = m.recipeId
-        LEFT JOIN RecipeIngredientProductDetails i ON i.r_recipeId = r.id
-        WHERE m.epochDay = :epochDay
-        AND m.mealId = :mealId
-        AND m.isDeleted = 0
+        SELECT *
+        FROM RecipeMeasurementEntity
+        WHERE id = :measurementId
+        AND isDeleted = 0
         """
     )
-    abstract override fun observeRecipeMeasurements(
+    abstract override fun observeMeasurement(measurementId: Long): Flow<RecipeMeasurementEntity>
+
+    @Query(
+        """
+        SELECT *
+        FROM RecipeMeasurementEntity
+        WHERE epochDay = :epochDay
+        AND mealId = :mealId
+        AND isDeleted = 0
+        """
+    )
+    abstract override fun observeMeasurements(
         epochDay: Int,
         mealId: Long
-    ): Flow<List<RecipeWithMeasurement>>
-
-    @Transaction
-    @Query(
-        """
-        SELECT DISTINCT
-            r.id AS r_id,
-            r.name AS r_name,
-            r.servings AS r_servings,
-            m.id AS m_id,
-            m.mealId AS m_mealId,
-            m.epochDay AS m_epochDay,
-            m.recipeId AS m_recipeId,
-            m.measurement AS m_measurement,
-            m.quantity AS m_quantity,
-            m.createdAt AS m_createdAt,
-            m.isDeleted AS m_isDeleted
-        FROM RecipeEntity r
-        LEFT JOIN RecipeMeasurementEntity m ON r.id = m.recipeId
-        LEFT JOIN RecipeIngredientProductDetails i ON i.r_recipeId = r.id
-        WHERE m.id = :measurementId
-        AND m.isDeleted = 0
-        """
-    )
-    abstract override fun observeRecipeMeasurement(
-        measurementId: Long
-    ): Flow<RecipeWithMeasurement?>
+    ): Flow<List<RecipeMeasurementEntity>>
 
     @Query(
         """

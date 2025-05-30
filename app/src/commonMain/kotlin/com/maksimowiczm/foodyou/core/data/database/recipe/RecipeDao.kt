@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeEntity
-import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeWithIngredients
 import com.maksimowiczm.foodyou.core.domain.source.RecipeLocalDataSource
 import kotlinx.coroutines.flow.Flow
@@ -17,19 +16,11 @@ abstract class RecipeDao : RecipeLocalDataSource {
     @Delete
     protected abstract suspend fun _deleteRecipe(recipeEntity: RecipeEntity)
 
-    @Delete
-    protected abstract suspend fun deleteRecipeIngredient(
-        recipeIngredientEntity: RecipeIngredientEntity
-    )
-
     @Transaction
     override suspend fun deleteRecipe(recipeId: Long) {
         val recipeWithIngredients = getRecipe(recipeId)
         if (recipeWithIngredients != null) {
             _deleteRecipe(recipeWithIngredients.recipeEntity)
-            recipeWithIngredients.ingredients.forEach {
-                deleteRecipeIngredient(it.recipeIngredientEntity)
-            }
         }
     }
 
@@ -38,7 +29,7 @@ abstract class RecipeDao : RecipeLocalDataSource {
         """
         SELECT r.*
         FROM RecipeEntity r
-        LEFT JOIN RecipeIngredientProductDetails ri ON r.id = ri.r_recipeId
+        LEFT JOIN RecipeIngredientEntity i ON r.id = i.recipeId
         WHERE r.id = :id
         """
     )
@@ -49,7 +40,7 @@ abstract class RecipeDao : RecipeLocalDataSource {
         """
         SELECT r.*
         FROM RecipeEntity r
-        LEFT JOIN RecipeIngredientProductDetails ri ON r.id = ri.r_recipeId
+        LEFT JOIN RecipeIngredientEntity i ON r.id = i.recipeId
         WHERE r.id = :id
         """
     )

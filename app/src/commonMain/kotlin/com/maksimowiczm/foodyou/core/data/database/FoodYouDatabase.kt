@@ -26,7 +26,6 @@ import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeMeasurementEnt
 import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeIngredientEntity
-import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeIngredientProductDetails
 import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
 
 @Database(
@@ -38,9 +37,6 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
         RecipeEntity::class,
         RecipeIngredientEntity::class,
         RecipeMeasurementEntity::class
-    ],
-    views = [
-        RecipeIngredientProductDetails::class
     ],
     version = FoodYouDatabase.VERSION,
     exportSchema = true,
@@ -75,7 +71,8 @@ import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
         AutoMigration(from = 13, to = 14),
         AutoMigration(from = 14, to = 15),
         AutoMigration(from = 15, to = 16),
-        AutoMigration(from = 16, to = 17)
+        AutoMigration(from = 16, to = 17),
+        AutoMigration(from = 17, to = 18)
     ]
 )
 @TypeConverters(
@@ -92,7 +89,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val foodDao: FoodDao
 
     companion object {
-        const val VERSION = 17
+        const val VERSION = 18
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,

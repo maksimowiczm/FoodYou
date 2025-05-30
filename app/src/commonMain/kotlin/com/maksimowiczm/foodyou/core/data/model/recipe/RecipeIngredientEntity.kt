@@ -21,18 +21,29 @@ import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
             parentColumns = ["id"],
             childColumns = ["productId"],
             onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = RecipeIngredientEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["recipeIngredientId"],
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [
         Index(value = ["recipeId"]),
-        Index(value = ["productId"])
+        Index(value = ["productId"]),
+        Index(value = ["recipeIngredientId"])
     ]
 )
 data class RecipeIngredientEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val recipeId: Long,
-    val productId: Long,
+
+    // Ingredient
+    val productId: Long?,
+    val recipeIngredientId: Long?,
+
     override val measurement: Measurement,
     override val quantity: Float
 ) : EntityWithMeasurement
