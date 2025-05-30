@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui
+package com.maksimowiczm.foodyou.feature.recipe.ui
 
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable

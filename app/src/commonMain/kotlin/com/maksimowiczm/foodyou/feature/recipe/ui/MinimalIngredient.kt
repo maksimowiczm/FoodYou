@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui
+package com.maksimowiczm.foodyou.feature.recipe.ui
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.saveable.Saver

@@ -1,0 +1,20 @@
+package com.maksimowiczm.foodyou.feature.recipe
+
+import com.maksimowiczm.foodyou.feature.recipe.domain.RecipeRepository
+import com.maksimowiczm.foodyou.feature.recipe.ui.create.CreateRecipeViewModel
+import com.maksimowiczm.foodyou.feature.recipe.ui.measure.MeasureIngredientViewModel
+import com.maksimowiczm.foodyou.feature.recipe.ui.search.IngredientsSearchViewModel
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.module
+
+val recipeModule = module {
+    factory {
+        RecipeRepository(
+            get()
+        )
+    }
+
+    viewModelOf(::CreateRecipeViewModel)
+    viewModelOf(::IngredientsSearchViewModel)
+    viewModelOf(::MeasureIngredientViewModel)
+}

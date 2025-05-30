@@ -1,16 +1,11 @@
 package com.maksimowiczm.foodyou.feature.addfood.ui
 
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
-import com.maksimowiczm.foodyou.core.navigation.ForwardBackwardComposableDefaults
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.addfood.ui.search.SearchFoodScreen
@@ -70,22 +65,7 @@ internal fun AddFoodApp(
                 state = searchScreenState
             )
         }
-        forwardBackwardComposable<MeasureFood>(
-            popEnterTransition = {
-                if (initialState.destination.hasRoute<UpdateRecipe>()) {
-                    fadeIn(snap())
-                } else {
-                    ForwardBackwardComposableDefaults.popEnterTransition()
-                }
-            },
-            exitTransition = {
-                if (targetState.destination.hasRoute<UpdateRecipe>()) {
-                    CrossFadeComposableDefaults.exitTransition()
-                } else {
-                    ForwardBackwardComposableDefaults.exitTransition()
-                }
-            }
-        ) {
+        forwardBackwardComposable<MeasureFood> {
             val route = it.toRoute<MeasureFood>()
 
             CreateMeasurementScreen(
@@ -145,24 +125,24 @@ internal fun AddFoodApp(
             }
         )
         recipeGraph(
-            onCreateClose = {
+            createOnBack = {
                 navController.popBackStack<CreateRecipe>(inclusive = true)
-            },
-            onCreate = {
-                navController.navigate(MeasureFood(FoodId.Recipe(it))) {
-                    launchSingleTop = true
-
-                    popUpTo<CreateRecipe> {
-                        inclusive = true
-                    }
-                }
-            },
-            onUpdateClose = {
-                navController.popBackStack<UpdateRecipe>(inclusive = true)
-            },
-            onUpdate = {
-                navController.popBackStack<UpdateRecipe>(inclusive = true)
             }
+//            onCreate = {
+//                navController.navigate(MeasureFood(FoodId.Recipe(it))) {
+//                    launchSingleTop = true
+//
+//                    popUpTo<CreateRecipe> {
+//                        inclusive = true
+//                    }
+//                }
+//            },
+//            onUpdateClose = {
+//                navController.popBackStack<UpdateRecipe>(inclusive = true)
+//            },
+//            onUpdate = {
+//                navController.popBackStack<UpdateRecipe>(inclusive = true)
+//            }
         )
     }
 }

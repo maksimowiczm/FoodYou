@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.domain
+package com.maksimowiczm.foodyou.feature.recipe.domain
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui
+package com.maksimowiczm.foodyou.feature.recipe.ui
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -11,8 +11,8 @@ import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.component.FoodErrorListItem
 import com.maksimowiczm.foodyou.core.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.feature.reciperedesign.domain.Ingredient
-import com.maksimowiczm.foodyou.feature.reciperedesign.domain.IngredientSearchItem
+import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
+import com.maksimowiczm.foodyou.feature.recipe.domain.IngredientSearchItem
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource

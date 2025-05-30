@@ -36,7 +36,6 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         mealModule,
         measurementModule,
         productModule,
-        recipeModule,
-        com.maksimowiczm.foodyou.feature.reciperedesign.recipeModule
+        recipeModule
     )
 }

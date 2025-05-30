@@ -74,10 +74,10 @@ private fun CaloriesNavHost(
             )
         }
         recipeGraph(
-            onCreateClose = {},
-            onCreate = {},
-            onUpdateClose = { navController.popBackStack<UpdateRecipe>(inclusive = true) },
-            onUpdate = { navController.popBackStack<UpdateRecipe>(inclusive = true) }
+            createOnBack = {}
+//            onCreate = {},
+//            onUpdateClose = { navController.popBackStack<UpdateRecipe>(inclusive = true) },
+//            onUpdate = { navController.popBackStack<UpdateRecipe>(inclusive = true) }
         )
     }
 }

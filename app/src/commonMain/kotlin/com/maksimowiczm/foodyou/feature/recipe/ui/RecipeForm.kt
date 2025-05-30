@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui
+package com.maksimowiczm.foodyou.feature.recipe.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,8 +32,8 @@ import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
 import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
-import com.maksimowiczm.foodyou.feature.reciperedesign.domain.Ingredient
-import com.maksimowiczm.foodyou.feature.reciperedesign.domain.nutritionFacts
+import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
+import com.maksimowiczm.foodyou.feature.recipe.domain.nutritionFacts
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

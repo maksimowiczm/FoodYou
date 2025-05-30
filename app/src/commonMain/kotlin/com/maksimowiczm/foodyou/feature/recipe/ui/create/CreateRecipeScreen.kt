@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui.create
+package com.maksimowiczm.foodyou.feature.recipe.ui.create
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,14 +38,14 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.feature.reciperedesign.domain.Ingredient
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.IngredientListItem
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.MinimalIngredient
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.RecipeForm
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.RecipeFormState
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.measure.MeasureIngredientScreen
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.rememberRecipeFormState
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.search.IngredientsSearchScreen
+import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
+import com.maksimowiczm.foodyou.feature.recipe.ui.IngredientListItem
+import com.maksimowiczm.foodyou.feature.recipe.ui.MinimalIngredient
+import com.maksimowiczm.foodyou.feature.recipe.ui.RecipeForm
+import com.maksimowiczm.foodyou.feature.recipe.ui.RecipeFormState
+import com.maksimowiczm.foodyou.feature.recipe.ui.measure.MeasureIngredientScreen
+import com.maksimowiczm.foodyou.feature.recipe.ui.rememberRecipeFormState
+import com.maksimowiczm.foodyou.feature.recipe.ui.search.IngredientsSearchScreen
 import foodyou.app.generated.resources.*
 import kotlin.collections.plus
 import kotlinx.coroutines.launch

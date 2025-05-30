@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui.search
+package com.maksimowiczm.foodyou.feature.recipe.ui.search
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -41,8 +41,8 @@ import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.plus
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
-import com.maksimowiczm.foodyou.feature.reciperedesign.domain.IngredientSearchItem
-import com.maksimowiczm.foodyou.feature.reciperedesign.ui.IngredientListItem
+import com.maksimowiczm.foodyou.feature.recipe.domain.IngredientSearchItem
+import com.maksimowiczm.foodyou.feature.recipe.ui.IngredientListItem
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_clear
 import foodyou.app.generated.resources.action_search

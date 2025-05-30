@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui.search
+package com.maksimowiczm.foodyou.feature.recipe.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.feature.reciperedesign.domain.IngredientSearchItem
-import com.maksimowiczm.foodyou.feature.reciperedesign.domain.RecipeRepository
+import com.maksimowiczm.foodyou.feature.recipe.domain.IngredientSearchItem
+import com.maksimowiczm.foodyou.feature.recipe.domain.RecipeRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

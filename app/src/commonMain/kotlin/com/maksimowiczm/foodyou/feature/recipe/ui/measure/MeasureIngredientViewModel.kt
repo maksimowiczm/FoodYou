@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.reciperedesign.ui.measure
+package com.maksimowiczm.foodyou.feature.recipe.ui.measure
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
