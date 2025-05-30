@@ -4,16 +4,15 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.core.data.database.food.MeasurementSuggestionView
-import com.maksimowiczm.foodyou.core.data.database.recipe.RecipeDao
 import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
+import com.maksimowiczm.foodyou.core.domain.source.RecipeLocalDataSource
 import com.maksimowiczm.foodyou.core.ext.mapValues
 import kotlinx.coroutines.flow.Flow
 
 internal class RecipeRepository(
-    // TODO replace with interface
-    private val recipeLocalDataSource: RecipeDao,
+    private val recipeLocalDataSource: RecipeLocalDataSource,
     private val measurementMapper: MeasurementMapper = MeasurementMapper
 ) {
     fun queryIngredients(query: String?): Flow<PagingData<IngredientSearchItem>> {
@@ -25,7 +24,7 @@ internal class RecipeRepository(
                 pageSize = 30
             )
         ) {
-            recipeLocalDataSource.queryIngredients(realQuery, barcode)
+            recipeLocalDataSource.queryIngredientsSuggestions(realQuery, barcode)
         }.flow.mapValues {
             with(measurementMapper) { toSearchFoodItem(it) }
         }
