@@ -8,16 +8,21 @@ import com.maksimowiczm.foodyou.core.ext.launch
 import com.maksimowiczm.foodyou.feature.recipe.domain.CreateRecipeUseCase
 import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
 import com.maksimowiczm.foodyou.feature.recipe.ui.MinimalIngredient
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class CreateRecipeViewModel(
     private val foodRepository: FoodRepository,
     private val createRecipeUseCase: CreateRecipeUseCase
 ) : ViewModel() {
+
+    private val _eventBus = Channel<CreateRecipeEvent>()
+    val eventBus = _eventBus.receiveAsFlow()
 
     fun observeIngredients(minimalIngredients: List<MinimalIngredient>): Flow<List<Ingredient>> {
         if (minimalIngredients.isEmpty()) {
@@ -54,5 +59,7 @@ internal class CreateRecipeViewModel(
             servings = servings,
             ingredients = ingredients
         )
+
+        _eventBus.send(CreateRecipeEvent.RecipeCreated(id))
     }
 }

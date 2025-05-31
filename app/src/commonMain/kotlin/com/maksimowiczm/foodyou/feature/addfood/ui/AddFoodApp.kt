@@ -127,16 +127,16 @@ internal fun AddFoodApp(
         recipeGraph(
             createOnBack = {
                 navController.popBackStack<CreateRecipe>(inclusive = true)
+            },
+            onCreate = {
+                navController.navigate(MeasureFood(it)) {
+                    launchSingleTop = true
+
+                    popUpTo<CreateRecipe> {
+                        inclusive = true
+                    }
+                }
             }
-//            onCreate = {
-//                navController.navigate(MeasureFood(FoodId.Recipe(it))) {
-//                    launchSingleTop = true
-//
-//                    popUpTo<CreateRecipe> {
-//                        inclusive = true
-//                    }
-//                }
-//            },
 //            onUpdateClose = {
 //                navController.popBackStack<UpdateRecipe>(inclusive = true)
 //            },

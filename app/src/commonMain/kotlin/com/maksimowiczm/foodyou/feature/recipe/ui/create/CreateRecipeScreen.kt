@@ -23,9 +23,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +40,7 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
 import com.maksimowiczm.foodyou.feature.recipe.ui.IngredientListItem
 import com.maksimowiczm.foodyou.feature.recipe.ui.MinimalIngredient
@@ -57,9 +60,17 @@ import org.koin.compose.koinInject
 @Composable
 internal fun CreateRecipeScreen(
     onBack: () -> Unit,
+    onCreate: (FoodId.Recipe) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreateRecipeViewModel = koinInject()
 ) {
+    val latestOnCreate by rememberUpdatedState(onCreate)
+    LaunchedCollectWithLifecycle(viewModel.eventBus) {
+        when (it) {
+            is CreateRecipeEvent.RecipeCreated -> latestOnCreate(it.id)
+        }
+    }
+
     val navController = rememberNavController()
 
     var ingredientsState = rememberSaveable(

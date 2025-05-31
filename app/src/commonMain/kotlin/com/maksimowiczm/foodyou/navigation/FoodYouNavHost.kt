@@ -191,10 +191,10 @@ fun FoodYouNavHost(
         recipeGraph(
             createOnBack = {
                 navController.popBackStack<CreateRecipe>(inclusive = true)
+            },
+            onCreate = {
+                navController.popBackStack<CreateRecipe>(inclusive = true)
             }
-//            onCreate = {
-//                navController.popBackStack<CreateRecipe>(inclusive = true)
-//            },
 //            onUpdateClose = {
 //                navController.popBackStack<UpdateRecipe>(inclusive = true)
 //            },
