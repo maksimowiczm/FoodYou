@@ -52,11 +52,13 @@ internal fun UpdateRecipeScreen(
 
     val formState = rememberRecipeFormState(
         initialName = recipe.name,
-        initialServings = recipe.servings
+        initialServings = recipe.servings,
+        initialIngredients = recipe.ingredients.map { it.toMinimalIngredient() }
     )
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     BackHandler(
+        enabled = formState.isModified,
         onBack = { showDiscardDialog = true }
     )
 
@@ -77,7 +79,6 @@ internal fun UpdateRecipeScreen(
     RecipeApp(
         recipeId = recipeId,
         titleRes = Res.string.headline_update_recipe,
-        ingredients = recipe.ingredients.map { it.toMinimalIngredient() },
         formState = formState,
         onSave = viewModel::onSave,
         onBack = onBack,

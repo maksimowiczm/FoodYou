@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.feature.recipe.ui.DiscardDialog
 import com.maksimowiczm.foodyou.feature.recipe.ui.RecipeApp
+import com.maksimowiczm.foodyou.feature.recipe.ui.rememberRecipeFormState
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -31,8 +32,11 @@ internal fun CreateRecipeScreen(
         }
     }
 
+    val formState = rememberRecipeFormState()
+
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     BackHandler(
+        enabled = formState.isModified,
         onBack = { showDiscardDialog = true }
     )
 
@@ -53,10 +57,10 @@ internal fun CreateRecipeScreen(
     RecipeApp(
         recipeId = null,
         titleRes = Res.string.headline_create_recipe,
-        ingredients = emptyList(),
         onSave = viewModel::onSave,
         onBack = onBack,
         observedIngredients = viewModel::observeIngredients,
-        modifier = modifier
+        modifier = modifier,
+        formState = formState
     )
 }

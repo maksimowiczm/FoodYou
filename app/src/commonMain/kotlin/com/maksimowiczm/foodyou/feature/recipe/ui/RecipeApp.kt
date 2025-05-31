@@ -2,8 +2,6 @@ package com.maksimowiczm.foodyou.feature.recipe.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
@@ -23,7 +21,6 @@ import org.jetbrains.compose.resources.StringResource
 internal fun RecipeApp(
     recipeId: FoodId.Recipe?,
     titleRes: StringResource,
-    ingredients: List<MinimalIngredient>,
     observedIngredients: (List<MinimalIngredient>) -> Flow<List<Ingredient>>,
     onSave: (name: String, servings: Int, ingredients: List<Ingredient>) -> Unit,
     onBack: () -> Unit,
@@ -32,15 +29,8 @@ internal fun RecipeApp(
 ) {
     val navController = rememberNavController()
 
-    var ingredientsState = rememberSaveable(
-        stateSaver = MinimalIngredient.ListSaver
-    ) {
-        mutableStateOf(ingredients)
-    }
-
     val observedIngredients =
-        observedIngredients(ingredientsState.value)
-            .collectAsStateWithLifecycle(emptyList()).value
+        observedIngredients(formState.ingredients).collectAsStateWithLifecycle(emptyList()).value
 
     NavHost(
         navController = navController,
@@ -69,7 +59,7 @@ internal fun RecipeApp(
                     }
                 },
                 onRemoveIngredient = { ingredient ->
-                    ingredientsState.value = ingredientsState.value.toMutableList().apply {
+                    formState.ingredients = formState.ingredients.toMutableList().apply {
                         removeAt(ingredient)
                     }
                 }
@@ -102,7 +92,7 @@ internal fun RecipeApp(
                     navController.popBackStack<MeasureIngredient>(inclusive = true)
                 },
                 onMeasurement = { measurement ->
-                    ingredientsState.value = ingredientsState.value + MinimalIngredient(
+                    formState.ingredients = formState.ingredients + MinimalIngredient(
                         foodId = foodId,
                         measurement = measurement
                     )
@@ -128,7 +118,7 @@ internal fun RecipeApp(
                     navController.popBackStack<UpdateIngredientMeasurement>(inclusive = true)
                 },
                 onMeasurement = { measurement ->
-                    ingredientsState.value = ingredientsState.value.toMutableList().apply {
+                    formState.ingredients = formState.ingredients.toMutableList().apply {
                         set(index, this[index].copy(measurement = measurement))
                     }
                     navController.popBackStack<UpdateIngredientMeasurement>(inclusive = true)
