@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.recipe
 
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.feature.recipe.domain.CreateRecipeUseCase
 import com.maksimowiczm.foodyou.feature.recipe.domain.CreateRecipeUseCaseImpl
 import com.maksimowiczm.foodyou.feature.recipe.domain.IngredientMapper
@@ -11,6 +12,7 @@ import com.maksimowiczm.foodyou.feature.recipe.ui.measure.MeasureIngredientViewM
 import com.maksimowiczm.foodyou.feature.recipe.ui.search.IngredientsSearchViewModel
 import com.maksimowiczm.foodyou.feature.recipe.ui.update.UpdateRecipeViewModel
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -27,6 +29,12 @@ val recipeModule = module {
 
     viewModelOf(::CreateRecipeViewModel)
     viewModelOf(::IngredientsSearchViewModel)
+    viewModel { (id: FoodId.Recipe?) ->
+        IngredientsSearchViewModel(
+            queryIngredientsUseCase = get(),
+            recipeId = id
+        )
+    }
     viewModelOf(::MeasureIngredientViewModel)
     viewModelOf(::UpdateRecipeViewModel)
 }
