@@ -20,7 +20,7 @@ internal class IngredientsSearchViewModel(
     val ingredients = searchQuery.flatMapLatest { query ->
         queryIngredientsUseCase.queryIngredients(
             query = query?.takeIf { it.isNotBlank() },
-            recipeId = recipeId
+            excludedRecipeId = recipeId
         )
     }.stateIn(
         scope = viewModelScope,

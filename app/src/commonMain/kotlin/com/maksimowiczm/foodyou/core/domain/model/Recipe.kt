@@ -36,4 +36,16 @@ data class Recipe(
                 sum / packageWeight.weight
             }
         }
+
+    /**
+     * Returns a flat list of all ingredients in the recipe.
+     */
+    fun flatIngredients(): List<Food> = ingredients.flatMap { ingredient ->
+        val food = ingredient.food
+        if (food is Recipe) {
+            listOf(food) + food.flatIngredients()
+        } else {
+            listOf(food)
+        }
+    }.distinct()
 }
