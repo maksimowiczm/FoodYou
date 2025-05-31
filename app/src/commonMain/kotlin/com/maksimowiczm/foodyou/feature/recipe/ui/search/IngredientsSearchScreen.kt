@@ -165,6 +165,18 @@ private fun IngredientsSearchScreen(
             }
         }
     ) { paddingValues ->
+        if (ingredients?.isEmpty() == true) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(Res.string.neutral_no_food_found),
+                    style = MaterialTheme.typography.bodyLargeEmphasized
+                )
+            }
+        }
+
         AnimatedVisibility(
             visible = showLoadingIndicator,
             modifier = Modifier
