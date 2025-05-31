@@ -28,9 +28,12 @@ object Changelog {
         )
 
     val next = Version.next(
-        newFeatures = listOf(),
+        newFeatures = listOf(
+            "Recipe can now contain other recipes. Go easy on the recursion 😉"
+        ),
         changes = listOf(
-            "Limit food search results to 100 items. If you need more results, please refine your search query."
+            "Limit food search results to 100 items. If you need more results, please refine your search query.",
+            "Removed recipe clone feature"
         ),
         bugFixes = listOf(),
         translations = listOf(),
