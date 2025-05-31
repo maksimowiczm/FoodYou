@@ -23,7 +23,7 @@ import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = RecipeIngredientEntity::class,
+            entity = RecipeEntity::class,
             parentColumns = ["id"],
             childColumns = ["recipeIngredientId"],
             onDelete = ForeignKey.CASCADE
