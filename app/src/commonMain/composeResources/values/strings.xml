@@ -257,6 +257,7 @@
     <string name="description_notifications_permission_required_data_sync">Notification permission is required to display data synchronization progress. Please enable it in the app settings.</string>
     <string name="description_copy_recipe">Recipe will be copied into a single product</string>
     <string name="description_show_macronutrients_goals">Show macronutrients goals</string>
+    <string name="description_recipe_missing_ingredients">You might not see every recipe here. Some recipes are hidden to prevent circular references.</string>
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>

@@ -26,8 +26,26 @@ data class Recipe(
         get() = if (ingredients.isEmpty()) {
             NutritionFacts.Empty
         } else {
-            ingredients
-                .map { it.product.nutritionFacts * (it.weight ?: 0f) }
-                .sum() / packageWeight.weight
+            val sum = ingredients
+                .map { it.food.nutritionFacts * (it.weight ?: 0f) }
+                .sum()
+
+            if (sum.isEmpty) {
+                NutritionFacts.Empty
+            } else {
+                sum / packageWeight.weight
+            }
         }
+
+    /**
+     * Returns a flat list of all ingredients in the recipe.
+     */
+    fun flatIngredients(): List<Food> = ingredients.flatMap { ingredient ->
+        val food = ingredient.food
+        if (food is Recipe) {
+            listOf(food) + food.flatIngredients()
+        } else {
+            listOf(food)
+        }
+    }.distinct()
 }

@@ -1,270 +1,127 @@
 package com.maksimowiczm.foodyou.feature.recipe.ui
 
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.maksimowiczm.foodyou.core.domain.model.Product
-import com.maksimowiczm.foodyou.core.navigation.CrossFadeComposableDefaults
-import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.feature.barcodescanner.CameraBarcodeScannerScreen
-import com.maksimowiczm.foodyou.feature.product.CreateProductScreen
-import com.maksimowiczm.foodyou.feature.product.UpdateProductScreen
-import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
-import kotlinx.coroutines.flow.collectLatest
+import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
+import com.maksimowiczm.foodyou.feature.recipe.ui.measure.MeasureIngredientScreen
+import com.maksimowiczm.foodyou.feature.recipe.ui.search.IngredientsSearchScreen
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
+import org.jetbrains.compose.resources.StringResource
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun RecipeApp(
+    recipeId: FoodId.Recipe?,
+    titleRes: StringResource,
+    observedIngredients: (List<MinimalIngredient>) -> Flow<List<Ingredient>>,
+    onSave: (name: String, servings: Int, ingredients: List<Ingredient>) -> Unit,
     onBack: () -> Unit,
-    onCreate: (recipeId: Long) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
-    recipeId: Long = -1,
-    viewModel: RecipeViewModel = koinViewModel(
-        parameters = { parametersOf(recipeId) }
-    )
+    formState: RecipeFormState = rememberRecipeFormState()
 ) {
-    val onBack: () -> Unit = {
-        if (navController.currentBackStack.value.size == 2) {
-            onBack()
-        } else {
-            navController.popBackStack<CreateRecipe>(inclusive = true)
-        }
-    }
+    val navController = rememberNavController()
 
-    val recipeState by viewModel.state.collectAsStateWithLifecycle()
-    val searchListState = rememberLazyListState()
-
-    val onCreate by rememberUpdatedState(onCreate)
-    LaunchedEffect(viewModel) {
-        viewModel.createState.collectLatest {
-            when (it) {
-                is CreateState.Created -> onCreate(it.recipeId)
-                CreateState.CreatingRecipe,
-                CreateState.Nothing -> Unit
-            }
-        }
-    }
+    val observedIngredients =
+        observedIngredients(formState.ingredients).collectAsStateWithLifecycle(emptyList()).value
 
     NavHost(
         navController = navController,
-        startDestination = CreateRecipe,
+        startDestination = RecipeForm,
         modifier = modifier
     ) {
-        crossfadeComposable<CreateRecipe> {
-            RecipeFormScreen(
-                state = recipeState,
-                onNameChange = remember(viewModel) { viewModel::onNameChange },
-                onServingsChange = remember(viewModel) { viewModel::onServingsChange },
+        forwardBackwardComposable<RecipeForm> {
+            FormContent(
+                titleRes = titleRes,
+                ingredients = observedIngredients,
+                formState = formState,
+                onSave = onSave,
+                onBack = onBack,
                 onAddIngredient = {
-                    navController.navigate(AddIngredient) {
+                    navController.navigate(IngredientsSearch) {
                         launchSingleTop = true
                     }
                 },
-                onClose = onBack,
-                onCreate = remember(viewModel) { viewModel::onCreate },
-                onEditProduct = {
-                    navController.navigate(UpdateProduct(it)) {
-                        launchSingleTop = true
+                onEditIngredient = { ingredient ->
+                    val index =
+                        observedIngredients.indexOfFirst { it.food.id == ingredient.food.id }
+                    if (index != -1) {
+                        navController.navigate(UpdateIngredientMeasurement(index)) {
+                            launchSingleTop = true
+                        }
                     }
                 },
-                onEditIngredient = {
-                    val index = recipeState.ingredients.indexOf(it)
-
-                    navController.navigate(UpdateIngredientMeasurement(index)) {
-                        launchSingleTop = true
+                onRemoveIngredient = { ingredient ->
+                    formState.ingredients = formState.ingredients.toMutableList().apply {
+                        removeAt(ingredient)
                     }
-                },
-                onRemoveIngredient = remember(viewModel) { viewModel::onRemoveIngredient }
+                }
             )
         }
-        crossfadeComposable<AddIngredient>(
-            popEnterTransition = {
-                if (initialState.destination.hasRoute<CreateProduct>()) {
-                    fadeIn(snap())
-                } else {
-                    CrossFadeComposableDefaults.enterTransition()
-                }
-            }
-        ) {
-            val pages = viewModel.pages.collectAsLazyPagingItems(
-                viewModel.viewModelScope.coroutineContext
-            )
-            val recentQueries by viewModel.recentQueries.collectAsStateWithLifecycle()
 
-            val textFieldState = rememberTextFieldState()
-
-            LaunchedEffect(viewModel) {
-                viewModel.searchQuery.collectLatest {
-                    when (it) {
-                        null -> textFieldState.clearText()
-                        else -> textFieldState.setTextAndPlaceCursorAtEnd(it)
-                    }
-                }
-            }
-
-            AddIngredientScreen(
-                pages = pages,
-                recentQueries = recentQueries,
-                onBarcodeScanner = {
-                    navController.navigate(BarcodeScanner) {
-                        launchSingleTop = true
-                    }
-                },
-                listState = searchListState,
-                textFieldState = textFieldState,
-                onSearch = remember(viewModel) { viewModel::onSearch },
-                onClear = remember(viewModel) { { viewModel.onSearch(null) } },
-                onProductClick = {
-                    navController.navigate(MeasureIngredient(it))
-                },
-                onCreateProduct = {
-                    navController.navigate(CreateProduct) {
-                        launchSingleTop = true
-                    }
-                },
+        forwardBackwardComposable<IngredientsSearch> {
+            IngredientsSearchScreen(
+                recipeId = recipeId,
                 onBack = {
-                    navController.popBackStack<AddIngredient>(inclusive = true)
-                }
-            )
-        }
-        crossfadeComposable<BarcodeScanner> {
-            CameraBarcodeScannerScreen(
-                onBarcodeScan = {
-                    viewModel.onSearch(it)
-                    navController.popBackStack<BarcodeScanner>(inclusive = true)
+                    navController.popBackStack(IngredientsSearch, inclusive = true)
                 },
-                onClose = {
-                    navController.popBackStack<BarcodeScanner>(inclusive = true)
+                onIngredient = {
+                    val route = MeasureIngredient(it.food.id)
+                    navController.navigate(route) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
-        crossfadeComposable<MeasureIngredient> {
-            val (productId) = it.toRoute<MeasureIngredient>()
 
-            val food = run {
-                viewModel.observeMeasurableFood(productId).collectAsStateWithLifecycle(null).value
-            } ?: return@crossfadeComposable
+        forwardBackwardComposable<MeasureIngredient> {
+            val route = it.toRoute<MeasureIngredient>()
+            val foodId = route.foodId
 
-            MeasurementScreen(
-                food = food.food,
-                suggestions = food.suggestions,
+            MeasureIngredientScreen(
+                foodId = route.foodId,
                 selected = null,
                 onBack = {
                     navController.popBackStack<MeasureIngredient>(inclusive = true)
                 },
-                onMeasurement = {
-                    viewModel.onAddIngredient(
-                        Ingredient(
-                            product = food.food as Product,
-                            measurement = it
-                        )
+                onMeasurement = { measurement ->
+                    formState.ingredients = formState.ingredients + MinimalIngredient(
+                        foodId = foodId,
+                        measurement = measurement
                     )
-                    navController.navigate(CreateRecipe) {
-                        popUpTo(CreateRecipe) {
-                            inclusive = false
-                        }
-
-                        launchSingleTop = true
-                    }
-                },
-                onEditFood = {
-                    navController.navigate(UpdateProduct(productId)) {
-                        launchSingleTop = true
-                    }
-                },
-                onDeleteFood = {
-                    viewModel.onProductDelete(productId)
-                    navController.popBackStack<MeasureIngredient>(inclusive = true)
+                    navController.popBackStack<IngredientsSearch>(inclusive = true)
                 }
             )
         }
-        crossfadeComposable<UpdateIngredientMeasurement> {
-            val (index) = it.toRoute<UpdateIngredientMeasurement>()
 
-            val ingredient = recipeState.ingredients.getOrNull(index) ?: return@crossfadeComposable
+        forwardBackwardComposable<UpdateIngredientMeasurement> {
+            val route = it.toRoute<UpdateIngredientMeasurement>()
+            val index = route.index
+            val ingredient = observedIngredients.getOrNull(index)
 
-            val food = run {
-                viewModel
-                    .observeMeasurableFood(ingredient.productId)
-                    .collectAsStateWithLifecycle(null).value
-            } ?: return@crossfadeComposable
+            if (ingredient == null) {
+                navController.popBackStack<IngredientsSearch>(inclusive = true)
+                return@forwardBackwardComposable
+            }
 
-            UpdateIngredientMeasurementScreen(
-                food = food,
-                ingredient = ingredient,
+            MeasureIngredientScreen(
+                foodId = ingredient.food.id,
+                selected = ingredient.measurement,
                 onBack = {
                     navController.popBackStack<UpdateIngredientMeasurement>(inclusive = true)
                 },
-                onMeasurement = {
-                    viewModel.onUpdateIngredient(
-                        index = index,
-                        ingredient = ingredient.copy(
-                            measurement = it
-                        )
-                    )
-                    navController.navigate(CreateRecipe) {
-                        popUpTo(CreateRecipe) {
-                            inclusive = false
-                        }
-
-                        launchSingleTop = true
+                onMeasurement = { measurement ->
+                    formState.ingredients = formState.ingredients.toMutableList().apply {
+                        set(index, this[index].copy(measurement = measurement))
                     }
-                },
-                onEditFood = {
-                    navController.navigate(UpdateProduct(ingredient.productId)) {
-                        launchSingleTop = true
-                    }
-                },
-                onDeleteFood = {
                     navController.popBackStack<UpdateIngredientMeasurement>(inclusive = true)
-                    viewModel.onRemoveIngredient(index)
-                    viewModel.onProductDelete(ingredient.productId)
-                }
-            )
-        }
-        forwardBackwardComposable<CreateProduct> {
-            CreateProductScreen(
-                onBack = {
-                    navController.popBackStack<CreateProduct>(inclusive = true)
-                },
-                onCreate = {
-                    navController.navigate(MeasureIngredient(it)) {
-                        launchSingleTop = true
-                    }
-                }
-            )
-        }
-        forwardBackwardComposable<UpdateProduct> {
-            val (productId) = it.toRoute<UpdateProduct>()
-
-            UpdateProductScreen(
-                productId = productId,
-                onBack = {
-                    navController.popBackStack<UpdateProduct>(inclusive = true)
-                },
-                onUpdate = {
-                    navController.popBackStack<UpdateProduct>(inclusive = true)
                 }
             )
         }
@@ -272,22 +129,31 @@ internal fun RecipeApp(
 }
 
 @Serializable
-private data object CreateRecipe
+private data object RecipeForm
 
 @Serializable
-private data object AddIngredient
+private data object IngredientsSearch
 
 @Serializable
-private data object BarcodeScanner
+private data class MeasureIngredient(val productId: Long?, val recipeId: Long?) {
+    constructor(foodId: FoodId) : this(
+        productId = (foodId as? FoodId.Product)?.id,
+        recipeId = (foodId as? FoodId.Recipe)?.id
+    )
 
-@Serializable
-private data class MeasureIngredient(val productId: Long)
+    init {
+        require(productId != null || recipeId != null) {
+            "Either productId or recipeId must be provided"
+        }
+    }
+
+    val foodId
+        get() = when {
+            productId != null -> FoodId.Product(productId)
+            recipeId != null -> FoodId.Recipe(recipeId)
+            else -> error("Either productId or recipeId must be provided")
+        }
+}
 
 @Serializable
 private data class UpdateIngredientMeasurement(val index: Int)
-
-@Serializable
-private data object CreateProduct
-
-@Serializable
-private data class UpdateProduct(val id: Long)

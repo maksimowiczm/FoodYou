@@ -1,67 +1,160 @@
 package com.maksimowiczm.foodyou.feature.recipe.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.ui.component.MeasurementSummary
-import com.maksimowiczm.foodyou.core.ui.component.NutrientsRow
+import com.maksimowiczm.foodyou.core.ui.component.FoodErrorListItem
+import com.maksimowiczm.foodyou.core.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.feature.recipe.model.Ingredient
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.product_package
-import foodyou.app.generated.resources.product_serving
-import foodyou.app.generated.resources.unit_gram_short
-import foodyou.app.generated.resources.unit_kcal
-import foodyou.app.generated.resources.x_times_y
+import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
+import com.maksimowiczm.foodyou.feature.recipe.domain.IngredientSearchItem
+import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun Ingredient.ListItem(modifier: Modifier = Modifier) {
-    val weight = weight
-    val measurementString = measurementString
-    val caloriesString = caloriesString
+internal fun IngredientListItem(
+    ingredient: IngredientSearchItem,
+    onClick: (() -> Unit)?,
+    modifier: Modifier = Modifier,
+    containerColor: Color = Color.Transparent,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    shape: Shape = RectangleShape
+) {
+    val weight = ingredient.weight
+    val measurementString = ingredient.measurementString
+    val caloriesString = ingredient.caloriesString
+
     if (weight == null || measurementString == null || caloriesString == null) {
-        // TODO handle broken weight
+        FoodErrorListItem(
+            headline = ingredient.headline,
+            modifier = modifier
+        )
         return
     }
 
-    val proteins = product.nutritionFacts.proteins.value
-    val carbohydrates = product.nutritionFacts.carbohydrates.value
-    val fats = product.nutritionFacts.fats.value
-
-    ListItem(
-        headlineContent = { Text(product.headline) },
-        modifier = modifier,
-        supportingContent = {
-            Column {
-                val proteins = (proteins * weight / 100f).roundToInt()
-                val carbohydrates = (carbohydrates * weight / 100f).roundToInt()
-                val fats = (fats * weight / 100f).roundToInt()
-
-                NutrientsRow(
-                    proteins = proteins,
-                    carbohydrates = carbohydrates,
-                    fats = fats,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                MeasurementSummary(
-                    measurementString = measurementString,
-                    measurementStringShort = measurementStringShort,
-                    caloriesString = caloriesString,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+    FoodListItem(
+        name = { Text(ingredient.food.headline) },
+        proteins = {
+            val proteins = (ingredient.proteins * weight / 100f).formatClipZeros("%.1f")
+            Text("$proteins " + stringResource(Res.string.unit_gram_short))
         },
-        colors = ListItemDefaults.colors(
-            containerColor = Color.Transparent
+        carbohydrates = {
+            val carbohydrates = (ingredient.carbohydrates * weight / 100f).formatClipZeros("%.1f")
+            Text("$carbohydrates " + stringResource(Res.string.unit_gram_short))
+        },
+        fats = {
+            val fats = (ingredient.fats * weight / 100f).formatClipZeros("%.1f")
+            Text("$fats " + stringResource(Res.string.unit_gram_short))
+        },
+        calories = { Text(caloriesString) },
+        measurement = { Text(measurementString) },
+        modifier = modifier,
+        onClick = onClick,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        shape = shape
+    )
+}
+
+private val IngredientSearchItem.measurementStringShort: String
+    @Composable get() = with(measurement) {
+        when (this) {
+            is Measurement.Package -> stringResource(
+                Res.string.x_times_y,
+                quantity.formatClipZeros(),
+                stringResource(Res.string.product_package)
+            )
+
+            is Measurement.Serving -> stringResource(
+                Res.string.x_times_y,
+                quantity.formatClipZeros(),
+                stringResource(Res.string.product_serving)
+            )
+
+            is Measurement.Gram -> "${value.formatClipZeros()} " +
+                stringResource(Res.string.unit_gram_short)
+        }
+    }
+
+private val IngredientSearchItem.measurementString: String?
+    @Composable get() {
+        val short = measurementStringShort
+        val weight = weight?.formatClipZeros() ?: return null
+
+        return when (measurement) {
+            is Measurement.Gram -> short
+            is Measurement.Package,
+            is Measurement.Serving ->
+                "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
+        }
+    }
+
+private val IngredientSearchItem.caloriesString: String?
+    @Composable get() = weight?.let {
+        val value = (it * calories / 100).roundToInt()
+        "$value " + stringResource(Res.string.unit_kcal)
+    }
+
+@Composable
+internal fun IngredientListItem(
+    ingredient: Ingredient,
+    onClick: (() -> Unit)?,
+    modifier: Modifier = Modifier,
+    containerColor: Color = Color.Transparent,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    shape: Shape = RectangleShape
+) {
+    val weight = ingredient.weight
+    val proteins = ingredient.proteins
+    val carbohydrates = ingredient.carbohydrates
+    val fats = ingredient.fats
+    val caloriesString = ingredient.caloriesString
+    val measurementString = ingredient.measurementString
+
+    if (
+        weight == null ||
+        proteins == null ||
+        carbohydrates == null ||
+        fats == null ||
+        caloriesString == null ||
+        measurementString == null
+    ) {
+        FoodErrorListItem(
+            headline = ingredient.food.headline,
+            modifier = modifier
         )
+        return
+    }
+
+    val g = stringResource(Res.string.unit_gram_short)
+
+    FoodListItem(
+        name = { Text(ingredient.food.headline) },
+        proteins = {
+            val proteins = (proteins * weight / 100f).formatClipZeros("%.1f")
+            Text("$proteins $g")
+        },
+        carbohydrates = {
+            val carbohydrates = (carbohydrates * weight / 100f).formatClipZeros("%.1f")
+            Text("$carbohydrates $g")
+        },
+        fats = {
+            val fats = (fats * weight / 100f).formatClipZeros("%.1f")
+            Text("$fats $g")
+        },
+        calories = { Text(caloriesString) },
+        measurement = { Text(measurementString) },
+        modifier = modifier,
+        onClick = onClick,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        shape = shape
     )
 }
 
@@ -94,16 +187,12 @@ private val Ingredient.measurementString: String?
             is Measurement.Gram -> short
             is Measurement.Package,
             is Measurement.Serving ->
-                "$short ($weight ${
-                    stringResource(
-                        Res.string.unit_gram_short
-                    )
-                })"
+                "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
         }
     }
 
 private val Ingredient.caloriesString: String?
     @Composable get() = weight?.let {
-        val value = (it * product.nutritionFacts.calories.value / 100).roundToInt()
+        val value = (it * food.nutritionFacts.calories.value / 100).roundToInt()
         "$value " + stringResource(Res.string.unit_kcal)
     }

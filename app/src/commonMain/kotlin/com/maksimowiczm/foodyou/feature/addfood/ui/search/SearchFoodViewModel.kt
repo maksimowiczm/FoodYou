@@ -32,7 +32,7 @@ internal class SearchFoodViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val foods = mutableSearchQuery.flatMapLatest { query ->
         addFoodRepository.queryFood(
-            query = query,
+            query = query?.takeIf { it.isNotBlank() },
             mealId = mealId,
             date = date
         )

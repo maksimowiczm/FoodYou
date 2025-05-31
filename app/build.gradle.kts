@@ -115,7 +115,6 @@ kotlin {
 
             // Room
             implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.paging)
 
             // Logger
             implementation(libs.kermit)

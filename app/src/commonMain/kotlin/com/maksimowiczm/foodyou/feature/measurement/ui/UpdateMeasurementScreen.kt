@@ -10,12 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
-import com.maksimowiczm.foodyou.core.domain.model.Recipe
 import com.maksimowiczm.foodyou.core.ui.ext.collectLatestWithLifecycle
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.rememberAdvancedMeasurementFormState
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.headline_copy
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -65,7 +61,6 @@ internal fun UpdateMeasurementScreen(
         initialMeasurement = 0
     )
 
-    val copySuffix = stringResource(Res.string.headline_copy)
     val food = measurement.food
 
     MeasurementScreen(
@@ -87,11 +82,6 @@ internal fun UpdateMeasurementScreen(
         },
         onEditFood = { onEditFood(food.id) },
         onDelete = viewModel::onDeleteMeasurement,
-        onClone = if (food is Recipe) {
-            { viewModel.onRecipeClone(recipeId = food.id, suffix = copySuffix) }
-        } else {
-            null
-        },
         onIngredientClick = { onEditFood(it) },
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier

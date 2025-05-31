@@ -1,49 +1,41 @@
 package com.maksimowiczm.foodyou.feature.recipe
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.feature.recipe.ui.RecipeApp
+import com.maksimowiczm.foodyou.feature.recipe.ui.create.CreateRecipeScreen
+import com.maksimowiczm.foodyou.feature.recipe.ui.update.UpdateRecipeScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object CreateRecipe
 
 @Serializable
-data class UpdateRecipe(val recipeId: Long)
+data class UpdateRecipe(val recipeId: Long) {
+    val id: FoodId.Recipe
+        get() = FoodId.Recipe(recipeId)
+}
 
 fun NavGraphBuilder.recipeGraph(
-    onCreateClose: () -> Unit,
-    onCreate: (recipeId: Long) -> Unit,
-    onUpdateClose: () -> Unit,
-    onUpdate: (recipeId: Long) -> Unit
+    createOnBack: () -> Unit,
+    onCreate: (FoodId.Recipe) -> Unit,
+    updateOnBack: () -> Unit,
+    onUpdate: () -> Unit
 ) {
     forwardBackwardComposable<CreateRecipe> {
-        Surface(
-            shadowElevation = 6.dp,
-            shape = MaterialTheme.shapes.medium
-        ) {
-            RecipeApp(
-                onBack = onCreateClose,
-                onCreate = onCreate
-            )
-        }
+        CreateRecipeScreen(
+            onBack = createOnBack,
+            onCreate = onCreate
+        )
     }
     forwardBackwardComposable<UpdateRecipe> {
-        val (recipeId) = it.toRoute<UpdateRecipe>()
+        val route = it.toRoute<UpdateRecipe>()
 
-        Surface(
-            shadowElevation = 6.dp,
-            shape = MaterialTheme.shapes.medium
-        ) {
-            RecipeApp(
-                onBack = onUpdateClose,
-                onCreate = onUpdate,
-                recipeId = recipeId
-            )
-        }
+        UpdateRecipeScreen(
+            recipeId = route.id,
+            onBack = updateOnBack,
+            onUpdate = onUpdate
+        )
     }
 }

@@ -4,10 +4,8 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.data.model.measurement.ProductMeasurementEntity
 import com.maksimowiczm.foodyou.core.data.model.measurement.ProductWithMeasurement as ProductWithMeasurementEntity
 import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeMeasurementEntity
-import com.maksimowiczm.foodyou.core.data.model.measurement.RecipeWithMeasurement as RecipeWithMeasurementEntity
 import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
 import com.maksimowiczm.foodyou.core.domain.mapper.ProductMapper
-import com.maksimowiczm.foodyou.core.domain.mapper.RecipeMapper
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
@@ -16,8 +14,12 @@ import com.maksimowiczm.foodyou.core.domain.model.ProductWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.RecipeWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
 import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapValues
 import kotlinx.datetime.Clock
@@ -57,7 +59,9 @@ interface MeasurementRepository {
 internal class MeasurementRepositoryImpl(
     private val recipeMeasurementDao: RecipeMeasurementLocalDataSource,
     private val productMeasurementDao: ProductMeasurementLocalDataSource,
-    private val measurementMapper: MeasurementMapper = MeasurementMapper
+    private val recipeRepository: RecipeRepository,
+    private val measurementMapper: MeasurementMapper = MeasurementMapper,
+    private val productMapper: ProductMapper = ProductMapper
 ) : MeasurementRepository {
 
     override fun observeMeasurements(
@@ -78,12 +82,35 @@ internal class MeasurementRepositoryImpl(
             mealId = mealId
         ).mapValues { it.toProductWithMeasurement() }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeRecipeMeasurements(date: LocalDate, mealId: Long) =
-        recipeMeasurementDao.observeRecipeMeasurements(
+        recipeMeasurementDao.observeMeasurements(
             epochDay = date.toEpochDays(),
             mealId = mealId
-        ).mapValues { it.toRecipeWithMeasurement() }
+        ).flatMapLatest { measurements ->
+            if (measurements.isEmpty()) {
+                return@flatMapLatest flowOf(emptyList())
+            }
 
+            val flows = measurements.map { measurementEntity ->
+                val recipeId = FoodId.Recipe(measurementEntity.recipeId)
+                recipeRepository.observeRecipe(recipeId).filterNotNull().map { recipe ->
+                    RecipeWithMeasurement(
+                        measurementId = MeasurementId.Recipe(measurementEntity.id),
+                        measurement = measurementMapper.toMeasurement(measurementEntity),
+                        measurementDate = Instant
+                            .fromEpochSeconds(measurementEntity.createdAt)
+                            .toLocalDateTime(TimeZone.currentSystemDefault()),
+                        mealId = measurementEntity.mealId,
+                        recipe = recipe
+                    )
+                }
+            }
+
+            combine(flows) { it.toList() }
+        }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun observeMeasurement(measurementId: MeasurementId): Flow<FoodWithMeasurement?> =
         when (measurementId) {
             is MeasurementId.Product ->
@@ -93,8 +120,21 @@ internal class MeasurementRepositoryImpl(
 
             is MeasurementId.Recipe ->
                 recipeMeasurementDao
-                    .observeRecipeMeasurement(measurementId.id)
-                    .map { it?.toRecipeWithMeasurement() }
+                    .observeMeasurement(measurementId.id)
+                    .flatMapLatest { measurementEntity ->
+                        val recipeId = FoodId.Recipe(measurementEntity.recipeId)
+                        recipeRepository.observeRecipe(recipeId).filterNotNull().map { recipe ->
+                            RecipeWithMeasurement(
+                                measurementId = measurementId,
+                                measurement = measurementMapper.toMeasurement(measurementEntity),
+                                measurementDate = Instant
+                                    .fromEpochSeconds(measurementEntity.createdAt)
+                                    .toLocalDateTime(TimeZone.currentSystemDefault()),
+                                mealId = measurementEntity.mealId,
+                                recipe = recipe
+                            )
+                        }
+                    }
         }
 
     override fun observeSuggestions(foodId: FoodId): Flow<List<Measurement>> = when (foodId) {
@@ -224,32 +264,18 @@ internal class MeasurementRepositoryImpl(
     private companion object {
         const val TAG = "MeasurementRepositoryImpl"
     }
-}
 
-private fun ProductWithMeasurementEntity.toProductWithMeasurement(): ProductWithMeasurement {
-    val date = Instant
-        .fromEpochSeconds(measurement.createdAt)
-        .toLocalDateTime(TimeZone.currentSystemDefault())
+    private fun ProductWithMeasurementEntity.toProductWithMeasurement(): ProductWithMeasurement {
+        val date = Instant
+            .fromEpochSeconds(measurement.createdAt)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
 
-    return ProductWithMeasurement(
-        measurementId = MeasurementId.Product(measurement.id),
-        measurement = with(MeasurementMapper) { measurement.toMeasurement() },
-        measurementDate = date,
-        mealId = measurement.mealId,
-        product = with(ProductMapper) { product.toModel() }
-    )
-}
-
-private fun RecipeWithMeasurementEntity.toRecipeWithMeasurement(): RecipeWithMeasurement {
-    val date = Instant
-        .fromEpochSeconds(this.measurement.createdAt)
-        .toLocalDateTime(TimeZone.currentSystemDefault())
-
-    return RecipeWithMeasurement(
-        recipe = with(RecipeMapper) { toModel() },
-        measurementId = MeasurementId.Recipe(this.measurement.id),
-        measurement = with(MeasurementMapper) { measurement.toMeasurement() },
-        mealId = measurement.mealId,
-        measurementDate = date
-    )
+        return ProductWithMeasurement(
+            measurementId = MeasurementId.Product(measurement.id),
+            measurement = measurementMapper.toMeasurement(measurement),
+            measurementDate = date,
+            mealId = measurement.mealId,
+            product = productMapper.toModel(product)
+        )
+    }
 }

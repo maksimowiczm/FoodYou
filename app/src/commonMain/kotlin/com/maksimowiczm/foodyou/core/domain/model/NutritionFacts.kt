@@ -45,6 +45,9 @@ data class NutritionFacts(
     val seleniumMicro: NutrientValue,
     val iodineMicro: NutrientValue
 ) {
+    val isEmpty: Boolean
+        get() = this == Empty
+
     val isComplete: Boolean
         get() = listOf(
             proteins,

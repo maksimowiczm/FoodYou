@@ -19,6 +19,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.ui.component.FoodErrorListItem
+import com.maksimowiczm.foodyou.core.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.component.ToggleButton
 import com.maksimowiczm.foodyou.core.ui.ext.performToggle
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
@@ -155,6 +157,6 @@ private val SearchFoodItem.measurementString: String?
 
 private val SearchFoodItem.caloriesString: String?
     @Composable get() = weight?.let {
-        val value = (it * calories / 100).roundToInt()
-        "$value " + stringResource(Res.string.unit_kcal)
+        val value = (it * calories / 100)
+        "${value.roundToInt()}" + stringResource(Res.string.unit_kcal)
     }

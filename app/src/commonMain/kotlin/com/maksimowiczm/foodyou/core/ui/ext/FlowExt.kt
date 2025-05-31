@@ -25,3 +25,19 @@ fun <T> Flow<T>.collectLatestWithLifecycle(
         }
     }
 }
+
+@Composable
+fun <T> LaunchedCollectWithLifecycle(
+    flow: Flow<T>,
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+    action: suspend (T) -> Unit
+) {
+    val latestAction by rememberUpdatedState(action)
+
+    LaunchedEffect(lifecycleOwner, flow) {
+        lifecycleOwner.repeatOnLifecycle(minActiveState) {
+            flow.collectLatest(latestAction)
+        }
+    }
+}
