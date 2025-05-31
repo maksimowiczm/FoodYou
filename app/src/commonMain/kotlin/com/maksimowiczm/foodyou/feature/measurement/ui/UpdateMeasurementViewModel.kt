@@ -2,7 +2,6 @@ package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
@@ -70,10 +69,5 @@ internal class UpdateMeasurementViewModel(
 
         foodRepository.deleteFood(id = foodId)
         eventBus.send(MeasurementScreenEvent.Deleted)
-    }
-
-    fun onRecipeClone(recipeId: FoodId.Recipe, suffix: String) = launch {
-        val productId = foodRepository.cloneRecipeIntoProduct(id = recipeId, nameSuffix = suffix)
-        eventBus.send(MeasurementScreenEvent.RecipeCloned(productId))
     }
 }

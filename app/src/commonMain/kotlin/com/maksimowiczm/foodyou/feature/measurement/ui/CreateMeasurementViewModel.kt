@@ -55,9 +55,4 @@ internal class CreateMeasurementViewModel(
         foodRepository.deleteFood(id = foodId)
         eventBus.send(MeasurementScreenEvent.Deleted)
     }
-
-    fun onRecipeClone(recipeId: FoodId.Recipe, suffix: String) = launch {
-        val productId = foodRepository.cloneRecipeIntoProduct(id = recipeId, nameSuffix = suffix)
-        eventBus.send(MeasurementScreenEvent.RecipeCloned(productId))
-    }
 }

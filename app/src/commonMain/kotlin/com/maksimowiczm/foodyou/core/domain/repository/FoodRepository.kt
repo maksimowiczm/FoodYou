@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.map
 interface FoodRepository {
     fun observeFood(id: FoodId): Flow<Food?>
     suspend fun deleteFood(id: FoodId)
-    suspend fun cloneRecipeIntoProduct(id: FoodId.Recipe, nameSuffix: String): FoodId.Product
 }
 
 internal class FoodRepositoryImpl(
@@ -33,36 +32,5 @@ internal class FoodRepositoryImpl(
             is FoodId.Product -> productLocalDataSource.deleteProduct(id.id)
             is FoodId.Recipe -> recipeLocalDataSource.deleteRecipe(id.id)
         }
-    }
-
-    override suspend fun cloneRecipeIntoProduct(
-        id: FoodId.Recipe,
-        nameSuffix: String
-    ): FoodId.Product {
-        val recipeEntity = recipeLocalDataSource.getRecipe(id.id)
-
-        if (recipeEntity == null) {
-            error("Recipe not found")
-        }
-
-//        val recipe = with(recipeMapper) { recipeEntity.toModel() }
-//
-//        val product = Product(
-//            id = FoodId.Product(0),
-//            name = recipe.name + "($nameSuffix)",
-//            brand = null,
-//            barcode = null,
-//            nutritionFacts = recipe.nutritionFacts,
-//            packageWeight = recipe.packageWeight,
-//            servingWeight = recipe.servingWeight
-//        )
-//
-//        val productEntity = with(productMapper) { product.toEntity() }.copy(id = 0)
-//
-//        val productId = productLocalDataSource.insertProduct(productEntity)
-//
-//        return FoodId.Product(productId)
-
-        TODO()
     }
 }

@@ -88,7 +88,8 @@ private fun IngredientsSearchScreen(
         FullScreenCameraBarcodeScanner(
             onClose = { showBarcodeScanner = false },
             onBarcodeScan = {
-                // TODO
+                showBarcodeScanner = false
+                onSearch(it)
             }
         )
     }

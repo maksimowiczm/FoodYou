@@ -58,23 +58,11 @@ internal fun MeasurementScreen(
     onSave: () -> Unit,
     onEditFood: () -> Unit,
     onDelete: () -> Unit,
-    onClone: (() -> Unit)?,
     onIngredientClick: (FoodId) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
-    var showCloneDialog by rememberSaveable { mutableStateOf(false) }
-    if (showCloneDialog && onClone != null) {
-        CloneRecipeDialog(
-            onDismissRequest = { showCloneDialog = false },
-            onClone = {
-                showCloneDialog = false
-                onClone()
-            }
-        )
-    }
 
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
     if (showDeleteDialog) {
@@ -96,12 +84,7 @@ internal fun MeasurementScreen(
                 actions = {
                     Menu(
                         onEdit = onEditFood,
-                        onDelete = { showDeleteDialog = true },
-                        onClone = if (onClone != null) {
-                            { showCloneDialog = true }
-                        } else {
-                            null
-                        }
+                        onDelete = { showDeleteDialog = true }
                     )
                 },
                 scrollBehavior = scrollBehavior
@@ -186,12 +169,7 @@ internal fun MeasurementScreen(
 }
 
 @Composable
-private fun Menu(
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-    onClone: (() -> Unit)?,
-    modifier: Modifier = Modifier
-) {
+private fun Menu(onEdit: () -> Unit, onDelete: () -> Unit, modifier: Modifier = Modifier) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier) {
@@ -207,15 +185,6 @@ private fun Menu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            onClone?.let {
-                DropdownMenuItem(
-                    text = { Text(stringResource(Res.string.action_copy)) },
-                    onClick = {
-                        expanded = false
-                        it()
-                    }
-                )
-            }
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.action_edit)) },
                 onClick = {
@@ -268,38 +237,6 @@ private fun DeleteDialog(
         },
         text = {
             Text(stringResource(Res.string.description_delete_product))
-        }
-    )
-}
-
-@Composable
-private fun CloneRecipeDialog(
-    onDismissRequest: () -> Unit,
-    onClone: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        confirmButton = {
-            TextButton(
-                onClick = onClone
-            ) {
-                Text(stringResource(Res.string.action_copy))
-            }
-        },
-        modifier = modifier,
-        dismissButton = {
-            TextButton(
-                onClick = onDismissRequest
-            ) {
-                Text(stringResource(Res.string.action_cancel))
-            }
-        },
-        title = {
-            Text(stringResource(Res.string.headline_copy_recipe))
-        },
-        text = {
-            Text(stringResource(Res.string.description_copy_recipe))
         }
     )
 }
