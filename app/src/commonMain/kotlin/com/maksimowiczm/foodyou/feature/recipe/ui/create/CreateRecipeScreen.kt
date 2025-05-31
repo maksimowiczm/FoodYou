@@ -25,6 +25,7 @@ internal fun CreateRecipeScreen(
     }
 
     RecipeApp(
+        recipeId = null,
         titleRes = Res.string.headline_create_recipe,
         ingredients = emptyList(),
         onSave = viewModel::onSave,

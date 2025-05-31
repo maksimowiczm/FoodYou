@@ -24,8 +24,21 @@ internal class QueryIngredientsUseCase(
     private val recipeRepository: RealRecipeRepository,
     private val measurementMapper: MeasurementMapper = MeasurementMapper
 ) {
+    /**
+     * Queries ingredients based on the provided query string and recipe ID.
+     *
+     * @param search query
+     * @param recipeId optional ID of the recipe to filter out possible circular references.
+     *
+     * Returns a flow of lists of [IngredientSearchItem] that match the query.
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun queryIngredients(query: String?): Flow<List<IngredientSearchItem>> {
+    fun queryIngredients(
+        query: String?,
+        recipeId: FoodId.Recipe?
+    ): Flow<List<IngredientSearchItem>> {
+        // TODO filter out circular references
+
         val barcode = query?.takeIf { it.all { it.isDigit() } }
 
         val queryFlow = if (barcode != null) {

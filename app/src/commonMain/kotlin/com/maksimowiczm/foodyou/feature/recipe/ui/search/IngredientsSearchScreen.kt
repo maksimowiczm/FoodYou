@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.plus
@@ -50,14 +51,18 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun IngredientsSearchScreen(
+    recipeId: FoodId.Recipe?,
     onBack: () -> Unit,
     onIngredient: (IngredientSearchItem) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: IngredientsSearchViewModel = koinViewModel()
+    modifier: Modifier = Modifier
 ) {
+    val viewModel = koinViewModel<IngredientsSearchViewModel>(
+        parameters = { parametersOf(recipeId) }
+    )
     val ingredients = viewModel.ingredients.collectAsStateWithLifecycle().value
 
     IngredientsSearchScreen(

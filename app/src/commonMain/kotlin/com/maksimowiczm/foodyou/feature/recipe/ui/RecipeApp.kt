@@ -21,6 +21,7 @@ import org.jetbrains.compose.resources.StringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun RecipeApp(
+    recipeId: FoodId.Recipe?,
     titleRes: StringResource,
     ingredients: List<MinimalIngredient>,
     observedIngredients: (List<MinimalIngredient>) -> Flow<List<Ingredient>>,
@@ -77,6 +78,7 @@ internal fun RecipeApp(
 
         forwardBackwardComposable<IngredientsSearch> {
             IngredientsSearchScreen(
+                recipeId = recipeId,
                 onBack = {
                     navController.popBackStack(IngredientsSearch, inclusive = true)
                 },

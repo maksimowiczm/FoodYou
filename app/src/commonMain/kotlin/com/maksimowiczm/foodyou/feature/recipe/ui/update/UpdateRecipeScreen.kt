@@ -49,6 +49,7 @@ internal fun UpdateRecipeScreen(
     )
 
     RecipeApp(
+        recipeId = recipeId,
         titleRes = Res.string.headline_update_recipe,
         ingredients = recipe.ingredients.map { it.toMinimalIngredient() },
         formState = formState,
