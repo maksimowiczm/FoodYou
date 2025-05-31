@@ -100,7 +100,12 @@ internal fun CreateRecipeScreen(
                     }
                 },
                 onEditIngredient = { ingredient ->
-                    // TODO
+                    val index = ingredients.indexOfFirst { it.food.id == ingredient.food.id }
+                    if (index != -1) {
+                        navController.navigate(UpdateMeasurement(index)) {
+                            launchSingleTop = true
+                        }
+                    }
                 },
                 onRemoveIngredient = { ingredient ->
                     ingredientsState.value = ingredientsState.value.toMutableList().apply {
@@ -126,10 +131,6 @@ internal fun CreateRecipeScreen(
 
                     navController.navigate(route) {
                         launchSingleTop = true
-
-                        popUpTo<Search> {
-                            saveState = true
-                        }
                     }
                 }
             )
@@ -150,6 +151,31 @@ internal fun CreateRecipeScreen(
                         measurement = measurement
                     )
                     navController.popBackStack<Search>(inclusive = true)
+                }
+            )
+        }
+        forwardBackwardComposable<UpdateMeasurement> {
+            val route = it.toRoute<UpdateMeasurement>()
+            val index = route.index
+            val ingredient = ingredients.getOrNull(index)
+
+            if (ingredient == null) {
+                // Handle the case where the ingredient is not found
+                navController.popBackStack<Search>(inclusive = true)
+                return@forwardBackwardComposable
+            }
+
+            MeasureIngredientScreen(
+                foodId = ingredient.food.id,
+                selected = ingredient.measurement,
+                onBack = {
+                    navController.popBackStack<UpdateMeasurement>(inclusive = true)
+                },
+                onMeasurement = { measurement ->
+                    ingredientsState.value = ingredientsState.value.toMutableList().apply {
+                        set(index, this[index].copy(measurement = measurement))
+                    }
+                    navController.popBackStack<UpdateMeasurement>(inclusive = true)
                 }
             )
         }
@@ -182,6 +208,9 @@ data class Measure(val productId: Long?, val recipeId: Long?) {
             else -> error("Either productId or recipeId must be provided")
         }
 }
+
+@Serializable
+data class UpdateMeasurement(val index: Int)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
