@@ -3,9 +3,12 @@ package com.maksimowiczm.foodyou.feature.recipe.ui.search
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +18,9 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -43,9 +49,8 @@ import com.maksimowiczm.foodyou.core.ui.ext.plus
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.recipe.domain.IngredientSearchItem
 import com.maksimowiczm.foodyou.feature.recipe.ui.IngredientListItem
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_clear
-import foodyou.app.generated.resources.action_search
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -154,9 +159,39 @@ private fun IngredientsSearchScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 8.dp),
-                contentPadding = paddingValues + PaddingValues(vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+                contentPadding = paddingValues + PaddingValues(vertical = 8.dp)
             ) {
+                item {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Info,
+                                contentDescription = null
+                            )
+                            Text(
+                                text = stringResource(
+                                    Res.string.description_recipe_missing_ingredients
+                                ),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    Spacer(Modifier.height(8.dp))
+                }
+
                 itemsIndexed(
                     items = ingredients,
                     key = { _, item -> item.uniqueId }
@@ -190,6 +225,10 @@ private fun IngredientsSearchScreen(
                         contentColor = MaterialTheme.colorScheme.onSurface,
                         shape = shape
                     )
+
+                    if (i < ingredients.lastIndex) {
+                        Spacer(Modifier.height(2.dp))
+                    }
                 }
             }
         }
