@@ -60,7 +60,8 @@ internal class MeasurementRepositoryImpl(
     private val recipeMeasurementDao: RecipeMeasurementLocalDataSource,
     private val productMeasurementDao: ProductMeasurementLocalDataSource,
     private val recipeRepository: RecipeRepository,
-    private val measurementMapper: MeasurementMapper = MeasurementMapper
+    private val measurementMapper: MeasurementMapper = MeasurementMapper,
+    private val productMapper: ProductMapper = ProductMapper
 ) : MeasurementRepository {
 
     override fun observeMeasurements(
@@ -274,7 +275,7 @@ internal class MeasurementRepositoryImpl(
             measurement = measurementMapper.toMeasurement(measurement),
             measurementDate = date,
             mealId = measurement.mealId,
-            product = with(ProductMapper) { product.toModel() }
+            product = productMapper.toModel(product)
         )
     }
 }
