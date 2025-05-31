@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.recipe.domain
 
-import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
 import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
@@ -61,9 +60,9 @@ internal class QueryIngredientsUseCaseImpl(
 
             val itemFlows = searchList.mapNotNull { entity ->
                 return@mapNotNull when {
-                    entity.productId != null -> mapToProduct(entity)
+                    entity.productId != null -> mapToProduct(entity.productId)
                     entity.recipeId != null -> mapToRecipe(
-                        entity,
+                        recipeId = entity.recipeId,
                         excludedRecipeId = excludedRecipeId
                     )
 
@@ -77,9 +76,7 @@ internal class QueryIngredientsUseCaseImpl(
         return result
     }
 
-    private fun mapToProduct(entity: FoodSearchEntity): Flow<IngredientSearchItem?> {
-        val productId = entity.productId ?: return flowOf(null)
-
+    private fun mapToProduct(productId: Long): Flow<IngredientSearchItem> {
         val suggestionFlow =
             productMeasurementLocalDataSource.observeLatestProductMeasurementSuggestion(
                 productId = productId
@@ -104,11 +101,9 @@ internal class QueryIngredientsUseCaseImpl(
     }
 
     private fun mapToRecipe(
-        entity: FoodSearchEntity,
+        recipeId: Long,
         excludedRecipeId: FoodId.Recipe?
     ): Flow<IngredientSearchItem?> {
-        val recipeId = entity.recipeId ?: return flowOf(null)
-
         val suggestionFlow =
             recipeMeasurementLocalDataSource.observeLatestRecipeMeasurementSuggestion(
                 recipeId = recipeId
