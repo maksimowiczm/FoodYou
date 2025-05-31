@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.saveable.Saver
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.domain.model.RecipeIngredient
 import com.maksimowiczm.foodyou.core.ui.res.Saver
 
 /**
@@ -60,3 +61,8 @@ internal data class MinimalIngredient(val foodId: FoodId, val measurement: Measu
         )
     }
 }
+
+internal fun RecipeIngredient.toMinimalIngredient() = MinimalIngredient(
+    foodId = food.id,
+    measurement = measurement
+)

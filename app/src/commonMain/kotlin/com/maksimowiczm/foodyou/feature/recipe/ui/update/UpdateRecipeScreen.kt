@@ -1,11 +1,13 @@
-package com.maksimowiczm.foodyou.feature.recipe.ui.create
+package com.maksimowiczm.foodyou.feature.recipe.ui.update
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -29,25 +31,38 @@ import com.maksimowiczm.foodyou.feature.recipe.ui.MinimalIngredient
 import com.maksimowiczm.foodyou.feature.recipe.ui.measure.MeasureIngredientScreen
 import com.maksimowiczm.foodyou.feature.recipe.ui.rememberRecipeFormState
 import com.maksimowiczm.foodyou.feature.recipe.ui.search.IngredientsSearchScreen
+import com.maksimowiczm.foodyou.feature.recipe.ui.toMinimalIngredient
 import foodyou.app.generated.resources.*
-import kotlin.collections.plus
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun CreateRecipeScreen(
+internal fun UpdateRecipeScreen(
+    recipeId: FoodId.Recipe,
     onBack: () -> Unit,
-    onCreate: (FoodId.Recipe) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: CreateRecipeViewModel = koinInject()
+    onUpdate: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val latestOnCreate by rememberUpdatedState(onCreate)
+    val viewModel = koinViewModel<UpdateRecipeViewModel>(
+        parameters = { parametersOf(recipeId) }
+    )
+
+    val latestOnUpdate by rememberUpdatedState(onUpdate)
     LaunchedCollectWithLifecycle(viewModel.eventBus) {
         when (it) {
-            is CreateRecipeEvent.RecipeCreated -> latestOnCreate(it.id)
+            is UpdateRecipeEvent.RecipeUpdated -> latestOnUpdate()
         }
+    }
+
+    val recipe = viewModel.recipe.collectAsStateWithLifecycle().value
+
+    if (recipe == null) {
+        // TODO loading state
+        Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
+        return
     }
 
     val navController = rememberNavController()
@@ -55,10 +70,13 @@ internal fun CreateRecipeScreen(
     var ingredientsState = rememberSaveable(
         stateSaver = MinimalIngredient.Companion.ListSaver
     ) {
-        mutableStateOf<List<MinimalIngredient>>(emptyList())
+        mutableStateOf<List<MinimalIngredient>>(recipe.ingredients.map { it.toMinimalIngredient() })
     }
 
-    val formState = rememberRecipeFormState()
+    val formState = rememberRecipeFormState(
+        initialName = recipe.name,
+        initialServings = recipe.servings
+    )
     val ingredients = viewModel
         .observeIngredients(ingredientsState.value)
         .collectAsStateWithLifecycle(emptyList()).value
@@ -95,7 +113,7 @@ internal fun CreateRecipeScreen(
                 topBar = {
                     TopAppBar(
                         title = {
-                            Text(stringResource(Res.string.headline_create_recipe))
+                            Text(stringResource(Res.string.headline_update_recipe))
                         },
                         navigationIcon = {
                             ArrowBackIconButton(onBack)
@@ -152,7 +170,9 @@ internal fun CreateRecipeScreen(
                         foodId = foodId,
                         measurement = measurement
                     )
-                    navController.popBackStack<Search>(inclusive = true)
+                    navController.popBackStack<Search>(
+                        inclusive = true
+                    )
                 }
             )
         }

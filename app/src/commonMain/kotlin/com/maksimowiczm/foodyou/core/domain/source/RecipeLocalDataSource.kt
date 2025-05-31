@@ -17,4 +17,11 @@ interface RecipeLocalDataSource {
         servings: Int,
         ingredients: List<RecipeIngredientEntity>
     ): Long
+
+    suspend fun updateRecipeWithIngredients(
+        recipeId: Long,
+        name: String,
+        servings: Int,
+        ingredients: List<RecipeIngredientEntity>
+    )
 }

@@ -37,7 +37,6 @@ import org.jetbrains.compose.resources.stringResource
 internal fun FormContent(
     ingredients: List<Ingredient>,
     formState: RecipeFormState,
-    onBack: () -> Unit,
     onAddIngredient: () -> Unit,
     onEditIngredient: (Ingredient) -> Unit,
     onRemoveIngredient: (index: Int) -> Unit,

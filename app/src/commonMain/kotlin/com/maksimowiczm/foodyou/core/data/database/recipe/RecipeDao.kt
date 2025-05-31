@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeIngredientEntity
 import com.maksimowiczm.foodyou.core.data.model.recipe.RecipeWithIngredients
@@ -75,5 +76,40 @@ abstract class RecipeDao : RecipeLocalDataSource {
         }
 
         return recipeId
+    }
+
+    @Update
+    protected abstract suspend fun updateRecipeEntity(recipeEntity: RecipeEntity)
+
+    @Query(
+        """
+        DELETE FROM RecipeIngredientEntity
+        WHERE recipeId = :recipeId
+        """
+    )
+    protected abstract suspend fun deleteRecipeIngredients(recipeId: Long)
+
+    // Deletes all ingredients for the recipe and then inserts new ones
+    @Transaction
+    override suspend fun updateRecipeWithIngredients(
+        recipeId: Long,
+        name: String,
+        servings: Int,
+        ingredients: List<RecipeIngredientEntity>
+    ) {
+        val recipeEntity = RecipeEntity(
+            id = recipeId,
+            name = name,
+            servings = servings
+        )
+
+        updateRecipeEntity(recipeEntity)
+
+        deleteRecipeIngredients(recipeId)
+
+        ingredients.forEach { ingredient ->
+            val recipeIngredientEntity = ingredient.copy(recipeId = recipeId)
+            createRecipeIngredientEntity(recipeIngredientEntity)
+        }
     }
 }
