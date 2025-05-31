@@ -26,8 +26,14 @@ data class Recipe(
         get() = if (ingredients.isEmpty()) {
             NutritionFacts.Empty
         } else {
-            ingredients
+            val sum = ingredients
                 .map { it.food.nutritionFacts * (it.weight ?: 0f) }
-                .sum() / packageWeight.weight
+                .sum()
+
+            if (sum.isEmpty) {
+                NutritionFacts.Empty
+            } else {
+                sum / packageWeight.weight
+            }
         }
 }

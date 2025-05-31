@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 interface RecipeRepository {
@@ -31,6 +32,17 @@ internal class RecipeRepositoryImpl(
 
         val flow = recipeFlow.filterNotNull().flatMapLatest { entity ->
             val (entity, ingredients) = entity
+
+            if (ingredients.isEmpty()) {
+                return@flatMapLatest flowOf(
+                    Recipe(
+                        id = FoodId.Recipe(entity.id),
+                        name = entity.name,
+                        servings = entity.servings,
+                        ingredients = emptyList()
+                    )
+                )
+            }
 
             val flows = ingredients.mapNotNull { ingredient ->
                 when {
