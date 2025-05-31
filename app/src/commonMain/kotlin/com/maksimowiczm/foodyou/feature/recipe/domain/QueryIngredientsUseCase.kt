@@ -17,14 +17,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 
-internal class QueryIngredientsUseCase(
-    private val foodRepository: FoodRepository,
-    private val foodLocalDataSource: FoodLocalDataSource,
-    private val productMeasurementLocalDataSource: ProductMeasurementLocalDataSource,
-    private val recipeMeasurementLocalDataSource: RecipeMeasurementLocalDataSource,
-    private val recipeRepository: RealRecipeRepository,
-    private val measurementMapper: MeasurementMapper = MeasurementMapper
-) {
+internal fun interface QueryIngredientsUseCase {
     /**
      * Queries ingredients based on the provided query string and recipe ID.
      *
@@ -33,8 +26,23 @@ internal class QueryIngredientsUseCase(
      *
      * Returns a flow of lists of [IngredientSearchItem] that match the query.
      */
+    operator fun invoke(
+        query: String?,
+        excludedRecipeId: FoodId.Recipe?
+    ): Flow<List<IngredientSearchItem>>
+}
+
+internal class QueryIngredientsUseCaseImpl(
+    private val foodRepository: FoodRepository,
+    private val foodLocalDataSource: FoodLocalDataSource,
+    private val productMeasurementLocalDataSource: ProductMeasurementLocalDataSource,
+    private val recipeMeasurementLocalDataSource: RecipeMeasurementLocalDataSource,
+    private val recipeRepository: RealRecipeRepository,
+    private val measurementMapper: MeasurementMapper = MeasurementMapper
+) : QueryIngredientsUseCase {
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun queryIngredients(
+    override operator fun invoke(
         query: String?,
         excludedRecipeId: FoodId.Recipe?
     ): Flow<List<IngredientSearchItem>> {

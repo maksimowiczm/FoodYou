@@ -18,7 +18,7 @@ internal class IngredientsSearchViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val ingredients = searchQuery.flatMapLatest { query ->
-        queryIngredientsUseCase.queryIngredients(
+        queryIngredientsUseCase(
             query = query?.takeIf { it.isNotBlank() },
             excludedRecipeId = recipeId
         )

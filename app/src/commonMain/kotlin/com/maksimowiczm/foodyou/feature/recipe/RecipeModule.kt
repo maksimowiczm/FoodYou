@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.feature.recipe.domain.CreateRecipeUseCase
 import com.maksimowiczm.foodyou.feature.recipe.domain.CreateRecipeUseCaseImpl
 import com.maksimowiczm.foodyou.feature.recipe.domain.IngredientMapper
 import com.maksimowiczm.foodyou.feature.recipe.domain.QueryIngredientsUseCase
+import com.maksimowiczm.foodyou.feature.recipe.domain.QueryIngredientsUseCaseImpl
 import com.maksimowiczm.foodyou.feature.recipe.domain.UpdateRecipeUseCase
 import com.maksimowiczm.foodyou.feature.recipe.domain.UpdateRecipeUseCaseImpl
 import com.maksimowiczm.foodyou.feature.recipe.ui.create.CreateRecipeViewModel
@@ -19,8 +20,8 @@ import org.koin.dsl.module
 
 val recipeModule = module {
     factory {
-        QueryIngredientsUseCase(get(), get(), get(), get(), get())
-    }
+        QueryIngredientsUseCaseImpl(get(), get(), get(), get(), get())
+    }.bind<QueryIngredientsUseCase>()
 
     factoryOf(::CreateRecipeUseCaseImpl).bind<CreateRecipeUseCase>()
     factoryOf(::UpdateRecipeUseCaseImpl).bind<UpdateRecipeUseCase>()
