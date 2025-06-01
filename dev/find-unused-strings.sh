@@ -1,6 +1,6 @@
 #!/bin/bash
 
-STRINGS_FILE="core/src/commonMain/composeResources/values/strings.xml"
+STRINGS_FILE="app/src/commonMain/composeResources/values/strings.xml"
 STRING_NAMES=$(grep -oP '(?<=<string name=")[^"]+' "$STRINGS_FILE")
 EXCLUDED_KEYS=("app_name")
 
