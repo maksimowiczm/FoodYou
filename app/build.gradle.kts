@@ -76,10 +76,6 @@ kotlin {
 
             implementation(libs.accompanist.permissions)
 
-            // Koin
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-
             // Ktor
             implementation(libs.ktor.client.okhttp)
 
@@ -91,7 +87,6 @@ kotlin {
             implementation(project(":feature:language"))
             implementation(project(":feature:calendar"))
 
-            implementation(libs.navigation.compose)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
@@ -115,7 +110,7 @@ kotlin {
         }
 
         commonTest.dependencies {
-            implementation(kotlin("test"))
+            implementation(libs.kotlin.test)
 
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)

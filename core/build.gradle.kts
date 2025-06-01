@@ -34,8 +34,8 @@ kotlin {
             api(libs.androidx.material3)
             api(compose.materialIconsExtended)
             api(compose.ui)
-            api(libs.navigation.compose)
             api(compose.components.resources)
+            api(libs.navigation.compose)
 
             // Kotlinx
             api(libs.kotlinx.datetime)
