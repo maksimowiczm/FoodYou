@@ -44,19 +44,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal actual fun LanguageScreen(onBack: () -> Unit, modifier: Modifier) {
-    LanguageScreen(
-        onBack = onBack,
-        modifier = modifier,
-        viewModel = koinViewModel()
-    )
-}
-
-@Composable
-private fun LanguageScreen(
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: LanguageViewModel = koinViewModel()
-) {
+    val viewModel: LanguageViewModel = koinViewModel()
     val uriHandler = LocalUriHandler.current
     val translateLink = stringResource(Res.string.link_translate)
 

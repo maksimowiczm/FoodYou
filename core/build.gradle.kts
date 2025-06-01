@@ -38,6 +38,8 @@ kotlin {
 
             // Koin
             api(libs.koin.core)
+            api(libs.koin.compose)
+            api(libs.koin.compose.viewmodel)
 
             // Datastore
             api(libs.androidx.datastore.preferences)
@@ -51,7 +53,11 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation(libs.androidx.appcompat)
+            api(libs.androidx.appcompat)
+
+            // Koin
+            api(libs.koin.android)
+            api(libs.koin.androidx.compose)
         }
     }
 }

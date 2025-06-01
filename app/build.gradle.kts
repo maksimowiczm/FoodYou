@@ -88,6 +88,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core"))
             implementation(project(":feature:barcodescanner"))
+            implementation(project(":feature:language"))
 
             implementation(compose.runtime)
             implementation(compose.foundation)

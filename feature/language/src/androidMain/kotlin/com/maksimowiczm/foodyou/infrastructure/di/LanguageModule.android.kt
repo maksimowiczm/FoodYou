@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.language
+package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.feature.language.ui.LanguageViewModel
 import org.koin.core.module.dsl.viewModelOf
