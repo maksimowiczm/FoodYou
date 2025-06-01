@@ -15,6 +15,14 @@ kotlin {
         namespace = "com.maksimowiczm.foodyou.core"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+
+        compilations.configureEach {
+            compilerOptions.configure {
+                jvmTarget.set(
+                    org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+                )
+            }
+        }
     }
 
     sourceSets {
@@ -62,6 +70,9 @@ kotlin {
     }
 }
 
+// Somehow compose resources are not working in multi module project but if they are defined in the
+// app module they work fine. WIERD
+// Use symlink to the app module resources directory to make it work.
 compose.resources {
     publicResClass = true
     packageOfResClass = "foodyou.app.generated.resources"
