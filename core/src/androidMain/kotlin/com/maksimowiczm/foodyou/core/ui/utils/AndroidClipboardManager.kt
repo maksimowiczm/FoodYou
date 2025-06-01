@@ -1,10 +1,9 @@
-package com.maksimowiczm.foodyou.infrastructure.android
+package com.maksimowiczm.foodyou.core.ui.utils
 
 import android.content.ClipData
 import android.content.Context
 import android.os.Build
 import android.widget.Toast
-import com.maksimowiczm.foodyou.core.ui.utils.ClipboardManager
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.neutral_copied
 import kotlinx.coroutines.runBlocking

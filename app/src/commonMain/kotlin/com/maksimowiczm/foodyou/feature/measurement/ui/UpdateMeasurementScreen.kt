@@ -5,12 +5,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
-import com.maksimowiczm.foodyou.core.ui.ext.collectLatestWithLifecycle
+import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.rememberAdvancedMeasurementFormState
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -37,20 +38,19 @@ internal fun UpdateMeasurementScreen(
         return
     }
 
-    val onEvent: (MeasurementScreenEvent) -> Unit = remember(onBack, onRecipeClone) {
-        {
-            when (it) {
-                MeasurementScreenEvent.Deleted -> onBack()
-                MeasurementScreenEvent.Done -> onBack()
-                is MeasurementScreenEvent.RecipeCloned -> onRecipeClone(
-                    it.productId,
-                    measurement.mealId,
-                    measurement.measurementDate.date.toEpochDays()
-                )
-            }
+    val latestOnBack by rememberUpdatedState(onBack)
+    val latestOnRecipeClone by rememberUpdatedState(onRecipeClone)
+    LaunchedCollectWithLifecycle(viewModel.measurementUpdatedEventBus) {
+        when (it) {
+            MeasurementScreenEvent.Deleted -> latestOnBack()
+            MeasurementScreenEvent.Done -> latestOnBack()
+            is MeasurementScreenEvent.RecipeCloned -> latestOnRecipeClone(
+                it.productId,
+                measurement.mealId,
+                measurement.measurementDate.date.toEpochDays()
+            )
         }
     }
-    viewModel.measurementUpdatedEventBus.collectLatestWithLifecycle { onEvent(it) }
 
     val formState = rememberAdvancedMeasurementFormState(
         food = measurement.food,

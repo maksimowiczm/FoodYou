@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.ui.motion
+package com.maksimowiczm.foodyou.core.motion
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition

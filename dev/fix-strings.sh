@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_DIR="app/src/commonMain/composeResources"
+TARGET_DIR="core/src/commonMain/composeResources"
 
 if [ ! -d "$TARGET_DIR" ]; then
     echo "Directory $TARGET_DIR does not exist."

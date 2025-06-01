@@ -1,8 +1,8 @@
-package com.maksimowiczm.foodyou.infrastructure.android
+package com.maksimowiczm.foodyou.core.ui.utils
 
 import android.content.Context
 import android.text.format.DateFormat
-import com.maksimowiczm.foodyou.core.ui.utils.DateFormatter
+import com.maksimowiczm.foodyou.infrastructure.android.defaultLocale
 import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle

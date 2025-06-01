@@ -12,21 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun <T> Flow<T>.collectLatestWithLifecycle(
-    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
-    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
-    action: suspend (T) -> Unit
-) {
-    val latestAction by rememberUpdatedState(action)
-
-    LaunchedEffect(lifecycleOwner, this) {
-        lifecycleOwner.repeatOnLifecycle(minActiveState) {
-            collectLatest(latestAction)
-        }
-    }
-}
-
-@Composable
 fun <T> LaunchedCollectWithLifecycle(
     flow: Flow<T>,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,

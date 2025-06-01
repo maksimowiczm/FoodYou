@@ -2,7 +2,7 @@
  * Read You
  * https://github.com/Ashinch/ReadYou/blob/74d0c50da789ebd26bd49cd03ce73b000a54c569/app/src/main/java/me/ash/reader/ui/motion/MaterialSharedAxis.kt
  */
-package com.maksimowiczm.foodyou.core.ui.motion
+package com.maksimowiczm.foodyou.core.motion
 
 /*
  * Copyright 2021 SOUP

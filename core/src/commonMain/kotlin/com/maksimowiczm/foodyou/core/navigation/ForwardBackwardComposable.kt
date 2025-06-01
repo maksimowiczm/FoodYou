@@ -12,8 +12,8 @@ import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import com.maksimowiczm.foodyou.core.ui.motion.materialSharedAxisXIn
-import com.maksimowiczm.foodyou.core.ui.motion.materialSharedAxisXOut
+import com.maksimowiczm.foodyou.core.motion.materialSharedAxisXIn
+import com.maksimowiczm.foodyou.core.motion.materialSharedAxisXOut
 import kotlin.reflect.KType
 
 /**

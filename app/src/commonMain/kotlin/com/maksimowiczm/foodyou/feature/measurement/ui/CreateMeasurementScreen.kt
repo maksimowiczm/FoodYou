@@ -5,12 +5,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.ext.now
-import com.maksimowiczm.foodyou.core.ui.ext.collectLatestWithLifecycle
+import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.rememberAdvancedMeasurementFormState
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -36,20 +37,19 @@ internal fun CreateMeasurementScreen(
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
     val date = date ?: LocalDate.now(TimeZone.currentSystemDefault())
 
-    val onEvent: (MeasurementScreenEvent) -> Unit = remember(onBack, onRecipeClone) {
-        {
-            when (it) {
-                MeasurementScreenEvent.Deleted -> onBack()
-                MeasurementScreenEvent.Done -> onBack()
-                is MeasurementScreenEvent.RecipeCloned -> onRecipeClone(
-                    it.productId,
-                    mealId,
-                    date.toEpochDays()
-                )
-            }
+    val latestOnBack by rememberUpdatedState(onBack)
+    val latestOnRecipeClone by rememberUpdatedState(onRecipeClone)
+    LaunchedCollectWithLifecycle(viewModel.measurementCreatedEventBus) {
+        when (it) {
+            MeasurementScreenEvent.Deleted -> latestOnBack()
+            MeasurementScreenEvent.Done -> latestOnBack()
+            is MeasurementScreenEvent.RecipeCloned -> latestOnRecipeClone(
+                it.productId,
+                mealId,
+                date.toEpochDays()
+            )
         }
     }
-    viewModel.measurementCreatedEventBus.collectLatestWithLifecycle { onEvent(it) }
 
     if (food == null || meals == null || suggestions == null) {
         // TODO loading state
