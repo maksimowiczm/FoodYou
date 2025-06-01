@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.infrastructure.di
 import com.maksimowiczm.foodyou.core.domain.domainModule
 import com.maksimowiczm.foodyou.feature.about.aboutModule
 import com.maksimowiczm.foodyou.feature.addfood.addFoodModule
-import com.maksimowiczm.foodyou.feature.calendar.calendarModule
 import com.maksimowiczm.foodyou.feature.goals.goalsModule
 import com.maksimowiczm.foodyou.feature.importexport.importExportModule
 import com.maksimowiczm.foodyou.feature.meal.mealModule

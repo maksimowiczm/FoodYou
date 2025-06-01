@@ -89,6 +89,7 @@ kotlin {
             implementation(project(":core"))
             implementation(project(":feature:barcodescanner"))
             implementation(project(":feature:language"))
+            implementation(project(":feature:calendar"))
 
             implementation(compose.runtime)
             implementation(compose.foundation)
