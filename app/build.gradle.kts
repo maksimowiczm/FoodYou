@@ -65,7 +65,7 @@ kotlin {
     }
 
     // Leave it here
-    // Otherwise IDE won't mark android dependencies as error in common code
+    // Otherwise IDE will not recognize the project as a multiplatform one
     jvm("desktop")
 
     sourceSets {
@@ -75,9 +75,6 @@ kotlin {
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.accompanist.permissions)
-
-            // Zxing
-            implementation(libs.zxing.android.embedded)
 
             // Koin
             implementation(libs.koin.android)
@@ -90,6 +87,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(project(":core"))
+            implementation(project(":feature:barcodescanner"))
 
             implementation(compose.runtime)
             implementation(compose.foundation)

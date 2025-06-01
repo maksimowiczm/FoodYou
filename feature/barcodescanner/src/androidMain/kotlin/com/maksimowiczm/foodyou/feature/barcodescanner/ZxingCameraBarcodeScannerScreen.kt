@@ -29,8 +29,7 @@ import androidx.compose.ui.zIndex
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
-import com.maksimowiczm.foodyou.R
-import com.maksimowiczm.foodyou.databinding.CameraBarcodeLayoutBinding
+import com.maksimowiczm.foodyou.feature.barcodescanner.databinding.CameraBarcodeLayoutBinding
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
