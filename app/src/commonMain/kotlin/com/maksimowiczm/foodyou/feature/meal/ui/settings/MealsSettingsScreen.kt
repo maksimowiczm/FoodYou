@@ -304,7 +304,7 @@ private fun MealsSettingsScreen(
     }
 }
 
-// Why is it so wierd?
+// Why is it so weird?
 // Data can't leave inside lazy list item because it will be lost when not visible. It must be
 // stored outside the lazy list.
 //

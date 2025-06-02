@@ -18,7 +18,7 @@ import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString as getStringRes
 
-// Use singleTop and mutable state because otherwise there are wierd behaviors with creating
+// Use singleTop and mutable state because otherwise there are weird behaviors with creating
 // multiple activities
 class ShareProductActivity : FoodYouAbstractActivity() {
 

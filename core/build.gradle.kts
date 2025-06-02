@@ -71,7 +71,7 @@ kotlin {
 }
 
 // Somehow compose resources are not working in multi module project but if they are defined in the
-// app module they work fine. WIERD
+// app module they work fine. WEIRD
 // Use symlink to the app module resources directory to make it work.
 compose.resources {
     publicResClass = true
