@@ -54,6 +54,8 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+
+            // Not sure why this is can't be consumer proguard file
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
