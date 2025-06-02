@@ -1,5 +1,9 @@
 package com.maksimowiczm.foodyou.core.domain.model
 
+import com.maksimowiczm.foodyou.core.model.FoodId
+import com.maksimowiczm.foodyou.core.model.PortionWeight
+import com.maksimowiczm.foodyou.core.model.Product
+
 fun testProduct(
     id: FoodId.Product = FoodId.Product(1L),
     name: String = "Test Product",
@@ -14,6 +18,6 @@ fun testProduct(
     brand = brand,
     nutritionFacts = nutritionFacts,
     barcode = barcode,
-    packageWeight = packageWeight,
+    totalWeight = packageWeight,
     servingWeight = servingWeight
 )

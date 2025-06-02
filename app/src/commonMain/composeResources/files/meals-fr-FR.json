@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Petit-déjeuner",
+    "from": "06:00",
+    "to": "10:00"
+  },
+  {
+    "name": "Déjeuner",
+    "from": "10:00",
+    "to": "15:00"
+  },
+  {
+    "name": "Dîner",
+    "from": "15:00",
+    "to": "21:00"
+  },
+  {
+    "name": "Collation",
+    "from": "00:00",
+    "to": "00:00"
+  }
+]

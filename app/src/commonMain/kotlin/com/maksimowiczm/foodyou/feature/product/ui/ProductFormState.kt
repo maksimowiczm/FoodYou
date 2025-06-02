@@ -9,8 +9,8 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.Product
+import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.ui.res.Saver
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
@@ -47,26 +47,26 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     }
 
     val packageWeight = rememberFormField(
-        initialValue = product?.packageWeight?.weight,
+        initialValue = product?.totalWeight,
         parser = nullableFloatParser,
         validator = when {
             measurement.value is Measurement.Package -> requirePositiveFloatValidator()
             else -> positiveFloatValidator()
         },
         textFieldState = rememberTextFieldState(
-            product?.packageWeight?.weight?.formatClipZeros() ?: ""
+            product?.totalWeight?.formatClipZeros() ?: ""
         )
     )
 
     val servingWeight = rememberFormField(
-        initialValue = product?.servingWeight?.weight,
+        initialValue = product?.servingWeight,
         parser = nullableFloatParser,
         validator = when {
             measurement.value is Measurement.Serving -> requirePositiveFloatValidator()
             else -> positiveFloatValidator()
         },
         textFieldState = rememberTextFieldState(
-            product?.servingWeight?.weight?.formatClipZeros() ?: ""
+            product?.servingWeight?.formatClipZeros() ?: ""
         )
     )
 

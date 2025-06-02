@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.feature.recipe.ui.update
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.Product
-import com.maksimowiczm.foodyou.core.domain.model.Recipe
 import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
 import com.maksimowiczm.foodyou.core.ext.launch
+import com.maksimowiczm.foodyou.core.model.FoodId
+import com.maksimowiczm.foodyou.core.model.Product
+import com.maksimowiczm.foodyou.core.model.Recipe
 import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
 import com.maksimowiczm.foodyou.feature.recipe.domain.UpdateRecipeUseCase
 import com.maksimowiczm.foodyou.feature.recipe.ui.MinimalIngredient

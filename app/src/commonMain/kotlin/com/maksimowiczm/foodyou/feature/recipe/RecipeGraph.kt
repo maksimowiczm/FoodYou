@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.recipe
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.recipe.ui.create.CreateRecipeScreen
 import com.maksimowiczm.foodyou.feature.recipe.ui.update.UpdateRecipeScreen

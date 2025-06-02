@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.component.FoodErrorListItem
 import com.maksimowiczm.foodyou.core.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros

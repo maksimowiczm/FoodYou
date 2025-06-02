@@ -1,20 +1,7 @@
 package com.maksimowiczm.foodyou.feature.recipe.domain
 
-import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.Recipe
-import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
-import com.maksimowiczm.foodyou.core.domain.repository.RecipeRepository as RealRecipeRepository
-import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
-import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
-import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.maksimowiczm.foodyou.core.model.FoodId
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 
 internal fun interface QueryIngredientsUseCase {
     /**
@@ -31,109 +18,109 @@ internal fun interface QueryIngredientsUseCase {
     ): Flow<List<IngredientSearchItem>>
 }
 
-internal class QueryIngredientsUseCaseImpl(
-    private val foodRepository: FoodRepository,
-    private val foodLocalDataSource: FoodLocalDataSource,
-    private val productMeasurementLocalDataSource: ProductMeasurementLocalDataSource,
-    private val recipeMeasurementLocalDataSource: RecipeMeasurementLocalDataSource,
-    private val recipeRepository: RealRecipeRepository,
-    private val measurementMapper: MeasurementMapper = MeasurementMapper
-) : QueryIngredientsUseCase {
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override operator fun invoke(
-        query: String?,
-        excludedRecipeId: FoodId.Recipe?
-    ): Flow<List<IngredientSearchItem>> {
-        val barcode = query?.takeIf { it.all { it.isDigit() } }
-
-        val queryFlow = if (barcode != null) {
-            foodLocalDataSource.queryFoodByBarcode(barcode)
-        } else {
-            foodLocalDataSource.queryFood(query)
-        }
-
-        val result = queryFlow.flatMapLatest { searchList ->
-            if (searchList.isEmpty()) {
-                return@flatMapLatest flowOf(emptyList())
-            }
-
-            val itemFlows = searchList.mapNotNull { entity ->
-                return@mapNotNull when {
-                    entity.productId != null -> mapToProduct(entity.productId)
-                    entity.recipeId != null -> mapToRecipe(
-                        recipeId = entity.recipeId,
-                        excludedRecipeId = excludedRecipeId
-                    )
-
-                    else -> null
-                }
-            }
-
-            combine(itemFlows) { it.filterNotNull().toList() }
-        }
-
-        return result
-    }
-
-    private fun mapToProduct(productId: Long): Flow<IngredientSearchItem> {
-        val suggestionFlow =
-            productMeasurementLocalDataSource.observeLatestProductMeasurementSuggestion(
-                productId = productId
-            )
-
-        val productFlow = foodRepository.observeFood(FoodId.Product(productId)).filterNotNull()
-
-        return combine(
-            productFlow,
-            suggestionFlow
-        ) { product, suggestion ->
-            val measurement = suggestion
-                ?.let { measurementMapper.toMeasurement(suggestion) }
-                ?: Measurement.defaultForFood(product)
-
-            IngredientSearchItem(
-                food = product,
-                measurement = measurement,
-                uniqueId = product.id.toString()
-            )
-        }
-    }
-
-    private fun mapToRecipe(
-        recipeId: Long,
-        excludedRecipeId: FoodId.Recipe?
-    ): Flow<IngredientSearchItem?> {
-        val suggestionFlow =
-            recipeMeasurementLocalDataSource.observeLatestRecipeMeasurementSuggestion(
-                recipeId = recipeId
-            )
-
-        val recipeFlow = recipeRepository.observeRecipe(FoodId.Recipe(recipeId)).filterNotNull()
-
-        return combine(
-            recipeFlow,
-            suggestionFlow
-        ) { recipe, suggestion ->
-
-            if (recipe.id == excludedRecipeId) {
-                return@combine null
-            }
-
-            val flatIngredients = recipe.flatIngredients()
-            if (flatIngredients.any { it is Recipe && it.id == excludedRecipeId }) {
-                return@combine null
-            }
-
-            val measurement = suggestion
-                ?.let { measurementMapper.toMeasurement(suggestion) }
-                ?: Measurement.defaultForFood(recipe)
-
-            IngredientSearchItem(
-                food = recipe,
-                measurement = measurement,
-                uniqueId = recipe.id.toString()
-            )
-        }
-    }
-}
+// internal class QueryIngredientsUseCaseImpl(
+//    private val foodRepository: FoodRepository,
+//    private val foodLocalDataSource: FoodLocalDataSource,
+//    private val productMeasurementLocalDataSource: ProductMeasurementLocalDataSource,
+//    private val recipeMeasurementLocalDataSource: RecipeMeasurementLocalDataSource,
+//    private val recipeRepository: RealRecipeRepository,
+//    private val measurementMapper: MeasurementMapper = MeasurementMapper
+// ) : QueryIngredientsUseCase {
+//
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    override operator fun invoke(
+//        query: String?,
+//        excludedRecipeId: FoodId.Recipe?
+//    ): Flow<List<IngredientSearchItem>> {
+//        val barcode = query?.takeIf { it.all { it.isDigit() } }
+//
+//        val queryFlow = if (barcode != null) {
+//            foodLocalDataSource.queryFoodByBarcode(barcode)
+//        } else {
+//            foodLocalDataSource.queryFood(query)
+//        }
+//
+//        val result = queryFlow.flatMapLatest { searchList ->
+//            if (searchList.isEmpty()) {
+//                return@flatMapLatest flowOf(emptyList())
+//            }
+//
+//            val itemFlows = searchList.mapNotNull { entity ->
+//                return@mapNotNull when {
+//                    entity.productId != null -> mapToProduct(entity.productId)
+//                    entity.recipeId != null -> mapToRecipe(
+//                        recipeId = entity.recipeId,
+//                        excludedRecipeId = excludedRecipeId
+//                    )
+//
+//                    else -> null
+//                }
+//            }
+//
+//            combine(itemFlows) { it.filterNotNull().toList() }
+//        }
+//
+//        return result
+//    }
+//
+//    private fun mapToProduct(productId: Long): Flow<IngredientSearchItem> {
+//        val suggestionFlow =
+//            productMeasurementLocalDataSource.observeLatestProductMeasurementSuggestion(
+//                productId = productId
+//            )
+//
+//        val productFlow = foodRepository.observeFood(FoodId.Product(productId)).filterNotNull()
+//
+//        return combine(
+//            productFlow,
+//            suggestionFlow
+//        ) { product, suggestion ->
+//            val measurement = suggestion
+//                ?.let { measurementMapper.toMeasurement(suggestion) }
+//                ?: Measurement.defaultForFood(product)
+//
+//            IngredientSearchItem(
+//                food = product,
+//                measurement = measurement,
+//                uniqueId = product.id.toString()
+//            )
+//        }
+//    }
+//
+//    private fun mapToRecipe(
+//        recipeId: Long,
+//        excludedRecipeId: FoodId.Recipe?
+//    ): Flow<IngredientSearchItem?> {
+//        val suggestionFlow =
+//            recipeMeasurementLocalDataSource.observeLatestRecipeMeasurementSuggestion(
+//                recipeId = recipeId
+//            )
+//
+//        val recipeFlow = recipeRepository.observeRecipe(FoodId.Recipe(recipeId)).filterNotNull()
+//
+//        return combine(
+//            recipeFlow,
+//            suggestionFlow
+//        ) { recipe, suggestion ->
+//
+//            if (recipe.id == excludedRecipeId) {
+//                return@combine null
+//            }
+//
+//            val flatIngredients = recipe.flatIngredients()
+//            if (flatIngredients.any { it is Recipe && it.id == excludedRecipeId }) {
+//                return@combine null
+//            }
+//
+//            val measurement = suggestion
+//                ?.let { measurementMapper.toMeasurement(suggestion) }
+//                ?: Measurement.defaultForFood(recipe)
+//
+//            IngredientSearchItem(
+//                food = recipe,
+//                measurement = measurement,
+//                uniqueId = recipe.id.toString()
+//            )
+//        }
+//    }
+// }

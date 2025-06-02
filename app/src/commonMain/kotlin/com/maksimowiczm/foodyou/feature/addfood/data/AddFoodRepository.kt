@@ -1,16 +1,5 @@
 package com.maksimowiczm.foodyou.feature.addfood.data
 
-import com.maksimowiczm.foodyou.core.data.model.food.FoodSearchEntity
-import com.maksimowiczm.foodyou.core.data.model.search.SearchQueryEntity
-import com.maksimowiczm.foodyou.core.domain.mapper.MeasurementMapper
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
-import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
-import com.maksimowiczm.foodyou.core.domain.source.FoodLocalDataSource
-import com.maksimowiczm.foodyou.core.domain.source.ProductMeasurementLocalDataSource
-import com.maksimowiczm.foodyou.core.domain.source.RecipeMeasurementLocalDataSource
-import com.maksimowiczm.foodyou.core.domain.source.SearchLocalDataSource
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -18,24 +7,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
-internal class AddFoodRepository(
-    private val searchLocalDataSource: SearchLocalDataSource,
-    private val foodLocalDataSource: FoodLocalDataSource,
-    private val productMeasurementDao: ProductMeasurementLocalDataSource,
-    private val recipeMeasurementDao: RecipeMeasurementLocalDataSource,
-    private val foodRepository: FoodRepository,
-    dispatcher: CoroutineDispatcher = Dispatchers.Default,
-    private val measurementMapper: MeasurementMapper = MeasurementMapper
-) {
+internal class AddFoodRepository(dispatcher: CoroutineDispatcher = Dispatchers.Default) {
     private val bgScope = CoroutineScope(dispatcher + SupervisorJob())
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -49,143 +25,149 @@ internal class AddFoodRepository(
             }
         }
 
-        val queryFlow = if (barcode != null) {
-            foodLocalDataSource.queryFoodByBarcode(barcode)
-        } else {
-            foodLocalDataSource.queryFood(query)
-        }
+//        val queryFlow = if (barcode != null) {
+//            foodLocalDataSource.queryFoodByBarcode(barcode)
+//        } else {
+//            foodLocalDataSource.queryFood(query)
+//        }
+//
+//        val epoch = date.toEpochDays()
+//
+//        return queryFlow.flatMapLatest { searchList ->
+//            if (searchList.isEmpty()) {
+//                return@flatMapLatest flowOf(emptyList())
+//            }
+//
+//            val itemFlows = searchList.mapNotNull { entity ->
+//                return@mapNotNull when {
+//                    entity.productId != null -> mapToProduct(entity, mealId, epoch)
+//                    entity.recipeId != null -> mapToRecipe(entity, mealId, epoch)
+//                    else -> null
+//                }
+//            }
+//
+//            combine(itemFlows) { it.toList() }.map { it.flatten() }
+//        }
 
-        val epoch = date.toEpochDays()
-
-        return queryFlow.flatMapLatest { searchList ->
-            if (searchList.isEmpty()) {
-                return@flatMapLatest flowOf(emptyList())
-            }
-
-            val itemFlows = searchList.mapNotNull { entity ->
-                return@mapNotNull when {
-                    entity.productId != null -> mapToProduct(entity, mealId, epoch)
-                    entity.recipeId != null -> mapToRecipe(entity, mealId, epoch)
-                    else -> null
-                }
-            }
-
-            combine(itemFlows) { it.toList() }.map { it.flatten() }
-        }
+        TODO()
     }
 
-    private fun mapToProduct(
-        entity: FoodSearchEntity,
-        mealId: Long,
-        epoch: Int
-    ): Flow<List<SearchFoodItem>>? = entity.productId?.let { productId ->
-        val measurementsFlow = productMeasurementDao.observeMeasurementsByProductMealDay(
-            productId = productId,
-            mealId = mealId,
-            epochDay = epoch
-        )
+//    private fun mapToProduct(
+//        entity: FoodSearchEntity,
+//        mealId: Long,
+//        epoch: Int
+//    ): Flow<List<SearchFoodItem>>? = entity.productId?.let { productId ->
+// //        val measurementsFlow = productMeasurementDao.observeMeasurementsByProductMealDay(
+// //            productId = productId,
+// //            mealId = mealId,
+// //            epochDay = epoch
+// //        )
+// //
+// //        val suggestionFlow = productMeasurementDao.observeLatestProductMeasurementSuggestion(
+// //            productId = productId
+// //        )
+// //
+// //        val productFlow = foodRepository.observeFood(FoodId.Product(productId)).filterNotNull()
+// //
+// //        val combinedFlow = combine(
+// //            measurementsFlow,
+// //            productFlow,
+// //            suggestionFlow
+// //        ) { measurements, product, suggestion ->
+// //            val measurement = suggestion
+// //                ?.let { measurementMapper.toMeasurement(suggestion) }
+// //                ?: Measurement.defaultForFood(product)
+// //
+// //            if (measurements.isEmpty()) {
+// //                listOf(
+// //                    SearchFoodItem(
+// //                        food = product,
+// //                        measurement = measurement,
+// //                        measurementId = null,
+// //                        uniqueId = "${product.id}-0"
+// //                    )
+// //                )
+// //            } else {
+// //                measurements.mapIndexed { i, measurementEntity ->
+// //                    SearchFoodItem(
+// //                        food = product,
+// //                        measurement = measurementMapper.toMeasurement(
+// //                            measurementEntity.measurement
+// //                        ),
+// //                        measurementId = MeasurementId.Product(
+// //                            measurementEntity.measurement.id
+// //                        ),
+// //                        uniqueId = "${product.id}-$i"
+// //                    )
+// //                }
+// //            }
+// //        }
+// //
+// //        combinedFlow
+//
+//        TODO()
+//    }
 
-        val suggestionFlow = productMeasurementDao.observeLatestProductMeasurementSuggestion(
-            productId = productId
-        )
-
-        val productFlow = foodRepository.observeFood(FoodId.Product(productId)).filterNotNull()
-
-        val combinedFlow = combine(
-            measurementsFlow,
-            productFlow,
-            suggestionFlow
-        ) { measurements, product, suggestion ->
-            val measurement = suggestion
-                ?.let { measurementMapper.toMeasurement(suggestion) }
-                ?: Measurement.defaultForFood(product)
-
-            if (measurements.isEmpty()) {
-                listOf(
-                    SearchFoodItem(
-                        food = product,
-                        measurement = measurement,
-                        measurementId = null,
-                        uniqueId = "${product.id}-0"
-                    )
-                )
-            } else {
-                measurements.mapIndexed { i, measurementEntity ->
-                    SearchFoodItem(
-                        food = product,
-                        measurement = measurementMapper.toMeasurement(
-                            measurementEntity.measurement
-                        ),
-                        measurementId = MeasurementId.Product(
-                            measurementEntity.measurement.id
-                        ),
-                        uniqueId = "${product.id}-$i"
-                    )
-                }
-            }
-        }
-
-        combinedFlow
-    }
-
-    private fun mapToRecipe(
-        entity: FoodSearchEntity,
-        mealId: Long,
-        epoch: Int
-    ): Flow<List<SearchFoodItem>>? = entity.recipeId?.let { recipeId ->
-        val measurementsFlow = recipeMeasurementDao.observeMeasurementsByRecipeMealDay(
-            recipeId = recipeId,
-            mealId = mealId,
-            epochDay = epoch
-        )
-
-        val suggestionFlow = recipeMeasurementDao.observeLatestRecipeMeasurementSuggestion(
-            recipeId = recipeId
-        )
-
-        val recipeFlow = foodRepository.observeFood(FoodId.Recipe(recipeId)).filterNotNull()
-
-        val combinedFlow = combine(
-            measurementsFlow,
-            recipeFlow,
-            suggestionFlow
-        ) { measurements, recipe, suggestion ->
-            val measurement = suggestion
-                ?.let { measurementMapper.toMeasurement(suggestion) }
-                ?: Measurement.defaultForFood(recipe)
-
-            if (measurements.isEmpty()) {
-                listOf(
-                    SearchFoodItem(
-                        food = recipe,
-                        measurement = measurement,
-                        measurementId = null,
-                        uniqueId = "${recipe.id}-0"
-                    )
-                )
-            } else {
-                measurements.mapIndexed { i, measurementEntity ->
-                    SearchFoodItem(
-                        food = recipe,
-                        measurement = measurementMapper.toMeasurement(measurementEntity),
-                        measurementId = MeasurementId.Recipe(measurementEntity.id),
-                        uniqueId = "${recipe.id}-$i"
-                    )
-                }
-            }
-        }
-
-        combinedFlow
-    }
+//    private fun mapToRecipe(
+//        entity: FoodSearchEntity,
+//        mealId: Long,
+//        epoch: Int
+//    ): Flow<List<SearchFoodItem>>? = entity.recipeId?.let { recipeId ->
+// //        val measurementsFlow = recipeMeasurementDao.observeMeasurementsByRecipeMealDay(
+// //            recipeId = recipeId,
+// //            mealId = mealId,
+// //            epochDay = epoch
+// //        )
+// //
+// //        val suggestionFlow = recipeMeasurementDao.observeLatestRecipeMeasurementSuggestion(
+// //            recipeId = recipeId
+// //        )
+// //
+// //        val recipeFlow = foodRepository.observeFood(FoodId.Recipe(recipeId)).filterNotNull()
+// //
+// //        val combinedFlow = combine(
+// //            measurementsFlow,
+// //            recipeFlow,
+// //            suggestionFlow
+// //        ) { measurements, recipe, suggestion ->
+// //            val measurement = suggestion
+// //                ?.let { measurementMapper.toMeasurement(suggestion) }
+// //                ?: Measurement.defaultForFood(recipe)
+// //
+// //            if (measurements.isEmpty()) {
+// //                listOf(
+// //                    SearchFoodItem(
+// //                        food = recipe,
+// //                        measurement = measurement,
+// //                        measurementId = null,
+// //                        uniqueId = "${recipe.id}-0"
+// //                    )
+// //                )
+// //            } else {
+// //                measurements.mapIndexed { i, measurementEntity ->
+// //                    SearchFoodItem(
+// //                        food = recipe,
+// //                        measurement = measurementMapper.toMeasurement(measurementEntity),
+// //                        measurementId = MeasurementId.Recipe(measurementEntity.id),
+// //                        uniqueId = "${recipe.id}-$i"
+// //                    )
+// //                }
+// //            }
+// //        }
+// //
+// //        combinedFlow
+//        TODO()
+//    }
 
     private suspend fun insertProductQueryWithCurrentTime(query: String) {
         val epochSeconds = Clock.System.now().epochSeconds
 
-        searchLocalDataSource.upsert(
-            SearchQueryEntity(
-                query = query,
-                epochSeconds = epochSeconds
-            )
-        )
+//        searchLocalDataSource.upsert(
+//            SearchQueryEntity(
+//                query = query,
+//                epochSeconds = epochSeconds
+//            )
+//        )
+        TODO()
     }
 }

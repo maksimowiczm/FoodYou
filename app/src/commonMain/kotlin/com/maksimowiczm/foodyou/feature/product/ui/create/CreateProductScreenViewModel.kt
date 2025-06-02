@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.feature.product.ui.create
 
 import androidx.lifecycle.ViewModel
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
 import com.maksimowiczm.foodyou.core.ext.launch
+import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.feature.product.domain.ProductRepository
 import com.maksimowiczm.foodyou.feature.product.ui.ProductFormState
 import kotlinx.coroutines.flow.MutableStateFlow

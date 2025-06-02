@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.core.domain.mapper
 
-import com.maksimowiczm.foodyou.core.data.model.Minerals
-import com.maksimowiczm.foodyou.core.data.model.Nutrients
-import com.maksimowiczm.foodyou.core.data.model.Vitamins
-import com.maksimowiczm.foodyou.core.domain.model.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
+import com.maksimowiczm.foodyou.core.database.food.Minerals
+import com.maksimowiczm.foodyou.core.database.food.Nutrients
+import com.maksimowiczm.foodyou.core.database.food.Vitamins
+import com.maksimowiczm.foodyou.core.model.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.core.model.NutritionFacts
 
 object NutritionFactsMapper {
     fun toNutritionFacts(nutrients: Nutrients, vitamins: Vitamins, minerals: Minerals) =

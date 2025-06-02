@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Ontbijt",
+    "from": "06:00",
+    "to": "10:00"
+  },
+  {
+    "name": "Lunch",
+    "from": "10:00",
+    "to": "15:00"
+  },
+  {
+    "name": "Avondeten",
+    "from": "15:00",
+    "to": "21:00"
+  },
+  {
+    "name": "Tussendoortjes",
+    "from": "00:00",
+    "to": "00:00"
+  }
+]

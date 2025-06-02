@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.core.domain.model
 
+import com.maksimowiczm.foodyou.core.model.Meal
 import kotlinx.datetime.LocalTime
 
 fun testMeal(

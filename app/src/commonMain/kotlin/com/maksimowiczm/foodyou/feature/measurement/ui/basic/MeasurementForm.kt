@@ -29,7 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
@@ -49,7 +49,7 @@ fun MeasurementForm(
                 isSelected = state.selected == MeasurementEnum.Package,
                 state = state.packageInput,
                 type = MeasurementEnum.Package,
-                weight = { value -> (state.packageWeight.weight * value).roundToInt() },
+                weight = { value -> (state.packageWeight * value).roundToInt() },
                 calories = { weight ->
                     (state.nutrients.calories.value * weight / 100).roundToInt()
                 },
@@ -65,7 +65,7 @@ fun MeasurementForm(
                 isSelected = state.selected == MeasurementEnum.Serving,
                 state = state.servingInput,
                 type = MeasurementEnum.Serving,
-                weight = { value -> (state.servingWeight.weight * value).roundToInt() },
+                weight = { value -> (state.servingWeight * value).roundToInt() },
                 calories = { weight ->
                     (state.nutrients.calories.value * weight / 100).roundToInt()
                 },

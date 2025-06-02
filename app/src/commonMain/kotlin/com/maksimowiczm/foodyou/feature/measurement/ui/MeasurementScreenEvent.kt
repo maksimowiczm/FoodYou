@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.measurement.ui
 
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.model.FoodId
 
 internal sealed interface MeasurementScreenEvent {
     /**

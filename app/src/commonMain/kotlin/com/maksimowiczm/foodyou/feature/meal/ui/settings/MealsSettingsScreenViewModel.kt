@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.meal.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.domain.repository.MealRepository
+import com.maksimowiczm.foodyou.core.model.Meal
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn

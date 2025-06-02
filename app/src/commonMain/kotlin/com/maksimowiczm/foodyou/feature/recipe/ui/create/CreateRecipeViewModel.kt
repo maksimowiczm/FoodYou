@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.feature.recipe.ui.create
 
 import androidx.lifecycle.ViewModel
-import com.maksimowiczm.foodyou.core.domain.model.Product
-import com.maksimowiczm.foodyou.core.domain.model.Recipe
 import com.maksimowiczm.foodyou.core.domain.repository.FoodRepository
 import com.maksimowiczm.foodyou.core.ext.launch
+import com.maksimowiczm.foodyou.core.model.Product
+import com.maksimowiczm.foodyou.core.model.Recipe
 import com.maksimowiczm.foodyou.feature.recipe.domain.CreateRecipeUseCase
 import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
 import com.maksimowiczm.foodyou.feature.recipe.ui.MinimalIngredient

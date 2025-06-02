@@ -5,7 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import com.maksimowiczm.foodyou.core.domain.model.Meal
+import com.maksimowiczm.foodyou.core.model.Meal
 
 @Stable
 internal class MealCardStateWithMeal(

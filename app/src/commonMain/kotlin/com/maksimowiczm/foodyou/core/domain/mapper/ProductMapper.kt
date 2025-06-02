@@ -1,13 +1,11 @@
 package com.maksimowiczm.foodyou.core.domain.mapper
 
-import com.maksimowiczm.foodyou.core.data.model.Minerals
-import com.maksimowiczm.foodyou.core.data.model.Nutrients
-import com.maksimowiczm.foodyou.core.data.model.Vitamins
-import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
-import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
-import com.maksimowiczm.foodyou.core.domain.model.Product
+import com.maksimowiczm.foodyou.core.database.food.Minerals
+import com.maksimowiczm.foodyou.core.database.food.Nutrients
+import com.maksimowiczm.foodyou.core.database.food.ProductEntity
+import com.maksimowiczm.foodyou.core.database.food.Vitamins
+import com.maksimowiczm.foodyou.core.model.FoodId
+import com.maksimowiczm.foodyou.core.model.Product
 
 object ProductMapper {
     @JvmName("toModelFromEntity")
@@ -19,11 +17,11 @@ object ProductMapper {
         brand = brand,
         barcode = barcode,
         nutritionFacts = NutritionFactsMapper.toNutritionFacts(nutrients, vitamins, minerals),
-        packageWeight = packageWeight?.let { PortionWeight.Package(it) },
-        servingWeight = servingWeight?.let { PortionWeight.Serving(it) }
+        totalWeight = packageWeight,
+        servingWeight = servingWeight
     )
 
-    fun Product.toEntity(source: ProductSource = ProductSource.User): ProductEntity {
+    fun Product.toEntity(): ProductEntity {
         val nutrients = Nutrients(
             proteins = nutritionFacts.proteins.value,
             carbohydrates = nutritionFacts.carbohydrates.value,
@@ -79,9 +77,8 @@ object ProductMapper {
             nutrients = nutrients,
             vitamins = vitamins,
             minerals = minerals,
-            packageWeight = packageWeight?.weight,
-            servingWeight = servingWeight?.weight,
-            productSource = source
+            packageWeight = totalWeight,
+            servingWeight = servingWeight
         )
     }
 }

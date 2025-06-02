@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.feature.recipe.domain
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.core.domain.model.Food
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.Measurement.Gram
-import com.maksimowiczm.foodyou.core.domain.model.Measurement.Serving
+import com.maksimowiczm.foodyou.core.model.Food
+import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Measurement.Gram
+import com.maksimowiczm.foodyou.core.model.Measurement.Serving
 
 @Immutable
 internal data class IngredientSearchItem(
@@ -31,7 +31,7 @@ internal data class IngredientSearchItem(
         get() = with(measurement) {
             when (this) {
                 is Gram -> value
-                is Measurement.Package -> food.packageWeight?.let { weight(it) }
+                is Measurement.Package -> food.totalWeight?.let { weight(it) }
                 is Serving -> food.servingWeight?.let { weight(it) }
             }
         }

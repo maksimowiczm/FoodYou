@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.feature.goals.model
 import androidx.compose.runtime.Immutable
 import com.maksimowiczm.foodyou.core.domain.model.DailyGoals
 import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
-import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.ext.sumOf
+import com.maksimowiczm.foodyou.core.model.Meal
 import kotlin.math.roundToInt
 import kotlinx.datetime.LocalDate
 

@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.measurement.ui.basic
 
 import androidx.compose.runtime.Composable
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementEnum.Gram
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementEnum.Serving
 import foodyou.app.generated.resources.Res

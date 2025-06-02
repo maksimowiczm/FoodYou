@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.recipe.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
+import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.feature.recipe.domain.QueryIngredientsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow

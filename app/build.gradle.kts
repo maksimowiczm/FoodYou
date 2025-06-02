@@ -83,6 +83,8 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(project(":core"))
+            implementation(project(":core-database"))
+            implementation(project(":core-model"))
             implementation(project(":feature:barcodescanner"))
             implementation(project(":feature:language"))
             implementation(project(":feature:calendar"))

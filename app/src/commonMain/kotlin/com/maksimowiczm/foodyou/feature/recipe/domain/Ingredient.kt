@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.feature.recipe.domain
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.core.domain.model.Food
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
-import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
-import com.maksimowiczm.foodyou.core.domain.model.Product as DomainProduct
-import com.maksimowiczm.foodyou.core.domain.model.Recipe as DomainRecipe
+import com.maksimowiczm.foodyou.core.model.Food
+import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.model.NutritionFacts
+import com.maksimowiczm.foodyou.core.model.Product as DomainProduct
+import com.maksimowiczm.foodyou.core.model.Recipe as DomainRecipe
 
 @Immutable
 internal sealed interface Ingredient {

@@ -5,8 +5,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import com.maksimowiczm.foodyou.core.domain.model.Meal
 import com.maksimowiczm.foodyou.core.domain.model.testMeal
+import com.maksimowiczm.foodyou.core.model.Meal
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
 import org.junit.Test
 

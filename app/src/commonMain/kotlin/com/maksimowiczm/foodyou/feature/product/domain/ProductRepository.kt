@@ -1,19 +1,19 @@
 package com.maksimowiczm.foodyou.feature.product.domain
 
-import com.maksimowiczm.foodyou.core.data.model.Minerals
-import com.maksimowiczm.foodyou.core.data.model.Nutrients
-import com.maksimowiczm.foodyou.core.data.model.Vitamins
-import com.maksimowiczm.foodyou.core.data.model.product.ProductEntity
-import com.maksimowiczm.foodyou.core.data.model.product.ProductSource
+import com.maksimowiczm.foodyou.core.database.food.Minerals
+import com.maksimowiczm.foodyou.core.database.food.Nutrients
+import com.maksimowiczm.foodyou.core.database.food.ProductEntity
+import com.maksimowiczm.foodyou.core.database.food.Vitamins
 import com.maksimowiczm.foodyou.core.domain.mapper.ProductMapper
-import com.maksimowiczm.foodyou.core.domain.model.Product
-import com.maksimowiczm.foodyou.core.domain.source.ProductLocalDataSource
-import kotlinx.coroutines.flow.first
+import com.maksimowiczm.foodyou.core.model.Product
 
-internal class ProductRepository(private val localProductDataSource: ProductLocalDataSource) {
+internal class ProductRepository(
+//    private val localProductDataSource: ProductLocalDataSource
+) {
 
     suspend fun getProductById(id: Long): Product? = with(ProductMapper) {
-        return localProductDataSource.observeProduct(id).first()?.toModel()
+        TODO()
+//        return localProductDataSource.observeProduct(id).first()?.toModel()
     }
 
     /**
@@ -121,11 +121,11 @@ internal class ProductRepository(private val localProductDataSource: ProductLoca
             vitamins = vitamins,
             minerals = minerals,
             packageWeight = packageWeight,
-            servingWeight = servingWeight,
-            productSource = ProductSource.User
+            servingWeight = servingWeight
         )
 
-        return localProductDataSource.insertProduct(entity)
+//        return localProductDataSource.insertProduct(entity)
+        TODO()
     }
 
     suspend fun updateProduct(
@@ -230,10 +230,10 @@ internal class ProductRepository(private val localProductDataSource: ProductLoca
             vitamins = vitamins,
             minerals = minerals,
             packageWeight = packageWeight,
-            servingWeight = servingWeight,
-            productSource = ProductSource.User
+            servingWeight = servingWeight
         )
 
-        localProductDataSource.updateProduct(entity)
+//        localProductDataSource.updateProduct(entity)
+        TODO()
     }
 }

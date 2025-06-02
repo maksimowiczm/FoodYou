@@ -18,7 +18,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.domain.model.Meal
+import com.maksimowiczm.foodyou.core.model.Meal
 import com.maksimowiczm.foodyou.feature.meal.ui.settings.MealCardTestTags.ALL_DAY_SWITCH
 import com.maksimowiczm.foodyou.feature.meal.ui.settings.MealCardTestTags.CONFIRM_BUTTON
 import com.maksimowiczm.foodyou.feature.meal.ui.settings.MealCardTestTags.DELETE_BUTTON

@@ -4,9 +4,8 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import com.maksimowiczm.foodyou.core.domain.model.Food
-import com.maksimowiczm.foodyou.core.domain.model.NutritionFacts
-import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
+import com.maksimowiczm.foodyou.core.model.Food
+import com.maksimowiczm.foodyou.core.model.NutritionFacts
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
 import com.maksimowiczm.foodyou.core.ui.simpleform.ParseResult
@@ -31,7 +30,7 @@ fun rememberMeasurementFormState(
     suggestions: Map<MeasurementEnum, Float>,
     selected: MeasurementEnum?
 ): MeasurementFormState {
-    val packageInput = food.packageWeight?.let {
+    val packageInput = food.totalWeight?.let {
         val suggestion = suggestions[MeasurementEnum.Package] ?: 1f
 
         rememberFormField(
@@ -62,7 +61,7 @@ fun rememberMeasurementFormState(
     return remember(packageInput, servingInput, gramInput, food, selected) {
         MeasurementFormState(
             packageInput,
-            food.packageWeight,
+            food.totalWeight,
             servingInput,
             food.servingWeight,
             gramInput,
@@ -77,7 +76,7 @@ fun rememberMeasurementFormState(
     food: Food,
     selected: MeasurementEnum? = null
 ): MeasurementFormState {
-    val packageInput = food.packageWeight?.let {
+    val packageInput = food.totalWeight?.let {
         rememberFormField(
             initialValue = 1f,
             parser = parser,
@@ -102,7 +101,7 @@ fun rememberMeasurementFormState(
     return remember(packageInput, servingInput, gramInput, food, selected) {
         MeasurementFormState(
             packageInput,
-            food.packageWeight,
+            food.totalWeight,
             servingInput,
             food.servingWeight,
             gramInput,
@@ -115,9 +114,9 @@ fun rememberMeasurementFormState(
 @Stable
 class MeasurementFormState(
     val packageInput: FormField<Float, String>?,
-    val packageWeight: PortionWeight.Package?,
+    val packageWeight: Float?,
     val servingInput: FormField<Float, String>?,
-    val servingWeight: PortionWeight.Serving?,
+    val servingWeight: Float?,
     val gramInput: FormField<Float, String>,
     val nutrients: NutritionFacts,
     val selected: MeasurementEnum?

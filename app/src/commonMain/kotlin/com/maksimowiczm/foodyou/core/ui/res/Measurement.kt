@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.core.ui.res
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Measurement
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource

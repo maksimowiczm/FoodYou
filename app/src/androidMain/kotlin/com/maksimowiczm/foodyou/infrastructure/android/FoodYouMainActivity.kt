@@ -1,7 +1,9 @@
 package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.os.Bundle
-import com.maksimowiczm.foodyou.ui.FoodYouApp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
+import org.koin.compose.koinInject
 
 class FoodYouMainActivity : FoodYouAbstractActivity() {
 
@@ -9,7 +11,10 @@ class FoodYouMainActivity : FoodYouAbstractActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            FoodYouApp()
+            val database = koinInject<FoodYouDatabase>()
+            database.foodLocalDataSource.observeProducts().collectAsStateWithLifecycle(null)
+
+//            FoodYouApp()
         }
     }
 }

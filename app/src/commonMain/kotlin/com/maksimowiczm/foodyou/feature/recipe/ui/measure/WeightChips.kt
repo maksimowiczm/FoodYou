@@ -16,8 +16,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.domain.model.Food
-import com.maksimowiczm.foodyou.core.domain.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Food
+import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.res.stringResource
 
 @Composable
@@ -56,7 +56,7 @@ internal fun rememberWeightChipsState(
         },
         restore = {
             WeightChipsState(
-                packageSuggestion = food.packageWeight?.let { Measurement.Package(1f) },
+                packageSuggestion = food.totalWeight?.let { Measurement.Package(1f) },
                 servingSuggestion = food.servingWeight?.let { Measurement.Serving(1f) },
                 extraFilter = extraFilter,
                 initialSelectedFilterIndex = it[0] as Int
@@ -65,7 +65,7 @@ internal fun rememberWeightChipsState(
     )
 ) {
     WeightChipsState(
-        packageSuggestion = food.packageWeight?.let { Measurement.Package(1f) },
+        packageSuggestion = food.totalWeight?.let { Measurement.Package(1f) },
         servingSuggestion = food.servingWeight?.let { Measurement.Serving(1f) },
         extraFilter = extraFilter,
         initialSelectedFilterIndex = 0

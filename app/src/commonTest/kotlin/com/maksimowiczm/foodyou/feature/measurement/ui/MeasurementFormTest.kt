@@ -3,10 +3,10 @@ package com.maksimowiczm.foodyou.feature.measurement.ui
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.runComposeUiTest
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
-import com.maksimowiczm.foodyou.core.domain.model.PortionWeight
-import com.maksimowiczm.foodyou.core.domain.model.Product
 import com.maksimowiczm.foodyou.core.domain.model.testNutritionFacts
+import com.maksimowiczm.foodyou.core.model.FoodId
+import com.maksimowiczm.foodyou.core.model.PortionWeight
+import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.ext.onNodeWithTag
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementForm
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementFormTestKeys
@@ -24,7 +24,7 @@ class MeasurementFormTest {
         brand = null,
         nutritionFacts = testNutritionFacts(),
         barcode = null,
-        packageWeight = packageWeight,
+        totalWeight = packageWeight,
         servingWeight = servingWeight
     )
 

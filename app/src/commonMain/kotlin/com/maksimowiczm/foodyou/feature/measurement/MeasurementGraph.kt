@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.measurement
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.core.domain.model.FoodId
 import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
+import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable

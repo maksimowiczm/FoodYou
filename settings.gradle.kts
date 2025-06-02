@@ -30,6 +30,8 @@ dependencyResolutionManagement {
 rootProject.name = "FoodYou"
 include(":app")
 include(":core")
+include(":core-database")
+include(":core-model")
 include(":feature:barcodescanner")
 include(":feature:language")
 include(":feature:calendar")
