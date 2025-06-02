@@ -1,0 +1,9 @@
+New features
+- Recipe can now contain other recipes. Go easy on the recursion. 😉
+
+Changes
+- Limit food search results to 100 items. If you need more results, please refine your search query.
+- Removed recipe clone feature
+
+Notes
+This update introduces a significant change to the recipe system, allowing recipes to include other recipes. It's not fully tested, so please report any issues you encounter.

@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_6_0,
             v2_5_0,
             v2_4_0,
             v2_3_2,
@@ -27,7 +27,9 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_6_0 = Version(
+        version = "2.6.0",
+        date = LocalDate(2025, 6, 2),
         newFeatures = listOf(
             "Recipe can now contain other recipes. Go easy on the recursion. 😉"
         ),
@@ -35,8 +37,6 @@ object Changelog {
             "Limit food search results to 100 items. If you need more results, please refine your search query.",
             "Removed recipe clone feature"
         ),
-        bugFixes = listOf(),
-        translations = listOf(),
         notes = "This update introduces a significant change to the recipe system, allowing recipes to include other recipes. It's not fully tested, so please report any issues you encounter."
     )
 
