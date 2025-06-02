@@ -55,7 +55,7 @@ internal fun CaloriesIndicator(
         Text(
             text = rememberCaloriesString(calories, caloriesGoal),
             // MUST use style because otherwise the text won't have the correct height
-            // (because of the AnnotatedString wierd behavior?)
+            // (because of the AnnotatedString weird behavior?)
             style = MaterialTheme.typography.headlineLarge
         )
 

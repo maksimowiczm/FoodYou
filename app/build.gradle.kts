@@ -65,7 +65,7 @@ kotlin {
     }
 
     // Leave it here
-    // Otherwise IDE won't mark android dependencies as error in common code
+    // Otherwise IDE will not recognize the project as a multiplatform one
     jvm("desktop")
 
     sourceSets {
@@ -76,51 +76,26 @@ kotlin {
 
             implementation(libs.accompanist.permissions)
 
-            // Zxing
-            implementation(libs.zxing.android.embedded)
-
-            // Koin
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-
             // Ktor
             implementation(libs.ktor.client.okhttp)
 
             implementation(libs.androidx.browser)
         }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-//            implementation(compose.material3)
-            implementation(libs.androidx.material3)
-            implementation(compose.material3AdaptiveNavigationSuite)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(libs.navigation.compose)
+            implementation(project(":core"))
+            implementation(project(":feature:barcodescanner"))
+            implementation(project(":feature:language"))
+            implementation(project(":feature:calendar"))
+
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-
-            // Koin
-            api(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
 
             // Kotlinx
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
 
-            // Datastore
-            implementation(libs.androidx.datastore.preferences)
-
             // Room
             implementation(libs.androidx.room.runtime)
-
-            // Logger
-            implementation(libs.kermit)
-
-            // Shimmer
-            implementation(libs.compose.shimmer)
 
             // Reorderable list
             implementation(libs.reorderable)
@@ -135,7 +110,7 @@ kotlin {
         }
 
         commonTest.dependencies {
-            implementation(kotlin("test"))
+            implementation(libs.kotlin.test)
 
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
@@ -189,11 +164,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    buildFeatures {
-        compose = true
-        viewBinding = true
     }
 }
 
