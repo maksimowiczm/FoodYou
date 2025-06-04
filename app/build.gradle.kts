@@ -20,33 +20,6 @@ buildConfig {
     val versionName = libs.versions.version.name.get()
 
     buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
-
-    // -- OPEN FOOD FACTS --
-    // https://openfoodfacts.github.io/openfoodfacts-server/api/#authentication
-    // Sorry no email 😭
-    // https://pub.dev/packages/openfoodfacts#migrating-from-2xx-to-3xx-breaking-changes
-    // https://pub.dev/packages/openfoodfacts#setup-optional
-    buildConfigField(
-        "String",
-        "OPEN_FOOD_FACTS_USER_AGENT",
-        "\"FoodYou/$versionName-opensource (https://github.com/maksimowiczm/FoodYou)\""
-    )
-
-    sourceSets.getByName("main") {
-        buildConfigField(
-            "String",
-            "OPEN_FOOD_FACTS_URL",
-            "\"https://world.openfoodfacts.org/\""
-        )
-    }
-
-    sourceSets.getByName("test") {
-        buildConfigField(
-            "String",
-            "OPEN_FOOD_FACTS_URL",
-            "\"https://world.openfoodfacts.net/\""
-        )
-    }
 }
 
 kotlin {
@@ -71,39 +44,35 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.work.runtime)
-
             implementation(libs.androidx.activity.compose)
-
             implementation(libs.accompanist.permissions)
-
-            // Ktor
-            implementation(libs.ktor.client.okhttp)
-
-            implementation(libs.androidx.browser)
         }
         commonMain.dependencies {
             implementation(project(":core"))
-            implementation(project(":feature:barcodescanner"))
+            implementation(project(":core-ui"))
+            implementation(project(":core-database"))
+            implementation(project(":core-model"))
+            implementation(project(":core-domain"))
             implementation(project(":feature:language"))
             implementation(project(":feature:calendar"))
+            implementation(project(":feature:product"))
+            implementation(project(":feature:measurement"))
+            implementation(project(":feature:recipe"))
+            implementation(project(":feature:meal"))
+            implementation(project(":feature:goals"))
+            implementation(project(":feature:addfood"))
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
             // Kotlinx
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.datetime)
 
             // Room
             implementation(libs.androidx.room.runtime)
 
             // Reorderable list
             implementation(libs.reorderable)
-
-            // Ktor
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.serialization.kotlinx.json)
 
             // CSV
             implementation(libs.kotlin.csv)

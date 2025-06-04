@@ -29,6 +29,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core"))
+            implementation(project(":core-ui"))
 
             implementation(libs.kotlinx.serialization.json)
         }

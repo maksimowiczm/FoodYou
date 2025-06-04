@@ -38,7 +38,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.BuildConfig
-import com.maksimowiczm.foodyou.core.ui.component.CardButton
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import com.maksimowiczm.foodyou.feature.changelog.ChangelogModalBottomSheet
 import foodyou.app.generated.resources.*

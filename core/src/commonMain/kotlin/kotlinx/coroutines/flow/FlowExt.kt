@@ -7,3 +7,6 @@ inline fun <reified T, R> Iterable<Flow<T>>.combine(
 inline fun <T, R> Flow<Iterable<T>>.mapValues(
     crossinline transform: suspend (value: T) -> R
 ): Flow<List<R>> = this.map { it.map { transform(it) } }
+
+inline fun <T, R> Flow<T?>.mapIfNotNull(crossinline transform: suspend (value: T) -> R?): Flow<R?> =
+    this.map { value -> value?.let { transform(it) } }

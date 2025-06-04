@@ -1,17 +1,15 @@
-name: Validate Meals XML
+name: Validate Meals
 
 on:
   push:
     paths:
-      - 'app/src/androidTest/res/meals-schema.xsd'
-      - 'app/src/androidTest/res/test-meals.bash'
-      - 'app/src/androidMain/res/xml*/meals.xml'
+      - 'core-ui/src/commonMain/composeResources/files/meals*'
+      - 'dev/test-meals-localization.bash'
       - '.github/workflows/validate-meals.yml'
   pull_request:
     paths:
-      - 'app/src/androidTest/res/meals-schema.xsd'
-      - 'app/src/androidTest/res/test-meals.bash'
-      - 'app/src/androidMain/res/xml*/meals.xml'
+      - 'core-ui/src/commonMain/composeResources/files/meals*'
+      - 'dev/test-meals-localization.bash'
       - '.github/workflows/validate-meals.yml'
 
 jobs:
@@ -21,11 +19,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install xmllint
+      - name: Install jq
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxml2-utils
+          sudo apt-get install -y jq
 
-      - name: Validate meals.xml
+      - name: Validate meals.json
         run: |
-          ./app/src/androidTest/res/test-meals.bash
+          ./dev/test-meals-localization.bash

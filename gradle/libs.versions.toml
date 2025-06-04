@@ -31,18 +31,25 @@ reorderable = "2.4.3"
 room = "2.7.1"
 workRuntime = "2.10.1"
 zxingAndroidEmbedded = "4.3.0"
+runner = "1.6.2"
+core = "1.6.1"
+junit = "1.2.1"
+kotlinStdlib = "2.1.20"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
+androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "coreKtxVersion" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
@@ -65,10 +72,12 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 gmazzo-buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "gmazzoBuildConfig" }
@@ -76,4 +85,3 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
-android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }

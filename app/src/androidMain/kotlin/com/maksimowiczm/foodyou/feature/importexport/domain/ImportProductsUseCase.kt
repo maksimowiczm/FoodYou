@@ -2,8 +2,7 @@ package com.maksimowiczm.foodyou.feature.importexport.domain
 
 import co.touchlab.kermit.Logger
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import com.maksimowiczm.foodyou.core.data.model.product.ProductEntityField
-import com.maksimowiczm.foodyou.core.domain.source.ProductLocalDataSource
+import com.maksimowiczm.foodyou.core.database.food.ProductLocalDataSource
 import java.io.InputStream
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
