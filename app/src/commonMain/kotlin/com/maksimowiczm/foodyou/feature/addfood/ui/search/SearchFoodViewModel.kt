@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
+import com.maksimowiczm.foodyou.core.domain.MeasurementRepository
 import com.maksimowiczm.foodyou.core.domain.repository.SearchRepository
 import com.maksimowiczm.foodyou.feature.addfood.data.AddFoodRepository
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
@@ -60,10 +60,11 @@ internal class SearchFoodViewModel(
     }
 
     fun onQuickRemove(item: SearchFoodItem) {
-        viewModelScope.launch {
-            item.measurementId?.let {
-                measurementRepository.removeMeasurement(item.measurementId)
-            }
-        }
+        TODO()
+//        viewModelScope.launch {
+//            item.measurementId?.let {
+//                measurementRepository.removeMeasurement(item.measurementId)
+//            }
+//        }
     }
 }
