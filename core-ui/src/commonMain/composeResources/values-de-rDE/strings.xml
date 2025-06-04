@@ -124,7 +124,6 @@
     <string name="action_insert_suggested_search">Vorgeschlagene Suche einfügen</string>
     <string name="action_edit_entry">Eintrag bearbeiten</string>
     <string name="action_delete_entry">Eintrag löschen</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Essen hinzufügen</string>
     <string name="action_undo">Rückgängig</string>
     <string name="action_close">Schließen</string>
     <string name="action_discard">Verwerfen</string>
@@ -158,7 +157,6 @@
     <string name="neutral_barcode_scanner_camera_request">Erlaube den Zugriff auf deine Kamera zum Scannen von Barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Um die Barcodes zu scannen, musst du den Zugriff erlauben</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Zum Scannen von Barcodes ist eine Kameraerlaubnis erforderlich. Bitte erlaube es in den App-Einstellungen.</string>
-    <string name="neutral_no_products_found">Keine Produkte gefunden</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d verbleibende Kalorien</item>
         <item quantity="other">%1$d verbleibende Kalorien</item>
@@ -169,7 +167,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Mahlzeit wird dauerhaft gelöscht. Alle Daten zu dieser Mahlzeit gehen verloren.</string>
     <string name="neutral_required">Erforderlich</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kalorien werden automatisch basierend auf Makronährstoffen berechnet</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Sieht aus, als wäre diese Mahlzeit leer. Füge etwas Essen hinzu, um deine Kalorien zu verfolgen.</string>
     <string name="neutral_entry_deleted">Eintrag gelöscht</string>
     <string name="neutral_help_translating_the_app">Hilf mit, die App zu übersetzen</string>
     <string name="neutral_copied">Informationen in die Zwischenablage gespeichert</string>

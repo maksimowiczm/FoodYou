@@ -85,7 +85,6 @@
     <string name="action_insert_suggested_search">Вставити запропонований пошук</string>
     <string name="action_edit_entry">Редагувати запис</string>
     <string name="action_delete_entry">Видалити запис</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Додати їжу</string>
     <string name="action_undo">Повернути</string>
     <string name="action_close">Закрити</string>
     <string name="action_discard">Скасувати</string>
@@ -112,7 +111,6 @@
     <string name="neutral_barcode_scanner_camera_request">Надати доступ до вашої камери для сканування штрихкодів</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Ви маєте надати доступ, щоб мати змогу сканувати штрихкоди</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Доступ до камери необхідний для сканування штрихкодів. Надайте його в налаштуваннях додатку.</string>
-    <string name="neutral_no_products_found">Продуктів не знайдено</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">Залишилася %1$d калорія</item>
         <item quantity="few">Залишилось %1$d калорій</item>
@@ -125,7 +123,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Страву буде видалено назавжди. Всі дані пов'язані з цією стравою буде втрачено.</string>
     <string name="neutral_required">Обов'язкове</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Калорії обчислюються автоматично на основі макронутрієнтів</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Здається, що в цій страві нічого нема. Додайте їжу, щоб слідкувати за своїми калоріями.</string>
     <string name="neutral_entry_deleted">Запис видалено</string>
     <string name="neutral_help_translating_the_app">Допомогти перекласти додаток</string>
     <string name="neutral_copied">Інформацію скопійовано в буфер обміну</string>

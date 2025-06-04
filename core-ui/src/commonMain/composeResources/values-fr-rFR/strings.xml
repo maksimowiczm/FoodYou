@@ -39,7 +39,6 @@
     <string name="headline_other">Autre</string>
     <string name="headline_vitamins">Vitamines</string>
     <string name="headline_minerals">Minéraux</string>
-    <string name="headline_copy_recipe">Copier la recette</string>
     <string name="headline_copy" description="A noun, thing that is a copy">Copier</string>
     <string name="weight">Poids</string>
     <string name="unit_calories">Calories</string>
@@ -120,7 +119,6 @@
     <string name="action_insert_suggested_search">Insérer la recherche suggérée</string>
     <string name="action_edit_entry">Modifier l'entrée</string>
     <string name="action_delete_entry">Supprimer l'entrée</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Ajouter de la nourriture</string>
     <string name="action_undo">Annuler</string>
     <string name="action_close">Fermer</string>
     <string name="action_discard">Rejeter</string>
@@ -150,7 +148,6 @@
     <string name="neutral_barcode_scanner_camera_request">Autoriser l'accès à l'appareil photo pour scanner les codes-barres</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Vous devez autoriser l'accès pour pouvoir scanner les codes-barres.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L'accès à la caméra est nécessaire pour scanner les codes-barres. Autorisez-le dans les paramètres.</string>
-    <string name="neutral_no_products_found">Aucun produit trouvé</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d calorie restante</item>
         <item quantity="other">%1$d calories restantes</item>
@@ -160,7 +157,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Le repas sera supprimé définitivement. Toutes les données associées seront perdues.</string>
     <string name="neutral_required">Requis</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Les calories sont calculées automatiquement à partir des macronutriments</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Ce repas est vide. Ajoutez des aliments pour comptabiliser vos calories.</string>
     <string name="neutral_entry_deleted">Entrée supprimée</string>
     <string name="neutral_help_translating_the_app">Contribuer à la traduction de l'app</string>
     <string name="neutral_copied">Info copiée dans le presse-papiers</string>

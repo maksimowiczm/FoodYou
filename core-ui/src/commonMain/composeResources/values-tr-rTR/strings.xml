@@ -47,7 +47,6 @@
     <string name="headline_import_and_export">İçe aktar ve dışa aktar</string>
     <string name="headline_experimental" description="Experimental feature">Deneysel</string>
     <string name="headline_experimental_feature">Deneysel özellik</string>
-    <string name="headline_copy_recipe">Tarifi kopyala</string>
     <string name="headline_copy" description="A noun, thing that is a copy">Kopyala</string>
     <string name="headline_something_went_wrong">Hata! Bir şeyler ters gitti</string>
     <string name="headline_daily_goals_settings">Günlük hedef ayarları</string>
@@ -131,7 +130,6 @@
     <string name="action_insert_suggested_search">Önerilen Aramayı Ekle</string>
     <string name="action_edit_entry">Girişi Düzenle</string>
     <string name="action_delete_entry">Girişi Sil</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Yemek Ekle</string>
     <string name="action_undo">Geri Al</string>
     <string name="action_close">Kapat</string>
     <string name="action_discard">Vazgeç</string>
@@ -173,7 +171,6 @@
     <string name="neutral_barcode_scanner_camera_request">Barkodları taramak için kameranıza erişime izin verin</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Barkodları tarayabilmek için erişime izin vermelisiniz</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Barkodları taramak için kamera izni gereklidir. Lütfen uygulama ayarlarında izin verin.</string>
-    <string name="neutral_no_products_found">Ürün bulunamadı</string>
     <string name="neutral_no_food_found">Gıda bulunamadı</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d kalori kaldı</item>
@@ -185,7 +182,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Yemek kalıcı olarak silinecek. Bu yemeğe ait tüm veriler kaybolacak.</string>
     <string name="neutral_required">Gerekli</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kaloriler, makro besinlere dayalı olarak otomatik olarak hesaplanır</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Bu yemek boş görünüyor. Kalorilerinizi takip etmek için biraz yiyecek ekleyin.</string>
     <string name="neutral_entry_deleted">Giriş silindi</string>
     <string name="neutral_help_translating_the_app">Uygulamayı çevirmeye yardım edin</string>
     <string name="neutral_copied">Bilgi panoya kopyalandı</string>
@@ -233,8 +229,8 @@
     <string name="description_import_and_export_hint">Tüm veri senkronizasyon işlemleri arka planda çalışır. Tamamlandıklarında size bildirim gönderilecektir.</string>
     <string name="description_experimental_feature">Bu deneysel bir özelliktir. Gelecek sürümlerde değişebilir veya kaldırılabilir.</string>
     <string name="description_notifications_permission_required_data_sync">Veri senkronizasyon ilerlemesini göstermek için bildirim izni gereklidir. Lütfen uygulama ayarlarında bu izni etkinleştirin.</string>
-    <string name="description_copy_recipe">Tarif tek bir ürüne kopyalanacak</string>
     <string name="description_show_macronutrients_goals">Makro besin hedeflerini göster</string>
+    <string name="description_recipe_missing_ingredients">Burada her tarifi görmeyebilirsiniz. Bazı tarifler, döngüsel referansları önlemek için gizlenmiştir.</string>
     <string name="headline_launcher_icon_by_icons8">Icons8 Tarafından Launcher İkonu</string>
     <string name="neutral_see_other_awesome_icons_here">Burada diğer harika ikonları görün</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>

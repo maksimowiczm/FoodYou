@@ -122,7 +122,6 @@
     <string name="action_edit">Aanpassen</string>
     <string name="action_edit_entry">Pas notitie aan</string>
     <string name="action_delete_entry">Verwijder notitie</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Voeg product toe</string>
     <string name="action_undo">Ongedaan maken</string>
     <string name="action_close">Sluiten</string>
     <string name="action_discard">Annuleren</string>
@@ -156,7 +155,6 @@
     <string name="neutral_barcode_scanner_camera_request">Keur toegang tot camera goed om barcodes te scannen</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Je moet toestemming verlenen om barcodes te scannen</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera toegang is nodig om barcodes te scannen. Sta dit toe bij systeeminstellingen.</string>
-    <string name="neutral_no_products_found">Geen producten gevonden</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d calorie over</item>
         <item quantity="other">%1$d calorieën over</item>
@@ -167,7 +165,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Deze maaltijd wordt permanent verwijderd. Alle data gerelateerd aan de maaltijd gaat verloren.</string>
     <string name="neutral_required">Verplicht</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calorieën worden automatisch berekend op basis van de macronutriënten</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Deze maaltijd is leeg. Voeg producten toe om je calorieën te tellen.</string>
     <string name="neutral_entry_deleted">Notitie verwijderd</string>
     <string name="neutral_help_translating_the_app">Help de app te vertalen</string>
     <string name="neutral_copied">Info naar klembord gekopieerd</string>

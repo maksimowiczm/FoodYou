@@ -47,7 +47,6 @@
     <string name="headline_import_and_export">Import i eksport</string>
     <string name="headline_experimental" description="Experimental feature">Eksperymentalne</string>
     <string name="headline_experimental_feature">Eksperymentalna funkcja</string>
-    <string name="headline_copy_recipe">Kopiuj przepis</string>
     <string name="headline_copy" description="A noun, thing that is a copy">Kopia</string>
     <string name="headline_something_went_wrong">Ups! Coś poszło nie tak</string>
     <string name="headline_daily_goals_settings">Ustawienia celów dziennych</string>
@@ -135,7 +134,6 @@
     <string name="action_insert_suggested_search">Wstaw sugerowane wyszukiwanie</string>
     <string name="action_edit_entry">Edytuj wpis</string>
     <string name="action_delete_entry">Usuń wpis</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Dodaj</string>
     <string name="action_undo">Cofnij</string>
     <string name="action_close">Zamknij</string>
     <string name="action_discard">Odrzuć</string>
@@ -177,7 +175,6 @@
     <string name="neutral_barcode_scanner_camera_request">Aby skanować kody kreskowe, zezwól na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Aby skanować kody kreskowe, musisz zezwolić na dostęp do aparatu.</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Aby skanować kody kreskowe, zezwól na dostęp do aparatu w ustawieniach aplikacji.</string>
-    <string name="neutral_no_products_found">Nie znaleziono produktów</string>
     <string name="neutral_no_food_found">Nie znaleziono jedzenia</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">Pozostała %1$d kaloria</item>
@@ -191,7 +188,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Posiłek zostanie trwale usunięty. Wszystkie powiązane z nim dane zostaną utracone.</string>
     <string name="neutral_required">Wymagane</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kalorie są obliczane automatycznie na podstawie makroskładników</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Wygląda na to, że ten posiłek jest pusty. Dodaj jedzenie, aby śledzić kalorie</string>
     <string name="neutral_entry_deleted">Wpis usunięty</string>
     <string name="neutral_help_translating_the_app">Pomóż w tłumaczeniu aplikacji</string>
     <string name="neutral_copied">Informacja skopiowana do schowka</string>
@@ -241,8 +237,8 @@
     <string name="description_import_and_export_hint">Wszystkie operacje synchronizacji danych wykonują się w tle. Zostaniesz powiadomiony, gdy zostaną zakończone.</string>
     <string name="description_experimental_feature">Jest to funkcja eksperymentalna. Może ulec zmianie lub zostać usunięta w przyszłych wersjach.</string>
     <string name="description_notifications_permission_required_data_sync">Wymagane jest pozwolenie na powiadomienia, aby wyświetlić postęp synchronizacji danych. Włącz je w ustawieniach aplikacji.</string>
-    <string name="description_copy_recipe">Przepis zostanie skopiowany do pojedynczego produktu</string>
     <string name="description_show_macronutrients_goals">Pokaż cele makroskładników</string>
+    <string name="description_recipe_missing_ingredients">Możesz nie zobaczyć tutaj wszystkich przepisów. Niektóre przepisy są ukryte, aby zapobiec cyklicznym odniesieniom.</string>
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Zobacz inne świetne ikony tutaj</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://pl.openfoodfacts.org/</string>
