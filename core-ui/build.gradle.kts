@@ -8,7 +8,7 @@ plugins {
 kotlin {
 
     androidLibrary {
-        namespace = "com.maksimowiczm.foodyou.core"
+        namespace = "com.maksimowiczm.foodyou.core.ui"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
@@ -44,6 +44,9 @@ kotlin {
 
             // Shimmer
             api(libs.compose.shimmer)
+
+            // Reorderable list
+            implementation(libs.reorderable)
         }
 
         commonTest.dependencies {

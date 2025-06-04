@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal
+package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsUseCase
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsUseCaseImpl

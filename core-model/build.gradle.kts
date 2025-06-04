@@ -21,8 +21,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core"))
-
             api(libs.kotlinx.datetime)
         }
 

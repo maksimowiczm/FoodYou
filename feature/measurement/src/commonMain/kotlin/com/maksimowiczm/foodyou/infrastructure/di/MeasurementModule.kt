@@ -6,8 +6,6 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val measurementModule = module {
-//    factoryOf(::ObserveMeasurableFoodUseCaseImpl).bind<ObserveMeasurableFoodUseCase>()
-
     viewModelOf(::CreateMeasurementViewModel)
     viewModelOf(::UpdateMeasurementViewModel)
 }

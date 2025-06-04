@@ -1,7 +1,5 @@
 package com.maksimowiczm.foodyou.core.model
 
-import com.maksimowiczm.foodyou.core.ext.sumOf
-
 data class Recipe(
     override val id: FoodId.Recipe,
     val name: String,
@@ -14,7 +12,9 @@ data class Recipe(
 
     override val totalWeight: Float
         get() {
-            val weight = ingredients.mapNotNull { it.weight }.sumOf { it }
+            val weight = ingredients.mapNotNull { it.weight }.fold(0f) { acc, ingredient ->
+                acc + ingredient
+            }
             return weight
         }
 

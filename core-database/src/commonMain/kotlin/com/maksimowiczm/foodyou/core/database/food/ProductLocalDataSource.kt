@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ProductLocalDataSource {
 
+    @Query("SELECT * FROM ProductEntity ORDER BY name")
+    fun observeProducts(): Flow<List<ProductEntity>>
+
     @Query("SELECT * FROM ProductEntity WHERE id = :id")
     fun observeProductById(id: Long): Flow<ProductEntity?>
 

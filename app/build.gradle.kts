@@ -44,12 +44,8 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.work.runtime)
-
             implementation(libs.androidx.activity.compose)
-
             implementation(libs.accompanist.permissions)
-
-            implementation(libs.androidx.browser)
         }
         commonMain.dependencies {
             implementation(project(":core"))
@@ -57,7 +53,6 @@ kotlin {
             implementation(project(":core-database"))
             implementation(project(":core-model"))
             implementation(project(":core-domain"))
-            implementation(project(":feature:barcodescanner"))
             implementation(project(":feature:language"))
             implementation(project(":feature:calendar"))
             implementation(project(":feature:product"))
@@ -72,7 +67,6 @@ kotlin {
 
             // Kotlinx
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.datetime)
 
             // Room
             implementation(libs.androidx.room.runtime)

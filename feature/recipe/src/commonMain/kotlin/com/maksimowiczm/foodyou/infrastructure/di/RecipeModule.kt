@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.recipe
+package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.feature.recipe.domain.CreateRecipeUseCase

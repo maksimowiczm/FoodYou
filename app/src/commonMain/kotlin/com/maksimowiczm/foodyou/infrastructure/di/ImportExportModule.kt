@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.importexport
+package com.maksimowiczm.foodyou.infrastructure.di
 
 import org.koin.core.module.Module
 

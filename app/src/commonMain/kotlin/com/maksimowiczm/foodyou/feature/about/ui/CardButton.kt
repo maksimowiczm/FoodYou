@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.ui.component
+package com.maksimowiczm.foodyou.feature.about.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CardButton(
+internal fun CardButton(
     leadingIcon: @Composable () -> Unit,
     text: @Composable () -> Unit,
     onClick: () -> Unit,
