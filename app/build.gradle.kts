@@ -65,6 +65,7 @@ kotlin {
             implementation(project(":feature:recipe"))
             implementation(project(":feature:meal"))
             implementation(project(":feature:goals"))
+            implementation(project(":feature:addfood"))
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)

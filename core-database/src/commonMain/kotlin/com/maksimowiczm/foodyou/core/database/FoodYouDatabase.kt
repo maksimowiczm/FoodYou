@@ -20,6 +20,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.MeasurementDatabase
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementTypeConverter
 import com.maksimowiczm.foodyou.core.database.search.SearchDatabase
+import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
 
 @Database(
     entities = [
@@ -27,7 +28,8 @@ import com.maksimowiczm.foodyou.core.database.search.SearchDatabase
         RecipeEntity::class,
         RecipeIngredientEntity::class,
         MealEntity::class,
-        MeasurementEntity::class
+        MeasurementEntity::class,
+        SearchQueryEntity::class
     ],
     version = FoodYouDatabase.VERSION,
     exportSchema = true,

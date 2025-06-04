@@ -14,6 +14,8 @@ import com.maksimowiczm.foodyou.core.domain.ProductMapper
 import com.maksimowiczm.foodyou.core.domain.ProductMapperImpl
 import com.maksimowiczm.foodyou.core.domain.RecipeRepository
 import com.maksimowiczm.foodyou.core.domain.RecipeRepositoryImpl
+import com.maksimowiczm.foodyou.core.domain.SearchRepository
+import com.maksimowiczm.foodyou.core.domain.SearchRepositoryImpl
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -27,4 +29,5 @@ val domainModule = module {
     factoryOf(::RecipeRepositoryImpl).bind<RecipeRepository>()
     factoryOf(::MealRepositoryImpl).bind<MealRepository>()
     factoryOf(::MeasurementRepositoryImpl).bind<MeasurementRepository>()
+    factoryOf(::SearchRepositoryImpl).bind<SearchRepository>()
 }

@@ -20,5 +20,6 @@ val databaseModule = module {
     factory { database.recipeDao }
     factory { database.measurementDao }
     factory { database.foodSearchDao }
+    factory { database.searchLocalDataSource }
     factory { database.mealDao }
 }

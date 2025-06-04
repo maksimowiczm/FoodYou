@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.domain.model
+package com.maksimowiczm.foodyou.core.model
 
 import kotlinx.datetime.LocalDateTime
 

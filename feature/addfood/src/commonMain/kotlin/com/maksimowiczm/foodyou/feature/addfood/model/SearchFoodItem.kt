@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.addfood.model
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.model.Food
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.Measurement.Gram
@@ -11,7 +10,7 @@ import com.maksimowiczm.foodyou.core.model.Measurement.Serving
 internal data class SearchFoodItem(
     val food: Food,
     val measurement: Measurement,
-    val measurementId: MeasurementId?,
+    val measurementId: Long?,
     val uniqueId: String
 ) {
     val headline: String

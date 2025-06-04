@@ -156,4 +156,30 @@ interface MeasurementLocalDataSource {
         """
     )
     fun observeRecipeMeasurementSuggestions(recipeId: Long): Flow<List<MeasurementSuggestion>>
+
+    @Query(
+        """
+        SELECT *
+        FROM MeasurementEntity
+        WHERE productId = :productId AND mealId = :mealId AND epochDay = :epochDay
+        """
+    )
+    fun observeMeasurementsByProductMealDay(
+        productId: Long,
+        mealId: Long,
+        epochDay: Int
+    ): Flow<List<MeasurementEntity>>
+
+    @Query(
+        """
+        SELECT *
+        FROM MeasurementEntity
+        WHERE recipeId = :recipeId AND mealId = :mealId AND epochDay = :epochDay
+        """
+    )
+    fun observeMeasurementsByRecipeMealDay(
+        recipeId: Long,
+        mealId: Long,
+        epochDay: Int
+    ): Flow<List<MeasurementEntity>>
 }
