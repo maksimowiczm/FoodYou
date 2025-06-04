@@ -17,4 +17,8 @@ val databaseModule = module {
     databaseDefinition()
 
     factory { database.productDao }
+    factory { database.recipeDao }
+    factory { database.measurementDao }
+    factory { database.foodSearchDao }
+    factory { database.mealDao }
 }

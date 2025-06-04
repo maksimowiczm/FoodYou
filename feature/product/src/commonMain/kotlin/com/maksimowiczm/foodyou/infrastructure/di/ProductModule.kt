@@ -2,8 +2,6 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.OpenFoodFactsFacade
 import com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.OpenFoodFactsRemoteDataSource
-import com.maksimowiczm.foodyou.feature.product.domain.ProductMapper
-import com.maksimowiczm.foodyou.feature.product.domain.ProductMapperImpl
 import com.maksimowiczm.foodyou.feature.product.domain.ProductRepository
 import com.maksimowiczm.foodyou.feature.product.domain.ProductRepositoryImpl
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProductRequestFactory
@@ -47,7 +45,6 @@ val productModule = module {
 
     factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
 
-    factory { ProductMapperImpl }.bind<ProductMapper>()
     factoryOf(::ProductRepositoryImpl).bind<ProductRepository>()
 
     viewModelOf(::CreateProductScreenViewModel)

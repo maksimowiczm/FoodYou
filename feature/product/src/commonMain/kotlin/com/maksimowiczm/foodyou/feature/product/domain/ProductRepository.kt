@@ -5,6 +5,7 @@ import com.maksimowiczm.foodyou.core.database.food.Nutrients
 import com.maksimowiczm.foodyou.core.database.food.ProductEntity
 import com.maksimowiczm.foodyou.core.database.food.ProductLocalDataSource
 import com.maksimowiczm.foodyou.core.database.food.Vitamins
+import com.maksimowiczm.foodyou.core.domain.ProductMapper
 import com.maksimowiczm.foodyou.core.model.Product
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

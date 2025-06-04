@@ -36,8 +36,8 @@ internal fun MealsCards(
             onLongClick = onLongClick,
             shimmer = homeState.shimmer,
             contentPadding = contentPadding,
-            onEditMeasurement = onEditMeasurement,
-            onDeleteEntry = viewModel::onDeleteMeasurement,
+            onEditMeasurement = { TODO() },
+            onDeleteEntry = { TODO() },
             modifier = modifier
         )
 
@@ -47,8 +47,8 @@ internal fun MealsCards(
             onLongClick = onLongClick,
             shimmer = homeState.shimmer,
             contentPadding = contentPadding,
-            onEditMeasurement = onEditMeasurement,
-            onDeleteEntry = viewModel::onDeleteMeasurement,
+            onEditMeasurement = { TODO() },
+            onDeleteEntry = { TODO() },
             modifier = modifier
         )
     }

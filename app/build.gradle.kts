@@ -53,12 +53,16 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(project(":core"))
+            implementation(project(":core-ui"))
             implementation(project(":core-database"))
             implementation(project(":core-model"))
+            implementation(project(":core-domain"))
             implementation(project(":feature:barcodescanner"))
             implementation(project(":feature:language"))
             implementation(project(":feature:calendar"))
             implementation(project(":feature:product"))
+            implementation(project(":feature:measurement"))
+            implementation(project(":feature:recipe"))
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)

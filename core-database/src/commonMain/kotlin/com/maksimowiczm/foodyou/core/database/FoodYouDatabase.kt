@@ -9,15 +9,17 @@ import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
-import com.maksimowiczm.foodyou.core.database.diary.DiaryDatabase
 import com.maksimowiczm.foodyou.core.database.diary.InitializeMealsCallback
+import com.maksimowiczm.foodyou.core.database.diary.MealDatabase
 import com.maksimowiczm.foodyou.core.database.diary.MealEntity
-import com.maksimowiczm.foodyou.core.database.diary.MeasurementEntity
-import com.maksimowiczm.foodyou.core.database.diary.MeasurementTypeConverter
 import com.maksimowiczm.foodyou.core.database.food.FoodDatabase
 import com.maksimowiczm.foodyou.core.database.food.ProductEntity
 import com.maksimowiczm.foodyou.core.database.food.RecipeEntity
 import com.maksimowiczm.foodyou.core.database.food.RecipeIngredientEntity
+import com.maksimowiczm.foodyou.core.database.measurement.MeasurementDatabase
+import com.maksimowiczm.foodyou.core.database.measurement.MeasurementEntity
+import com.maksimowiczm.foodyou.core.database.measurement.MeasurementTypeConverter
+import com.maksimowiczm.foodyou.core.database.search.SearchDatabase
 
 @Database(
     entities = [
@@ -74,7 +76,9 @@ import com.maksimowiczm.foodyou.core.database.food.RecipeIngredientEntity
 abstract class FoodYouDatabase :
     RoomDatabase(),
     FoodDatabase,
-    DiaryDatabase {
+    MeasurementDatabase,
+    SearchDatabase,
+    MealDatabase {
 
     companion object {
         const val VERSION = 19

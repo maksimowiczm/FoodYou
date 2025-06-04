@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.meal.domain
 
-import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.ext.sumOf
+import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import kotlinx.datetime.LocalTime
 
 internal data class Meal(

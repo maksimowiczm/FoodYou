@@ -17,4 +17,7 @@ interface ProductLocalDataSource {
 
     @Update
     suspend fun updateProduct(product: ProductEntity)
+
+    @Query("DELETE FROM ProductEntity WHERE id = :id")
+    suspend fun deleteProductById(id: Long)
 }

@@ -3,12 +3,12 @@ name: Validate Meals
 on:
   push:
     paths:
-      - 'core/src/commonMain/composeResources/files/meals*'
+      - 'core-ui/src/commonMain/composeResources/files/meals*'
       - 'dev/test-meals-localization.bash'
       - '.github/workflows/validate-meals.yml'
   pull_request:
     paths:
-      - 'core/src/commonMain/composeResources/files/meals*'
+      - 'core-ui/src/commonMain/composeResources/files/meals*'
       - 'dev/test-meals-localization.bash'
       - '.github/workflows/validate-meals.yml'
 

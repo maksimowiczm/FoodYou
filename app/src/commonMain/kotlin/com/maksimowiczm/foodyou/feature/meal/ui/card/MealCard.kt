@@ -51,9 +51,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.domain.model.FoodWithMeasurement
-import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.modifier.animatePlacement
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
@@ -70,8 +69,8 @@ internal fun MealCard(
     meal: Meal,
     onAddFood: () -> Unit,
     onLongClick: () -> Unit,
-    onEditMeasurement: (MeasurementId) -> Unit,
-    onDeleteEntry: (MeasurementId) -> Unit,
+    onEditMeasurement: (Long) -> Unit,
+    onDeleteEntry: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
@@ -188,8 +187,8 @@ internal fun MealCard(
 @Composable
 private fun FoodContainer(
     food: List<FoodWithMeasurement>,
-    onEditMeasurement: (MeasurementId) -> Unit,
-    onDeleteEntry: (MeasurementId) -> Unit,
+    onEditMeasurement: (Long) -> Unit,
+    onDeleteEntry: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -242,8 +241,8 @@ private fun <T> List<T>.animateBottomCornerRadius(index: Int, defaultRadius: Dp 
 @Composable
 private fun FoodContainerItem(
     foodWithMeasurement: FoodWithMeasurement,
-    onEditMeasurement: (MeasurementId) -> Unit,
-    onDeleteEntry: (MeasurementId) -> Unit,
+    onEditMeasurement: (Long) -> Unit,
+    onDeleteEntry: (Long) -> Unit,
     shape: Shape,
     modifier: Modifier = Modifier
 ) {
