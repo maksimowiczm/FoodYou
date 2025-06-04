@@ -4,14 +4,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.core.database.FoodYouDatabase.Companion.buildDatabase
-import com.maksimowiczm.foodyou.core.database.diary.DiaryDatabase
-import com.maksimowiczm.foodyou.core.database.food.FoodDatabase
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.scope.Scope
-import org.koin.dsl.binds
-import org.koin.dsl.module
+import org.koin.core.definition.KoinDefinition
+import org.koin.core.module.Module
 
-actual val databaseModule = module {
+actual val databaseDefinition: Module.() -> KoinDefinition<FoodYouDatabase> = {
     single {
         val builder: RoomDatabase.Builder<FoodYouDatabase> =
             Room.databaseBuilder(
@@ -21,15 +18,5 @@ actual val databaseModule = module {
             )
 
         builder.buildDatabase()
-    }.binds(
-        arrayOf(
-            FoodDatabase::class,
-            DiaryDatabase::class
-        )
-    )
-
-    factory { database.foodLocalDataSource }
+    }
 }
-
-private val Scope.database
-    get() = get<FoodYouDatabase>()

@@ -10,8 +10,8 @@ import androidx.compose.runtime.setValue
 import com.maksimowiczm.foodyou.core.model.Food
 import com.maksimowiczm.foodyou.core.model.Meal
 import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Saver
 import com.maksimowiczm.foodyou.core.ui.ext.Saver
-import com.maksimowiczm.foodyou.core.ui.res.Saver
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.rememberMeasurementFormState
 import kotlinx.datetime.LocalDate

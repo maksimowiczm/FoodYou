@@ -5,7 +5,7 @@ import androidx.compose.runtime.saveable.Saver
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.RecipeIngredient
-import com.maksimowiczm.foodyou.core.ui.res.Saver
+import com.maksimowiczm.foodyou.core.model.Saver
 
 /**
  * Represents a minimal data structure for an ingredient. Easy to save and restore in the state.

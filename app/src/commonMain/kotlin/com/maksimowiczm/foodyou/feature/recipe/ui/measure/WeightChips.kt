@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.model.Food
 import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.ui.res.stringResource
+import com.maksimowiczm.foodyou.core.model.stringResource
 
 @Composable
 internal fun WeightChips(

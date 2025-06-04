@@ -24,7 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.ui.res.stringResource
+import com.maksimowiczm.foodyou.core.model.stringResource
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementForm
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.Instant

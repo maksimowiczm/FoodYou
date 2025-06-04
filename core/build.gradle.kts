@@ -23,6 +23,10 @@ kotlin {
                 )
             }
         }
+
+        // Allow multi-module compose resources
+        // https://www.jetbrains.com/help/kotlin-multiplatform-dev/whats-new-compose-180.html#support-for-multiplatform-resources-in-the-androidlibrary-target
+        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
     }
 
     sourceSets {
@@ -70,11 +74,8 @@ kotlin {
     }
 }
 
-// Somehow compose resources are not working in multi module project but if they are defined in the
-// app module they work fine. WEIRD
-// Use symlink to the app module resources directory to make it work.
 compose.resources {
     publicResClass = true
     packageOfResClass = "foodyou.app.generated.resources"
-    generateResClass = auto
+    generateResClass = always
 }

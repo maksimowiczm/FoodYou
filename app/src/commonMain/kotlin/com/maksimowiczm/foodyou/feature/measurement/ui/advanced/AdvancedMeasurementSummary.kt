@@ -18,9 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.NutritionFacts
+import com.maksimowiczm.foodyou.core.model.stringResource
 import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
-import com.maksimowiczm.foodyou.core.ui.res.stringResource
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
