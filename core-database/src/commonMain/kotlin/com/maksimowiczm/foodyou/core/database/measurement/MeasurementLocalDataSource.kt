@@ -16,6 +16,9 @@ interface MeasurementLocalDataSource {
     @Query("SELECT * FROM MeasurementEntity WHERE id = :measurementId")
     fun observeMeasurementById(measurementId: Long): Flow<MeasurementEntity?>
 
+    @Query("SELECT * FROM MeasurementEntity WHERE mealId = :mealId AND epochDay = :epochDay")
+    fun observeMeasurements(mealId: Long, epochDay: Int): Flow<List<MeasurementEntity>>
+
     @Insert
     suspend fun addMeasurement(measurement: MeasurementEntity): Long
 

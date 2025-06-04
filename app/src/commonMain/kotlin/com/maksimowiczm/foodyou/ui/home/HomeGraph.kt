@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.ui.home
 
 import androidx.navigation.NavGraphBuilder
-import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import kotlinx.serialization.Serializable
 
@@ -11,7 +10,7 @@ data object Home
 fun NavGraphBuilder.homeGraph(
     onSettings: () -> Unit,
     onAbout: () -> Unit,
-    onEditMeasurement: (MeasurementId) -> Unit,
+    onEditMeasurement: (Long) -> Unit,
     onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onGoalsCardClick: (epochDay: Int) -> Unit,

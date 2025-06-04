@@ -54,11 +54,11 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.core.ui.modifier.animatePlacement
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.meal.domain.Meal
+import com.maksimowiczm.foodyou.feature.meal.ui.animatePlacement
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource

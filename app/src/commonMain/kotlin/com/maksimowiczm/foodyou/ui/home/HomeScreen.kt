@@ -26,11 +26,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
-import com.maksimowiczm.foodyou.feature.goals.GoalsCard
 import com.maksimowiczm.foodyou.feature.meal.MealsCards
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -40,7 +38,7 @@ import org.koin.compose.koinInject
 fun HomeScreen(
     onSettings: () -> Unit,
     onAbout: () -> Unit,
-    onEditMeasurement: (MeasurementId) -> Unit,
+    onEditMeasurement: (measurementId: Long) -> Unit,
     onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onGoalsCardClick: (epochDay: Int) -> Unit,
@@ -69,7 +67,7 @@ fun HomeScreen(
     order: List<HomeCard>,
     onSettings: () -> Unit,
     onAbout: () -> Unit,
-    onEditMeasurement: (MeasurementId) -> Unit,
+    onEditMeasurement: (measurementId: Long) -> Unit,
     onMealCardLongClick: () -> Unit,
     onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
     onGoalsCardClick: (epochDay: Int) -> Unit,
@@ -137,16 +135,18 @@ fun HomeScreen(
                         modifier = Modifier.testTag(testTag)
                     )
 
-                    HomeCard.Goals -> GoalsCard(
-                        homeState = homeState,
-                        onClick = {
-                            onGoalsCardClick(homeState.selectedDate.toEpochDays())
-                        },
-                        onLongClick = onGoalsCardLongClick,
-                        modifier = Modifier
-                            .testTag(testTag)
-                            .padding(horizontal = 8.dp)
-                    )
+                    else -> Unit
+
+//                    HomeCard.Goals -> GoalsCard(
+//                        homeState = homeState,
+//                        onClick = {
+//                            onGoalsCardClick(homeState.selectedDate.toEpochDays())
+//                        },
+//                        onLongClick = onGoalsCardLongClick,
+//                        modifier = Modifier
+//                            .testTag(testTag)
+//                            .padding(horizontal = 8.dp)
+//                    )
                 }
             }
         }

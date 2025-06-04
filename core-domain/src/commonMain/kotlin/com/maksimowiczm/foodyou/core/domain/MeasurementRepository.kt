@@ -7,9 +7,12 @@ import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapIfNotNull
 import kotlinx.coroutines.flow.mapValues
 import kotlinx.datetime.Clock
@@ -48,6 +51,8 @@ interface MeasurementRepository {
     suspend fun removeMeasurement(measurementId: Long)
 
     fun observeMeasurement(measurementId: Long): Flow<FoodWithMeasurement?>
+
+    fun observeMeasurements(mealId: Long, date: LocalDate): Flow<List<FoodWithMeasurement>>
 }
 
 internal class MeasurementRepositoryImpl(
@@ -148,4 +153,51 @@ internal class MeasurementRepositoryImpl(
                     )
                 }
             }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun observeMeasurements(
+        mealId: Long,
+        date: LocalDate
+    ): Flow<List<FoodWithMeasurement>> {
+        return measurementLocalDataSource.observeMeasurements(
+            mealId = mealId,
+            epochDay = date.toEpochDays()
+        ).flatMapLatest { measurements ->
+            if (measurements.isEmpty()) {
+                return@flatMapLatest flowOf(emptyList())
+            }
+
+            val result = measurements.map { measurement ->
+                foodRepository.observeFood(measurement.foodId).filterNotNull().map { food ->
+                    FoodWithMeasurement(
+                        measurementId = measurement.id,
+                        measurement = measurementMapper.toMeasurement(measurement),
+                        measurementDate = Instant
+                            .fromEpochSeconds(measurement.createdAt)
+                            .toLocalDateTime(TimeZone.currentSystemDefault()),
+                        mealId = measurement.mealId,
+                        food = food
+                    )
+                }
+            }.combine { it.toList() }.map {
+                it.sortedBy {
+                    it.food.headline.lowercase()
+                }
+            }
+
+            result
+        }
+    }
 }
+
+private val MeasurementEntity.foodId: FoodId
+    get() {
+        val productId = this.productId
+        val recipeId = this.recipeId
+
+        return when {
+            productId != null -> FoodId.Product(productId)
+            recipeId != null -> FoodId.Recipe(recipeId)
+            else -> error("Measurement must have either productId or recipeId")
+        }
+    }

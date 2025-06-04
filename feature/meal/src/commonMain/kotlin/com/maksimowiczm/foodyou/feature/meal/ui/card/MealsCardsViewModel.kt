@@ -4,8 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
-import com.maksimowiczm.foodyou.core.domain.repository.MeasurementRepository
+import com.maksimowiczm.foodyou.core.domain.MeasurementRepository
 import com.maksimowiczm.foodyou.core.ext.launch
 import com.maksimowiczm.foodyou.feature.meal.data.observeMealCardsLayout
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsUseCase
@@ -47,7 +46,7 @@ internal class MealsCardsViewModel(
         dateState.value = date
     }
 
-    fun onDeleteMeasurement(measurementId: MeasurementId) = launch {
+    fun onDeleteMeasurement(measurementId: Long) = launch {
         measurementRepository.removeMeasurement(measurementId)
     }
 }

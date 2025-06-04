@@ -58,7 +58,9 @@ fun FoodYouNavHost(
                 }
             },
             onEditMeasurement = {
-                TODO()
+                navController.navigate(UpdateMeasurement(it)) {
+                    launchSingleTop = true
+                }
             },
             onMealCardLongClick = {
                 navController.navigate(MealCardSettings) {
