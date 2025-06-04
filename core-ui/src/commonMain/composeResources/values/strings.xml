@@ -52,7 +52,6 @@
     <string name="headline_import_and_export">Import and export</string>
     <string name="headline_experimental" description="Experimental feature">Experimental</string>
     <string name="headline_experimental_feature">Experimental feature</string>
-    <string name="headline_copy_recipe">Copy recipe</string>
     <string name="headline_copy" description="A noun, thing that is a copy">Copy</string>
     <string name="headline_something_went_wrong">Oops! Something went wrong</string>
     <string name="headline_daily_goals_settings">Daily goals settings</string>
@@ -147,7 +146,6 @@
     <string name="action_insert_suggested_search">Insert suggested search</string>
     <string name="action_edit_entry">Edit entry</string>
     <string name="action_delete_entry">Delete entry</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Add food</string>
     <string name="action_undo">Undo</string>
     <string name="action_close">Close</string>
     <string name="action_discard">Discard</string>
@@ -190,7 +188,6 @@
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Camera permission is required to scan barcodes. Please allow it in the app settings.</string>
-    <string name="neutral_no_products_found">No products found</string>
     <string name="neutral_no_food_found">No food found</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d calorie left</item>
@@ -202,7 +199,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Meal will be deleted permanently. All data related to this meal will be lost.</string>
     <string name="neutral_required">Required</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calories are calculated automatically based on macronutrients</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Looks like this meal is empty. Add some food to track your calories.</string>
     <string name="neutral_entry_deleted">Entry deleted</string>
     <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_copied">Info copied to clipboard</string>
@@ -255,7 +251,6 @@
     <string name="description_import_and_export_hint">All data synchronization operations run in the background. You will be notified when they are complete.</string>
     <string name="description_experimental_feature">This is an experimental feature. It may change or be removed in future versions.</string>
     <string name="description_notifications_permission_required_data_sync">Notification permission is required to display data synchronization progress. Please enable it in the app settings.</string>
-    <string name="description_copy_recipe">Recipe will be copied into a single product</string>
     <string name="description_show_macronutrients_goals">Show macronutrients goals</string>
     <string name="description_recipe_missing_ingredients">You might not see every recipe here. Some recipes are hidden to prevent circular references.</string>
 

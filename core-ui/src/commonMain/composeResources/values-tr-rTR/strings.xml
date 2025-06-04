@@ -235,6 +235,7 @@
     <string name="description_notifications_permission_required_data_sync">Veri senkronizasyon ilerlemesini göstermek için bildirim izni gereklidir. Lütfen uygulama ayarlarında bu izni etkinleştirin.</string>
     <string name="description_copy_recipe">Tarif tek bir ürüne kopyalanacak</string>
     <string name="description_show_macronutrients_goals">Makro besin hedeflerini göster</string>
+    <string name="description_recipe_missing_ingredients">Burada her tarifi görmeyebilirsiniz. Bazı tarifler, döngüsel referansları önlemek için gizlenmiştir.</string>
     <string name="headline_launcher_icon_by_icons8">Icons8 Tarafından Launcher İkonu</string>
     <string name="neutral_see_other_awesome_icons_here">Burada diğer harika ikonları görün</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>

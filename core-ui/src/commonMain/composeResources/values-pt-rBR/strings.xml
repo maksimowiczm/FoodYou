@@ -174,6 +174,7 @@
     <string name="description_notifications_permission_required_data_sync">A permissão de notificação é necessária para exibir o progresso da sincronização de dados. Por favor, habilite-a nas configurações do aplicativo.</string>
     <string name="description_copy_recipe">A receita será copiada em um único produto</string>
     <string name="description_show_macronutrients_goals">Mostrar os objetivos de macronutrientes</string>
+    <string name="description_recipe_missing_ingredients">Talvez você não veja todas as receitas aqui. Algumas receitas estão ocultas para evitar referências circulares.</string>
     <string name="headline_launcher_icon_by_icons8">Ícone da aplicação por Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Veja outros ícones incríveis aqui</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>

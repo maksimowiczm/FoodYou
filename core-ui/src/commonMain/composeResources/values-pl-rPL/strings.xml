@@ -243,6 +243,7 @@
     <string name="description_notifications_permission_required_data_sync">Wymagane jest pozwolenie na powiadomienia, aby wyświetlić postęp synchronizacji danych. Włącz je w ustawieniach aplikacji.</string>
     <string name="description_copy_recipe">Przepis zostanie skopiowany do pojedynczego produktu</string>
     <string name="description_show_macronutrients_goals">Pokaż cele makroskładników</string>
+    <string name="description_recipe_missing_ingredients">Możesz nie zobaczyć tutaj wszystkich przepisów. Niektóre przepisy są ukryte, aby zapobiec cyklicznym odniesieniom.</string>
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Zobacz inne świetne ikony tutaj</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://pl.openfoodfacts.org/</string>
