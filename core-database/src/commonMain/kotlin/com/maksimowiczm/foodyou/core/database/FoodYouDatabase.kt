@@ -65,11 +65,12 @@ import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
         AutoMigration(from = 14, to = 15),
         AutoMigration(from = 15, to = 16),
         AutoMigration(from = 16, to = 17),
-        AutoMigration(from = 17, to = 18)
+        AutoMigration(from = 17, to = 18),
         /**
          * @see [MIGRATION_18_19]
          * Merge product and recipe measurements into MeasurementEntity
          */
+        AutoMigration(from = 19, to = 20)
     ]
 )
 @TypeConverters(
@@ -91,8 +92,7 @@ abstract class FoodYouDatabase :
             MIGRATION_7_8,
             MIGRATION_8_9,
             MIGRATION_11_12,
-            MIGRATION_18_19,
-            MIGRATION_19_20
+            MIGRATION_18_19
         )
 
         fun Builder<FoodYouDatabase>.buildDatabase(): FoodYouDatabase {
@@ -544,17 +544,5 @@ private val MIGRATION_18_19 = object : Migration(18, 19) {
 
         // Drop the temporary table
         execSQL("DROP TABLE IF EXISTS RecipeIngredientEntity_temp")
-    }
-}
-
-// Add chromium mineral to ProductEntity
-private val MIGRATION_19_20 = object : Migration(19, 20) {
-    override fun migrate(connection: SQLiteConnection) = with(connection) {
-        execSQL(
-            """
-            ALTER TABLE ProductEntity 
-            ADD COLUMN chromiumMicro REAL
-            """.trimIndent()
-        )
     }
 }
