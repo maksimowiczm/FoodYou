@@ -7,8 +7,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.room)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.gmazzo.buildconfig)
 }
@@ -30,11 +28,6 @@ kotlin {
 
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
-    }
-
-    compilerOptions {
-        freeCompilerArgs.add("-Xwhen-guards")
-        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
     // Leave it here
@@ -67,9 +60,6 @@ kotlin {
 
             // Kotlinx
             implementation(libs.kotlinx.serialization.json)
-
-            // Room
-            implementation(libs.androidx.room.runtime)
 
             // Reorderable list
             implementation(libs.reorderable)
@@ -136,15 +126,7 @@ android {
     }
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
-
 dependencies {
-    listOf("kspAndroid").forEach {
-        add(it, libs.androidx.room.compiler)
-    }
-
     debugImplementation(compose.uiTooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     androidTestImplementation(libs.androidx.test.core.ktx)

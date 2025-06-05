@@ -8,8 +8,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
-import com.maksimowiczm.foodyou.core.domain.model.MeasurementId
-import com.maksimowiczm.foodyou.ext.onNodeWithTag
+import com.maksimowiczm.foodyou.onNodeWithTag
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -22,7 +21,7 @@ class HomeScreenTest {
         order: List<HomeCard> = HomeCard.entries,
         onSettings: () -> Unit = {},
         onAbout: () -> Unit = {},
-        onEditMeasurement: (MeasurementId) -> Unit = {},
+        onEditMeasurement: (Long) -> Unit = {},
         onMealCardLongClick: () -> Unit = {},
         onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit = { _, _ -> },
         onGoalsCardClick: (epochDay: Int) -> Unit = {},
