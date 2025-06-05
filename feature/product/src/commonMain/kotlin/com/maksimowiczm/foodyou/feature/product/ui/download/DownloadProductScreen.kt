@@ -223,7 +223,8 @@ internal fun DownloadProductScreen(
 
                     Text(
                         text = unorderedList(
-                            "Open Food Facts (world.openfoodfacts.org)"
+                            "Open Food Facts (world.openfoodfacts.org)",
+                            "USDA FoodData Central (fdc.nal.usda.gov)"
                         ),
                         style = MaterialTheme.typography.bodySmall
                     )

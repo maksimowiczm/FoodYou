@@ -8,9 +8,9 @@ import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 internal object USDAProductMapper {
     fun toRemoteProduct(abridgedFoodItem: AbridgedFoodItem) = with(abridgedFoodItem) {
         RemoteProduct(
-            name = description,
-            brand = brand,
-            barcode = barcode,
+            name = description.trim(),
+            brand = brand?.trim(),
+            barcode = barcode?.trim(),
             nutritionFacts = RemoteNutritionFacts(
                 proteins = (getNutrient(Nutrient.PROTEIN)?.amount ?: 0.0).toFloat(),
                 carbohydrates = (getNutrient(Nutrient.CARBOHYDRATE)?.amount ?: 0.0).toFloat(),
@@ -22,7 +22,7 @@ internal object USDAProductMapper {
                 omega3 = null,
                 omega6 = null,
                 sugars = getNutrient(Nutrient.SUGARS)?.amount?.toFloat(),
-                salt = getNutrient(Nutrient.SODIUM)?.amount?.toFloat(),
+                salt = null,
                 fiber = getNutrient(Nutrient.FIBER)?.amount?.toFloat(),
                 cholesterolMilli = getNutrient(Nutrient.CHOLESTEROL)?.amount?.toFloat(),
                 caffeineMilli = getNutrient(Nutrient.CAFFEINE)?.amount?.toFloat(),

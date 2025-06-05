@@ -45,7 +45,7 @@ buildConfig {
     buildConfigField(
         "String",
         "USDA_URL",
-        "\"https://api.nal.usda.gov/fdc\""
+        "\"https://api.nal.usda.gov\""
     )
 }
 

@@ -9,7 +9,7 @@ internal enum class Nutrient(val number: String) {
     MONOUNSATURATED_FAT("645"),
     POLYUNSATURATED_FAT("646"),
 
-    SUGARS("269.3"),
+    SUGARS("269"),
     FIBER("291"),
     CHOLESTEROL("601"),
     CAFFEINE("262"),
