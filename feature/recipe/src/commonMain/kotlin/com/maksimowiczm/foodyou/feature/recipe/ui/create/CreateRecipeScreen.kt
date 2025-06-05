@@ -60,7 +60,13 @@ internal fun CreateRecipeScreen(
         titleRes = Res.string.headline_create_recipe,
         observedIngredients = viewModel::observeIngredients,
         onSave = viewModel::onSave,
-        onBack = onBack,
+        onBack = {
+            if (formState.isModified) {
+                showDiscardDialog = true
+            } else {
+                onBack()
+            }
+        },
         onEditFood = onEditFood,
         modifier = modifier,
         formState = formState

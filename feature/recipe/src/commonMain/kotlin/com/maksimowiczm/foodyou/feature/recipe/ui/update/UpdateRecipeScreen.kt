@@ -82,7 +82,13 @@ internal fun UpdateRecipeScreen(
         titleRes = Res.string.headline_update_recipe,
         observedIngredients = viewModel::observeIngredients,
         onSave = viewModel::onSave,
-        onBack = onBack,
+        onBack = {
+            if (formState.isModified) {
+                showDiscardDialog = true
+            } else {
+                onBack()
+            }
+        },
         onEditFood = onEditFood,
         modifier = modifier,
         formState = formState
