@@ -11,6 +11,15 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.DOWNLOAD_FAB
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.ERROR_CARD
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.OPEN_FOOD_FACTS_CHIP
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.PASTE_FAB
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.PASTE_URL_CHIP
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.PROGRESS_INDICATOR
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.SUGGEST_DATABASE_CHIP
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.TEXT_FIELD
+import com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreenTestTags.USDA_CHIP
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -27,6 +36,7 @@ class DownloadProductScreenTest {
         onDownload: () -> Unit = {},
         onPaste: () -> Unit = {},
         onOpenFoodFacts: () -> Unit = {},
+        onUsda: () -> Unit = {},
         onSuggestDatabase: () -> Unit = {}
     ) {
         com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreen(
@@ -37,6 +47,7 @@ class DownloadProductScreenTest {
             onDownload = onDownload,
             onPaste = onPaste,
             onOpenFoodFacts = onOpenFoodFacts,
+            onUsda = onUsda,
             onSuggestDatabase = onSuggestDatabase,
             modifier = modifier
         )
@@ -48,16 +59,15 @@ class DownloadProductScreenTest {
             DownloadProductScreen()
         }
 
-        onNodeWithTag(DownloadProductScreenTestTags.PROGRESS_INDICATOR).assertDoesNotExist()
-        onNodeWithTag(DownloadProductScreenTestTags.ERROR_CARD).assertDoesNotExist()
-        onNodeWithTag(DownloadProductScreenTestTags.TEXT_FIELD).assertIsDisplayed()
-        onNodeWithTag(DownloadProductScreenTestTags.DOWNLOAD_FAB).assertIsDisplayed()
-        onNodeWithTag(DownloadProductScreenTestTags.PASTE_FAB).assertIsDisplayed()
-        onNodeWithTag(DownloadProductScreenTestTags.PASTE_URL_CHIP).assertExists().assertIsEnabled()
-        onNodeWithTag(DownloadProductScreenTestTags.OPEN_FOOD_FACTS_CHIP).assertExists()
-            .assertIsEnabled()
-        onNodeWithTag(DownloadProductScreenTestTags.SUGGEST_DATABASE_CHIP).assertExists()
-            .assertIsEnabled()
+        onNodeWithTag(PROGRESS_INDICATOR).assertDoesNotExist()
+        onNodeWithTag(ERROR_CARD).assertDoesNotExist()
+        onNodeWithTag(TEXT_FIELD).assertIsDisplayed()
+        onNodeWithTag(DOWNLOAD_FAB).assertIsDisplayed()
+        onNodeWithTag(PASTE_FAB).assertIsDisplayed()
+        onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(USDA_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(SUGGEST_DATABASE_CHIP).assertExists().assertIsEnabled()
     }
 
     @Test
@@ -66,17 +76,15 @@ class DownloadProductScreenTest {
             DownloadProductScreen(isMutating = true)
         }
 
-        onNodeWithTag(DownloadProductScreenTestTags.PROGRESS_INDICATOR).assertIsDisplayed()
-        onNodeWithTag(DownloadProductScreenTestTags.ERROR_CARD).assertDoesNotExist()
-        onNodeWithTag(DownloadProductScreenTestTags.TEXT_FIELD).assertExists().assertIsNotEnabled()
-        onNodeWithTag(DownloadProductScreenTestTags.DOWNLOAD_FAB).assertIsNotDisplayed()
-        onNodeWithTag(DownloadProductScreenTestTags.PASTE_FAB).assertIsNotDisplayed()
-        onNodeWithTag(DownloadProductScreenTestTags.PASTE_URL_CHIP).assertExists()
-            .assertIsNotEnabled()
-        onNodeWithTag(DownloadProductScreenTestTags.OPEN_FOOD_FACTS_CHIP).assertExists()
-            .assertIsEnabled()
-        onNodeWithTag(DownloadProductScreenTestTags.SUGGEST_DATABASE_CHIP).assertExists()
-            .assertIsEnabled()
+        onNodeWithTag(PROGRESS_INDICATOR).assertIsDisplayed()
+        onNodeWithTag(ERROR_CARD).assertDoesNotExist()
+        onNodeWithTag(TEXT_FIELD).assertExists().assertIsNotEnabled()
+        onNodeWithTag(DOWNLOAD_FAB).assertIsNotDisplayed()
+        onNodeWithTag(PASTE_FAB).assertIsNotDisplayed()
+        onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsNotEnabled()
+        onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(USDA_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(SUGGEST_DATABASE_CHIP).assertExists().assertIsEnabled()
     }
 
     @Test
@@ -87,15 +95,14 @@ class DownloadProductScreenTest {
             )
         }
 
-        onNodeWithTag(DownloadProductScreenTestTags.PROGRESS_INDICATOR).assertDoesNotExist()
-        onNodeWithTag(DownloadProductScreenTestTags.ERROR_CARD).assertIsDisplayed()
-        onNodeWithTag(DownloadProductScreenTestTags.TEXT_FIELD).assertExists().assertIsEnabled()
-        onNodeWithTag(DownloadProductScreenTestTags.DOWNLOAD_FAB).assertIsDisplayed()
-        onNodeWithTag(DownloadProductScreenTestTags.PASTE_FAB).assertIsDisplayed()
-        onNodeWithTag(DownloadProductScreenTestTags.PASTE_URL_CHIP).assertExists().assertIsEnabled()
-        onNodeWithTag(DownloadProductScreenTestTags.OPEN_FOOD_FACTS_CHIP).assertExists()
-            .assertIsEnabled()
-        onNodeWithTag(DownloadProductScreenTestTags.SUGGEST_DATABASE_CHIP).assertExists()
-            .assertIsEnabled()
+        onNodeWithTag(PROGRESS_INDICATOR).assertDoesNotExist()
+        onNodeWithTag(ERROR_CARD).assertIsDisplayed()
+        onNodeWithTag(TEXT_FIELD).assertExists().assertIsEnabled()
+        onNodeWithTag(DOWNLOAD_FAB).assertIsDisplayed()
+        onNodeWithTag(PASTE_FAB).assertIsDisplayed()
+        onNodeWithTag(PASTE_URL_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(OPEN_FOOD_FACTS_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(USDA_CHIP).assertExists().assertIsEnabled()
+        onNodeWithTag(SUGGEST_DATABASE_CHIP).assertExists().assertIsEnabled()
     }
 }

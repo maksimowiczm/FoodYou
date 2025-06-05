@@ -64,6 +64,20 @@ internal actual fun DownloadProductScreen(
         }
     }
 
+    val usdaUrl = stringResource(Res.string.link_usda)
+    val onUsda = remember(context, uriHandler, usdaUrl) {
+        {
+            val packageName = CustomTabsClient.getPackageName(context, Collections.emptyList())
+
+            if (packageName == null) {
+                uriHandler.openUri(usdaUrl)
+            } else {
+                val intent = CustomTabsIntent.Builder().build()
+                intent.launchUrl(context, usdaUrl.toUri())
+            }
+        }
+    }
+
     DownloadProductScreen(
         isMutating = isMutating,
         error = error,
@@ -77,6 +91,7 @@ internal actual fun DownloadProductScreen(
                 ?.let { textFieldState.setTextAndPlaceCursorAtEnd(it) }
         },
         onOpenFoodFacts = onOpenFoodFacts,
+        onUsda = onUsda,
         onSuggestDatabase = { uriHandler.openUri(suggestDatabaseUrl) },
         modifier = modifier
     )

@@ -79,6 +79,7 @@ internal fun DownloadProductScreen(
     onDownload: () -> Unit,
     onPaste: () -> Unit,
     onOpenFoodFacts: () -> Unit,
+    onUsda: () -> Unit,
     onSuggestDatabase: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -236,6 +237,7 @@ internal fun DownloadProductScreen(
                     isMutating = isMutating,
                     onPaste = onPaste,
                     onOpenFoodFacts = onOpenFoodFacts,
+                    onUsda = onUsda,
                     onSuggestDatabase = onSuggestDatabase,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )

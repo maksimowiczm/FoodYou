@@ -31,7 +31,7 @@ object Changelog {
         newFeatures = listOf(),
         changes = listOf(),
         bugFixes = listOf(
-            "Stop overriding calories value when updating product or downloading product data from remote databases",
+            "Stop overriding calories value when updating product or downloading product data from remote databases"
         ),
         translations = listOf(),
         notes = null

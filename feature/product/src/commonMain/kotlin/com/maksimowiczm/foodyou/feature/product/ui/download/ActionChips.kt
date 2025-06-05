@@ -24,6 +24,7 @@ internal fun ActionChips(
     isMutating: Boolean,
     onPaste: () -> Unit,
     onOpenFoodFacts: () -> Unit,
+    onUsda: () -> Unit,
     onSuggestDatabase: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -57,6 +58,20 @@ internal fun ActionChips(
             },
             label = {
                 Text(stringResource(Res.string.action_browse_open_food_facts))
+            }
+        )
+        AssistChip(
+            onClick = onUsda,
+            modifier = Modifier.testTag(DownloadProductScreenTestTags.USDA_CHIP),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    modifier = Modifier.size(AssistChipDefaults.IconSize)
+                )
+            },
+            label = {
+                Text(stringResource(Res.string.action_browse_usda))
             }
         )
         AssistChip(

@@ -185,6 +185,7 @@
     <string name="action_copy_header" description="Copy CSV file header">Copy header</string>
     <string name="action_copy_and_open_bug_report">Copy and open bug report</string>
     <string name="action_show_details">Show details</string>
+    <string name="action_browse_usda">Browse Food Data Central (USDA)</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -263,6 +264,7 @@
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
     <string name="link_github_issue" translatable="false">https://github.com/maksimowiczm/FoodYou/issues</string>
     <string name="link_github_repository" translatable="false">https://github.com/maksimowiczm/FoodYou</string>
+    <string name="link_usda" translatable="false">https://fdc.nal.usda.gov/food-search?query=</string>
 
     <!-- Don't translate changelog strings -->
     <string name="changelog_new_features" translatable="false">New features</string>
