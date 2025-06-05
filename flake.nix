@@ -38,6 +38,8 @@
         url = "https://github.com/mrmans0n/compose-rules/releases/download/v0.4.22/ktlint-compose-0.4.22-all.jar";
         sha256 = "98118356601fa5817145aebf3887bedd311791a4599ae644c602c52453d9dda2";
       };
+
+      pythonEnv = pkgs.python3.withPackages (ps: with ps; [ pandas openpyxl ]);
     in
     {
       devShells.${system}.default = pkgs.mkShell {
@@ -45,6 +47,7 @@
           pkgs.just
           pkgs.temurin-bin-17
           androidComposition.androidsdk
+          pythonEnv
         ];
 
         nativeBuildInputs = [
