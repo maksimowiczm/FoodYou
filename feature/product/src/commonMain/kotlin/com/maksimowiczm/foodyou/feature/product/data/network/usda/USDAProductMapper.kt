@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.product.data.network.usda
 
+import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.product.data.network.usda.model.AbridgedFoodItem
 import com.maksimowiczm.foodyou.feature.product.data.network.usda.model.Nutrient
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteNutritionFacts
@@ -7,19 +8,27 @@ import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 
 internal object USDAProductMapper {
     fun toRemoteProduct(abridgedFoodItem: AbridgedFoodItem) = with(abridgedFoodItem) {
+        val proteins = getNutrient(Nutrient.PROTEIN)?.amount ?: 0.0
+        val carbohydrates = getNutrient(Nutrient.CARBOHYDRATE)?.amount ?: 0.0
+        val fats = getNutrient(Nutrient.FAT)?.amount ?: 0.0
+
+        val calories = getNutrient(Nutrient.CALORIES)?.amount
+            ?: getNutrient(Nutrient.CALORIES_ALTERNATIVE)?.amount
+            ?: NutrientsHelper.calculateCalories(
+                proteins = proteins,
+                carbohydrates = carbohydrates,
+                fats = fats
+            )
+
         RemoteProduct(
             name = description.trim(),
             brand = brand?.trim(),
             barcode = barcode?.trim(),
             nutritionFacts = RemoteNutritionFacts(
-                proteins = (getNutrient(Nutrient.PROTEIN)?.amount ?: 0.0).toFloat(),
-                carbohydrates = (getNutrient(Nutrient.CARBOHYDRATE)?.amount ?: 0.0).toFloat(),
-                fats = (getNutrient(Nutrient.FAT)?.amount ?: 0.0).toFloat(),
-                calories = (
-                    getNutrient(Nutrient.CALORIES)?.amount
-                        ?: getNutrient(Nutrient.CALORIES_ALTERNATIVE)?.amount
-                        ?: 0.0
-                    ).toFloat(),
+                proteins = proteins.toFloat(),
+                carbohydrates = carbohydrates.toFloat(),
+                fats = fats.toFloat(),
+                calories = calories.toFloat(),
                 saturatedFats = getNutrient(Nutrient.SATURATED_FAT)?.amount?.toFloat(),
                 monounsaturatedFats = getNutrient(Nutrient.MONOUNSATURATED_FAT)?.amount?.toFloat(),
                 polyunsaturatedFats = getNutrient(Nutrient.POLYUNSATURATED_FAT)?.amount?.toFloat(),
