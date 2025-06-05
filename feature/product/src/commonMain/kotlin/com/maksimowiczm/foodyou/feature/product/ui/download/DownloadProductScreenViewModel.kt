@@ -1,8 +1,14 @@
 package com.maksimowiczm.foodyou.feature.product.ui.download
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import com.maksimowiczm.foodyou.core.ext.launch
+import com.maksimowiczm.foodyou.core.ext.set
+import com.maksimowiczm.foodyou.core.ext.setNull
 import com.maksimowiczm.foodyou.feature.product.data.ProductNotFoundException
+import com.maksimowiczm.foodyou.feature.product.data.network.usda.USDAException
+import com.maksimowiczm.foodyou.feature.product.data.network.usda.USDAPreferences
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProductRequestFactory
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +17,8 @@ import kotlinx.coroutines.flow.filterNotNull
 
 internal class DownloadProductScreenViewModel(
     text: String?,
-    private val requestFactory: RemoteProductRequestFactory
+    private val requestFactory: RemoteProductRequestFactory,
+    private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
     private val _isMutating = MutableStateFlow(false)
     val isMutating = _isMutating.asStateFlow()
@@ -55,7 +62,8 @@ internal class DownloadProductScreenViewModel(
         val product = request.execute().getOrElse {
             when (it) {
                 is ProductNotFoundException -> _error.emit(DownloadError.ProductNotFound)
-                else -> _error.emit(DownloadError.Custom(it.message?.toString()))
+                is USDAException -> _error.emit(DownloadError.UsdaApiKeyError(it))
+                else -> _error.emit(DownloadError.Custom(it.message))
             }
 
             return@withMutateGuard
@@ -71,4 +79,12 @@ internal class DownloadProductScreenViewModel(
     }
 
     private fun extractFirstLink(text: String): String? = linkRegex.find(text)?.value
+
+    fun setUsdaApiKey(key: String) = launch {
+        if (key.isBlank()) {
+            dataStore.setNull(USDAPreferences.apiKeyPreferenceKey)
+        } else {
+            dataStore.set(USDAPreferences.apiKeyPreferenceKey to key)
+        }
+    }
 }

@@ -77,6 +77,19 @@ internal actual fun DownloadProductScreen(
             }
         }
     }
+    val usdaObtainKeyUrl = stringResource(Res.string.link_usda_obtain_key)
+    val onUsdaObtainKey = remember(context, uriHandler, usdaObtainKeyUrl) {
+        {
+            val packageName = CustomTabsClient.getPackageName(context, Collections.emptyList())
+
+            if (packageName == null) {
+                uriHandler.openUri(usdaObtainKeyUrl)
+            } else {
+                val intent = CustomTabsIntent.Builder().build()
+                intent.launchUrl(context, usdaObtainKeyUrl.toUri())
+            }
+        }
+    }
 
     DownloadProductScreen(
         isMutating = isMutating,
@@ -92,6 +105,8 @@ internal actual fun DownloadProductScreen(
         },
         onOpenFoodFacts = onOpenFoodFacts,
         onUsda = onUsda,
+        onUsdaSetApiKey = viewModel::setUsdaApiKey,
+        onUsdaObtainApiKey = onUsdaObtainKey,
         onSuggestDatabase = { uriHandler.openUri(suggestDatabaseUrl) },
         modifier = modifier
     )

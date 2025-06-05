@@ -37,6 +37,8 @@ class DownloadProductScreenTest {
         onPaste: () -> Unit = {},
         onOpenFoodFacts: () -> Unit = {},
         onUsda: () -> Unit = {},
+        onUsdaSetApiKey: (String) -> Unit = {},
+        onUsdaObtainApiKey: () -> Unit = {},
         onSuggestDatabase: () -> Unit = {}
     ) {
         com.maksimowiczm.foodyou.feature.product.ui.download.DownloadProductScreen(
@@ -48,6 +50,8 @@ class DownloadProductScreenTest {
             onPaste = onPaste,
             onOpenFoodFacts = onOpenFoodFacts,
             onUsda = onUsda,
+            onUsdaSetApiKey = onUsdaSetApiKey,
+            onUsdaObtainApiKey = onUsdaObtainApiKey,
             onSuggestDatabase = onSuggestDatabase,
             modifier = modifier
         )

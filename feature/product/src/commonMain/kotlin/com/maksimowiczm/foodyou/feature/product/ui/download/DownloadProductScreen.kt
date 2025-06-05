@@ -23,10 +23,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
@@ -38,15 +40,21 @@ import androidx.compose.material3.MediumExtendedFloatingActionButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -59,6 +67,7 @@ import com.maksimowiczm.foodyou.core.ui.component.unorderedList
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -80,12 +89,48 @@ internal fun DownloadProductScreen(
     onPaste: () -> Unit,
     onOpenFoodFacts: () -> Unit,
     onUsda: () -> Unit,
+    onUsdaSetApiKey: (String) -> Unit,
+    onUsdaObtainApiKey: () -> Unit,
     onSuggestDatabase: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var fabHeightPx by remember { mutableIntStateOf(0) }
     val fabHeightDp = with(LocalDensity.current) { fabHeightPx.toDp() }
+
+    var showUsdaApiKeyPrompt by rememberSaveable { mutableStateOf(false) }
+
+    if (showUsdaApiKeyPrompt) {
+        val focusRequester = remember { FocusRequester() }
+        val textFieldState = rememberTextFieldState()
+
+        LaunchedEffect(Unit) {
+            delay(200)
+            focusRequester.requestFocus()
+        }
+
+        AlertDialog(
+            onDismissRequest = { showUsdaApiKeyPrompt = false },
+            title = { Text(stringResource(Res.string.action_set_key)) },
+            text = {
+                OutlinedTextField(
+                    state = textFieldState,
+                    modifier = Modifier.focusRequester(focusRequester),
+                    placeholder = { Text(stringResource(Res.string.headline_api_key)) }
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showUsdaApiKeyPrompt = false
+                        onUsdaSetApiKey(textFieldState.text.toString())
+                    }
+                ) {
+                    Text(stringResource(Res.string.action_save))
+                }
+            }
+        )
+    }
 
     Scaffold(
         modifier = modifier,
@@ -202,13 +247,28 @@ internal fun DownloadProductScreen(
 
             item {
                 if (error != null) {
-                    DownloadErrorCard(
-                        error = error,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .testTag(DownloadProductScreenTestTags.ERROR_CARD)
-                    )
+                    when (error) {
+                        is DownloadError.Custom,
+                        DownloadError.ProductNotFound,
+                        DownloadError.URLNotFound,
+                        DownloadError.URLNotSupported -> DownloadErrorCard(
+                            error = error,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .testTag(DownloadProductScreenTestTags.ERROR_CARD)
+                        )
+
+                        is DownloadError.UsdaApiKeyError -> UsdaApiKeyErrorCard(
+                            error = error,
+                            onSetKey = { showUsdaApiKeyPrompt = true },
+                            onObtainKey = onUsdaObtainApiKey,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .testTag(DownloadProductScreenTestTags.ERROR_CARD)
+                        )
+                    }
                 }
             }
 

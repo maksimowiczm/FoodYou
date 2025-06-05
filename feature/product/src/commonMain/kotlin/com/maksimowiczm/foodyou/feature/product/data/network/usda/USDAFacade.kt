@@ -23,7 +23,10 @@ internal class USDAFacade(
     fun createRequest(id: String) = USDAProductRequest(
         client = httpClient,
         id = id,
-        apiKey = dataStore.getBlocking(USDAPreferences.apiKeyPreferenceKey) ?: "DEMO_KEY"
+        apiKey = dataStore
+            .getBlocking(USDAPreferences.apiKeyPreferenceKey)
+            ?.takeIf { it.isNotEmpty() }
+            ?: "DEMO_KEY"
     )
 
     private companion object {

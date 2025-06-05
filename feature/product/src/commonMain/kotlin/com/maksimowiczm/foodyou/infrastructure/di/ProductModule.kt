@@ -68,6 +68,6 @@ val productModule = module {
     viewModelOf(::CreateProductScreenViewModel)
     viewModelOf(::UpdateProductScreenViewModel)
     viewModel { (text: String?) ->
-        DownloadProductScreenViewModel(text = text, requestFactory = get())
+        DownloadProductScreenViewModel(text, get(), get())
     }
 }

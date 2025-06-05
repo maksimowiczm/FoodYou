@@ -55,6 +55,7 @@
     <string name="headline_copy" description="A noun, thing that is a copy">Copy</string>
     <string name="headline_something_went_wrong">Oops! Something went wrong</string>
     <string name="headline_daily_goals_settings">Daily goals settings</string>
+    <string name="headline_api_key">API key</string>
 
     <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">In %1$s</string>
     <string name="x_times_y" translatable="false">%1$s x %2$s</string>
@@ -186,6 +187,8 @@
     <string name="action_copy_and_open_bug_report">Copy and open bug report</string>
     <string name="action_show_details">Show details</string>
     <string name="action_browse_usda">Browse Food Data Central (USDA)</string>
+    <string name="action_set_key">Set key</string>
+    <string name="action_obtain_key">Obtain key</string>
 
     <string name="neutral_barcode_scanner_camera_request">Allow access to your camera to scan barcodes</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">You must allow access in order to scan barcodes</string>
@@ -225,6 +228,7 @@
     <string name="error_product_not_found">Product not found</string>
     <string name="error_unknown_error">Unknown error</string>
     <string name="error_measurement_error">Measurement error, please check the serving and package weight</string>
+    <string name="error_api_key_is_invalid">API key is invalid</string>
 
     <string name="positive_goal_reached">Goal reached</string>
     <string name="positive_ok">OK</string>
@@ -264,7 +268,6 @@
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
     <string name="link_github_issue" translatable="false">https://github.com/maksimowiczm/FoodYou/issues</string>
     <string name="link_github_repository" translatable="false">https://github.com/maksimowiczm/FoodYou</string>
-    <string name="link_usda" translatable="false">https://fdc.nal.usda.gov/food-search?query=</string>
 
     <!-- Don't translate changelog strings -->
     <string name="changelog_new_features" translatable="false">New features</string>
@@ -283,4 +286,12 @@
 
     <string name="notification_data_sync_channel_name">Data synchronization</string>
     <string name="notification_data_sync_progress_channel_name">Data synchronization progress</string>
+
+    <string name="link_usda" translatable="false">https://fdc.nal.usda.gov/food-search?query=</string>
+    <string name="link_usda_obtain_key" translatable="false">https://fdc.nal.usda.gov/api-key-signup</string>
+    <string name="headline_food_data_central_usda" translatable="false">Food Data Central (USDA)</string>
+    <string name="error_usda_rate_limit">Food Data Central (USDA) API rate limit exceeded</string>
+    <string name="error_usda_rate_limit_description">You have exceeded the allowed number of requests. Please wait before retrying or sign up to obtain a key.</string>
+    <string name="error_usda_not_verified">The API key supplied has not been verified yet. Please check your e-mail to verify the API key.</string>
+
 </resources>

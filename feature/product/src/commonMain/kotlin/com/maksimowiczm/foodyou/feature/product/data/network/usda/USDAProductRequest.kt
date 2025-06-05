@@ -10,6 +10,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
 
@@ -35,11 +36,33 @@ internal class USDAProductRequest(
                 return Result.failure(ProductNotFoundException())
             }
 
+            if (response.status == HttpStatusCode.TooManyRequests) {
+                Logger.w(TAG) { "USDA API rate limit exceeded for code: $id" }
+                return Result.failure(USDAException.RateLimitException())
+            }
+
+            if (response.status == HttpStatusCode.Forbidden) {
+                val error = response.getError()
+                Logger.e(TAG) { "USDA API error for code: $id - ${error.message}" }
+                return Result.failure(error)
+            }
+
             val product = response.body<AbridgedFoodItem>()
 
             return Result.success(mapper.toRemoteProduct(product))
         } catch (e: Exception) {
             return Result.failure(e)
+        }
+    }
+
+    private suspend fun HttpResponse.getError(): Exception = with(body<String>()) {
+        return when {
+            contains("API_KEY_MISSING") -> USDAException.ApiKeyIsMissingException()
+            contains("API_KEY_INVALID") -> USDAException.ApiKeyInvalidException()
+            contains("API_KEY_DISABLED") -> USDAException.ApiKeyDisabledException()
+            contains("API_KEY_UNAUTHORIZED") -> USDAException.ApiKeyUnauthorizedException()
+            contains("API_KEY_UNVERIFIED") -> USDAException.ApiKeyUnverifiedException()
+            else -> Exception("Unknown USDA API error: $this")
         }
     }
 
