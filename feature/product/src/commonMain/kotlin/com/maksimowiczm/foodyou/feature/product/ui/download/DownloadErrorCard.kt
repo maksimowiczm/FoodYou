@@ -83,9 +83,8 @@ internal fun UsdaApiKeyErrorCard(
         is USDAException.ApiKeyIsMissingException,
         is USDAException.ApiKeyDisabledException,
         is USDAException.ApiKeyInvalidException,
-        is USDAException.ApiKeyUnauthorizedException -> stringResource(
-            Res.string.error_api_key_is_invalid
-        )
+        is USDAException.ApiKeyUnauthorizedException ->
+            error.error.message ?: stringResource(Res.string.error_api_key_is_invalid)
 
         is USDAException.ApiKeyUnverifiedException -> stringResource(
             Res.string.error_usda_not_verified
