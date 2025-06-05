@@ -35,7 +35,6 @@
     <string name="headline_import_and_export">Importar e Exportar</string>
     <string name="headline_experimental" description="Experimental feature">Experimental</string>
     <string name="headline_experimental_feature">Recurso experimental</string>
-    <string name="headline_copy_recipe">Copiar receita</string>
     <string name="headline_copy" description="A noun, thing that is a copy">Copiar</string>
     <string name="headline_something_went_wrong">Opa! Algo deu errado</string>
     <string name="headline_daily_goals_settings">Configurações de objetivos diários</string>
@@ -88,7 +87,6 @@
     <string name="action_insert_suggested_search">Inserir pesquisa sugerida</string>
     <string name="action_edit_entry">Editar entrada</string>
     <string name="action_delete_entry">Excluir entrada</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Adicionar alimentos</string>
     <string name="action_undo">Desfazer</string>
     <string name="action_close">Fechar</string>
     <string name="action_discard">Descartar</string>
@@ -123,7 +121,6 @@
     <string name="neutral_barcode_scanner_camera_request">Permitir acesso à sua câmera para escanear códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Você deve permitir o acesso para digitalizar códigos de barras</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">A permissão da câmera é obrigatória para ler códigos de barras. Por favor, habilite essa função nas configurações do aplicativo.</string>
-    <string name="neutral_no_products_found">Nenhum produto encontrado</string>
     <string name="neutral_no_food_found">Alimento não encontrado</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d caloria restante</item>
@@ -135,7 +132,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">A refeição será excluída permanentemente. Todos os dados relacionados a essa refeição serão perdidos.</string>
     <string name="neutral_required">Obrigatório</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">As calorias são calculadas automaticamente com base nos macronutrientes</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Parece que esta refeição está vazia. Adicione algum alimento para monitorar suas calorias.</string>
     <string name="neutral_entry_deleted">Entrada excluída</string>
     <string name="neutral_help_translating_the_app">Ajude a traduzir o aplicativo</string>
     <string name="neutral_copied">Informações copiadas para a área de transferência</string>
@@ -172,7 +168,6 @@
     <string name="description_import_and_export_hint">Todas as operações de sincronização de dados são executadas em segundo plano. Você será notificado quando forem concluídas.</string>
     <string name="description_experimental_feature">Isto é um recurso experimental. Poderá ser alterado ou removido em versões futuras.</string>
     <string name="description_notifications_permission_required_data_sync">A permissão de notificação é necessária para exibir o progresso da sincronização de dados. Por favor, habilite-a nas configurações do aplicativo.</string>
-    <string name="description_copy_recipe">A receita será copiada em um único produto</string>
     <string name="description_show_macronutrients_goals">Mostrar os objetivos de macronutrientes</string>
     <string name="description_recipe_missing_ingredients">Talvez você não veja todas as receitas aqui. Algumas receitas estão ocultas para evitar referências circulares.</string>
     <string name="headline_launcher_icon_by_icons8">Ícone da aplicação por Icons8</string>

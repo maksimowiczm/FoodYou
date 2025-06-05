@@ -85,7 +85,6 @@
     <string name="action_insert_suggested_search">إدراج البحث المقترح</string>
     <string name="action_edit_entry">تعديل المدخل</string>
     <string name="action_delete_entry">حذف المدخل</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">إضافة طعام</string>
     <string name="action_undo">تراجع</string>
     <string name="action_close">إغلاق</string>
     <string name="action_discard">تجاهل</string>
@@ -108,7 +107,6 @@
     <string name="neutral_barcode_scanner_camera_request">السماح بالوصول إلى كاميراتك لمسح الباركودات</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">يجب عليك السماح بالوصول حتى تتمكن من مسح الباركود</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">يتطلب مسح الباركودات الحصول على إذن الكاميرا. يُرجى السماح بذلك في إعدادات التطبيق.</string>
-    <string name="neutral_no_products_found">لا توجد منتجات</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="zero">%1$d calories left</item>
         <item quantity="one">%1$d سعرة متبقية</item>
@@ -123,7 +121,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">سُتحذف الوجبة نهائيًا. ستُفقد جميع البيانات المتعلقة بها.</string>
     <string name="neutral_required">مطلوب</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">يتم حساب السعرات الحرارية تلقائيًا بناءً على المغذيات الكبرى</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">يبدو أن هذه الوجبة فارغة. أضف طعامًا لتتبع سعراتك الحرارية.</string>
     <string name="neutral_entry_deleted">حُذف المدخل</string>
     <string name="neutral_help_translating_the_app">المساعدة في ترجمة التطبيق</string>
     <string name="question_discard_product">تجاهل المنتج؟</string>

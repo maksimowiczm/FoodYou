@@ -123,7 +123,6 @@
     <string name="action_insert_suggested_search">Javasolt keresés beszúrása</string>
     <string name="action_edit_entry">Bejegyzés szerkesztése</string>
     <string name="action_delete_entry">Bejegyzés törlése</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Étel hozzáadása</string>
     <string name="action_undo">Visszavonás</string>
     <string name="action_close">Bezár</string>
     <string name="action_discard">Elvetés</string>
@@ -157,7 +156,6 @@
     <string name="neutral_barcode_scanner_camera_request">Kamera hozzáférés engedélyezése a kód beolvasásához</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Azért kell engedélyezni, hogy be lehessen olvasni a QR-kódot</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">A vonalkód beolvasásához szükség van a kamera engedélyeztetésére. Kérlek, engedélyezd ezt az alkalmazás beállításokban.</string>
-    <string name="neutral_no_products_found">A termék nem található</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d kalória maradt</item>
         <item quantity="other">%1$d kalória maradt</item>
@@ -168,7 +166,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Az étkezés véglegesen törlődik. Az ehhez tartozó összes adat el fog veszni.</string>
     <string name="neutral_required">Szükséges</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">A rendszer automatikusan kiszámolja a kalóriát a tápanyag alapján</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Úgy tűnik, ez az étkezés üres. Adj hozzá ételt, hogy nyomon követhesd a kalóriáidat.</string>
     <string name="neutral_entry_deleted">Bejegyzés törölve</string>
     <string name="neutral_help_translating_the_app">Segíts lefordítani az applikációt</string>
     <string name="neutral_copied">Az információ a váglólapra lett másolva</string>

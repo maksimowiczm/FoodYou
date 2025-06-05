@@ -47,7 +47,6 @@
     <string name="headline_import_and_export">Importa ed esporta</string>
     <string name="headline_experimental" description="Experimental feature">Sperimentale</string>
     <string name="headline_experimental_feature">Funzionalità sperimentale</string>
-    <string name="headline_copy_recipe">Copia ricetta</string>
     <string name="headline_copy" description="A noun, thing that is a copy">Copia</string>
     <string name="headline_something_went_wrong">Oops! Qualcosa è andato storto</string>
     <string name="headline_daily_goals_settings">Impostazioni obiettivi giornalieri</string>
@@ -131,7 +130,6 @@
     <string name="action_insert_suggested_search">Inserisci ricerca suggerita</string>
     <string name="action_edit_entry">Modifica voce</string>
     <string name="action_delete_entry">Elimina voce</string>
-    <string name="action_add_food" description="Should be short. Can be single 'Add'.">Aggiungi alimento</string>
     <string name="action_undo">Annulla</string>
     <string name="action_close">Chiudi</string>
     <string name="action_discard">Abbandona</string>
@@ -173,7 +171,6 @@
     <string name="neutral_barcode_scanner_camera_request">Permetti l'accesso alla tua fotocamera per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Devi permettere l'accesso per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L'autorizzazione alla fotocamera è necessaria per scansionare i codici a barre. Per favore, concedila nelle impostazioni dell'app.</string>
-    <string name="neutral_no_products_found">Nessun prodotto trovato</string>
     <string name="neutral_no_food_found">Nessun alimento trovato</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d caloria rimasta</item>
@@ -185,7 +182,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Il pasto verrà eliminato definitivamente. Tutti i dati relativi a questo pasto verranno persi.</string>
     <string name="neutral_required">Richiesto</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Le calorie sono calcolate automaticamente in base ai macronutrienti</string>
-    <string name="neutral_no_products_meal_screen" description="Tell user that there are no products in the meal screen and encourage them to add some.">Sembra che questo pasto sia vuoto. Aggiungi alcuni alimenti per tracciare le tue calorie.</string>
     <string name="neutral_entry_deleted">Voce eliminata</string>
     <string name="neutral_help_translating_the_app">Aiuta a tradurre l'app</string>
     <string name="neutral_copied">Informazioni copiate negli appunti</string>
@@ -233,8 +229,8 @@
     <string name="description_import_and_export_hint">Tutte le operazioni di sincronizzazione dei dati vengono eseguite in background. Riceverai una notifica quando sono terminate.</string>
     <string name="description_experimental_feature">Questa è una funzionalità sperimentale. Potrebbe cambiare o essere rimossa in versioni future.</string>
     <string name="description_notifications_permission_required_data_sync">L'autorizzazione alle notifiche è necessaria per mostrare l'avanzamento della sincronizzazione dei dati. Abilitala nelle impostazioni dell'app.</string>
-    <string name="description_copy_recipe">La ricetta verrà copiata in un singolo prodotto</string>
     <string name="description_show_macronutrients_goals">Mostra obiettivi dei macronutrienti</string>
+    <string name="description_recipe_missing_ingredients">Potresti non vedere tutte le ricette qui. Alcune ricette sono nascoste per evitare riferimenti circolari.</string>
     <string name="headline_launcher_icon_by_icons8">Icona del launcher di Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Guarda altre fantastiche icone qui</string>
     <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
