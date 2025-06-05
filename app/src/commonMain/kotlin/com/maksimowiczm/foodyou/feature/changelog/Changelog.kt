@@ -29,15 +29,16 @@ object Changelog {
 
     val v2_6_0 = Version(
         version = "2.6.0",
-        date = LocalDate(2025, 6, 2),
+        date = LocalDate(2025, 6, 5),
         newFeatures = listOf(
             "Recipe can now contain other recipes. Go easy on the recursion. 😉"
         ),
         changes = listOf(
             "Limit food search results to 100 items. If you need more results, please refine your search query.",
-            "Removed recipe clone feature"
+            "Removed recipe clone feature",
+            "Updated toggle button in the food search screen"
         ),
-        notes = "This update introduces a significant change to the recipe system, allowing recipes to include other recipes. It's not fully tested, so please report any issues you encounter."
+        notes = "This update introduces a significant change to the recipe system, allowing recipes to include other recipes."
     )
 
     val v2_5_0 = Version(
