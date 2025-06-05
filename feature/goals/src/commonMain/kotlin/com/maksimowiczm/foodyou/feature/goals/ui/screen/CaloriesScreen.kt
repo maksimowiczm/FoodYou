@@ -175,21 +175,13 @@ private fun CaloriesScreen(
                     val foods = diaryDay.nonEmptyMeals
                         .filter { it in meals }
                         .flatMap { diaryDay.foods[it] ?: emptyList() }
+                        .map { it.food }
 
-                    val anyProductIncomplete = foods.any { !it.food.nutritionFacts.isComplete }
+                    val incompleteFoods = IncompleteFoodData.fromFoodList(foods)
 
-                    // Display incomplete products
-                    if (anyProductIncomplete) {
+                    if (incompleteFoods.isNotEmpty()) {
                         IncompleteFoodsList(
-                            foods = foods
-                                .distinctBy { it.food.id }
-                                .filter { !it.food.nutritionFacts.isComplete }
-                                .map {
-                                    IncompleteFoodData(
-                                        foodId = it.food.id,
-                                        name = it.food.headline
-                                    )
-                                },
+                            foods = incompleteFoods,
                             onFoodClick = onFoodClick,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                         )

@@ -136,16 +136,11 @@ internal fun RecipeForm(
                     .padding(horizontalPadding)
             )
 
-            val incompleteIngredients = ingredients.filter { !it.food.nutritionFacts.isComplete }
+            val incompleteIngredients = IncompleteFoodData.fromFoodList(ingredients.map { it.food })
 
             if (incompleteIngredients.isNotEmpty()) {
                 IncompleteFoodsList(
-                    foods = incompleteIngredients.map {
-                        IncompleteFoodData(
-                            foodId = it.food.id,
-                            name = it.food.headline
-                        )
-                    },
+                    foods = incompleteIngredients,
                     onFoodClick = onEditFood,
                     modifier = Modifier
                         .fillMaxWidth()

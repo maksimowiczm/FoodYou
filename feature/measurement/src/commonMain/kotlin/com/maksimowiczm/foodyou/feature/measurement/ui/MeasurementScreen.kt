@@ -148,16 +148,17 @@ internal fun MeasurementScreen(
             }
 
             if (food is Recipe) {
-                val incompleteFoods = food.ingredients
-                    .filter { !it.food.nutritionFacts.isComplete }
-                    .map { IncompleteFoodData(it.food.id, it.food.headline) }
+                val incompleteIngredients =
+                    IncompleteFoodData.fromFoodList(food.ingredients.map { it.food })
 
-                item {
-                    IncompleteFoodsList(
-                        foods = incompleteFoods,
-                        onFoodClick = onIngredientClick,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
+                if (incompleteIngredients.isNotEmpty()) {
+                    item {
+                        IncompleteFoodsList(
+                            foods = incompleteIngredients,
+                            onFoodClick = onIngredientClick,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
                 }
             }
 
