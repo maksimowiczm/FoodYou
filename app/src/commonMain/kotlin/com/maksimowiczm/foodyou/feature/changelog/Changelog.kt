@@ -27,6 +27,16 @@ object Changelog {
             v2_0_0
         )
 
+    val next = Version.next(
+        newFeatures = listOf(),
+        changes = listOf(),
+        bugFixes = listOf(
+            "Stop overriding calories value when updating product or downloading product data from remote databases",
+        ),
+        translations = listOf(),
+        notes = null
+    )
+
     val v2_6_0 = Version(
         version = "2.6.0",
         date = LocalDate(2025, 6, 5),

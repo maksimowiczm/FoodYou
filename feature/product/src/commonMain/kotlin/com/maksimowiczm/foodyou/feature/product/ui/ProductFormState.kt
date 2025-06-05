@@ -9,6 +9,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshotFlow
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.model.Saver
@@ -18,6 +19,9 @@ import com.maksimowiczm.foodyou.core.ui.simpleform.ParseResult
 import com.maksimowiczm.foodyou.core.ui.simpleform.rememberFormField
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProduct
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
 
 @Composable
 internal fun rememberProductFormState(product: Product? = null): ProductFormState {
@@ -282,18 +286,20 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
     val fats = rememberRequiredFormField(product.nutritionFacts.fats)
     val calories = rememberRequiredFormField(product.nutritionFacts.calories)
 
-    LaunchedEffect(proteins.value, carbohydrates.value, fats.value) {
-        val proteins = proteins.value
-        val carbohydrates = carbohydrates.value
-        val fats = fats.value
+    LaunchedEffect(proteins, carbohydrates, fats) {
+        combine(
+            snapshotFlow { proteins.value },
+            snapshotFlow { carbohydrates.value },
+            snapshotFlow { fats.value }
+        ) { it }.drop(1).collectLatest { (proteins, carbohydrates, fats) ->
+            if (proteins == null || carbohydrates == null || fats == null) {
+                return@collectLatest
+            }
 
-        if (proteins == null || carbohydrates == null || fats == null) {
-            return@LaunchedEffect
+            val kcal = NutrientsHelper.calculateCalories(proteins, carbohydrates, fats)
+            val text = kcal.formatClipZeros()
+            calories.textFieldState.setTextAndPlaceCursorAtEnd(text)
         }
-
-        val kcal = NutrientsHelper.calculateCalories(proteins, carbohydrates, fats)
-        val text = kcal.formatClipZeros()
-        calories.textFieldState.setTextAndPlaceCursorAtEnd(text)
     }
 
     val saturatedFats = rememberNotRequiredFormField(product.nutritionFacts.saturatedFats)
