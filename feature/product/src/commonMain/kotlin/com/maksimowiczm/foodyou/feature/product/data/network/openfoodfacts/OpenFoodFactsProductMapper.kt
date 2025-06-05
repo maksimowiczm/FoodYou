@@ -48,7 +48,8 @@ internal object OpenFoodFactsProductMapper {
             ironMilli = product.nutritionFacts?.iron.toMilligrams(),
             phosphorusMilli = product.nutritionFacts?.phosphorus.toMilligrams(),
             seleniumMicro = product.nutritionFacts?.selenium.toMicrograms(),
-            iodineMicro = product.nutritionFacts?.iodine.toMicrograms()
+            iodineMicro = product.nutritionFacts?.iodine.toMicrograms(),
+            chromiumMicro = null
         ),
         packageWeight = product.packageWeight?.takeIf { it > 0 },
         servingWeight = product.servingWeight?.takeIf { it > 0 }

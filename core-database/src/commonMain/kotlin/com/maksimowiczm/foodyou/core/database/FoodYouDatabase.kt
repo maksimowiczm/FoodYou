@@ -65,11 +65,12 @@ import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
         AutoMigration(from = 14, to = 15),
         AutoMigration(from = 15, to = 16),
         AutoMigration(from = 16, to = 17),
-        AutoMigration(from = 17, to = 18)
+        AutoMigration(from = 17, to = 18),
         /**
          * @see [MIGRATION_18_19]
          * Merge product and recipe measurements into MeasurementEntity
          */
+        AutoMigration(from = 19, to = 20)
     ]
 )
 @TypeConverters(
@@ -83,7 +84,7 @@ abstract class FoodYouDatabase :
     MealDatabase {
 
     companion object {
-        const val VERSION = 19
+        const val VERSION = 20
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,

@@ -41,7 +41,8 @@ fun testNutritionFacts(
     ironMilli: Float? = 0.1f,
     phosphorusMilli: Float? = 0.1f,
     seleniumMicro: Float? = 0.1f,
-    iodineMicro: Float? = 0.1f
+    iodineMicro: Float? = 0.1f,
+    chromiumMicro: Float? = 0.1f
 ) = NutritionFacts(
     proteins = proteins.toNutrientValue(),
     carbohydrates = carbohydrates.toNutrientValue(),
@@ -80,5 +81,6 @@ fun testNutritionFacts(
     ironMilli = ironMilli.toNutrientValue(),
     phosphorusMilli = phosphorusMilli.toNutrientValue(),
     seleniumMicro = seleniumMicro.toNutrientValue(),
-    iodineMicro = iodineMicro.toNutrientValue()
+    iodineMicro = iodineMicro.toNutrientValue(),
+    chromiumMicro = chromiumMicro.toNutrientValue()
 )

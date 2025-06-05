@@ -128,6 +128,7 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     val phosphorus = rememberNotRequiredFormField(product?.nutritionFacts?.phosphorusMilli?.value)
     val selenium = rememberNotRequiredFormField(product?.nutritionFacts?.seleniumMicro?.value)
     val iodine = rememberNotRequiredFormField(product?.nutritionFacts?.iodineMicro?.value)
+    val chromium = rememberNotRequiredFormField(product?.nutritionFacts?.chromiumMicro?.value)
 
     return remember(
         name,
@@ -219,7 +220,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
             ironMilli = iron,
             phosphorusMilli = phosphorus,
             seleniumMicro = selenium,
-            iodineMicro = iodine
+            iodineMicro = iodine,
+            chromiumMicro = chromium
         )
     }
 }
@@ -332,6 +334,7 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
     val phosphorus = rememberNotRequiredFormField(product.nutritionFacts.phosphorusMilli)
     val selenium = rememberNotRequiredFormField(product.nutritionFacts.seleniumMicro)
     val iodine = rememberNotRequiredFormField(product.nutritionFacts.iodineMicro)
+    val chromium = rememberNotRequiredFormField(product.nutritionFacts.chromiumMicro)
 
     return remember(
         name,
@@ -423,7 +426,8 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
             ironMilli = iron,
             phosphorusMilli = phosphorus,
             seleniumMicro = selenium,
-            iodineMicro = iodine
+            iodineMicro = iodine,
+            chromiumMicro = chromium
         )
     }
 }
@@ -479,6 +483,7 @@ internal class ProductFormState(
     val sodiumMilli: FormField<Float?, ProductFormFieldError>,
     val ironMilli: FormField<Float?, ProductFormFieldError>,
     val phosphorusMilli: FormField<Float?, ProductFormFieldError>,
+    val chromiumMicro: FormField<Float?, ProductFormFieldError>,
     val seleniumMicro: FormField<Float?, ProductFormFieldError>,
     val iodineMicro: FormField<Float?, ProductFormFieldError>
 ) {

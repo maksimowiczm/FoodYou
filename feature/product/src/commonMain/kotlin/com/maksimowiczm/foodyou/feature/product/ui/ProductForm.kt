@@ -328,6 +328,11 @@ internal fun ProductForm(state: ProductFormState, modifier: Modifier = Modifier)
 
         state.iodineMicro.TextField(
             label = stringResource(Res.string.mineral_iodine),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.chromiumMicro.TextField(
+            label = stringResource(Res.string.mineral_chromium),
             suffix = stringResource(Res.string.unit_microgram_short),
             imeAction = ImeAction.Done
         )

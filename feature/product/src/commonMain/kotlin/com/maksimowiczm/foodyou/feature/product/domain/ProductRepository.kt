@@ -68,6 +68,7 @@ internal interface ProductRepository {
         phosphorusMilli: Float?,
         seleniumMicro: Float?,
         iodineMicro: Float?,
+        chromiumMicro: Float?,
         packageWeight: Float?,
         servingWeight: Float?
     ): Long
@@ -120,6 +121,7 @@ internal interface ProductRepository {
         phosphorusMilli: Float?,
         seleniumMicro: Float?,
         iodineMicro: Float?,
+        chromiumMicro: Float?,
         packageWeight: Float?,
         servingWeight: Float?
     )
@@ -181,6 +183,7 @@ internal class ProductRepositoryImpl(
         phosphorusMilli: Float?,
         seleniumMicro: Float?,
         iodineMicro: Float?,
+        chromiumMicro: Float?,
         packageWeight: Float?,
         servingWeight: Float?
     ): Long {
@@ -228,7 +231,8 @@ internal class ProductRepositoryImpl(
             ironMilli = ironMilli,
             phosphorusMilli = phosphorusMilli,
             seleniumMicro = seleniumMicro,
-            iodineMicro = iodineMicro
+            iodineMicro = iodineMicro,
+            chromiumMicro = chromiumMicro
         )
 
         val entity = ProductEntity(
@@ -288,6 +292,7 @@ internal class ProductRepositoryImpl(
         phosphorusMilli: Float?,
         seleniumMicro: Float?,
         iodineMicro: Float?,
+        chromiumMicro: Float?,
         packageWeight: Float?,
         servingWeight: Float?
     ) {
@@ -335,7 +340,8 @@ internal class ProductRepositoryImpl(
             ironMilli = ironMilli,
             phosphorusMilli = phosphorusMilli,
             seleniumMicro = seleniumMicro,
-            iodineMicro = iodineMicro
+            iodineMicro = iodineMicro,
+            chromiumMicro = chromiumMicro
         )
 
         val entity = ProductEntity(

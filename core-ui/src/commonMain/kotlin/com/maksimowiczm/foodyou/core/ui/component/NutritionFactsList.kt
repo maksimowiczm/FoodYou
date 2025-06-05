@@ -627,6 +627,22 @@ fun NutritionFactsList(
             },
             modifier = Modifier.padding(vertical = 8.dp)
         )
+
+        NutrientListItem(
+            label = { Text(stringResource(Res.string.mineral_chromium)) },
+            value = {
+                val summary = facts.chromiumMicro
+
+                when (summary) {
+                    is NutrientValue.Incomplete -> incompleteValue(summary)()
+                    is NutrientValue.Complete -> {
+                        val value = summary.value.formatClipZeros()
+                        Text("$value $ug")
+                    }
+                }
+            },
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
     }
 }
 

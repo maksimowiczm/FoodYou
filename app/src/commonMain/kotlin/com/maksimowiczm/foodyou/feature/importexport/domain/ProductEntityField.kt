@@ -48,6 +48,7 @@ enum class ProductEntityField {
     PHOSPHORUS_MILLI,
     SELENIUM_MICRO,
     IODINE_MICRO,
+    CHROMIUM_MICRO,
     PACKAGE_WEIGHT,
     SERVING_WEIGHT
 }

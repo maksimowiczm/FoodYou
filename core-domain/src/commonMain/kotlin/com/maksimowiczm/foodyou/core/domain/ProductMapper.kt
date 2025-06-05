@@ -75,7 +75,8 @@ internal object ProductMapperImpl : ProductMapper {
             ironMilli = nutritionFacts.ironMilli.value,
             phosphorusMilli = nutritionFacts.phosphorusMilli.value,
             seleniumMicro = nutritionFacts.seleniumMicro.value,
-            iodineMicro = nutritionFacts.iodineMicro.value
+            iodineMicro = nutritionFacts.iodineMicro.value,
+            chromiumMicro = null
         )
 
         ProductEntity(
@@ -130,6 +131,7 @@ internal object ProductMapperImpl : ProductMapper {
             ironMilli = minerals.ironMilli.toNutrientValue(),
             phosphorusMilli = minerals.phosphorusMilli.toNutrientValue(),
             seleniumMicro = minerals.seleniumMicro.toNutrientValue(),
-            iodineMicro = minerals.iodineMicro.toNutrientValue()
+            iodineMicro = minerals.iodineMicro.toNutrientValue(),
+            chromiumMicro = minerals.chromiumMicro.toNutrientValue()
         )
 }
