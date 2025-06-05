@@ -29,6 +29,7 @@ internal fun UpdateRecipeScreen(
     recipeId: FoodId.Recipe,
     onBack: () -> Unit,
     onUpdate: () -> Unit,
+    onEditFood: (FoodId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel = koinViewModel<UpdateRecipeViewModel>(
@@ -79,10 +80,11 @@ internal fun UpdateRecipeScreen(
     RecipeApp(
         recipeId = recipeId,
         titleRes = Res.string.headline_update_recipe,
-        formState = formState,
+        observedIngredients = viewModel::observeIngredients,
         onSave = viewModel::onSave,
         onBack = onBack,
-        observedIngredients = viewModel::observeIngredients,
-        modifier = modifier
+        onEditFood = onEditFood,
+        modifier = modifier,
+        formState = formState
     )
 }

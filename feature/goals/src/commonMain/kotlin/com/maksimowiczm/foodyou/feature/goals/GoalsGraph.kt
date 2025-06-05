@@ -2,11 +2,13 @@ package com.maksimowiczm.foodyou.feature.goals
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.goals.ui.cardsettings.GoalsCardSettings
-import com.maksimowiczm.foodyou.feature.goals.ui.screen.CaloriesApp
+import com.maksimowiczm.foodyou.feature.goals.ui.screen.CaloriesScreen
 import com.maksimowiczm.foodyou.feature.goals.ui.settings.GoalsSettingsScreen
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -21,7 +23,8 @@ data object GoalsCardSettings
 fun NavGraphBuilder.goalsGraph(
     onGoalsSettings: () -> Unit,
     onGoalsSettingsBack: () -> Unit,
-    onGoalsCardSettingsBack: () -> Unit
+    onGoalsCardSettingsBack: () -> Unit,
+    onEditFood: (FoodId) -> Unit
 ) {
     forwardBackwardComposable<GoalsSettings> {
         GoalsSettingsScreen(
@@ -31,9 +34,12 @@ fun NavGraphBuilder.goalsGraph(
     crossfadeComposable<GoalsScreen> {
         val (epochDay) = it.toRoute<GoalsScreen>()
 
-        CaloriesApp(
-            outerAnimatedScope = this,
-            epochDay = epochDay
+        val date = LocalDate.fromEpochDays(epochDay)
+
+        CaloriesScreen(
+            date = date,
+            animatedVisibilityScope = this,
+            onFoodClick = onEditFood
         )
     }
     forwardBackwardComposable<GoalsCardSettings> {

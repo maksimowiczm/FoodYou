@@ -28,6 +28,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
@@ -42,6 +43,7 @@ internal fun RecipeForm(
     ingredients: List<Ingredient>,
     onAddIngredient: () -> Unit,
     onIngredientClick: (index: Int) -> Unit,
+    onEditFood: (FoodId) -> Unit,
     modifier: Modifier = Modifier,
     formState: RecipeFormState = rememberRecipeFormState(),
     contentPadding: PaddingValues = PaddingValues()
@@ -144,9 +146,7 @@ internal fun RecipeForm(
                             name = it.food.headline
                         )
                     },
-                    onFoodClick = {
-                        // Nothing
-                    },
+                    onFoodClick = onEditFood,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontalPadding)

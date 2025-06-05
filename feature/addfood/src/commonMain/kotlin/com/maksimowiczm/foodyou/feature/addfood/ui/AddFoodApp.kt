@@ -142,6 +142,16 @@ internal fun AddFoodApp(
             },
             onUpdate = {
                 navController.popBackStack<UpdateRecipe>(inclusive = true)
+            },
+            onEditFood = {
+                when (it) {
+                    is FoodId.Product -> navController.navigate(UpdateProduct(it.id)) {
+                        launchSingleTop = true
+                    }
+
+                    // Ignore recipe edit to prevent users from accidentally destroying their database
+                    is FoodId.Recipe -> Unit
+                }
             }
         )
     }

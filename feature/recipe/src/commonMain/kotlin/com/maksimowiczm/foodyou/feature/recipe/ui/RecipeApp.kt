@@ -24,6 +24,7 @@ internal fun RecipeApp(
     observedIngredients: (List<MinimalIngredient>) -> Flow<List<Ingredient>>,
     onSave: (name: String, servings: Int, ingredients: List<Ingredient>) -> Unit,
     onBack: () -> Unit,
+    onEditFood: (FoodId) -> Unit,
     modifier: Modifier = Modifier,
     formState: RecipeFormState = rememberRecipeFormState()
 ) {
@@ -58,6 +59,7 @@ internal fun RecipeApp(
                         }
                     }
                 },
+                onEditFood = onEditFood,
                 onRemoveIngredient = { ingredient ->
                     formState.ingredients = formState.ingredients.toMutableList().apply {
                         removeAt(ingredient)
@@ -97,7 +99,8 @@ internal fun RecipeApp(
                         measurement = measurement
                     )
                     navController.popBackStack<IngredientsSearch>(inclusive = true)
-                }
+                },
+                onEditFood = onEditFood
             )
         }
 
@@ -122,7 +125,8 @@ internal fun RecipeApp(
                         set(index, this[index].copy(measurement = measurement))
                     }
                     navController.popBackStack<UpdateIngredientMeasurement>(inclusive = true)
-                }
+                },
+                onEditFood = onEditFood
             )
         }
     }

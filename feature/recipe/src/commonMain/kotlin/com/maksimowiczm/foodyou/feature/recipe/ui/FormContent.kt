@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
 import foodyou.app.generated.resources.Res
@@ -51,6 +52,7 @@ internal fun FormContent(
     onAddIngredient: () -> Unit,
     onEditIngredient: (Ingredient) -> Unit,
     onRemoveIngredient: (index: Int) -> Unit,
+    onEditFood: (FoodId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -165,6 +167,7 @@ internal fun FormContent(
                     onIngredientClick = { index ->
                         selectedIngredientIndex.value = index
                     },
+                    onEditFood = onEditFood,
                     formState = formState,
                     contentPadding = PaddingValues(horizontal = 16.dp)
                 )
