@@ -109,7 +109,8 @@ private fun Map<ProductEntityField, String>.toProductEntity(): ProductEntity? {
         ironMilli = this[ProductEntityField.IRON_MILLI]?.toFloatOrNull(),
         phosphorusMilli = this[ProductEntityField.PHOSPHORUS_MILLI]?.toFloatOrNull(),
         seleniumMicro = this[ProductEntityField.SELENIUM_MICRO]?.toFloatOrNull(),
-        iodineMicro = this[ProductEntityField.IODINE_MICRO]?.toFloatOrNull()
+        iodineMicro = this[ProductEntityField.IODINE_MICRO]?.toFloatOrNull(),
+        chromiumMicro = this[ProductEntityField.CHROMIUM_MICRO]?.toFloatOrNull()
     )
 
     val name = this[ProductEntityField.NAME]?.toString() ?: return null

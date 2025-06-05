@@ -43,7 +43,8 @@ data class NutritionFacts(
     val ironMilli: NutrientValue,
     val phosphorusMilli: NutrientValue,
     val seleniumMicro: NutrientValue,
-    val iodineMicro: NutrientValue
+    val iodineMicro: NutrientValue,
+    val chromiumMicro: NutrientValue
 ) {
     val isEmpty: Boolean
         get() = this == Empty
@@ -128,7 +129,8 @@ data class NutritionFacts(
         ironMilli = this.ironMilli + other.ironMilli,
         phosphorusMilli = this.phosphorusMilli + other.phosphorusMilli,
         seleniumMicro = this.seleniumMicro + other.seleniumMicro,
-        iodineMicro = this.iodineMicro + other.iodineMicro
+        iodineMicro = this.iodineMicro + other.iodineMicro,
+        chromiumMicro = this.chromiumMicro + other.chromiumMicro
     )
 
     operator fun times(multiplier: Float): NutritionFacts = NutritionFacts(
@@ -169,7 +171,8 @@ data class NutritionFacts(
         ironMilli = this.ironMilli * multiplier,
         phosphorusMilli = this.phosphorusMilli * multiplier,
         seleniumMicro = this.seleniumMicro * multiplier,
-        iodineMicro = this.iodineMicro * multiplier
+        iodineMicro = this.iodineMicro * multiplier,
+        chromiumMicro = this.chromiumMicro * multiplier
     )
 
     operator fun div(divisor: Float): NutritionFacts = NutritionFacts(
@@ -210,7 +213,8 @@ data class NutritionFacts(
         ironMilli = this.ironMilli / divisor,
         phosphorusMilli = this.phosphorusMilli / divisor,
         seleniumMicro = this.seleniumMicro / divisor,
-        iodineMicro = this.iodineMicro / divisor
+        iodineMicro = this.iodineMicro / divisor,
+        chromiumMicro = this.chromiumMicro / divisor
     )
 
     companion object {
@@ -252,7 +256,8 @@ data class NutritionFacts(
             ironMilli = NutrientValue.Complete(0f),
             phosphorusMilli = NutrientValue.Complete(0f),
             seleniumMicro = NutrientValue.Complete(0f),
-            iodineMicro = NutrientValue.Complete(0f)
+            iodineMicro = NutrientValue.Complete(0f),
+            chromiumMicro = NutrientValue.Complete(0f)
         )
     }
 }

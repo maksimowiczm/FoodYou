@@ -83,7 +83,7 @@ abstract class FoodYouDatabase :
     MealDatabase {
 
     companion object {
-        const val VERSION = 19
+        const val VERSION = 20
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,
@@ -91,7 +91,8 @@ abstract class FoodYouDatabase :
             MIGRATION_7_8,
             MIGRATION_8_9,
             MIGRATION_11_12,
-            MIGRATION_18_19
+            MIGRATION_18_19,
+            MIGRATION_19_20
         )
 
         fun Builder<FoodYouDatabase>.buildDatabase(): FoodYouDatabase {
@@ -543,5 +544,17 @@ private val MIGRATION_18_19 = object : Migration(18, 19) {
 
         // Drop the temporary table
         execSQL("DROP TABLE IF EXISTS RecipeIngredientEntity_temp")
+    }
+}
+
+// Add chromium mineral to ProductEntity
+private val MIGRATION_19_20 = object : Migration(19, 20) {
+    override fun migrate(connection: SQLiteConnection) = with(connection) {
+        execSQL(
+            """
+            ALTER TABLE ProductEntity 
+            ADD COLUMN chromiumMicro REAL
+            """.trimIndent()
+        )
     }
 }

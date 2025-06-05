@@ -49,5 +49,6 @@ internal data class RemoteNutritionFacts(
     val ironMilli: Float?,
     val phosphorusMilli: Float?,
     val seleniumMicro: Float?,
-    val iodineMicro: Float?
+    val iodineMicro: Float?,
+    val chromiumMicro: Float?
 )

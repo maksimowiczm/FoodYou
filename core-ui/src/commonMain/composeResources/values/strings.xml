@@ -128,6 +128,7 @@
     <string name="mineral_phosphorus">Phosphorus</string>
     <string name="mineral_selenium">Selenium</string>
     <string name="mineral_iodine">Iodine</string>
+    <string name="mineral_chromium">Chromium</string>
 
     <string name="action_search">Search</string>
     <string name="action_scan_barcode">Scan barcode</string>

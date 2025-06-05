@@ -68,6 +68,7 @@ internal class CreateProductScreenViewModel(private val productRepository: Produ
             sodiumMilli = productForm.sodiumMilli.value?.let { it * multiplier },
             ironMilli = productForm.ironMilli.value?.let { it * multiplier },
             phosphorusMilli = productForm.phosphorusMilli.value?.let { it * multiplier },
+            chromiumMicro = productForm.chromiumMicro.value?.let { it * multiplier },
             packageWeight = productForm.packageWeight.value,
             servingWeight = productForm.servingWeight.value
         )
