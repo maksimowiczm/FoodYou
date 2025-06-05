@@ -70,7 +70,5 @@ internal data class OpenFoodFactsNutrients(
     @SerialName("selenium_100g")
     val selenium: Double? = null,
     @SerialName("iodine_100g")
-    val iodine: Double? = null,
-    @SerialName("chromium_100g")
-    val chromium: Double? = null
+    val iodine: Double? = null
 )
