@@ -215,16 +215,11 @@ private fun MeasureIngredientScreen(
 
                     if (food is Recipe) {
                         val incompleteIngredients =
-                            food.ingredients.filter { !it.food.nutritionFacts.isComplete }
+                            IncompleteFoodData.fromFoodList(food.ingredients.map { it.food })
 
                         if (incompleteIngredients.isNotEmpty()) {
                             IncompleteFoodsList(
-                                foods = incompleteIngredients.map {
-                                    IncompleteFoodData(
-                                        foodId = it.food.id,
-                                        name = it.food.headline
-                                    )
-                                },
+                                foods = incompleteIngredients,
                                 onFoodClick = onEditFood,
                                 modifier = Modifier
                                     .fillMaxWidth()

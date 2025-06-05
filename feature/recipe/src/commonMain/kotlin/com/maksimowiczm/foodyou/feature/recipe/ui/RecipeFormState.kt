@@ -103,7 +103,7 @@ internal class RecipeFormState(
     isModifiedState: State<Boolean>
 ) {
     val isValid by derivedStateOf {
-        nameState.error == null && servingsState.error == null
+        nameState.error == null && servingsState.error == null && ingredients.isNotEmpty()
     }
 
     var ingredients by ingredientsState

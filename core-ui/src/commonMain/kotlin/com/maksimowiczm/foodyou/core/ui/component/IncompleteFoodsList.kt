@@ -12,12 +12,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.model.Food
 import com.maksimowiczm.foodyou.core.model.FoodId
+import com.maksimowiczm.foodyou.core.model.Product
+import com.maksimowiczm.foodyou.core.model.Recipe
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
-data class IncompleteFoodData(val foodId: FoodId, val name: String)
+data class IncompleteFoodData(val foodId: FoodId, val name: String) {
+    companion object {
+
+        /**
+         * Creates a list of [IncompleteFoodData] from a [Food] instance.
+         */
+        fun fromFood(food: Food): List<IncompleteFoodData> = when (food) {
+            is Product -> listOf(food)
+            is Recipe -> food.flatIngredients().filterIsInstance<Product>()
+        }.distinct().filterNot { it.nutritionFacts.isComplete }.map {
+            IncompleteFoodData(
+                foodId = it.id,
+                name = it.headline
+            )
+        }
+
+        fun fromFoodList(foods: List<Food>): List<IncompleteFoodData> =
+            foods.flatMap { fromFood(it) }.distinctBy { it.foodId }
+    }
+}
 
 @Composable
 fun IncompleteFoodsList(
