@@ -144,7 +144,7 @@ internal fun FormContent(
                                 ingredients.toList()
                             )
                         },
-                        enabled = formState.isValid && ingredients.isNotEmpty()
+                        enabled = formState.isValid
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Save,
