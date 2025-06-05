@@ -24,7 +24,7 @@ internal class DownloadProductScreenViewModel(
 
     private val linkRegex by lazy {
         Regex(
-            "(https?://[\\w-]+(\\.[\\w-]+)+(/\\S*)?)",
+            """[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)""",
             RegexOption.IGNORE_CASE
         )
     }
