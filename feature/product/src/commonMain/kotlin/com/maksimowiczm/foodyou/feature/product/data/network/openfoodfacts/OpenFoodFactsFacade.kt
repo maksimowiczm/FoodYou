@@ -10,6 +10,11 @@ internal class OpenFoodFactsFacade(
         val matchResult = regex.find(url)
         return matchResult?.groups?.get(1)?.value
     }
+
+    fun createRequest(barcode: String) = OpenFoodFactsProductRequest(
+        dataSource = remoteDataSource,
+        barcode = barcode
+    )
 }
 
 private val regex by lazy {

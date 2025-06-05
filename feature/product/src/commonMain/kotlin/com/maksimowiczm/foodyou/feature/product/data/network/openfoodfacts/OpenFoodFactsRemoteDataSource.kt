@@ -23,7 +23,7 @@ internal class OpenFoodFactsRemoteDataSource(private val client: HttpClient) {
         val url = "${BuildConfig.OPEN_FOOD_FACTS_URL}api/v2/product/$barcode"
 
         val response = client.get(url) {
-            userAgent(BuildConfig.OPEN_FOOD_FACTS_USER_AGENT)
+            userAgent(BuildConfig.USER_AGENT)
 
             timeout {
                 requestTimeoutMillis = TIMEOUT
