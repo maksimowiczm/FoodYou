@@ -5,10 +5,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
-import com.maksimowiczm.foodyou.ext.onNodeWithTag
+import com.maksimowiczm.foodyou.onNodeWithTag
 import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreenTestTags.CARDS_LIST
 import kotlin.test.Test
 
