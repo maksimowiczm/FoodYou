@@ -61,6 +61,7 @@ internal fun MeasureIngredientScreen(
     selected: Measurement?,
     onBack: () -> Unit,
     onMeasurement: (Measurement) -> Unit,
+    onEditFood: (FoodId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel = koinViewModel<MeasureIngredientViewModel>(
@@ -80,6 +81,7 @@ internal fun MeasureIngredientScreen(
         suggestions = suggestions,
         onBack = onBack,
         onMeasurement = onMeasurement,
+        onEditFood = onEditFood,
         modifier = modifier
     )
 }
@@ -92,6 +94,7 @@ private fun MeasureIngredientScreen(
     suggestions: List<Measurement>,
     onBack: () -> Unit,
     onMeasurement: (Measurement) -> Unit,
+    onEditFood: (FoodId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedEnum by rememberSaveable { mutableStateOf(selected?.toEnum()) }
@@ -222,9 +225,7 @@ private fun MeasureIngredientScreen(
                                         name = it.food.headline
                                     )
                                 },
-                                onFoodClick = {
-                                    // TODO
-                                },
+                                onFoodClick = onEditFood,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp)

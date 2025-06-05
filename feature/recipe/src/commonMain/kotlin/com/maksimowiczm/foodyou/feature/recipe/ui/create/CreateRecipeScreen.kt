@@ -22,6 +22,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun CreateRecipeScreen(
     onBack: () -> Unit,
     onCreate: (FoodId.Recipe) -> Unit,
+    onEditFood: (FoodId) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CreateRecipeViewModel = koinViewModel()
 ) {
@@ -57,9 +58,10 @@ internal fun CreateRecipeScreen(
     RecipeApp(
         recipeId = null,
         titleRes = Res.string.headline_create_recipe,
+        observedIngredients = viewModel::observeIngredients,
         onSave = viewModel::onSave,
         onBack = onBack,
-        observedIngredients = viewModel::observeIngredients,
+        onEditFood = onEditFood,
         modifier = modifier,
         formState = formState
     )

@@ -21,12 +21,14 @@ fun NavGraphBuilder.recipeGraph(
     createOnBack: () -> Unit,
     onCreate: (FoodId.Recipe) -> Unit,
     updateOnBack: () -> Unit,
-    onUpdate: () -> Unit
+    onUpdate: () -> Unit,
+    onEditFood: (FoodId) -> Unit
 ) {
     forwardBackwardComposable<CreateRecipe> {
         CreateRecipeScreen(
             onBack = createOnBack,
-            onCreate = onCreate
+            onCreate = onCreate,
+            onEditFood = onEditFood
         )
     }
     forwardBackwardComposable<UpdateRecipe> {
@@ -35,7 +37,8 @@ fun NavGraphBuilder.recipeGraph(
         UpdateRecipeScreen(
             recipeId = route.id,
             onBack = updateOnBack,
-            onUpdate = onUpdate
+            onUpdate = onUpdate,
+            onEditFood = onEditFood
         )
     }
 }
