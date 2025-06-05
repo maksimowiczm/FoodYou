@@ -15,7 +15,11 @@ internal object USDAProductMapper {
                 proteins = (getNutrient(Nutrient.PROTEIN)?.amount ?: 0.0).toFloat(),
                 carbohydrates = (getNutrient(Nutrient.CARBOHYDRATE)?.amount ?: 0.0).toFloat(),
                 fats = (getNutrient(Nutrient.FAT)?.amount ?: 0.0).toFloat(),
-                calories = (getNutrient(Nutrient.CALORIES)?.amount ?: 0.0).toFloat(),
+                calories = (
+                    getNutrient(Nutrient.CALORIES)?.amount
+                        ?: getNutrient(Nutrient.CALORIES_ALTERNATIVE)?.amount
+                        ?: 0.0
+                    ).toFloat(),
                 saturatedFats = getNutrient(Nutrient.SATURATED_FAT)?.amount?.toFloat(),
                 monounsaturatedFats = getNutrient(Nutrient.MONOUNSATURATED_FAT)?.amount?.toFloat(),
                 polyunsaturatedFats = getNutrient(Nutrient.POLYUNSATURATED_FAT)?.amount?.toFloat(),

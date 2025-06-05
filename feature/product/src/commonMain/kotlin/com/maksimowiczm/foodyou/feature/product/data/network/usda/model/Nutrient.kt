@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.feature.product.data.network.usda.model
 
 internal enum class Nutrient(val number: String) {
     CALORIES("957"),
+    CALORIES_ALTERNATIVE("208"),
+
     PROTEIN("203"),
     CARBOHYDRATE("205"),
     FAT("204"),
