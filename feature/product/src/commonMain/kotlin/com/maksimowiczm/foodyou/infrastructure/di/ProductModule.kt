@@ -34,7 +34,8 @@ val productModule = module {
                         }
                     )
                 }
-            }
+            },
+            dataStore = get()
         )
     }
 

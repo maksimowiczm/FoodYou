@@ -15,7 +15,7 @@ import io.ktor.http.userAgent
 
 internal class USDAProductRequest(
     private val client: HttpClient,
-    private val apiKey: String = "DEMO_KEY",
+    private val apiKey: String,
     private val id: String,
     private val mapper: USDAProductMapper = USDAProductMapper
 ) : RemoteProductRequest {
