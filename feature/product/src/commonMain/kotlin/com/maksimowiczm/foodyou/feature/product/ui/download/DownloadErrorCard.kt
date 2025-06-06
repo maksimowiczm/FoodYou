@@ -23,14 +23,19 @@ import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun DownloadErrorCard(error: DownloadError, modifier: Modifier = Modifier) {
+internal fun DownloadErrorCard(error: DownloadError.GenericError, modifier: Modifier = Modifier) {
     val errorText = when (error) {
-        DownloadError.URLNotFound -> stringResource(Res.string.error_url_not_found)
-        DownloadError.URLNotSupported -> stringResource(Res.string.error_url_is_not_supported)
-        DownloadError.ProductNotFound -> stringResource(Res.string.error_product_not_found)
-        is DownloadError.Custom if (error.message != null) -> error.message
-        is DownloadError.Custom -> stringResource(Res.string.error_unknown_error)
-        is DownloadError.UsdaApiKeyError -> return
+        DownloadError.GenericError.URLNotFound ->
+            stringResource(Res.string.error_url_not_found)
+
+        DownloadError.GenericError.URLNotSupported ->
+            stringResource(Res.string.error_url_is_not_supported)
+
+        DownloadError.GenericError.ProductNotFound ->
+            stringResource(Res.string.error_product_not_found)
+
+        is DownloadError.GenericError.Custom if (error.message != null) -> error.message
+        is DownloadError.GenericError.Custom -> stringResource(Res.string.error_unknown_error)
     }
 
     Card(

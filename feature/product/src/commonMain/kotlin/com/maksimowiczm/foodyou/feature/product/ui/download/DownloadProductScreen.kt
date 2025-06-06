@@ -248,10 +248,7 @@ internal fun DownloadProductScreen(
             item {
                 if (error != null) {
                     when (error) {
-                        is DownloadError.Custom,
-                        DownloadError.ProductNotFound,
-                        DownloadError.URLNotFound,
-                        DownloadError.URLNotSupported -> DownloadErrorCard(
+                        is DownloadError.GenericError -> DownloadErrorCard(
                             error = error,
                             modifier = Modifier
                                 .fillMaxWidth()

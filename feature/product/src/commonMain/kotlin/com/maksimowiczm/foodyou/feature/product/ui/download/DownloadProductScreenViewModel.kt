@@ -48,22 +48,22 @@ internal class DownloadProductScreenViewModel(
         val link = extractFirstLink(text)
 
         if (link == null) {
-            _error.emit(DownloadError.URLNotFound)
+            _error.emit(urlNotFoundError())
             return@withMutateGuard
         }
 
         val request = requestFactory.createFromUrl(link)
 
         if (request == null) {
-            _error.emit(DownloadError.URLNotSupported)
+            _error.emit(urlNotSupportedError())
             return@withMutateGuard
         }
 
         val product = request.execute().getOrElse {
             when (it) {
-                is ProductNotFoundException -> _error.emit(DownloadError.ProductNotFound)
-                is USDAException -> _error.emit(DownloadError.UsdaApiKeyError(it))
-                else -> _error.emit(DownloadError.Custom(it.message))
+                is ProductNotFoundException -> _error.emit(productNotFoundError())
+                is USDAException -> _error.emit(usdaApiKeyError(it))
+                else -> _error.emit(customError(it.message))
             }
 
             return@withMutateGuard
@@ -88,3 +88,9 @@ internal class DownloadProductScreenViewModel(
         }
     }
 }
+
+private fun productNotFoundError() = DownloadError.GenericError.ProductNotFound
+private fun urlNotFoundError() = DownloadError.GenericError.URLNotFound
+private fun urlNotSupportedError() = DownloadError.GenericError.URLNotSupported
+private fun customError(message: String?) = DownloadError.GenericError.Custom(message)
+private fun usdaApiKeyError(error: USDAException) = DownloadError.UsdaApiKeyError(error)

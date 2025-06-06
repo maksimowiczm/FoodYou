@@ -29,7 +29,7 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(
-            "Added FoodData Central support. You can now download product data from new remote database."
+            "Added FoodData Central (USDA) support. You can now download product data from new remote database."
         ),
         changes = listOf(),
         bugFixes = listOf(
