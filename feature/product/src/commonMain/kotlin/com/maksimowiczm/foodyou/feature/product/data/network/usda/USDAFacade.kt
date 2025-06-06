@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.product.data.network.usda
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.core.ext.getBlocking
+import com.maksimowiczm.foodyou.core.ext.get
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProductMatcher
 import io.ktor.client.HttpClient
 
@@ -20,11 +20,11 @@ internal class USDAFacade(
         null
     }
 
-    fun createRequest(id: String) = USDAProductRequest(
+    suspend fun createRequest(id: String) = USDAProductRequest(
         client = httpClient,
         id = id,
         apiKey = dataStore
-            .getBlocking(USDAPreferences.apiKeyPreferenceKey)
+            .get(USDAPreferences.apiKeyPreferenceKey)
             ?.takeIf { it.isNotEmpty() }
             ?: "DEMO_KEY"
     )
