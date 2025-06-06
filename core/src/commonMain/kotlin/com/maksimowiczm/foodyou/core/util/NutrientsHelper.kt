@@ -8,6 +8,9 @@ object NutrientsHelper {
     fun calculateCalories(proteins: Float, carbohydrates: Float, fats: Float): Float =
         proteins * PROTEINS + carbohydrates * CARBOHYDRATES + fats * FATS
 
+    fun calculateCalories(proteins: Double, carbohydrates: Double, fats: Double): Double =
+        proteins * PROTEINS + carbohydrates * CARBOHYDRATES + fats * FATS
+
     fun proteinsPercentage(calories: Int, proteins: Number): Float =
         proteins.toFloat() * PROTEINS / calories
 

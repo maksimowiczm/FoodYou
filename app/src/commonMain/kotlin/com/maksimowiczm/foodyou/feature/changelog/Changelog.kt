@@ -28,10 +28,12 @@ object Changelog {
         )
 
     val next = Version.next(
-        newFeatures = listOf(),
+        newFeatures = listOf(
+            "Added FoodData Central (USDA) support. You can now download product data from new remote database."
+        ),
         changes = listOf(),
         bugFixes = listOf(
-            "Stop overriding calories value when updating product or downloading product data from remote databases",
+            "Stop overriding calories value when updating product or downloading product data from remote databases"
         ),
         translations = listOf(),
         notes = null

@@ -22,7 +22,7 @@ buildConfig {
     // https://pub.dev/packages/openfoodfacts#setup-optional
     buildConfigField(
         "String",
-        "OPEN_FOOD_FACTS_USER_AGENT",
+        "USER_AGENT",
         "\"FoodYou/$versionName-opensource (https://github.com/maksimowiczm/FoodYou)\""
     )
 
@@ -41,6 +41,12 @@ buildConfig {
             "\"https://world.openfoodfacts.net/\""
         )
     }
+
+    buildConfigField(
+        "String",
+        "USDA_URL",
+        "\"https://api.nal.usda.gov\""
+    )
 }
 
 kotlin {

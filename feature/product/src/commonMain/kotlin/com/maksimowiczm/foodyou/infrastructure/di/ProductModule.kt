@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.OpenFoodFactsFacade
 import com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.feature.product.data.network.usda.USDAFacade
 import com.maksimowiczm.foodyou.feature.product.domain.ProductRepository
 import com.maksimowiczm.foodyou.feature.product.domain.ProductRepositoryImpl
 import com.maksimowiczm.foodyou.feature.product.domain.RemoteProductRequestFactory
@@ -21,6 +22,23 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val productModule = module {
+    // USDA
+    factory {
+        USDAFacade(
+            httpClient = HttpClient {
+                install(HttpTimeout)
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            ignoreUnknownKeys = true
+                        }
+                    )
+                }
+            },
+            dataStore = get()
+        )
+    }
+
     // Open Food Facts
     factory {
         OpenFoodFactsRemoteDataSource(
@@ -50,6 +68,6 @@ val productModule = module {
     viewModelOf(::CreateProductScreenViewModel)
     viewModelOf(::UpdateProductScreenViewModel)
     viewModel { (text: String?) ->
-        DownloadProductScreenViewModel(text = text, requestFactory = get())
+        DownloadProductScreenViewModel(text, get(), get())
     }
 }
