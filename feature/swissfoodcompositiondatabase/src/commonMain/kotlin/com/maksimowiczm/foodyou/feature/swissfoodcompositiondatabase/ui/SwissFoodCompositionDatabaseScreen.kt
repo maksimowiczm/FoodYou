@@ -79,9 +79,7 @@ internal fun SwissFoodCompositionDatabaseScreen(onBack: () -> Unit, modifier: Mo
         topBar = {
             TopAppBar(
                 title = {},
-                navigationIcon = {
-                    ArrowBackIconButton(onBack)
-                },
+                navigationIcon = { ArrowBackIconButton(onBack) },
                 scrollBehavior = scrollBehavior
             )
         }
@@ -144,14 +142,14 @@ internal fun SwissFoodCompositionDatabaseScreen(onBack: () -> Unit, modifier: Mo
                         SwissFoodCompositionDatabaseUiState.Finished -> ImportingFinished(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 100.dp)
+                                .padding(top = 100.dp)
                         )
 
                         is SwissFoodCompositionDatabaseUiState.Importing -> ImportingProgress(
                             progress = it.progress,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 100.dp)
+                                .padding(top = 100.dp)
                         )
 
                         SwissFoodCompositionDatabaseUiState.LanguagePick -> LanguagePicker(
