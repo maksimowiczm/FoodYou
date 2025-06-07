@@ -240,7 +240,7 @@ private fun SwissFoodCompositionDatabase(onClick: () -> Unit, modifier: Modifier
                             }
                         }
                     },
-                    style = LocalTextStyle.current
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 
