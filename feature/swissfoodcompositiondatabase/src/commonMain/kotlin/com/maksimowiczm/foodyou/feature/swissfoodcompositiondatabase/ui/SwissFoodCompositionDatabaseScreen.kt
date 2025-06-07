@@ -215,6 +215,8 @@ private fun LanguageButton(label: String, onClick: () -> Unit, modifier: Modifie
         ) {
             Text(
                 text = label,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge
             )
         }
@@ -241,7 +243,9 @@ private fun ImportingProgress(progress: Float, modifier: Modifier = Modifier) {
         Spacer(Modifier.height(24.dp))
 
         Text(
-            text = "Importing products",
+            text = stringResource(Res.string.notification_importing_products),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary
         )
@@ -249,7 +253,8 @@ private fun ImportingProgress(progress: Float, modifier: Modifier = Modifier) {
         Spacer(Modifier.height(16.dp))
 
         Text(
-            text = "Please wait while importing products from the Swiss Food Composition Database.",
+            text = stringResource(Res.string.description4_swiss_food_composition_database),
+            modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -272,7 +277,9 @@ private fun ImportingFinished(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(24.dp))
 
         Text(
-            text = "Finished importing products",
+            text = stringResource(Res.string.notification_importing_products_success),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary
         )

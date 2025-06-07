@@ -46,7 +46,7 @@ internal class SwissFoodCompositionDatabaseViewModel(
 
                 dataStore.set(SwissFoodCompositionDatabasePreferences.showHint to false)
 
-                delay(1000)
+                delay(500)
 
                 _uiState.value = SwissFoodCompositionDatabaseUiState.Finished
             }
