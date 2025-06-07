@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.importexport.domain
+package com.maksimowiczm.foodyou.feature.importexport.domain.csv
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.maksimowiczm.foodyou.core.database.food.ProductLocalDataSource
@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.first
 
 data class ExportProgress(val progress: Int, val total: Int)
 
-internal fun interface ExportProductsUseCase {
+fun interface ExportProductsUseCase {
     suspend operator fun invoke(stream: OutputStream): Flow<ExportProgress>
 }
 

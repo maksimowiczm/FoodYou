@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.importexport.domain
+package com.maksimowiczm.foodyou.feature.importexport.domain.csv
 
 import com.maksimowiczm.foodyou.core.database.food.Minerals
 import com.maksimowiczm.foodyou.core.database.food.Nutrients

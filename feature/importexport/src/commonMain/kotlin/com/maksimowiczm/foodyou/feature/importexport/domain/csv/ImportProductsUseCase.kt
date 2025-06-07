@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.importexport.domain
+package com.maksimowiczm.foodyou.feature.importexport.domain.csv
 
 import co.touchlab.kermit.Logger
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
@@ -7,7 +7,7 @@ import java.io.InputStream
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
-internal fun interface ImportProductsUseCase {
+fun interface ImportProductsUseCase {
     /**
      * @return [Flow] of the number of products imported.
      */
@@ -15,11 +15,12 @@ internal fun interface ImportProductsUseCase {
 }
 
 internal class ImportProductsUseCaseImpl(
-    private val productSource: ProductLocalDataSource,
+    private val productLocalDataSource: ProductLocalDataSource,
     private val mapper: ProductCsvMapper = ProductCsvMapper
 ) : ImportProductsUseCase {
     override suspend fun invoke(stream: InputStream): Flow<Int> = channelFlow {
         var count = 0
+
         csvReader().openAsync(stream) {
             readAllWithHeaderAsSequence().forEachIndexed { index, row ->
                 val enumMap =
@@ -34,7 +35,7 @@ internal class ImportProductsUseCaseImpl(
                     return@forEachIndexed
                 }
 
-                productSource.insertProduct(product)
+                productLocalDataSource.insertProduct(product)
 
                 count++
                 send(count)

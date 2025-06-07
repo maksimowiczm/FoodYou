@@ -37,7 +37,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.component.ExperimentalFeatureCard
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
-import com.maksimowiczm.foodyou.feature.importexport.domain.csvHeader
+import com.maksimowiczm.foodyou.feature.importexport.domain.csv.csvHeader
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest

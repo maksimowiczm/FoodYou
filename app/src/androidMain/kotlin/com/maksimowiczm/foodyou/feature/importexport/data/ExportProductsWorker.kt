@@ -17,7 +17,7 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.R
 import com.maksimowiczm.foodyou.core.data.createNotificationChannel
 import com.maksimowiczm.foodyou.core.ext.notifyIfAllowed
-import com.maksimowiczm.foodyou.feature.importexport.domain.ExportProductsUseCase
+import com.maksimowiczm.foodyou.feature.importexport.domain.csv.ExportProductsUseCase
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.getString

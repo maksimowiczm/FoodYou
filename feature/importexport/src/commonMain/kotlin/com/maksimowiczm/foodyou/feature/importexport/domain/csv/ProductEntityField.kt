@@ -1,12 +1,11 @@
-package com.maksimowiczm.foodyou.feature.importexport.domain
+package com.maksimowiczm.foodyou.feature.importexport.domain.csv
 
-internal fun csvHeader(): String =
-    ProductEntityField.entries.joinToString(",") { it.name.lowercase() }
+fun csvHeader(): String = ProductEntityField.entries.joinToString(",") { it.name.lowercase() }
 
 internal fun csvHeaderFields(): List<String> =
     ProductEntityField.entries.map { it.name.lowercase() }
 
-enum class ProductEntityField {
+internal enum class ProductEntityField {
     NAME,
     BRAND,
     BARCODE,
