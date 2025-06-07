@@ -15,6 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_6_0,
             v2_5_0,
             v2_4_0,
@@ -29,7 +30,9 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(
-            "Added FoodData Central (USDA) support. You can now download product data from new remote database."
+            "Added FoodData Central (USDA) support. You can now download product data from new remote database.",
+            "Added Swiss Food Composition Database support",
+            "Added external databases settings screen to manage remote databases"
         ),
         changes = listOf(),
         bugFixes = listOf(
