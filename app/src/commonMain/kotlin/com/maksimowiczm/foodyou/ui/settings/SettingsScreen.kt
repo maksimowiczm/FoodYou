@@ -27,6 +27,7 @@ import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.feature.meal.MealsSettingsListItem
 import com.maksimowiczm.foodyou.feature.security.SecureScreenSettingsListItem
 import com.maksimowiczm.foodyou.ui.home.HomeSettingsListItem
+import com.maksimowiczm.foodyou.ui.settings.externaldatabases.ExternalDatabasesSettingsListItem
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
@@ -41,6 +42,7 @@ fun SettingsScreen(
     onAbout: () -> Unit,
     onLanguage: () -> Unit,
     onImportExport: () -> Unit,
+    onExternalDatabases: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -85,6 +87,11 @@ fun SettingsScreen(
             }
 
             settingsItem {
+                ExternalDatabasesSettingsListItem(
+                    onClick = onExternalDatabases,
+                    containerColor = containerColor,
+                    contentColor = contentColor
+                )
                 ImportExportSettingsListItem(
                     onClick = onImportExport,
                     containerColor = containerColor,

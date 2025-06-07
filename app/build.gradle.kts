@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.androidx.work.runtime)
             implementation(libs.androidx.activity.compose)
             implementation(libs.accompanist.permissions)
+            implementation(libs.androidx.browser)
         }
         commonMain.dependencies {
             implementation(project(":core"))

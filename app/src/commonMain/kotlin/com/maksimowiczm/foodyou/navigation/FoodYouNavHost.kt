@@ -34,6 +34,7 @@ import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.ImportSwiss
 import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.swissFoodCompositionDatabaseGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
+import com.maksimowiczm.foodyou.ui.settings.ExternalDatabases
 import com.maksimowiczm.foodyou.ui.settings.HomeSettings
 import com.maksimowiczm.foodyou.ui.settings.Settings
 import com.maksimowiczm.foodyou.ui.settings.settingsGraph
@@ -136,6 +137,19 @@ fun FoodYouNavHost(
             },
             onImportExport = {
                 navController.navigate(ImportExport) {
+                    launchSingleTop = true
+                }
+            },
+            onExternalDatabases = {
+                navController.navigate(ExternalDatabases) {
+                    launchSingleTop = true
+                }
+            },
+            externalDatabasesOnBack = {
+                navController.popBackStack<ExternalDatabases>(inclusive = true)
+            },
+            onSwissFoodCompositionDatabase = {
+                navController.navigate(ImportSwissFoodCompositionDatabase) {
                     launchSingleTop = true
                 }
             }
