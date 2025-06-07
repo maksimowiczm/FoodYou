@@ -261,7 +261,7 @@ private fun FeaturesContainer(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Features",
+            text = stringResource(Res.string.headline_features),
             style = MaterialTheme.typography.labelLarge
         )
 
@@ -277,7 +277,7 @@ private fun ShareURL(modifier: Modifier = Modifier) {
             contentDescription = null
         )
         Spacer(Modifier.width(16.dp))
-        Text("Share a URL with FoodYou")
+        Text(stringResource(Res.string.feature_share_url_with_food_you))
     }
 }
 
@@ -289,7 +289,7 @@ private fun InAppDownload(modifier: Modifier = Modifier) {
             contentDescription = null
         )
         Spacer(Modifier.width(16.dp))
-        Text("In-app download")
+        Text(stringResource(Res.string.feature_in_app_download))
     }
 }
 
@@ -301,7 +301,7 @@ private fun ManualImport(modifier: Modifier = Modifier) {
             contentDescription = null
         )
         Spacer(Modifier.width(16.dp))
-        Text("Manual database import")
+        Text(stringResource(Res.string.feature_manual_database_import))
     }
 }
 
@@ -340,11 +340,11 @@ private fun SuggestDatabase(onClick: () -> Unit, modifier: Modifier = Modifier) 
             )
             Column {
                 Text(
-                    text = "Suggest external database",
+                    text = stringResource(Res.string.action_suggest_external_database),
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "Suggest a publicly available database to be included",
+                    text = stringResource(Res.string.description_suggest_external_database),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
