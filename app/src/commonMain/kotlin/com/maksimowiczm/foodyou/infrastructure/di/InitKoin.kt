@@ -24,6 +24,7 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         mealModule,
         measurementModule,
         productModule,
-        recipeModule
+        recipeModule,
+        swissFoodCompositionDatabaseModule
     )
 }

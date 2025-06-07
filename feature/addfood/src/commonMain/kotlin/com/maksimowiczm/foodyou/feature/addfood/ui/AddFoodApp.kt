@@ -26,6 +26,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 internal fun AddFoodApp(
     onBack: () -> Unit,
+    onSwissFoodDatabase: () -> Unit,
     mealId: Long,
     epochDay: Int,
     modifier: Modifier = Modifier
@@ -61,6 +62,7 @@ internal fun AddFoodApp(
                         launchSingleTop = true
                     }
                 },
+                onSwissFoodDatabase = onSwissFoodDatabase,
                 viewModel = searchViewModel,
                 state = searchScreenState
             )
