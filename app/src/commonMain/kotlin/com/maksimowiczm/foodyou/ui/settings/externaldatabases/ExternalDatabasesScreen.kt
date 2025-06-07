@@ -191,7 +191,7 @@ private fun FoodDataCentral(onClick: () -> Unit, modifier: Modifier = Modifier) 
                             }
                         }
                     },
-                    style = LocalTextStyle.current
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 
