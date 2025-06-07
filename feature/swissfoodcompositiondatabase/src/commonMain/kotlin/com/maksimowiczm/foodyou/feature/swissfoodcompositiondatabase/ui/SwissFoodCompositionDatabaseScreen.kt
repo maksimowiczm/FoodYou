@@ -253,7 +253,7 @@ private fun ImportingProgress(progress: Float, modifier: Modifier = Modifier) {
         Spacer(Modifier.height(16.dp))
 
         Text(
-            text = stringResource(Res.string.description4_swiss_food_composition_database),
+            text = stringResource(Res.string.description_please_wait_while_importing_products),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium
