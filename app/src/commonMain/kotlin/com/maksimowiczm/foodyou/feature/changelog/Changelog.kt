@@ -32,6 +32,7 @@ object Changelog {
         version = "2.7.0",
         date = LocalDate(2025, 6, 7),
         newFeatures = listOf(
+            "Added new mineral - Chromium",
             "Added FoodData Central (USDA) support. You can now download product data from new remote database.",
             "Added Swiss Food Composition Database support",
             "Added external databases settings screen to manage remote databases"
