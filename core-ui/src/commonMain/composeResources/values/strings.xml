@@ -267,8 +267,11 @@
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">See other awesome icons here</string>
 
+    <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
+    <string name="description_open_food_facts">A collaborative, free and open database of food products from around the world</string>
+    <string name="link_open_food_facts" translatable="false">https://world.openfoodfacts.org</string>
+
     <string name="link_translate" translatable="false">https://crowdin.com/project/food-you</string>
-    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
     <string name="link_github_issue" translatable="false">https://github.com/maksimowiczm/FoodYou/issues</string>
     <string name="link_github_repository" translatable="false">https://github.com/maksimowiczm/FoodYou</string>
 
@@ -290,9 +293,10 @@
     <string name="notification_data_sync_channel_name">Data synchronization</string>
     <string name="notification_data_sync_progress_channel_name">Data synchronization progress</string>
 
-    <string name="link_usda" translatable="false">https://fdc.nal.usda.gov/food-search?query=</string>
-    <string name="link_usda_obtain_key" translatable="false">https://fdc.nal.usda.gov/api-key-signup</string>
     <string name="headline_food_data_central_usda" translatable="false">Food Data Central (USDA)</string>
+    <string name="description_food_data_central_usda">FoodData Central is USDA's comprehensive source of food composition data with multiple distinct data types</string>
+    <string name="link_usda" translatable="false">https://fdc.nal.usda.gov</string>
+    <string name="link_usda_obtain_key" translatable="false">https://fdc.nal.usda.gov/api-key-signup</string>
     <string name="error_usda_rate_limit">Food Data Central (USDA) API rate limit exceeded</string>
     <string name="error_usda_rate_limit_description">You have exceeded the allowed number of requests. Please wait before retrying, or sign up to obtain a key.</string>
     <string name="error_usda_not_verified" translatable="false">The API key supplied has not been verified yet. Please check your e-mail to verify the API key.</string>
@@ -302,5 +306,8 @@
     <string name="description_swiss_food_composition_database">You can expand your food list by adding the Swiss food database. It includes over 1,100 foods in English, German, French, or Italian.</string>
     <string name="description2_swiss_food_composition_database">Swiss Food Composition Database includes nutritional information for over 1,100 general food products. It is available in four languages. To import these products into your food diary, please select your preferred language.</string>
     <string name="description3_swiss_food_composition_database">Your food database will be populated with 1,100 products from Swiss Food Composition Database</string>
+
+    <string name="headline_external_databases">External databases</string>
+    <string name="description_external_databases">See supported databases</string>
 
 </resources>
