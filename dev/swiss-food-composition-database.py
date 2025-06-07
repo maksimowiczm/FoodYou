@@ -174,6 +174,7 @@ EXTRA_COLUMNS = {
     "barcode": "",
     "omega3": "",
     "omega6": "",
+    "caffeine_milli": "",
     "vitamin_b7_micro": "",
     "vitamin_k_micro": "",
     "manganese_milli": "",
@@ -248,7 +249,7 @@ def extract_and_map(input_file, output_file, language=None):
             "salt",
             "fiber",
             "cholesterol_milli",
-            "caffeine_milli",  # Not mapped → will raise KeyError unless we add a default
+            "caffeine_milli",
             "vitamin_a_micro",
             "vitamin_b1_milli",
             "vitamin_b2_milli",
