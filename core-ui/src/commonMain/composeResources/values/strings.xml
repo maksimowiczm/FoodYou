@@ -305,7 +305,7 @@
 
     <string name="headline_swiss_food_composition_database" translatable="false">Swiss Food Composition Database</string>
     <string name="link_swiss_food_composition_database" translatable="false">https://www.naehrwertdaten.ch</string>
-    <string name="description_swiss_food_composition_database">You can expand your food list by adding the Swiss food database. It includes over 1,100 foods in English, German, French, or Italian.</string>
+    <string name="description_swiss_food_composition_database">You can expand your food list by adding the Swiss Food Composition Database. It includes over 1,100 foods in English, German, French, or Italian.</string>
     <string name="description2_swiss_food_composition_database">Swiss Food Composition Database includes nutritional information for over 1,100 general food products. It is available in four languages. To import these products into your food diary, please select your preferred language.</string>
     <string name="description3_swiss_food_composition_database">Your food database will be populated with 1,100 products from Swiss Food Composition Database</string>
 
