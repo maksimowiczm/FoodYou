@@ -9,12 +9,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AddFood(val mealId: Long, val epochDay: Int)
 
-fun NavGraphBuilder.addFoodGraph(onBack: () -> Unit) {
+fun NavGraphBuilder.addFoodGraph(onBack: () -> Unit, onSwissFoodDatabase: () -> Unit) {
     crossfadeComposable<AddFood> {
         val (mealId, epochDay) = it.toRoute<AddFood>()
 
         AddFoodApp(
             onBack = onBack,
+            onSwissFoodDatabase = onSwissFoodDatabase,
             mealId = mealId,
             epochDay = epochDay
         )

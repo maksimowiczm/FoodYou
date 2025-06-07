@@ -6,7 +6,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -68,6 +67,7 @@ import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
 import com.maksimowiczm.foodyou.core.ui.component.Scrim
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.SwissFoodCompositionDatabaseHintCard
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -78,6 +78,7 @@ internal fun SearchFoodScreen(
     onProductAdd: () -> Unit,
     onRecipeAdd: () -> Unit,
     onFoodClick: (FoodId) -> Unit,
+    onSwissFoodDatabase: () -> Unit,
     state: SearchFoodScreenState,
     viewModel: SearchFoodViewModel,
     modifier: Modifier = Modifier
@@ -100,6 +101,7 @@ internal fun SearchFoodScreen(
             }
         },
         onSearch = viewModel::onSearch,
+        onSwissFoodDatabase = onSwissFoodDatabase,
         modifier = modifier
     )
 }
@@ -116,6 +118,7 @@ private fun SearchFoodScreen(
     onFoodClick: (FoodId) -> Unit,
     onFoodToggle: (Boolean, SearchFoodItem) -> Unit,
     onSearch: (String?) -> Unit,
+    onSwissFoodDatabase: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
@@ -154,7 +157,8 @@ private fun SearchFoodScreen(
             onBack = onBack,
             onFoodClick = onFoodClick,
             onFoodToggle = onFoodToggle,
-            onSearch = onSearch
+            onSearch = onSearch,
+            onSwissFoodDatabase = onSwissFoodDatabase
         )
     }
 }
@@ -242,27 +246,15 @@ private fun Content(
     onFoodToggle: (Boolean, SearchFoodItem) -> Unit,
     onBack: () -> Unit,
     onSearch: (String?) -> Unit,
+    onSwissFoodDatabase: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
     var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
 
-//    var showLoadingIndicator by remember { mutableStateOf(true) }
     val showLoadingIndicator = remember(foods) {
         foods == null
     }
-//    LaunchedEffect(pages) {
-//        snapshotFlow { pages.loadState }.transform {
-//            if (it.isIdle) {
-//                emit(it)
-//            } else {
-//                delay(200)
-//                emit(it)
-//            }
-//        }.collectLatest {
-//            showLoadingIndicator = !it.isIdle
-//        }
-//    }
 
     val inputField = @Composable {
         SearchBarDefaults.InputField(
@@ -384,9 +376,15 @@ private fun Content(
             LazyColumn(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 state = state.lazyListState,
-                verticalArrangement = Arrangement.spacedBy(2.dp),
                 contentPadding = paddingValues
             ) {
+                item {
+                    SwissFoodCompositionDatabaseHintCard(
+                        onAdd = onSwissFoodDatabase,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+
                 itemsIndexed(
                     items = foods,
                     key = { _, food -> food.uniqueId }
@@ -419,6 +417,10 @@ private fun Content(
                         onToggle = { onFoodToggle(it, food) },
                         shape = shape
                     )
+
+                    if (i < foods.size - 1) {
+                        Spacer(Modifier.height(2.dp))
+                    }
                 }
 
                 // FAB spacer

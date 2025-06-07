@@ -41,6 +41,7 @@ kotlin {
             implementation(project(":feature:recipe"))
             implementation(project(":feature:measurement"))
             implementation(project(":feature:barcodescanner"))
+            implementation(project(":feature:swissfoodcompositiondatabase"))
 
             implementation(libs.kotlinx.serialization.json)
         }

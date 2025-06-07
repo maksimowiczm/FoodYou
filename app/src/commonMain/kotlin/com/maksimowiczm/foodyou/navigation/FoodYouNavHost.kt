@@ -30,6 +30,8 @@ import com.maksimowiczm.foodyou.feature.product.productGraph
 import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
+import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.ImportSwissFoodCompositionDatabase
+import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.swissFoodCompositionDatabaseGraph
 import com.maksimowiczm.foodyou.ui.home.Home
 import com.maksimowiczm.foodyou.ui.home.homeGraph
 import com.maksimowiczm.foodyou.ui.settings.HomeSettings
@@ -142,6 +144,11 @@ fun FoodYouNavHost(
         addFoodGraph(
             onBack = {
                 navController.popBackStack<AddFood>(inclusive = true)
+            },
+            onSwissFoodDatabase = {
+                navController.navigate(ImportSwissFoodCompositionDatabase) {
+                    launchSingleTop = true
+                }
             }
         )
         goalsGraph(
@@ -283,6 +290,11 @@ fun FoodYouNavHost(
                         inclusive = true
                     }
                 }
+            }
+        )
+        swissFoodCompositionDatabaseGraph(
+            onBack = {
+                navController.popBackStack<ImportSwissFoodCompositionDatabase>(inclusive = true)
             }
         )
     }
