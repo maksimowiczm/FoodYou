@@ -73,10 +73,6 @@ kotlin {
         }.configure {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
-
-        // Allow multi-module compose resources
-        // https://www.jetbrains.com/help/kotlin-multiplatform-dev/whats-new-compose-180.html#support-for-multiplatform-resources-in-the-androidlibrary-target
-        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
     }
 
     sourceSets {

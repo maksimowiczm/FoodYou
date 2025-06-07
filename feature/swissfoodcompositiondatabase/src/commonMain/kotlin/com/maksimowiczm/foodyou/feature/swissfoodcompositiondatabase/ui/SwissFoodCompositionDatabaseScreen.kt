@@ -44,6 +44,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -244,6 +245,14 @@ private fun ImportingProgress(progress: Float, modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary
         )
+
+        Spacer(Modifier.height(16.dp))
+
+        Text(
+            text = "Please wait while importing products from the Swiss Food Composition Database.",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
@@ -263,7 +272,7 @@ private fun ImportingFinished(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(24.dp))
 
         Text(
-            text = "Importing products",
+            text = "Finished importing products",
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary
         )
