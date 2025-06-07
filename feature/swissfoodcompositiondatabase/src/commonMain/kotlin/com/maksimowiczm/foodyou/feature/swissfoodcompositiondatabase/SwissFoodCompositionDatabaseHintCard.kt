@@ -5,7 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -80,18 +80,15 @@ private fun SwissFoodCompositionDatabaseHintCard(
                 text = stringResource(Res.string.description_swiss_food_composition_database),
                 style = MaterialTheme.typography.bodyMedium
             )
-            Row(
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                TextButton(
-                    onClick = onDontShowAgain
-                ) {
+                TextButton(onDontShowAgain) {
                     Text(stringResource(Res.string.action_dont_show_again))
                 }
-                Button(
-                    onClick = onAdd
-                ) {
+                Button(onAdd) {
                     Text(stringResource(Res.string.action_add))
                 }
             }
