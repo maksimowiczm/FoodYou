@@ -1,15 +1,15 @@
-<b>FoodYou</b> is a modern calorie-tracking app built with Material You aesthetic. It’s designed to make calorie tracking easier and more visually appealing.
+<b>FoodYou</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
 
 <b>Features:</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming for a cohesive and visually pleasing experience.</li>
-    <li><b>Interactive Home Page:</b> Quick access to key features with a card-based interface.</li>
-    <li><b>Open Food Facts Integration:</b> Get accurate food data for precise calorie tracking.</li>
-    <li><b>Edge-to-Edge Layout:</b> Enjoy a more immersive experience with a full-screen design.</li>
-    <li><b>Predictive Back Feature:</b> A seamless navigation experience with predictive back.</li>
-    <li><b>Customizable & Open-Source:</b> Built to be extensible and community-driven, allowing you to contribute and modify.</li>
+    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
+    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
+    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
+    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
+    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
+    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
 </ul>
 
-Start tracking your calories today with FoodYou!
+Start tracking your nutrition today with FoodYou — clean, complete, and fully yours.
 
 Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
