@@ -28,6 +28,8 @@ val domainModule = module {
     factoryOf(::FoodRepositoryImpl).bind<FoodRepository>()
     factoryOf(::RecipeRepositoryImpl).bind<RecipeRepository>()
     factoryOf(::MealRepositoryImpl).bind<MealRepository>()
-    factoryOf(::MeasurementRepositoryImpl).bind<MeasurementRepository>()
+    factory {
+        MeasurementRepositoryImpl(get(), get(), get())
+    }.bind<MeasurementRepository>()
     factoryOf(::SearchRepositoryImpl).bind<SearchRepository>()
 }
