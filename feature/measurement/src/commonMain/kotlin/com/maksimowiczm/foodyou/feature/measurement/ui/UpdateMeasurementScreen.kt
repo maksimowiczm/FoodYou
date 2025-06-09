@@ -20,7 +20,6 @@ internal fun UpdateMeasurementScreen(
     measurementId: Long,
     onBack: () -> Unit,
     onEditFood: (FoodId) -> Unit,
-    onRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
@@ -32,24 +31,18 @@ internal fun UpdateMeasurementScreen(
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
 
-    if (measurement == null || meals == null || suggestions == null) {
-        // TODO loading state
-        Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
-        return
-    }
-
     val latestOnBack by rememberUpdatedState(onBack)
-    val latestOnRecipeClone by rememberUpdatedState(onRecipeClone)
     LaunchedCollectWithLifecycle(viewModel.measurementUpdatedEventBus) {
         when (it) {
             MeasurementScreenEvent.FoodDeleted -> latestOnBack()
             MeasurementScreenEvent.Done -> latestOnBack()
-            is MeasurementScreenEvent.RecipeCloned -> latestOnRecipeClone(
-                it.productId,
-                measurement.mealId,
-                measurement.measurementDate.date.toEpochDays()
-            )
         }
+    }
+
+    if (measurement == null || meals == null || suggestions == null) {
+        // TODO loading state
+        Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
+        return
     }
 
     val formState = rememberAdvancedMeasurementFormState(

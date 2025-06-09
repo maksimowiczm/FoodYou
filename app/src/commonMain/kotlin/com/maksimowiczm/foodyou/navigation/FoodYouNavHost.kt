@@ -274,36 +274,6 @@ fun FoodYouNavHost(
                 navController.navigate(route) {
                     launchSingleTop = true
                 }
-            },
-            createOnRecipeClone = { foodId, mealId, epochDay ->
-                navController.navigate(
-                    CreateMeasurement(
-                        foodId = foodId,
-                        mealId = mealId,
-                        epochDay = epochDay
-                    )
-                ) {
-                    launchSingleTop = true
-
-                    popUpTo<CreateMeasurement> {
-                        inclusive = true
-                    }
-                }
-            },
-            updateOnRecipeClone = { foodId, mealId, epochDay ->
-                navController.navigate(
-                    CreateMeasurement(
-                        foodId = foodId,
-                        mealId = mealId,
-                        epochDay = epochDay
-                    )
-                ) {
-                    launchSingleTop = true
-
-                    popUpTo<UpdateMeasurement> {
-                        inclusive = true
-                    }
-                }
             }
         )
         swissFoodCompositionDatabaseGraph(
