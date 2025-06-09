@@ -306,10 +306,9 @@ private fun Ingredients(
             val measurementString = ingredientWeight.let {
                 ingredient.measurementString(ingredientWeight)
             }
-            val caloriesString =
-                ingredientWeight.let {
-                    ingredient.caloriesString(ingredientWeight)
-                }
+            val caloriesString = ingredientWeight.let {
+                ingredient.caloriesString(ingredientWeight)
+            }
 
             if (nutritionFacts == null ||
                 measurementString == null ||
