@@ -38,7 +38,7 @@ internal class SearchFoodViewModel(
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(30_000L),
+        started = SharingStarted.WhileSubscribed(3_000L),
         initialValue = null
     )
 

@@ -27,15 +27,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,8 +53,11 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
@@ -58,6 +65,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun SwissFoodCompositionDatabaseScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<SwissFoodCompositionDatabaseViewModel>()
+    val coroutinesScope = rememberCoroutineScope()
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
@@ -74,15 +82,48 @@ internal fun SwissFoodCompositionDatabaseScreen(onBack: () -> Unit, modifier: Mo
         )
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val pleaseWaitMessage =
+        stringResource(Res.string.description_please_wait_while_importing_products)
+
+    BackHandler(
+        enabled = uiState is SwissFoodCompositionDatabaseUiState.Importing,
+        onBack = coroutinesScope.lambda {
+            snackbarHostState.showSnackbar(pleaseWaitMessage)
+        }
+    )
+
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            SwissFoodCompositionDatabaseUiState.Finished ->
+                snackbarHostState.currentSnackbarData?.dismiss()
+            is SwissFoodCompositionDatabaseUiState.Importing,
+            SwissFoodCompositionDatabaseUiState.LanguagePick -> Unit
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
                 title = {},
-                navigationIcon = { ArrowBackIconButton(onBack) },
+                navigationIcon = {
+                    ArrowBackIconButton(
+                        onClick = {
+                            if (uiState is SwissFoodCompositionDatabaseUiState.Importing) {
+                                coroutinesScope.launch {
+                                    snackbarHostState.showSnackbar(pleaseWaitMessage)
+                                }
+                            } else {
+                                onBack()
+                            }
+                        }
+                    )
+                },
                 scrollBehavior = scrollBehavior
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
