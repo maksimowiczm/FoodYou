@@ -3,16 +3,20 @@ package com.maksimowiczm.foodyou.feature.measurement.ui
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.CallSplit
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.CallSplit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -66,6 +70,7 @@ internal fun MeasurementScreen(
     onEditFood: () -> Unit,
     onDelete: () -> Unit,
     onIngredientClick: (FoodId) -> Unit,
+    onExplode: () -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
@@ -147,52 +152,11 @@ internal fun MeasurementScreen(
                 }
 
                 item {
-                    Column {
-                        Text(
-                            text = "Ingredients",
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-
-                        val fractions = food.ingredientFractions()
-
-                        food.ingredients.forEach { ingredient ->
-                            val ingredientWeight = weight.times(fractions[ingredient.food.id] ?: 1f)
-                            val nutritionFacts =
-                                ingredient.nutritionFacts?.times(ingredientWeight / 100f)
-                            val measurementString = ingredientWeight.let {
-                                ingredient.measurementString(ingredientWeight)
-                            }
-                            val caloriesString =
-                                ingredientWeight.let {
-                                    ingredient.caloriesString(ingredientWeight)
-                                }
-
-                            if (nutritionFacts == null ||
-                                measurementString == null ||
-                                caloriesString == null
-                            ) {
-                                FoodErrorListItem(ingredient.food.headline)
-                            } else {
-                                val g = stringResource(Res.string.unit_gram_short)
-                                val proteins = nutritionFacts.proteins.value.formatClipZeros("%.1f")
-                                val carbohydrates =
-                                    nutritionFacts.carbohydrates.value.formatClipZeros("%.1f")
-                                val fats = nutritionFacts.fats.value.formatClipZeros("%.1f")
-
-                                FoodListItem(
-                                    name = { Text(ingredient.food.headline) },
-                                    proteins = { Text("$proteins $g") },
-                                    carbohydrates = { Text("$carbohydrates $g") },
-                                    fats = { Text("$fats $g") },
-                                    calories = { Text(caloriesString) },
-                                    measurement = { Text(measurementString) }
-                                )
-                            }
-
-                            HorizontalDivider()
-                        }
-                    }
+                    Ingredients(
+                        recipe = food,
+                        weight = weight,
+                        onExplode = onExplode
+                    )
                 }
             }
 
@@ -306,6 +270,76 @@ private fun DeleteDialog(
 }
 
 @Composable
+private fun Ingredients(
+    recipe: Recipe,
+    weight: Float,
+    onExplode: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(Res.string.headline_ingredients),
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(Modifier.weight(1f))
+            IconButton(
+                onClick = onExplode
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.CallSplit,
+                    contentDescription = null
+                )
+            }
+        }
+
+        val fractions = recipe.ingredientFractions()
+
+        recipe.ingredients.forEach { ingredient ->
+            val ingredientWeight = weight.times(fractions[ingredient.food.id] ?: 1f)
+            val nutritionFacts =
+                ingredient.nutritionFacts?.times(ingredientWeight / 100f)
+            val measurementString = ingredientWeight.let {
+                ingredient.measurementString(ingredientWeight)
+            }
+            val caloriesString =
+                ingredientWeight.let {
+                    ingredient.caloriesString(ingredientWeight)
+                }
+
+            if (nutritionFacts == null ||
+                measurementString == null ||
+                caloriesString == null
+            ) {
+                FoodErrorListItem(ingredient.food.headline)
+            } else {
+                val g = stringResource(Res.string.unit_gram_short)
+                val proteins = nutritionFacts.proteins.value.formatClipZeros("%.1f")
+                val carbohydrates =
+                    nutritionFacts.carbohydrates.value.formatClipZeros("%.1f")
+                val fats = nutritionFacts.fats.value.formatClipZeros("%.1f")
+
+                FoodListItem(
+                    name = { Text(ingredient.food.headline) },
+                    proteins = { Text("$proteins $g") },
+                    carbohydrates = { Text("$carbohydrates $g") },
+                    fats = { Text("$fats $g") },
+                    calories = { Text(caloriesString) },
+                    measurement = { Text(measurementString) }
+                )
+            }
+
+            HorizontalDivider()
+        }
+    }
+}
+
+@Composable
 private fun RecipeIngredient.measurementStringShort(weight: Float): String? = with(measurement) {
     when (this) {
         is Measurement.Package -> {
@@ -331,7 +365,7 @@ private fun RecipeIngredient.measurementStringShort(weight: Float): String? = wi
         }
 
         is Measurement.Gram -> "${weight.formatClipZeros()} " +
-                stringResource(Res.string.unit_gram_short)
+            stringResource(Res.string.unit_gram_short)
     }
 }
 

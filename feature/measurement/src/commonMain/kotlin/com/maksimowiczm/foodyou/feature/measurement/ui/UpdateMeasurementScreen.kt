@@ -83,6 +83,9 @@ internal fun UpdateMeasurementScreen(
         onEditFood = { onEditFood(food.id) },
         onDelete = viewModel::onDeleteMeasurement,
         onIngredientClick = { onEditFood(it) },
+        onExplode = {
+            // TODO
+        },
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
     )

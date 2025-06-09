@@ -87,6 +87,19 @@ internal fun CreateMeasurementScreen(
         onEditFood = { onEditFood(foodId) },
         onDelete = viewModel::onDeleteMeasurement,
         onIngredientClick = { onEditFood(it) },
+        onExplode = {
+            val date = formState.date
+            val measurement = formState.measurement
+            val mealId = formState.meal?.id
+
+            if (measurement != null && mealId != null) {
+                viewModel.onExplodeRecipe(
+                    date = date,
+                    mealId = mealId,
+                    measurement = measurement
+                )
+            }
+        },
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
     )
