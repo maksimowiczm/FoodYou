@@ -57,11 +57,10 @@ internal class CreateMeasurementViewModel(
     }
 
     fun onExplodeRecipe(date: LocalDate, mealId: Long, measurement: Measurement) = try {
-        val recipe = food.value as? Recipe
+        val recipe = food.value
 
-        checkNotNull(recipe) {
-            "Food with id $foodId is null or not a recipe"
-        }
+        checkNotNull(recipe) { "Food with id $foodId is null" }
+        check(recipe is Recipe) { "Food is not a recipe but a ${recipe::class.simpleName}" }
 
         val weight = when (measurement) {
             is Measurement.Gram -> measurement.value
@@ -132,10 +131,10 @@ internal class CreateMeasurementViewModel(
 
     fun onDeleteMeasurement() = launch {
         foodRepository.deleteFood(id = foodId)
-        eventBus.send(MeasurementScreenEvent.Deleted)
+        eventBus.send(MeasurementScreenEvent.FoodDeleted)
     }
 
     private companion object {
-        private const val TAG = "CreateMeasurementViewModel"
+        const val TAG = "CreateMeasurementViewModel"
     }
 }

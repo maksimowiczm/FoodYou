@@ -42,7 +42,7 @@ internal fun UpdateMeasurementScreen(
     val latestOnRecipeClone by rememberUpdatedState(onRecipeClone)
     LaunchedCollectWithLifecycle(viewModel.measurementUpdatedEventBus) {
         when (it) {
-            MeasurementScreenEvent.Deleted -> latestOnBack()
+            MeasurementScreenEvent.FoodDeleted -> latestOnBack()
             MeasurementScreenEvent.Done -> latestOnBack()
             is MeasurementScreenEvent.RecipeCloned -> latestOnRecipeClone(
                 it.productId,
@@ -81,10 +81,16 @@ internal fun UpdateMeasurementScreen(
             }
         },
         onEditFood = { onEditFood(food.id) },
-        onDelete = viewModel::onDeleteMeasurement,
+        onDeleteFood = viewModel::onDeleteFood,
         onIngredientClick = { onEditFood(it) },
         onExplode = {
-            // TODO
+            val date = formState.date
+            val mealId = formState.meal?.id
+            val measurement = formState.measurement
+
+            if (measurement != null && mealId != null) {
+                viewModel.onExplodeRecipe(date, mealId, measurement)
+            }
         },
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier

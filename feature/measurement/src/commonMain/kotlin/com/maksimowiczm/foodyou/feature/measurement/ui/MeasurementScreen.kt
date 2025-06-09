@@ -16,7 +16,6 @@ import androidx.compose.material.icons.automirrored.outlined.CallSplit
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.CallSplit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -68,7 +67,7 @@ internal fun MeasurementScreen(
     onBack: () -> Unit,
     onSave: () -> Unit,
     onEditFood: () -> Unit,
-    onDelete: () -> Unit,
+    onDeleteFood: () -> Unit,
     onIngredientClick: (FoodId) -> Unit,
     onExplode: () -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -82,7 +81,7 @@ internal fun MeasurementScreen(
             onDismissRequest = { showDeleteDialog = false },
             onDelete = {
                 showDeleteDialog = false
-                onDelete()
+                onDeleteFood()
             }
         )
     }

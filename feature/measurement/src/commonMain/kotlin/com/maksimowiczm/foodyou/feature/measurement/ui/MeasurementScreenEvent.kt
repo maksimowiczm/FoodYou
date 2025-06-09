@@ -11,7 +11,7 @@ internal sealed interface MeasurementScreenEvent {
     /**
      * The food was deleted.
      */
-    data object Deleted : MeasurementScreenEvent
+    data object FoodDeleted : MeasurementScreenEvent
 
     /**
      * The recipe was cloned into a new product.
