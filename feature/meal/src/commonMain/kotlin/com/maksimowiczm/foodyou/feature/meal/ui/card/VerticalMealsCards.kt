@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.model.FoodId
+import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.feature.meal.domain.Meal
 import com.valentinilk.shimmer.Shimmer
 
@@ -15,6 +17,7 @@ internal fun VerticalMealsCards(
     meals: List<Meal>?,
     onAdd: (mealId: Long) -> Unit,
     onEditMeasurement: (Long) -> Unit,
+    onExplodeRecipe: (FoodId.Recipe, mealId: Long, Measurement, measurementId: Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     onLongClick: () -> Unit,
     shimmer: Shimmer,
@@ -35,6 +38,9 @@ internal fun VerticalMealsCards(
                     meal = meal,
                     onAddFood = { onAdd(meal.id) },
                     onEditMeasurement = onEditMeasurement,
+                    onExplodeRecipe = { recipeId, measurement, measurementId ->
+                        onExplodeRecipe(recipeId, meal.id, measurement, measurementId)
+                    },
                     onDeleteEntry = onDeleteEntry,
                     onLongClick = onLongClick
                 )

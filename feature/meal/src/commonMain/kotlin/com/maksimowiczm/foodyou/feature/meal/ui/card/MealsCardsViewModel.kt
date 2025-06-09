@@ -4,8 +4,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.domain.MeasurementRepository
 import com.maksimowiczm.foodyou.core.ext.launch
+import com.maksimowiczm.foodyou.core.model.FoodId
+import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.feature.meal.data.observeMealCardsLayout
 import com.maksimowiczm.foodyou.feature.meal.domain.ObserveMealsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,6 +18,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDate
 
@@ -48,5 +52,33 @@ internal class MealsCardsViewModel(
 
     fun onDeleteMeasurement(measurementId: Long) = launch {
         measurementRepository.removeMeasurement(measurementId)
+    }
+
+    fun onExplodeRecipe(
+        recipeId: FoodId.Recipe,
+        mealId: Long,
+        measurement: Measurement,
+        measurementId: Long
+    ) = try {
+        viewModelScope.launch {
+            val date = dateState.value
+
+            checkNotNull(date) { "Date must be set before exploding recipe" }
+
+            measurementRepository.explodeRecipe(
+                date = date,
+                mealId = mealId,
+                recipeId = recipeId,
+                measurement = measurement
+            )
+
+            measurementRepository.removeMeasurement(measurementId)
+        }
+    } catch (e: Exception) {
+        Logger.e(TAG, e) { "Failed to explode recipe" }
+    }
+
+    private companion object {
+        const val TAG = "MealsCardsViewModel"
     }
 }
