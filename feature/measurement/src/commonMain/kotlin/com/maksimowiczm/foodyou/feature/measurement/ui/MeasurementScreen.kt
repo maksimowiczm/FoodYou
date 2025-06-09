@@ -157,8 +157,9 @@ internal fun MeasurementScreen(
                         val fractions = food.ingredientFractions()
 
                         food.ingredients.forEach { ingredient ->
-                            val nutritionFacts = ingredient.nutritionFacts
                             val ingredientWeight = weight.times(fractions[ingredient.food.id] ?: 1f)
+                            val nutritionFacts =
+                                ingredient.nutritionFacts?.times(ingredientWeight / 100f)
                             val measurementString = ingredientWeight.let {
                                 ingredient.measurementString(ingredientWeight)
                             }
@@ -330,19 +331,20 @@ private fun RecipeIngredient.measurementStringShort(weight: Float): String? = wi
         }
 
         is Measurement.Gram -> "${weight.formatClipZeros()} " +
-            stringResource(Res.string.unit_gram_short)
+                stringResource(Res.string.unit_gram_short)
     }
 }
 
 @Composable
 private fun RecipeIngredient.measurementString(weight: Float): String? {
     val short = measurementStringShort(weight) ?: return null
+    val weightString = weight.formatClipZeros()
 
     return when (measurement) {
         is Measurement.Gram -> short
         is Measurement.Package,
         is Measurement.Serving ->
-            "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
+            "$short ($weightString ${stringResource(Res.string.unit_gram_short)})"
     }
 }
 
