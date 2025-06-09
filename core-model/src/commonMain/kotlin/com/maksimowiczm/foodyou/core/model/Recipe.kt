@@ -47,4 +47,12 @@ data class Recipe(
             listOf(food)
         }
     }.distinct()
+
+    /**
+     * Returns a map of ingredient fractions, where the key is the food ID and the value is the fraction of the total weight.
+     */
+    fun ingredientFractions(): Map<FoodId, Float> = ingredients
+        .mapNotNull { it.weight?.let { weight -> it.food.id to weight } }
+        .groupBy({ it.first }, { it.second })
+        .mapValues { (_, weights) -> weights.sum() / totalWeight }
 }

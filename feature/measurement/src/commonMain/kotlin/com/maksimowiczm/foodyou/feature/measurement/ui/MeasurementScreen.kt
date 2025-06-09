@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeExtendedFloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,13 +42,18 @@ import com.maksimowiczm.foodyou.core.model.Food
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.Recipe
+import com.maksimowiczm.foodyou.core.model.RecipeIngredient
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.component.FoodErrorListItem
+import com.maksimowiczm.foodyou.core.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
+import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementForm
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementSummary
 import foodyou.app.generated.resources.*
+import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -74,6 +81,9 @@ internal fun MeasurementScreen(
             }
         )
     }
+
+    val measurement = state.measurement ?: Measurement.Gram(100f)
+    val weight = measurement.weight(food) ?: 100f
 
     Scaffold(
         modifier = modifier,
@@ -131,13 +141,65 @@ internal fun MeasurementScreen(
                 HorizontalDivider()
             }
 
+            if (food is Recipe) {
+                item {
+                    Spacer(Modifier.height(8.dp))
+                }
+
+                item {
+                    Column {
+                        Text(
+                            text = "Ingredients",
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+
+                        val fractions = food.ingredientFractions()
+
+                        food.ingredients.forEach { ingredient ->
+                            val nutritionFacts = ingredient.nutritionFacts
+                            val ingredientWeight = weight.times(fractions[ingredient.food.id] ?: 1f)
+                            val measurementString = ingredientWeight.let {
+                                ingredient.measurementString(ingredientWeight)
+                            }
+                            val caloriesString =
+                                ingredientWeight.let {
+                                    ingredient.caloriesString(ingredientWeight)
+                                }
+
+                            if (nutritionFacts == null ||
+                                measurementString == null ||
+                                caloriesString == null
+                            ) {
+                                FoodErrorListItem(ingredient.food.headline)
+                            } else {
+                                val g = stringResource(Res.string.unit_gram_short)
+                                val proteins = nutritionFacts.proteins.value.formatClipZeros("%.1f")
+                                val carbohydrates =
+                                    nutritionFacts.carbohydrates.value.formatClipZeros("%.1f")
+                                val fats = nutritionFacts.fats.value.formatClipZeros("%.1f")
+
+                                FoodListItem(
+                                    name = { Text(ingredient.food.headline) },
+                                    proteins = { Text("$proteins $g") },
+                                    carbohydrates = { Text("$carbohydrates $g") },
+                                    fats = { Text("$fats $g") },
+                                    calories = { Text(caloriesString) },
+                                    measurement = { Text(measurementString) }
+                                )
+                            }
+
+                            HorizontalDivider()
+                        }
+                    }
+                }
+            }
+
             item {
                 Spacer(Modifier.height(8.dp))
             }
 
             item {
-                val measurement = state.measurement ?: Measurement.Gram(100f)
-                val weight = measurement.weight(food) ?: 100f
                 val nutritionFacts = food.nutritionFacts * weight / 100f
 
                 AdvancedMeasurementSummary(
@@ -240,4 +302,52 @@ private fun DeleteDialog(
             Text(stringResource(Res.string.description_delete_product))
         }
     )
+}
+
+@Composable
+private fun RecipeIngredient.measurementStringShort(weight: Float): String? = with(measurement) {
+    when (this) {
+        is Measurement.Package -> {
+            val packageWeight = food.totalWeight ?: return null
+            val quantity = weight / packageWeight
+
+            stringResource(
+                Res.string.x_times_y,
+                quantity.formatClipZeros(),
+                stringResource(Res.string.product_package)
+            )
+        }
+
+        is Measurement.Serving -> {
+            val servingWeight = food.servingWeight ?: return null
+            val quantity = weight / servingWeight
+
+            stringResource(
+                Res.string.x_times_y,
+                quantity.formatClipZeros(),
+                stringResource(Res.string.product_serving)
+            )
+        }
+
+        is Measurement.Gram -> "${weight.formatClipZeros()} " +
+            stringResource(Res.string.unit_gram_short)
+    }
+}
+
+@Composable
+private fun RecipeIngredient.measurementString(weight: Float): String? {
+    val short = measurementStringShort(weight) ?: return null
+
+    return when (measurement) {
+        is Measurement.Gram -> short
+        is Measurement.Package,
+        is Measurement.Serving ->
+            "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
+    }
+}
+
+@Composable
+private fun RecipeIngredient.caloriesString(weight: Float): String? {
+    val calories = nutritionFacts?.calories?.value?.times(weight / 100f) ?: return null
+    return "${calories.roundToInt()} " + stringResource(Res.string.unit_kcal)
 }
