@@ -17,6 +17,7 @@ core = "1.6.1"
 coreKtxVersion = "1.6.1"
 datastorePreferences = "1.1.4"
 desugar_jdk_libs = "2.1.5"
+espressoCore = "3.6.1"
 gmazzoBuildConfig = "5.5.2"
 junit = "1.2.1"
 kermit = "2.0.5"
@@ -44,12 +45,14 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "coreKtxVersion" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }

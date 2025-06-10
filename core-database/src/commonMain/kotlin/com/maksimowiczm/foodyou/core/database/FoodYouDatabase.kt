@@ -329,7 +329,7 @@ private val MIGRATION_11_12 = object : Migration(11, 12) {
 // Delete product source from ProductEntity
 // Merge product and recipe measurements into MeasurementEntity
 // Update RecipeIngredientEntity to use ingredientProductId and ingredientRecipeId column names
-private val MIGRATION_18_19 = object : Migration(18, 19) {
+internal val MIGRATION_18_19 = object : Migration(18, 19) {
     override fun migrate(connection: SQLiteConnection): Unit = with(connection) {
         mergeMeasurements()
         deleteProductSource()
