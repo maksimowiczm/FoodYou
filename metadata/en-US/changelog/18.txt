@@ -1,0 +1,6 @@
+New features
+- App now supports Android 7.0 and above
+
+Bug fixes
+- Fixed products export header, it will now write a valid CSV file.
+- Fixed app crashes on some older Android version when migrating database to the new version.
