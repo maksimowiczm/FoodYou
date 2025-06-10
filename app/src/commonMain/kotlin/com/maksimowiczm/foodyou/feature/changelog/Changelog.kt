@@ -30,7 +30,7 @@ object Changelog {
 
     val v2_7_0 = Version(
         version = "2.7.0",
-        date = LocalDate(2025, 6, 7),
+        date = LocalDate(2025, 6, 10),
         newFeatures = listOf(
             "Added new mineral - Chromium",
             "Added FoodData Central (USDA) support. You can now download product data from new remote database.",
