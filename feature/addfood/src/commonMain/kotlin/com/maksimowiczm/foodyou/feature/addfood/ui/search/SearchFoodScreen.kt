@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
