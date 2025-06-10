@@ -164,5 +164,5 @@ private val SearchFoodItem.measurementString: String?
 private val SearchFoodItem.caloriesString: String?
     @Composable get() = weight?.let {
         val value = (it * calories / 100)
-        "${value.roundToInt()}" + stringResource(Res.string.unit_kcal)
+        "${value.roundToInt()} " + stringResource(Res.string.unit_kcal)
     }

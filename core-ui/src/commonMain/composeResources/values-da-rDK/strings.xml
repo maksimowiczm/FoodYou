@@ -26,15 +26,34 @@
     <string name="headline_product">Produkt</string>
     <string name="headline_recipe">Opskrift</string>
     <string name="headline_create_recipe">Opret opskrift</string>
-    <string name="headline_update_recipe">Opdater opskrift</string>
+    <string name="headline_update_recipe">Opdatere opskrift</string>
     <string name="headline_ingredients" description="Recipe ingredients">Ingredienser</string>
     <string name="headline_summary">Oversigt</string>
     <string name="headline_whats_new">Nyheder</string>
     <string name="headline_changelog">Ændringslog</string>
     <string name="headline_installed" description="Installed version of the app">Installeret</string>
+    <string name="headline_home" description="Home screen">Hjem</string>
+    <string name="headline_home_settings" description="Home screen settings">Hjemindstillinger</string>
+    <string name="headline_calendar">Kalender</string>
+    <string name="headline_meals_settings">Måltidsindstillinger</string>
+    <string name="headline_meals_cards_settings">Måltidskortindstillinger</string>
+    <string name="headline_horizontal">Vandret</string>
+    <string name="headline_vertical">Lodret</string>
+    <string name="headline_values_per">Værdier pr.</string>
+    <string name="headline_other">Andet</string>
+    <string name="headline_vitamins">Vitaminer</string>
+    <string name="headline_minerals">Mineraler</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">Understøttede URL'er</string>
+    <string name="headline_import_and_export">Import/Eksport</string>
+    <string name="headline_experimental" description="Experimental feature">Eksperimentel</string>
+    <string name="headline_experimental_feature">Eksperimentel funktion</string>
+    <string name="headline_copy" description="A noun, thing that is a copy">Kopiér</string>
+    <string name="headline_something_went_wrong">Up! Noget gik galt</string>
+    <string name="headline_daily_goals_settings">Daglige mål-indstillinger</string>
     <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">I %1$s</string>
     <string name="weight">Vægt</string>
     <string name="unit_calories">Kalorier</string>
+    <string name="unit_energy" description="Energy as calories">Energi</string>
     <string name="unit_kcal">kcal</string>
     <plurals name="unit_gram">
         <item quantity="one">gram</item>
@@ -62,8 +81,38 @@
     <string name="nutriment_fats">Fedt</string>
     <string name="nutriment_fats_short">F</string>
     <string name="nutriment_saturated_fats">Mættede fedtsyrer</string>
+    <string name="nutriment_polyunsaturated_fats">Flerumættede fedtstoffer</string>
+    <string name="nutriment_monounsaturated_fats">Enkelumættede fedtstoffer</string>
+    <string name="nutriment_omega_3">Omega-3 fedtsyrer</string>
+    <string name="nutriment_omega_6">Omega-6 fedtsyrer</string>
     <string name="nutriment_salt">Salt</string>
     <string name="nutriment_fiber">Fiber</string>
+    <string name="nutriment_cholesterol">Kolesterol</string>
+    <string name="nutriment_caffeine">Kaffein</string>
+    <string name="vitamin_a">Vitamin A</string>
+    <string name="vitamin_b1">Vitamin B1</string>
+    <string name="vitamin_b2">Vitamin B2</string>
+    <string name="vitamin_b3">Vitamin B3</string>
+    <string name="vitamin_b5">Vitamin B5</string>
+    <string name="vitamin_b6">Vitamin B6</string>
+    <string name="vitamin_b7">Vitamin B7</string>
+    <string name="vitamin_b9">Vitamin B9</string>
+    <string name="vitamin_b12">Vitamin B12</string>
+    <string name="vitamin_c">Vitamin C</string>
+    <string name="vitamin_d">Vitamin D</string>
+    <string name="vitamin_e">Vitamin E</string>
+    <string name="vitamin_k">Vitamin K</string>
+    <string name="mineral_manganese">Mangan</string>
+    <string name="mineral_magnesium">Magnesium</string>
+    <string name="mineral_potassium">Kalium</string>
+    <string name="mineral_calcium">Kalcium</string>
+    <string name="mineral_copper">Kobber</string>
+    <string name="mineral_zinc">Zink</string>
+    <string name="mineral_sodium">Natrium</string>
+    <string name="mineral_iron">Jern</string>
+    <string name="mineral_phosphorus">Fosfor</string>
+    <string name="mineral_selenium">Selenium</string>
+    <string name="mineral_iodine">Jod</string>
     <string name="action_search">Søg</string>
     <string name="action_scan_barcode">Skan stregkode</string>
     <string name="action_add">Tilføj</string>
@@ -97,16 +146,32 @@
     <string name="action_move_up" description="reorder list item up">Flyt op</string>
     <string name="action_move_down" description="reorder list item down">Flyt ned</string>
     <string name="action_use_time_based_ordering">Brug tidsbaseret sortering</string>
+    <string name="action_ignore_all_day_meals">Ignorér heldagsmåltider</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Tilføj ingrediens</string>
-    <string name="action_edit_ingredient_measurement">Rediger ingrediensmåling</string>
+    <string name="action_edit_ingredient_measurement">Redigér ingrediensudmåling</string>
     <string name="action_delete_ingredient">Slet ingrediens</string>
-    <string name="action_download">Hent</string>
+    <string name="action_download">Download</string>
     <string name="action_paste_url">Indsæt URL</string>
-    <string name="action_browse_open_food_facts">Udforsk Open Food facts</string>
+    <string name="action_browse_open_food_facts">Udforsk Open Food Facts</string>
     <string name="action_copy">Kopiér</string>
+    <string name="action_choose_other_date">Vælg anden dato</string>
+    <string name="action_choose_other_measurement">Vælg anden udmåling</string>
+    <string name="action_edit_your_home_page">Redigér startsiden</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Vis mere</string>
+    <string name="action_download_product">Download produkt</string>
+    <string name="action_suggest_external_database">Foreslå ekstern database</string>
+    <string name="action_import_food_products">Importere fødvareprodukter</string>
+    <string name="action_import_food_products_from_csv">Importere fødevareprodukter fra CSV-fil</string>
+    <string name="action_export_food_products">Eksportere fødvareprodukter</string>
+    <string name="action_export_food_products_to_csv">Eksportere fødevareprodukter fra CSV-fil</string>
+    <string name="action_share">Del</string>
+    <string name="action_copy_header" description="Copy CSV file header">Kopiér header</string>
+    <string name="action_copy_and_open_bug_report">Kopiér og åbn fejlanmeldelse</string>
+    <string name="action_show_details">Vis detaljer</string>
     <string name="neutral_barcode_scanner_camera_request">Tillad kameraadgang for at skanne stregkoder</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Adgang skal tildeles for at kunne skanne stregkoder</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Kameratilladelse kræves til stregkodeskanning. Tillad i app-indstillingerne.</string>
+    <string name="neutral_no_food_found">Ingen fødevare fundet</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">%1$d kalorie tilbage</item>
         <item quantity="other">%1$d kalorier tilbage</item>
@@ -120,6 +185,9 @@
     <string name="neutral_entry_deleted">Optegnelse slettet</string>
     <string name="neutral_help_translating_the_app">Hjælp med app-oversættelsen</string>
     <string name="neutral_copied">Info kopieret til udklipsholder</string>
+    <string name="neutral_product_created">Produkt oprettet</string>
+    <string name="neutral_export_started">Eksport startet</string>
+    <string name="neutral_import_started">Import startet</string>
     <string name="question_discard_product">Kassér produkt?</string>
     <string name="question_discard_changes">Kassér ændringer?</string>
     <string name="question_discard_recipe">Kassér opskrift?</string>
@@ -129,6 +197,13 @@
     <string name="error_value_must_be_less_than">Værdi skal være lavere end %1$s</string>
     <string name="error_value_must_be_integer">Værdi skal være et heltal</string>
     <string name="error_sum_of_percentages_must_be_100">Sum af procenter skal udgøre 100</string>
+    <string name="error_value_must_be_positive">Værdi skal være positiv</string>
+    <string name="error_url_not_found">URL ikke fundet</string>
+    <string name="error_url_is_not_supported">URL understøttes ikke</string>
+    <string name="error_failed_to_download_product">Mislykkedes at downloade produktet</string>
+    <string name="error_product_not_found">Produkt ikke fundet</string>
+    <string name="error_unknown_error">Ukendt fejl</string>
+    <string name="error_measurement_error">Udmålingsfejl. Tjek portions- og pakkevægt</string>
     <string name="positive_goal_reached">Mål opnået</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
@@ -143,11 +218,28 @@
     <string name="description_show_some_love">Finder man dette projekt nyttigt, så overvej at give det en stjerne på GitHub! Det hjælper andre til at finde det og holder udviklingen i gang.</string>
     <string name="description_share_your_thoughts">Har du feedback, funktionsanmodninger eller fejlanmeldelser, så lad mig det vide! Jeg vil meget gerne høre fra dig.</string>
     <string name="description_time_based_meals_sorting">Når aktiveret, vises måltider, som p.t. finder sted, først</string>
-    <string name="description_incomplete_nutrition_data">Nogle af de brugte produkter mangler denne værdi; derfor er den viste værdi muligvis ikke akkurat</string>
-    <string name="description_translation_warning">Oversættelserne er lavet af frivillige. De er måske ikke perfekte, og nogle oversættelser kan mangle. Hvis du opdager fejl, så hjælp gerne med at forbedre dem.</string>
+    <string name="description_action_ignore_all_day_meals">Heldagsmåltider vise til slut på listen</string>
+    <string name="description_incomplete_nutrition_data">Nogle af de brugte produkter mangler denne værdi, hvorfor den viste værdi muligvis ikke retvisende</string>
+    <string name="description_translation_warning">Oversættelser er foretaget af frivillige. De er måske ikke perfekte, og nogle oversættelser kan mangle. Opdages fejl, så tøv ikke med at forbedre dem.</string>
     <string name="description_changelog">Se, hvad der er nyt i appen</string>
+    <string name="description_home_settings">Tilpas startsiden</string>
+    <string name="description_download_product">Indsæt link til et fødevareprodukt og hent automatisk ernæringsfakta samt produktdetaljer.</string>
+    <string name="description_download_product_hint">Enhver tekst kan indsættes. Første URL anvendes.</string>
+    <string name="description_import_and_export">Gem og indlæs egne data</string>
+    <string name="description_import_and_export_hint">Alle datasynkronisationshandlinger afvikles i baggrunden. Man underrettes, når de er færdige.</string>
+    <string name="description_experimental_feature">Dette er en eksperimentel funktion. Den kan ændres, eller helt forsvinde, på et tidspunkt.</string>
+    <string name="description_notifications_permission_required_data_sync">Notifikationstilladelse kræves for visning af synkronisationsstatus. Slå den venligst til i app-indstillingerne.</string>
+    <string name="description_show_macronutrients_goals">Vis makroernæringsmål</string>
+    <string name="description_recipe_missing_ingredients">Man ser muligvis ikke alle opskrifter her. Nogle opskrifter er skjult for at forhindre cirkulære referencer.</string>
     <string name="headline_launcher_icon_by_icons8">Launcher-ikon fra Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Se andre fantastiske ikoner her</string>
-    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
     <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">Eksporterer produkter</string>
+    <string name="notification_exporting_products_success">Produkteksport færdig</string>
+    <string name="notification_exporting_products_failure">Produkteksport mislykkedes</string>
+    <string name="notification_importing_products">Importerer produkter</string>
+    <string name="notification_importing_products_success">Produktimport færdig</string>
+    <string name="notification_importing_products_failure">Produktimport mislykkedes</string>
+    <string name="notification_data_sync_channel_name">Datasynkronisation</string>
+    <string name="notification_data_sync_progress_channel_name">Datasynkronisation i gang</string>
 </resources>

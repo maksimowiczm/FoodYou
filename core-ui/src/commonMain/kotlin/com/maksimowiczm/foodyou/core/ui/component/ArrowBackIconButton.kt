@@ -11,10 +11,15 @@ import foodyou.app.generated.resources.action_go_back
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ArrowBackIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun ArrowBackIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
+) {
     IconButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        enabled = enabled
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,

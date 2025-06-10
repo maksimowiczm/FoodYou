@@ -312,7 +312,7 @@
     <string name="headline_external_databases">External databases</string>
     <string name="description_external_databases">See supported databases</string>
 
-    <string name="feature_share_url_with_food_you">Share URL with FoodYou</string>
+    <string name="feature_share_url_with_food_you">Share URL with Food You</string>
     <string name="feature_in_app_download">In-app download</string>
     <string name="feature_manual_database_import">Manual database import</string>
 

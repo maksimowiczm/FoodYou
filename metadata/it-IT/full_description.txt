@@ -1,15 +1,15 @@
-<b>FoodYou</b> è un'app moderna per il monitoraggio delle calorie, costruita con l'estetica Material You. È progettata per rendere il monitoraggio delle calorie più semplice e visivamente accattivante.
+<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
 
 <b>Funzionalità:</b>
 <ul>
-    <li><b>Design Material You:</b> Tema dinamico per un'esperienza coesiva e visivamente piacevole.</li>
-    <li><b>Home Page Interattiva:</b> Accesso rapido alle funzionalità chiave con un'interfaccia a schede.</li>
-    <li><b>Integrazione Open Food Facts:</b> Ottieni dati alimentari accurati per un monitoraggio calorico preciso.</li>
-    <li><b>Layout Edge-to-Edge:</b> Goditi un'esperienza più immersiva con un design a schermo intero.</li>
-    <li><b>Funzione Indietro Predittivo:</b> Un'esperienza di navigazione fluida con indietro predittivo.</li>
-    <li><b>Personalizzabile e Open-Source:</b> Progettato per essere estendibile e supportato dalla comunità, permettendoti di contribuire e modificarlo.</li>
+    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
+    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
+    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
+    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
+    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
+    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
 </ul>
 
-Inizia a tracciare le tue calorie oggi con FoodYou!
+Start tracking your nutrition today with Food You — clean, complete, and fully yours.
 
-Icona del launcher creata da <a href='https://icons8.com/' target='_blank' rel='nofollow noopener noreferrer'>Icons8</a>
+Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
