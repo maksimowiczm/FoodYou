@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
@@ -5,7 +7,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.clearText
@@ -24,17 +24,12 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.LunchDining
-import androidx.compose.material.icons.filled.NorthWest
-import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -54,7 +49,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.dp
@@ -317,22 +311,12 @@ private fun Content(
         )
     }
 
-    ExpandedFullScreenSearchBar(
-        state = state.searchBarState,
+    FullScreenSearchBar(
+        state = state,
+        recentQueries = recentQueries,
+        onSearch = onSearch,
         inputField = inputField
-    ) {
-        ProductSearchBarSuggestions(
-            recentQueries = recentQueries,
-            onSearch = coroutineScope.lambda<String> {
-                onSearch(it)
-                state.textFieldState.setTextAndPlaceCursorAtEnd(it)
-                state.searchBarState.animateToCollapsed()
-            },
-            onFill = {
-                state.textFieldState.setTextAndPlaceCursorAtEnd(it)
-            }
-        )
-    }
+    )
 
     Scaffold(
         topBar = {
@@ -428,50 +412,6 @@ private fun Content(
                     Spacer(Modifier.padding(vertical = 16.dp).height(72.dp))
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun ProductSearchBarSuggestions(
-    recentQueries: List<String>,
-    onSearch: (String) -> Unit,
-    onFill: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        modifier = modifier
-    ) {
-        items(recentQueries) { query ->
-            ListItem(
-                modifier = Modifier.clickable {
-                    onSearch(query)
-                },
-                headlineContent = {
-                    Text(query)
-                },
-                colors = ListItemDefaults.colors(
-                    containerColor = Color.Transparent
-                ),
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Default.Schedule,
-                        contentDescription = stringResource(Res.string.action_search)
-                    )
-                },
-                trailingContent = {
-                    IconButton(
-                        onClick = { onFill(query) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.NorthWest,
-                            contentDescription = stringResource(
-                                Res.string.action_insert_suggested_search
-                            )
-                        )
-                    }
-                }
-            )
         }
     }
 }
