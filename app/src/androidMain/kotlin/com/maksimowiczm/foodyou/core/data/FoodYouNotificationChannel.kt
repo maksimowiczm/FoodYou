@@ -11,11 +11,7 @@ abstract class FoodYouNotificationChannel(
     val importance: Int
 ) {
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getChannel(): NotificationChannel = NotificationChannel(
-        channelId,
-        name,
-        importance
-    )
+    fun getChannel(): NotificationChannel = NotificationChannel(channelId, name, importance)
 }
 
 /**
