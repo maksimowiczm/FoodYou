@@ -23,7 +23,6 @@ fun NavGraphBuilder.measurementGraph(
             date = route.date,
             onBack = createOnBack,
             onEditFood = onEditFood,
-            onRecipeClone = createOnRecipeClone,
             animatedVisibilityScope = this
         )
     }
@@ -34,7 +33,6 @@ fun NavGraphBuilder.measurementGraph(
             measurementId = route.measurementId,
             onBack = updateOnBack,
             onEditFood = onEditFood,
-            onRecipeClone = updateOnRecipeClone,
             animatedVisibilityScope = this
         )
     }
