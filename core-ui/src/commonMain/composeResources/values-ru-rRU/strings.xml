@@ -241,7 +241,6 @@
     <string name="description_recipe_missing_ingredients">Возможно, вы увидите здесь не все рецепты. Некоторые рецепты скрыты, чтобы избежать циклических ссылок.</string>
     <string name="headline_launcher_icon_by_icons8">Иконка приложения от Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Посмотреть другие крутые иконки здесь</string>
-    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Происходит экспорт продуктов</string>
     <string name="notification_exporting_products_success">Экспорт продуктов завершен</string>

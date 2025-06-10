@@ -208,6 +208,5 @@
     <string name="description_download_product_hint">Bármilyen szöveget beilleszthetsz. Az első URL kerül felhasználásra.</string>
     <string name="headline_launcher_icon_by_icons8">Az indítási ikon az Icons8-ról származik</string>
     <string name="neutral_see_other_awesome_icons_here">Nézegess további nagyszerű ikonokat itt</string>
-    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
     <!-- Don't translate changelog strings -->
 </resources>

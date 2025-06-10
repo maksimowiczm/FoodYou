@@ -207,6 +207,5 @@
     <string name="description_home_settings">Passe deine Startseite an</string>
     <string name="headline_launcher_icon_by_icons8">Startprogramm-Symbol von Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Weitere tolle Icons siehst du hier</string>
-    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://de.openfoodfacts.org/</string>
     <!-- Don't translate changelog strings -->
 </resources>

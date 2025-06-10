@@ -1,15 +1,15 @@
-<b>FoodYou</b> - це сучасний додаток для трекінгу калорій побудований за дизайн-естетикою Material You. Він побудований, щоб зробити трекінг калорій простішим та більш візуально привабливим.
+<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
 
 <b>Функції:</b>
 <ul>
-    <li><b>Дизайн Material You:</b>Динамічна тематизація для цілісного та візуально привабливого досвіду.</li>
-    <li><b>Інтерактивна домашня сторінка:</b> Швидкий доступ до ключових функцій за допомогою карткового інтерфейсу.</li>
-    <li><b>Інтеграція з Open Food Facts:</b> Отримуйте перевірені дані про їжу для точного трекінгу калорій.</li>
-    <li><b>Компонування Edge-to-Edge:</b> Насолоджуйтеся більш імерсивним досвідом з повноекранним дизайном.</li>
-    <li><b>Функція Predictive Back:</b> Бездоганний навігаційний досвід з використанням предикативної зворотної навігації.</li>
-    <li><b>Гнучкість та відкритий код:</b> Збудований, щоб бути розширюваним та керованим спільнотою, даючи вам можливість сприяти розвитку додатку.</li>
+    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
+    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
+    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
+    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
+    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
+    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
 </ul>
 
-Почніть слідкувати за своїми калоріями вже сьогодні з FoodYou!
+Start tracking your nutrition today with Food You — clean, complete, and fully yours.
 
-Іконка додатку виготовлена <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
