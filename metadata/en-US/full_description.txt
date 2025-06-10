@@ -1,4 +1,4 @@
-<b>FoodYou</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
+<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
 
 <b>Features:</b>
 <ul>
@@ -10,6 +10,6 @@
     <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
 </ul>
 
-Start tracking your nutrition today with FoodYou — clean, complete, and fully yours.
+Start tracking your nutrition today with Food You — clean, complete, and fully yours.
 
 Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
