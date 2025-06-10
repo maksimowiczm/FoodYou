@@ -40,6 +40,7 @@ kotlin {
         }
 
         androidMain.dependencies {
+            implementation(libs.sqlite.android)
         }
     }
 }

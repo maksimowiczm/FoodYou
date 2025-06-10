@@ -13,9 +13,11 @@ appcompatVersion = "1.7.0"
 browser = "1.8.0"
 composeMultiplatform = "1.8.0"
 composeShimmer = "1.3.2"
+core = "1.6.1"
 coreKtxVersion = "1.6.1"
 datastorePreferences = "1.1.4"
 gmazzoBuildConfig = "5.5.2"
+junit = "1.2.1"
 kermit = "2.0.5"
 koin = "4.0.4"
 kotlin = "2.1.20"
@@ -29,12 +31,10 @@ material3 = "1.4.0-alpha14"
 navigationCompose = "2.9.0-beta01"
 reorderable = "2.4.3"
 room = "2.7.1"
+runner = "1.6.2"
+sqliteAndroid = "3.49.0"
 workRuntime = "2.10.1"
 zxingAndroidEmbedded = "4.3.0"
-runner = "1.6.2"
-core = "1.6.1"
-junit = "1.2.1"
-kotlinStdlib = "2.1.20"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -70,9 +70,9 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-client-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
+sqlite-android = { module = "com.github.requery:sqlite-android", version.ref = "sqliteAndroid" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

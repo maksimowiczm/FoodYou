@@ -114,15 +114,8 @@ android {
             initWith(getByName("devRelease"))
             isMinifyEnabled = true
         }
-        create("preview") {
-            initWith(getByName("release"))
-            applicationIdSuffix = ".preview"
-            versionNameSuffix = "-preview"
-
-            manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher_preview"
-            manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round_preview"
-        }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
