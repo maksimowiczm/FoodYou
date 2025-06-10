@@ -36,8 +36,8 @@ object Changelog {
             "App now supports Android 7.0 and above"
         ),
         bugFixes = listOf(
-            "Fixed products export header, it will now write a valid CSV file.",
-            "Fixed app crashes on some older Android version when migrating database to the new version."
+            "Fixed products export header, it will now write a valid CSV file",
+            "Fixed app crashes on some older Android version when migrating database to the new version"
         )
     )
 
