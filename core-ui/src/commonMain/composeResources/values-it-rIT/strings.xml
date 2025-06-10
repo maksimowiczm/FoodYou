@@ -50,6 +50,9 @@
     <string name="headline_copy" description="A noun, thing that is a copy">Copia</string>
     <string name="headline_something_went_wrong">Oops! Qualcosa è andato storto</string>
     <string name="headline_daily_goals_settings">Impostazioni obiettivi giornalieri</string>
+    <string name="headline_api_key">Chiave API</string>
+    <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Fonte</string>
+    <string name="headline_features">Funzionalità</string>
     <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">In %1$s</string>
     <string name="weight">Peso</string>
     <string name="unit_calories">Calorie</string>
@@ -113,6 +116,7 @@
     <string name="mineral_phosphorus">Fosforo</string>
     <string name="mineral_selenium">Selenio</string>
     <string name="mineral_iodine">Iodio</string>
+    <string name="mineral_chromium">Chromium</string>
     <string name="action_search">Cerca</string>
     <string name="action_scan_barcode">Scansiona codice a barre</string>
     <string name="action_add">Aggiungi</string>
@@ -168,6 +172,10 @@
     <string name="action_copy_header" description="Copy CSV file header">Copia intestazione</string>
     <string name="action_copy_and_open_bug_report">Copia e apri segnalazione bug</string>
     <string name="action_show_details">Mostra dettagli</string>
+    <string name="action_browse_usda">Sfoglia Food Data Central (USDA)</string>
+    <string name="action_set_key">Imposta chiave</string>
+    <string name="action_obtain_key">Ottieni chiave</string>
+    <string name="action_dont_show_again">Non mostrare più</string>
     <string name="neutral_barcode_scanner_camera_request">Permetti l'accesso alla tua fotocamera per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Devi permettere l'accesso per scansionare i codici a barre</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">L'autorizzazione alla fotocamera è necessaria per scansionare i codici a barre. Per favore, concedila nelle impostazioni dell'app.</string>
@@ -204,6 +212,7 @@
     <string name="error_product_not_found">Prodotto non trovato</string>
     <string name="error_unknown_error">Errore sconosciuto</string>
     <string name="error_measurement_error">Errore nella misurazione, controlla la porzione e il peso della confezione</string>
+    <string name="error_api_key_is_invalid">La chiave API non è valida</string>
     <string name="positive_goal_reached">Obiettivo raggiunto</string>
     <string name="positive_ok">OK</string>
     <plurals name="negative_exceeded_by_calories">
@@ -231,9 +240,10 @@
     <string name="description_notifications_permission_required_data_sync">L'autorizzazione alle notifiche è necessaria per mostrare l'avanzamento della sincronizzazione dei dati. Abilitala nelle impostazioni dell'app.</string>
     <string name="description_show_macronutrients_goals">Mostra obiettivi dei macronutrienti</string>
     <string name="description_recipe_missing_ingredients">Potresti non vedere tutte le ricette qui. Alcune ricette sono nascoste per evitare riferimenti circolari.</string>
+    <string name="description_suggest_external_database">Suggerisci un database pubblico da includere</string>
     <string name="headline_launcher_icon_by_icons8">Icona del launcher di Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Guarda altre fantastiche icone qui</string>
-    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
+    <string name="description_open_food_facts">Un database collaborativo, gratuito e aperto di prodotti alimentari da tutto il mondo</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Esportazione prodotti</string>
     <string name="notification_exporting_products_success">Esportazione prodotti completata</string>
@@ -243,4 +253,12 @@
     <string name="notification_importing_products_failure">Importazione prodotti fallita</string>
     <string name="notification_data_sync_channel_name">Sincronizzazione dei dati</string>
     <string name="notification_data_sync_progress_channel_name">Avanzamento della sincronizzazione dei dati</string>
+    <string name="description_food_data_central_usda">FoodData Central è la fonte completa di dati sulla composizione degli alimenti dell'USDA, con diversi tipi di dati distinti</string>
+    <string name="error_usda_rate_limit">Limite di richieste all’API di Food Data Central (USDA) superato</string>
+    <string name="error_usda_rate_limit_description">Hai superato il numero massimo di richieste consentito. Prima di riprovare attendi, oppure iscriviti per ottenere una chiave.</string>
+    <string name="description_swiss_food_composition_database">Puoi ampliare il tuo elenco di alimenti aggiungendo il Database Svizzero sulla Composizione degli Alimenti. Include oltre 1.100 alimenti in inglese, tedesco, francese o italiano.</string>
+    <string name="description2_swiss_food_composition_database">Il Database Svizzero sulla Composizione degli Alimenti include informazioni nutrizionali per oltre 1.100 prodotti alimentari generici. È disponibile in quattro lingue. Per importare questi prodotti nel tuo diario alimentare, seleziona la lingua preferita.</string>
+    <string name="description3_swiss_food_composition_database">Il tuo database alimentare sarà popolato da 1.100 prodotti dal Database Svizzero sulla Composizione degli Alimenti</string>
+    <string name="headline_external_databases">Database esterni</string>
+    <string name="description_external_databases">Vedi i database supportati</string>
 </resources>

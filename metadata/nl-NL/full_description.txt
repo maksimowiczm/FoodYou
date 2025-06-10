@@ -1,15 +1,15 @@
-<b>FoodYou</b> is een moderne calorieteller en voedingsdagboek gemaakt in de stijl van Material You. De app is gemaakt om calorieën tellen makkelijker en visueel aantrekkelijker te maken.
+<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
 
 <b>Functies:</b>
 <ul>
-    <li><b>Material You:</b> Dynamisch thema voor visuele cohesie en een aantrekkelijk uiterlijk.</li>
-    <li><b>Interactieve Home pagina</b> Snelle toegang tot belangrijke functies met een kaart-gebaseerd design.</li>
-    <li><b>Open Food Facts integratie:</b> Krijg duidelijke en accurate voedingsinformatie.</li>
-    <li><b>Schermvullende layout:</b> Zorgt voor een betere ervaring.</li>
-    <li><b>Voorspellende terugknop:</b> Een naadloze navigatieervaring door voorspellende terugknop.</li>
-    <li><b>Volledig configureerbaar & Open-Source:</b> Gebouwd voor en door makers in de community. Help ons de app nog beter te maken.</li>
+    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
+    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
+    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
+    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
+    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
+    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
 </ul>
 
-Start vandaag nog met calorieën tellen met FoodYou!
+Start tracking your nutrition today with Food You — clean, complete, and fully yours.
 
-App icoon door <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

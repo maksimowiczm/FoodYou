@@ -1,15 +1,15 @@
-<b>FoodYou</b> это современный трекер калорий, построенный в дизайне Material You. Он создан для того, чтобы трекинг калорий был легче и радовал глаз.
+<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
 
 <b>Возможности:</b>
 <ul>
-    <li><b>Дизайн Material You:</b> Динамические темы — единство стиля и приятный глазу интерфейс.</li>
-    <li><b>Интерактивная Домашняя Страница:</b> Основные функции всегда под рукой благодаря карточному дизайну.</li>
-    <li><b>Интеграция Open Food Facts:</b> Получайте точные данные о продуктах, чтобы считать калории без ошибок.</li>
-    <li><b>Интерфейс во весь экран:</b> Более полное погружение благодаря дизайну без полей.</li>
-    <li><b>Функция Predictive Back:</b> Идеальная навигация без задержек.</li>
-    <li><b>Настраиваемый и открытый исходный код:</b> Расширяйте функционал и участвуйте в развитии проекта.</li>
+    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
+    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
+    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
+    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
+    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
+    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
 </ul>
 
-Начните отслеживать калории уже сегодня с FoodYou!
+Start tracking your nutrition today with Food You — clean, complete, and fully yours.
 
-Иконку приложения сделали <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

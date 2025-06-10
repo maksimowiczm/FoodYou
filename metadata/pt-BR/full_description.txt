@@ -1,15 +1,15 @@
-O <b>FoodYou</b> é um aplicativo moderno de controle de calorias criado com a estética do Material You. Ele foi projetado para tornar o controle de calorias mais fácil e visualmente mais atraente.
+<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
 
 <b>Características:</b>
 <ul>
-    <li><b>Estilo Material You:</b> Tema dinâmico para uma experiência coesa e visualmente agradável.</li>
-    <li><b>Página Inicial Interativa:</b> Acesso rápido aos principais recursos com uma interface baseada em cartões.</li>
-    <li><b>Integração do Open Food Facts:</b> Obtenha dados exatos sobre os alimentos para um controle preciso das calorias.</li>
-    <li><b>Layout de borda a borda:</b> Desfrute de uma experiência mais imersiva com um design de tela cheia.</li>
-    <li><b>Recurso Predictive Back:</b> Uma experiência de navegação perfeita com previsão de retorno.</li>
-    <li><b>Personalizável e de código aberto:</b> Criado para ser extensível e orientado pela comunidade, permitindo que você contribua e modifique.</li>
+    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
+    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
+    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
+    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
+    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
+    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
 </ul>
 
-Comece a monitorar suas calorias hoje mesmo com o FoodYou!
+Start tracking your nutrition today with Food You — clean, complete, and fully yours.
 
-Criação do ícone da aplicação <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

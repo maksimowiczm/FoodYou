@@ -188,7 +188,6 @@
     <string name="description_changelog">Voir les nouveautés de l'application</string>
     <string name="headline_launcher_icon_by_icons8">Icône de démarrage fournie par Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Découvrez d'autres superbes icônes ici</string>
-    <string name="link_open_food_facts" description="Put country domain here. For example Poland: pl.openfoodfacts.org">https://world.openfoodfacts.org/</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_data_sync_progress_channel_name">Progression de la synchronisation des données</string>
 </resources>
