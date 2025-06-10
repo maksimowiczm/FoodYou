@@ -1,0 +1,11 @@
+New features
+- Added new mineral - Chromium
+- Added FoodData Central (USDA) support. You can now download product data from new remote database.
+- Added Swiss Food Composition Database support
+- Added external databases settings screen to manage remote databases
+
+Bug fixes
+- Stop overriding calories value when updating product or downloading product data from remote databases
+
+Notes
+Even the best food tracking app is useless without a good database of food products. This update adds support for two new databases: FoodData Central (USDA) and the Swiss Food Composition Database.

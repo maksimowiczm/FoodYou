@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_7_0,
             v2_6_0,
             v2_5_0,
             v2_4_0,
@@ -28,18 +28,19 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_7_0 = Version(
+        version = "2.7.0",
+        date = LocalDate(2025, 6, 10),
         newFeatures = listOf(
+            "Added new mineral - Chromium",
             "Added FoodData Central (USDA) support. You can now download product data from new remote database.",
             "Added Swiss Food Composition Database support",
             "Added external databases settings screen to manage remote databases"
         ),
-        changes = listOf(),
         bugFixes = listOf(
             "Stop overriding calories value when updating product or downloading product data from remote databases"
         ),
-        translations = listOf(),
-        notes = null
+        notes = "Even the best food tracking app is useless without a good database of food products. This update adds support for two new databases: FoodData Central (USDA) and the Swiss Food Composition Database."
     )
 
     val v2_6_0 = Version(
