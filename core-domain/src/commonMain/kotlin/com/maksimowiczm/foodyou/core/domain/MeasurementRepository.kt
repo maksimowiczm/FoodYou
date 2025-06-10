@@ -16,10 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapIfNotNull
 import kotlinx.coroutines.flow.mapValues
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 interface MeasurementRepository {
     fun observeSuggestions(id: FoodId): Flow<List<Measurement>>
@@ -137,9 +134,7 @@ internal class MeasurementRepositoryImpl(
                     else -> return@flatMapLatest flowOf(null)
                 }
 
-                val date = Instant
-                    .fromEpochSeconds(measurement.createdAt)
-                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                val date = LocalDate.fromEpochDays(measurement.epochDay)
 
                 val measurementModel = measurementMapper.toMeasurement(measurement)
 
@@ -172,9 +167,7 @@ internal class MeasurementRepositoryImpl(
                     FoodWithMeasurement(
                         measurementId = measurement.id,
                         measurement = measurementMapper.toMeasurement(measurement),
-                        measurementDate = Instant
-                            .fromEpochSeconds(measurement.createdAt)
-                            .toLocalDateTime(TimeZone.currentSystemDefault()),
+                        measurementDate = LocalDate.fromEpochDays(measurement.epochDay),
                         mealId = measurement.mealId,
                         food = food
                     )

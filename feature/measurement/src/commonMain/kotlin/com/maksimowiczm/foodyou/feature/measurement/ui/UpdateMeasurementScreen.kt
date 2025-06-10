@@ -47,7 +47,7 @@ internal fun UpdateMeasurementScreen(
 
     val formState = rememberAdvancedMeasurementFormState(
         food = measurement.food,
-        initialDate = measurement.measurementDate.date,
+        initialDate = measurement.measurementDate,
         meals = meals,
         measurements = (listOf(measurement.measurement) + suggestions).distinct(),
         initialMeal = measurement.mealId.let { meals.indexOfFirst { meal -> meal.id == it } },

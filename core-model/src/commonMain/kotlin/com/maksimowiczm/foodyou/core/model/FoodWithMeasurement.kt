@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.core.model
 
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 
 data class FoodWithMeasurement(
     val measurementId: Long,
     val measurement: Measurement,
-    val measurementDate: LocalDateTime,
+    val measurementDate: LocalDate,
     val mealId: Long,
     val food: Food
 ) {
