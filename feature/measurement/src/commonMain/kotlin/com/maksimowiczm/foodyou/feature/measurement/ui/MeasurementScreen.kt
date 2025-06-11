@@ -112,8 +112,7 @@ internal fun MeasurementScreen(
                     visible = !animatedVisibilityScope.transition.isRunning && state.isValid,
                     alignment = Alignment.BottomEnd
                 ),
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalAlignment = Alignment.End
             ) {
                 if (food is Recipe) {
                     ExtendedFloatingActionButton(
@@ -132,6 +131,7 @@ internal fun MeasurementScreen(
                         Spacer(Modifier.width(8.dp))
                         Text(stringResource(Res.string.action_unpack))
                     }
+                    Spacer(Modifier.height(8.dp))
                 }
 
                 LargeExtendedFloatingActionButton(
@@ -214,7 +214,12 @@ internal fun MeasurementScreen(
             }
 
             item {
-                Spacer(Modifier.height(16.dp + 56.dp + 8.dp + 96.dp + 16.dp))
+                Spacer(Modifier.height(16.dp))
+                if (food is Recipe) {
+                    Spacer(Modifier.height(56.dp + 8.dp))
+                }
+                Spacer(Modifier.height(96.dp))
+                Spacer(Modifier.height(16.dp))
             }
         }
     }
