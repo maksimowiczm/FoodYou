@@ -76,6 +76,7 @@ interface MeasurementLocalDataSource {
             ) latest ON m1.measurement = latest.measurement AND m1.createdAt = latest.maxCreatedAt
             WHERE m1.productId = :productId
             GROUP BY m1.measurement
+            ORDER BY m1.createdAt DESC
         ),
         Defaults AS (
             SELECT
@@ -129,6 +130,7 @@ interface MeasurementLocalDataSource {
             ) latest ON m1.measurement = latest.measurement AND m1.createdAt = latest.maxCreatedAt
             WHERE m1.recipeId = :recipeId
             GROUP BY m1.measurement
+            ORDER BY m1.createdAt DESC
         ),
         Defaults AS (
             SELECT

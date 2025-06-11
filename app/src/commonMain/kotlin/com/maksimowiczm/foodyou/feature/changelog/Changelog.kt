@@ -32,7 +32,9 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(),
-        changes = listOf(),
+        changes = listOf(
+            "Select latest measurement on the create measurement screen. Most of the time, this will be the same measurement as shown on the food search screen."
+        ),
         bugFixes = listOf(
             "Use proper measurement date when updating product measurement",
             "Stop displaying deleted measurements"
