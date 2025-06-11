@@ -35,6 +35,7 @@ object Changelog {
         changes = listOf(),
         bugFixes = listOf(
             "Use proper measurement date when updating product measurement",
+            "Stop displaying deleted measurements"
         ),
         translations = listOf(),
         notes = null
