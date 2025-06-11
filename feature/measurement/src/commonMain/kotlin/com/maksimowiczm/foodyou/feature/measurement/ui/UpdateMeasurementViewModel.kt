@@ -65,12 +65,22 @@ internal class UpdateMeasurementViewModel(
         eventBus.send(MeasurementScreenEvent.Done)
     }
 
-    fun unpackRecipe(date: LocalDate, mealId: Long, measurement: Measurement) = try {
+    fun unpackRecipe(date: LocalDate, mealId: Long, measurement: Measurement) {
         val recipe = this.measurement.value?.food
-        checkNotNull(recipe) { "Food from measurement with id $measurementId is null" }
+        if (recipe == null) {
+            Logger.e(TAG) {
+                "Unpacking recipe failed: Food is null for measurement with id $measurementId."
+            }
+            return
+        }
 
         val foodId = recipe.id
-        check(foodId is FoodId.Recipe) { "Food ID must be a Recipe ID to unpack a recipe." }
+        if (foodId !is FoodId.Recipe) {
+            Logger.e(TAG) {
+                "Unpacking recipe failed: Food ID is not a Recipe ID for measurement with id $measurementId."
+            }
+            return
+        }
 
         viewModelScope.launch {
             measurementRepository.unpackRecipe(
@@ -87,10 +97,6 @@ internal class UpdateMeasurementViewModel(
             )
 
             eventBus.send(MeasurementScreenEvent.Done)
-        }
-    } catch (e: Exception) {
-        Logger.e(TAG, e) {
-            "Error exploding recipe for measurement with id $measurementId"
         }
     }
 

@@ -53,8 +53,11 @@ internal class CreateMeasurementViewModel(
         eventBus.send(MeasurementScreenEvent.Done)
     }
 
-    fun unpackRecipe(date: LocalDate, mealId: Long, measurement: Measurement) = try {
-        check(foodId is FoodId.Recipe) { "Food ID must be a Recipe ID to unpack a recipe." }
+    fun unpackRecipe(date: LocalDate, mealId: Long, measurement: Measurement) {
+        if (foodId !is FoodId.Recipe) {
+            Logger.e(TAG) { "Unpacking recipe failed: Food ID is not a Recipe ID." }
+            return
+        }
 
         viewModelScope.launch {
             measurementRepository.unpackRecipe(
@@ -65,10 +68,6 @@ internal class CreateMeasurementViewModel(
             )
 
             eventBus.send(MeasurementScreenEvent.Done)
-        }
-    } catch (e: Exception) {
-        Logger.e(TAG, e) {
-            "Failed to unpack recipe with ID: $foodId"
         }
     }
 
