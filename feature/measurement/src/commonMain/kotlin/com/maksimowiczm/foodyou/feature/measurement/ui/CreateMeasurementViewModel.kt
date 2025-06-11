@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.domain.FoodRepository
 import com.maksimowiczm.foodyou.core.domain.MealRepository
 import com.maksimowiczm.foodyou.core.domain.MeasurementRepository
@@ -12,6 +13,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
 internal class CreateMeasurementViewModel(
@@ -51,8 +53,30 @@ internal class CreateMeasurementViewModel(
         eventBus.send(MeasurementScreenEvent.Done)
     }
 
+    fun unpackRecipe(date: LocalDate, mealId: Long, measurement: Measurement) {
+        if (foodId !is FoodId.Recipe) {
+            Logger.e(TAG) { "Unpacking recipe failed: Food ID is not a Recipe ID." }
+            return
+        }
+
+        viewModelScope.launch {
+            measurementRepository.unpackRecipe(
+                date = date,
+                mealId = mealId,
+                recipeId = foodId,
+                measurement = measurement
+            )
+
+            eventBus.send(MeasurementScreenEvent.Done)
+        }
+    }
+
     fun onDeleteMeasurement() = launch {
         foodRepository.deleteFood(id = foodId)
-        eventBus.send(MeasurementScreenEvent.Deleted)
+        eventBus.send(MeasurementScreenEvent.FoodDeleted)
+    }
+
+    private companion object {
+        const val TAG = "CreateMeasurementViewModel"
     }
 }

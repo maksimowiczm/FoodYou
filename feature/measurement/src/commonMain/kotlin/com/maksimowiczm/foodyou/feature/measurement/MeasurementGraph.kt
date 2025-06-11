@@ -10,9 +10,7 @@ import kotlinx.serialization.Serializable
 fun NavGraphBuilder.measurementGraph(
     createOnBack: () -> Unit,
     updateOnBack: () -> Unit,
-    onEditFood: (FoodId) -> Unit,
-    createOnRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit,
-    updateOnRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit
+    onEditFood: (FoodId) -> Unit
 ) {
     forwardBackwardComposable<CreateMeasurement> {
         val route = it.toRoute<CreateMeasurement>()

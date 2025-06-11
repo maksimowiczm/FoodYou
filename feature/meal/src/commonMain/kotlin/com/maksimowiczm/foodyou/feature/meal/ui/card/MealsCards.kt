@@ -36,6 +36,7 @@ internal fun MealsCards(
             shimmer = homeState.shimmer,
             contentPadding = contentPadding,
             onEditMeasurement = onEditMeasurement,
+            onUnpackRecipe = viewModel::unpackRecipe,
             onDeleteEntry = viewModel::onDeleteMeasurement,
             modifier = modifier
         )
@@ -47,6 +48,7 @@ internal fun MealsCards(
             shimmer = homeState.shimmer,
             contentPadding = contentPadding,
             onEditMeasurement = onEditMeasurement,
+            onUnpackRecipe = viewModel::unpackRecipe,
             onDeleteEntry = viewModel::onDeleteMeasurement,
             modifier = modifier
         )

@@ -9,5 +9,5 @@ internal sealed interface MeasurementScreenEvent {
     /**
      * The food was deleted.
      */
-    data object Deleted : MeasurementScreenEvent
+    data object FoodDeleted : MeasurementScreenEvent
 }

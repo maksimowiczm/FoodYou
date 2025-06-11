@@ -1,10 +1,13 @@
 package com.maksimowiczm.foodyou.core.domain
 
+import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementLocalDataSource
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Recipe
+import kotlin.collections.map
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -42,6 +45,13 @@ interface MeasurementRepository {
         measurementId: Long,
         date: LocalDate,
         mealId: Long,
+        measurement: Measurement
+    )
+
+    suspend fun unpackRecipe(
+        date: LocalDate,
+        mealId: Long,
+        recipeId: FoodId.Recipe,
         measurement: Measurement
     )
 
@@ -109,6 +119,41 @@ internal class MeasurementRepositoryImpl(
         )
 
         measurementLocalDataSource.updateMeasurement(updatedEntity)
+    }
+
+    override suspend fun unpackRecipe(
+        date: LocalDate,
+        mealId: Long,
+        recipeId: FoodId.Recipe,
+        measurement: Measurement
+    ) {
+        val recipe = foodRepository.observeFood(recipeId).firstOrNull()
+
+        if (recipe == null) {
+            Logger.w(TAG) { "Recipe with id ${recipeId.id} not found for exploding measurements." }
+            return
+        }
+
+        if (recipe !is Recipe) {
+            Logger.w(TAG) { "Food is not a recipe but a ${recipe.javaClass.simpleName}" }
+            return
+        }
+
+        val measuredIngredients = recipe.measuredIngredients(measurement)
+
+        measuredIngredients.forEach { (ingredient, measurement) ->
+            if (measurement == null) {
+                Logger.w(TAG) { "Ingredient ${ingredient.headline} has no measurement, skipping." }
+                return@forEach
+            }
+
+            addMeasurement(
+                date = date,
+                mealId = mealId,
+                foodId = ingredient.id,
+                measurement = measurement
+            )
+        }
     }
 
     override suspend fun removeMeasurement(measurementId: Long) {
@@ -180,6 +225,10 @@ internal class MeasurementRepositoryImpl(
 
             result
         }
+    }
+
+    private companion object {
+        const val TAG = "MeasurementRepository"
     }
 }
 

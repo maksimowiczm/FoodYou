@@ -40,7 +40,7 @@ internal fun CreateMeasurementScreen(
     val latestOnBack by rememberUpdatedState(onBack)
     LaunchedCollectWithLifecycle(viewModel.measurementCreatedEventBus) {
         when (it) {
-            MeasurementScreenEvent.Deleted -> latestOnBack()
+            MeasurementScreenEvent.FoodDeleted -> latestOnBack()
             MeasurementScreenEvent.Done -> latestOnBack()
         }
     }
@@ -78,8 +78,21 @@ internal fun CreateMeasurementScreen(
             }
         },
         onEditFood = { onEditFood(foodId) },
-        onDelete = viewModel::onDeleteMeasurement,
+        onDeleteFood = viewModel::onDeleteMeasurement,
         onIngredientClick = { onEditFood(it) },
+        onUnpack = {
+            val date = formState.date
+            val measurement = formState.measurement
+            val mealId = formState.meal?.id
+
+            if (measurement != null && mealId != null) {
+                viewModel.unpackRecipe(
+                    date = date,
+                    mealId = mealId,
+                    measurement = measurement
+                )
+            }
+        },
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
     )
