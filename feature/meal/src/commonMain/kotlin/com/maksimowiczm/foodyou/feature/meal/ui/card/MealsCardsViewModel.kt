@@ -59,23 +59,22 @@ internal class MealsCardsViewModel(
         mealId: Long,
         measurement: Measurement,
         measurementId: Long
-    ) = try {
-        viewModelScope.launch {
-            val date = dateState.value
+    ) = launch {
+        val date = dateState.value
 
-            checkNotNull(date) { "Date must be set before exploding recipe" }
-
-            measurementRepository.unpackRecipe(
-                date = date,
-                mealId = mealId,
-                recipeId = recipeId,
-                measurement = measurement
-            )
-
-            measurementRepository.removeMeasurement(measurementId)
+        if (date == null) {
+            Logger.w(TAG) { "Date is not set, cannot unpack recipe." }
+            return@launch
         }
-    } catch (e: Exception) {
-        Logger.e(TAG, e) { "Failed to unpack recipe" }
+
+        measurementRepository.unpackRecipe(
+            date = date,
+            mealId = mealId,
+            recipeId = recipeId,
+            measurement = measurement
+        )
+
+        measurementRepository.removeMeasurement(measurementId)
     }
 
     private companion object {
