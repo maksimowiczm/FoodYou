@@ -312,7 +312,15 @@ private fun Ingredients(recipe: Recipe, weight: Float, modifier: Modifier = Modi
             )
         }
 
-        recipe.measuredIngredients(weight).forEach { ingredient ->
+        recipe.measuredIngredients(weight).forEach { (food, measurement) ->
+            if (measurement == null) {
+                FoodErrorListItem(food.headline)
+                HorizontalDivider()
+                return@forEach
+            }
+
+            val ingredient = RecipeIngredient(food, measurement)
+
             val ingredientWeight = ingredient.weight
             if (ingredientWeight == null) {
                 FoodErrorListItem(ingredient.food.headline)
@@ -332,8 +340,7 @@ private fun Ingredients(recipe: Recipe, weight: Float, modifier: Modifier = Modi
 
             val g = stringResource(Res.string.unit_gram_short)
             val proteins = nutritionFacts.proteins.value.formatClipZeros("%.1f")
-            val carbohydrates =
-                nutritionFacts.carbohydrates.value.formatClipZeros("%.1f")
+            val carbohydrates = nutritionFacts.carbohydrates.value.formatClipZeros("%.1f")
             val fats = nutritionFacts.fats.value.formatClipZeros("%.1f")
 
             FoodListItem(

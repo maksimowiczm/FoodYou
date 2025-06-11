@@ -51,8 +51,11 @@ data class Recipe(
     /**
      * Returns a list of ingredients with their measurements based on the given [measurement].
      * The weight is calculated based on the total weight of the recipe and the serving size.
+     *
+     * The returned list contains pairs of [Food] and nullable [Measurement].
+     * If an ingredient does not have a valid measurement, it will be paired with `null`.
      */
-    fun measuredIngredients(measurement: Measurement): List<RecipeIngredient> {
+    fun measuredIngredients(measurement: Measurement): List<Pair<Food, Measurement?>> {
         val weight = when (measurement) {
             is Measurement.Gram -> measurement.value
             is Measurement.Package -> measurement.quantity * totalWeight
@@ -65,8 +68,11 @@ data class Recipe(
     /**
      * Returns a list of ingredients with their measurements based on the given [weight].
      * The weight is calculated based on the total weight of the recipe.
+     *
+     * The returned list contains pairs of [Food] and nullable [Measurement].
+     * If an ingredient does not have a valid measurement, it will be paired with `null`.
      */
-    fun measuredIngredients(weight: Float): List<RecipeIngredient> {
+    fun measuredIngredients(weight: Float): List<Pair<Food, Measurement?>> {
         val fractions = ingredients
             .mapNotNull { it.weight?.let { weight -> it.food.id to weight } }
             .groupBy({ it.first }, { it.second })
@@ -75,8 +81,8 @@ data class Recipe(
         val measurements = ingredients.map { ingredient ->
             val fraction = fractions[ingredient.food.id]
 
-            checkNotNull(fraction) {
-                "Fraction for ingredient ${ingredient.food} in recipe $this is null"
+            if (fraction == null) {
+                return@map ingredient.food to null
             }
 
             val ingredientWeight = weight * fraction
@@ -85,8 +91,9 @@ data class Recipe(
 
                 is Measurement.Package -> {
                     val packageWeight = ingredient.food.totalWeight
-                    checkNotNull(packageWeight) {
-                        "No total weight for ingredient: ${ingredient.food}"
+
+                    if (packageWeight == null) {
+                        return@map ingredient.food to null
                     }
 
                     val quantity = ingredientWeight / packageWeight
@@ -95,8 +102,9 @@ data class Recipe(
 
                 is Measurement.Serving -> {
                     val servingWeight = ingredient.food.servingWeight
-                    checkNotNull(servingWeight) {
-                        "No serving weight for ingredient: ${ingredient.food}"
+
+                    if (servingWeight == null) {
+                        return@map ingredient.food to null
                     }
 
                     val quantity = ingredientWeight / servingWeight
@@ -104,10 +112,7 @@ data class Recipe(
                 }
             }
 
-            RecipeIngredient(
-                food = ingredient.food,
-                measurement = measurement
-            )
+            ingredient.food to measurement
         }
 
         return measurements

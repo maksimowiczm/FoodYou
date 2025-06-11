@@ -142,6 +142,11 @@ internal class MeasurementRepositoryImpl(
         val measuredIngredients = recipe.measuredIngredients(measurement)
 
         measuredIngredients.forEach { (ingredient, measurement) ->
+            if (measurement == null) {
+                Logger.w(TAG) { "Ingredient ${ingredient.headline} has no measurement, skipping." }
+                return@forEach
+            }
+
             addMeasurement(
                 date = date,
                 mealId = mealId,
