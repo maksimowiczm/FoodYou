@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -379,7 +378,7 @@ private fun RecipeIngredient.measurementStringShort(weight: Float): String? = wi
         }
 
         is Measurement.Gram -> "${weight.formatClipZeros()} " +
-                stringResource(Res.string.unit_gram_short)
+            stringResource(Res.string.unit_gram_short)
     }
 }
 
