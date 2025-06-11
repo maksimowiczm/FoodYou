@@ -65,23 +65,23 @@ internal class UpdateMeasurementViewModel(
         eventBus.send(MeasurementScreenEvent.Done)
     }
 
-    fun onExplodeRecipe(date: LocalDate, mealId: Long, measurement: Measurement) = try {
+    fun unpackRecipe(date: LocalDate, mealId: Long, measurement: Measurement) = try {
         val recipe = this.measurement.value?.food
         checkNotNull(recipe) { "Food from measurement with id $measurementId is null" }
 
         val foodId = recipe.id
-        check(foodId is FoodId.Recipe) { "Food ID must be a Recipe ID to explode a recipe." }
+        check(foodId is FoodId.Recipe) { "Food ID must be a Recipe ID to unpack a recipe." }
 
         viewModelScope.launch {
-            measurementRepository.explodeRecipe(
+            measurementRepository.unpackRecipe(
                 date = date,
                 mealId = mealId,
                 recipeId = foodId,
                 measurement = measurement
             )
 
-            // Can't explode a recipe and remove measurement in parallel, because it will cause
-            // racing conditions. Must FIRST explode the recipe and THEN remove the measurement.
+            // Can't unpack a recipe and remove measurement in parallel, because it will cause
+            // racing conditions. Must FIRST unpack the recipe and THEN remove the measurement.
             measurementRepository.removeMeasurement(
                 measurementId = measurementId
             )

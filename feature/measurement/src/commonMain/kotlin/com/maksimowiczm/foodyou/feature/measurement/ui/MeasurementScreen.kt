@@ -69,7 +69,7 @@ internal fun MeasurementScreen(
     onEditFood: () -> Unit,
     onDeleteFood: () -> Unit,
     onIngredientClick: (FoodId) -> Unit,
-    onExplode: () -> Unit,
+    onUnpack: () -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
@@ -154,7 +154,7 @@ internal fun MeasurementScreen(
                     Ingredients(
                         recipe = food,
                         weight = weight,
-                        onExplode = onExplode
+                        onUnpack = onUnpack
                     )
                 }
             }
@@ -272,7 +272,7 @@ private fun DeleteDialog(
 private fun Ingredients(
     recipe: Recipe,
     weight: Float,
-    onExplode: () -> Unit,
+    onUnpack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
@@ -288,7 +288,7 @@ private fun Ingredients(
             )
             Spacer(Modifier.weight(1f))
             IconButton(
-                onClick = onExplode
+                onClick = onUnpack
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.CallSplit,

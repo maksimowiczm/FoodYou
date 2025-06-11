@@ -54,7 +54,7 @@ interface MeasurementRepository {
         measurement: Measurement
     )
 
-    suspend fun explodeRecipe(
+    suspend fun unpackRecipe(
         date: LocalDate,
         mealId: Long,
         recipeId: FoodId.Recipe,
@@ -130,7 +130,7 @@ internal class MeasurementRepositoryImpl(
         measurementLocalDataSource.updateMeasurement(updatedEntity)
     }
 
-    override suspend fun explodeRecipe(
+    override suspend fun unpackRecipe(
         date: LocalDate,
         mealId: Long,
         recipeId: FoodId.Recipe,

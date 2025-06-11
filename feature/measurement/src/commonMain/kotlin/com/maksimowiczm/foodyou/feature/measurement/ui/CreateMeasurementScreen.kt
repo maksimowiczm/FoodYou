@@ -80,13 +80,13 @@ internal fun CreateMeasurementScreen(
         onEditFood = { onEditFood(foodId) },
         onDeleteFood = viewModel::onDeleteMeasurement,
         onIngredientClick = { onEditFood(it) },
-        onExplode = {
+        onUnpack = {
             val date = formState.date
             val measurement = formState.measurement
             val mealId = formState.meal?.id
 
             if (measurement != null && mealId != null) {
-                viewModel.onExplodeRecipe(
+                viewModel.unpackRecipe(
                     date = date,
                     mealId = mealId,
                     measurement = measurement

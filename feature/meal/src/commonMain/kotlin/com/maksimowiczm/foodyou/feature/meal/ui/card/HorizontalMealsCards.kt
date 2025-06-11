@@ -28,7 +28,7 @@ internal fun HorizontalMealsCards(
     meals: List<Meal>?,
     onAdd: (mealId: Long) -> Unit,
     onEditMeasurement: (Long) -> Unit,
-    onExplodeRecipe: (FoodId.Recipe, mealId: Long, Measurement, measurementId: Long) -> Unit,
+    onUnpackRecipe: (FoodId.Recipe, mealId: Long, Measurement, measurementId: Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     onLongClick: () -> Unit,
     shimmer: Shimmer,
@@ -71,8 +71,8 @@ internal fun HorizontalMealsCards(
                     meal = meal,
                     onAddFood = { onAdd(meal.id) },
                     onEditMeasurement = onEditMeasurement,
-                    onExplodeRecipe = { recipeId, measurement, measurementId ->
-                        onExplodeRecipe(recipeId, meal.id, measurement, measurementId)
+                    onUnpackRecipe = { recipeId, measurement, measurementId ->
+                        onUnpackRecipe(recipeId, meal.id, measurement, measurementId)
                     },
                     onDeleteEntry = onDeleteEntry,
                     onLongClick = onLongClick

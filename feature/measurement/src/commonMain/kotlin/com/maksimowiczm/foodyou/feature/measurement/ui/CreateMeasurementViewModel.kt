@@ -53,11 +53,11 @@ internal class CreateMeasurementViewModel(
         eventBus.send(MeasurementScreenEvent.Done)
     }
 
-    fun onExplodeRecipe(date: LocalDate, mealId: Long, measurement: Measurement) = try {
-        check(foodId is FoodId.Recipe) { "Food ID must be a Recipe ID to explode a recipe." }
+    fun unpackRecipe(date: LocalDate, mealId: Long, measurement: Measurement) = try {
+        check(foodId is FoodId.Recipe) { "Food ID must be a Recipe ID to unpack a recipe." }
 
         viewModelScope.launch {
-            measurementRepository.explodeRecipe(
+            measurementRepository.unpackRecipe(
                 date = date,
                 mealId = mealId,
                 recipeId = foodId,
@@ -68,7 +68,7 @@ internal class CreateMeasurementViewModel(
         }
     } catch (e: Exception) {
         Logger.e(TAG, e) {
-            "Failed to explode recipe with ID: $foodId"
+            "Failed to unpack recipe with ID: $foodId"
         }
     }
 

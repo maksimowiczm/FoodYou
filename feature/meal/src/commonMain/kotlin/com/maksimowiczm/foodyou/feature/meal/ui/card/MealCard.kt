@@ -74,7 +74,7 @@ internal fun MealCard(
     onAddFood: () -> Unit,
     onLongClick: () -> Unit,
     onEditMeasurement: (Long) -> Unit,
-    onExplodeRecipe: (FoodId.Recipe, Measurement, measurementId: Long) -> Unit,
+    onUnpackRecipe: (FoodId.Recipe, Measurement, measurementId: Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -121,7 +121,7 @@ internal fun MealCard(
             FoodContainer(
                 food = meal.food,
                 onEditMeasurement = onEditMeasurement,
-                onExplodeRecipe = onExplodeRecipe,
+                onUnpackRecipe = onUnpackRecipe,
                 onDeleteEntry = onDeleteEntry,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -194,7 +194,7 @@ internal fun MealCard(
 private fun FoodContainer(
     food: List<FoodWithMeasurement>,
     onEditMeasurement: (Long) -> Unit,
-    onExplodeRecipe: (FoodId.Recipe, Measurement, measurementId: Long) -> Unit,
+    onUnpackRecipe: (FoodId.Recipe, Measurement, measurementId: Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -213,8 +213,8 @@ private fun FoodContainer(
                 FoodContainerItem(
                     foodWithMeasurement = foodWithMeasurement,
                     onEditMeasurement = onEditMeasurement,
-                    onExplodeRecipe = {
-                        onExplodeRecipe(
+                    onUnpackRecipe = {
+                        onUnpackRecipe(
                             it,
                             foodWithMeasurement.measurement,
                             foodWithMeasurement.measurementId
@@ -256,7 +256,7 @@ private fun <T> List<T>.animateBottomCornerRadius(index: Int, defaultRadius: Dp 
 private fun FoodContainerItem(
     foodWithMeasurement: FoodWithMeasurement,
     onEditMeasurement: (Long) -> Unit,
-    onExplodeRecipe: (FoodId.Recipe) -> Unit,
+    onUnpackRecipe: (FoodId.Recipe) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     shape: Shape,
     modifier: Modifier = Modifier
@@ -278,8 +278,8 @@ private fun FoodContainerItem(
                     sheetState.hide()
                     showBottomSheet = false
                 },
-                onExplodeRecipe = coroutineScope.lambda<FoodId.Recipe> {
-                    onExplodeRecipe(it)
+                onUnpackRecipe = coroutineScope.lambda<FoodId.Recipe> {
+                    onUnpackRecipe(it)
                     sheetState.hide()
                     showBottomSheet = false
                 },
@@ -340,7 +340,7 @@ private fun BottomSheetContent(
     food: FoodWithMeasurement,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onExplodeRecipe: (FoodId.Recipe) -> Unit,
+    onUnpackRecipe: (FoodId.Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
@@ -385,9 +385,9 @@ private fun BottomSheetContent(
         if (food is Recipe) {
             ListItem(
                 headlineContent = {
-                    Text("Explode recipe")
+                    Text("Unpack recipe")
                 },
-                modifier = Modifier.clickable { onExplodeRecipe(food.id) },
+                modifier = Modifier.clickable { onUnpackRecipe(food.id) },
                 leadingContent = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.CallSplit,

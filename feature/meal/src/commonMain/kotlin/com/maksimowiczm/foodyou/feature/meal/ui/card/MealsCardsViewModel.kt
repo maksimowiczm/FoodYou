@@ -54,7 +54,7 @@ internal class MealsCardsViewModel(
         measurementRepository.removeMeasurement(measurementId)
     }
 
-    fun onExplodeRecipe(
+    fun unpackRecipe(
         recipeId: FoodId.Recipe,
         mealId: Long,
         measurement: Measurement,
@@ -65,7 +65,7 @@ internal class MealsCardsViewModel(
 
             checkNotNull(date) { "Date must be set before exploding recipe" }
 
-            measurementRepository.explodeRecipe(
+            measurementRepository.unpackRecipe(
                 date = date,
                 mealId = mealId,
                 recipeId = recipeId,
@@ -75,7 +75,7 @@ internal class MealsCardsViewModel(
             measurementRepository.removeMeasurement(measurementId)
         }
     } catch (e: Exception) {
-        Logger.e(TAG, e) { "Failed to explode recipe" }
+        Logger.e(TAG, e) { "Failed to unpack recipe" }
     }
 
     private companion object {
