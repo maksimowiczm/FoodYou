@@ -16,9 +16,6 @@ import com.maksimowiczm.foodyou.core.domain.RecipeRepository
 import com.maksimowiczm.foodyou.core.domain.RecipeRepositoryImpl
 import com.maksimowiczm.foodyou.core.domain.SearchRepository
 import com.maksimowiczm.foodyou.core.domain.SearchRepositoryImpl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -31,14 +28,6 @@ val domainModule = module {
     factoryOf(::FoodRepositoryImpl).bind<FoodRepository>()
     factoryOf(::RecipeRepositoryImpl).bind<RecipeRepository>()
     factoryOf(::MealRepositoryImpl).bind<MealRepository>()
-    factory {
-        // TODO use proper coroutine scope
-        MeasurementRepositoryImpl(
-            measurementLocalDataSource = get(),
-            foodRepository = get(),
-            measurementMapper = get(),
-            bgScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-        )
-    }.bind<MeasurementRepository>()
+    factoryOf(::MeasurementRepositoryImpl).bind<MeasurementRepository>()
     factoryOf(::SearchRepositoryImpl).bind<SearchRepository>()
 }

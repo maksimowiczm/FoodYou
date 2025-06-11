@@ -312,41 +312,38 @@ private fun Ingredients(recipe: Recipe, weight: Float, modifier: Modifier = Modi
             )
         }
 
-        val fractions = recipe.ingredientFractions()
-
-        recipe.ingredients.forEach { ingredient ->
-            val ingredientWeight = weight.times(fractions[ingredient.food.id] ?: 1f)
-            val nutritionFacts =
-                ingredient.nutritionFacts?.times(ingredientWeight / 100f)
-            val measurementString = ingredientWeight.let {
-                ingredient.measurementString(ingredientWeight)
-            }
-            val caloriesString = ingredientWeight.let {
-                ingredient.caloriesString(ingredientWeight)
-            }
-
-            if (nutritionFacts == null ||
-                measurementString == null ||
-                caloriesString == null
-            ) {
+        recipe.measuredIngredients(weight).forEach { ingredient ->
+            val ingredientWeight = ingredient.weight
+            if (ingredientWeight == null) {
                 FoodErrorListItem(ingredient.food.headline)
-            } else {
-                val g = stringResource(Res.string.unit_gram_short)
-                val proteins = nutritionFacts.proteins.value.formatClipZeros("%.1f")
-                val carbohydrates =
-                    nutritionFacts.carbohydrates.value.formatClipZeros("%.1f")
-                val fats = nutritionFacts.fats.value.formatClipZeros("%.1f")
-
-                FoodListItem(
-                    name = { Text(ingredient.food.headline) },
-                    proteins = { Text("$proteins $g") },
-                    carbohydrates = { Text("$carbohydrates $g") },
-                    fats = { Text("$fats $g") },
-                    calories = { Text(caloriesString) },
-                    measurement = { Text(measurementString) }
-                )
+                HorizontalDivider()
+                return@forEach
             }
 
+            val nutritionFacts = ingredient.nutritionFacts
+            val measurementString = ingredient.measurementString(ingredientWeight)
+            val caloriesString = ingredient.caloriesString(ingredientWeight)
+
+            if (nutritionFacts == null || measurementString == null || caloriesString == null) {
+                FoodErrorListItem(ingredient.food.headline)
+                HorizontalDivider()
+                return@forEach
+            }
+
+            val g = stringResource(Res.string.unit_gram_short)
+            val proteins = nutritionFacts.proteins.value.formatClipZeros("%.1f")
+            val carbohydrates =
+                nutritionFacts.carbohydrates.value.formatClipZeros("%.1f")
+            val fats = nutritionFacts.fats.value.formatClipZeros("%.1f")
+
+            FoodListItem(
+                name = { Text(ingredient.food.headline) },
+                proteins = { Text("$proteins $g") },
+                carbohydrates = { Text("$carbohydrates $g") },
+                fats = { Text("$fats $g") },
+                calories = { Text(caloriesString) },
+                measurement = { Text(measurementString) }
+            )
             HorizontalDivider()
         }
     }
