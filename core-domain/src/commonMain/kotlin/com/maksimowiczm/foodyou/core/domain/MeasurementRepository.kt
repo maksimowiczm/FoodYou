@@ -8,11 +8,8 @@ import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.Recipe
 import kotlin.collections.map
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
@@ -72,10 +69,8 @@ internal class MeasurementRepositoryImpl(
     private val measurementLocalDataSource: MeasurementLocalDataSource,
     private val foodRepository: FoodRepository,
     private val measurementMapper: MeasurementMapper,
-    bgDispatcher: CoroutineDispatcher = Dispatchers.Default
+    private val bgScope: CoroutineScope
 ) : MeasurementRepository {
-
-    private val bgScope = CoroutineScope(bgDispatcher + SupervisorJob())
 
     override fun observeSuggestions(id: FoodId): Flow<List<Measurement>> = when (id) {
         is FoodId.Product ->
