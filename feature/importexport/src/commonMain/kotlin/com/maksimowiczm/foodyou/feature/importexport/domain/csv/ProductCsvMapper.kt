@@ -13,51 +13,55 @@ internal object ProductCsvMapper {
         map.toProductEntity()
 }
 
-private fun ProductEntity.toStringMap(): Map<ProductEntityField, String?> = mapOf(
-    ProductEntityField.NAME to name.toString(),
-    ProductEntityField.BRAND to brand?.toString(),
-    ProductEntityField.BARCODE to barcode?.toString(),
-    ProductEntityField.PROTEINS to nutrients.proteins.toString(),
-    ProductEntityField.CARBOHYDRATES to nutrients.carbohydrates.toString(),
-    ProductEntityField.FATS to nutrients.fats.toString(),
-    ProductEntityField.CALORIES to nutrients.calories.toString(),
-    ProductEntityField.SATURATED_FATS to nutrients.saturatedFats?.toString(),
-    ProductEntityField.MONOUNSATURATED_FATS to nutrients.monounsaturatedFats?.toString(),
-    ProductEntityField.POLYUNSATURATED_FATS to nutrients.polyunsaturatedFats?.toString(),
-    ProductEntityField.OMEGA3 to nutrients.omega3?.toString(),
-    ProductEntityField.OMEGA6 to nutrients.omega6?.toString(),
-    ProductEntityField.SUGARS to nutrients.sugars?.toString(),
-    ProductEntityField.SALT to nutrients.salt?.toString(),
-    ProductEntityField.FIBER to nutrients.fiber?.toString(),
-    ProductEntityField.CHOLESTEROL_MILLI to nutrients.cholesterolMilli?.toString(),
-    ProductEntityField.CAFFEINE_MILLI to nutrients.caffeineMilli?.toString(),
-    ProductEntityField.VITAMIN_A_MICRO to vitamins.vitaminAMicro?.toString(),
-    ProductEntityField.VITAMIN_B1_MILLI to vitamins.vitaminB1Milli?.toString(),
-    ProductEntityField.VITAMIN_B2_MILLI to vitamins.vitaminB2Milli?.toString(),
-    ProductEntityField.VITAMIN_B3_MILLI to vitamins.vitaminB3Milli?.toString(),
-    ProductEntityField.VITAMIN_B5_MILLI to vitamins.vitaminB5Milli?.toString(),
-    ProductEntityField.VITAMIN_B6_MILLI to vitamins.vitaminB6Milli?.toString(),
-    ProductEntityField.VITAMIN_B7_MICRO to vitamins.vitaminB7Micro?.toString(),
-    ProductEntityField.VITAMIN_B9_MICRO to vitamins.vitaminB9Micro?.toString(),
-    ProductEntityField.VITAMIN_B12_MICRO to vitamins.vitaminB12Micro?.toString(),
-    ProductEntityField.VITAMIN_C_MILLI to vitamins.vitaminCMilli?.toString(),
-    ProductEntityField.VITAMIN_D_MICRO to vitamins.vitaminDMicro?.toString(),
-    ProductEntityField.VITAMIN_E_MILLI to vitamins.vitaminEMilli?.toString(),
-    ProductEntityField.VITAMIN_K_MICRO to vitamins.vitaminKMicro?.toString(),
-    ProductEntityField.MANGANESE_MILLI to minerals.manganeseMilli?.toString(),
-    ProductEntityField.MAGNESIUM_MILLI to minerals.magnesiumMilli?.toString(),
-    ProductEntityField.POTASSIUM_MILLI to minerals.potassiumMilli?.toString(),
-    ProductEntityField.CALCIUM_MILLI to minerals.calciumMilli?.toString(),
-    ProductEntityField.COPPER_MILLI to minerals.copperMilli?.toString(),
-    ProductEntityField.ZINC_MILLI to minerals.zincMilli?.toString(),
-    ProductEntityField.SODIUM_MILLI to minerals.sodiumMilli?.toString(),
-    ProductEntityField.IRON_MILLI to minerals.ironMilli?.toString(),
-    ProductEntityField.PHOSPHORUS_MILLI to minerals.phosphorusMilli?.toString(),
-    ProductEntityField.SELENIUM_MICRO to minerals.seleniumMicro?.toString(),
-    ProductEntityField.IODINE_MICRO to minerals.iodineMicro?.toString(),
-    ProductEntityField.PACKAGE_WEIGHT to packageWeight?.toString(),
-    ProductEntityField.SERVING_WEIGHT to servingWeight?.toString()
-)
+private fun ProductEntity.toStringMap(): Map<ProductEntityField, String?> =
+    ProductEntityField.entries.associateWith {
+        when (it) {
+            ProductEntityField.NAME -> name.toString()
+            ProductEntityField.BRAND -> brand?.toString()
+            ProductEntityField.BARCODE -> barcode?.toString()
+            ProductEntityField.PROTEINS -> nutrients.proteins.toString()
+            ProductEntityField.CARBOHYDRATES -> nutrients.carbohydrates.toString()
+            ProductEntityField.FATS -> nutrients.fats.toString()
+            ProductEntityField.CALORIES -> nutrients.calories.toString()
+            ProductEntityField.SATURATED_FATS -> nutrients.saturatedFats?.toString()
+            ProductEntityField.MONOUNSATURATED_FATS -> nutrients.monounsaturatedFats?.toString()
+            ProductEntityField.POLYUNSATURATED_FATS -> nutrients.polyunsaturatedFats?.toString()
+            ProductEntityField.OMEGA3 -> nutrients.omega3?.toString()
+            ProductEntityField.OMEGA6 -> nutrients.omega6?.toString()
+            ProductEntityField.SUGARS -> nutrients.sugars?.toString()
+            ProductEntityField.SALT -> nutrients.salt?.toString()
+            ProductEntityField.FIBER -> nutrients.fiber?.toString()
+            ProductEntityField.CHOLESTEROL_MILLI -> nutrients.cholesterolMilli?.toString()
+            ProductEntityField.CAFFEINE_MILLI -> nutrients.caffeineMilli?.toString()
+            ProductEntityField.VITAMIN_A_MICRO -> vitamins.vitaminAMicro?.toString()
+            ProductEntityField.VITAMIN_B1_MILLI -> vitamins.vitaminB1Milli?.toString()
+            ProductEntityField.VITAMIN_B2_MILLI -> vitamins.vitaminB2Milli?.toString()
+            ProductEntityField.VITAMIN_B3_MILLI -> vitamins.vitaminB3Milli?.toString()
+            ProductEntityField.VITAMIN_B5_MILLI -> vitamins.vitaminB5Milli?.toString()
+            ProductEntityField.VITAMIN_B6_MILLI -> vitamins.vitaminB6Milli?.toString()
+            ProductEntityField.VITAMIN_B7_MICRO -> vitamins.vitaminB7Micro?.toString()
+            ProductEntityField.VITAMIN_B9_MICRO -> vitamins.vitaminB9Micro?.toString()
+            ProductEntityField.VITAMIN_B12_MICRO -> vitamins.vitaminB12Micro?.toString()
+            ProductEntityField.VITAMIN_C_MILLI -> vitamins.vitaminCMilli?.toString()
+            ProductEntityField.VITAMIN_D_MICRO -> vitamins.vitaminDMicro?.toString()
+            ProductEntityField.VITAMIN_E_MILLI -> vitamins.vitaminEMilli?.toString()
+            ProductEntityField.VITAMIN_K_MICRO -> vitamins.vitaminKMicro?.toString()
+            ProductEntityField.MANGANESE_MILLI -> minerals.manganeseMilli?.toString()
+            ProductEntityField.MAGNESIUM_MILLI -> minerals.magnesiumMilli?.toString()
+            ProductEntityField.POTASSIUM_MILLI -> minerals.potassiumMilli?.toString()
+            ProductEntityField.CALCIUM_MILLI -> minerals.calciumMilli?.toString()
+            ProductEntityField.COPPER_MILLI -> minerals.copperMilli?.toString()
+            ProductEntityField.ZINC_MILLI -> minerals.zincMilli?.toString()
+            ProductEntityField.SODIUM_MILLI -> minerals.sodiumMilli?.toString()
+            ProductEntityField.IRON_MILLI -> minerals.ironMilli?.toString()
+            ProductEntityField.PHOSPHORUS_MILLI -> minerals.phosphorusMilli?.toString()
+            ProductEntityField.SELENIUM_MICRO -> minerals.seleniumMicro?.toString()
+            ProductEntityField.IODINE_MICRO -> minerals.iodineMicro?.toString()
+            ProductEntityField.CHROMIUM_MICRO -> minerals.chromiumMicro?.toString()
+            ProductEntityField.PACKAGE_WEIGHT -> packageWeight?.toString()
+            ProductEntityField.SERVING_WEIGHT -> servingWeight?.toString()
+        }
+    }
 
 private fun Map<ProductEntityField, String>.toProductEntity(): ProductEntity? {
     val proteins = this[ProductEntityField.PROTEINS]?.toFloatOrNull() ?: return null

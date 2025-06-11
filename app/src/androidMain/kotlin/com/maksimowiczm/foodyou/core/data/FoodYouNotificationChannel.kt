@@ -1,12 +1,17 @@
 package com.maksimowiczm.foodyou.core.data
 
 import android.app.NotificationChannel
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
 
-interface FoodYouNotificationChannel {
-    val channelId: String
-
-    suspend fun getChannel(): NotificationChannel
+abstract class FoodYouNotificationChannel(
+    val channelId: String,
+    val name: CharSequence,
+    val importance: Int
+) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getChannel(): NotificationChannel = NotificationChannel(channelId, name, importance)
 }
 
 /**
@@ -14,9 +19,13 @@ interface FoodYouNotificationChannel {
  *
  * @return The ID of the created notification channel.
  */
-suspend fun NotificationManagerCompat.createNotificationChannel(
+fun NotificationManagerCompat.createNotificationChannel(
     channel: FoodYouNotificationChannel
 ): String {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        return ""
+    }
+
     val channel = channel.getChannel()
     createNotificationChannel(channel)
     return channel.id

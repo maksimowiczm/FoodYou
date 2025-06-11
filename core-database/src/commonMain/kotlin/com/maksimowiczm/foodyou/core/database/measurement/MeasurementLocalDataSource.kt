@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.core.database.measurement
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstants.GRAM
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSQLConstants.PACKAGE
@@ -13,10 +13,19 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MeasurementLocalDataSource {
 
-    @Query("SELECT * FROM MeasurementEntity WHERE id = :measurementId")
+    @Query("SELECT * FROM MeasurementEntity WHERE id = :measurementId AND isDeleted = 0")
     fun observeMeasurementById(measurementId: Long): Flow<MeasurementEntity?>
 
-    @Query("SELECT * FROM MeasurementEntity WHERE mealId = :mealId AND epochDay = :epochDay")
+    @Query(
+        """
+        SELECT * 
+        FROM MeasurementEntity 
+        WHERE 
+            mealId = :mealId 
+            AND epochDay = :epochDay 
+            AND isDeleted = 0
+        """
+    )
     fun observeMeasurements(mealId: Long, epochDay: Int): Flow<List<MeasurementEntity>>
 
     @Insert
@@ -25,8 +34,11 @@ interface MeasurementLocalDataSource {
     @Update
     suspend fun updateMeasurement(measurement: MeasurementEntity)
 
-    @Delete
-    suspend fun deleteMeasurement(measurement: MeasurementEntity)
+    @Transaction
+    suspend fun deleteMeasurement(measurement: MeasurementEntity) {
+        val updatedMeasurement = measurement.copy(isDeleted = true)
+        updateMeasurement(updatedMeasurement)
+    }
 
     @Query(
         """
@@ -64,6 +76,7 @@ interface MeasurementLocalDataSource {
             ) latest ON m1.measurement = latest.measurement AND m1.createdAt = latest.maxCreatedAt
             WHERE m1.productId = :productId
             GROUP BY m1.measurement
+            ORDER BY m1.createdAt DESC
         ),
         Defaults AS (
             SELECT
@@ -117,6 +130,7 @@ interface MeasurementLocalDataSource {
             ) latest ON m1.measurement = latest.measurement AND m1.createdAt = latest.maxCreatedAt
             WHERE m1.recipeId = :recipeId
             GROUP BY m1.measurement
+            ORDER BY m1.createdAt DESC
         ),
         Defaults AS (
             SELECT
@@ -161,7 +175,11 @@ interface MeasurementLocalDataSource {
         """
         SELECT *
         FROM MeasurementEntity
-        WHERE productId = :productId AND mealId = :mealId AND epochDay = :epochDay
+        WHERE
+            productId = :productId 
+            AND mealId = :mealId 
+            AND epochDay = :epochDay 
+            AND isDeleted = 0
         """
     )
     fun observeMeasurementsByProductMealDay(
@@ -174,7 +192,11 @@ interface MeasurementLocalDataSource {
         """
         SELECT *
         FROM MeasurementEntity
-        WHERE recipeId = :recipeId AND mealId = :mealId AND epochDay = :epochDay
+        WHERE 
+            recipeId = :recipeId 
+            AND mealId = :mealId 
+            AND epochDay = :epochDay 
+            AND isDeleted = 0
         """
     )
     fun observeMeasurementsByRecipeMealDay(

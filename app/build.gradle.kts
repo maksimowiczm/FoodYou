@@ -114,16 +114,11 @@ android {
             initWith(getByName("devRelease"))
             isMinifyEnabled = true
         }
-        create("preview") {
-            initWith(getByName("release"))
-            applicationIdSuffix = ".preview"
-            versionNameSuffix = "-preview"
-
-            manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher_preview"
-            manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round_preview"
-        }
     }
+
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -133,4 +128,5 @@ dependencies {
     debugImplementation(compose.uiTooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     androidTestImplementation(libs.androidx.test.core.ktx)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
