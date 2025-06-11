@@ -385,7 +385,7 @@ private fun BottomSheetContent(
         if (food is Recipe) {
             ListItem(
                 headlineContent = {
-                    Text("Unpack recipe")
+                    Text(stringResource(Res.string.action_unpack))
                 },
                 modifier = Modifier.clickable { onUnpackRecipe(food.id) },
                 leadingContent = {

@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -105,23 +107,47 @@ internal fun MeasurementScreen(
             )
         },
         floatingActionButton = {
-            LargeExtendedFloatingActionButton(
+            Column(
                 modifier = Modifier.animateFloatingActionButton(
                     visible = !animatedVisibilityScope.transition.isRunning && state.isValid,
                     alignment = Alignment.BottomEnd
                 ),
-                onClick = {
-                    if (state.isValid) {
-                        onSave()
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (food is Recipe) {
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            if (state.isValid) {
+                                onUnpack()
+                            }
+                        },
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.CallSplit,
+                            contentDescription = null
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(Res.string.action_unpack))
                     }
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = null
-                )
-                Spacer(Modifier.width(16.dp))
-                Text(stringResource(Res.string.action_save))
+
+                LargeExtendedFloatingActionButton(
+                    onClick = {
+                        if (state.isValid) {
+                            onSave()
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = null
+                    )
+                    Spacer(Modifier.width(16.dp))
+                    Text(stringResource(Res.string.action_save))
+                }
             }
         }
     ) { paddingValues ->
@@ -153,8 +179,7 @@ internal fun MeasurementScreen(
                 item {
                     Ingredients(
                         recipe = food,
-                        weight = weight,
-                        onUnpack = onUnpack
+                        weight = weight
                     )
                 }
             }
@@ -189,7 +214,7 @@ internal fun MeasurementScreen(
             }
 
             item {
-                Spacer(Modifier.height(16.dp + 96.dp + 16.dp))
+                Spacer(Modifier.height(16.dp + 56.dp + 8.dp + 96.dp + 16.dp))
             }
         }
     }
@@ -269,12 +294,7 @@ private fun DeleteDialog(
 }
 
 @Composable
-private fun Ingredients(
-    recipe: Recipe,
-    weight: Float,
-    onUnpack: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun Ingredients(recipe: Recipe, weight: Float, modifier: Modifier = Modifier) {
     Column(modifier) {
         Row(
             modifier = Modifier
@@ -286,15 +306,6 @@ private fun Ingredients(
                 text = stringResource(Res.string.headline_ingredients),
                 style = MaterialTheme.typography.titleLarge
             )
-            Spacer(Modifier.weight(1f))
-            IconButton(
-                onClick = onUnpack
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.CallSplit,
-                    contentDescription = null
-                )
-            }
         }
 
         val fractions = recipe.ingredientFractions()
@@ -363,7 +374,7 @@ private fun RecipeIngredient.measurementStringShort(weight: Float): String? = wi
         }
 
         is Measurement.Gram -> "${weight.formatClipZeros()} " +
-            stringResource(Res.string.unit_gram_short)
+                stringResource(Res.string.unit_gram_short)
     }
 }
 
