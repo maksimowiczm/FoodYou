@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_7_2,
             v2_7_1,
             v2_7_0,
             v2_6_0,
@@ -30,7 +30,9 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_7_2 = Version(
+        version = "2.7.2",
+        date = LocalDate(2025, 6, 11),
         newFeatures = listOf(),
         changes = listOf(
             "Select latest measurement on the create measurement screen. Most of the time, this will be the same measurement as shown on the food search screen."
