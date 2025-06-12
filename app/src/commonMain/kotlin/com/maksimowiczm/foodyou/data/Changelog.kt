@@ -33,9 +33,12 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(
-            "Added recipe unpacking. You can now unpack recipe measurement into individual ingredients."
+            "Added recipe unpacking. You can now unpack recipe measurement into individual ingredients.",
+            "Added donation screen. You can now support the app development by donating."
         ),
-        changes = listOf(),
+        changes = listOf(
+            "Updated about screen"
+        ),
         bugFixes = listOf(),
         translations = listOf(),
         notes = null
