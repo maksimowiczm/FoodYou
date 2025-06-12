@@ -328,6 +328,5 @@
     <string name="description_donate_contact">If you have any requests regarding donations, feel free to contact me via email or GitHub.</string>
 
     <string name="donate_bank_or_card">Bank account or credit card</string>
-    <string name="donate_bitcoin" translatable="false">Bitcoin</string>
 
 </resources>
