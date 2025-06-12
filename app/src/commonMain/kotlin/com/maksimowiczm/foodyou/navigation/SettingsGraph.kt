@@ -33,7 +33,8 @@ fun NavGraphBuilder.settingsGraph(
     onImportExport: () -> Unit,
     onExternalDatabases: () -> Unit,
     externalDatabasesOnBack: () -> Unit,
-    onSwissFoodCompositionDatabase: () -> Unit
+    onSwissFoodCompositionDatabase: () -> Unit,
+    aboutOnBack: () -> Unit
 ) {
     forwardBackwardComposable<Settings> {
         SettingsScreen(
@@ -61,6 +62,8 @@ fun NavGraphBuilder.settingsGraph(
         )
     }
     forwardBackwardComposable<About> {
-        AboutScreen()
+        AboutScreen(
+            onBack = aboutOnBack
+        )
     }
 }

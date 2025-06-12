@@ -144,6 +144,9 @@ fun FoodYouNavHost(
                 navController.navigate(ImportSwissFoodCompositionDatabase) {
                     launchSingleTop = true
                 }
+            },
+            aboutOnBack = {
+                navController.popBackStack<About>(inclusive = true)
             }
         )
         addFoodGraph(

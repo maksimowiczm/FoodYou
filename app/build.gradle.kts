@@ -69,6 +69,8 @@ kotlin {
 
             // CSV
             implementation(libs.kotlin.csv)
+
+            implementation(libs.androidx.graphics.shapes)
         }
 
         commonTest.dependencies {
