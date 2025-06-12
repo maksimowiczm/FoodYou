@@ -37,7 +37,7 @@ interface CryptoDonateOption : DonateOption {
 
 private val bitcoinOption = object : CryptoDonateOption {
     override val name = "Bitcoin"
-    override val address = "TODO: Add Bitcoin address here"
+    override val address = "bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2"
 
     @Composable
     override fun Icon(modifier: Modifier) {
