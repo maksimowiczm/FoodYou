@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.ui.donate
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,6 +36,7 @@ import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -153,7 +155,7 @@ private fun ContactCard(onContact: () -> Unit, modifier: Modifier = Modifier) {
 private fun Fiat(onKofi: () -> Unit, onLiberapay: () -> Unit, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(
-            text = "BANK ACCOUNT OR CREDIT CARD",
+            text = stringResource(Res.string.donate_bank_or_card).uppercase(),
             modifier = Modifier.padding(start = 16.dp),
             style = MaterialTheme.typography.labelLarge
         )
@@ -162,9 +164,10 @@ private fun Fiat(onKofi: () -> Unit, onLiberapay: () -> Unit, modifier: Modifier
             onClick = onKofi,
             label = DonateConfig.KOFI_URL,
             leadingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.Hail,
-                    contentDescription = null
+                Image(
+                    painter = painterResource(Res.drawable.kofi_logo),
+                    contentDescription = null,
+                    modifier = Modifier.height(24.dp)
                 )
             },
             trailingIcon = {
@@ -179,9 +182,10 @@ private fun Fiat(onKofi: () -> Unit, onLiberapay: () -> Unit, modifier: Modifier
             onClick = onLiberapay,
             label = DonateConfig.LIBERAPAY_URL,
             leadingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.Hail,
-                    contentDescription = null
+                Image(
+                    painter = painterResource(Res.drawable.liberapay_logo),
+                    contentDescription = null,
+                    modifier = Modifier.height(24.dp)
                 )
             },
             trailingIcon = {
@@ -199,7 +203,7 @@ private fun Fiat(onKofi: () -> Unit, onLiberapay: () -> Unit, modifier: Modifier
 private fun Bitcoin(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(
-            text = "BITCOIN",
+            text = stringResource(Res.string.donate_bitcoin).uppercase(),
             modifier = Modifier.padding(start = 16.dp),
             style = MaterialTheme.typography.labelLarge
         )
@@ -208,9 +212,10 @@ private fun Bitcoin(onClick: () -> Unit, modifier: Modifier = Modifier) {
             onClick = onClick,
             label = DonateConfig.BITCOIN,
             leadingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.Hail,
-                    contentDescription = null
+                Image(
+                    painter = painterResource(Res.drawable.bitcoin_logo),
+                    contentDescription = null,
+                    modifier = Modifier.height(24.dp)
                 )
             },
             trailingIcon = {
