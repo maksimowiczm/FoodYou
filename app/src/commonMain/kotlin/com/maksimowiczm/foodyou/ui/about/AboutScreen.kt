@@ -1,14 +1,18 @@
 package com.maksimowiczm.foodyou.ui.about
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,8 +50,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.ripple
 import androidx.compose.material3.toPath
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,7 +79,9 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.graphics.shapes.Morph
+import androidx.graphics.shapes.RoundedPolygon
 import com.maksimowiczm.foodyou.BuildConfig
+import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.ui.changelog.ChangelogModalBottomSheet
 import foodyou.app.generated.resources.*
@@ -288,7 +296,6 @@ private fun InteractiveLogo(
 ) {
     val infiniteTransition = rememberInfiniteTransition()
     val coroutineScope = rememberCoroutineScope()
-    val motionScheme = MaterialTheme.motionScheme
 
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -302,42 +309,68 @@ private fun InteractiveLogo(
         )
     )
 
-    val progress = remember {
-        Animatable(0f)
-    }
     val morphs = remember {
         val shapes = listOf(
+            MaterialShapes.Diamond,
+            MaterialShapes.Gem,
+            MaterialShapes.Oval,
+            MaterialShapes.Pill,
+            MaterialShapes.VerySunny,
             MaterialShapes.Sunny,
             MaterialShapes.Pentagon,
             MaterialShapes.Burst,
-            MaterialShapes.Cookie6Sided
-        )
+            MaterialShapes.Boom,
+            MaterialShapes.Flower,
+            MaterialShapes.PixelCircle,
+            MaterialShapes.Cookie4Sided,
+            MaterialShapes.Cookie6Sided,
+            MaterialShapes.Cookie7Sided,
+            MaterialShapes.Cookie9Sided,
+            MaterialShapes.Cookie12Sided,
+            MaterialShapes.Ghostish,
+            MaterialShapes.Clover4Leaf,
+            MaterialShapes.Clover8Leaf
+        ).shuffled()
 
-        listOf(
-            Morph(shapes[0], shapes[1]),
-            Morph(shapes[1], shapes[2]),
-            Morph(shapes[2], shapes[3]),
-            Morph(shapes[3], shapes[0])
-        )
+        val pairs = mutableListOf<Pair<RoundedPolygon, RoundedPolygon>>()
+        for (i in 1 until shapes.size) {
+            pairs.add(Pair(shapes[i - 1], shapes[i]))
+        }
+
+        pairs.add(Pair(shapes.last(), shapes.first()))
+
+        pairs.map { (start, end) ->
+            Morph(start, end)
+        }
     }
+    val progress = rememberWrapAroundCounter(morphs.size.toFloat())
     val morph by remember {
         derivedStateOf {
-            when (progress.value) {
-                in 0f..<1f -> morphs[0]
-                in 1f..<2f -> morphs[1]
-                in 2f..<3f -> morphs[2]
-                in 3f..<4f -> morphs[3]
-                else -> morphs[0]
+            val index = (progress.value / 1f).toInt()
+
+            if (index >= morphs.size) {
+                morphs[0]
+            } else {
+                morphs[index]
             }
         }
     }
+
+    val motionScheme = MaterialTheme.motionScheme
+    val interactionSource = remember { MutableInteractionSource() }
 
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Box(
-            modifier = Modifier.size(350.dp),
+            modifier = Modifier.size(350.dp).clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = coroutineScope.lambda {
+                    progress.increment(motionScheme.fastSpatialSpec())
+                }
+            ),
             contentAlignment = Alignment.Center
         ) {
             Box(
@@ -352,21 +385,12 @@ private fun InteractiveLogo(
                         )
                     }
                     .background(backgroundColor)
-                    .clickable {
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = ripple()
+                    ) {
                         coroutineScope.launch {
-                            val next =
-                                ((progress.value.roundToInt() + 1) % (morphs.size + 1)).toFloat()
-
-                            progress.animateTo(
-                                targetValue = next,
-                                animationSpec = motionScheme.slowSpatialSpec()
-                            ) {
-                                if (value >= morphs.size) {
-                                    coroutineScope.launch {
-                                        progress.snapTo(0f)
-                                    }
-                                }
-                            }
+                            progress.increment(motionScheme.slowSpatialSpec())
                         }
                     },
                 content = {}
@@ -508,4 +532,33 @@ private class MorphShape(private val morph: Morph, private val percentage: Float
 
         return Outline.Generic(path)
     }
+}
+
+@Stable
+class WrapAroundCounter(
+    private val maxValue: Float,
+    private val animatable: Animatable<Float, AnimationVector1D>
+) {
+    val value: Float by derivedStateOf { animatable.value % maxValue }
+
+    suspend fun increment(animationSpec: AnimationSpec<Float> = spring()) {
+        animatable.animateTo(
+            targetValue = (animatable.value + 1f).roundToInt().toFloat(),
+            animationSpec = animationSpec
+        )
+    }
+}
+
+@Composable
+fun rememberWrapAroundCounter(maxValue: Float, initialValue: Float = 0f): WrapAroundCounter {
+    val animatable = remember(initialValue) { Animatable(initialValue) }
+
+    val counter = remember(animatable, maxValue) {
+        WrapAroundCounter(
+            maxValue = maxValue,
+            animatable = animatable
+        )
+    }
+
+    return counter
 }
