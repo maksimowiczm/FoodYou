@@ -19,16 +19,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -85,7 +81,6 @@ import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.RoundedPolygon
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.core.ext.lambda
-import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.ui.changelog.ChangelogModalBottomSheet
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
@@ -162,14 +157,10 @@ private fun AboutScreen(
             }
         }
 
-        val columnPadding = WindowInsets.safeDrawing.asPaddingValues()
-            .add(insets.only(WindowInsetsSides.Horizontal).asPaddingValues())
-            .add(PaddingValues(top = 8.dp))
-
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(columnPadding)
+                .safeDrawingPadding()
                 .fillMaxSize()
         ) {
             InteractiveLogo(Modifier.fillMaxWidth())
@@ -312,7 +303,6 @@ private fun InteractiveLogo(
         for (i in 1 until shapes.size) {
             pairs.add(Pair(shapes[i - 1], shapes[i]))
         }
-
         pairs.add(Pair(shapes.last(), shapes.first()))
 
         pairs.map { (start, end) ->
