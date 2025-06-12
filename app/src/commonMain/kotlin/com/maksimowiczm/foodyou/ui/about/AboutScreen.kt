@@ -20,17 +20,20 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.TrendingUp
@@ -160,129 +163,102 @@ private fun AboutScreen(
         }
 
         val columnPadding = WindowInsets.safeDrawing.asPaddingValues()
-            .add(insets.asPaddingValues())
+            .add(insets.only(WindowInsetsSides.Horizontal).asPaddingValues())
             .add(PaddingValues(top = 8.dp))
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = columnPadding
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(columnPadding)
+                .fillMaxSize()
         ) {
-            item {
-                InteractiveLogo(Modifier.fillMaxWidth())
-            }
-
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
-
-            item {
-                LogoLabel(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-
-            item {
-                AboutButtons(
-                    onDonate = onDonate,
-                    onSourceCode = onSourceCode,
-                    onChangelog = onChangelog,
-                    onIdeas = onIdeas,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = { Text(stringResource(Res.string.headline_donate)) },
-                    modifier = Modifier.clickable { onDonate() },
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.Outlined.VolunteerActivism,
-                            contentDescription = null
-                        )
-                    },
-                    supportingContent = {
-                        Text(stringResource(Res.string.description_donate_short))
-                    }
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = { Text(stringResource(Res.string.headline_source_code)) },
-                    modifier = Modifier.clickable { onSourceCode() },
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.Outlined.Code,
-                            contentDescription = null
-                        )
-                    },
-                    supportingContent = {
-                        Text(stringResource(Res.string.description_source_code))
-                    }
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = { Text(stringResource(Res.string.headline_changelog)) },
-                    modifier = Modifier.clickable { onChangelog() },
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
-                            contentDescription = null
-                        )
-                    },
-                    supportingContent = { Text(stringResource(Res.string.description_changelog)) }
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(stringResource(Res.string.action_feature_request_on_github))
-                    },
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.Outlined.Lightbulb,
-                            contentDescription = null
-                        )
-                    },
-                    modifier = Modifier.clickable { onFeatureRequest() }
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = {
-                        Text(stringResource(Res.string.action_bug_report_on_github))
-                    },
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.Outlined.BugReport,
-                            contentDescription = null
-                        )
-                    },
-                    modifier = Modifier.clickable { onBugReport() }
-                )
-            }
-
-            item {
-                ListItem(
-                    headlineContent = { Text(stringResource(Res.string.action_write_an_email)) },
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.Outlined.Email,
-                            contentDescription = null
-                        )
-                    },
-                    modifier = Modifier.clickable { onEmail() }
-                )
-            }
+            InteractiveLogo(Modifier.fillMaxWidth())
+            Spacer(Modifier.height(16.dp))
+            LogoLabel(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+            AboutButtons(
+                onDonate = onDonate,
+                onSourceCode = onSourceCode,
+                onChangelog = onChangelog,
+                onIdeas = onIdeas,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(Res.string.headline_donate)) },
+                modifier = Modifier.clickable { onDonate() },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.VolunteerActivism,
+                        contentDescription = null
+                    )
+                },
+                supportingContent = {
+                    Text(stringResource(Res.string.description_donate_short))
+                }
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(Res.string.headline_source_code)) },
+                modifier = Modifier.clickable { onSourceCode() },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.Code,
+                        contentDescription = null
+                    )
+                },
+                supportingContent = {
+                    Text(stringResource(Res.string.description_source_code))
+                }
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(Res.string.headline_changelog)) },
+                modifier = Modifier.clickable { onChangelog() },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
+                        contentDescription = null
+                    )
+                },
+                supportingContent = { Text(stringResource(Res.string.description_changelog)) }
+            )
+            ListItem(
+                headlineContent = {
+                    Text(stringResource(Res.string.action_feature_request_on_github))
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.Lightbulb,
+                        contentDescription = null
+                    )
+                },
+                modifier = Modifier.clickable { onFeatureRequest() }
+            )
+            ListItem(
+                headlineContent = {
+                    Text(stringResource(Res.string.action_bug_report_on_github))
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.BugReport,
+                        contentDescription = null
+                    )
+                },
+                modifier = Modifier.clickable { onBugReport() }
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(Res.string.action_write_an_email)) },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.Email,
+                        contentDescription = null
+                    )
+                },
+                modifier = Modifier.clickable { onEmail() }
+            )
         }
     }
 }
@@ -535,7 +511,7 @@ private class MorphShape(private val morph: Morph, private val percentage: Float
 }
 
 @Stable
-class WrapAroundCounter(
+private class WrapAroundCounter(
     private val maxValue: Float,
     private val animatable: Animatable<Float, AnimationVector1D>
 ) {
@@ -550,7 +526,10 @@ class WrapAroundCounter(
 }
 
 @Composable
-fun rememberWrapAroundCounter(maxValue: Float, initialValue: Float = 0f): WrapAroundCounter {
+private fun rememberWrapAroundCounter(
+    maxValue: Float,
+    initialValue: Float = 0f
+): WrapAroundCounter {
     val animatable = remember(initialValue) { Animatable(initialValue) }
 
     val counter = remember(animatable, maxValue) {
