@@ -2,9 +2,11 @@ package com.maksimowiczm.foodyou.ui.about
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -14,28 +16,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.TrendingUp
+import androidx.compose.material.icons.outlined.BugReport
+import androidx.compose.material.icons.outlined.Code
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Lightbulb
+import androidx.compose.material.icons.outlined.VolunteerActivism
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,25 +52,57 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.BuildConfig
+import com.maksimowiczm.foodyou.core.ui.ext.add
 import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.action_bug_report_on_github
+import foodyou.app.generated.resources.action_feature_request_on_github
 import foodyou.app.generated.resources.action_go_back
+import foodyou.app.generated.resources.action_write_an_email
 import foodyou.app.generated.resources.app_name
+import foodyou.app.generated.resources.description_changelog
+import foodyou.app.generated.resources.description_donate_short
+import foodyou.app.generated.resources.description_source_code
+import foodyou.app.generated.resources.headline_changelog
+import foodyou.app.generated.resources.headline_donate
 import foodyou.app.generated.resources.headline_launcher_icon_by_icons8
+import foodyou.app.generated.resources.headline_source_code
 import foodyou.app.generated.resources.headline_version
 import foodyou.app.generated.resources.ic_sushi
 import foodyou.app.generated.resources.link_icons8
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+@Composable
+fun AboutScreen(onBack: () -> Unit, onDonate: () -> Unit, modifier: Modifier = Modifier) {
+    AboutScreen(
+        onBack = onBack,
+        onDonate = onDonate,
+        onSourceCode = { /* TODO: Implement source code action */ },
+        onChangelog = { /* TODO: Implement changelog action */ },
+        onIdeas = { /* TODO: Implement ideas action */ },
+        onFeatureRequest = { /* TODO: Implement feature request action */ },
+        onBugReport = { /* TODO: Implement bug report action */ },
+        onEmail = { /* TODO: Implement email action */ },
+        modifier = modifier
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .safeDrawingPadding()
-    ) {
+private fun AboutScreen(
+    onBack: () -> Unit,
+    onDonate: () -> Unit,
+    onSourceCode: () -> Unit,
+    onChangelog: () -> Unit,
+    onIdeas: () -> Unit,
+    onFeatureRequest: () -> Unit,
+    onBugReport: () -> Unit,
+    onEmail: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier) {
         // Padding according to the Material Design App bars guidelines
         // https://m3.material.io/components/app-bars/specs
         val insets = TopAppBarDefaults.windowInsets
@@ -75,6 +113,7 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                 .windowInsetsPadding(insets)
                 .consumeWindowInsets(insets)
                 .padding(padding)
+                .zIndex(100f)
         ) {
             FilledIconButton(
                 onClick = onBack,
@@ -90,9 +129,13 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             }
         }
 
+        val columnPadding = WindowInsets.safeDrawing.asPaddingValues()
+            .add(insets.asPaddingValues())
+            .add(PaddingValues(top = 8.dp))
+
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = WindowInsets.safeDrawing.asPaddingValues()
+            contentPadding = columnPadding
         ) {
             item {
                 InteractiveLogo(Modifier.fillMaxWidth())
@@ -109,6 +152,107 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                         .padding(horizontal = 16.dp)
                 )
             }
+
+            item {
+                AboutButtons(
+                    onDonate = onDonate,
+                    onSourceCode = onSourceCode,
+                    onChangelog = onChangelog,
+                    onIdeas = onIdeas,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = { Text(stringResource(Res.string.headline_donate)) },
+                    modifier = Modifier.clickable { onDonate() },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Outlined.VolunteerActivism,
+                            contentDescription = null
+                        )
+                    },
+                    supportingContent = {
+                        Text(stringResource(Res.string.description_donate_short))
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = { Text(stringResource(Res.string.headline_source_code)) },
+                    modifier = Modifier.clickable { onSourceCode() },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Outlined.Code,
+                            contentDescription = null
+                        )
+                    },
+                    supportingContent = {
+                        Text(stringResource(Res.string.description_source_code))
+                    }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = { Text(stringResource(Res.string.headline_changelog)) },
+                    modifier = Modifier.clickable { onSourceCode() },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
+                            contentDescription = null
+                        )
+                    },
+                    supportingContent = { Text(stringResource(Res.string.description_changelog)) }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(stringResource(Res.string.action_feature_request_on_github))
+                    },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Outlined.Lightbulb,
+                            contentDescription = null
+                        )
+                    },
+                    modifier = Modifier.clickable { onFeatureRequest() }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(stringResource(Res.string.action_bug_report_on_github))
+                    },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Outlined.BugReport,
+                            contentDescription = null
+                        )
+                    },
+                    modifier = Modifier.clickable { onBugReport() }
+                )
+            }
+
+            item {
+                ListItem(
+                    headlineContent = { Text(stringResource(Res.string.action_write_an_email)) },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Outlined.Email,
+                            contentDescription = null
+                        )
+                    },
+                    modifier = Modifier.clickable { onEmail() }
+                )
+            }
         }
     }
 }
@@ -117,21 +261,9 @@ fun AboutScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 private fun InteractiveLogo(
     modifier: Modifier = Modifier,
-    iconColor: Color = MaterialTheme.colorScheme.surface,
-    backgroundColor: Color = MaterialTheme.colorScheme.outline
+    iconColor: Color = MaterialTheme.colorScheme.onTertiaryContainer,
+    backgroundColor: Color = MaterialTheme.colorScheme.tertiaryContainer
 ) {
-    val shapes = remember {
-        listOf(
-            MaterialShapes.Square,
-            MaterialShapes.Gem,
-            MaterialShapes.Sunny,
-            MaterialShapes.Cookie6Sided
-        )
-    }
-
-    var shapeIndex by rememberSaveable { mutableIntStateOf(0) }
-    val shape by remember { derivedStateOf { shapes[shapeIndex] } }
-
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -139,9 +271,8 @@ private fun InteractiveLogo(
         Box(
             modifier = Modifier
                 .size(350.dp)
-                .clip(shape.toShape())
-                .background(backgroundColor)
-                .clickable { shapeIndex = (shapeIndex + 1) % shapes.size },
+                .clip(MaterialShapes.Sunny.toShape())
+                .background(backgroundColor),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -201,5 +332,65 @@ private fun LogoLabel(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun AboutButtons(
+    onDonate: () -> Unit,
+    onSourceCode: () -> Unit,
+    onChangelog: () -> Unit,
+    onIdeas: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+    ) {
+        OutlinedButton(
+            onClick = onDonate,
+            shape = CircleShape,
+            modifier = Modifier.size(72.dp, 56.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.VolunteerActivism,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+        OutlinedButton(
+            onClick = onSourceCode,
+            shape = CircleShape,
+            modifier = Modifier.size(72.dp, 56.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Code,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+        OutlinedButton(
+            onClick = onChangelog,
+            shape = CircleShape,
+            modifier = Modifier.size(72.dp, 56.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+        OutlinedButton(
+            onClick = onIdeas,
+            shape = CircleShape,
+            modifier = Modifier.size(72.dp, 56.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Lightbulb,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+        }
     }
 }

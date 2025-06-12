@@ -20,6 +20,9 @@ data object ExternalDatabases
 @Serializable
 data object About
 
+@Serializable
+data object Donate
+
 fun NavGraphBuilder.settingsGraph(
     settingsOnBack: () -> Unit,
     homeSettingsOnBack: () -> Unit,
@@ -34,7 +37,8 @@ fun NavGraphBuilder.settingsGraph(
     onExternalDatabases: () -> Unit,
     externalDatabasesOnBack: () -> Unit,
     onSwissFoodCompositionDatabase: () -> Unit,
-    aboutOnBack: () -> Unit
+    aboutOnBack: () -> Unit,
+    aboutOnDonate: () -> Unit
 ) {
     forwardBackwardComposable<Settings> {
         SettingsScreen(
@@ -63,7 +67,10 @@ fun NavGraphBuilder.settingsGraph(
     }
     forwardBackwardComposable<About> {
         AboutScreen(
-            onBack = aboutOnBack
+            onBack = aboutOnBack,
+            onDonate = aboutOnDonate
         )
+    }
+    forwardBackwardComposable<Donate> {
     }
 }

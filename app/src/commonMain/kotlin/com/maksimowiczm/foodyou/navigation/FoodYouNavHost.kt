@@ -147,6 +147,11 @@ fun FoodYouNavHost(
             },
             aboutOnBack = {
                 navController.popBackStack<About>(inclusive = true)
+            },
+            aboutOnDonate = {
+                navController.navigate(Donate) {
+                    launchSingleTop = true
+                }
             }
         )
         addFoodGraph(

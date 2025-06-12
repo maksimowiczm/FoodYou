@@ -318,4 +318,10 @@
 
     <string name="action_unpack" description="Unpack the recipe ingredients">Unpack</string>
 
+    <string name="headline_donate">Donate</string>
+    <string name="description_donate_short">Contributions in any form are welcome</string>
+    <string name="headline_source_code">Source code</string>
+    <string name="description_source_code">View the project’s source code on GitHub</string>
+    <string name="action_write_an_email">Write an email</string>
+
 </resources>
