@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.ui.about
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -47,13 +48,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.toPath
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Matrix
@@ -73,24 +76,9 @@ import androidx.graphics.shapes.Morph
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.ui.changelog.ChangelogModalBottomSheet
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.action_bug_report_on_github
-import foodyou.app.generated.resources.action_feature_request_on_github
-import foodyou.app.generated.resources.action_go_back
-import foodyou.app.generated.resources.action_write_an_email
-import foodyou.app.generated.resources.app_name
-import foodyou.app.generated.resources.description_changelog
-import foodyou.app.generated.resources.description_donate_short
-import foodyou.app.generated.resources.description_source_code
-import foodyou.app.generated.resources.headline_changelog
-import foodyou.app.generated.resources.headline_donate
-import foodyou.app.generated.resources.headline_launcher_icon_by_icons8
-import foodyou.app.generated.resources.headline_source_code
-import foodyou.app.generated.resources.headline_version
-import foodyou.app.generated.resources.ic_sushi
-import foodyou.app.generated.resources.link_github_issue
-import foodyou.app.generated.resources.link_github_repository
-import foodyou.app.generated.resources.link_icons8
+import foodyou.app.generated.resources.*
+import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -299,6 +287,8 @@ private fun InteractiveLogo(
     backgroundColor: Color = MaterialTheme.colorScheme.tertiaryContainer
 ) {
     val infiniteTransition = rememberInfiniteTransition()
+    val coroutineScope = rememberCoroutineScope()
+    val motionScheme = MaterialTheme.motionScheme
 
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -311,21 +301,36 @@ private fun InteractiveLogo(
             repeatMode = RepeatMode.Restart
         )
     )
-    val progress by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = InfiniteRepeatableSpec(
-            animation = tween(
-                easing = LinearEasing,
-                durationMillis = 5 * 1000
-            ),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
 
-    val shapeA = MaterialShapes.Sunny
-    val shapeB = MaterialShapes.Pentagon
-    val morph = Morph(shapeA, shapeB)
+    val progress = remember {
+        Animatable(0f)
+    }
+    val morphs = remember {
+        val shapes = listOf(
+            MaterialShapes.Sunny,
+            MaterialShapes.Pentagon,
+            MaterialShapes.Burst,
+            MaterialShapes.Cookie6Sided
+        )
+
+        listOf(
+            Morph(shapes[0], shapes[1]),
+            Morph(shapes[1], shapes[2]),
+            Morph(shapes[2], shapes[3]),
+            Morph(shapes[3], shapes[0])
+        )
+    }
+    val morph by remember {
+        derivedStateOf {
+            when (progress.value) {
+                in 0f..<1f -> morphs[0]
+                in 1f..<2f -> morphs[1]
+                in 2f..<3f -> morphs[2]
+                in 3f..<4f -> morphs[3]
+                else -> morphs[0]
+            }
+        }
+    }
 
     Box(
         modifier = modifier,
@@ -343,10 +348,27 @@ private fun InteractiveLogo(
                         clip = true
                         shape = MorphShape(
                             morph = morph,
-                            percentage = progress
+                            percentage = progress.value % 1f
                         )
                     }
-                    .background(backgroundColor),
+                    .background(backgroundColor)
+                    .clickable {
+                        coroutineScope.launch {
+                            val next =
+                                ((progress.value.roundToInt() + 1) % (morphs.size + 1)).toFloat()
+
+                            progress.animateTo(
+                                targetValue = next,
+                                animationSpec = motionScheme.slowSpatialSpec()
+                            ) {
+                                if (value >= morphs.size) {
+                                    coroutineScope.launch {
+                                        progress.snapTo(0f)
+                                    }
+                                }
+                            }
+                        }
+                    },
                 content = {}
             )
             Icon(
