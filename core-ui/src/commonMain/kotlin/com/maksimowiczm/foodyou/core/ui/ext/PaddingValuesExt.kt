@@ -57,3 +57,13 @@ fun PaddingValues.add(
 
     return add(paddingValues)
 }
+
+@Composable
+fun PaddingValues.add(horizontal: Dp = 0.dp, vertical: Dp = 0.dp): PaddingValues {
+    val paddingValues = PaddingValues(
+        horizontal = horizontal,
+        vertical = vertical
+    )
+
+    return add(paddingValues)
+}

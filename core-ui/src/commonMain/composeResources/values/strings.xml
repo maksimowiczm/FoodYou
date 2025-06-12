@@ -320,8 +320,11 @@
 
     <string name="headline_donate">Donate</string>
     <string name="description_donate_short">Contributions in any form are welcome</string>
+    <string name="description_donate">This app is free, open-source, and ad-free. Your donation helps keep it that way, funds new features, and supports ongoing development.</string>
     <string name="headline_source_code">Source code</string>
     <string name="description_source_code">View the project’s source code on GitHub</string>
     <string name="action_write_an_email">Write an email</string>
+    <string name="headline_contact">Contact</string>
+    <string name="description_donate_contact">If you have any requests regarding donations, feel free to contact me via email or GitHub.</string>
 
 </resources>
