@@ -7,8 +7,6 @@ object AppPreferences {
     // Rename calories card to goals card, update preference version
     val homeOrder = stringPreferencesKey("home_order_v2")
 
-    val githubStarClicked = booleanPreferencesKey("github_star_clicked")
-
     val latestRememberedVersion = stringPreferencesKey("latest_remembered_version")
 
     val hideContent = booleanPreferencesKey("security_hide_content")
