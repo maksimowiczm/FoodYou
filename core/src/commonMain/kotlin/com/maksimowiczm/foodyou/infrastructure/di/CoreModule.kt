@@ -8,7 +8,7 @@ import org.koin.dsl.module
 
 expect fun Module.systemDetails()
 
-val utilsModule = module {
+val coreModule = module {
     single { DateProviderImpl() }.bind<DateProvider>()
 
     systemDetails()

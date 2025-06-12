@@ -1,7 +1,8 @@
-package com.maksimowiczm.foodyou.ui.home
+package com.maksimowiczm.foodyou.navigation
 
 import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
+import com.maksimowiczm.foodyou.ui.home.HomeScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

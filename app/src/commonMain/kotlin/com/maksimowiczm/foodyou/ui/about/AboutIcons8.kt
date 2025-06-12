@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.ui
+package com.maksimowiczm.foodyou.ui.about
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
@@ -20,7 +20,7 @@ import org.jetbrains.compose.resources.stringResource
  * State at 27.02.2025
  */
 @Composable
-internal fun AboutIcons8(onOpenIcons8: () -> Unit, modifier: Modifier = Modifier) {
+fun AboutIcons8(onOpenIcons8: () -> Unit, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = {
             Text(stringResource(Res.string.headline_launcher_icon_by_icons8))

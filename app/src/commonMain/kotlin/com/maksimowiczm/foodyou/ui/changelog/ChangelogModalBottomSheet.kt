@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.changelog.ui
+package com.maksimowiczm.foodyou.ui.changelog
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
@@ -41,8 +41,8 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.component.unorderedList
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
-import com.maksimowiczm.foodyou.feature.changelog.Changelog
-import com.maksimowiczm.foodyou.feature.changelog.Version
+import com.maksimowiczm.foodyou.data.Changelog
+import com.maksimowiczm.foodyou.data.Version
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -50,10 +50,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ChangelogModalBottomSheet(
-    onDismissRequest: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun ChangelogModalBottomSheet(onDismissRequest: () -> Unit, modifier: Modifier = Modifier) {
     val sheetState = rememberModalBottomSheetState()
 
     ModalBottomSheet(

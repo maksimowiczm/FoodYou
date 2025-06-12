@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.settings.externaldatabases
+package com.maksimowiczm.foodyou.ui.externaldatabases
 
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent

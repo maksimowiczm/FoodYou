@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.changelog
+package com.maksimowiczm.foodyou.ui.changelog
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,7 +13,7 @@ import com.maksimowiczm.foodyou.core.ext.getBlocking
 import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
-import com.maksimowiczm.foodyou.feature.changelog.data.ChangelogPreferences
+import com.maksimowiczm.foodyou.data.AppPreferences
 import org.koin.compose.koinInject
 
 /**
@@ -31,7 +31,7 @@ fun AppUpdateChangelogModalBottomSheet(
     if (latestRememberedVersion != currentVersion) {
         ChangelogModalBottomSheet(
             onDismissRequest = coroutineScope.lambda {
-                dataStore.set(ChangelogPreferences.latestRememberedVersion to currentVersion)
+                dataStore.set(AppPreferences.latestRememberedVersion to currentVersion)
             },
             modifier = modifier
         )
@@ -40,5 +40,5 @@ fun AppUpdateChangelogModalBottomSheet(
 
 @Composable
 private fun DataStore<Preferences>.observeLatestRememberedVersionAsState() =
-    observe(ChangelogPreferences.latestRememberedVersion)
-        .collectAsStateWithLifecycle(getBlocking(ChangelogPreferences.latestRememberedVersion))
+    observe(AppPreferences.latestRememberedVersion)
+        .collectAsStateWithLifecycle(getBlocking(AppPreferences.latestRememberedVersion))

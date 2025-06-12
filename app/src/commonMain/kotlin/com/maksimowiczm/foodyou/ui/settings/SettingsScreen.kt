@@ -20,14 +20,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
 import com.maksimowiczm.foodyou.feature.goals.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.importexport.ImportExportSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.feature.meal.MealsSettingsListItem
-import com.maksimowiczm.foodyou.feature.security.SecureScreenSettingsListItem
+import com.maksimowiczm.foodyou.ui.about.AboutSettingsListItem
+import com.maksimowiczm.foodyou.ui.externaldatabases.ExternalDatabasesSettingsListItem
 import com.maksimowiczm.foodyou.ui.home.HomeSettingsListItem
-import com.maksimowiczm.foodyou.ui.settings.externaldatabases.ExternalDatabasesSettingsListItem
+import com.maksimowiczm.foodyou.ui.security.SecureScreenSettingsListItem
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource

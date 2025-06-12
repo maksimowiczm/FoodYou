@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.lifecycleScope
 import androidx.test.core.app.launchActivity
 import com.maksimowiczm.foodyou.core.ext.set
-import com.maksimowiczm.foodyou.feature.security.data.SecurityPreferences
+import com.maksimowiczm.foodyou.data.AppPreferences
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import org.junit.Test
@@ -21,14 +21,14 @@ class SecureActivityTest {
 
                     // Run on same thread as the activity
                     lifecycleScope.launch {
-                        dataStore.set(SecurityPreferences.hideContent to true)
+                        dataStore.set(AppPreferences.hideContent to true)
 
                         // Yield just to be safe
                         yield()
 
                         assert((window.attributes.flags and FLAG_SECURE) == FLAG_SECURE)
 
-                        dataStore.set(SecurityPreferences.hideContent to false)
+                        dataStore.set(AppPreferences.hideContent to false)
 
                         // Yield just to be safe
                         yield()

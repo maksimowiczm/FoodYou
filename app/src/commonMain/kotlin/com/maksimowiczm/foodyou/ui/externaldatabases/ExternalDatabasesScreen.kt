@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.settings.externaldatabases
+package com.maksimowiczm.foodyou.ui.externaldatabases
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource

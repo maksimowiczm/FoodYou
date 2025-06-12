@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.security.ui
+package com.maksimowiczm.foodyou.ui.security
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -16,7 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
 import com.maksimowiczm.foodyou.core.ui.component.SettingsListItem
-import com.maksimowiczm.foodyou.feature.security.data.SecurityPreferences
+import com.maksimowiczm.foodyou.data.AppPreferences
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.runBlocking
@@ -24,7 +24,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-internal fun SecureScreenSettingsListItem(
+fun SecureScreenSettingsListItem(
     modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
@@ -32,7 +32,7 @@ internal fun SecureScreenSettingsListItem(
     dataStore: DataStore<Preferences> = koinInject()
 ) {
     val checked by dataStore
-        .observe(SecurityPreferences.hideContent)
+        .observe(AppPreferences.hideContent)
         .filterNotNull()
         .collectAsStateWithLifecycle(false)
 
@@ -40,7 +40,7 @@ internal fun SecureScreenSettingsListItem(
         checked = checked,
         onCheckedChange = { checked ->
             runBlocking {
-                dataStore.set(SecurityPreferences.hideContent to checked)
+                dataStore.set(AppPreferences.hideContent to checked)
             }
         },
         modifier = modifier,

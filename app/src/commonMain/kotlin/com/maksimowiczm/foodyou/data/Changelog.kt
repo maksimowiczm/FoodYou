@@ -1,6 +1,6 @@
 @file:Suppress("ktlint:standard:max-line-length")
 
-package com.maksimowiczm.foodyou.feature.changelog
+package com.maksimowiczm.foodyou.data
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

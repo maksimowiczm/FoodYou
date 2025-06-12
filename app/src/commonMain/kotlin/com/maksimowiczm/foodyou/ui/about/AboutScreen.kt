@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.ui
+package com.maksimowiczm.foodyou.ui.about
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
-import com.maksimowiczm.foodyou.feature.changelog.ChangelogModalBottomSheet
+import com.maksimowiczm.foodyou.ui.changelog.ChangelogModalBottomSheet
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -47,7 +47,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun AboutScreen(
+fun AboutScreen(
     modifier: Modifier = Modifier,
     viewModel: AboutSettingsViewModel = koinViewModel()
 ) {

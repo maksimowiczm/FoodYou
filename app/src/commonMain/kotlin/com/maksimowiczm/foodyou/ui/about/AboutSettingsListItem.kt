@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about
+package com.maksimowiczm.foodyou.ui.about
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.crashreport.ui
+package com.maksimowiczm.foodyou.ui.crashreport
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding

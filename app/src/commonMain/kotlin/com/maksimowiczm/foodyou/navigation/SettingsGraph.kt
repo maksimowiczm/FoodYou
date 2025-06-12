@@ -1,9 +1,11 @@
-package com.maksimowiczm.foodyou.ui.settings
+package com.maksimowiczm.foodyou.navigation
 
 import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.ui.about.AboutScreen
+import com.maksimowiczm.foodyou.ui.externaldatabases.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreen
-import com.maksimowiczm.foodyou.ui.settings.externaldatabases.ExternalDatabasesScreen
+import com.maksimowiczm.foodyou.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,6 +16,9 @@ data object HomeSettings
 
 @Serializable
 data object ExternalDatabases
+
+@Serializable
+data object About
 
 fun NavGraphBuilder.settingsGraph(
     settingsOnBack: () -> Unit,
@@ -54,5 +59,8 @@ fun NavGraphBuilder.settingsGraph(
             onBack = externalDatabasesOnBack,
             onSwissFoodCompositionDatabase = onSwissFoodCompositionDatabase
         )
+    }
+    forwardBackwardComposable<About> {
+        AboutScreen()
     }
 }
