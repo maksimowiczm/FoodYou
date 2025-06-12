@@ -42,11 +42,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
@@ -55,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.core.ui.ext.add
+import com.maksimowiczm.foodyou.ui.changelog.ChangelogModalBottomSheet
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_bug_report_on_github
 import foodyou.app.generated.resources.action_feature_request_on_github
@@ -70,21 +74,37 @@ import foodyou.app.generated.resources.headline_launcher_icon_by_icons8
 import foodyou.app.generated.resources.headline_source_code
 import foodyou.app.generated.resources.headline_version
 import foodyou.app.generated.resources.ic_sushi
+import foodyou.app.generated.resources.link_github_issue
+import foodyou.app.generated.resources.link_github_repository
 import foodyou.app.generated.resources.link_icons8
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AboutScreen(onBack: () -> Unit, onDonate: () -> Unit, modifier: Modifier = Modifier) {
+    val uriHandler = LocalUriHandler.current
+
+    val linkSourceCode = stringResource(Res.string.link_github_repository)
+    val linkFeatureRequest = stringResource(Res.string.link_github_issue)
+    val linkBugReport = stringResource(Res.string.link_github_issue)
+
+    var showChangelog by rememberSaveable { mutableStateOf(false) }
+
+    if (showChangelog) {
+        ChangelogModalBottomSheet(
+            onDismissRequest = { showChangelog = false }
+        )
+    }
+
     AboutScreen(
         onBack = onBack,
         onDonate = onDonate,
-        onSourceCode = { /* TODO: Implement source code action */ },
-        onChangelog = { /* TODO: Implement changelog action */ },
-        onIdeas = { /* TODO: Implement ideas action */ },
-        onFeatureRequest = { /* TODO: Implement feature request action */ },
-        onBugReport = { /* TODO: Implement bug report action */ },
-        onEmail = { /* TODO: Implement email action */ },
+        onSourceCode = { uriHandler.openUri(linkSourceCode) },
+        onChangelog = { showChangelog = true },
+        onIdeas = { uriHandler.openUri(linkFeatureRequest) },
+        onFeatureRequest = { uriHandler.openUri(linkFeatureRequest) },
+        onBugReport = { uriHandler.openUri(linkBugReport) },
+        onEmail = { uriHandler.openUri(BuildConfig.FEEDBACK_EMAIL_URI) },
         modifier = modifier
     )
 }
@@ -200,7 +220,7 @@ private fun AboutScreen(
             item {
                 ListItem(
                     headlineContent = { Text(stringResource(Res.string.headline_changelog)) },
-                    modifier = Modifier.clickable { onSourceCode() },
+                    modifier = Modifier.clickable { onChangelog() },
                     leadingContent = {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
