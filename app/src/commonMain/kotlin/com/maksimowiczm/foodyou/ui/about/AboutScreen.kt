@@ -1,5 +1,11 @@
 package com.maksimowiczm.foodyou.ui.about
 
+import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +45,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.toShape
+import androidx.compose.material3.toPath
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,14 +54,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Matrix
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.graphics.shapes.Morph
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.ui.changelog.ChangelogModalBottomSheet
@@ -284,17 +298,57 @@ private fun InteractiveLogo(
     iconColor: Color = MaterialTheme.colorScheme.onTertiaryContainer,
     backgroundColor: Color = MaterialTheme.colorScheme.tertiaryContainer
 ) {
+    val infiniteTransition = rememberInfiniteTransition()
+
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = InfiniteRepeatableSpec(
+            animation = tween(
+                easing = LinearEasing,
+                durationMillis = 2 * 60 * 1000
+            ),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+    val progress by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = InfiniteRepeatableSpec(
+            animation = tween(
+                easing = LinearEasing,
+                durationMillis = 5 * 1000
+            ),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    val shapeA = MaterialShapes.Sunny
+    val shapeB = MaterialShapes.Pentagon
+    val morph = Morph(shapeA, shapeB)
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Box(
-            modifier = Modifier
-                .size(350.dp)
-                .clip(MaterialShapes.Sunny.toShape())
-                .background(backgroundColor),
+            modifier = Modifier.size(350.dp),
             contentAlignment = Alignment.Center
         ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        rotationZ = rotation
+                        clip = true
+                        shape = MorphShape(
+                            morph = morph,
+                            percentage = progress
+                        )
+                    }
+                    .background(backgroundColor),
+                content = {}
+            )
             Icon(
                 painter = painterResource(Res.drawable.ic_sushi),
                 contentDescription = null,
@@ -412,5 +466,24 @@ private fun AboutButtons(
                 modifier = Modifier.size(32.dp)
             )
         }
+    }
+}
+
+private class MorphShape(private val morph: Morph, private val percentage: Float) : Shape {
+
+    private val matrix = Matrix()
+
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        matrix.scale(size.width, size.height)
+
+        val path = morph.toPath(progress = percentage)
+        path.transform(matrix)
+
+        return Outline.Generic(path)
     }
 }
