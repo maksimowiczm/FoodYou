@@ -1,0 +1,15 @@
+<b>Food You</b> 是一款功能强大的开源营养追踪器，采用现代 Material You 美学构建。 它不仅可以帮助您跟踪卡路里，还可以帮助您跟踪您的整个营养摄入量 - 通过可靠的食物数据和灵活的模块化界面。
+
+<b>即将支持：</b>
+<ul>
+    <li><b>Material You Design：</b>动态主题，可适应您的设备，提供无缝的视觉体验。</li>
+    <li><b>综合食品数据库：</b> 从 Open Food Facts、USDA FoodCentral 和 Swiss Food Composition Database 访问营养数据。</li>
+    <li><b>全面营养追踪：</b>监测卡路里、宏量营养素、维生素、矿物质等。</li>
+    <li><b>食谱创建：</b>通过自动营养计算将食物组合成自定义食谱。</li>
+    <li><b>每日目标：</b>设定并遵循个性化营养目标。</li>
+    <li><b>模块化主屏幕：</b>使用根据您的需求量身定制的卡片定制您的家。</li>
+</ul>
+
+今天就开始使用 Food You 跟踪您的营养 - 干净、完整且完全属于您。
+
+启动器图标由 <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>提供

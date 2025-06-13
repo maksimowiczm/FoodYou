@@ -37,7 +37,9 @@ object Changelog {
         ),
         changes = listOf(),
         bugFixes = listOf(),
-        translations = listOf(),
+        translations = listOf(
+            "Added Chinese Simplified"
+        ),
         notes = null
     )
 
