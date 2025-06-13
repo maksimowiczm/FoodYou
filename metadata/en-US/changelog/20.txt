@@ -3,3 +3,6 @@ New features
 
 Bug fixes
 - Fixed an app crash when creating a new meal
+
+Translations
+- Added Chinese Simplified
