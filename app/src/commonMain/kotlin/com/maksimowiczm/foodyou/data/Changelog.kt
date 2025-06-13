@@ -31,12 +31,16 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val next = Version(
+        version = "2.8.0",
+        date = LocalDate(2025, 6, 13),
         newFeatures = listOf(
             "Added recipe unpacking. You can now unpack recipe measurement into individual ingredients."
         ),
         changes = listOf(),
-        bugFixes = listOf(),
+        bugFixes = listOf(
+            "Fixed an app crash when creating a new meal"
+        ),
         translations = listOf(),
         notes = null
     )
