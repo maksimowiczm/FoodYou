@@ -95,7 +95,7 @@ class DownloadProductScreenTest {
     fun errorState() = runComposeUiTest {
         setContent {
             DownloadProductScreen(
-                error = DownloadError.Custom("Error message")
+                error = DownloadError.GenericError.Custom("Error message")
             )
         }
 

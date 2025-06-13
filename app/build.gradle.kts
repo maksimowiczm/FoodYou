@@ -34,10 +34,6 @@ kotlin {
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
-    // Leave it here
-    // Otherwise IDE will not recognize the project as a multiplatform one
-    jvm("desktop")
-
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.work.runtime)
@@ -73,8 +69,6 @@ kotlin {
 
             // CSV
             implementation(libs.kotlin.csv)
-
-            implementation(libs.androidx.graphics.shapes)
         }
 
         commonTest.dependencies {

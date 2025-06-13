@@ -42,7 +42,7 @@ interface MeasurementLocalDataSource {
 
     @Query(
         """
-        SELECT *
+        SELECT measurement, quantity
         FROM MeasurementEntity
         WHERE productId = :productId
         ORDER BY createdAt DESC
@@ -53,7 +53,7 @@ interface MeasurementLocalDataSource {
 
     @Query(
         """
-        SELECT *
+        SELECT measurement, quantity
         FROM MeasurementEntity
         WHERE recipeId = :recipeId
         ORDER BY createdAt DESC

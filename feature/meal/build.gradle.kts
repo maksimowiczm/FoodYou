@@ -15,14 +15,6 @@ kotlin {
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
-        compilations.configureEach {
-            compilerOptions.configure {
-                jvmTarget.set(
-                    org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-                )
-            }
-        }
-
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
         }.configure {
@@ -48,9 +40,6 @@ kotlin {
 
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
-        }
-
-        androidMain.dependencies {
         }
 
         getByName("androidDeviceTest").dependencies {

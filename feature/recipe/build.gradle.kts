@@ -1,5 +1,3 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -14,14 +12,6 @@ kotlin {
         namespace = "com.maksimowiczm.foodyou.feature.recipe"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
-
-        compilations.configureEach {
-            compilerOptions.configure {
-                jvmTarget.set(
-                    org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-                )
-            }
-        }
 
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
@@ -41,23 +31,6 @@ kotlin {
             implementation(project(":feature:barcodescanner"))
 
             implementation(libs.kotlinx.serialization.json)
-        }
-
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-
-            @OptIn(ExperimentalComposeLibrary::class)
-            implementation(compose.uiTest)
-        }
-
-        androidMain.dependencies {
-        }
-
-        getByName("androidDeviceTest").dependencies {
-            implementation(libs.androidx.runner)
-            implementation(libs.androidx.core)
-            implementation(libs.androidx.junit)
-            implementation(libs.androidx.ui.test.manifest)
         }
     }
 }

@@ -5,6 +5,6 @@ import okio.Path.Companion.toPath
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.scope.Scope
 
-actual val dataStorePath: Scope.(String) -> Path = { fileName ->
+actual val dataStorePath: Scope.(fileName: String) -> Path = { fileName ->
     androidContext().filesDir.resolve(fileName).absolutePath.toPath()
 }

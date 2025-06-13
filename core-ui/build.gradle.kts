@@ -49,10 +49,6 @@ kotlin {
             implementation(libs.reorderable)
         }
 
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-
         androidMain.dependencies {
             // Koin
             api(libs.koin.androidx.compose)
