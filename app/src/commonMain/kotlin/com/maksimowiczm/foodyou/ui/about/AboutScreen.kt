@@ -1,108 +1,118 @@
 package com.maksimowiczm.foodyou.ui.about
 
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Moving
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.TrendingUp
+import androidx.compose.material.icons.outlined.BugReport
+import androidx.compose.material.icons.outlined.Code
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Lightbulb
+import androidx.compose.material.icons.outlined.VolunteerActivism
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.ripple
+import androidx.compose.material3.toPath
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.graphics.Matrix
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.zIndex
+import androidx.graphics.shapes.Morph
+import androidx.graphics.shapes.RoundedPolygon
 import com.maksimowiczm.foodyou.BuildConfig
-import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
+import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.ui.changelog.ChangelogModalBottomSheet
 import foodyou.app.generated.resources.*
+import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AboutScreen(
-    modifier: Modifier = Modifier,
-    viewModel: AboutSettingsViewModel = koinViewModel()
-) {
-    val coroutineScope = rememberCoroutineScope()
-    val clipboardManager = LocalClipboardManager.current
-
-    val githubStarClicked by viewModel.githubStar.collectAsStateWithLifecycle()
-
+fun AboutScreen(onBack: () -> Unit, onDonate: () -> Unit, modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
-    var showChangelogSheet by rememberSaveable { mutableStateOf(false) }
 
-    val requestFeatureLink = stringResource(Res.string.link_github_issue)
-    val bugReportLink = stringResource(Res.string.link_github_issue)
-    val readmeLink = stringResource(Res.string.link_github_repository)
-    val githubStarLink = stringResource(Res.string.link_github_repository)
-    val icons8Link = stringResource(Res.string.link_icons8)
-    val versionString = stringResource(Res.string.headline_version)
+    val linkSourceCode = stringResource(Res.string.link_github_repository)
+    val linkFeatureRequest = stringResource(Res.string.link_github_issue)
+    val linkBugReport = stringResource(Res.string.link_github_issue)
 
-    if (showChangelogSheet) {
+    var showChangelog by rememberSaveable { mutableStateOf(false) }
+
+    if (showChangelog) {
         ChangelogModalBottomSheet(
-            onDismissRequest = { showChangelogSheet = false }
+            onDismissRequest = { showChangelog = false }
         )
     }
 
     AboutScreen(
-        onRequestFeature = remember(uriHandler, requestFeatureLink) {
-            { uriHandler.openUri(requestFeatureLink) }
-        },
-        onBugReport = remember(uriHandler, bugReportLink) {
-            { uriHandler.openUri(bugReportLink) }
-        },
-        onReadme = remember(uriHandler, readmeLink) {
-            { uriHandler.openUri(readmeLink) }
-        },
-        onIcons8 = remember(uriHandler, icons8Link) {
-            { uriHandler.openUri(icons8Link) }
-        },
-        githubStarClicked = githubStarClicked,
-        onGithubStarClick = remember(viewModel, uriHandler, githubStarLink) {
-            {
-                viewModel.onGithubStarClick()
-                uriHandler.openUri(githubStarLink)
-            }
-        },
-        onChangelog = { showChangelogSheet = true },
-        onVersion = remember(coroutineScope, clipboardManager, versionString) {
-            {
-                coroutineScope.launch {
-                    clipboardManager.copy(
-                        label = versionString,
-                        text = BuildConfig.VERSION_NAME
-                    )
-                }
-            }
-        },
+        onBack = onBack,
+        onDonate = onDonate,
+        onSourceCode = { uriHandler.openUri(linkSourceCode) },
+        onChangelog = { showChangelog = true },
+        onIdeas = { uriHandler.openUri(linkFeatureRequest) },
+        onFeatureRequest = { uriHandler.openUri(linkFeatureRequest) },
+        onBugReport = { uriHandler.openUri(linkBugReport) },
+        onEmail = { uriHandler.openUri(BuildConfig.FEEDBACK_EMAIL_URI) },
         modifier = modifier
     )
 }
@@ -110,263 +120,414 @@ fun AboutScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AboutScreen(
-    onRequestFeature: () -> Unit,
-    onBugReport: () -> Unit,
-    onReadme: () -> Unit,
-    onIcons8: () -> Unit,
-    githubStarClicked: Boolean,
-    onGithubStarClick: () -> Unit,
+    onBack: () -> Unit,
+    onDonate: () -> Unit,
+    onSourceCode: () -> Unit,
     onChangelog: () -> Unit,
-    onVersion: () -> Unit,
+    onIdeas: () -> Unit,
+    onFeatureRequest: () -> Unit,
+    onBugReport: () -> Unit,
+    onEmail: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    Box(modifier) {
+        // Padding according to the Material Design App bars guidelines
+        // https://m3.material.io/components/app-bars/specs
+        val insets = TopAppBarDefaults.windowInsets
+        val padding = PaddingValues(top = 8.dp, start = 4.dp)
 
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(Res.string.headline_about)) },
-                scrollBehavior = scrollBehavior
+        Box(
+            modifier = Modifier
+                .windowInsetsPadding(insets)
+                .consumeWindowInsets(insets)
+                .padding(padding)
+                .zIndex(100f)
+        ) {
+            FilledIconButton(
+                onClick = onBack,
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(Res.string.action_go_back)
+                )
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .safeDrawingPadding()
+                .fillMaxSize()
+        ) {
+            InteractiveLogo(Modifier.fillMaxWidth())
+            Spacer(Modifier.height(16.dp))
+            LogoLabel(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+            AboutButtons(
+                onDonate = onDonate,
+                onSourceCode = onSourceCode,
+                onChangelog = onChangelog,
+                onIdeas = onIdeas,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(Res.string.headline_donate)) },
+                modifier = Modifier.clickable { onDonate() },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.VolunteerActivism,
+                        contentDescription = null
+                    )
+                },
+                supportingContent = {
+                    Text(stringResource(Res.string.description_donate_short))
+                }
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(Res.string.headline_source_code)) },
+                modifier = Modifier.clickable { onSourceCode() },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.Code,
+                        contentDescription = null
+                    )
+                },
+                supportingContent = {
+                    Text(stringResource(Res.string.description_source_code))
+                }
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(Res.string.headline_changelog)) },
+                modifier = Modifier.clickable { onChangelog() },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
+                        contentDescription = null
+                    )
+                },
+                supportingContent = { Text(stringResource(Res.string.description_changelog)) }
+            )
+            ListItem(
+                headlineContent = {
+                    Text(stringResource(Res.string.action_feature_request_on_github))
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.Lightbulb,
+                        contentDescription = null
+                    )
+                },
+                modifier = Modifier.clickable { onFeatureRequest() }
+            )
+            ListItem(
+                headlineContent = {
+                    Text(stringResource(Res.string.action_bug_report_on_github))
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.BugReport,
+                        contentDescription = null
+                    )
+                },
+                modifier = Modifier.clickable { onBugReport() }
+            )
+            ListItem(
+                headlineContent = { Text(stringResource(Res.string.action_write_an_email)) },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.Email,
+                        contentDescription = null
+                    )
+                },
+                modifier = Modifier.clickable { onEmail() }
             )
         }
-    ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun InteractiveLogo(
+    modifier: Modifier = Modifier,
+    iconColor: Color = MaterialTheme.colorScheme.onTertiaryContainer,
+    backgroundColor: Color = MaterialTheme.colorScheme.tertiaryContainer
+) {
+    val infiniteTransition = rememberInfiniteTransition()
+    val coroutineScope = rememberCoroutineScope()
+
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = InfiniteRepeatableSpec(
+            animation = tween(
+                easing = LinearEasing,
+                durationMillis = 2 * 60 * 1000
+            ),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    val morphs = remember {
+        val shapes = listOf(
+            MaterialShapes.Diamond,
+            MaterialShapes.Gem,
+            MaterialShapes.Oval,
+            MaterialShapes.Pill,
+            MaterialShapes.VerySunny,
+            MaterialShapes.Sunny,
+            MaterialShapes.Pentagon,
+            MaterialShapes.Burst,
+            MaterialShapes.Boom,
+            MaterialShapes.Flower,
+            MaterialShapes.PixelCircle,
+            MaterialShapes.Cookie4Sided,
+            MaterialShapes.Cookie6Sided,
+            MaterialShapes.Cookie7Sided,
+            MaterialShapes.Cookie9Sided,
+            MaterialShapes.Cookie12Sided,
+            MaterialShapes.Ghostish,
+            MaterialShapes.Clover4Leaf,
+            MaterialShapes.Clover8Leaf
+        ).shuffled()
+
+        val pairs = mutableListOf<Pair<RoundedPolygon, RoundedPolygon>>()
+        for (i in 1 until shapes.size) {
+            pairs.add(Pair(shapes[i - 1], shapes[i]))
+        }
+        pairs.add(Pair(shapes.last(), shapes.first()))
+
+        pairs.map { (start, end) ->
+            Morph(start, end)
+        }
+    }
+    val progress = rememberWrapAroundCounter(morphs.size.toFloat())
+    val morph by remember {
+        derivedStateOf {
+            val index = (progress.value / 1f).toInt()
+
+            if (index >= morphs.size) {
+                morphs[0]
+            } else {
+                morphs[index]
+            }
+        }
+    }
+
+    val motionScheme = MaterialTheme.motionScheme
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier.size(350.dp).clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = coroutineScope.lambda {
+                    progress.increment(motionScheme.fastSpatialSpec())
+                }
+            ),
+            contentAlignment = Alignment.Center
         ) {
-            item {
-                ShareYourThoughtsItem(
-                    onRequestFeature = onRequestFeature,
-                    onBugReport = onBugReport,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
-
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
-
-            item {
-                ShowSomeLoveItem(
-                    githubStarClicked = githubStarClicked,
-                    onGithubStarClick = onGithubStarClick,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
-
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
-
-            item {
-                Text(
-                    text = stringResource(Res.string.headline_miscellaneous),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
-
-            item {
-                ReadmeListItem(
-                    onReadme = onReadme
-                )
-            }
-
-            item {
-                AboutIcons8(
-                    onOpenIcons8 = onIcons8
-                )
-            }
-
-            item {
-                ChangelogListItem(
-                    modifier = Modifier.clickable { onChangelog() }
-                )
-            }
-
-            item {
-                VersionListItem(
-                    modifier = Modifier.clickable { onVersion() }
-                )
-            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        rotationZ = rotation
+                        clip = true
+                        shape = MorphShape(
+                            morph = morph,
+                            percentage = progress.value % 1f
+                        )
+                    }
+                    .background(backgroundColor)
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = ripple()
+                    ) {
+                        coroutineScope.launch {
+                            progress.increment(motionScheme.slowSpatialSpec())
+                        }
+                    },
+                content = {}
+            )
+            Icon(
+                painter = painterResource(Res.drawable.ic_sushi),
+                contentDescription = null,
+                modifier = Modifier.size(150.dp),
+                tint = iconColor
+            )
         }
     }
 }
 
 @Composable
-private fun ShareYourThoughtsItem(
-    onRequestFeature: () -> Unit,
-    onBugReport: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun LogoLabel(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(Res.string.headline_share_your_thoughts),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelLarge
+            text = stringResource(Res.string.app_name),
+            style = MaterialTheme.typography.headlineMedium
         )
-
         Text(
-            text = stringResource(Res.string.description_share_your_thoughts),
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.Justify,
-            style = MaterialTheme.typography.bodyMedium
+            text = buildString {
+                append(stringResource(Res.string.headline_version))
+                append(" ")
+                append(BuildConfig.VERSION_NAME)
+            },
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-
-        Spacer(Modifier.height(8.dp))
-
-        CardButton(
-            leadingIcon = {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    painter = painterResource(Res.drawable.ic_github_mark),
-                    contentDescription = null
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(Res.string.action_feature_request_on_github),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            },
-            onClick = onRequestFeature,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        CardButton(
-            leadingIcon = {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    painter = painterResource(Res.drawable.ic_github_mark),
-                    contentDescription = null
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(Res.string.action_bug_report_on_github),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            },
-            onClick = onBugReport,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
-@Composable
-private fun ShowSomeLoveItem(
-    githubStarClicked: Boolean,
-    onGithubStarClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-    ) {
         Text(
-            text = stringResource(Res.string.headline_show_some_love),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelLarge
-        )
+            text = buildAnnotatedString {
+                val str = stringResource(Res.string.headline_launcher_icon_by_icons8)
+                val link = stringResource(Res.string.link_icons8)
 
-        Text(
-            text = stringResource(Res.string.description_show_some_love),
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.Justify,
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        CardButton(
-            leadingIcon = {
-                AnimatedContent(
-                    targetState = githubStarClicked
-                ) {
-                    if (it) {
-                        Icon(
-                            imageVector = Icons.Default.Favorite,
-                            contentDescription = null,
-                            tint = Color.Red
-                        )
+                str.split(" ").forEachIndexed { index, word ->
+                    if (word == "Icons8") {
+                        withLink(LinkAnnotation.Url(link)) {
+                            withStyle(
+                                MaterialTheme.typography.bodyMedium
+                                    .merge(MaterialTheme.colorScheme.primary)
+                                    .toSpanStyle()
+                            ) {
+                                append(word)
+                            }
+                        }
                     } else {
-                        Icon(
-                            imageVector = Icons.Outlined.Star,
-                            contentDescription = null
-                        )
+                        append(word)
+                    }
+
+                    if (index < str.split(" ").lastIndex) {
+                        append(" ")
                     }
                 }
             },
-            text = {
-                Text(
-                    text = stringResource(Res.string.action_leave_a_star_on_github),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            },
-            onClick = onGithubStarClick,
-            modifier = Modifier.fillMaxWidth()
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun AboutButtons(
+    onDonate: () -> Unit,
+    onSourceCode: () -> Unit,
+    onChangelog: () -> Unit,
+    onIdeas: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+    ) {
+        OutlinedButton(
+            onClick = onDonate,
+            shape = CircleShape,
+            modifier = Modifier.size(72.dp, 56.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.VolunteerActivism,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+        OutlinedButton(
+            onClick = onSourceCode,
+            shape = CircleShape,
+            modifier = Modifier.size(72.dp, 56.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Code,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+        OutlinedButton(
+            onClick = onChangelog,
+            shape = CircleShape,
+            modifier = Modifier.size(72.dp, 56.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+        OutlinedButton(
+            onClick = onIdeas,
+            shape = CircleShape,
+            modifier = Modifier.size(72.dp, 56.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Lightbulb,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+    }
+}
+
+private class MorphShape(private val morph: Morph, private val percentage: Float) : Shape {
+
+    private val matrix = Matrix()
+
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        matrix.scale(size.width, size.height)
+
+        val path = morph.toPath(progress = percentage)
+        path.transform(matrix)
+
+        return Outline.Generic(path)
+    }
+}
+
+@Stable
+private class WrapAroundCounter(
+    private val maxValue: Float,
+    private val animatable: Animatable<Float, AnimationVector1D>
+) {
+    val value: Float by derivedStateOf { animatable.value % maxValue }
+
+    suspend fun increment(animationSpec: AnimationSpec<Float> = spring()) {
+        animatable.animateTo(
+            targetValue = (animatable.value + 1f).roundToInt().toFloat(),
+            animationSpec = animationSpec
         )
     }
 }
 
 @Composable
-private fun ReadmeListItem(onReadme: () -> Unit, modifier: Modifier = Modifier) {
-    ListItem(
-        headlineContent = {
-            Text(stringResource(Res.string.headline_readme))
-        },
-        modifier = modifier.clickable { onReadme() },
-        supportingContent = {
-            Text(stringResource(Res.string.description_README_setting))
-        },
-        leadingContent = {
-            Icon(
-                imageVector = Icons.Default.Description,
-                contentDescription = null
-            )
-        }
-    )
-}
+private fun rememberWrapAroundCounter(
+    maxValue: Float,
+    initialValue: Float = 0f
+): WrapAroundCounter {
+    val animatable = remember(initialValue) { Animatable(initialValue) }
 
-@Composable
-private fun VersionListItem(modifier: Modifier = Modifier) {
-    ListItem(
-        headlineContent = {
-            Text(stringResource(Res.string.headline_version))
-        },
-        modifier = modifier,
-        leadingContent = {
-            Icon(
-                imageVector = Icons.Outlined.Info,
-                contentDescription = null
-            )
-        },
-        supportingContent = {
-            Text(text = BuildConfig.VERSION_NAME)
-        }
-    )
-}
+    val counter = remember(animatable, maxValue) {
+        WrapAroundCounter(
+            maxValue = maxValue,
+            animatable = animatable
+        )
+    }
 
-@Composable
-private fun ChangelogListItem(modifier: Modifier = Modifier) {
-    ListItem(
-        headlineContent = {
-            Text(stringResource(Res.string.headline_changelog))
-        },
-        modifier = modifier,
-        leadingContent = {
-            Icon(
-                imageVector = Icons.Default.Moving,
-                contentDescription = null
-            )
-        },
-        supportingContent = {
-            Text(stringResource(Res.string.description_changelog))
-        }
-    )
+    return counter
 }
