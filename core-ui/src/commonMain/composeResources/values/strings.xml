@@ -310,7 +310,9 @@
 
     <string name="headline_donate">Donate</string>
     <string name="description_donate_short">Contributions in any form are welcome</string>
-    <string name="description_donate">This app is free, open-source, and ad-free. Your donation helps keep it that way, funds new features, and supports ongoing development.</string>
+    <string name="description_donate_1">In a world where every tap is tracked and every feature locked behind a paywall, this food tracker is different. No ads. No subscriptions. No surveillance.</string>
+    <string name="description_donate_2">Built on the belief that useful tools should be free, open, and respect your privacy, it offers a quiet stand against the exploitative models dominating app stores.</string>
+    <string name="description_donate_3">If this matters to you, consider making a donation. Your support helps keep digital freedom alive. Every contribution, big or small, is a step towards a more open and independent future.</string>
     <string name="headline_source_code">Source code</string>
     <string name="description_source_code">View the project’s source code on GitHub</string>
     <string name="action_write_an_email">Write an email</string>
