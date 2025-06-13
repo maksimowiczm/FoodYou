@@ -18,7 +18,7 @@ buildConfig {
     val versionName = libs.versions.version.name.get()
     val feedbackEmail = "maksimowicz.dev@gmail.com"
     val feedbackEmailUri =
-        "mailto:$feedbackEmail?subject=FoodYou Feedback&body=FoodYou Version: $versionName\\n"
+        "mailto:$feedbackEmail?subject=Food You Feedback&body=Food You Version: $versionName\\n"
 
     buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
     buildConfigField("String", "FEEDBACK_EMAIL_URI", "\"$feedbackEmailUri\"")
