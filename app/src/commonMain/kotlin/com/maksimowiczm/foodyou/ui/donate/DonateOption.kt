@@ -3,10 +3,8 @@ package com.maksimowiczm.foodyou.ui.donate
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.bitcoin_logo
-import foodyou.app.generated.resources.kofi_logo
-import foodyou.app.generated.resources.liberapay_logo
 import org.jetbrains.compose.resources.painterResource
 
 sealed interface DonateOption {
@@ -22,7 +20,8 @@ sealed interface DonateOption {
         )
 
         val crypto = listOf<CryptoDonateOption>(
-            bitcoinOption
+            bitcoin,
+            monero
         )
     }
 }
@@ -35,7 +34,7 @@ interface CryptoDonateOption : DonateOption {
     val address: String
 }
 
-private val bitcoinOption = object : CryptoDonateOption {
+private val bitcoin = object : CryptoDonateOption {
     override val name = "Bitcoin"
     override val address = "bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2"
 
@@ -43,6 +42,21 @@ private val bitcoinOption = object : CryptoDonateOption {
     override fun Icon(modifier: Modifier) {
         Image(
             painter = painterResource(Res.drawable.bitcoin_logo),
+            contentDescription = null,
+            modifier = modifier
+        )
+    }
+}
+
+private val monero = object : CryptoDonateOption {
+    override val name = "Monero"
+    override val address =
+        "41tP8QxdL5hduxcntGwJD92GJDdCTKDyyGSKofbgdgaLG2uJuqgK7daYymBQuJ1iA48LuiLdfoduFMLk1kdkTRKSC4mHkMY"
+
+    @Composable
+    override fun Icon(modifier: Modifier) {
+        Image(
+            painter = painterResource(Res.drawable.monero_logo),
             contentDescription = null,
             modifier = modifier
         )

@@ -68,6 +68,7 @@ the project.
 - [Support on Liberapay](https://liberapay.com/maksimowiczm)
 - [Support on Ko-fi](https://ko-fi.com/maksimowiczm)
 - **BTC**: `bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2`
+- **Monero**: `41tP8QxdL5hduxcntGwJD92GJDdCTKDyyGSKofbgdgaLG2uJuqgK7daYymBQuJ1iA48LuiLdfoduFMLk1kdkTRKSC4mHkMY`
 
 ---
 

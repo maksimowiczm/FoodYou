@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -137,7 +139,7 @@ private fun DonateScreen(
 private fun LinkDonateOption.DonateCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
     DonateCard(
         label = name,
-        leadingIcon = { Icon(Modifier.height(24.dp)) },
+        leadingIcon = { Icon(Modifier.width(24.dp)) },
         trailingIcon = {
             Icon(
                 imageVector = Icons.Outlined.Link,
@@ -182,7 +184,7 @@ private fun DonateCard(
 ) {
     Surface(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().heightIn(min = 56.dp),
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceContainer,
         contentColor = MaterialTheme.colorScheme.onSurface
