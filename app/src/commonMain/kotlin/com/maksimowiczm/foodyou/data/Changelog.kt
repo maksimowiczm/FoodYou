@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_8_0,
             v2_7_2,
             v2_7_1,
             v2_7_0,
@@ -31,31 +31,30 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_8_0 = Version(
+        version = "2.8.0",
+        date = LocalDate(2025, 6, 13),
         newFeatures = listOf(
             "Added recipe unpacking. You can now unpack recipe measurement into individual ingredients."
         ),
-        changes = listOf(),
-        bugFixes = listOf(),
+        bugFixes = listOf(
+            "Fixed an app crash when creating a new meal"
+        ),
         translations = listOf(
             "Added Chinese Simplified"
-        ),
-        notes = null
+        )
     )
 
     val v2_7_2 = Version(
         version = "2.7.2",
         date = LocalDate(2025, 6, 11),
-        newFeatures = listOf(),
         changes = listOf(
             "Select latest measurement on the create measurement screen. Most of the time, this will be the same measurement as shown on the food search screen."
         ),
         bugFixes = listOf(
             "Use proper measurement date when updating product measurement",
             "Stop displaying deleted measurements"
-        ),
-        translations = listOf(),
-        notes = null
+        )
     )
 
     val v2_7_1 = Version(

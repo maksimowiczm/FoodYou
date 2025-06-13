@@ -1,0 +1,8 @@
+New features
+- Added recipe unpacking. You can now unpack recipe measurement into individual ingredients.
+
+Bug fixes
+- Fixed an app crash when creating a new meal
+
+Translations
+- Added Chinese Simplified
