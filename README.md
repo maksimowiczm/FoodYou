@@ -63,9 +63,10 @@ Want to help make Food You even better? Here are some great ways to contribute:
 
 ### ❤️ Donate
 
-This app is free, open-source, and ad-free. Your donation helps keep it that way, funds new features, and supports ongoing development.
-- [Ko-fi](https://ko-fi.com/maksimowiczm)
-- [Liberapay](https://liberapay.com/maksimowiczm)
+This app is free, open-source, and ad-free. Your donations directly support full-time development of
+the project.
+- [Support on Liberapay](https://liberapay.com/maksimowiczm)
+- [Support on Ko-fi](https://ko-fi.com/maksimowiczm)
 - **BTC**: `bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2`
 
 ---

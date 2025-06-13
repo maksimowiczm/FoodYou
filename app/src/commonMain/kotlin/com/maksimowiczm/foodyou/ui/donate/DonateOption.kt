@@ -17,8 +17,8 @@ sealed interface DonateOption {
 
     companion object {
         val fiat = listOf<LinkDonateOption>(
-            kofi,
-            liberapay
+            liberapay,
+            kofi
         )
 
         val crypto = listOf<CryptoDonateOption>(
