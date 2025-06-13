@@ -257,12 +257,12 @@
     <string name="description_food_data_central_usda">FoodData Central, USDA'nın birden çok farklı veri türüne sahip kapsamlı gıda bileşimi veri kaynağıdır</string>
     <string name="error_usda_rate_limit">Food Data Central (USDA) API oran limiti aşıldı</string>
     <string name="error_usda_rate_limit_description">İzin verilen istek sayısını aştınız. Lütfen tekrar denemeden önce bekleyin veya bir anahtar almak için kaydolun.</string>
-    <string name="description_swiss_food_composition_database">İsviçre Gıda Bileşimi Veritabanı'nı ekleyerek gıda listenizi genişletebilirsiniz. İngilizce, Almanca, Fransızca veya İtalyanca dillerinde 1.100'den fazla gıda içerir.</string>
+    <string name="description_swiss_food_composition_database">İsviçre gıda veritabanını ekleyerek yiyecek listenizi genişletebilirsiniz. Bu veritabanı, İngilizce, Almanca, Fransızca veya İtalyanca olarak 1.100’den fazla gıda içerir.</string>
     <string name="description2_swiss_food_composition_database">İsviçre Gıda Bileşimi Veritabanı, 1.100'den fazla genel gıda ürünü için besin bilgilerini içerir. Dört dilde mevcuttur. Bu ürünleri gıda günlüğünüze aktarmak için lütfen tercih ettiğiniz dili seçin.</string>
     <string name="description3_swiss_food_composition_database">Gıda veritabanınız, İsviçre Gıda Bileşimi Veritabanı'ndan 1.100 ürünle doldurulacaktır</string>
     <string name="headline_external_databases">Harici Veritabanları</string>
     <string name="description_external_databases">Desteklenen veritabanlarını görün</string>
-    <string name="feature_share_url_with_food_you">URL'yi FoodYou ile Paylaş</string>
+    <string name="feature_share_url_with_food_you">URL'yi Food You ile Paylaş</string>
     <string name="feature_in_app_download">Uygulama İçi İndirme</string>
     <string name="feature_manual_database_import">Manuel Veritabanı İçe Aktarma</string>
 </resources>

@@ -41,7 +41,9 @@ object Changelog {
         bugFixes = listOf(
             "Fixed an app crash when creating a new meal"
         ),
-        translations = listOf(),
+        translations = listOf(
+            "Added Chinese Simplified"
+        ),
         notes = null
     )
 
