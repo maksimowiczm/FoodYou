@@ -89,6 +89,10 @@ val languages = mapOf(
     "العربية (المملكة العربية السعودية)" to Translation(
         tag = "ar-SA",
         authorsStrings = listOf()
+    ),
+    "简体中文" to Translation(
+        tag = "zh-CN",
+        authorsStrings = listOf()
     )
 )
 

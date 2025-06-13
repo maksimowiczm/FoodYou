@@ -1,4 +1,4 @@
-<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
+<b>Food You<b> ist ein leistungsfähiger, quelloffener Ernährungs-Tracker, der eine moderne Material You Ästhetik nutzt. Er hilft Dir nicht nur Deine Kalorien, sondern Deine gesamte Nährstoffaufnahme zu tracken - mit verlässlichen Ernährungsdaten und flexibler, modularer Oberfläche.
 
 <b>Merkmale:</b>
 <ul>

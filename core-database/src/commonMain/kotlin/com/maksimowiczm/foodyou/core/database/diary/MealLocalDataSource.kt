@@ -18,20 +18,20 @@ abstract class MealLocalDataSource {
     abstract fun observeMealById(id: Long): Flow<MealEntity?>
 
     @Insert
-    protected abstract fun insertMeal(meal: MealEntity)
+    protected abstract suspend fun insertMeal(meal: MealEntity)
 
     @Query(
         """
-        SELECT * 
+        SELECT rank
         FROM MealEntity
         ORDER BY rank DESC
         LIMIT 1
         """
     )
-    protected abstract fun getLastRank(): Int
+    protected abstract suspend fun getLastRank(): Int
 
     @Transaction
-    open fun insertWithLastRank(entity: MealEntity) {
+    open suspend fun insertWithLastRank(entity: MealEntity) {
         val lastRank = getLastRank()
 
         insertMeal(
