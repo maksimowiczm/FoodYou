@@ -1,13 +1,10 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
+import okio.Path
 import okio.Path.Companion.toPath
 import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+import org.koin.core.scope.Scope
 
-actual val dataStoreModule = module {
-    single {
-        createDataStore {
-            androidContext().filesDir.resolve(DATASTORE_FILE_NAME).absolutePath.toPath()
-        }
-    }
+actual val dataStorePath: Scope.(String) -> Path = { fileName ->
+    androidContext().filesDir.resolve(fileName).absolutePath.toPath()
 }

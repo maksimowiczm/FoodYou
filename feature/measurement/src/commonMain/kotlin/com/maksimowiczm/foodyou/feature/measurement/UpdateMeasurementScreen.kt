@@ -10,7 +10,6 @@ fun UpdateMeasurementScreen(
     measurementId: Long,
     onBack: () -> Unit,
     onEditFood: (FoodId) -> Unit,
-    onRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
@@ -18,7 +17,6 @@ fun UpdateMeasurementScreen(
         measurementId = measurementId,
         onBack = onBack,
         onEditFood = onEditFood,
-        onRecipeClone = onRecipeClone,
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
     )

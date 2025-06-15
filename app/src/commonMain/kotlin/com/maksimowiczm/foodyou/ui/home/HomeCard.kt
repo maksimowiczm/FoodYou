@@ -7,7 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ext.getBlocking
 import com.maksimowiczm.foodyou.core.ext.observe
 import com.maksimowiczm.foodyou.core.ext.set
-import com.maksimowiczm.foodyou.data.HomePreferences
+import com.maksimowiczm.foodyou.data.AppPreferences
 import kotlinx.coroutines.flow.map
 
 enum class HomeCard {
@@ -35,9 +35,9 @@ private fun String?.toHomeCards() = runCatching {
 private fun List<HomeCard>.string() = joinToString(",") { it.ordinal.toString() }
 
 @Composable
-fun DataStore<Preferences>.collectHomeCardsAsState() = observe(HomePreferences.homeOrder)
+fun DataStore<Preferences>.collectHomeCardsAsState() = observe(AppPreferences.homeOrder)
     .map { it.toHomeCards() }
-    .collectAsStateWithLifecycle(getBlocking(HomePreferences.homeOrder).toHomeCards())
+    .collectAsStateWithLifecycle(getBlocking(AppPreferences.homeOrder).toHomeCards())
 
 suspend fun DataStore<Preferences>.updateHomeCards(homeCards: List<HomeCard>) =
-    set(HomePreferences.homeOrder to homeCards.string())
+    set(AppPreferences.homeOrder to homeCards.string())

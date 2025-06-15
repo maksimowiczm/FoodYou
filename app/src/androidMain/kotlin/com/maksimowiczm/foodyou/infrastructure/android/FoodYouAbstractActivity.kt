@@ -14,7 +14,7 @@ import com.maksimowiczm.foodyou.core.ui.utils.AndroidClipboardManager
 import com.maksimowiczm.foodyou.core.ui.utils.AndroidDateFormatter
 import com.maksimowiczm.foodyou.core.ui.utils.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.core.ui.utils.DateFormatterProvider
-import com.maksimowiczm.foodyou.feature.security.data.SecurityPreferences
+import com.maksimowiczm.foodyou.data.AppPreferences
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
@@ -51,7 +51,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
         val dataStore = get<DataStore<Preferences>>()
 
         dataStore
-            .observe(SecurityPreferences.hideContent)
+            .observe(AppPreferences.hideContent)
             .filterNotNull()
             .collectLatest {
                 if (it) {

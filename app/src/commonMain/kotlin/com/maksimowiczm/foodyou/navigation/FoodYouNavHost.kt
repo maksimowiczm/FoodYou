@@ -6,8 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.feature.about.About
-import com.maksimowiczm.foodyou.feature.about.aboutGraph
 import com.maksimowiczm.foodyou.feature.addfood.AddFood
 import com.maksimowiczm.foodyou.feature.addfood.addFoodGraph
 import com.maksimowiczm.foodyou.feature.goals.GoalsCardSettings
@@ -32,12 +30,6 @@ import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
 import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.ImportSwissFoodCompositionDatabase
 import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.swissFoodCompositionDatabaseGraph
-import com.maksimowiczm.foodyou.ui.home.Home
-import com.maksimowiczm.foodyou.ui.home.homeGraph
-import com.maksimowiczm.foodyou.ui.settings.ExternalDatabases
-import com.maksimowiczm.foodyou.ui.settings.HomeSettings
-import com.maksimowiczm.foodyou.ui.settings.Settings
-import com.maksimowiczm.foodyou.ui.settings.settingsGraph
 
 @Composable
 fun FoodYouNavHost(
@@ -154,7 +146,6 @@ fun FoodYouNavHost(
                 }
             }
         )
-        aboutGraph()
         addFoodGraph(
             onBack = {
                 navController.popBackStack<AddFood>(inclusive = true)
@@ -273,36 +264,6 @@ fun FoodYouNavHost(
 
                 navController.navigate(route) {
                     launchSingleTop = true
-                }
-            },
-            createOnRecipeClone = { foodId, mealId, epochDay ->
-                navController.navigate(
-                    CreateMeasurement(
-                        foodId = foodId,
-                        mealId = mealId,
-                        epochDay = epochDay
-                    )
-                ) {
-                    launchSingleTop = true
-
-                    popUpTo<CreateMeasurement> {
-                        inclusive = true
-                    }
-                }
-            },
-            updateOnRecipeClone = { foodId, mealId, epochDay ->
-                navController.navigate(
-                    CreateMeasurement(
-                        foodId = foodId,
-                        mealId = mealId,
-                        epochDay = epochDay
-                    )
-                ) {
-                    launchSingleTop = true
-
-                    popUpTo<UpdateMeasurement> {
-                        inclusive = true
-                    }
                 }
             }
         )

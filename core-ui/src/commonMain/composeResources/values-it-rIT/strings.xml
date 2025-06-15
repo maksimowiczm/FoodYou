@@ -240,6 +240,7 @@
     <string name="description_notifications_permission_required_data_sync">L'autorizzazione alle notifiche è necessaria per mostrare l'avanzamento della sincronizzazione dei dati. Abilitala nelle impostazioni dell'app.</string>
     <string name="description_show_macronutrients_goals">Mostra obiettivi dei macronutrienti</string>
     <string name="description_recipe_missing_ingredients">Potresti non vedere tutte le ricette qui. Alcune ricette sono nascoste per evitare riferimenti circolari.</string>
+    <string name="description_please_wait_while_importing_products">Attendere il completamento dell’importazione dei prodotti</string>
     <string name="description_suggest_external_database">Suggerisci un database pubblico da includere</string>
     <string name="headline_launcher_icon_by_icons8">Icona del launcher di Icons8</string>
     <string name="neutral_see_other_awesome_icons_here">Guarda altre fantastiche icone qui</string>
@@ -261,4 +262,7 @@
     <string name="description3_swiss_food_composition_database">Il tuo database alimentare sarà popolato da 1.100 prodotti dal Database Svizzero sulla Composizione degli Alimenti</string>
     <string name="headline_external_databases">Database esterni</string>
     <string name="description_external_databases">Vedi i database supportati</string>
+    <string name="feature_share_url_with_food_you">Condividi URL con Food You</string>
+    <string name="feature_in_app_download">Download in-app</string>
+    <string name="feature_manual_database_import">Importazione manuale del database</string>
 </resources>

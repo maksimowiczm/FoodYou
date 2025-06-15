@@ -88,15 +88,6 @@ internal fun AddFoodApp(
                         }
                     }
                 },
-                onRecipeClone = { it, _, _ ->
-                    navController.navigate(MeasureFood(productId = it.id)) {
-                        launchSingleTop = true
-
-                        popUpTo<MeasureFood> {
-                            inclusive = true
-                        }
-                    }
-                },
                 animatedVisibilityScope = this
             )
         }

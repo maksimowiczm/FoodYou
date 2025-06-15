@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_available_short">未知</string>
+    <string name="headline_create_product">添加产品</string>
+    <string name="headline_settings">设置</string>
+    <string name="headline_calories_goal">卡路里目标</string>
+    <string name="headline_daily_goals">每日目标</string>
+    <string name="headline_general">常规</string>
+    <string name="headline_macronutrients">大量营养素</string>
+    <string name="headline_meals">餐</string>
+    <string name="headline_delete_product">删除产品</string>
+    <string name="headline_edit_product">编辑产品</string>
+    <string name="headline_permission_required">需要权限</string>
+    <string name="headline_language">语言</string>
+    <string name="headline_system">系统</string>
+    <string name="headline_system_language_settings">系统语言设置</string>
+    <string name="headline_secure_screen">安全屏幕</string>
+    <string name="headline_about">关于</string>
+    <string name="headline_miscellaneous">杂项</string>
+    <string name="headline_version">版本</string>
+    <string name="headline_share_your_thoughts">提供一些建议和反馈</string>
+    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">捐赠</string>
+    <string name="headline_all_day" description="All-day (meal)">一整天</string>
+    <string name="headline_time_based_ordering">按照时间排序</string>
+    <string name="headline_incomplete_products">不完整的产品</string>
+    <string name="headline_product">预包装食品</string>
+    <string name="headline_recipe">食谱</string>
+    <string name="headline_create_recipe">创建配方</string>
+    <string name="headline_update_recipe">更新配方</string>
+    <string name="headline_ingredients" description="Recipe ingredients">成分</string>
+    <string name="headline_summary">总结</string>
+    <string name="headline_whats_new">新增功能</string>
+    <string name="headline_changelog">更新日志</string>
+    <string name="headline_installed" description="Installed version of the app">安装</string>
+    <string name="headline_home" description="Home screen">主页</string>
+    <string name="headline_home_settings" description="Home screen settings">主页设置</string>
+    <string name="headline_calendar">日历</string>
+    <string name="headline_meals_settings">餐食设置</string>
+    <string name="headline_meals_cards_settings">餐食卡设置</string>
+    <string name="headline_horizontal">水平</string>
+    <string name="headline_vertical">垂直</string>
+    <string name="headline_values_per">每个</string>
+    <string name="headline_other">其他</string>
+    <string name="headline_vitamins">维生素</string>
+    <string name="headline_minerals">矿物质</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">支持的链接</string>
+    <string name="headline_import_and_export">导入和导出</string>
+    <string name="headline_experimental" description="Experimental feature">实验</string>
+    <string name="headline_experimental_feature">实验性功能</string>
+    <string name="headline_copy" description="A noun, thing that is a copy">复制</string>
+    <string name="headline_something_went_wrong">哎呀！出错了</string>
+    <string name="headline_daily_goals_settings">每日目标设置</string>
+    <string name="headline_api_key">API 密钥</string>
+    <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">资源</string>
+    <string name="headline_features">特征</string>
+    <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">%</string>
+    <string name="weight">重量</string>
+    <string name="unit_calories">卡路里</string>
+    <string name="unit_energy" description="Energy as calories">能量</string>
+    <string name="unit_kcal">千卡</string>
+    <plurals name="unit_gram">
+        <item quantity="other">克</item>
+    </plurals>
+    <plurals name="unit_milliliter">
+        <item quantity="other">毫升</item>
+    </plurals>
+    <string name="product_package_weight">包装重量</string>
+    <string name="product_package">包装</string>
+    <string name="product_serving_weight">份量</string>
+    <string name="product_serving">份</string>
+    <string name="product_name">名称</string>
+    <string name="product_brand">品牌</string>
+    <string name="product_barcode">条形码</string>
+    <string name="product_link">产品链接</string>
+    <string name="recipe_servings">份</string>
+    <string name="description_recipe_servings">这个食谱做多少份</string>
+    <string name="nutriment_proteins">蛋白质</string>
+    <string name="nutriment_proteins_short">P</string>
+    <string name="nutriment_carbohydrates">碳水化合物</string>
+    <string name="nutriment_carbohydrates_short">C</string>
+    <string name="nutriment_sugars">糖</string>
+    <string name="nutriment_fats">脂肪</string>
+    <string name="nutriment_fats_short">F</string>
+    <string name="nutriment_saturated_fats">饱和脂肪</string>
+    <string name="nutriment_polyunsaturated_fats">多不饱和脂肪</string>
+    <string name="nutriment_monounsaturated_fats">单不饱和脂肪</string>
+    <string name="nutriment_omega_3">Omega-3 脂肪酸</string>
+    <string name="nutriment_omega_6">Omega-6 脂肪酸</string>
+    <string name="nutriment_salt">盐</string>
+    <string name="nutriment_fiber">纤维素</string>
+    <string name="nutriment_cholesterol">胆固醇</string>
+    <string name="nutriment_caffeine">咖啡因</string>
+    <string name="vitamin_a">维生素A</string>
+    <string name="vitamin_b1">维生素B1</string>
+    <string name="vitamin_b2">维生素 B2</string>
+    <string name="vitamin_b3">维生素 B3</string>
+    <string name="vitamin_b5">维生素 B5</string>
+    <string name="vitamin_b6">维生素 B6</string>
+    <string name="vitamin_b7">维生素 B7</string>
+    <string name="vitamin_b9">维生素 B9</string>
+    <string name="vitamin_b12">维生素 B12</string>
+    <string name="vitamin_c">维生素 C</string>
+    <string name="vitamin_d">维生素 D</string>
+    <string name="vitamin_e">维生素 E</string>
+    <string name="vitamin_k">维生素 K</string>
+    <string name="mineral_manganese">锰</string>
+    <string name="mineral_magnesium">镁</string>
+    <string name="mineral_potassium">钾</string>
+    <string name="mineral_calcium">钙</string>
+    <string name="mineral_copper"> 铜</string>
+    <string name="mineral_zinc">锌</string>
+    <string name="mineral_sodium">钠</string>
+    <string name="mineral_iron">铁</string>
+    <string name="mineral_phosphorus">磷</string>
+    <string name="mineral_selenium">硒</string>
+    <string name="mineral_iodine">碘</string>
+    <string name="mineral_chromium">铬</string>
+    <string name="action_search">搜索</string>
+    <string name="action_scan_barcode">扫描条形码</string>
+    <string name="action_add">添加</string>
+    <string name="action_go_back">返回</string>
+    <string name="action_tap_to_allow_access">点击以允许访问</string>
+    <string name="action_create">创建</string>
+    <string name="action_clear">清楚</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_go_to_settings">前往设置</string>
+    <string name="action_save">保存</string>
+    <string name="action_delete">删除</string>
+    <string name="action_confirm">确认</string>
+    <string name="action_add_meal">添加食物</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_insert_suggested_search">插入建议的搜索</string>
+    <string name="action_edit_entry">编辑条目</string>
+    <string name="action_delete_entry">删除条目</string>
+    <string name="action_undo">撤销</string>
+    <string name="action_close">关闭</string>
+    <string name="action_discard">丢弃</string>
+    <string name="action_translate">翻译</string>
+    <string name="action_enable_camera_flash">打开闪光灯</string>
+    <string name="action_disable_camera_flash">关闭闪光灯</string>
+    <string name="action_prevent_screen_capture">禁止截图</string>
+    <string name="action_go_to_today">回到今天</string>
+    <string name="action_bug_report_on_github">去 GitHub 上 Bug 报告</string>
+    <string name="action_feature_request_on_github">去 GitHub 上请求功能</string>
+    <string name="action_leave_a_star_on_github">去 GitHub 上留下星标</string>
+    <string name="action_show_calendar">显示日历</string>
+    <string name="action_reorder">重新安排</string>
+    <string name="action_move_up" description="reorder list item up">上移</string>
+    <string name="action_move_down" description="reorder list item down">下移</string>
+    <string name="action_use_time_based_ordering">按时间排序</string>
+    <string name="action_ignore_all_day_meals">忽略全天用餐</string>
+    <string name="action_add_ingredient" description="Add ingredient to the recipe">添加成分</string>
+    <string name="action_edit_ingredient_measurement">编辑成分单位</string>
+    <string name="action_delete_ingredient">删除成分</string>
+    <string name="action_download">下载</string>
+    <string name="action_paste_url">粘贴链接</string>
+    <string name="action_browse_open_food_facts">浏览 Open Food Facts</string>
+    <string name="action_copy">复制</string>
+    <string name="action_choose_other_date">选择其他日期</string>
+    <string name="action_choose_other_measurement">选择其他单位</string>
+    <string name="action_edit_your_home_page">编辑主页</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">显示更多</string>
+    <string name="action_download_product">下载产品</string>
+    <string name="action_suggest_external_database">建议外部数据库</string>
+    <string name="action_import_food_products">导入食品信息</string>
+    <string name="action_import_food_products_from_csv">导入CSV格式的食品信息</string>
+    <string name="action_export_food_products">导出食品信息</string>
+    <string name="action_export_food_products_to_csv">导出食品信息为CSV格式</string>
+    <string name="action_share">分享</string>
+    <string name="action_copy_header" description="Copy CSV file header">复制表头</string>
+    <string name="action_copy_and_open_bug_report">复制并打开 bug 报告</string>
+    <string name="action_show_details">显示详情</string>
+    <string name="action_browse_usda">浏览 Food Data Central （USDA）</string>
+    <string name="action_set_key">设置密钥</string>
+    <string name="action_obtain_key">获取密钥</string>
+    <string name="action_dont_show_again">不再显示</string>
+    <string name="neutral_barcode_scanner_camera_request">允许访问您的相机以扫描条形码</string>
+    <string name="neutral_barcode_scanner_camera_request_rationale">您必须允许访问才能扫描条形码</string>
+    <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">扫描条形码需要相机权限。请在应用程序设置中允许它。</string>
+    <string name="neutral_no_food_found">未找到食物</string>
+    <plurals name="neutral_remaining_calories">
+        <item quantity="other">剩余 %1$d 卡路里</item>
+    </plurals>
+    <string name="neutral_set_your_daily_goals">设定每日目标</string>
+    <string name="neutral_set_your_meal_schedule">设置您的用餐时间表</string>
+    <string name="neutral_permanently_delete_meal">永久删除餐食？</string>
+    <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">餐食将被永久删除。与此餐食相关的所有数据都将丢失。</string>
+    <string name="neutral_required">必填</string>
+    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">卡路里是根据宏量营养素自动计算的</string>
+    <string name="neutral_entry_deleted">条目已删除</string>
+    <string name="neutral_help_translating_the_app">帮助我们翻译这款应用</string>
+    <string name="neutral_copied">信息已复制到剪贴板</string>
+    <string name="neutral_product_created">已创建产品</string>
+    <string name="neutral_export_started">开始导出</string>
+    <string name="neutral_import_started">开始导入</string>
+    <string name="question_discard_product">丢弃产品？</string>
+    <string name="question_discard_changes">放弃更改吗？</string>
+    <string name="question_discard_recipe">丢弃配方？</string>
+    <string name="error_this_field_is_required">此字段是必须的</string>
+    <string name="error_invalid_number">无效的号码</string>
+    <string name="error_value_cannot_be_negative">值不能为负数</string>
+    <string name="error_value_must_be_less_than">值必须小于 %1$s</string>
+    <string name="error_value_must_be_integer">值必须为整数</string>
+    <string name="error_sum_of_percentages_must_be_100">百分比总和必须为 100</string>
+    <string name="error_value_must_be_positive">值必须为正数</string>
+    <string name="error_url_not_found">找不到 URL</string>
+    <string name="error_url_is_not_supported">不支持的 URL</string>
+    <string name="error_failed_to_download_product">下载产品失败</string>
+    <string name="error_product_not_found">未找到产品</string>
+    <string name="error_unknown_error">未知错误</string>
+    <string name="error_measurement_error">测量误差，请检查份量和包装重量</string>
+    <string name="error_api_key_is_invalid">API 密钥无效</string>
+    <string name="positive_goal_reached">达到目标</string>
+    <string name="positive_ok">好的</string>
+    <plurals name="negative_exceeded_by_calories">
+        <item quantity="other">超过 %1$d 卡路里</item>
+    </plurals>
+    <string name="description_calories_goal">设定您的每日卡路里摄入量目标。这将帮助您跟踪进度并保持正轨。</string>
+    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">产品将被永久删除。此作无法撤消。所有与本产品相关的日记条目都将被删除。</string>
+    <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">此条目将从您的日记中删除。您可以随时再次添加它。</string>
+    <string name="description_README_setting">在 GitHub 上查看项目的 README 文件</string>
+    <string name="description_about_setting">了解有关该应用程序的更多信息</string>
+    <string name="description_show_some_love">如果您觉得此项目有帮助，请考虑在 GitHub 上给它打个标！它帮助其他人发现它并保持开发继续进行。</string>
+    <string name="description_share_your_thoughts">如果您有任何反馈、功能请求或错误报告，请告诉我！我很想听听你的意见。</string>
+    <string name="description_time_based_meals_sorting">启用后，将首先显示当前正在进行的用餐</string>
+    <string name="description_action_ignore_all_day_meals">全天餐点将显示在列表末尾</string>
+    <string name="description_incomplete_nutrition_data">一些二手产品缺乏这种价值;因此，显示的值可能不准确</string>
+    <string name="description_translation_warning">翻译由志愿者创建。它们可能并不完美，并且可能缺少一些翻译。如果您发现任何错误，请随时帮助改进它们。</string>
+    <string name="description_changelog">查看应用程序中的新增功能</string>
+    <string name="description_home_settings">自定义您的主页</string>
+    <string name="description_download_product">粘贴食品类商品的链接，并自动获取营养成分和商品详情。</string>
+    <string name="description_download_product_hint">您可以粘贴任何文本。将使用第一个 URL。</string>
+    <string name="description_import_and_export">保存和加载数据</string>
+    <string name="description_import_and_export_hint">所有数据同步作都在后台运行。完成后，您将收到通知。</string>
+    <string name="description_experimental_feature">这是一项实验性功能。在将来的版本中，它可能会更改或删除。</string>
+    <string name="description_notifications_permission_required_data_sync">需要通知权限才能显示数据同步进度。请在应用程序设置中启用它。</string>
+    <string name="description_show_macronutrients_goals">显示宏量营养素目标</string>
+    <string name="description_recipe_missing_ingredients">您可能不会在此处看到每个配方。某些配方被隐藏以防止循环引用。</string>
+    <string name="description_please_wait_while_importing_products">导入商品时请稍候</string>
+    <string name="description_suggest_external_database">建议包含公开可用的数据库</string>
+    <string name="headline_launcher_icon_by_icons8">启动器图标来自于Icon8</string>
+    <string name="neutral_see_other_awesome_icons_here">在此处查看其他超棒的图标</string>
+    <string name="description_open_food_facts">一个协作、免费和开放的食品数据库，包含来自世界各地的食品</string>
+    <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">导出产品</string>
+    <string name="notification_exporting_products_success">成品出口</string>
+    <string name="notification_exporting_products_failure">产品导出失败</string>
+    <string name="notification_importing_products">进口商品</string>
+    <string name="notification_importing_products_success">成品进口</string>
+    <string name="notification_importing_products_failure">产品导入失败</string>
+    <string name="notification_data_sync_channel_name">数据同步</string>
+    <string name="notification_data_sync_progress_channel_name">数据同步进度</string>
+    <string name="description_food_data_central_usda">FoodData Central 是 USDA 的综合食品成分数据源，具有多种不同的数据类型</string>
+    <string name="error_usda_rate_limit">超出 Food Data Central （USDA） API 速率限制</string>
+    <string name="error_usda_rate_limit_description">您已超过允许的请求数。请稍候，然后再重试，或注册以获取密钥。</string>
+    <string name="description_swiss_food_composition_database">您可以通过添加瑞士食品数据库来扩展您的食品清单。它包括 1,100 多种英语、德语、法语或意大利语的食物。</string>
+    <string name="description2_swiss_food_composition_database">瑞士食品成分数据库包括 1,100 多种普通食品的营养信息。它有四种语言版本。要将这些产品导入您的饮食日记，请选择您的首选语言。</string>
+    <string name="description3_swiss_food_composition_database">您的食品数据库将填充来自瑞士食品成分数据库的 1,100 种产品</string>
+    <string name="headline_external_databases">外部数据库</string>
+    <string name="description_external_databases">查看支持的数据库</string>
+    <string name="feature_share_url_with_food_you">与 Food You 共享 URL</string>
+    <string name="feature_in_app_download">应用内下载</string>
+    <string name="feature_manual_database_import">手动数据库导入</string>
+</resources>

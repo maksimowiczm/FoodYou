@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.CallSplit
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -52,7 +53,10 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
+import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.model.Recipe
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
@@ -70,6 +74,7 @@ internal fun MealCard(
     onAddFood: () -> Unit,
     onLongClick: () -> Unit,
     onEditMeasurement: (Long) -> Unit,
+    onUnpackRecipe: (FoodId.Recipe, Measurement, measurementId: Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -116,6 +121,7 @@ internal fun MealCard(
             FoodContainer(
                 food = meal.food,
                 onEditMeasurement = onEditMeasurement,
+                onUnpackRecipe = onUnpackRecipe,
                 onDeleteEntry = onDeleteEntry,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -188,6 +194,7 @@ internal fun MealCard(
 private fun FoodContainer(
     food: List<FoodWithMeasurement>,
     onEditMeasurement: (Long) -> Unit,
+    onUnpackRecipe: (FoodId.Recipe, Measurement, measurementId: Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -206,6 +213,13 @@ private fun FoodContainer(
                 FoodContainerItem(
                     foodWithMeasurement = foodWithMeasurement,
                     onEditMeasurement = onEditMeasurement,
+                    onUnpackRecipe = {
+                        onUnpackRecipe(
+                            it,
+                            foodWithMeasurement.measurement,
+                            foodWithMeasurement.measurementId
+                        )
+                    },
                     onDeleteEntry = onDeleteEntry,
                     shape = shape,
                     modifier = Modifier.animatePlacement()
@@ -242,6 +256,7 @@ private fun <T> List<T>.animateBottomCornerRadius(index: Int, defaultRadius: Dp 
 private fun FoodContainerItem(
     foodWithMeasurement: FoodWithMeasurement,
     onEditMeasurement: (Long) -> Unit,
+    onUnpackRecipe: (FoodId.Recipe) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     shape: Shape,
     modifier: Modifier = Modifier
@@ -260,6 +275,11 @@ private fun FoodContainerItem(
                 food = foodWithMeasurement,
                 onEdit = coroutineScope.lambda {
                     onEditMeasurement(foodWithMeasurement.measurementId)
+                    sheetState.hide()
+                    showBottomSheet = false
+                },
+                onUnpackRecipe = coroutineScope.lambda<FoodId.Recipe> {
+                    onUnpackRecipe(it)
                     sheetState.hide()
                     showBottomSheet = false
                 },
@@ -320,6 +340,7 @@ private fun BottomSheetContent(
     food: FoodWithMeasurement,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
+    onUnpackRecipe: (FoodId.Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
@@ -359,6 +380,26 @@ private fun BottomSheetContent(
                 containerColor = Color.Transparent
             )
         )
+
+        val food = food.food
+        if (food is Recipe) {
+            ListItem(
+                headlineContent = {
+                    Text(stringResource(Res.string.action_unpack))
+                },
+                modifier = Modifier.clickable { onUnpackRecipe(food.id) },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.CallSplit,
+                        contentDescription = null
+                    )
+                },
+                colors = ListItemDefaults.colors(
+                    containerColor = Color.Transparent
+                )
+            )
+        }
+
         ListItem(
             headlineContent = {
                 Text(stringResource(Res.string.action_delete_entry))

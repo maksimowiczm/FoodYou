@@ -25,7 +25,6 @@ internal fun CreateMeasurementScreen(
     date: LocalDate?,
     onBack: () -> Unit,
     onEditFood: (FoodId) -> Unit,
-    onRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
@@ -39,16 +38,10 @@ internal fun CreateMeasurementScreen(
     val date = date ?: LocalDate.now(TimeZone.currentSystemDefault())
 
     val latestOnBack by rememberUpdatedState(onBack)
-    val latestOnRecipeClone by rememberUpdatedState(onRecipeClone)
     LaunchedCollectWithLifecycle(viewModel.measurementCreatedEventBus) {
         when (it) {
-            MeasurementScreenEvent.Deleted -> latestOnBack()
+            MeasurementScreenEvent.FoodDeleted -> latestOnBack()
             MeasurementScreenEvent.Done -> latestOnBack()
-            is MeasurementScreenEvent.RecipeCloned -> latestOnRecipeClone(
-                it.productId,
-                mealId,
-                date.toEpochDays()
-            )
         }
     }
 
@@ -85,8 +78,21 @@ internal fun CreateMeasurementScreen(
             }
         },
         onEditFood = { onEditFood(foodId) },
-        onDelete = viewModel::onDeleteMeasurement,
+        onDeleteFood = viewModel::onDeleteMeasurement,
         onIngredientClick = { onEditFood(it) },
+        onUnpack = {
+            val date = formState.date
+            val measurement = formState.measurement
+            val mealId = formState.meal?.id
+
+            if (measurement != null && mealId != null) {
+                viewModel.unpackRecipe(
+                    date = date,
+                    mealId = mealId,
+                    measurement = measurement
+                )
+            }
+        },
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
     )

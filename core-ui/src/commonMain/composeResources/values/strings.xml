@@ -316,4 +316,6 @@
     <string name="feature_in_app_download">In-app download</string>
     <string name="feature_manual_database_import">Manual database import</string>
 
+    <string name="action_unpack" description="Unpack the recipe ingredients">Unpack</string>
+
 </resources>

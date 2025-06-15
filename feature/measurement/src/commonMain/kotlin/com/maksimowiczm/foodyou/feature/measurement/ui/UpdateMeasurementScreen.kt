@@ -20,7 +20,6 @@ internal fun UpdateMeasurementScreen(
     measurementId: Long,
     onBack: () -> Unit,
     onEditFood: (FoodId) -> Unit,
-    onRecipeClone: (FoodId.Product, mealId: Long?, epochDay: Int) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
@@ -32,29 +31,23 @@ internal fun UpdateMeasurementScreen(
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
 
+    val latestOnBack by rememberUpdatedState(onBack)
+    LaunchedCollectWithLifecycle(viewModel.measurementUpdatedEventBus) {
+        when (it) {
+            MeasurementScreenEvent.FoodDeleted -> latestOnBack()
+            MeasurementScreenEvent.Done -> latestOnBack()
+        }
+    }
+
     if (measurement == null || meals == null || suggestions == null) {
         // TODO loading state
         Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
         return
     }
 
-    val latestOnBack by rememberUpdatedState(onBack)
-    val latestOnRecipeClone by rememberUpdatedState(onRecipeClone)
-    LaunchedCollectWithLifecycle(viewModel.measurementUpdatedEventBus) {
-        when (it) {
-            MeasurementScreenEvent.Deleted -> latestOnBack()
-            MeasurementScreenEvent.Done -> latestOnBack()
-            is MeasurementScreenEvent.RecipeCloned -> latestOnRecipeClone(
-                it.productId,
-                measurement.mealId,
-                measurement.measurementDate.date.toEpochDays()
-            )
-        }
-    }
-
     val formState = rememberAdvancedMeasurementFormState(
         food = measurement.food,
-        initialDate = measurement.measurementDate.date,
+        initialDate = measurement.measurementDate,
         meals = meals,
         measurements = (listOf(measurement.measurement) + suggestions).distinct(),
         initialMeal = measurement.mealId.let { meals.indexOfFirst { meal -> meal.id == it } },
@@ -81,8 +74,17 @@ internal fun UpdateMeasurementScreen(
             }
         },
         onEditFood = { onEditFood(food.id) },
-        onDelete = viewModel::onDeleteMeasurement,
+        onDeleteFood = viewModel::onDeleteFood,
         onIngredientClick = { onEditFood(it) },
+        onUnpack = {
+            val date = formState.date
+            val mealId = formState.meal?.id
+            val measurement = formState.measurement
+
+            if (measurement != null && mealId != null) {
+                viewModel.unpackRecipe(date, mealId, measurement)
+            }
+        },
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
     )

@@ -1,15 +1,15 @@
-<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
+<b>Food You</b>, modern bir Material You estetiğiyle oluşturulmuş güçlü, açık kaynaklı bir beslenme takipçisidir. Yalnızca kalorileri değil, tüm besin alımınızı da güvenilir yiyecek verileriyle ve esnek, modüler bir arayüz üzerinden takip etmenize yardımcı olur.
 
 <b>Özellikler:</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
-    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
-    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
-    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
-    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
-    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
+    <li><b>Material You Tasarımı:</b> Cihazınıza uyum sağlayan dinamik temalandırma ile kesintisiz bir görsel deneyim sunar.</li>
+    <li><b>Kapsamlı Gıda Veritabanları:</b> Open Food Facts, USDA FoodCentral ve İsviçre Gıda Kompozisyon Veritabanı'ndan besin verilerine erişim sağlar.</li>
+    <li><b>Kapsamlı Beslenme Takibi:</b> Kalori, makro besinler, vitaminler, mineraller ve daha fazlasını takip edin.</li>
+    <li><b>Tarif Oluşturma:</b> Otomatik besin değeri hesaplamasıyla yiyecekleri birleştirip kendi tariflerinizi oluşturun.</li>
+    <li><b>Günlük Hedefler:</b> Kişiselleştirilmiş beslenme hedefleri belirleyin ve takip edin.</li>
+    <li><b>Modüler Ana Ekran:</b> İhtiyaçlarınıza göre özelleştirilmiş kartlarla ana ekranınızı kişiselleştirin.</li>
 </ul>
 
-Start tracking your nutrition today with Food You — clean, complete, and fully yours.
+Bugün Food You ile beslenmenizi takip etmeye başlayın — sade, kapsamlı ve tamamen size özel.
 
-Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Launcher simgesi <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a> tarafından yapılmıştır
