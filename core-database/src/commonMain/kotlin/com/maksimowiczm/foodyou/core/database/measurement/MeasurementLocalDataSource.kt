@@ -80,11 +80,13 @@ interface MeasurementLocalDataSource {
             AND (:recipeId IS NULL OR recipeId = :recipeId)
             AND (:measurement IS NULL OR measurement = :measurement)
         ORDER BY createdAt DESC
+        LIMIT :limit
         """
     )
     fun observeAllMeasurementsByType(
         productId: Long? = null,
         recipeId: Long? = null,
-        measurement: Measurement? = null
+        measurement: Measurement? = null,
+        limit: Int = 1
     ): Flow<List<MeasurementSuggestion>>
 }
