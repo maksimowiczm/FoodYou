@@ -89,13 +89,18 @@ private val IngredientSearchItem.measurementString: String?
     @Composable get() {
         val short = measurementStringShort
         val weight = weight?.formatClipZeros() ?: return null
+        val suffix = if (food.isLiquid) {
+            stringResource(Res.string.unit_milliliter_short)
+        } else {
+            stringResource(Res.string.unit_gram_short)
+        }
 
         return when (measurement) {
             is Measurement.Gram,
             is Measurement.Milliliter -> short
             is Measurement.Package,
             is Measurement.Serving ->
-                "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
+                "$short ($weight $suffix)"
         }
     }
 
