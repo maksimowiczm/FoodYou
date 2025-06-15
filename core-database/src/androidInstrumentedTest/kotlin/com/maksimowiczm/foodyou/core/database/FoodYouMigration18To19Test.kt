@@ -19,9 +19,10 @@ class FoodYouMigration18To19Test {
 
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
-        InstrumentationRegistry.getInstrumentation(),
-        FoodYouDatabase::class.java.canonicalName,
-        FrameworkSQLiteOpenHelperFactory()
+        instrumentation = InstrumentationRegistry.getInstrumentation(),
+        databaseClass = FoodYouDatabase::class.java,
+        specs = emptyList(),
+        openFactory = FrameworkSQLiteOpenHelperFactory()
     )
 
     @Test
