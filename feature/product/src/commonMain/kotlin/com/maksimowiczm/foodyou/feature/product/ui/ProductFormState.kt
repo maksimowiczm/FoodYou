@@ -46,7 +46,7 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
         textFieldState = rememberTextFieldState(product?.barcode ?: "")
     )
 
-    var isLiquidState = rememberSaveable { mutableStateOf(false) }
+    var isLiquidState = rememberSaveable { mutableStateOf(product?.isLiquid ?: false) }
 
     val measurement = rememberSaveable(
         stateSaver = Measurement.Saver
