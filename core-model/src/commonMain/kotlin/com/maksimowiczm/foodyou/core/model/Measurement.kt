@@ -33,6 +33,7 @@ sealed interface Measurement {
         fun defaultForFood(food: Food): Measurement = when {
             food.servingWeight != null -> Serving(1f)
             food.totalWeight != null -> Package(1f)
+            food.isLiquid -> Milliliter(100f)
             else -> Gram(100f)
         }
     }

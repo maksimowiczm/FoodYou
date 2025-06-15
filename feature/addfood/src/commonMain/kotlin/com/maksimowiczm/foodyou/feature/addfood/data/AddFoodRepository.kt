@@ -92,9 +92,9 @@ internal class AddFoodRepository(
             epochDay = epoch
         )
 
-        val suggestionFlow = measurementLocalDataSource.observeLatestProductMeasurementSuggestion(
+        val suggestionFlow = measurementLocalDataSource.observeAllMeasurementsByType(
             productId = productId
-        )
+        ).map { it.firstOrNull() }
 
         val productFlow = foodRepository.observeFood(FoodId.Product(productId)).filterNotNull()
 
@@ -142,9 +142,9 @@ internal class AddFoodRepository(
             epochDay = epoch
         )
 
-        val suggestionFlow = measurementLocalDataSource.observeLatestRecipeMeasurementSuggestion(
+        val suggestionFlow = measurementLocalDataSource.observeAllMeasurementsByType(
             recipeId = recipeId
-        )
+        ).map { it.firstOrNull() }
 
         val recipeFlow = foodRepository.observeFood(FoodId.Recipe(recipeId)).filterNotNull()
 

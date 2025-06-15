@@ -39,28 +39,6 @@ interface MeasurementLocalDataSource {
 
     @Query(
         """
-        SELECT measurement, quantity
-        FROM MeasurementEntity
-        WHERE productId = :productId
-        ORDER BY createdAt DESC
-        LIMIT 1
-        """
-    )
-    fun observeLatestProductMeasurementSuggestion(productId: Long): Flow<MeasurementSuggestion?>
-
-    @Query(
-        """
-        SELECT measurement, quantity
-        FROM MeasurementEntity
-        WHERE recipeId = :recipeId
-        ORDER BY createdAt DESC
-        LIMIT 1
-        """
-    )
-    fun observeLatestRecipeMeasurementSuggestion(recipeId: Long): Flow<MeasurementSuggestion?>
-
-    @Query(
-        """
         SELECT *
         FROM MeasurementEntity
         WHERE
@@ -100,13 +78,13 @@ interface MeasurementLocalDataSource {
         WHERE
             (:productId IS NULL OR productId = :productId)
             AND (:recipeId IS NULL OR recipeId = :recipeId)
-            AND measurement = :measurement
+            AND (:measurement IS NULL OR measurement = :measurement)
         ORDER BY createdAt DESC
         """
     )
     fun observeAllMeasurementsByType(
         productId: Long? = null,
         recipeId: Long? = null,
-        measurement: Measurement
+        measurement: Measurement? = null
     ): Flow<List<MeasurementSuggestion>>
 }

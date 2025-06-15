@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 
 internal fun interface QueryIngredientsUseCase {
     /**
@@ -74,10 +75,11 @@ internal class QueryIngredientsUseCaseImpl(
     }
 
     private fun mapToProduct(productId: Long): Flow<IngredientSearchItem> {
-        val suggestionFlow =
-            measurementLocalDataSource.observeLatestProductMeasurementSuggestion(
-                productId = productId
-            )
+        val suggestionFlow = measurementLocalDataSource.observeAllMeasurementsByType(
+            productId = productId
+        ).map {
+            it.firstOrNull()
+        }
 
         val productFlow = foodRepository.observeFood(FoodId.Product(productId)).filterNotNull()
 
@@ -101,10 +103,11 @@ internal class QueryIngredientsUseCaseImpl(
         recipeId: Long,
         excludedRecipeId: FoodId.Recipe?
     ): Flow<IngredientSearchItem?> {
-        val suggestionFlow =
-            measurementLocalDataSource.observeLatestRecipeMeasurementSuggestion(
-                recipeId = recipeId
-            )
+        val suggestionFlow = measurementLocalDataSource.observeAllMeasurementsByType(
+            recipeId = recipeId
+        ).map {
+            it.firstOrNull()
+        }
 
         val recipeFlow = recipeRepository.observeRecipe(FoodId.Recipe(recipeId)).filterNotNull()
 
