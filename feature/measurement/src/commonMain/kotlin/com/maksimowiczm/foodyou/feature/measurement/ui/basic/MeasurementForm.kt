@@ -46,6 +46,7 @@ fun MeasurementForm(
     Column(modifier = modifier) {
         if (state.packageInput != null && state.packageWeight != null) {
             MeasurementRow(
+                isLiquid = state.isLiquid,
                 isSelected = state.selected == MeasurementEnum.Package,
                 state = state.packageInput,
                 type = MeasurementEnum.Package,
@@ -62,6 +63,7 @@ fun MeasurementForm(
 
         if (state.servingInput != null && state.servingWeight != null) {
             MeasurementRow(
+                isLiquid = state.isLiquid,
                 isSelected = state.selected == MeasurementEnum.Serving,
                 state = state.servingInput,
                 type = MeasurementEnum.Serving,
@@ -76,21 +78,43 @@ fun MeasurementForm(
             HorizontalDivider()
         }
 
-        MeasurementRow(
-            isSelected = state.selected == MeasurementEnum.Gram,
-            state = state.gramInput,
-            type = MeasurementEnum.Gram,
-            weight = { it.roundToInt() },
-            calories = { weight -> (state.nutrients.calories.value * weight / 100).roundToInt() },
-            onMeasurement = { value -> onMeasurement(Measurement.Gram(value)) },
-            contentPadding = contentPadding,
-            colors = colors
-        )
+        if (state.gramInput != null) {
+            MeasurementRow(
+                isLiquid = state.isLiquid,
+                isSelected = state.selected == MeasurementEnum.Gram,
+                state = state.gramInput,
+                type = MeasurementEnum.Gram,
+                weight = { it.roundToInt() },
+                calories = { weight ->
+                    (state.nutrients.calories.value * weight / 100).roundToInt()
+                },
+                onMeasurement = { value -> onMeasurement(Measurement.Gram(value)) },
+                contentPadding = contentPadding,
+                colors = colors
+            )
+        }
+
+        if (state.milliliterInput != null) {
+            MeasurementRow(
+                isLiquid = state.isLiquid,
+                isSelected = state.selected == MeasurementEnum.Milliliter,
+                state = state.milliliterInput,
+                type = MeasurementEnum.Milliliter,
+                weight = { it.roundToInt() },
+                calories = { weight ->
+                    (state.nutrients.calories.value * weight / 100).roundToInt()
+                },
+                onMeasurement = { value -> onMeasurement(Measurement.Milliliter(value)) },
+                contentPadding = contentPadding,
+                colors = colors
+            )
+        }
     }
 }
 
 @Composable
 private fun MeasurementRow(
+    isLiquid: Boolean,
     isSelected: Boolean,
     state: FormField<Float, String>,
     type: MeasurementEnum,
@@ -146,6 +170,7 @@ private fun MeasurementRow(
                     MeasurementEnum.Milliliter -> {
                         { Text(stringResource(Res.string.unit_milliliter_short)) }
                     }
+
                     MeasurementEnum.Gram -> {
                         { Text(stringResource(Res.string.unit_gram_short)) }
                     }
@@ -163,40 +188,51 @@ private fun MeasurementRow(
                 }
             )
 
-            val weightValue = weight(state.value)
+            when (type) {
+                MeasurementEnum.Package,
+                MeasurementEnum.Serving -> {
+                    val weightValue = weight(state.value)
 
-            if (type != MeasurementEnum.Gram) {
-                WeightCaloriesLayout(
-                    weight = {
-                        val g = stringResource(Res.string.unit_gram_short)
-                        Text(
-                            text = "$weightValue $g",
-                            overflow = TextOverflow.Visible,
-                            textAlign = TextAlign.Center
-                        )
-                    },
-                    calories = {
-                        val caloriesValue = calories(weightValue.toFloat())
-                        val kcal = stringResource(Res.string.unit_kcal)
-                        Text(
-                            text = "$caloriesValue $kcal",
-                            overflow = TextOverflow.Visible,
-                            textAlign = TextAlign.Center
-                        )
-                    },
-                    modifier = Modifier
-                        .weight(2f)
-                        .clipToBounds()
-                )
-            } else {
-                val caloriesValue = calories(state.value)
-                val kcal = stringResource(Res.string.unit_kcal)
-                Text(
-                    text = "$caloriesValue $kcal",
-                    modifier = Modifier.weight(2f),
-                    overflow = TextOverflow.Visible,
-                    textAlign = TextAlign.Center
-                )
+                    WeightCaloriesLayout(
+                        weight = {
+                            val suffix = if (isLiquid) {
+                                stringResource(Res.string.unit_milliliter_short)
+                            } else {
+                                stringResource(Res.string.unit_gram_short)
+                            }
+
+                            Text(
+                                text = "$weightValue $suffix",
+                                overflow = TextOverflow.Visible,
+                                textAlign = TextAlign.Center
+                            )
+                        },
+                        calories = {
+                            val caloriesValue = calories(weightValue.toFloat())
+                            val kcal = stringResource(Res.string.unit_kcal)
+                            Text(
+                                text = "$caloriesValue $kcal",
+                                overflow = TextOverflow.Visible,
+                                textAlign = TextAlign.Center
+                            )
+                        },
+                        modifier = Modifier
+                            .weight(2f)
+                            .clipToBounds()
+                    )
+                }
+
+                MeasurementEnum.Gram,
+                MeasurementEnum.Milliliter -> {
+                    val caloriesValue = calories(state.value)
+                    val kcal = stringResource(Res.string.unit_kcal)
+                    Text(
+                        text = "$caloriesValue $kcal",
+                        modifier = Modifier.weight(2f),
+                        overflow = TextOverflow.Visible,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
 
             FilledIconButton(

@@ -36,6 +36,7 @@ import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -87,7 +88,10 @@ internal fun MeasurementScreen(
         )
     }
 
-    val measurement = state.measurement ?: Measurement.Gram(100f)
+    val defaultMeasurement = remember(food) {
+        if (food.isLiquid) Measurement.Milliliter(100f) else Measurement.Gram(100f)
+    }
+    val measurement = state.measurement ?: defaultMeasurement
     val weight = measurement.weight(food) ?: 100f
 
     Scaffold(

@@ -50,21 +50,38 @@ fun rememberMeasurementFormState(
         )
     }
 
-    val gramInput = rememberFormField(
-        initialValue = suggestions[MeasurementEnum.Gram] ?: 100f,
-        parser = parser,
-        textFieldState = rememberTextFieldState(
-            initialText = suggestions[MeasurementEnum.Gram]?.formatClipZeros() ?: "100"
+    val gramInput = if (!food.isLiquid) {
+        rememberFormField(
+            initialValue = suggestions[MeasurementEnum.Gram] ?: 100f,
+            parser = parser,
+            textFieldState = rememberTextFieldState(
+                initialText = suggestions[MeasurementEnum.Gram]?.formatClipZeros() ?: "100"
+            )
         )
-    )
+    } else {
+        null
+    }
 
-    return remember(packageInput, servingInput, gramInput, food, selected) {
+    val milliliterInput = if (food.isLiquid) {
+        rememberFormField(
+            initialValue = suggestions[MeasurementEnum.Milliliter] ?: 100f,
+            parser = parser,
+            textFieldState = rememberTextFieldState(
+                initialText = suggestions[MeasurementEnum.Milliliter]?.formatClipZeros() ?: "100"
+            )
+        )
+    } else {
+        null
+    }
+
+    return remember(packageInput, servingInput, gramInput, milliliterInput, food, selected) {
         MeasurementFormState(
             packageInput,
             food.totalWeight,
             servingInput,
             food.servingWeight,
             gramInput,
+            milliliterInput,
             food.nutritionFacts,
             selected
         )
@@ -92,19 +109,34 @@ fun rememberMeasurementFormState(
         )
     }
 
-    val gramInput = rememberFormField(
-        initialValue = 100f,
-        parser = parser,
-        textFieldState = rememberTextFieldState(initialText = "100")
-    )
+    val gramInput = if (!food.isLiquid) {
+        rememberFormField(
+            initialValue = 100f,
+            parser = parser,
+            textFieldState = rememberTextFieldState(initialText = "100")
+        )
+    } else {
+        null
+    }
 
-    return remember(packageInput, servingInput, gramInput, food, selected) {
+    val milliliterInput = if (food.isLiquid) {
+        rememberFormField(
+            initialValue = 100f,
+            parser = parser,
+            textFieldState = rememberTextFieldState(initialText = "100")
+        )
+    } else {
+        null
+    }
+
+    return remember(packageInput, servingInput, gramInput, milliliterInput, food, selected) {
         MeasurementFormState(
             packageInput,
             food.totalWeight,
             servingInput,
             food.servingWeight,
             gramInput,
+            milliliterInput,
             food.nutritionFacts,
             selected
         )
@@ -117,7 +149,12 @@ class MeasurementFormState(
     val packageWeight: Float?,
     val servingInput: FormField<Float, String>?,
     val servingWeight: Float?,
-    val gramInput: FormField<Float, String>,
+    val gramInput: FormField<Float, String>?,
+    val milliliterInput: FormField<Float, String>?,
     val nutrients: NutritionFacts,
     val selected: MeasurementEnum?
-)
+) {
+    // Hacky way to determine if the food is liquid based on the presence of milliliter input.
+    val isLiquid: Boolean
+        get() = milliliterInput != null
+}
