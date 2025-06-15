@@ -17,9 +17,7 @@ core = "1.6.1"
 coreKtxVersion = "1.6.1"
 datastorePreferences = "1.1.4"
 desugar_jdk_libs = "2.1.5"
-espressoCore = "3.6.1"
 gmazzoBuildConfig = "5.5.2"
-graphicsShapes = "1.0.1"
 junit = "1.2.1"
 kermit = "2.0.5"
 koin = "4.0.4"
@@ -38,6 +36,7 @@ runner = "1.6.2"
 sqliteAndroid = "3.49.0"
 workRuntime = "2.10.1"
 zxingAndroidEmbedded = "4.3.0"
+sqliteBundled = "2.5.1"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -46,8 +45,6 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-graphics-shapes = { module = "androidx.graphics:graphics-shapes", version.ref = "graphicsShapes" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
@@ -56,6 +53,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqliteBundled" }
 androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "coreKtxVersion" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
