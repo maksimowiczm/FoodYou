@@ -35,6 +35,7 @@ internal enum class RecipeFormFieldError {
 internal fun rememberRecipeFormState(
     initialName: String = "",
     initialServings: Int = 1,
+    initialIsLiquid: Boolean = false,
     initialIngredients: List<MinimalIngredient> = emptyList()
 ): RecipeFormState {
     val nameState = rememberFormField(
@@ -71,6 +72,8 @@ internal fun rememberRecipeFormState(
         textFieldState = rememberTextFieldState(initialServings.toString())
     )
 
+    val isLiquidState = rememberSaveable { mutableStateOf(initialIsLiquid) }
+
     val ingredientsState = rememberSaveable(
         stateSaver = MinimalIngredient.ListSaver
     ) {
@@ -81,7 +84,8 @@ internal fun rememberRecipeFormState(
         derivedStateOf {
             initialName != nameState.value ||
                 initialServings != servingsState.value ||
-                initialIngredients != ingredientsState.value
+                initialIngredients != ingredientsState.value ||
+                initialIsLiquid != isLiquidState.value
         }
     }
 
@@ -89,6 +93,7 @@ internal fun rememberRecipeFormState(
         RecipeFormState(
             nameState = nameState,
             servingsState = servingsState,
+            isLiquidState = isLiquidState,
             ingredientsState = ingredientsState,
             isModifiedState = isModified
         )
@@ -99,12 +104,15 @@ internal fun rememberRecipeFormState(
 internal class RecipeFormState(
     val nameState: FormField<String, RecipeFormFieldError>,
     val servingsState: FormField<Int, RecipeFormFieldError>,
+    isLiquidState: MutableState<Boolean>,
     ingredientsState: MutableState<List<MinimalIngredient>>,
     isModifiedState: State<Boolean>
 ) {
     val isValid by derivedStateOf {
         nameState.error == null && servingsState.error == null && ingredients.isNotEmpty()
     }
+
+    var isLiquid by isLiquidState
 
     var ingredients by ingredientsState
 

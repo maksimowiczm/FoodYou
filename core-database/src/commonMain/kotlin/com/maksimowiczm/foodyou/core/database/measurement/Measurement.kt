@@ -17,5 +17,10 @@ enum class Measurement {
     /**
      * The weight is measured in the servings of the product.
      */
-    Serving
+    Serving,
+
+    /**
+     * The weight is measured in milliliters.
+     */
+    Milliliter
 }

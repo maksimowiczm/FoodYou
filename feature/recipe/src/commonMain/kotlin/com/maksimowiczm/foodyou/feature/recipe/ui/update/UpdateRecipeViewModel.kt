@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.feature.recipe.ui.update
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.core.domain.FoodRepository
-import com.maksimowiczm.foodyou.core.ext.launch
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.model.Recipe
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 internal class UpdateRecipeViewModel(
     private val foodRepository: FoodRepository,
@@ -68,16 +68,19 @@ internal class UpdateRecipeViewModel(
         return flows.combine { it.toList() }
     }
 
-    fun onSave(name: String, servings: Int, ingredients: List<Ingredient>) = launch {
-        val recipe = recipe.value ?: return@launch
+    fun onSave(name: String, servings: Int, isLiquid: Boolean, ingredients: List<Ingredient>) {
+        val recipe = recipe.value ?: return
 
-        updateRecipeUseCase(
-            recipeId = recipe.id,
-            name = name,
-            servings = servings,
-            ingredients = ingredients
-        )
+        viewModelScope.launch {
+            updateRecipeUseCase(
+                recipeId = recipe.id,
+                name = name,
+                servings = servings,
+                ingredients = ingredients,
+                isLiquid = isLiquid
+            )
 
-        _eventBus.send(UpdateRecipeEvent.RecipeUpdated)
+            _eventBus.send(UpdateRecipeEvent.RecipeUpdated)
+        }
     }
 }

@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.feature.recipe.ui.create
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.core.domain.FoodRepository
-import com.maksimowiczm.foodyou.core.ext.launch
 import com.maksimowiczm.foodyou.core.model.Product
 import com.maksimowiczm.foodyou.core.model.Recipe
 import com.maksimowiczm.foodyou.feature.recipe.domain.CreateRecipeUseCase
@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 internal class CreateRecipeViewModel(
     private val foodRepository: FoodRepository,
@@ -53,13 +54,16 @@ internal class CreateRecipeViewModel(
         return flows.combine { it.toList() }
     }
 
-    fun onSave(name: String, servings: Int, ingredients: List<Ingredient>) = launch {
-        val id = createRecipeUseCase(
-            name = name,
-            servings = servings,
-            ingredients = ingredients
-        )
+    fun onSave(name: String, servings: Int, isLiquid: Boolean, ingredients: List<Ingredient>) {
+        viewModelScope.launch {
+            val id = createRecipeUseCase(
+                name = name,
+                servings = servings,
+                ingredients = ingredients,
+                isLiquid = isLiquid
+            )
 
-        _eventBus.send(CreateRecipeEvent.RecipeCreated(id))
+            _eventBus.send(CreateRecipeEvent.RecipeCreated(id))
+        }
     }
 }

@@ -25,6 +25,10 @@ fun Measurement.stringResource() = when (this) {
     is Measurement.Gram -> {
         value.formatClipZeros() + " " + stringResource(Res.string.unit_gram_short)
     }
+
+    is Measurement.Milliliter -> {
+        value.formatClipZeros() + " " + stringResource(Res.string.unit_milliliter_short)
+    }
 }
 
 val Measurement.Companion.Saver: Saver<Measurement?, ArrayList<Any>>
@@ -35,6 +39,7 @@ val Measurement.Companion.Saver: Saver<Measurement?, ArrayList<Any>>
                 is Measurement.Gram -> 0
                 is Measurement.Serving -> 2
                 is Measurement.Package -> 1
+                is Measurement.Milliliter -> 3
             }
 
             val value = when (it) {
@@ -42,6 +47,7 @@ val Measurement.Companion.Saver: Saver<Measurement?, ArrayList<Any>>
                 is Measurement.Gram -> it.value
                 is Measurement.Serving -> it.quantity
                 is Measurement.Package -> it.quantity
+                is Measurement.Milliliter -> it.value
             }
 
             arrayListOf<Any>(id, value)
@@ -55,6 +61,7 @@ val Measurement.Companion.Saver: Saver<Measurement?, ArrayList<Any>>
                 0 -> Measurement.Gram(value)
                 1 -> Measurement.Package(value)
                 2 -> Measurement.Serving(value)
+                3 -> Measurement.Milliliter(value)
                 else -> error("Invalid measurement id: $id")
             }
         }

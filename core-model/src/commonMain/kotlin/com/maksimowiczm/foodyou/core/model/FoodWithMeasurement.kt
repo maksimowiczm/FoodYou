@@ -15,6 +15,7 @@ data class FoodWithMeasurement(
      */
     val weight: Float?
         get() = when (val measurement = measurement) {
+            is Measurement.Milliliter -> measurement.value
             is Measurement.Gram -> measurement.value
             is Measurement.Package -> food.totalWeight?.let { it * measurement.quantity }
             is Measurement.Serving -> food.servingWeight?.let { it * measurement.quantity }

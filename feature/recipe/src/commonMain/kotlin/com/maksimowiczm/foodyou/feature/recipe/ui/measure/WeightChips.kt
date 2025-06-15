@@ -56,37 +56,33 @@ internal fun rememberWeightChipsState(
         },
         restore = {
             WeightChipsState(
-                packageSuggestion = food.totalWeight?.let { Measurement.Package(1f) },
-                servingSuggestion = food.servingWeight?.let { Measurement.Serving(1f) },
-                extraFilter = extraFilter,
+                filterOptions = listOfNotNull(
+                    extraFilter,
+                    if (food.isLiquid) Measurement.Milliliter(100f) else Measurement.Gram(100f),
+                    food.totalWeight?.let { Measurement.Package(1f) },
+                    food.servingWeight?.let { Measurement.Serving(1f) }
+                ).distinct(),
                 initialSelectedFilterIndex = it[0] as Int
             )
         }
     )
 ) {
     WeightChipsState(
-        packageSuggestion = food.totalWeight?.let { Measurement.Package(1f) },
-        servingSuggestion = food.servingWeight?.let { Measurement.Serving(1f) },
-        extraFilter = extraFilter,
+        filterOptions = listOfNotNull(
+            extraFilter,
+            if (food.isLiquid) Measurement.Milliliter(100f) else Measurement.Gram(100f),
+            food.totalWeight?.let { Measurement.Package(1f) },
+            food.servingWeight?.let { Measurement.Serving(1f) }
+        ).distinct(),
         initialSelectedFilterIndex = 0
     )
 }
 
 @Stable
 internal class WeightChipsState(
-    packageSuggestion: Measurement.Package?,
-    servingSuggestion: Measurement.Serving?,
-    extraFilter: Measurement?,
+    val filterOptions: List<Measurement> = emptyList(),
     initialSelectedFilterIndex: Int
 ) {
-    val filterOptions: List<Measurement> = listOfNotNull(
-        extraFilter,
-        Measurement.Gram(100f),
-        packageSuggestion?.let { Measurement.Package(1f) },
-        servingSuggestion?.let { Measurement.Serving(1f) }
-    ).distinct()
-
     var selectedFilterIndex: Int by mutableIntStateOf(initialSelectedFilterIndex)
-
     val selectedFilter by derivedStateOf { filterOptions[selectedFilterIndex] }
 }

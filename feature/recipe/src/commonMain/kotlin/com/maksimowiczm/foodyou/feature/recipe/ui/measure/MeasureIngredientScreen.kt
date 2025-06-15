@@ -130,11 +130,16 @@ private fun MeasureIngredientScreen(
                 .distinctUntilChanged()
                 .drop(1)
                 .map { Measurement.Serving(it) },
-            snapshotFlow { fromState.gramInput.value }
+            snapshotFlow { fromState.gramInput?.value }
                 .filterNotNull()
                 .distinctUntilChanged()
                 .drop(1)
-                .map { Measurement.Gram(it) }
+                .map { Measurement.Gram(it) },
+            snapshotFlow { fromState.milliliterInput?.value }
+                .filterNotNull()
+                .distinctUntilChanged()
+                .drop(1)
+                .map { Measurement.Milliliter(it) }
         ).collectLatest {
             extraFilter = it
         }

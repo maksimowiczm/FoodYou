@@ -1,8 +1,10 @@
 package com.maksimowiczm.foodyou.core.domain
 
 import co.touchlab.kermit.Logger
+import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEnum
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementEntity
 import com.maksimowiczm.foodyou.core.database.measurement.MeasurementLocalDataSource
+import com.maksimowiczm.foodyou.core.database.measurement.MeasurementSuggestion
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
@@ -68,16 +70,63 @@ internal class MeasurementRepositoryImpl(
     private val measurementMapper: MeasurementMapper
 ) : MeasurementRepository {
 
-    override fun observeSuggestions(id: FoodId): Flow<List<Measurement>> = when (id) {
-        is FoodId.Product ->
-            measurementLocalDataSource
-                .observeProductMeasurementSuggestions(id.id)
-                .mapValues { measurementMapper.toMeasurement(it) }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun observeSuggestions(id: FoodId): Flow<List<Measurement>> {
+        val flow = foodRepository
+            .observeFood(id)
+            .filterNotNull()
+            .flatMapLatest {
+                val productId = (it.id as? FoodId.Product)?.id
+                val recipeId = (it.id as? FoodId.Recipe)?.id
 
-        is FoodId.Recipe ->
-            measurementLocalDataSource
-                .observeRecipeMeasurementSuggestions(id.id)
-                .mapValues { measurementMapper.toMeasurement(it) }
+                val packageSuggestion = measurementLocalDataSource.observeAllMeasurementsByType(
+                    productId = productId,
+                    recipeId = recipeId,
+                    measurement = MeasurementEnum.Package
+                ).map {
+                    it.firstOrNull()
+                }
+
+                val servingSuggestion = measurementLocalDataSource.observeAllMeasurementsByType(
+                    productId = productId,
+                    recipeId = recipeId,
+                    measurement = MeasurementEnum.Serving
+                ).map {
+                    it.firstOrNull()
+                }
+
+                val raw = if (it.isLiquid) {
+                    measurementLocalDataSource.observeAllMeasurementsByType(
+                        productId = productId,
+                        recipeId = recipeId,
+                        measurement = MeasurementEnum.Milliliter
+                    ).map {
+                        it.firstOrNull() ?: MeasurementSuggestion(100f, MeasurementEnum.Milliliter)
+                    }
+                } else {
+                    measurementLocalDataSource.observeAllMeasurementsByType(
+                        productId = productId,
+                        recipeId = recipeId,
+                        measurement = MeasurementEnum.Gram
+                    ).map {
+                        it.firstOrNull() ?: MeasurementSuggestion(100f, MeasurementEnum.Gram)
+                    }
+                }
+
+                combine(
+                    packageSuggestion,
+                    servingSuggestion,
+                    raw
+                ) { packageSuggestion, servingSuggestion, raw ->
+                    listOfNotNull(
+                        packageSuggestion,
+                        servingSuggestion,
+                        raw
+                    )
+                }
+            }
+
+        return flow.mapValues { measurementMapper.toMeasurement(it) }
     }
 
     override suspend fun addMeasurement(

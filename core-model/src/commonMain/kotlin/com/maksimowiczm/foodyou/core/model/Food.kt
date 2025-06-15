@@ -6,4 +6,5 @@ sealed interface Food {
     val nutritionFacts: NutritionFacts
     val totalWeight: Float?
     val servingWeight: Float?
+    val isLiquid: Boolean
 }

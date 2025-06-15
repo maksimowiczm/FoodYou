@@ -20,13 +20,8 @@ import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.error_measurement_error
-import foodyou.app.generated.resources.product_package
-import foodyou.app.generated.resources.product_serving
-import foodyou.app.generated.resources.unit_gram_short
-import foodyou.app.generated.resources.unit_kcal
-import foodyou.app.generated.resources.x_times_y
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
@@ -188,6 +183,9 @@ private val FoodWithMeasurement.measurementStringShort: String
 
             is Measurement.Gram -> "${value.formatClipZeros()} " +
                 stringResource(Res.string.unit_gram_short)
+
+            is Measurement.Milliliter -> "${value.formatClipZeros()} " +
+                stringResource(Res.string.unit_milliliter_short)
         }
     }
 
@@ -195,12 +193,19 @@ private val FoodWithMeasurement.measurementString: String?
     @Composable get() {
         val short = measurementStringShort
         val weight = weight?.formatClipZeros() ?: return null
+        val suffix = if (food.isLiquid) {
+            stringResource(Res.string.unit_milliliter_short)
+        } else {
+            stringResource(Res.string.unit_gram_short)
+        }
 
         return when (measurement) {
-            is Measurement.Gram -> short
+            is Measurement.Gram,
+            is Measurement.Milliliter -> short
+
             is Measurement.Package,
             is Measurement.Serving ->
-                "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
+                "$short ($weight $suffix)"
         }
     }
 

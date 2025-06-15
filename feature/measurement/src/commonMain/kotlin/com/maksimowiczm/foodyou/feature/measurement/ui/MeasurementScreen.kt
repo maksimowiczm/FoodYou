@@ -36,6 +36,7 @@ import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -87,7 +88,10 @@ internal fun MeasurementScreen(
         )
     }
 
-    val measurement = state.measurement ?: Measurement.Gram(100f)
+    val defaultMeasurement = remember(food) {
+        if (food.isLiquid) Measurement.Milliliter(100f) else Measurement.Gram(100f)
+    }
+    val measurement = state.measurement ?: defaultMeasurement
     val weight = measurement.weight(food) ?: 100f
 
     Scaffold(
@@ -383,6 +387,9 @@ private fun RecipeIngredient.measurementStringShort(weight: Float): String? = wi
 
         is Measurement.Gram -> "${weight.formatClipZeros()} " +
             stringResource(Res.string.unit_gram_short)
+
+        is Measurement.Milliliter -> "${weight.formatClipZeros()} " +
+            stringResource(Res.string.unit_milliliter_short)
     }
 }
 
@@ -393,6 +400,7 @@ private fun RecipeIngredient.measurementString(weight: Float): String? {
 
     return when (measurement) {
         is Measurement.Gram -> short
+        is Measurement.Milliliter -> short
         is Measurement.Package,
         is Measurement.Serving ->
             "$short ($weightString ${stringResource(Res.string.unit_gram_short)})"

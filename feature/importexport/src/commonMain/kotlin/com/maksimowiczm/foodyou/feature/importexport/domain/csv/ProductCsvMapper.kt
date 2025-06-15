@@ -60,6 +60,7 @@ private fun ProductEntity.toStringMap(): Map<ProductEntityField, String?> =
             ProductEntityField.CHROMIUM_MICRO -> minerals.chromiumMicro?.toString()
             ProductEntityField.PACKAGE_WEIGHT -> packageWeight?.toString()
             ProductEntityField.SERVING_WEIGHT -> servingWeight?.toString()
+            ProductEntityField.IS_LIQUID -> isLiquid.toString()
         }
     }
 
@@ -127,6 +128,7 @@ private fun Map<ProductEntityField, String>.toProductEntity(): ProductEntity? {
         vitamins = vitamins,
         minerals = minerals,
         packageWeight = this[ProductEntityField.PACKAGE_WEIGHT]?.toFloatOrNull(),
-        servingWeight = this[ProductEntityField.SERVING_WEIGHT]?.toFloatOrNull()
+        servingWeight = this[ProductEntityField.SERVING_WEIGHT]?.toFloatOrNull(),
+        isLiquid = this[ProductEntityField.IS_LIQUID]?.toBooleanStrictOrNull() ?: false
     )
 }

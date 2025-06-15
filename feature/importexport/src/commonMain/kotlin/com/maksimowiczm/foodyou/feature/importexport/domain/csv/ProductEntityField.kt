@@ -49,5 +49,6 @@ internal enum class ProductEntityField {
     IODINE_MICRO,
     CHROMIUM_MICRO,
     PACKAGE_WEIGHT,
-    SERVING_WEIGHT
+    SERVING_WEIGHT,
+    IS_LIQUID
 }

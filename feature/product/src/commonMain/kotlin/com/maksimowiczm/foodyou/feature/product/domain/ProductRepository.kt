@@ -70,7 +70,8 @@ internal interface ProductRepository {
         iodineMicro: Float?,
         chromiumMicro: Float?,
         packageWeight: Float?,
-        servingWeight: Float?
+        servingWeight: Float?,
+        isLiquid: Boolean
     ): Long
 
     /**
@@ -123,7 +124,8 @@ internal interface ProductRepository {
         iodineMicro: Float?,
         chromiumMicro: Float?,
         packageWeight: Float?,
-        servingWeight: Float?
+        servingWeight: Float?,
+        isLiquid: Boolean
     )
 }
 
@@ -185,7 +187,8 @@ internal class ProductRepositoryImpl(
         iodineMicro: Float?,
         chromiumMicro: Float?,
         packageWeight: Float?,
-        servingWeight: Float?
+        servingWeight: Float?,
+        isLiquid: Boolean
     ): Long {
         val nutrients = Nutrients(
             proteins = proteins,
@@ -243,7 +246,8 @@ internal class ProductRepositoryImpl(
             vitamins = vitamins,
             minerals = minerals,
             packageWeight = packageWeight,
-            servingWeight = servingWeight
+            servingWeight = servingWeight,
+            isLiquid = isLiquid
         )
 
         return localProductDataSource.insertProduct(entity)
@@ -294,7 +298,8 @@ internal class ProductRepositoryImpl(
         iodineMicro: Float?,
         chromiumMicro: Float?,
         packageWeight: Float?,
-        servingWeight: Float?
+        servingWeight: Float?,
+        isLiquid: Boolean
     ) {
         val nutrients = Nutrients(
             proteins = proteins,
@@ -353,7 +358,8 @@ internal class ProductRepositoryImpl(
             vitamins = vitamins,
             minerals = minerals,
             packageWeight = packageWeight,
-            servingWeight = servingWeight
+            servingWeight = servingWeight,
+            isLiquid = isLiquid
         )
 
         localProductDataSource.updateProduct(entity)

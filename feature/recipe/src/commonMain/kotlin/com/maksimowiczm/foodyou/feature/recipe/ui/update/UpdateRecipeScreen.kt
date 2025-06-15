@@ -54,7 +54,8 @@ internal fun UpdateRecipeScreen(
     val formState = rememberRecipeFormState(
         initialName = recipe.name,
         initialServings = recipe.servings,
-        initialIngredients = recipe.ingredients.map { it.toMinimalIngredient() }
+        initialIngredients = recipe.ingredients.map { it.toMinimalIngredient() },
+        initialIsLiquid = recipe.isLiquid
     )
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }

@@ -26,6 +26,7 @@ internal class UpdateProductScreenViewModel(
 
         val multiplier = when (productForm.measurement) {
             is Measurement.Gram -> 1f
+            is Measurement.Milliliter -> 1f
             is Measurement.Package -> productForm.packageWeight.value?.let { 1 / it * 100 }
             is Measurement.Serving -> productForm.servingWeight.value?.let { 1 / it * 100 }
         } ?: return@launch
@@ -76,7 +77,8 @@ internal class UpdateProductScreenViewModel(
             phosphorusMilli = productForm.phosphorusMilli.value?.let { it * multiplier },
             chromiumMicro = productForm.chromiumMicro.value?.let { it * multiplier },
             packageWeight = productForm.packageWeight.value,
-            servingWeight = productForm.servingWeight.value
+            servingWeight = productForm.servingWeight.value,
+            isLiquid = productForm.isLiquid
         )
 
         eventBus.emit(UpdateProductEvent.Updated)

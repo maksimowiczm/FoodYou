@@ -18,5 +18,6 @@ data class ProductEntity(
     @Embedded
     val minerals: Minerals,
     val packageWeight: Float?,
-    val servingWeight: Float?
+    val servingWeight: Float?,
+    val isLiquid: Boolean
 )
