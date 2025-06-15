@@ -56,34 +56,33 @@ internal fun rememberWeightChipsState(
         },
         restore = {
             WeightChipsState(
-                suggestions = listOfNotNull(
+                filterOptions = listOfNotNull(
                     extraFilter,
                     if (food.isLiquid) Measurement.Milliliter(100f) else Measurement.Gram(100f),
                     food.totalWeight?.let { Measurement.Package(1f) },
                     food.servingWeight?.let { Measurement.Serving(1f) }
-                ),
+                ).distinct(),
                 initialSelectedFilterIndex = it[0] as Int
             )
         }
     )
 ) {
     WeightChipsState(
-        suggestions = listOfNotNull(
+        filterOptions = listOfNotNull(
             extraFilter,
             if (food.isLiquid) Measurement.Milliliter(100f) else Measurement.Gram(100f),
             food.totalWeight?.let { Measurement.Package(1f) },
             food.servingWeight?.let { Measurement.Serving(1f) }
-        ),
+        ).distinct(),
         initialSelectedFilterIndex = 0
     )
 }
 
 @Stable
 internal class WeightChipsState(
-    suggestions: List<Measurement> = emptyList(),
+    val filterOptions: List<Measurement> = emptyList(),
     initialSelectedFilterIndex: Int
 ) {
-    val filterOptions: List<Measurement> = suggestions.distinct()
     var selectedFilterIndex: Int by mutableIntStateOf(initialSelectedFilterIndex)
     val selectedFilter by derivedStateOf { filterOptions[selectedFilterIndex] }
 }
