@@ -144,6 +144,17 @@ fun FoodYouNavHost(
                 navController.navigate(ImportSwissFoodCompositionDatabase) {
                     launchSingleTop = true
                 }
+            },
+            aboutOnBack = {
+                navController.popBackStack<About>(inclusive = true)
+            },
+            aboutOnDonate = {
+                navController.navigate(Donate) {
+                    launchSingleTop = true
+                }
+            },
+            donateOnBack = {
+                navController.popBackStack<Donate>(inclusive = true)
             }
         )
         addFoodGraph(

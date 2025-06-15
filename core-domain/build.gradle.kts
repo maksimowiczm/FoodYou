@@ -10,14 +10,6 @@ kotlin {
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
-        compilations.configureEach {
-            compilerOptions.configure {
-                jvmTarget.set(
-                    org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-                )
-            }
-        }
-
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
         }.configure {
@@ -30,13 +22,6 @@ kotlin {
             implementation(project(":core"))
             implementation(project(":core-database"))
             implementation(project(":core-model"))
-        }
-
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-
-        androidMain.dependencies {
         }
 
         getByName("androidDeviceTest") {

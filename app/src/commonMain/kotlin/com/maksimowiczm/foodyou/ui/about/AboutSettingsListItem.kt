@@ -20,18 +20,10 @@ fun AboutSettingsListItem(
     contentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     SettingsListItem(
-        headlineContent = {
-            Text(
-                text = stringResource(Res.string.headline_about)
-            )
-        },
+        headlineContent = { Text(stringResource(Res.string.headline_about)) },
         onClick = onClick,
         modifier = modifier,
-        supportingContent = {
-            Text(
-                text = stringResource(Res.string.description_about_setting)
-            )
-        },
+        supportingContent = { Text(stringResource(Res.string.description_about_setting)) },
         leadingContent = {
             Icon(
                 imageVector = Icons.Outlined.Info,

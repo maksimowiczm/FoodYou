@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.navigation
 import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.ui.about.AboutScreen
+import com.maksimowiczm.foodyou.ui.donate.DonateScreen
 import com.maksimowiczm.foodyou.ui.externaldatabases.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreen
 import com.maksimowiczm.foodyou.ui.settings.SettingsScreen
@@ -20,6 +21,9 @@ data object ExternalDatabases
 @Serializable
 data object About
 
+@Serializable
+data object Donate
+
 fun NavGraphBuilder.settingsGraph(
     settingsOnBack: () -> Unit,
     homeSettingsOnBack: () -> Unit,
@@ -33,7 +37,10 @@ fun NavGraphBuilder.settingsGraph(
     onImportExport: () -> Unit,
     onExternalDatabases: () -> Unit,
     externalDatabasesOnBack: () -> Unit,
-    onSwissFoodCompositionDatabase: () -> Unit
+    onSwissFoodCompositionDatabase: () -> Unit,
+    aboutOnBack: () -> Unit,
+    aboutOnDonate: () -> Unit,
+    donateOnBack: () -> Unit
 ) {
     forwardBackwardComposable<Settings> {
         SettingsScreen(
@@ -61,6 +68,14 @@ fun NavGraphBuilder.settingsGraph(
         )
     }
     forwardBackwardComposable<About> {
-        AboutScreen()
+        AboutScreen(
+            onBack = aboutOnBack,
+            onDonate = aboutOnDonate
+        )
+    }
+    forwardBackwardComposable<Donate> {
+        DonateScreen(
+            onBack = donateOnBack
+        )
     }
 }

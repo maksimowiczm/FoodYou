@@ -13,12 +13,10 @@ kotlin {
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
-        compilations.configureEach {
-            compilerOptions.configure {
-                jvmTarget.set(
-                    org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-                )
-            }
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }.configure {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
 
         // Allow multi-module compose resources
@@ -34,9 +32,6 @@ kotlin {
 
             implementation(compose.components.resources)
             implementation(libs.kotlinx.serialization.json)
-        }
-
-        androidMain.dependencies {
         }
     }
 }

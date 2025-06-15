@@ -29,10 +29,6 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
         }
 
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-
         androidMain.dependencies {
             implementation(libs.sqlite.android)
         }

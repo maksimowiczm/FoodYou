@@ -20,11 +20,7 @@
     <string name="headline_system_language_settings">System language settings</string>
     <string name="headline_secure_screen">Secure screen</string>
     <string name="headline_about">About</string>
-    <string name="headline_miscellaneous">Miscellaneous</string>
-    <string name="headline_readme" translatable="false">README</string>
     <string name="headline_version">Version</string>
-    <string name="headline_share_your_thoughts">Share your thoughts</string>
-    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Show some love</string>
     <string name="headline_all_day" description="All-day (meal)">All-day</string>
     <string name="headline_time_based_ordering">Time-based ordering</string>
     <string name="headline_incomplete_products">Incomplete products</string>
@@ -160,7 +156,6 @@
     <string name="action_go_to_today">Go to today</string>
     <string name="action_bug_report_on_github">Bug report on GitHub</string>
     <string name="action_feature_request_on_github">Feature request on GitHub</string>
-    <string name="action_leave_a_star_on_github">Leave a star on GitHub</string>
     <string name="action_show_calendar">Show calendar</string>
     <string name="action_reorder">Reorder</string>
     <string name="action_move_up" description="reorder list item up">Move up</string>
@@ -207,7 +202,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Meal will be deleted permanently. All data related to this meal will be lost.</string>
     <string name="neutral_required">Required</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calories are calculated automatically based on macronutrients</string>
-    <string name="neutral_entry_deleted">Entry deleted</string>
     <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_copied">Info copied to clipboard</string>
     <string name="neutral_product_created">Product created</string>
@@ -244,10 +238,7 @@
     <string name="description_calories_goal">Set your daily calorie intake goal. This will help you to track your progress and stay on track.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Product will be deleted permanently. This action can't be undone. All diary entries related to this product will be deleted.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">This entry will be deleted from your diary. You can add it again anytime.</string>
-    <string name="description_README_setting">View the project's README on GitHub</string>
     <string name="description_about_setting">Learn more about the app</string>
-    <string name="description_show_some_love">If you find this project helpful, please consider giving it a star on GitHub! It helps others discover it and keeps the development going.</string>
-    <string name="description_share_your_thoughts">If you have any feedback, feature requests, or bug reports, please let me know! I'd love to hear from you.</string>
     <string name="description_time_based_meals_sorting">When enabled, meals that are currently happening will be displayed first</string>
     <string name="description_action_ignore_all_day_meals">All-day meals will be displayed at the end of the list</string>
     <string name="description_incomplete_nutrition_data">Some of the used products lack this value; therefore, the displayed value might not be accurate</string>
@@ -267,7 +258,6 @@
 
     <string name="link_icons8" translatable="false">https://icons8.com/</string>
     <string name="headline_launcher_icon_by_icons8">Launcher icon by Icons8</string>
-    <string name="neutral_see_other_awesome_icons_here">See other awesome icons here</string>
 
     <string name="headline_open_food_facts" translatable="false">Open Food Facts</string>
     <string name="description_open_food_facts">A collaborative, free and open database of food products from around the world</string>
@@ -317,5 +307,18 @@
     <string name="feature_manual_database_import">Manual database import</string>
 
     <string name="action_unpack" description="Unpack the recipe ingredients">Unpack</string>
+
+    <string name="headline_donate">Donate</string>
+    <string name="description_donate_short">Contributions in any form are welcome</string>
+    <string name="description_donate_1">In a world where every tap is tracked and every feature locked behind a paywall, this food tracker is different. No ads. No subscriptions. No surveillance.</string>
+    <string name="description_donate_2">Built on the belief that useful tools should be free, open, and respect your privacy, it offers a quiet stand against the exploitative models dominating app stores.</string>
+    <string name="description_donate_3">If this matters to you, consider making a donation. Your donations directly support full-time development of the project.</string>
+    <string name="headline_source_code">Source code</string>
+    <string name="description_source_code">View the project’s source code on GitHub</string>
+    <string name="action_write_an_email">Write an email</string>
+    <string name="headline_contact">Contact</string>
+    <string name="description_donate_contact">If you have any requests regarding donations, feel free to contact me via email or GitHub.</string>
+
+    <string name="donate_bank_or_card">Bank account or credit card</string>
 
 </resources>

@@ -16,8 +16,12 @@ buildConfig {
     className("BuildConfig")
 
     val versionName = libs.versions.version.name.get()
+    val feedbackEmail = "maksimowicz.dev@gmail.com"
+    val feedbackEmailUri =
+        "mailto:$feedbackEmail?subject=Food You Feedback&body=Food You Version: $versionName\\n"
 
     buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
+    buildConfigField("String", "FEEDBACK_EMAIL_URI", "\"$feedbackEmailUri\"")
 }
 
 kotlin {
@@ -29,10 +33,6 @@ kotlin {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
-
-    // Leave it here
-    // Otherwise IDE will not recognize the project as a multiplatform one
-    jvm("desktop")
 
     sourceSets {
         androidMain.dependencies {

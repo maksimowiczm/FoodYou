@@ -11,10 +11,6 @@ plugins {
 
 kotlin {
 
-    // Leave it here
-    // Otherwise IDE will not recognize the project as a multiplatform one
-    jvm("desktop")
-
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
@@ -27,10 +23,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core-ui"))
-        }
-
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
         }
 
         androidMain.dependencies {
