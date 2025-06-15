@@ -70,7 +70,8 @@ internal class CreateProductScreenViewModel(private val productRepository: Produ
             phosphorusMilli = productForm.phosphorusMilli.value?.let { it * multiplier },
             chromiumMicro = productForm.chromiumMicro.value?.let { it * multiplier },
             packageWeight = productForm.packageWeight.value,
-            servingWeight = productForm.servingWeight.value
+            servingWeight = productForm.servingWeight.value,
+            isLiquid = TODO()
         )
 
         eventBus.emit(CreateProductEvent.Created(id))

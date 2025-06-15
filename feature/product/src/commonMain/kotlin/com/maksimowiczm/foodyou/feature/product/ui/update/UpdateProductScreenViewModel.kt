@@ -76,7 +76,8 @@ internal class UpdateProductScreenViewModel(
             phosphorusMilli = productForm.phosphorusMilli.value?.let { it * multiplier },
             chromiumMicro = productForm.chromiumMicro.value?.let { it * multiplier },
             packageWeight = productForm.packageWeight.value,
-            servingWeight = productForm.servingWeight.value
+            servingWeight = productForm.servingWeight.value,
+            isLiquid = TODO()
         )
 
         eventBus.emit(UpdateProductEvent.Updated)

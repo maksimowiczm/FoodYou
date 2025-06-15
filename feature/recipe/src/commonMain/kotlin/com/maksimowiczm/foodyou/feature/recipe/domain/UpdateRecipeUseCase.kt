@@ -8,6 +8,7 @@ internal fun interface UpdateRecipeUseCase {
         recipeId: FoodId.Recipe,
         name: String,
         servings: Int,
+        isLiquid: Boolean,
         ingredients: List<Ingredient>
     )
 }
@@ -20,13 +21,15 @@ internal class UpdateRecipeUseCaseImpl(
         recipeId: FoodId.Recipe,
         name: String,
         servings: Int,
+        isLiquid: Boolean,
         ingredients: List<Ingredient>
     ) {
         recipeLocalDataSource.updateRecipeWithIngredients(
             recipeId = recipeId.id,
             name = name,
             servings = servings,
-            ingredients = ingredients.map(ingredientMapper::toEntity)
+            ingredients = ingredients.map(ingredientMapper::toEntity),
+            isLiquid = isLiquid
         )
     }
 }

@@ -88,7 +88,8 @@ internal object ProductMapperImpl : ProductMapper {
             vitamins = vitamins,
             minerals = minerals,
             packageWeight = totalWeight,
-            servingWeight = servingWeight
+            servingWeight = servingWeight,
+            isLiquid = TODO()
         )
     }
 

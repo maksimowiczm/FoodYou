@@ -7,6 +7,7 @@ internal fun interface CreateRecipeUseCase {
     suspend operator fun invoke(
         name: String,
         servings: Int,
+        isLiquid: Boolean,
         ingredients: List<Ingredient>
     ): FoodId.Recipe
 }
@@ -18,12 +19,14 @@ internal class CreateRecipeUseCaseImpl(
     override suspend fun invoke(
         name: String,
         servings: Int,
+        isLiquid: Boolean,
         ingredients: List<Ingredient>
     ): FoodId.Recipe {
         val id = recipeLocalDataSource.createRecipeWithIngredients(
             name = name,
             servings = servings,
-            ingredients = ingredients.map(ingredientMapper::toEntity)
+            ingredients = ingredients.map(ingredientMapper::toEntity),
+            isLiquid = isLiquid
         )
 
         return FoodId.Recipe(id)

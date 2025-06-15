@@ -57,7 +57,8 @@ internal class CreateRecipeViewModel(
         val id = createRecipeUseCase(
             name = name,
             servings = servings,
-            ingredients = ingredients
+            ingredients = ingredients,
+            isLiquid = TODO()
         )
 
         _eventBus.send(CreateRecipeEvent.RecipeCreated(id))

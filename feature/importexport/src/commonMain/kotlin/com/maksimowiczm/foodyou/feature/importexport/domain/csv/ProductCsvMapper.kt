@@ -127,6 +127,7 @@ private fun Map<ProductEntityField, String>.toProductEntity(): ProductEntity? {
         vitamins = vitamins,
         minerals = minerals,
         packageWeight = this[ProductEntityField.PACKAGE_WEIGHT]?.toFloatOrNull(),
-        servingWeight = this[ProductEntityField.SERVING_WEIGHT]?.toFloatOrNull()
+        servingWeight = this[ProductEntityField.SERVING_WEIGHT]?.toFloatOrNull(),
+        isLiquid = TODO()
     )
 }

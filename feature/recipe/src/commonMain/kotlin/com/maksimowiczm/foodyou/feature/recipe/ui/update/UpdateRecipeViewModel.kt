@@ -75,7 +75,8 @@ internal class UpdateRecipeViewModel(
             recipeId = recipe.id,
             name = name,
             servings = servings,
-            ingredients = ingredients
+            ingredients = ingredients,
+            isLiquid = TODO()
         )
 
         _eventBus.send(UpdateRecipeEvent.RecipeUpdated)
