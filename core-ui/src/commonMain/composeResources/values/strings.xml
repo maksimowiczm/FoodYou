@@ -323,7 +323,7 @@
     <string name="donate_bank_or_card">Bank account or credit card</string>
 
     <string name="action_treat_as_liquid">Treat as liquid</string>
-    <string name="description_treat_as_liquid">Use milliliters when measuring</string>
+    <string name="description_treat_as_liquid">Prefer milliliters when measuring</string>
 
 
 </resources>
