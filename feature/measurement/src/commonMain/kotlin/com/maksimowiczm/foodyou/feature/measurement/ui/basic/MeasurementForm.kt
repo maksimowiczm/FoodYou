@@ -104,6 +104,7 @@ private fun MeasurementRow(
         MeasurementEnum.Package -> MeasurementFormTestKeys.Package(state.value)
         MeasurementEnum.Serving -> MeasurementFormTestKeys.Serving(state.value)
         MeasurementEnum.Gram -> MeasurementFormTestKeys.Gram(state.value)
+        MeasurementEnum.Milliliter -> MeasurementFormTestKeys.Milliliter(state.value)
     }
 
     val onConfirm = remember(state, onMeasurement) { { onMeasurement(state.value) } }
@@ -135,12 +136,19 @@ private fun MeasurementRow(
                         { Text(type.stringResource()) }
                     }
 
+                    MeasurementEnum.Milliliter,
                     MeasurementEnum.Gram -> null
                 },
-                suffix = if (type == MeasurementEnum.Gram) {
-                    { Text(stringResource(Res.string.unit_gram_short)) }
-                } else {
-                    null
+                suffix = when (type) {
+                    MeasurementEnum.Package,
+                    MeasurementEnum.Serving -> null
+
+                    MeasurementEnum.Milliliter -> {
+                        { Text(stringResource(Res.string.unit_milliliter_short)) }
+                    }
+                    MeasurementEnum.Gram -> {
+                        { Text(stringResource(Res.string.unit_gram_short)) }
+                    }
                 },
                 shape = MaterialTheme.shapes.medium,
                 keyboardOptions = KeyboardOptions(
@@ -208,6 +216,7 @@ internal object MeasurementFormTestKeys {
     data class Package(val value: Float)
     data class Serving(val value: Float)
     data class Gram(val value: Float)
+    data class Milliliter(val value: Float)
 }
 
 @Immutable

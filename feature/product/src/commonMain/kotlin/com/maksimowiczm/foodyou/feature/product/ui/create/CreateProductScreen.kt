@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.product.ui.create
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -118,7 +119,7 @@ internal fun CreateProductApp(
             item {
                 ProductForm(
                     state = productFormState,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    contentPadding = PaddingValues(horizontal = 16.dp)
                 )
             }
         }

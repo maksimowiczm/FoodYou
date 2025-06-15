@@ -57,6 +57,7 @@ data class Recipe(
      */
     fun measuredIngredients(measurement: Measurement): List<Pair<Food, Measurement?>> {
         val weight = when (measurement) {
+            is Measurement.Milliliter -> measurement.value
             is Measurement.Gram -> measurement.value
             is Measurement.Package -> measurement.quantity * totalWeight
             is Measurement.Serving -> measurement.quantity * servingWeight
@@ -87,6 +88,7 @@ data class Recipe(
 
             val ingredientWeight = weight * fraction
             val measurement = when (ingredient.measurement) {
+                is Measurement.Milliliter -> Measurement.Milliliter(ingredientWeight)
                 is Measurement.Gram -> Measurement.Gram(ingredientWeight)
 
                 is Measurement.Package -> {

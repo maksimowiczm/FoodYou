@@ -383,6 +383,9 @@ private fun RecipeIngredient.measurementStringShort(weight: Float): String? = wi
 
         is Measurement.Gram -> "${weight.formatClipZeros()} " +
             stringResource(Res.string.unit_gram_short)
+
+        is Measurement.Milliliter -> "${weight.formatClipZeros()} " +
+            stringResource(Res.string.unit_milliliter_short)
     }
 }
 
@@ -393,6 +396,7 @@ private fun RecipeIngredient.measurementString(weight: Float): String? {
 
     return when (measurement) {
         is Measurement.Gram -> short
+        is Measurement.Milliliter -> short
         is Measurement.Package,
         is Measurement.Serving ->
             "$short ($weightString ${stringResource(Res.string.unit_gram_short)})"

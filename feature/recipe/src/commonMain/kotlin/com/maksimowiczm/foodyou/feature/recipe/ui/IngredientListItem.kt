@@ -79,6 +79,9 @@ private val IngredientSearchItem.measurementStringShort: String
 
             is Measurement.Gram -> "${value.formatClipZeros()} " +
                 stringResource(Res.string.unit_gram_short)
+
+            is Measurement.Milliliter -> "${value.formatClipZeros()} " +
+                stringResource(Res.string.unit_milliliter_short)
         }
     }
 
@@ -88,7 +91,8 @@ private val IngredientSearchItem.measurementString: String?
         val weight = weight?.formatClipZeros() ?: return null
 
         return when (measurement) {
-            is Measurement.Gram -> short
+            is Measurement.Gram,
+            is Measurement.Milliliter -> short
             is Measurement.Package,
             is Measurement.Serving ->
                 "$short ($weight ${stringResource(Res.string.unit_gram_short)})"
@@ -175,6 +179,9 @@ private val Ingredient.measurementStringShort: String
 
             is Measurement.Gram -> "${value.formatClipZeros()} " +
                 stringResource(Res.string.unit_gram_short)
+
+            is Measurement.Milliliter -> "${value.formatClipZeros()} " +
+                stringResource(Res.string.unit_milliliter_short)
         }
     }
 
@@ -184,7 +191,9 @@ private val Ingredient.measurementString: String?
         val weight = weight?.formatClipZeros() ?: return null
 
         return when (measurement) {
-            is Measurement.Gram -> short
+            is Measurement.Gram,
+            is Measurement.Milliliter -> short
+
             is Measurement.Package,
             is Measurement.Serving ->
                 "$short ($weight ${stringResource(Res.string.unit_gram_short)})"

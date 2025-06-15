@@ -27,7 +27,8 @@ internal object ProductMapperImpl : ProductMapper {
             minerals = entity.minerals
         ),
         totalWeight = entity.packageWeight,
-        servingWeight = entity.servingWeight
+        servingWeight = entity.servingWeight,
+        isLiquid = entity.isLiquid
     )
 
     override fun toEntity(product: Product): ProductEntity = with(product) {
@@ -89,7 +90,7 @@ internal object ProductMapperImpl : ProductMapper {
             minerals = minerals,
             packageWeight = totalWeight,
             servingWeight = servingWeight,
-            isLiquid = TODO()
+            isLiquid = isLiquid
         )
     }
 

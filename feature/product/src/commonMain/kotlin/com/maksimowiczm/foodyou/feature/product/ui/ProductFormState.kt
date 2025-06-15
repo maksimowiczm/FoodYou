@@ -6,9 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.Product
@@ -43,6 +45,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
         parser = { ParseResult.Success(it) },
         textFieldState = rememberTextFieldState(product?.barcode ?: "")
     )
+
+    var isLiquidState = rememberSaveable { mutableStateOf(false) }
 
     val measurement = rememberSaveable(
         stateSaver = Measurement.Saver
@@ -184,6 +188,7 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
             name = name,
             brand = brand,
             barcode = barcode,
+            isLiquidState = isLiquidState,
             measurementState = measurement,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
@@ -250,6 +255,8 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
         parser = { ParseResult.Success(it) },
         textFieldState = rememberTextFieldState(product.barcode ?: "")
     )
+
+    var isLiquidState = rememberSaveable { mutableStateOf(false) }
 
     val measurement = rememberSaveable(
         stateSaver = Measurement.Saver
@@ -392,6 +399,7 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
             name = name,
             brand = brand,
             barcode = barcode,
+            isLiquidState = isLiquidState,
             measurementState = measurement,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
@@ -445,6 +453,7 @@ internal class ProductFormState(
     val brand: FormField<String, ProductFormFieldError>,
     val barcode: FormField<String, ProductFormFieldError>,
     // Weight
+    private val isLiquidState: MutableState<Boolean>,
     private val measurementState: MutableState<Measurement?>,
     val packageWeight: FormField<Float?, ProductFormFieldError>,
     val servingWeight: FormField<Float?, ProductFormFieldError>,
@@ -538,6 +547,8 @@ internal class ProductFormState(
             phosphorusMilli.error == null &&
             seleniumMicro.error == null &&
             iodineMicro.error == null
+
+    var isLiquid: Boolean by isLiquidState
 
     var measurement: Measurement
         get() = measurementState.value!!

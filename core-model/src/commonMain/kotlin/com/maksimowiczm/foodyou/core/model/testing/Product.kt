@@ -11,7 +11,8 @@ fun testProduct(
     nutritionFacts: NutritionFacts = testNutritionFacts(),
     barcode: String? = "1234567890123",
     totalWeight: Float? = 500f,
-    servingWeight: Float? = 100f
+    servingWeight: Float? = 100f,
+    isLiquid: Boolean = false
 ): Product = Product(
     id = id,
     name = name,
@@ -19,5 +20,6 @@ fun testProduct(
     nutritionFacts = nutritionFacts,
     barcode = barcode,
     totalWeight = totalWeight,
-    servingWeight = servingWeight
+    servingWeight = servingWeight,
+    isLiquid = isLiquid
 )

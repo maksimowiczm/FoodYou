@@ -8,12 +8,16 @@ sealed interface Measurement {
      */
     fun weight(food: Food): Float? = when (this) {
         is Gram -> value
+        is Milliliter -> value
         is Package -> food.totalWeight?.let { weight(it) }
         is Serving -> food.servingWeight?.let { weight(it) }
     }
 
     @JvmInline
     value class Gram(val value: Float) : Measurement
+
+    @JvmInline
+    value class Milliliter(val value: Float) : Measurement
 
     @JvmInline
     value class Package(val quantity: Float) : Measurement {
