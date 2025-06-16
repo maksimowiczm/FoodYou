@@ -35,10 +35,12 @@ object Changelog {
     val next = Version.next(
         newFeatures = listOf(
             "Added donation screen. You can now support the app development by donating.",
-            "Added liquid food. You can now create and track liquid products and recipes."
+            "Added liquid food. You can now create and track liquid products and recipes.",
+            "Added personalization settings"
         ),
         changes = listOf(
-            "Updated about screen"
+            "Updated about screen",
+            "Move home settings to the personalize settings"
         ),
         bugFixes = listOf(),
         translations = listOf(),

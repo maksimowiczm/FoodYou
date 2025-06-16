@@ -325,5 +325,8 @@
     <string name="action_treat_as_liquid">Treat as liquid</string>
     <string name="description_treat_as_liquid">Prefer milliliters when measuring</string>
 
+    <string name="headline_personalization">Personalization</string>
+    <string name="description_personalization">Customize your experience</string>
+
 
 </resources>
