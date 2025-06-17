@@ -20,6 +20,10 @@ kotlin {
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
+    // Leave it here
+    // Otherwise IDE will not recognize the project as a multiplatform project
+    jvm("desktop")
+
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core-ui"))

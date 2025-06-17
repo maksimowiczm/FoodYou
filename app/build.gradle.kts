@@ -34,6 +34,10 @@ kotlin {
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
+    // Leave it here
+    // Otherwise IDE will not recognize the project as a multiplatform project
+    jvm("desktop")
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.work.runtime)
