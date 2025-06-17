@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.product.ui.update
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -98,7 +98,7 @@ internal fun UpdateProductScreen(
             item {
                 ProductForm(
                     state = productFormState,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    contentPadding = PaddingValues(horizontal = 16.dp)
                 )
             }
         }
