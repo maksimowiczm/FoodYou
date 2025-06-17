@@ -6,15 +6,16 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maksimowiczm.foodyou.core.ext.set
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.util.SystemDetails
-import com.maksimowiczm.foodyou.feature.language.data.LanguagePreferences
+import com.maksimowiczm.foodyou.feature.language.preferences.ShowTranslationWarning
 import java.util.Locale
 import kotlinx.coroutines.launch
 
 actual class LanguageViewModel(
     private val androidSystemDetails: SystemDetails,
-    private val dataStore: DataStore<Preferences>
+    dataStore: DataStore<Preferences>,
+    private val showTranslationWarning: ShowTranslationWarning = dataStore.userPreference()
 ) : ViewModel() {
     private val locale: Locale
         get() = androidSystemDetails.defaultLocale
@@ -36,7 +37,7 @@ actual class LanguageViewModel(
      */
     fun onLanguageSelect(tag: String?) {
         viewModelScope.launch {
-            dataStore.set(LanguagePreferences.showTranslationWarning to true)
+            showTranslationWarning.set(true)
         }
 
         if (tag == null) {
