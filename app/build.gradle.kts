@@ -91,9 +91,6 @@ android {
         versionCode = libs.versions.android.versionCode.get().toInt()
         versionName = libs.versions.version.name.get()
 
-        manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher"
-        manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
