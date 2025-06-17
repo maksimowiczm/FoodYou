@@ -22,6 +22,7 @@ import org.jetbrains.compose.resources.stringResource
 fun PersonalizeSettingsScreen(
     onBack: () -> Unit,
     onHomeSettings: () -> Unit,
+    onNutritionFacts: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -38,13 +39,16 @@ fun PersonalizeSettingsScreen(
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues
         ) {
             item {
-                HomeSettingsListItem(
-                    onClick = onHomeSettings
-                )
+                HomeSettingsListItem(onHomeSettings)
+            }
+            item {
+                PersonalizeNutritionFactsSettingsListItem(onNutritionFacts)
             }
         }
     }

@@ -1,27 +1,20 @@
 package com.maksimowiczm.foodyou.feature.meal.ui.card
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.ui.nutrition.FoodErrorListItem
+import com.maksimowiczm.foodyou.core.ui.nutrition.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
@@ -34,8 +27,6 @@ internal fun FoodListItem(
     shape: Shape,
     modifier: Modifier = Modifier
 ) {
-    val nutrientsPalette = LocalNutrientsPalette.current
-
     val proteinsString = foodWithMeasurement.proteins?.let {
         it.formatClipZeros("%.1f") + " " + stringResource(Res.string.unit_gram_short)
     }
@@ -58,111 +49,49 @@ internal fun FoodListItem(
         caloriesString == null ||
         measurementString == null
     ) {
-        FoodListErrorItem(
+        FoodErrorListItem(
             headline = foodWithMeasurement.food.headline,
-            shape = shape,
             modifier = modifier
         )
     } else {
         FoodListItem(
-            headlineContent = { Text(foodWithMeasurement.food.headline) },
-            supportingContent = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = proteinsString,
-                            color = nutrientsPalette.proteinsOnSurfaceContainer
-                        )
-
-                        Text(
-                            text = carbohydratesString,
-                            color = nutrientsPalette.carbohydratesOnSurfaceContainer
-                        )
-
-                        Text(
-                            text = fatsString,
-                            color = nutrientsPalette.fatsOnSurfaceContainer
-                        )
-
-                        Text(
-                            text = caloriesString,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-
-                    Text(text = measurementString)
-                }
+            name = { Text(foodWithMeasurement.food.headline) },
+            proteins = {
+                Text(
+                    text = proteinsString,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            },
+            carbohydrates = {
+                Text(
+                    text = carbohydratesString,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            },
+            fats = {
+                Text(
+                    text = fatsString,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            },
+            calories = {
+                Text(
+                    text = caloriesString,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            },
+            measurement = {
+                Text(
+                    text = measurementString,
+                    style = MaterialTheme.typography.bodySmall
+                )
             },
             modifier = modifier,
-            color = color,
+            containerColor = color,
             contentColor = contentColor,
-            shape = shape
+            shape = shape,
+            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-internal fun FoodListErrorItem(headline: String, shape: Shape, modifier: Modifier = Modifier) {
-    FoodListItem(
-        headlineContent = {
-            Text(
-                text = headline,
-                color = MaterialTheme.colorScheme.onErrorContainer
-            )
-        },
-        supportingContent = {
-            Text(
-                text = stringResource(Res.string.error_measurement_error),
-                color = MaterialTheme.colorScheme.onErrorContainer
-            )
-        },
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.errorContainer,
-        shape = shape,
-        contentColor = MaterialTheme.colorScheme.onErrorContainer
-    )
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun FoodListItem(
-    headlineContent: @Composable () -> Unit,
-    supportingContent: @Composable () -> Unit,
-    color: Color,
-    contentColor: Color,
-    shape: Shape,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier,
-        shape = shape,
-        color = color,
-        contentColor = contentColor
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .padding(start = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
-            ) {
-                headlineContent()
-            }
-
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.bodySmall
-            ) {
-                supportingContent()
-            }
-        }
     }
 }
 

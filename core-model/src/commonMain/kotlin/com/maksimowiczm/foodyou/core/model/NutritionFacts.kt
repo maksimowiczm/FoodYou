@@ -46,6 +46,52 @@ data class NutritionFacts(
     val iodineMicro: NutrientValue,
     val chromiumMicro: NutrientValue
 ) {
+    private val map = NutritionFactsField.entries.associateWith {
+        when (it) {
+            NutritionFactsField.Proteins -> proteins
+            NutritionFactsField.Carbohydrates -> carbohydrates
+            NutritionFactsField.Fats -> fats
+            NutritionFactsField.Energy -> calories
+            NutritionFactsField.SaturatedFats -> saturatedFats
+            NutritionFactsField.MonounsaturatedFats -> monounsaturatedFats
+            NutritionFactsField.PolyunsaturatedFats -> polyunsaturatedFats
+            NutritionFactsField.Omega3 -> omega3
+            NutritionFactsField.Omega6 -> omega6
+            NutritionFactsField.Sugars -> sugars
+            NutritionFactsField.Salt -> salt
+            NutritionFactsField.Fiber -> fiber
+            NutritionFactsField.Cholesterol -> cholesterolMilli
+            NutritionFactsField.Caffeine -> caffeineMilli
+            NutritionFactsField.VitaminA -> vitaminAMicro
+            NutritionFactsField.VitaminB1 -> vitaminB1Milli
+            NutritionFactsField.VitaminB2 -> vitaminB2Milli
+            NutritionFactsField.VitaminB3 -> vitaminB3Milli
+            NutritionFactsField.VitaminB5 -> vitaminB5Milli
+            NutritionFactsField.VitaminB6 -> vitaminB6Milli
+            NutritionFactsField.VitaminB7 -> vitaminB7Micro
+            NutritionFactsField.VitaminB9 -> vitaminB9Micro
+            NutritionFactsField.VitaminB12 -> vitaminB12Micro
+            NutritionFactsField.VitaminC -> vitaminCMilli
+            NutritionFactsField.VitaminD -> vitaminDMicro
+            NutritionFactsField.VitaminE -> vitaminEMilli
+            NutritionFactsField.VitaminK -> vitaminKMicro
+            NutritionFactsField.Manganese -> manganeseMilli
+            NutritionFactsField.Magnesium -> magnesiumMilli
+            NutritionFactsField.Potassium -> potassiumMilli
+            NutritionFactsField.Calcium -> calciumMilli
+            NutritionFactsField.Copper -> copperMilli
+            NutritionFactsField.Zinc -> zincMilli
+            NutritionFactsField.Sodium -> sodiumMilli
+            NutritionFactsField.Iron -> ironMilli
+            NutritionFactsField.Phosphorus -> phosphorusMilli
+            NutritionFactsField.Selenium -> seleniumMicro
+            NutritionFactsField.Iodine -> iodineMicro
+            NutritionFactsField.Chromium -> chromiumMicro
+        }
+    }
+
+    fun get(field: NutritionFactsField) = map[field] ?: error("Unknown field: $field")
+
     val isEmpty: Boolean
         get() = this == Empty
 

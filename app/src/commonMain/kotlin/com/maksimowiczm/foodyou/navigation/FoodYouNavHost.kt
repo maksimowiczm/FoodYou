@@ -163,6 +163,14 @@ fun FoodYouNavHost(
                 navController.navigate(PersonalizeSettings) {
                     launchSingleTop = true
                 }
+            },
+            onPersonalizeNutritionFacts = {
+                navController.navigate(PersonalizeNutritionFactsSettings) {
+                    launchSingleTop = true
+                }
+            },
+            personalizeNutritionFactsOnBack = {
+                navController.popBackStack<PersonalizeNutritionFactsSettings>(inclusive = true)
             }
         )
         addFoodGraph(

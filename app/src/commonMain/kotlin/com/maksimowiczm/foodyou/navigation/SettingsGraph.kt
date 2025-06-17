@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.ui.donate.DonateScreen
 import com.maksimowiczm.foodyou.ui.externaldatabases.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreen
+import com.maksimowiczm.foodyou.ui.personalize.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.ui.personalize.PersonalizeSettingsScreen
 import com.maksimowiczm.foodyou.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
@@ -28,6 +29,9 @@ data object Donate
 @Serializable
 data object PersonalizeSettings
 
+@Serializable
+data object PersonalizeNutritionFactsSettings
+
 fun NavGraphBuilder.settingsGraph(
     settingsOnBack: () -> Unit,
     homeSettingsOnBack: () -> Unit,
@@ -46,7 +50,9 @@ fun NavGraphBuilder.settingsGraph(
     aboutOnDonate: () -> Unit,
     donateOnBack: () -> Unit,
     personalizeOnBack: () -> Unit,
-    onPersonalizeSettings: () -> Unit
+    onPersonalizeSettings: () -> Unit,
+    onPersonalizeNutritionFacts: () -> Unit,
+    personalizeNutritionFactsOnBack: () -> Unit
 ) {
     forwardBackwardComposable<Settings> {
         SettingsScreen(
@@ -87,7 +93,13 @@ fun NavGraphBuilder.settingsGraph(
     forwardBackwardComposable<PersonalizeSettings> {
         PersonalizeSettingsScreen(
             onBack = personalizeOnBack,
-            onHomeSettings = onHomeSettings
+            onHomeSettings = onHomeSettings,
+            onNutritionFacts = onPersonalizeNutritionFacts
+        )
+    }
+    forwardBackwardComposable<PersonalizeNutritionFactsSettings> {
+        PersonalizeNutritionFactsScreen(
+            onBack = personalizeNutritionFactsOnBack
         )
     }
 }

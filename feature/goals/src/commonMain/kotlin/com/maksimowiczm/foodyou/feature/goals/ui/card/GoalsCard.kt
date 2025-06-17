@@ -21,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,9 +33,14 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.model.NutritionFactsField
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.home.HomeState
+import com.maksimowiczm.foodyou.core.ui.nutrition.NutritionFactsListPreference
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.feature.goals.model.DailyGoals
 import com.valentinilk.shimmer.Shimmer
@@ -165,8 +171,11 @@ private fun GoalsCardContent(
     proteinsPercentage: Float,
     carbsPercentage: Float,
     fatsPercentage: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    preference: NutritionFactsListPreference = userPreference()
 ) {
+    val preferences by preference.collectAsStateWithLifecycle(preference.getBlocking())
+
     val nutrientsPalette = LocalNutrientsPalette.current
 
     val typography = MaterialTheme.typography
@@ -244,27 +253,35 @@ private fun GoalsCardContent(
             modifier = Modifier.height(64.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            MacroBar(
-                progress = proteinsPercentage,
-                containerColor = nutrientsPalette.proteinsOnSurfaceContainer.copy(
-                    alpha = .25f
-                ),
-                barColor = nutrientsPalette.proteinsOnSurfaceContainer
-            )
-            MacroBar(
-                progress = carbsPercentage,
-                containerColor = nutrientsPalette.carbohydratesOnSurfaceContainer.copy(
-                    alpha = .25f
-                ),
-                barColor = nutrientsPalette.carbohydratesOnSurfaceContainer
-            )
-            MacroBar(
-                progress = fatsPercentage,
-                containerColor = nutrientsPalette.fatsOnSurfaceContainer.copy(
-                    alpha = .25f
-                ),
-                barColor = nutrientsPalette.fatsOnSurfaceContainer
-            )
+            preferences.orderedEnabled.forEach { field ->
+                when (field) {
+                    NutritionFactsField.Proteins -> MacroBar(
+                        progress = proteinsPercentage,
+                        containerColor = nutrientsPalette.proteinsOnSurfaceContainer.copy(
+                            alpha = .25f
+                        ),
+                        barColor = nutrientsPalette.proteinsOnSurfaceContainer
+                    )
+
+                    NutritionFactsField.Carbohydrates -> MacroBar(
+                        progress = carbsPercentage,
+                        containerColor = nutrientsPalette.carbohydratesOnSurfaceContainer.copy(
+                            alpha = .25f
+                        ),
+                        barColor = nutrientsPalette.carbohydratesOnSurfaceContainer
+                    )
+
+                    NutritionFactsField.Fats -> MacroBar(
+                        progress = fatsPercentage,
+                        containerColor = nutrientsPalette.fatsOnSurfaceContainer.copy(
+                            alpha = .25f
+                        ),
+                        barColor = nutrientsPalette.fatsOnSurfaceContainer
+                    )
+
+                    else -> Unit
+                }
+            }
         }
     }
 }
@@ -345,8 +362,11 @@ private fun ExpandedCardContent(
     carbohydratesGoalGrams: Int,
     fatsGrams: Int,
     fatsGoalGrams: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    preference: NutritionFactsListPreference = userPreference()
 ) {
+    val preferences by preference.collectAsStateWithLifecycle(preference.getBlocking())
+
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
     val nutrientsPalette = LocalNutrientsPalette.current
@@ -400,67 +420,61 @@ private fun ExpandedCardContent(
     Column(
         modifier = modifier
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            RoundedSquare(
-                color = LocalNutrientsPalette.current.proteinsOnSurfaceContainer
-            )
+        preferences.orderedEnabled.forEach { field ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                when (field) {
+                    NutritionFactsField.Proteins -> {
+                        RoundedSquare(LocalNutrientsPalette.current.proteinsOnSurfaceContainer)
 
-            Text(
-                text = stringResource(Res.string.nutriment_proteins),
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.labelLarge
-            )
+                        Text(
+                            text = stringResource(Res.string.nutriment_proteins),
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.labelLarge
+                        )
 
-            Text(
-                text = proteinsString,
-                style = MaterialTheme.typography.headlineSmall
-            )
-        }
+                        Text(
+                            text = proteinsString,
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            RoundedSquare(
-                color = LocalNutrientsPalette.current.carbohydratesOnSurfaceContainer
-            )
+                    NutritionFactsField.Carbohydrates -> {
+                        RoundedSquare(LocalNutrientsPalette.current.carbohydratesOnSurfaceContainer)
 
-            Text(
-                text = stringResource(Res.string.nutriment_carbohydrates),
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.labelLarge
-            )
+                        Text(
+                            text = stringResource(Res.string.nutriment_carbohydrates),
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.labelLarge
+                        )
 
-            Text(
-                text = carbohydratesString,
-                style = MaterialTheme.typography.headlineSmall
-            )
-        }
+                        Text(
+                            text = carbohydratesString,
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            RoundedSquare(
-                color = LocalNutrientsPalette.current.fatsOnSurfaceContainer
-            )
+                    NutritionFactsField.Fats -> {
+                        RoundedSquare(LocalNutrientsPalette.current.fatsOnSurfaceContainer)
 
-            Text(
-                text = stringResource(Res.string.nutriment_fats),
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.labelLarge
-            )
+                        Text(
+                            text = stringResource(Res.string.nutriment_fats),
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.labelLarge
+                        )
 
-            Text(
-                text = fatsString,
-                style = MaterialTheme.typography.headlineSmall
-            )
+                        Text(
+                            text = fatsString,
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
+
+                    else -> Unit
+                }
+            }
         }
     }
 }

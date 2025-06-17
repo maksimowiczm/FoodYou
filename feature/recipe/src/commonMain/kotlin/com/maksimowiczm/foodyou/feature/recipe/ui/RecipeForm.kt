@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
-import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
+import com.maksimowiczm.foodyou.core.ui.nutrition.NutritionFactsList
 import com.maksimowiczm.foodyou.core.ui.simpleform.FormField
 import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
 import com.maksimowiczm.foodyou.feature.recipe.domain.nutritionFacts

@@ -8,8 +8,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.ui.component.FoodErrorListItem
-import com.maksimowiczm.foodyou.core.ui.component.FoodListItem
+import com.maksimowiczm.foodyou.core.ui.nutrition.FoodErrorListItem
+import com.maksimowiczm.foodyou.core.ui.nutrition.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.recipe.domain.Ingredient
 import com.maksimowiczm.foodyou.feature.recipe.domain.IngredientSearchItem

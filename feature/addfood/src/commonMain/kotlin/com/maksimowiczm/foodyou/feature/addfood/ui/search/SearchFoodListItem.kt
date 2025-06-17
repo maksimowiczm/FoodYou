@@ -21,9 +21,9 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.ui.component.FoodErrorListItem
-import com.maksimowiczm.foodyou.core.ui.component.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.ext.performToggle
+import com.maksimowiczm.foodyou.core.ui.nutrition.FoodErrorListItem
+import com.maksimowiczm.foodyou.core.ui.nutrition.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import foodyou.app.generated.resources.*
