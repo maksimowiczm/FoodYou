@@ -309,18 +309,18 @@
 
     <string name="action_unpack" description="Unpack the recipe ingredients">Unpack</string>
 
-    <string name="headline_donate">Donate</string>
-    <string name="description_donate_short">Contributions in any form are welcome</string>
-    <string name="description_donate_1">In a world where every tap is tracked and every feature locked behind a paywall, this food tracker is different. No ads. No subscriptions. No surveillance.</string>
-    <string name="description_donate_2">Built on the belief that useful tools should be free, open, and respect your privacy, it offers a quiet stand against the exploitative models dominating app stores.</string>
-    <string name="description_donate_3">If this matters to you, consider making a donation. Your donations directly support full-time development of the project.</string>
+    <string name="headline_sponsor">Sponsor</string>
+    <string name="description_sponsor_short">Contributions in any form are welcome</string>
+    <string name="description_sponsor_1">In a world where every tap is tracked and every feature locked behind a paywall, this food tracker is different. No ads. No subscriptions. No surveillance.</string>
+    <string name="description_sponsor_2">Built on the belief that useful tools should be free, open, and respect your privacy, it offers a quiet stand against the exploitative models dominating app stores.</string>
+    <string name="description_sponsor_3">If this matters to you, consider supporting. You directly support full-time development of the project.</string>
     <string name="headline_source_code">Source code</string>
     <string name="description_source_code">View the project’s source code on GitHub</string>
     <string name="action_write_an_email">Write an email</string>
     <string name="headline_contact">Contact</string>
-    <string name="description_donate_contact">If you have any requests regarding donations, feel free to contact me via email or GitHub.</string>
+    <string name="description_sponsor_contact">If you have any requests regarding sponsoring, feel free to contact me via email or GitHub.</string>
 
-    <string name="donate_bank_or_card">Bank account or credit card</string>
+    <string name="sponsor_bank_or_card">Bank account or credit card</string>
 
     <string name="action_treat_as_liquid">Treat as liquid</string>
     <string name="description_treat_as_liquid">Prefer milliliters when measuring</string>

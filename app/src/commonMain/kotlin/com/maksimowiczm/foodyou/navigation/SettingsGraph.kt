@@ -3,12 +3,12 @@ package com.maksimowiczm.foodyou.navigation
 import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.ui.about.AboutScreen
-import com.maksimowiczm.foodyou.ui.donate.DonateScreen
 import com.maksimowiczm.foodyou.ui.externaldatabases.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreen
 import com.maksimowiczm.foodyou.ui.personalize.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.ui.personalize.PersonalizeSettingsScreen
 import com.maksimowiczm.foodyou.ui.settings.SettingsScreen
+import com.maksimowiczm.foodyou.ui.sponsor.SponsorScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -24,7 +24,7 @@ data object ExternalDatabases
 data object About
 
 @Serializable
-data object Donate
+data object Sponsor
 
 @Serializable
 data object PersonalizeSettings
@@ -47,8 +47,8 @@ fun NavGraphBuilder.settingsGraph(
     externalDatabasesOnBack: () -> Unit,
     onSwissFoodCompositionDatabase: () -> Unit,
     aboutOnBack: () -> Unit,
-    aboutOnDonate: () -> Unit,
-    donateOnBack: () -> Unit,
+    aboutOnSponsor: () -> Unit,
+    sponsorOnBack: () -> Unit,
     personalizeOnBack: () -> Unit,
     onPersonalizeSettings: () -> Unit,
     onPersonalizeNutritionFacts: () -> Unit,
@@ -82,12 +82,12 @@ fun NavGraphBuilder.settingsGraph(
     forwardBackwardComposable<About> {
         AboutScreen(
             onBack = aboutOnBack,
-            onDonate = aboutOnDonate
+            onSponsor = aboutOnSponsor
         )
     }
-    forwardBackwardComposable<Donate> {
-        DonateScreen(
-            onBack = donateOnBack
+    forwardBackwardComposable<Sponsor> {
+        SponsorScreen(
+            onBack = sponsorOnBack
         )
     }
     forwardBackwardComposable<PersonalizeSettings> {

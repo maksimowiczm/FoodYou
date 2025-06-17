@@ -89,7 +89,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AboutScreen(onBack: () -> Unit, onDonate: () -> Unit, modifier: Modifier = Modifier) {
+fun AboutScreen(onBack: () -> Unit, onSponsor: () -> Unit, modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
 
     val linkSourceCode = stringResource(Res.string.link_github_repository)
@@ -106,7 +106,7 @@ fun AboutScreen(onBack: () -> Unit, onDonate: () -> Unit, modifier: Modifier = M
 
     AboutScreen(
         onBack = onBack,
-        onDonate = onDonate,
+        onSponsor = onSponsor,
         onSourceCode = { uriHandler.openUri(linkSourceCode) },
         onChangelog = { showChangelog = true },
         onIdeas = { uriHandler.openUri(linkFeatureRequest) },
@@ -121,7 +121,7 @@ fun AboutScreen(onBack: () -> Unit, onDonate: () -> Unit, modifier: Modifier = M
 @Composable
 private fun AboutScreen(
     onBack: () -> Unit,
-    onDonate: () -> Unit,
+    onSponsor: () -> Unit,
     onSourceCode: () -> Unit,
     onChangelog: () -> Unit,
     onIdeas: () -> Unit,
@@ -171,7 +171,7 @@ private fun AboutScreen(
                     .padding(horizontal = 16.dp)
             )
             AboutButtons(
-                onDonate = onDonate,
+                onSponsor = onSponsor,
                 onSourceCode = onSourceCode,
                 onChangelog = onChangelog,
                 onIdeas = onIdeas,
@@ -180,8 +180,8 @@ private fun AboutScreen(
                     .padding(16.dp)
             )
             ListItem(
-                headlineContent = { Text(stringResource(Res.string.headline_donate)) },
-                modifier = Modifier.clickable { onDonate() },
+                headlineContent = { Text(stringResource(Res.string.headline_sponsor)) },
+                modifier = Modifier.clickable { onSponsor() },
                 leadingContent = {
                     Icon(
                         imageVector = Icons.Outlined.VolunteerActivism,
@@ -189,7 +189,7 @@ private fun AboutScreen(
                     )
                 },
                 supportingContent = {
-                    Text(stringResource(Res.string.description_donate_short))
+                    Text(stringResource(Res.string.description_sponsor_short))
                 }
             )
             ListItem(
@@ -424,7 +424,7 @@ private fun LogoLabel(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun AboutButtons(
-    onDonate: () -> Unit,
+    onSponsor: () -> Unit,
     onSourceCode: () -> Unit,
     onChangelog: () -> Unit,
     onIdeas: () -> Unit,
@@ -435,7 +435,7 @@ private fun AboutButtons(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
         OutlinedButton(
-            onClick = onDonate,
+            onClick = onSponsor,
             shape = CircleShape,
             modifier = Modifier.size(72.dp, 56.dp)
         ) {

@@ -60,10 +60,10 @@ Want to help make Food You even better? Here are some great ways to contribute:
 
 ---
 
-### ❤️ Donate
+### ❤️ Sponsor
 
-This app is free, open-source, and ad-free. Your donations directly support full-time development of
-the project.
+This app is free, open-source, and ad-free. You directly support full-time development of the
+project.
 
 - [Support on Liberapay](https://liberapay.com/maksimowiczm)
 - [Support on Ko-fi](https://ko-fi.com/maksimowiczm)

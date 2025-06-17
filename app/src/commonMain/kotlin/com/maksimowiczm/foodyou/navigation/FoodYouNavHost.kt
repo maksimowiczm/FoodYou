@@ -148,13 +148,13 @@ fun FoodYouNavHost(
             aboutOnBack = {
                 navController.popBackStack<About>(inclusive = true)
             },
-            aboutOnDonate = {
-                navController.navigate(Donate) {
+            aboutOnSponsor = {
+                navController.navigate(Sponsor) {
                     launchSingleTop = true
                 }
             },
-            donateOnBack = {
-                navController.popBackStack<Donate>(inclusive = true)
+            sponsorOnBack = {
+                navController.popBackStack<Sponsor>(inclusive = true)
             },
             personalizeOnBack = {
                 navController.popBackStack<PersonalizeSettings>(inclusive = true)

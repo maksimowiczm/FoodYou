@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.donate
+package com.maksimowiczm.foodyou.ui.sponsor
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,11 +42,11 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun DonateScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+fun SponsorScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
     val clipboardManager = LocalClipboardManager.current
 
-    DonateScreen(
+    SponsorScreen(
         onBack = onBack,
         onOpenUrl = { uriHandler.openUri(it) },
         onCopy = { clipboardManager.copy("address", it) },
@@ -57,7 +57,7 @@ fun DonateScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun DonateScreen(
+private fun SponsorScreen(
     onBack: () -> Unit,
     onOpenUrl: (String) -> Unit,
     onCopy: (String) -> Unit,
@@ -70,7 +70,7 @@ private fun DonateScreen(
         modifier = modifier,
         topBar = {
             LargeFlexibleTopAppBar(
-                title = { Text(stringResource(Res.string.headline_donate)) },
+                title = { Text(stringResource(Res.string.headline_sponsor)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 scrollBehavior = scrollBehavior
             )
@@ -91,9 +91,9 @@ private fun DonateScreen(
                     CompositionLocalProvider(
                         LocalTextStyle provides MaterialTheme.typography.bodyMedium
                     ) {
-                        Text(stringResource(Res.string.description_donate_1))
-                        Text(stringResource(Res.string.description_donate_2))
-                        Text(stringResource(Res.string.description_donate_3))
+                        Text(stringResource(Res.string.description_sponsor_1))
+                        Text(stringResource(Res.string.description_sponsor_2))
+                        Text(stringResource(Res.string.description_sponsor_3))
                     }
                 }
             }
@@ -101,7 +101,7 @@ private fun DonateScreen(
             item {
                 Column {
                     Text(
-                        text = stringResource(Res.string.donate_bank_or_card).uppercase(),
+                        text = stringResource(Res.string.sponsor_bank_or_card).uppercase(),
                         modifier = Modifier.padding(start = 16.dp),
                         style = MaterialTheme.typography.labelLarge
                     )
@@ -109,8 +109,8 @@ private fun DonateScreen(
                     Column(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        DonateOption.fiat.forEach {
-                            it.DonateCard(
+                        SponsorMethod.fiat.forEach {
+                            it.SponsorCard(
                                 onClick = { onOpenUrl(it.url) }
                             )
                         }
@@ -119,9 +119,9 @@ private fun DonateScreen(
             }
 
             items(
-                items = DonateOption.crypto
+                items = SponsorMethod.crypto
             ) {
-                it.DonateCard(
+                it.SponsorCard(
                     onClick = { onCopy(it.address) }
                 )
             }
@@ -136,8 +136,8 @@ private fun DonateScreen(
 }
 
 @Composable
-private fun LinkDonateOption.DonateCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    DonateCard(
+private fun LinkSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    SponsorCard(
         label = name,
         leadingIcon = { Icon(Modifier.width(24.dp)) },
         trailingIcon = {
@@ -152,14 +152,14 @@ private fun LinkDonateOption.DonateCard(onClick: () -> Unit, modifier: Modifier 
 }
 
 @Composable
-private fun CryptoDonateOption.DonateCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun CryptoSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(
             text = name.uppercase(),
             modifier = Modifier.padding(start = 16.dp),
             style = MaterialTheme.typography.labelLarge
         )
-        DonateCard(
+        SponsorCard(
             label = address,
             leadingIcon = { Icon(Modifier.height(24.dp)) },
             trailingIcon = {
@@ -175,7 +175,7 @@ private fun CryptoDonateOption.DonateCard(onClick: () -> Unit, modifier: Modifie
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun DonateCard(
+private fun SponsorCard(
     label: String,
     leadingIcon: @Composable () -> Unit,
     trailingIcon: @Composable () -> Unit,
@@ -236,7 +236,7 @@ private fun ContactCard(onContact: () -> Unit, modifier: Modifier = Modifier) {
             }
 
             Text(
-                text = stringResource(Res.string.description_donate_contact),
+                text = stringResource(Res.string.description_sponsor_contact),
                 style = MaterialTheme.typography.bodyMedium
             )
         }

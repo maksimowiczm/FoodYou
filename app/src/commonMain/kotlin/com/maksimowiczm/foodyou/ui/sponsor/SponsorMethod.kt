@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.donate
+package com.maksimowiczm.foodyou.ui.sponsor
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
@@ -7,34 +7,34 @@ import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.painterResource
 
-sealed interface DonateOption {
+sealed interface SponsorMethod {
     val name: String
 
     @Composable
     fun Icon(modifier: Modifier = Modifier)
 
     companion object {
-        val fiat = listOf<LinkDonateOption>(
+        val fiat = listOf<LinkSponsorMethod>(
             liberapay,
             kofi
         )
 
-        val crypto = listOf<CryptoDonateOption>(
+        val crypto = listOf<CryptoSponsorMethod>(
             bitcoin,
             monero
         )
     }
 }
 
-interface LinkDonateOption : DonateOption {
+interface LinkSponsorMethod : SponsorMethod {
     val url: String
 }
 
-interface CryptoDonateOption : DonateOption {
+interface CryptoSponsorMethod : SponsorMethod {
     val address: String
 }
 
-private val bitcoin = object : CryptoDonateOption {
+private val bitcoin = object : CryptoSponsorMethod {
     override val name = "Bitcoin"
     override val address = "bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2"
 
@@ -48,7 +48,7 @@ private val bitcoin = object : CryptoDonateOption {
     }
 }
 
-private val monero = object : CryptoDonateOption {
+private val monero = object : CryptoSponsorMethod {
     override val name = "Monero"
     override val address =
         "41tP8QxdL5hduxcntGwJD92GJDdCTKDyyGSKofbgdgaLG2uJuqgK7daYymBQuJ1iA48LuiLdfoduFMLk1kdkTRKSC4mHkMY"
@@ -63,7 +63,7 @@ private val monero = object : CryptoDonateOption {
     }
 }
 
-private val kofi = object : LinkDonateOption {
+private val kofi = object : LinkSponsorMethod {
     override val name = "ko-fi.com/maksimowiczm"
     override val url = "https://ko-fi.com/maksimowiczm"
 
@@ -77,7 +77,7 @@ private val kofi = object : LinkDonateOption {
     }
 }
 
-private val liberapay = object : LinkDonateOption {
+private val liberapay = object : LinkSponsorMethod {
     override val name = "liberapay.com/maksimowiczm"
     override val url = "https://liberapay.com/maksimowiczm"
 
