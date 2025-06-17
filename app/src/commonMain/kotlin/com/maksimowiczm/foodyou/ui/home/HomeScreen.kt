@@ -24,16 +24,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.goals.GoalsCard
 import com.maksimowiczm.foodyou.feature.meal.MealsCards
+import com.maksimowiczm.foodyou.preferences.HomeCard
+import com.maksimowiczm.foodyou.preferences.HomeOrder
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 fun HomeScreen(
@@ -45,9 +47,10 @@ fun HomeScreen(
     onGoalsCardClick: (epochDay: Int) -> Unit,
     onGoalsCardLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    dataStore: DataStore<Preferences> = koinInject()
+    homeOrder: HomeOrder = userPreference()
 ) {
-    val order by dataStore.collectHomeCardsAsState()
+    val order by homeOrder.observe()
+        .collectAsStateWithLifecycle(homeOrder.getBlocking())
 
     HomeScreen(
         order = order,

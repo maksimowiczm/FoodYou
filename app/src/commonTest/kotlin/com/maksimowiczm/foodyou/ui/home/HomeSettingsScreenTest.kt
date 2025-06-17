@@ -8,6 +8,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
 import com.maksimowiczm.foodyou.onNodeWithTag
+import com.maksimowiczm.foodyou.preferences.HomeCard
 import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreenTestTags.CARDS_LIST
 import kotlin.test.Test
 

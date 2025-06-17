@@ -50,17 +50,19 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.preferences.HomeCard
+import com.maksimowiczm.foodyou.preferences.HomeOrder
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyListState
@@ -73,11 +75,12 @@ fun HomeSettingsScreen(
     onMealsSettings: () -> Unit,
     onGoalsSettings: () -> Unit,
     modifier: Modifier = Modifier,
-    dataStore: DataStore<Preferences> = koinInject()
+    homeOrder: HomeOrder = userPreference()
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val order by dataStore.collectHomeCardsAsState()
+    val order by homeOrder.observe()
+        .collectAsStateWithLifecycle(homeOrder.getBlocking())
 
     HomeSettingsScreen(
         order = order,
@@ -85,7 +88,7 @@ fun HomeSettingsScreen(
         onMealsSettings = onMealsSettings,
         onGoalsSettings = onGoalsSettings,
         onReorder = coroutineScope.lambda<List<HomeCard>> {
-            dataStore.updateHomeCards(it)
+            homeOrder.set(it)
         },
         modifier = modifier
     )

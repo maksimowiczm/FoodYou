@@ -8,20 +8,17 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ext.observe
-import com.maksimowiczm.foodyou.core.ext.set
+import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.component.SettingsListItem
-import com.maksimowiczm.foodyou.data.AppPreferences
+import com.maksimowiczm.foodyou.preferences.HideContent
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 fun SecureScreenSettingsListItem(
@@ -29,19 +26,18 @@ fun SecureScreenSettingsListItem(
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     // It is just one boolean flag, lets not bother with a ViewModel for this
-    dataStore: DataStore<Preferences> = koinInject()
+    hideContent: HideContent = userPreference()
 ) {
-    val checked by dataStore
-        .observe(AppPreferences.hideContent)
+    val coroutineScope = rememberCoroutineScope()
+    val checked by hideContent
+        .observe()
         .filterNotNull()
         .collectAsStateWithLifecycle(false)
 
     SecureScreenSettingsListItem(
         checked = checked,
-        onCheckedChange = { checked ->
-            runBlocking {
-                dataStore.set(AppPreferences.hideContent to checked)
-            }
+        onCheckedChange = coroutineScope.lambda<Boolean> {
+            hideContent.set(it)
         },
         modifier = modifier,
         containerColor = containerColor,
@@ -75,7 +71,7 @@ private fun SecureScreenSettingsListItem(
         trailingContent = {
             Switch(
                 checked = checked,
-                onCheckedChange = onCheckedChange
+                onCheckedChange = null
             )
         },
         containerColor = containerColor,

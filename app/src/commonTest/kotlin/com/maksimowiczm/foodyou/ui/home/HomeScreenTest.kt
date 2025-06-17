@@ -9,6 +9,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.runComposeUiTest
 import com.maksimowiczm.foodyou.onNodeWithTag
+import com.maksimowiczm.foodyou.preferences.HomeCard
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
