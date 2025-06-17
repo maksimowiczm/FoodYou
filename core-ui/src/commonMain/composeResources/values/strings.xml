@@ -325,5 +325,23 @@
     <string name="action_treat_as_liquid">Treat as liquid</string>
     <string name="description_treat_as_liquid">Prefer milliliters when measuring</string>
 
+    <string name="headline_personalization">Personalization</string>
+    <string name="description_personalization">Customize your experience</string>
+
+    <string name="headline_nutrition_facts">Nutrition facts</string>
+    <string name="description_personalize_nutrition_facts">Which nutrition details are you interested in? You can also choose the order they appear.</string>
+    <string name="description_personalize_nutrition_facts_help">Tap to enable/disable, drag to reorder</string>
+    <string name="description_personalize_nutrition_facts_short">Hide nutrition facts, change the ordering</string>
+    <string name="action_reset_ordering">Reset ordering</string>
+
+    <string name="headline_reset_to_default">Reset to default</string>
+    <string name="action_reset" description="Confirm resetting">Reset</string>
+
+    <string name="description_reset_nutrition_facts">Reset nutrition facts personalization to default</string>
+    <string name="description_warning_nutrition_facts_1">Disabling energy, proteins, carbohydrates or fats is not recommended. These are key nutrients for tracking overall nutritional balance.</string>
+    <string name="description_warning_nutrition_facts_2">You can still disable it if you prefer — just be aware this may limit the usefulness of your food diary.</string>
+
+    <string name="headline_enabled" description="Label indicating that something is currently enabled">Enabled</string>
+    <string name="headline_disabled" description="Label indicating that something is currently disabled">Disabled</string>
 
 </resources>

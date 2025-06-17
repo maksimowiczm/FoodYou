@@ -26,7 +26,7 @@ import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.feature.meal.MealsSettingsListItem
 import com.maksimowiczm.foodyou.ui.about.AboutSettingsListItem
 import com.maksimowiczm.foodyou.ui.externaldatabases.ExternalDatabasesSettingsListItem
-import com.maksimowiczm.foodyou.ui.home.HomeSettingsListItem
+import com.maksimowiczm.foodyou.ui.personalize.PersonalizeSettingsListItem
 import com.maksimowiczm.foodyou.ui.security.SecureScreenSettingsListItem
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
@@ -36,13 +36,13 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
-    onHomeSettings: () -> Unit,
     onMealsSettings: () -> Unit,
     onGoalsSettings: () -> Unit,
     onAbout: () -> Unit,
     onLanguage: () -> Unit,
     onImportExport: () -> Unit,
     onExternalDatabases: () -> Unit,
+    onPersonalizeSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -69,8 +69,8 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             settingsItem {
-                HomeSettingsListItem(
-                    onClick = onHomeSettings,
+                PersonalizeSettingsListItem(
+                    onClick = onPersonalizeSettings,
                     containerColor = containerColor,
                     contentColor = contentColor
                 )

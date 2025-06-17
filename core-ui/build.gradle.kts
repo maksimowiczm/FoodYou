@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -47,6 +48,8 @@ kotlin {
 
             // Reorderable list
             implementation(libs.reorderable)
+
+            implementation(libs.kotlinx.serialization.json)
         }
 
         androidMain.dependencies {

@@ -35,10 +35,10 @@ import com.maksimowiczm.foodyou.core.model.Recipe
 import com.maksimowiczm.foodyou.core.model.Saver
 import com.maksimowiczm.foodyou.core.model.stringResource
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.component.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
-import com.maksimowiczm.foodyou.core.ui.component.NutritionFactsList
+import com.maksimowiczm.foodyou.core.ui.nutrition.CaloriesProgressIndicator
+import com.maksimowiczm.foodyou.core.ui.nutrition.NutritionFactsList
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementForm
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.rememberMeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.toEnum

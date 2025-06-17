@@ -6,6 +6,8 @@ import com.maksimowiczm.foodyou.ui.about.AboutScreen
 import com.maksimowiczm.foodyou.ui.donate.DonateScreen
 import com.maksimowiczm.foodyou.ui.externaldatabases.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.ui.home.HomeSettingsScreen
+import com.maksimowiczm.foodyou.ui.personalize.PersonalizeNutritionFactsScreen
+import com.maksimowiczm.foodyou.ui.personalize.PersonalizeSettingsScreen
 import com.maksimowiczm.foodyou.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
@@ -24,6 +26,12 @@ data object About
 @Serializable
 data object Donate
 
+@Serializable
+data object PersonalizeSettings
+
+@Serializable
+data object PersonalizeNutritionFactsSettings
+
 fun NavGraphBuilder.settingsGraph(
     settingsOnBack: () -> Unit,
     homeSettingsOnBack: () -> Unit,
@@ -40,18 +48,22 @@ fun NavGraphBuilder.settingsGraph(
     onSwissFoodCompositionDatabase: () -> Unit,
     aboutOnBack: () -> Unit,
     aboutOnDonate: () -> Unit,
-    donateOnBack: () -> Unit
+    donateOnBack: () -> Unit,
+    personalizeOnBack: () -> Unit,
+    onPersonalizeSettings: () -> Unit,
+    onPersonalizeNutritionFacts: () -> Unit,
+    personalizeNutritionFactsOnBack: () -> Unit
 ) {
     forwardBackwardComposable<Settings> {
         SettingsScreen(
             onBack = settingsOnBack,
-            onHomeSettings = onHomeSettings,
             onMealsSettings = onMealsSettings,
             onGoalsSettings = onGoalsSettings,
             onAbout = onAbout,
             onLanguage = onLanguage,
             onImportExport = onImportExport,
-            onExternalDatabases = onExternalDatabases
+            onExternalDatabases = onExternalDatabases,
+            onPersonalizeSettings = onPersonalizeSettings
         )
     }
     forwardBackwardComposable<HomeSettings> {
@@ -76,6 +88,18 @@ fun NavGraphBuilder.settingsGraph(
     forwardBackwardComposable<Donate> {
         DonateScreen(
             onBack = donateOnBack
+        )
+    }
+    forwardBackwardComposable<PersonalizeSettings> {
+        PersonalizeSettingsScreen(
+            onBack = personalizeOnBack,
+            onHomeSettings = onHomeSettings,
+            onNutritionFacts = onPersonalizeNutritionFacts
+        )
+    }
+    forwardBackwardComposable<PersonalizeNutritionFactsSettings> {
+        PersonalizeNutritionFactsScreen(
+            onBack = personalizeNutritionFactsOnBack
         )
     }
 }

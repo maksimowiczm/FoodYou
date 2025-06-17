@@ -56,8 +56,13 @@ import com.maksimowiczm.foodyou.core.ext.lambda
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.core.model.NutritionFactsField
 import com.maksimowiczm.foodyou.core.model.Recipe
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
+import com.maksimowiczm.foodyou.core.ui.nutrition.NutritionFactsListPreference
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
@@ -76,8 +81,11 @@ internal fun MealCard(
     onEditMeasurement: (Long) -> Unit,
     onUnpackRecipe: (FoodId.Recipe, Measurement, measurementId: Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    preference: NutritionFactsListPreference = userPreference()
 ) {
+    val preferences = preference.collectAsStateWithLifecycle(preference.getBlocking()).value
+
     val nutrientsPalette = LocalNutrientsPalette.current
     val dateFormatter = LocalDateFormatter.current
     val enDash = stringResource(Res.string.en_dash)
@@ -146,33 +154,39 @@ internal fun MealCard(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                ValueColumn(
-                    label = stringResource(Res.string.unit_kcal),
-                    value = meal.calories.roundToInt().toString(),
-                    suffix = null,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                preferences.orderedEnabled.forEach { field ->
+                    when (field) {
+                        NutritionFactsField.Energy -> ValueColumn(
+                            label = stringResource(Res.string.unit_kcal),
+                            value = meal.calories.roundToInt().toString(),
+                            suffix = null,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
 
-                ValueColumn(
-                    label = stringResource(Res.string.nutriment_proteins_short),
-                    value = meal.proteins.formatClipZeros("%.1f"),
-                    suffix = stringResource(Res.string.unit_gram_short),
-                    color = nutrientsPalette.proteinsOnSurfaceContainer
-                )
+                        NutritionFactsField.Proteins -> ValueColumn(
+                            label = stringResource(Res.string.nutriment_proteins_short),
+                            value = meal.proteins.formatClipZeros("%.1f"),
+                            suffix = stringResource(Res.string.unit_gram_short),
+                            color = nutrientsPalette.proteinsOnSurfaceContainer
+                        )
 
-                ValueColumn(
-                    label = stringResource(Res.string.nutriment_carbohydrates_short),
-                    value = meal.carbohydrates.formatClipZeros("%.1f"),
-                    suffix = stringResource(Res.string.unit_gram_short),
-                    color = nutrientsPalette.carbohydratesOnSurfaceContainer
-                )
+                        NutritionFactsField.Carbohydrates -> ValueColumn(
+                            label = stringResource(Res.string.nutriment_carbohydrates_short),
+                            value = meal.carbohydrates.formatClipZeros("%.1f"),
+                            suffix = stringResource(Res.string.unit_gram_short),
+                            color = nutrientsPalette.carbohydratesOnSurfaceContainer
+                        )
 
-                ValueColumn(
-                    label = stringResource(Res.string.nutriment_fats_short),
-                    value = meal.fats.formatClipZeros("%.1f"),
-                    suffix = stringResource(Res.string.unit_gram_short),
-                    color = nutrientsPalette.fatsOnSurfaceContainer
-                )
+                        NutritionFactsField.Fats -> ValueColumn(
+                            label = stringResource(Res.string.nutriment_fats_short),
+                            value = meal.fats.formatClipZeros("%.1f"),
+                            suffix = stringResource(Res.string.unit_gram_short),
+                            color = nutrientsPalette.fatsOnSurfaceContainer
+                        )
+
+                        else -> Unit
+                    }
+                }
 
                 Spacer(Modifier.weight(1f))
 
