@@ -23,6 +23,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+
+            implementation(kotlin("reflect"))
+
             // Kotlinx
             api(libs.kotlinx.datetime)
             api(libs.kotlinx.coroutines.core)
