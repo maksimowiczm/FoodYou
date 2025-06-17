@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_9_0,
             v2_8_0,
             v2_7_2,
             v2_7_1,
@@ -32,16 +32,19 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_9_0 = Version(
+        version = "2.9.0",
+        date = LocalDate(2025, 6, 18),
         newFeatures = listOf(
             "Added donation screen. You can now support the app development by donating.",
             "Added liquid food. You can now create and track liquid products and recipes.",
             "Added personalization settings",
-            "Added nutrition facts personalization: You can now choose which nutrition facts to display and in what order within the app."
+            "Added nutrition facts personalization. You can now choose which nutrition facts to display and in what order within the app."
         ),
         changes = listOf(
             "Updated about screen",
-            "Move home settings to the personalize settings"
+            "Move home settings to the personalize settings",
+            "Fixed monochrome icon"
         ),
         bugFixes = listOf(),
         translations = listOf(),
