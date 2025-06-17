@@ -1,12 +1,13 @@
 package com.maksimowiczm.foodyou.ui.changelog
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.getBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.preferences.LatestRememberedVersion
@@ -21,9 +22,8 @@ fun AppUpdateChangelogModalBottomSheet(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val currentVersion = remember { BuildConfig.VERSION_NAME }
-    val latestRememberedVersion = lastRememberedVersion.observe()
+    val latestRememberedVersion by lastRememberedVersion
         .collectAsStateWithLifecycle(lastRememberedVersion.getBlocking())
-        .value
 
     if (latestRememberedVersion != currentVersion) {
         ChangelogModalBottomSheet(

@@ -11,13 +11,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.component.SettingsListItem
 import com.maksimowiczm.foodyou.preferences.HideContent
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.filterNotNull
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -29,10 +29,7 @@ fun SecureScreenSettingsListItem(
     hideContent: HideContent = userPreference()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val checked by hideContent
-        .observe()
-        .filterNotNull()
-        .collectAsStateWithLifecycle(false)
+    val checked by hideContent.collectAsStateWithLifecycle(hideContent.getBlocking())
 
     SecureScreenSettingsListItem(
         checked = checked,

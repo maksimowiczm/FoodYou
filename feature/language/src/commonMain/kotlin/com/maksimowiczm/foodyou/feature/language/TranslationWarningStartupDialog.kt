@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.util.SystemDetails
 import com.maksimowiczm.foodyou.core.util.isUS
@@ -20,7 +20,7 @@ fun TranslationWarningStartupDialog(
     systemDetails: SystemDetails = koinInject()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val showTranslationWarning by showTranslationWarningPreference.observe()
+    val showTranslationWarning by showTranslationWarningPreference
         .collectAsStateWithLifecycle(false)
 
     if (showTranslationWarning && !systemDetails.isUS) {

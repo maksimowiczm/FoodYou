@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.getBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ext.add
@@ -49,8 +49,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     homeOrder: HomeOrder = userPreference()
 ) {
-    val order by homeOrder.observe()
-        .collectAsStateWithLifecycle(homeOrder.getBlocking())
+    val order by homeOrder.collectAsStateWithLifecycle(homeOrder.getBlocking())
 
     HomeScreen(
         order = order,

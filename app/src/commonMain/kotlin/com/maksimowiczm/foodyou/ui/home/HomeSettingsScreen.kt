@@ -50,8 +50,8 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ext.lambda
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.getBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
@@ -79,8 +79,7 @@ fun HomeSettingsScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val order by homeOrder.observe()
-        .collectAsStateWithLifecycle(homeOrder.getBlocking())
+    val order by homeOrder.collectAsStateWithLifecycle(homeOrder.getBlocking())
 
     HomeSettingsScreen(
         order = order,
