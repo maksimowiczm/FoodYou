@@ -55,7 +55,7 @@ kotlin {
             implementation(project(":feature:calendar"))
             implementation(project(":feature:diary:product"))
             implementation(project(":feature:measurement"))
-            implementation(project(":feature:recipe"))
+            implementation(project(":feature:diary:recipe"))
             implementation(project(":feature:meal"))
             implementation(project(":feature:goals"))
             implementation(project(":feature:diary:addfood"))

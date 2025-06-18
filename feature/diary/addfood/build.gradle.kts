@@ -28,7 +28,7 @@ kotlin {
             implementation(project(":core-database"))
             implementation(project(":core-domain"))
             implementation(project(":feature:diary:product"))
-            implementation(project(":feature:recipe"))
+            implementation(project(":feature:diary:recipe"))
             implementation(project(":feature:measurement"))
             implementation(project(":feature:barcodescanner"))
             implementation(project(":feature:swissfoodcompositiondatabase"))

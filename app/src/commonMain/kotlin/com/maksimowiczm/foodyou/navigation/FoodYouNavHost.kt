@@ -11,6 +11,9 @@ import com.maksimowiczm.foodyou.feature.diary.addfood.addFoodGraph
 import com.maksimowiczm.foodyou.feature.diary.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.diary.product.UpdateProduct
 import com.maksimowiczm.foodyou.feature.diary.product.productGraph
+import com.maksimowiczm.foodyou.feature.diary.recipe.CreateRecipe
+import com.maksimowiczm.foodyou.feature.diary.recipe.UpdateRecipe
+import com.maksimowiczm.foodyou.feature.diary.recipe.recipeGraph
 import com.maksimowiczm.foodyou.feature.goals.GoalsCardSettings
 import com.maksimowiczm.foodyou.feature.goals.GoalsScreen
 import com.maksimowiczm.foodyou.feature.goals.GoalsSettings
@@ -25,9 +28,6 @@ import com.maksimowiczm.foodyou.feature.meal.mealGraph
 import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurement
 import com.maksimowiczm.foodyou.feature.measurement.UpdateMeasurement
 import com.maksimowiczm.foodyou.feature.measurement.measurementGraph
-import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
-import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
-import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
 import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.ImportSwissFoodCompositionDatabase
 import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.swissFoodCompositionDatabaseGraph
 

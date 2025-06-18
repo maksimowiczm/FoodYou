@@ -14,10 +14,10 @@ import com.maksimowiczm.foodyou.feature.diary.addfood.ui.search.rememberSearchFo
 import com.maksimowiczm.foodyou.feature.diary.product.CreateProduct
 import com.maksimowiczm.foodyou.feature.diary.product.UpdateProduct
 import com.maksimowiczm.foodyou.feature.diary.product.productGraph
+import com.maksimowiczm.foodyou.feature.diary.recipe.CreateRecipe
+import com.maksimowiczm.foodyou.feature.diary.recipe.UpdateRecipe
+import com.maksimowiczm.foodyou.feature.diary.recipe.recipeGraph
 import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurementScreen
-import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
-import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
-import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
