@@ -16,10 +16,7 @@
     <string name="headline_system_language_settings">Systeemtaal instellingen</string>
     <string name="headline_secure_screen">Voorkom schermafbeeldingen</string>
     <string name="headline_about">Over</string>
-    <string name="headline_miscellaneous">Overige</string>
     <string name="headline_version">Versie</string>
-    <string name="headline_share_your_thoughts">Deel je mening</string>
-    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Steun ons</string>
     <string name="headline_all_day" description="All-day (meal)">Hele dag</string>
     <string name="headline_time_based_ordering">Sorteren op tijd</string>
     <string name="headline_incomplete_products">Onvolledige producten</string>
@@ -132,7 +129,6 @@
     <string name="action_go_to_today">Ga naar vandaag</string>
     <string name="action_bug_report_on_github">Rapporteer een probleem op GitHub</string>
     <string name="action_feature_request_on_github">Verzoek een functie op GitHub</string>
-    <string name="action_leave_a_star_on_github">Laat een ster achter op GitHub</string>
     <string name="action_show_calendar">Open kalender</string>
     <string name="action_reorder">Rangschikken</string>
     <string name="action_move_up" description="reorder list item up">Omhoog verplaatsen</string>
@@ -165,7 +161,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Deze maaltijd wordt permanent verwijderd. Alle data gerelateerd aan de maaltijd gaat verloren.</string>
     <string name="neutral_required">Verplicht</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calorieën worden automatisch berekend op basis van de macronutriënten</string>
-    <string name="neutral_entry_deleted">Notitie verwijderd</string>
     <string name="neutral_help_translating_the_app">Help de app te vertalen</string>
     <string name="neutral_copied">Info naar klembord gekopieerd</string>
     <string name="neutral_product_created">Product aangemaakt</string>
@@ -189,10 +184,7 @@
     <string name="description_calories_goal">Stel je dagelijkse calorie doel in. Dit helpt je om je voortgang bij te houden en je doel te halen.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Dit product wordt permanent verwijderd. Deze actie kan niet teruggedraaid worden. Alle dagboeknotities met dit product worden verwijderd.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Deze notitie wordt verwijderd uit je dagboek. Je kan dit in de toekomst altijd weer toevoegen.</string>
-    <string name="description_README_setting">Open het README bestand op GitHub</string>
     <string name="description_about_setting">Meer informatie over FoodYou</string>
-    <string name="description_show_some_love">Als FoodYou goed bevallen is, overweeg dan een ster te geven op GitHub! Dit helpt ons enorm met meer mensen bereiken en de ontwikkeling van de app gaande te houden.</string>
-    <string name="description_share_your_thoughts">Heb je feedback voor ons, een functie die je graag zou willen zien of een bug gevonden? Laat het ons weten! We horen graag van je.</string>
     <string name="description_time_based_meals_sorting">Wanneer deze optie wordt geselecteerd, wordt de maaltijd die bezig is als eerste weergegeven</string>
     <string name="description_action_ignore_all_day_meals">Maaltijden zonder begin- of eindtijd worden aan het einde van de lijst weergegeven</string>
     <string name="description_incomplete_nutrition_data">Sommige van de producten, die gebruikt worden, hebben deze waarde niet, het totaal kan dus afwijken van de werkelijkheid</string>
@@ -202,6 +194,5 @@
     <string name="description_download_product">Vul een link naar een product in en haal automatisch voedingswaarde-informatie op.</string>
     <string name="description_download_product_hint">Alle tekst wordt geaccepteerd, de eerste URL zal worden gebruikt.</string>
     <string name="headline_launcher_icon_by_icons8">App icoon door Icons8</string>
-    <string name="neutral_see_other_awesome_icons_here">Bekijk andere fantastische iconen hier</string>
     <!-- Don't translate changelog strings -->
 </resources>

@@ -16,10 +16,7 @@
     <string name="headline_system_language_settings">系统语言设置</string>
     <string name="headline_secure_screen">安全屏幕</string>
     <string name="headline_about">关于</string>
-    <string name="headline_miscellaneous">杂项</string>
     <string name="headline_version">版本</string>
-    <string name="headline_share_your_thoughts">提供一些建议和反馈</string>
-    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">捐赠</string>
     <string name="headline_all_day" description="All-day (meal)">一整天</string>
     <string name="headline_time_based_ordering">按照时间排序</string>
     <string name="headline_incomplete_products">不完整的产品</string>
@@ -142,7 +139,6 @@
     <string name="action_go_to_today">回到今天</string>
     <string name="action_bug_report_on_github">去 GitHub 上 Bug 报告</string>
     <string name="action_feature_request_on_github">去 GitHub 上请求功能</string>
-    <string name="action_leave_a_star_on_github">去 GitHub 上留下星标</string>
     <string name="action_show_calendar">显示日历</string>
     <string name="action_reorder">重新安排</string>
     <string name="action_move_up" description="reorder list item up">上移</string>
@@ -187,7 +183,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">餐食将被永久删除。与此餐食相关的所有数据都将丢失。</string>
     <string name="neutral_required">必填</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">卡路里是根据宏量营养素自动计算的</string>
-    <string name="neutral_entry_deleted">条目已删除</string>
     <string name="neutral_help_translating_the_app">帮助我们翻译这款应用</string>
     <string name="neutral_copied">信息已复制到剪贴板</string>
     <string name="neutral_product_created">已创建产品</string>
@@ -218,10 +213,7 @@
     <string name="description_calories_goal">设定您的每日卡路里摄入量目标。这将帮助您跟踪进度并保持正轨。</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">产品将被永久删除。此作无法撤消。所有与本产品相关的日记条目都将被删除。</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">此条目将从您的日记中删除。您可以随时再次添加它。</string>
-    <string name="description_README_setting">在 GitHub 上查看项目的 README 文件</string>
     <string name="description_about_setting">了解有关该应用程序的更多信息</string>
-    <string name="description_show_some_love">如果您觉得此项目有帮助，请考虑在 GitHub 上给它打个标！它帮助其他人发现它并保持开发继续进行。</string>
-    <string name="description_share_your_thoughts">如果您有任何反馈、功能请求或错误报告，请告诉我！我很想听听你的意见。</string>
     <string name="description_time_based_meals_sorting">启用后，将首先显示当前正在进行的用餐</string>
     <string name="description_action_ignore_all_day_meals">全天餐点将显示在列表末尾</string>
     <string name="description_incomplete_nutrition_data">一些二手产品缺乏这种价值;因此，显示的值可能不准确</string>
@@ -239,7 +231,6 @@
     <string name="description_please_wait_while_importing_products">导入商品时请稍候</string>
     <string name="description_suggest_external_database">建议包含公开可用的数据库</string>
     <string name="headline_launcher_icon_by_icons8">启动器图标来自于Icon8</string>
-    <string name="neutral_see_other_awesome_icons_here">在此处查看其他超棒的图标</string>
     <string name="description_open_food_facts">一个协作、免费和开放的食品数据库，包含来自世界各地的食品</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">导出产品</string>

@@ -16,10 +16,7 @@
     <string name="headline_system_language_settings">Ustawienia języka systemowego</string>
     <string name="headline_secure_screen">Zabezpieczony ekran</string>
     <string name="headline_about">O aplikacji</string>
-    <string name="headline_miscellaneous">Różne</string>
     <string name="headline_version">Wersja</string>
-    <string name="headline_share_your_thoughts">Podziel się swoimi przemyśleniami</string>
-    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Pokaż swoje wsparcie</string>
     <string name="headline_all_day" description="All-day (meal)">Cały dzień</string>
     <string name="headline_time_based_ordering">Kolejność oparta na czasie</string>
     <string name="headline_incomplete_products">Niekompletne produkty</string>
@@ -148,7 +145,6 @@
     <string name="action_go_to_today">Przejdź do dzisiaj</string>
     <string name="action_bug_report_on_github">Zgłoś błąd na GitHubie</string>
     <string name="action_feature_request_on_github">Zgłoś sugestię na GitHubie</string>
-    <string name="action_leave_a_star_on_github">Zostaw gwiazdkę na GitHubie</string>
     <string name="action_show_calendar">Pokaż kalendarz</string>
     <string name="action_reorder">Zmień kolejność</string>
     <string name="action_move_up" description="reorder list item up">Przesuń w górę</string>
@@ -196,7 +192,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Posiłek zostanie trwale usunięty. Wszystkie powiązane z nim dane zostaną utracone.</string>
     <string name="neutral_required">Wymagane</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kalorie są obliczane automatycznie na podstawie makroskładników</string>
-    <string name="neutral_entry_deleted">Wpis usunięty</string>
     <string name="neutral_help_translating_the_app">Pomóż w tłumaczeniu aplikacji</string>
     <string name="neutral_copied">Informacja skopiowana do schowka</string>
     <string name="neutral_product_created">Produkt stworzony</string>
@@ -230,10 +225,7 @@
     <string name="description_calories_goal">Ustaw swój dzienny cel spożycia kalorii. Pomoże Ci to śledzić postępy i pozostać na właściwej ścieżce.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Produkt zostanie trwale usunięty. Ta czynność nie może być cofnięta. Wszystkie wpisy w dzienniku związane z tym produktem zostaną utracone.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Ten wpis zostanie usunięty z Twojego dziennika. Możesz dodać go ponownie w każdej chwili.</string>
-    <string name="description_README_setting">Zobacz README na GitHubie</string>
     <string name="description_about_setting">Dowiedz się więcej o aplikacji</string>
-    <string name="description_show_some_love">Jeśli uważasz, że ten projekt jest pomocny, rozważ dodanie mu gwiazdki na GitHubie! Dzięki temu więcej osób go odkryje, a rozwój projektu będzie mógł trwać dalej.</string>
-    <string name="description_share_your_thoughts">Jeśli masz jakiekolwiek uwagi, propozycje funkcji lub zgłoszenia błędów, daj mi znać! Chętnie wysłucham Twojej opinii.</string>
     <string name="description_time_based_meals_sorting">Gdy włączone, posiłki trwające w danym momencie będą wyświetlane jako pierwsze</string>
     <string name="description_action_ignore_all_day_meals">Całodzienne posiłki będą wyświetlane na końcu listy</string>
     <string name="description_incomplete_nutrition_data">Niektóre z używanych produktów nie mają tej wartości, dlatego wyświetlana wartość może być niedokładna</string>
@@ -251,7 +243,6 @@
     <string name="description_please_wait_while_importing_products">Proszę czekać podczas importowania produktów</string>
     <string name="description_suggest_external_database">Zaproponuj uwzględnienie publicznie dostępnej bazy danych</string>
     <string name="headline_launcher_icon_by_icons8">Ikona startowa od Icons8</string>
-    <string name="neutral_see_other_awesome_icons_here">Zobacz inne świetne ikony tutaj</string>
     <string name="description_open_food_facts">Wspólna, wolna i otwarta baza produktów spożywczych z całego świata</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Eksportuje produkty</string>
@@ -273,4 +264,32 @@
     <string name="feature_share_url_with_food_you">Udostępnij adres URL do Food You</string>
     <string name="feature_in_app_download">Pobieranie w aplikacji</string>
     <string name="feature_manual_database_import">Ręczny import bazy danych</string>
+    <string name="action_unpack" description="Unpack the recipe ingredients">Rozpakuj</string>
+    <string name="headline_sponsor">Sponsoruj</string>
+    <string name="description_sponsor_short">Wszelkie formy wsparcia są mile widziane</string>
+    <string name="description_sponsor_1">W świecie, w którym każdy dotyk ekranu jest śledzony, a każda funkcja ukryta za opłatą, ten licznik kalorii to wyjątek. Bez reklam. Bez abonamentu. Bez śledzenia.</string>
+    <string name="description_sponsor_2">Stworzony z przekonania, że przydatne narzędzia powinny być darmowe, otwarte i szanować Twoją prywatność, stanowi cichy sprzeciw wobec wyzyskujących modeli, które dominują w sklepach z aplikacjami.</string>
+    <string name="description_sponsor_3">Jeśli to ma dla Ciebie znaczenie, rozważ wsparcie. Twoje wpłaty bezpośrednio wspierają pełnoetatowy rozwój tego projektu.</string>
+    <string name="headline_source_code">Kod źródłowy</string>
+    <string name="description_source_code">Zobacz kod źródłowy projektu na GitHub</string>
+    <string name="action_write_an_email">Napisz e-mail</string>
+    <string name="headline_contact">Kontakt</string>
+    <string name="description_sponsor_contact">Jeśli masz jakieś pytania dotyczące sponsorowania, możesz się ze mną skontaktować przez e-mail lub GitHub.</string>
+    <string name="sponsor_bank_or_card">Przelew lub karta kredytowa</string>
+    <string name="action_treat_as_liquid">Traktuj jako ciecz</string>
+    <string name="description_treat_as_liquid">Preferuj mililitry przy pomiarach</string>
+    <string name="headline_personalization">Personalizacja</string>
+    <string name="description_personalization">Dostosuj swoje doświadczenia</string>
+    <string name="headline_nutrition_facts">Informacje żywieniowe</string>
+    <string name="description_personalize_nutrition_facts">Jakie szczegóły dotyczące odżywiania Cię interesują? Możesz również wybrać kolejność ich wyświetlania.</string>
+    <string name="description_personalize_nutrition_facts_help">Dotknij, aby włączyć/wyłączyć, przeciągnij, aby zmienić kolejność</string>
+    <string name="description_personalize_nutrition_facts_short">Ukryj informacje, zmień kolejność</string>
+    <string name="action_reset_ordering">Zresetuj kolejność</string>
+    <string name="headline_reset_to_default">Przywróć domyślne</string>
+    <string name="action_reset" description="Confirm resetting">Zresetuj</string>
+    <string name="description_reset_nutrition_facts">Przywróć ustawienia personalizacji informacji żywieniowych do domyślnych</string>
+    <string name="description_warning_nutrition_facts_1">Nie zaleca się wyłączania energii, białek, węglowodanów lub tłuszczów. Są to kluczowe składniki odżywcze do śledzenia ogólnej równowagi odżywczej.</string>
+    <string name="description_warning_nutrition_facts_2">Jeśli wolisz, nadal możesz tę funkcję wyłączyć — pamiętaj jednak, że może to ograniczyć przydatność Twojego dziennika żywieniowego.</string>
+    <string name="headline_enabled" description="Label indicating that something is currently enabled">Włącz</string>
+    <string name="headline_disabled" description="Label indicating that something is currently disabled">Wyłącz</string>
 </resources>

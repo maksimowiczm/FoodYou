@@ -16,10 +16,7 @@
     <string name="headline_system_language_settings">Sistem Dil Ayarları</string>
     <string name="headline_secure_screen">Güvenli Ekran</string>
     <string name="headline_about">Hakkında</string>
-    <string name="headline_miscellaneous">Çeşitli</string>
     <string name="headline_version">Sürüm</string>
-    <string name="headline_share_your_thoughts">Düşüncelerinizi Paylaşın</string>
-    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Biraz Sevgi Gösterin</string>
     <string name="headline_all_day" description="All-day (meal)">Tüm Gün</string>
     <string name="headline_time_based_ordering">Zaman Bazlı Sıralama</string>
     <string name="headline_incomplete_products">Eksik Ürünler</string>
@@ -144,7 +141,6 @@
     <string name="action_go_to_today">Bugüne Git</string>
     <string name="action_bug_report_on_github">GitHub'da Hata Raporu</string>
     <string name="action_feature_request_on_github">GitHub'da Özellik Talebi</string>
-    <string name="action_leave_a_star_on_github">GitHub'da Bir Yıldız Bırak</string>
     <string name="action_show_calendar">Takvimi Göster</string>
     <string name="action_reorder">Yeniden Sırala</string>
     <string name="action_move_up" description="reorder list item up">Yukarı Taşı</string>
@@ -190,7 +186,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Öğün kalıcı olarak silinecek. Bu öğünle ilgili tüm veriler kaybolacak.</string>
     <string name="neutral_required">Gerekli</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Kaloriler, makro besinlere (protein, karbonhidrat, yağ) göre otomatik olarak hesaplanır</string>
-    <string name="neutral_entry_deleted">Giriş silindi</string>
     <string name="neutral_help_translating_the_app">Uygulamayı çevirmeye yardımcı ol</string>
     <string name="neutral_copied">Bilgi panoya kopyalandı</string>
     <string name="neutral_product_created">Ürün oluşturuldu</string>
@@ -222,10 +217,7 @@
     <string name="description_calories_goal">Günlük kalori alım hedefinizi belirleyin. Bu, ilerlemenizi takip etmenize ve yolda kalmanıza yardımcı olacaktır.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Ürün kalıcı olarak silinecek. Bu işlem geri alınamaz. Bu ürünle ilgili tüm günlük girişleri silinecektir.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Bu giriş günlüğünüzden silinecek. İstediğiniz zaman tekrar ekleyebilirsiniz.</string>
-    <string name="description_README_setting">Projenin README'sini GitHub'da görüntüle</string>
     <string name="description_about_setting">Uygulama hakkında daha fazla bilgi edinin</string>
-    <string name="description_show_some_love">Bu projeyi yararlı buluyorsanız, lütfen GitHub'da bir yıldız vermeyi düşünün! Bu, başkalarının projeyi keşfetmesine yardımcı olur ve geliştirmenin devam etmesini sağlar.</string>
-    <string name="description_share_your_thoughts">Herhangi bir geri bildirim, özellik talebi veya hata raporu varsa, lütfen bana bildirin! Sizden haber almayı çok isterim.</string>
     <string name="description_time_based_meals_sorting">Etkinleştirildiğinde, şu anda gerçekleşen öğünler önce gösterilecektir</string>
     <string name="description_action_ignore_all_day_meals">Tüm gün öğünleri listenin sonunda gösterilecektir</string>
     <string name="description_incomplete_nutrition_data">Kullanılan ürünlerden bazıları bu değere sahip değil; bu nedenle, gösterilen değer doğru olmayabilir</string>
@@ -243,7 +235,6 @@
     <string name="description_please_wait_while_importing_products">Ürünler içe aktarılırken lütfen bekleyin</string>
     <string name="description_suggest_external_database">Dahil edilmek üzere halka açık bir veritabanı önerin</string>
     <string name="headline_launcher_icon_by_icons8">Başlatıcı simgesi Icons8 tarafından</string>
-    <string name="neutral_see_other_awesome_icons_here">Burada diğer harika simgeleri görün</string>
     <string name="description_open_food_facts">Dünya çapında gıda ürünlerinin işbirlikçi, ücretsiz ve açık bir veritabanı</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Ürünler dışa aktarılıyor</string>
@@ -257,7 +248,7 @@
     <string name="description_food_data_central_usda">FoodData Central, USDA'nın birden çok farklı veri türüne sahip kapsamlı gıda bileşimi veri kaynağıdır</string>
     <string name="error_usda_rate_limit">Food Data Central (USDA) API oran limiti aşıldı</string>
     <string name="error_usda_rate_limit_description">İzin verilen istek sayısını aştınız. Lütfen tekrar denemeden önce bekleyin veya bir anahtar almak için kaydolun.</string>
-    <string name="description_swiss_food_composition_database">İsviçre gıda veritabanını ekleyerek yiyecek listenizi genişletebilirsiniz. Bu veritabanı, İngilizce, Almanca, Fransızca veya İtalyanca olarak 1.100’den fazla gıda içerir.</string>
+    <string name="description_swiss_food_composition_database">Yemek listenizi, İngilizce, Almanca, Fransızca veya İtalyanca dillerinde 1.100'den fazla yiyeceği içeren İsviçre Gıda Kompozisyon Veritabanı'nı ekleyerek genişletebilirsiniz.</string>
     <string name="description2_swiss_food_composition_database">İsviçre Gıda Bileşimi Veritabanı, 1.100'den fazla genel gıda ürünü için besin bilgilerini içerir. Dört dilde mevcuttur. Bu ürünleri gıda günlüğünüze aktarmak için lütfen tercih ettiğiniz dili seçin.</string>
     <string name="description3_swiss_food_composition_database">Gıda veritabanınız, İsviçre Gıda Bileşimi Veritabanı'ndan 1.100 ürünle doldurulacaktır</string>
     <string name="headline_external_databases">Harici Veritabanları</string>
@@ -265,4 +256,11 @@
     <string name="feature_share_url_with_food_you">URL'yi Food You ile Paylaş</string>
     <string name="feature_in_app_download">Uygulama İçi İndirme</string>
     <string name="feature_manual_database_import">Manuel Veritabanı İçe Aktarma</string>
+    <string name="action_unpack" description="Unpack the recipe ingredients">Paketten çıkar</string>
+    <string name="headline_source_code">Kaynak kodu</string>
+    <string name="description_source_code">Projenin kaynak kodunu GitHub'da görüntüle</string>
+    <string name="action_write_an_email">E-posta yaz</string>
+    <string name="headline_contact">İletişim</string>
+    <string name="action_treat_as_liquid">Sıvı olarak kabul et</string>
+    <string name="description_treat_as_liquid">Ölçüm yaparken mililitre kullanmayı tercih et</string>
 </resources>

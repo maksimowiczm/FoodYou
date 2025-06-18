@@ -16,10 +16,7 @@
     <string name="headline_system_language_settings">Configurações de idioma do sistema</string>
     <string name="headline_secure_screen">Tela segura</string>
     <string name="headline_about">Sobre</string>
-    <string name="headline_miscellaneous">Diversos</string>
     <string name="headline_version">Versão</string>
-    <string name="headline_share_your_thoughts">Compartilhe suas ideias</string>
-    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Demonstre seu amor</string>
     <string name="headline_all_day" description="All-day (meal)">O dia todo</string>
     <string name="headline_time_based_ordering">Organização por tempo</string>
     <string name="headline_incomplete_products">Produtos incompletos</string>
@@ -97,7 +94,6 @@
     <string name="action_go_to_today">Ir para hoje</string>
     <string name="action_bug_report_on_github">Reportar erros no GitHub</string>
     <string name="action_feature_request_on_github">Solicitar recurso no GitHub</string>
-    <string name="action_leave_a_star_on_github">Deixar uma estrela no GitHub</string>
     <string name="action_show_calendar">Mostrar calendário</string>
     <string name="action_reorder">Reordenar</string>
     <string name="action_move_up" description="reorder list item up">Mover para cima</string>
@@ -132,7 +128,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">A refeição será excluída permanentemente. Todos os dados relacionados a essa refeição serão perdidos.</string>
     <string name="neutral_required">Obrigatório</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">As calorias são calculadas automaticamente com base nos macronutrientes</string>
-    <string name="neutral_entry_deleted">Entrada excluída</string>
     <string name="neutral_help_translating_the_app">Ajude a traduzir o aplicativo</string>
     <string name="neutral_copied">Informações copiadas para a área de transferência</string>
     <string name="neutral_export_started">Exportação iniciada</string>
@@ -156,10 +151,7 @@
     <string name="description_calories_goal">Defina sua meta de ingestão diária de calorias. Isso o ajudará a acompanhar seu progresso e a se manter no caminho certo.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">O produto será excluído permanentemente. Essa ação não pode ser desfeita. Todas as entradas do diário relacionadas a esse produto serão excluídas.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Essa entrada será excluída de seu diário. Você pode adicioná-la novamente a qualquer momento.</string>
-    <string name="description_README_setting">Veja o README do projeto no GitHub</string>
     <string name="description_about_setting">Saiba mais sobre o aplicativo</string>
-    <string name="description_show_some_love">Se você achar este projeto útil, considere dar uma estrela a ele no GitHub! Isso ajuda outras pessoas a descobri-lo e mantém o desenvolvimento em andamento.</string>
-    <string name="description_share_your_thoughts">Se você tiver algum feedback, solicitação de recursos ou relatório de bugs, entre em contato comigo! Gostaria muito de ouvir sua opinião.</string>
     <string name="description_time_based_meals_sorting">Quando ativado, as refeições que estão acontecendo no momento serão exibidas primeiro</string>
     <string name="description_incomplete_nutrition_data">Alguns dos produtos usados não têm esse valor; portanto, o valor exibido pode não ser exato</string>
     <string name="description_translation_warning">As traduções são feitas por voluntários. Elas podem não ser perfeitas e podem estar faltando algumas traduções. Se você notar algum erro, não hesite em ajudar a melhorá-las.</string>
@@ -171,7 +163,6 @@
     <string name="description_show_macronutrients_goals">Mostrar os objetivos de macronutrientes</string>
     <string name="description_recipe_missing_ingredients">Talvez você não veja todas as receitas aqui. Algumas receitas estão ocultas para evitar referências circulares.</string>
     <string name="headline_launcher_icon_by_icons8">Ícone da aplicação por Icons8</string>
-    <string name="neutral_see_other_awesome_icons_here">Veja outros ícones incríveis aqui</string>
     <!-- Don't translate changelog strings -->
     <string name="notification_exporting_products">Exportando produtos</string>
     <string name="notification_exporting_products_success">Exportação de produtos concluída</string>

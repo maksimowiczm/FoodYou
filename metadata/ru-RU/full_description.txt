@@ -1,15 +1,15 @@
-<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
+<b>Food You</b> - это мощный трекер питания с открытым исходным кодом, созданный на основе эстетики Material You. Приложение помогает вам отслеживать не только количество калорий, но и потребление всех питательных веществ — благодаря надежным данным о продуктах питания и гибкому модульному интерфейсу.
 
 <b>Возможности:</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
-    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
-    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
-    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
-    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
-    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
+    <li><b>Дизайн Material You:</b> Динамическое оформление, которое адаптируется к вашему устройству для плавного визуального восприятия.</li>
+    <li><b>Обширные базы данных о продуктах:</b> Доступ к данным о продукте из Open Food Facts, USDA FoodCentral и Швейцарской базы данных состава продуктов.</li>
+    <li><b>Полное отслеживание питания:</b> Контроль калорий, макронутриентов, витаминов, минералов и многого другого.</li>
+    <li><b>Создание рецептов:</b> Сочетайте продукты в рецепты с автоматическим расчетом питательной ценности.</li>
+    <li><b>Ежедневные цели:</b> Устанавливайте и соблюдайте ваши пищевые цели.</li>
+    <li><b>Модульный главный экран:</b> Настройте свою главную страницу приложения с карточками, адаптированными под ваши потребности.</li>
 </ul>
 
-Start tracking your nutrition today with Food You — clean, complete, and fully yours.
+Начните следить за своим питанием уже сегодня с Food You — чистым, полноценным и полностью вашим.
 
-Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Иконка приложения нарисована <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

@@ -16,10 +16,7 @@
     <string name="headline_system_language_settings">Rendszer nyelvi beállításai</string>
     <string name="headline_secure_screen">Védett képernyő</string>
     <string name="headline_about">Rólunk</string>
-    <string name="headline_miscellaneous">Egyebek</string>
     <string name="headline_version">Verzió</string>
-    <string name="headline_share_your_thoughts">Oszd meg a gondolataid</string>
-    <string name="headline_show_some_love" description="Encourages users to express appreciation, such as by liking, sharing, or supporting content. Keep it friendly and engaging.">Mutass egy kis szeretetet</string>
     <string name="headline_all_day" description="All-day (meal)">Egész nap</string>
     <string name="headline_time_based_ordering">Időalapú rendezés</string>
     <string name="headline_incomplete_products">Befejezetlen termékek</string>
@@ -133,7 +130,6 @@
     <string name="action_go_to_today">Irány a mai nap</string>
     <string name="action_bug_report_on_github">Hiba jelentése GitHub-on</string>
     <string name="action_feature_request_on_github">Funkció kérése a GitHub-on</string>
-    <string name="action_leave_a_star_on_github">Becsillagozás GitHub-on</string>
     <string name="action_show_calendar">Naptár megjelenítése</string>
     <string name="action_reorder">Átrendezés</string>
     <string name="action_move_up" description="reorder list item up">Mozgatás fel</string>
@@ -166,7 +162,6 @@
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Az étkezés véglegesen törlődik. Az ehhez tartozó összes adat el fog veszni.</string>
     <string name="neutral_required">Szükséges</string>
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">A rendszer automatikusan kiszámolja a kalóriát a tápanyag alapján</string>
-    <string name="neutral_entry_deleted">Bejegyzés törölve</string>
     <string name="neutral_help_translating_the_app">Segíts lefordítani az applikációt</string>
     <string name="neutral_copied">Az információ a váglólapra lett másolva</string>
     <string name="neutral_product_created">Termék létrehozva</string>
@@ -194,10 +189,7 @@
     <string name="description_calories_goal">Állítsd be a napi kalóriabeviteled célját. Ez segít követni a haladásod és a céljaid betartását.</string>
     <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">A termék véglegesen törlésre kerül. Ez a művelet nem visszavonható. Minden, a termékhez kapcsolódó naplóbejegyzés is törlődni fog.</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Ez a bejegyzés törlésre kerül a naplódból. Bármikor újra hozzáadhatod.</string>
-    <string name="description_README_setting">Nézd meg a projekt README dokumentumát a GitHub-on</string>
     <string name="description_about_setting">Tudj meg többet az applikációról</string>
-    <string name="description_show_some_love">Ha hasznosnak találod ezt a projektet, kérlek adj rá csillagot a GitHub-on! Ez segít másoknak, hogy megtalálják, és támogatja a fejlesztést is.</string>
-    <string name="description_share_your_thoughts">Ha van visszajelzésed, ötleted vagy hibajelentésed, kérlek jelezd! Örömmel fogadnám.</string>
     <string name="description_time_based_meals_sorting">Ha be van kapcsolva, az éppen aktuális étkezések jelennek meg elsőként</string>
     <string name="description_action_ignore_all_day_meals">Az egész napos étkezés, mely a nap bármely szakaszában fogyasztható ételeket jelenti, a lista végére kerül</string>
     <string name="description_incomplete_nutrition_data">Néhány használt termék híján van az értékeknek, ezért az itt látható érték pontatlan lehet</string>
@@ -207,6 +199,5 @@
     <string name="description_download_product">Illeszd be egy élelmiszer linkjét, és automatikusan betöltjük a tápértékeket és a termék adatait.</string>
     <string name="description_download_product_hint">Bármilyen szöveget beilleszthetsz. Az első URL kerül felhasználásra.</string>
     <string name="headline_launcher_icon_by_icons8">Az indítási ikon az Icons8-ról származik</string>
-    <string name="neutral_see_other_awesome_icons_here">Nézegess további nagyszerű ikonokat itt</string>
     <!-- Don't translate changelog strings -->
 </resources>
