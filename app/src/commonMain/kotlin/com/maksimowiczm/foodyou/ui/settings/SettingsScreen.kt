@@ -21,7 +21,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.feature.diary.meal.MealsSettingsListItem
-import com.maksimowiczm.foodyou.feature.goals.GoalsSettingsListItem
+import com.maksimowiczm.foodyou.feature.diary.goals.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.importexport.ImportExportSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.ui.about.AboutSettingsListItem

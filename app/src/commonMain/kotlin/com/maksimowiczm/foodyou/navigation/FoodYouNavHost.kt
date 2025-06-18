@@ -20,10 +20,10 @@ import com.maksimowiczm.foodyou.feature.diary.product.productGraph
 import com.maksimowiczm.foodyou.feature.diary.recipe.CreateRecipe
 import com.maksimowiczm.foodyou.feature.diary.recipe.UpdateRecipe
 import com.maksimowiczm.foodyou.feature.diary.recipe.recipeGraph
-import com.maksimowiczm.foodyou.feature.goals.GoalsCardSettings
-import com.maksimowiczm.foodyou.feature.goals.GoalsScreen
-import com.maksimowiczm.foodyou.feature.goals.GoalsSettings
-import com.maksimowiczm.foodyou.feature.goals.goalsGraph
+import com.maksimowiczm.foodyou.feature.diary.goals.GoalsCardSettings
+import com.maksimowiczm.foodyou.feature.diary.goals.GoalsScreen
+import com.maksimowiczm.foodyou.feature.diary.goals.GoalsSettings
+import com.maksimowiczm.foodyou.feature.diary.goals.goalsGraph
 import com.maksimowiczm.foodyou.feature.importexport.ImportExport
 import com.maksimowiczm.foodyou.feature.importexport.importExportGraph
 import com.maksimowiczm.foodyou.feature.language.Language
