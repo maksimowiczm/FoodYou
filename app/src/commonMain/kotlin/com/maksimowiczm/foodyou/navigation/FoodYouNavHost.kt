@@ -6,8 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.feature.addfood.AddFood
-import com.maksimowiczm.foodyou.feature.addfood.addFoodGraph
+import com.maksimowiczm.foodyou.feature.diary.addfood.AddFood
+import com.maksimowiczm.foodyou.feature.diary.addfood.addFoodGraph
 import com.maksimowiczm.foodyou.feature.goals.GoalsCardSettings
 import com.maksimowiczm.foodyou.feature.goals.GoalsScreen
 import com.maksimowiczm.foodyou.feature.goals.GoalsSettings
