@@ -11,10 +11,10 @@ import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.diary.addfood.ui.search.SearchFoodScreen
 import com.maksimowiczm.foodyou.feature.diary.addfood.ui.search.SearchFoodViewModel
 import com.maksimowiczm.foodyou.feature.diary.addfood.ui.search.rememberSearchFoodScreenState
+import com.maksimowiczm.foodyou.feature.diary.product.CreateProduct
+import com.maksimowiczm.foodyou.feature.diary.product.UpdateProduct
+import com.maksimowiczm.foodyou.feature.diary.product.productGraph
 import com.maksimowiczm.foodyou.feature.measurement.CreateMeasurementScreen
-import com.maksimowiczm.foodyou.feature.product.CreateProduct
-import com.maksimowiczm.foodyou.feature.product.UpdateProduct
-import com.maksimowiczm.foodyou.feature.product.productGraph
 import com.maksimowiczm.foodyou.feature.recipe.CreateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.UpdateRecipe
 import com.maksimowiczm.foodyou.feature.recipe.recipeGraph
