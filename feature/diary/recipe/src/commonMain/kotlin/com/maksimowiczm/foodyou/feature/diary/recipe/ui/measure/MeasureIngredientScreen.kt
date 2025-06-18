@@ -39,10 +39,10 @@ import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.core.ui.nutrition.CaloriesProgressIndicator
 import com.maksimowiczm.foodyou.core.ui.nutrition.NutritionFactsList
-import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementForm
-import com.maksimowiczm.foodyou.feature.measurement.ui.basic.rememberMeasurementFormState
-import com.maksimowiczm.foodyou.feature.measurement.ui.basic.toEnum
-import com.maksimowiczm.foodyou.feature.measurement.ui.basic.value
+import com.maksimowiczm.foodyou.feature.diary.measurement.ui.basic.MeasurementForm
+import com.maksimowiczm.foodyou.feature.diary.measurement.ui.basic.rememberMeasurementFormState
+import com.maksimowiczm.foodyou.feature.diary.measurement.ui.basic.toEnum
+import com.maksimowiczm.foodyou.feature.diary.measurement.ui.basic.value
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.in_x
 import kotlinx.coroutines.flow.collectLatest

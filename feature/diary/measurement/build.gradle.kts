@@ -1,3 +1,5 @@
+import org.jetbrains.compose.ExperimentalComposeLibrary
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -9,7 +11,7 @@ plugins {
 kotlin {
 
     androidLibrary {
-        namespace = "com.maksimowiczm.foodyou.feature.diary.addfood"
+        namespace = "com.maksimowiczm.foodyou.feature.diary.measurement"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
@@ -25,15 +27,23 @@ kotlin {
             implementation(project(":core"))
             implementation(project(":core-ui"))
             implementation(project(":core-model"))
-            implementation(project(":core-database"))
             implementation(project(":core-domain"))
-            implementation(project(":feature:diary:product"))
-            implementation(project(":feature:diary:recipe"))
-            implementation(project(":feature:diary:measurement"))
-            implementation(project(":feature:barcodescanner"))
-            implementation(project(":feature:swissfoodcompositiondatabase"))
 
             implementation(libs.kotlinx.serialization.json)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+
+            @OptIn(ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
+
+        getByName("androidDeviceTest").dependencies {
+            implementation(libs.androidx.runner)
+            implementation(libs.androidx.core)
+            implementation(libs.androidx.junit)
+            implementation(libs.androidx.ui.test.manifest)
         }
     }
 }
