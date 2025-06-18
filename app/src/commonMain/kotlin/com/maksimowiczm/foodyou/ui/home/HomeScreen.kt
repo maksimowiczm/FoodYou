@@ -30,8 +30,8 @@ import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.home.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
+import com.maksimowiczm.foodyou.feature.diary.meal.MealsCards
 import com.maksimowiczm.foodyou.feature.goals.GoalsCard
-import com.maksimowiczm.foodyou.feature.meal.MealsCards
 import com.maksimowiczm.foodyou.preferences.HomeCard
 import com.maksimowiczm.foodyou.preferences.HomeOrder
 import foodyou.app.generated.resources.*

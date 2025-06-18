@@ -8,6 +8,9 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.feature.diary.addfood.AddFood
 import com.maksimowiczm.foodyou.feature.diary.addfood.addFoodGraph
+import com.maksimowiczm.foodyou.feature.diary.meal.MealCardSettings
+import com.maksimowiczm.foodyou.feature.diary.meal.MealsSettings
+import com.maksimowiczm.foodyou.feature.diary.meal.mealGraph
 import com.maksimowiczm.foodyou.feature.diary.measurement.CreateMeasurement
 import com.maksimowiczm.foodyou.feature.diary.measurement.UpdateMeasurement
 import com.maksimowiczm.foodyou.feature.diary.measurement.measurementGraph
@@ -25,9 +28,6 @@ import com.maksimowiczm.foodyou.feature.importexport.ImportExport
 import com.maksimowiczm.foodyou.feature.importexport.importExportGraph
 import com.maksimowiczm.foodyou.feature.language.Language
 import com.maksimowiczm.foodyou.feature.language.languageGraph
-import com.maksimowiczm.foodyou.feature.meal.MealCardSettings
-import com.maksimowiczm.foodyou.feature.meal.MealsSettings
-import com.maksimowiczm.foodyou.feature.meal.mealGraph
 import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.ImportSwissFoodCompositionDatabase
 import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.swissFoodCompositionDatabaseGraph
 
