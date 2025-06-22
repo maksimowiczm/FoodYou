@@ -11,8 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material.icons.outlined.UnfoldLess
 import androidx.compose.material.icons.outlined.UnfoldMore
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,7 +65,7 @@ internal fun AdvancedMeasurementSummary(
                     .height(16.dp)
             )
 
-            FilledTonalIconButton(
+            IconButton(
                 onClick = { onSizeChange(size.toggle()) }
             ) {
                 Icon(
