@@ -47,7 +47,13 @@ internal fun FormContent(
     titleRes: StringResource,
     ingredients: List<Ingredient>,
     formState: RecipeFormState,
-    onSave: (name: String, servings: Int, isLiquid: Boolean, ingredients: List<Ingredient>) -> Unit,
+    onSave: (
+        name: String,
+        servings: Int,
+        isLiquid: Boolean,
+        ingredients: List<Ingredient>,
+        note: String
+    ) -> Unit,
     onBack: () -> Unit,
     onAddIngredient: () -> Unit,
     onEditIngredient: (Ingredient) -> Unit,
@@ -142,7 +148,8 @@ internal fun FormContent(
                                 formState.nameState.value,
                                 formState.servingsState.value,
                                 formState.isLiquid,
-                                ingredients.toList()
+                                ingredients.toList(),
+                                formState.noteState.value
                             )
                         },
                         enabled = formState.isValid

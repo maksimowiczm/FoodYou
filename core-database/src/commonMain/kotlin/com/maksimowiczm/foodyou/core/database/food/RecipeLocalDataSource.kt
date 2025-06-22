@@ -37,12 +37,14 @@ abstract class RecipeLocalDataSource {
         name: String,
         servings: Int,
         isLiquid: Boolean,
-        ingredients: List<RecipeIngredientEntity>
+        ingredients: List<RecipeIngredientEntity>,
+        note: String
     ): Long {
         val recipeEntity = RecipeEntity(
             name = name,
             servings = servings,
-            isLiquid = isLiquid
+            isLiquid = isLiquid,
+            note = note.trim().takeIf { it.isNotEmpty() }
         )
 
         val recipeId = createRecipeEntity(recipeEntity)
@@ -68,13 +70,15 @@ abstract class RecipeLocalDataSource {
         name: String,
         servings: Int,
         isLiquid: Boolean,
-        ingredients: List<RecipeIngredientEntity>
+        ingredients: List<RecipeIngredientEntity>,
+        note: String?
     ) {
         val recipeEntity = RecipeEntity(
             id = recipeId,
             name = name,
             servings = servings,
-            isLiquid = isLiquid
+            isLiquid = isLiquid,
+            note = note?.trim()?.takeIf { it.isNotEmpty() }
         )
 
         updateRecipeEntity(recipeEntity)

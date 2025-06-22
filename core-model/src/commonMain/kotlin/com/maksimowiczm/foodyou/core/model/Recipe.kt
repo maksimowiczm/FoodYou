@@ -5,7 +5,8 @@ data class Recipe(
     val name: String,
     val servings: Int,
     val ingredients: List<RecipeIngredient>,
-    override val isLiquid: Boolean
+    override val isLiquid: Boolean,
+    override val note: String?
 ) : Food {
 
     override val headline: String

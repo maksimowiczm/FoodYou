@@ -54,13 +54,20 @@ internal class CreateRecipeViewModel(
         return flows.combine { it.toList() }
     }
 
-    fun onSave(name: String, servings: Int, isLiquid: Boolean, ingredients: List<Ingredient>) {
+    fun onSave(
+        name: String,
+        servings: Int,
+        isLiquid: Boolean,
+        ingredients: List<Ingredient>,
+        note: String
+    ) {
         viewModelScope.launch {
             val id = createRecipeUseCase(
                 name = name,
                 servings = servings,
                 ingredients = ingredients,
-                isLiquid = isLiquid
+                isLiquid = isLiquid,
+                note = note
             )
 
             _eventBus.send(CreateRecipeEvent.RecipeCreated(id))

@@ -456,6 +456,22 @@ internal fun ProductForm(
             imeAction = ImeAction.Done,
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )
+
+        Text(
+            text = stringResource(Res.string.headline_extra),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        TextField(
+            state = state.note.textFieldState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontalPadding),
+            label = { Text(stringResource(Res.string.headline_note)) },
+            supportingText = { Text(stringResource(Res.string.description_add_note)) }
+        )
     }
 }
 

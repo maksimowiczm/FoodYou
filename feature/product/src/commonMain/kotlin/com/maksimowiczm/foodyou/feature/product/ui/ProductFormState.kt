@@ -138,6 +138,12 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     val iodine = rememberNotRequiredFormField(product?.nutritionFacts?.iodineMicro?.value)
     val chromium = rememberNotRequiredFormField(product?.nutritionFacts?.chromiumMicro?.value)
 
+    val note = rememberFormField<String, Nothing>(
+        initialValue = product?.note ?: "",
+        parser = { ParseResult.Success(it) },
+        textFieldState = rememberTextFieldState(product?.note ?: "")
+    )
+
     return remember(
         name,
         brand,
@@ -182,7 +188,9 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
         iron,
         phosphorus,
         selenium,
-        iodine
+        iodine,
+        chromium,
+        note
     ) {
         ProductFormState(
             name = name,
@@ -230,7 +238,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
             phosphorusMilli = phosphorus,
             seleniumMicro = selenium,
             iodineMicro = iodine,
-            chromiumMicro = chromium
+            chromiumMicro = chromium,
+            note = note
         )
     }
 }
@@ -349,6 +358,12 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
     val iodine = rememberNotRequiredFormField(product.nutritionFacts.iodineMicro)
     val chromium = rememberNotRequiredFormField(product.nutritionFacts.chromiumMicro)
 
+    val note = rememberFormField<String, Nothing>(
+        initialValue = "",
+        parser = { ParseResult.Success(it) },
+        textFieldState = rememberTextFieldState()
+    )
+
     return remember(
         name,
         brand,
@@ -393,7 +408,9 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
         iron,
         phosphorus,
         selenium,
-        iodine
+        iodine,
+        chromium,
+        note
     ) {
         ProductFormState(
             name = name,
@@ -441,7 +458,8 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
             phosphorusMilli = phosphorus,
             seleniumMicro = selenium,
             iodineMicro = iodine,
-            chromiumMicro = chromium
+            chromiumMicro = chromium,
+            note = note
         )
     }
 }
@@ -500,7 +518,9 @@ internal class ProductFormState(
     val phosphorusMilli: FormField<Float?, ProductFormFieldError>,
     val chromiumMicro: FormField<Float?, ProductFormFieldError>,
     val seleniumMicro: FormField<Float?, ProductFormFieldError>,
-    val iodineMicro: FormField<Float?, ProductFormFieldError>
+    val iodineMicro: FormField<Float?, ProductFormFieldError>,
+    // Extra
+    val note: FormField<String, Nothing>
 ) {
     val isValid: Boolean
         get() = name.error == null &&

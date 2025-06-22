@@ -8,7 +8,8 @@ internal fun interface CreateRecipeUseCase {
         name: String,
         servings: Int,
         isLiquid: Boolean,
-        ingredients: List<Ingredient>
+        ingredients: List<Ingredient>,
+        note: String
     ): FoodId.Recipe
 }
 
@@ -20,13 +21,15 @@ internal class CreateRecipeUseCaseImpl(
         name: String,
         servings: Int,
         isLiquid: Boolean,
-        ingredients: List<Ingredient>
+        ingredients: List<Ingredient>,
+        note: String
     ): FoodId.Recipe {
         val id = recipeLocalDataSource.createRecipeWithIngredients(
             name = name,
             servings = servings,
             ingredients = ingredients.map(ingredientMapper::toEntity),
-            isLiquid = isLiquid
+            isLiquid = isLiquid,
+            note = note
         )
 
         return FoodId.Recipe(id)

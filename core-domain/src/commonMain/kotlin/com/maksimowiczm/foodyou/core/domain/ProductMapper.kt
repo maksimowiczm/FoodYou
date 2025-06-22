@@ -26,7 +26,8 @@ internal object ProductMapperImpl : ProductMapper {
         ),
         totalWeight = entity.packageWeight,
         servingWeight = entity.servingWeight,
-        isLiquid = entity.isLiquid
+        isLiquid = entity.isLiquid,
+        note = entity.note
     )
 
     private fun toNutritionFacts(nutrients: Nutrients, vitamins: Vitamins, minerals: Minerals) =

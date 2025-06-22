@@ -7,4 +7,5 @@ sealed interface Food {
     val totalWeight: Float?
     val servingWeight: Float?
     val isLiquid: Boolean
+    val note: String?
 }

@@ -33,10 +33,11 @@ internal enum class RecipeFormFieldError {
 
 @Composable
 internal fun rememberRecipeFormState(
-    initialName: String = "",
-    initialServings: Int = 1,
-    initialIsLiquid: Boolean = false,
-    initialIngredients: List<MinimalIngredient> = emptyList()
+    initialName: String,
+    initialServings: Int,
+    initialNote: String,
+    initialIsLiquid: Boolean,
+    initialIngredients: List<MinimalIngredient>
 ): RecipeFormState {
     val nameState = rememberFormField(
         initialValue = initialName,
@@ -72,6 +73,12 @@ internal fun rememberRecipeFormState(
         textFieldState = rememberTextFieldState(initialServings.toString())
     )
 
+    val noteState = rememberFormField<String, Nothing>(
+        initialValue = initialNote,
+        parser = { ParseResult.Success(it) },
+        textFieldState = rememberTextFieldState(initialNote)
+    )
+
     val isLiquidState = rememberSaveable { mutableStateOf(initialIsLiquid) }
 
     val ingredientsState = rememberSaveable(
@@ -85,7 +92,8 @@ internal fun rememberRecipeFormState(
             initialName != nameState.value ||
                 initialServings != servingsState.value ||
                 initialIngredients != ingredientsState.value ||
-                initialIsLiquid != isLiquidState.value
+                initialIsLiquid != isLiquidState.value ||
+                initialNote != noteState.value
         }
     }
 
@@ -93,6 +101,7 @@ internal fun rememberRecipeFormState(
         RecipeFormState(
             nameState = nameState,
             servingsState = servingsState,
+            noteState = noteState,
             isLiquidState = isLiquidState,
             ingredientsState = ingredientsState,
             isModifiedState = isModified
@@ -104,6 +113,7 @@ internal fun rememberRecipeFormState(
 internal class RecipeFormState(
     val nameState: FormField<String, RecipeFormFieldError>,
     val servingsState: FormField<Int, RecipeFormFieldError>,
+    val noteState: FormField<String, Nothing>,
     isLiquidState: MutableState<Boolean>,
     ingredientsState: MutableState<List<MinimalIngredient>>,
     isModifiedState: State<Boolean>
