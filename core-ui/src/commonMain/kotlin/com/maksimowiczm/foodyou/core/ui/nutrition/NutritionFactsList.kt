@@ -58,6 +58,43 @@ fun NutritionFactsList(
 }
 
 @Composable
+fun CompactNutritionFactsList(
+    facts: NutritionFacts,
+    modifier: Modifier = Modifier,
+    incompleteValue: (
+        NutrientValue.Incomplete
+    ) -> (@Composable () -> Unit) = NutrientsListDefaults::incompleteValue,
+    preference: NutritionFactsListPreference = userPreference()
+) {
+    val allowedFields = setOf(
+        NutritionFactsField.Energy,
+        NutritionFactsField.Proteins,
+        NutritionFactsField.Carbohydrates,
+        NutritionFactsField.Fats
+    )
+
+    val preferences by preference.collectAsStateWithLifecycle(preference.getBlocking())
+    val order = preferences.orderedEnabled.filter { it in allowedFields }
+
+    Column(modifier) {
+        order.forEachIndexed { i, field ->
+            NutrientListItem(
+                facts = facts,
+                field = field,
+                incompleteValue = incompleteValue,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            if (i < order.size - 1) {
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun NutrientListItem(
     facts: NutritionFacts,
     field: NutritionFactsField,

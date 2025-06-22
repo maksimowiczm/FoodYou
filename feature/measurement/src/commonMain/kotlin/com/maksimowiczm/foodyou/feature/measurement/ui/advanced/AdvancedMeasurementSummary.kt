@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.material.icons.outlined.UnfoldLess
+import androidx.compose.material.icons.outlined.UnfoldMore
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,15 +23,18 @@ import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.NutritionFacts
 import com.maksimowiczm.foodyou.core.model.stringResource
 import com.maksimowiczm.foodyou.core.ui.nutrition.CaloriesProgressIndicator
+import com.maksimowiczm.foodyou.core.ui.nutrition.CompactNutritionFactsList
 import com.maksimowiczm.foodyou.core.ui.nutrition.NutritionFactsList
+import com.maksimowiczm.foodyou.feature.measurement.preferences.NutrientsListSize
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AdvancedMeasurementSummary(
+internal fun AdvancedMeasurementSummary(
     measurement: Measurement,
     nutritionFacts: NutritionFacts,
+    size: NutrientsListSize,
+    onSizeChange: (NutrientsListSize) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -55,9 +61,21 @@ fun AdvancedMeasurementSummary(
                 carbohydrates = nutritionFacts.carbohydrates.value,
                 fats = nutritionFacts.fats.value,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .height(16.dp)
             )
+
+            IconButton(
+                onClick = { onSizeChange(size.toggle()) }
+            ) {
+                Icon(
+                    imageVector = when (size) {
+                        NutrientsListSize.Compact -> Icons.Outlined.UnfoldMore
+                        NutrientsListSize.Full -> Icons.Outlined.UnfoldLess
+                    },
+                    contentDescription = null
+                )
+            }
         }
 
         Text(
@@ -65,8 +83,9 @@ fun AdvancedMeasurementSummary(
             style = MaterialTheme.typography.labelLarge
         )
 
-        NutritionFactsList(
-            facts = nutritionFacts
-        )
+        when (size) {
+            NutrientsListSize.Compact -> CompactNutritionFactsList(nutritionFacts)
+            NutrientsListSize.Full -> NutritionFactsList(nutritionFacts)
+        }
     }
 }

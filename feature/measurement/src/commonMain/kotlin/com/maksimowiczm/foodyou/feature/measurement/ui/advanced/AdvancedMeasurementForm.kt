@@ -34,7 +34,10 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun AdvancedMeasurementForm(state: AdvancedMeasurementFormState, modifier: Modifier = Modifier) {
+internal fun AdvancedMeasurementForm(
+    state: AdvancedMeasurementFormState,
+    modifier: Modifier = Modifier
+) {
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
     if (showDatePicker) {

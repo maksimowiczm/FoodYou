@@ -48,12 +48,18 @@ import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.Recipe
 import com.maksimowiczm.foodyou.core.model.RecipeIngredient
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.setBlocking
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodData
 import com.maksimowiczm.foodyou.core.ui.component.IncompleteFoodsList
 import com.maksimowiczm.foodyou.core.ui.nutrition.FoodErrorListItem
 import com.maksimowiczm.foodyou.core.ui.nutrition.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.feature.measurement.preferences.NutrientsListSize
+import com.maksimowiczm.foodyou.feature.measurement.preferences.NutrientsListSizePreference
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementForm
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementFormState
 import com.maksimowiczm.foodyou.feature.measurement.ui.advanced.AdvancedMeasurementSummary
@@ -93,6 +99,11 @@ internal fun MeasurementScreen(
     }
     val measurement = state.measurement ?: defaultMeasurement
     val weight = measurement.weight(food) ?: 100f
+
+    val nutrientsListSizePreference: NutrientsListSizePreference = userPreference()
+    val nutrientsListSize by nutrientsListSizePreference.collectAsStateWithLifecycle(
+        nutrientsListSizePreference.getBlocking()
+    )
 
     Scaffold(
         modifier = modifier,
@@ -197,11 +208,15 @@ internal fun MeasurementScreen(
                 AdvancedMeasurementSummary(
                     measurement = measurement,
                     nutritionFacts = nutritionFacts,
+                    size = nutrientsListSize,
+                    onSizeChange = { newSize ->
+                        nutrientsListSizePreference.setBlocking(newSize)
+                    },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
 
-            if (food is Recipe) {
+            if (food is Recipe && nutrientsListSize == NutrientsListSize.Full) {
                 val incompleteIngredients =
                     IncompleteFoodData.fromFoodList(food.ingredients.map { it.food })
 

@@ -17,7 +17,7 @@ import com.maksimowiczm.foodyou.feature.measurement.ui.basic.rememberMeasurement
 import kotlinx.datetime.LocalDate
 
 @Composable
-fun rememberAdvancedMeasurementFormState(
+internal fun rememberAdvancedMeasurementFormState(
     food: Food,
     initialDate: LocalDate,
     meals: List<Meal>,
