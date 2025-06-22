@@ -19,5 +19,6 @@ data class ProductEntity(
     val minerals: Minerals,
     val packageWeight: Float?,
     val servingWeight: Float?,
-    val isLiquid: Boolean
+    val isLiquid: Boolean,
+    val note: String?
 )

@@ -75,6 +75,10 @@ import com.maksimowiczm.foodyou.core.database.search.SearchQueryEntity
          * @see [MIGRATION_20_21]
          * Add isLiquid column to ProductEntity and RecipeEntity
          */
+        /**
+         * @see [MIGRATION_21_22]
+         * Add `note` column to ProductEntity and RecipeEntity
+         */
     ]
 )
 @TypeConverters(
@@ -88,7 +92,7 @@ abstract class FoodYouDatabase :
     MealDatabase {
 
     companion object {
-        const val VERSION = 21
+        const val VERSION = 22
 
         private val migrations: List<Migration> = listOf(
             MIGRATION_1_2,
@@ -97,7 +101,8 @@ abstract class FoodYouDatabase :
             MIGRATION_8_9,
             MIGRATION_11_12,
             MIGRATION_18_19,
-            MIGRATION_20_21
+            MIGRATION_20_21,
+            MIGRATION_21_22
         )
 
         fun Builder<FoodYouDatabase>.buildDatabase(): FoodYouDatabase {
@@ -567,6 +572,26 @@ private val MIGRATION_20_21 = object : Migration(20, 21) {
             """
             ALTER TABLE RecipeEntity 
             ADD COLUMN isLiquid INTEGER NOT NULL DEFAULT 0
+            """.trimIndent()
+        )
+    }
+}
+
+/**
+ * Add `note` column to ProductEntity and RecipeEntity
+ */
+private val MIGRATION_21_22 = object : Migration(21, 22) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            ALTER TABLE ProductEntity 
+            ADD COLUMN note TEXT
+            """.trimIndent()
+        )
+        connection.execSQL(
+            """
+            ALTER TABLE RecipeEntity 
+            ADD COLUMN note TEXT
             """.trimIndent()
         )
     }
