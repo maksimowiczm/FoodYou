@@ -8,7 +8,8 @@ data class Product(
     val barcode: String?,
     override val totalWeight: Float?,
     override val servingWeight: Float?,
-    override val isLiquid: Boolean
+    override val isLiquid: Boolean,
+    override val notes: String?
 ) : Food {
     override val headline: String
         get() = if (brand.isNullOrBlank()) name else "$name ($brand)"
