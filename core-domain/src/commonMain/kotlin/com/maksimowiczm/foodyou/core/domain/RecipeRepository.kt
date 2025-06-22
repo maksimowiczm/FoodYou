@@ -39,7 +39,7 @@ internal class RecipeRepositoryImpl(
                         servings = entity.servings,
                         ingredients = emptyList(),
                         isLiquid = entity.isLiquid,
-                        notes = entity.note
+                        note = entity.note
                     )
                 )
             }
@@ -80,7 +80,7 @@ internal class RecipeRepositoryImpl(
                     servings = entity.servings,
                     ingredients = ingredientsList.toList(),
                     isLiquid = entity.isLiquid,
-                    notes = entity.note
+                    note = entity.note
                 )
             }
 

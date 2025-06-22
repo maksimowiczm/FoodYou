@@ -13,7 +13,7 @@ fun testProduct(
     totalWeight: Float? = 500f,
     servingWeight: Float? = 100f,
     isLiquid: Boolean = false,
-    notes: String? = null
+    note: String? = null
 ): Product = Product(
     id = id,
     name = name,
@@ -23,5 +23,5 @@ fun testProduct(
     totalWeight = totalWeight,
     servingWeight = servingWeight,
     isLiquid = isLiquid,
-    notes = notes
+    note = note
 )

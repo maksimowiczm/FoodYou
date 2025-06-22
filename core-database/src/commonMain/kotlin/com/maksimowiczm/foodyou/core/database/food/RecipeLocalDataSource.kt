@@ -38,13 +38,13 @@ abstract class RecipeLocalDataSource {
         servings: Int,
         isLiquid: Boolean,
         ingredients: List<RecipeIngredientEntity>,
-        note: String?
+        note: String
     ): Long {
         val recipeEntity = RecipeEntity(
             name = name,
             servings = servings,
             isLiquid = isLiquid,
-            note = note?.trim()?.takeIf { it.isNotEmpty() }
+            note = note.trim().takeIf { it.isNotEmpty() }
         )
 
         val recipeId = createRecipeEntity(recipeEntity)

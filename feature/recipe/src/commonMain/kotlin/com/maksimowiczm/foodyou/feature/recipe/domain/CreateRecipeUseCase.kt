@@ -9,7 +9,7 @@ internal fun interface CreateRecipeUseCase {
         servings: Int,
         isLiquid: Boolean,
         ingredients: List<Ingredient>,
-        note: String?
+        note: String
     ): FoodId.Recipe
 }
 
@@ -22,14 +22,14 @@ internal class CreateRecipeUseCaseImpl(
         servings: Int,
         isLiquid: Boolean,
         ingredients: List<Ingredient>,
-        note: String?
+        note: String
     ): FoodId.Recipe {
         val id = recipeLocalDataSource.createRecipeWithIngredients(
             name = name,
             servings = servings,
             ingredients = ingredients.map(ingredientMapper::toEntity),
             isLiquid = isLiquid,
-            note = note?.trim()?.takeIf { it.isNotEmpty() }
+            note = note
         )
 
         return FoodId.Recipe(id)

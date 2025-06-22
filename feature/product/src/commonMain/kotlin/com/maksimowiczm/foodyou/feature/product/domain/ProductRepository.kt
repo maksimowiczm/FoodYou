@@ -72,7 +72,7 @@ internal interface ProductRepository {
         packageWeight: Float?,
         servingWeight: Float?,
         isLiquid: Boolean,
-        note: String?
+        note: String
     ): Long
 
     /**
@@ -127,7 +127,7 @@ internal interface ProductRepository {
         packageWeight: Float?,
         servingWeight: Float?,
         isLiquid: Boolean,
-        note: String?
+        note: String
     )
 }
 
@@ -191,7 +191,7 @@ internal class ProductRepositoryImpl(
         packageWeight: Float?,
         servingWeight: Float?,
         isLiquid: Boolean,
-        note: String?
+        note: String
     ): Long {
         val nutrients = Nutrients(
             proteins = proteins,
@@ -251,7 +251,7 @@ internal class ProductRepositoryImpl(
             packageWeight = packageWeight,
             servingWeight = servingWeight,
             isLiquid = isLiquid,
-            note = note?.trim()?.takeIf { it.isNotBlank() }
+            note = note.trim().takeIf { it.isNotBlank() }
         )
 
         return localProductDataSource.insertProduct(entity)
@@ -304,7 +304,7 @@ internal class ProductRepositoryImpl(
         packageWeight: Float?,
         servingWeight: Float?,
         isLiquid: Boolean,
-        note: String?
+        note: String
     ) {
         val nutrients = Nutrients(
             proteins = proteins,
@@ -365,7 +365,7 @@ internal class ProductRepositoryImpl(
             packageWeight = packageWeight,
             servingWeight = servingWeight,
             isLiquid = isLiquid,
-            note = note?.trim()?.takeIf { it.isNotBlank() }
+            note = note.trim().takeIf { it.isNotBlank() }
         )
 
         localProductDataSource.updateProduct(entity)
