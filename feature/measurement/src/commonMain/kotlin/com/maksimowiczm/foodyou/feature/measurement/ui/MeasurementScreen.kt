@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.measurement.ui
 
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -231,6 +232,19 @@ internal fun MeasurementScreen(
                 }
             }
 
+            when (val notes = food.notes?.takeIf { it.isNotBlank() }) {
+                null -> Unit
+                else -> item {
+                    Spacer(Modifier.height(8.dp))
+                    HorizontalDivider()
+                    Spacer(Modifier.height(8.dp))
+                    Notes(
+                        notes = notes,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
+            }
+
             item {
                 Spacer(Modifier.height(16.dp))
                 if (food is Recipe) {
@@ -314,6 +328,24 @@ private fun DeleteDialog(
             Text(stringResource(Res.string.description_delete_product))
         }
     )
+}
+
+@Composable
+private fun Notes(notes: String, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "Note",
+            style = MaterialTheme.typography.titleLarge
+        )
+
+        Text(
+            text = notes,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
 }
 
 @Composable
