@@ -33,7 +33,13 @@ internal fun CreateRecipeScreen(
         }
     }
 
-    val formState = rememberRecipeFormState()
+    val formState = rememberRecipeFormState(
+        initialName = "",
+        initialServings = 1,
+        initialNote = "",
+        initialIsLiquid = false,
+        initialIngredients = emptyList()
+    )
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     BackHandler(

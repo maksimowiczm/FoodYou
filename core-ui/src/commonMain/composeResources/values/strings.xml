@@ -344,4 +344,8 @@
     <string name="headline_enabled" description="Label indicating that something is currently enabled">Enabled</string>
     <string name="headline_disabled" description="Label indicating that something is currently disabled">Disabled</string>
 
+    <string name="headline_note">Note</string>
+    <string name="description_add_note">Extra information you would like to attach to the food</string>
+    <string name="headline_extra" description="Something that is not a part of the main thing, additional information">Extra</string>
+
 </resources>

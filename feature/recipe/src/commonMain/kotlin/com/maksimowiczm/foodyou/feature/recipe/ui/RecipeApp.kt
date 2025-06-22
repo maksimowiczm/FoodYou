@@ -22,11 +22,17 @@ internal fun RecipeApp(
     recipeId: FoodId.Recipe?,
     titleRes: StringResource,
     observedIngredients: (List<MinimalIngredient>) -> Flow<List<Ingredient>>,
-    onSave: (name: String, servings: Int, isLiquid: Boolean, ingredients: List<Ingredient>) -> Unit,
+    onSave: (
+        name: String,
+        servings: Int,
+        isLiquid: Boolean,
+        ingredients: List<Ingredient>,
+        note: String
+    ) -> Unit,
     onBack: () -> Unit,
     onEditFood: (FoodId) -> Unit,
-    modifier: Modifier = Modifier,
-    formState: RecipeFormState = rememberRecipeFormState()
+    formState: RecipeFormState,
+    modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
 

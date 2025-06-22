@@ -68,7 +68,13 @@ internal class UpdateRecipeViewModel(
         return flows.combine { it.toList() }
     }
 
-    fun onSave(name: String, servings: Int, isLiquid: Boolean, ingredients: List<Ingredient>) {
+    fun onSave(
+        name: String,
+        servings: Int,
+        isLiquid: Boolean,
+        ingredients: List<Ingredient>,
+        note: String
+    ) {
         val recipe = recipe.value ?: return
 
         viewModelScope.launch {
@@ -77,7 +83,8 @@ internal class UpdateRecipeViewModel(
                 name = name,
                 servings = servings,
                 ingredients = ingredients,
-                isLiquid = isLiquid
+                isLiquid = isLiquid,
+                note = note
             )
 
             _eventBus.send(UpdateRecipeEvent.RecipeUpdated)

@@ -47,8 +47,8 @@ internal fun RecipeForm(
     onAddIngredient: () -> Unit,
     onIngredientClick: (index: Int) -> Unit,
     onEditFood: (FoodId) -> Unit,
+    formState: RecipeFormState,
     modifier: Modifier = Modifier,
-    formState: RecipeFormState = rememberRecipeFormState(),
     contentPadding: PaddingValues = PaddingValues()
 ) {
     val layoutDirection = LocalLayoutDirection.current
@@ -89,6 +89,13 @@ internal fun RecipeForm(
                     .fillMaxWidth()
                     .padding(horizontalPadding),
                 state = formState.servingsState
+            )
+
+            NoteTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontalPadding),
+                state = formState.noteState
             )
 
             Row(
@@ -230,9 +237,23 @@ private fun ServingsTextField(
         },
         isError = state.error != null,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done
+            keyboardType = KeyboardType.Number
         )
+    )
+}
+
+@Composable
+private fun NoteTextField(state: FormField<String, Nothing>, modifier: Modifier = Modifier) {
+    OutlinedTextField(
+        modifier = modifier,
+        state = state.textFieldState,
+        label = {
+            Text(stringResource(Res.string.headline_note))
+        },
+        supportingText = {
+            Text(stringResource(Res.string.description_add_note))
+        },
+        isError = false
     )
 }
 

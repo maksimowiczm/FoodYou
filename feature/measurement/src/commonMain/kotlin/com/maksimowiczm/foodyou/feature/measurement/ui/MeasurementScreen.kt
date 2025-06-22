@@ -232,13 +232,13 @@ internal fun MeasurementScreen(
                 }
             }
 
-            when (val notes = food.notes?.takeIf { it.isNotBlank() }) {
+            when (val notes = food.note?.takeIf { it.isNotBlank() }) {
                 null -> Unit
                 else -> item {
                     Spacer(Modifier.height(8.dp))
                     HorizontalDivider()
                     Spacer(Modifier.height(8.dp))
-                    Notes(
+                    Note(
                         notes = notes,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
@@ -331,13 +331,13 @@ private fun DeleteDialog(
 }
 
 @Composable
-private fun Notes(notes: String, modifier: Modifier = Modifier) {
+private fun Note(notes: String, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Note",
+            text = stringResource(Res.string.headline_note),
             style = MaterialTheme.typography.titleLarge
         )
 
