@@ -35,7 +35,8 @@ object Changelog {
 
     val next = Version.next(
         newFeatures = listOf(
-            "Added nutrition facts list size preference. You can now choose between compact and full nutrition facts list sizes in measurement screen."
+            "Added nutrition facts list size preference. You can now choose between compact and full nutrition facts list sizes in measurement screen.",
+            "Added food note. You can now add a note to the food product. It will be displayed in the food measurement screen."
         ),
         changes = listOf(),
         bugFixes = listOf(),
