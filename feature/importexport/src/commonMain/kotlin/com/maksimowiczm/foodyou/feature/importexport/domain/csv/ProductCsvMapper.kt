@@ -61,6 +61,7 @@ private fun ProductEntity.toStringMap(): Map<ProductEntityField, String?> =
             ProductEntityField.PACKAGE_WEIGHT -> packageWeight?.toString()
             ProductEntityField.SERVING_WEIGHT -> servingWeight?.toString()
             ProductEntityField.IS_LIQUID -> isLiquid.toString()
+            ProductEntityField.NOTE -> note?.toString()
         }
     }
 
@@ -130,6 +131,6 @@ private fun Map<ProductEntityField, String>.toProductEntity(): ProductEntity? {
         packageWeight = this[ProductEntityField.PACKAGE_WEIGHT]?.toFloatOrNull(),
         servingWeight = this[ProductEntityField.SERVING_WEIGHT]?.toFloatOrNull(),
         isLiquid = this[ProductEntityField.IS_LIQUID]?.toBooleanStrictOrNull() ?: false,
-        note = null
+        note = this[ProductEntityField.NOTE]
     )
 }
