@@ -38,7 +38,9 @@ object Changelog {
             "Added nutrition facts list size preference. You can now choose between compact and full nutrition facts list sizes in measurement screen.",
             "Added food note. You can now add a note to the food product. It will be displayed in the food measurement screen."
         ),
-        changes = listOf(),
+        changes = listOf(
+            "Added background to the status bar in food search screen"
+        ),
         bugFixes = listOf(),
         translations = listOf(),
         notes = null

@@ -2,7 +2,9 @@ package com.maksimowiczm.foodyou.feature.addfood.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
@@ -57,6 +59,7 @@ import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.ui.component.BackHandler
 import com.maksimowiczm.foodyou.core.ui.component.BarcodeScannerIconButton
 import com.maksimowiczm.foodyou.core.ui.component.Scrim
+import com.maksimowiczm.foodyou.core.ui.component.StatusBarProtection
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.SwissFoodCompositionDatabaseHintCard
@@ -136,12 +139,6 @@ private fun SearchFoodScreen(
             )
         }
     ) {
-        Scrim(
-            visible = fabExpanded,
-            onDismiss = { fabExpanded = false },
-            modifier = Modifier.fillMaxSize().zIndex(10f)
-        )
-
         Content(
             state = state,
             foods = foods,
@@ -152,6 +149,24 @@ private fun SearchFoodScreen(
             onSearch = onSearch,
             onSwissFoodDatabase = onSwissFoodDatabase
         )
+
+        Scrim(
+            visible = fabExpanded,
+            onDismiss = { fabExpanded = false },
+            modifier = Modifier
+                .fillMaxSize()
+                .zIndex(100f)
+        )
+
+        AnimatedVisibility(
+            visible = state.lazyListState.canScrollBackward,
+            enter = fadeIn(tween(50)),
+            exit = fadeOut(tween(100))
+        ) {
+            StatusBarProtection(
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
+            )
+        }
     }
 }
 
