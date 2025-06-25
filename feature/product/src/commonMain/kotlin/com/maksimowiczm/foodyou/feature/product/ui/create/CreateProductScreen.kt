@@ -50,9 +50,15 @@ internal fun CreateProductApp(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
-    val handleBack = { showDiscardDialog = true }
+    val handleBack = {
+        if (!productFormState.isModified) {
+            onBack()
+        } else {
+            showDiscardDialog = true
+        }
+    }
     BackHandler(
-        enabled = true
+        enabled = productFormState.isModified
     ) {
         showDiscardDialog = true
     }

@@ -39,9 +39,12 @@ object Changelog {
             "Added food note. You can now add a note to the food product. It will be displayed in the food measurement screen."
         ),
         changes = listOf(
-            "Added background to the status bar in food search screen"
+            "Added background to the status bar in food search screen",
+            "Show the product form discard dialog only when the form has been modified (i.e., when the user changes something)."
         ),
-        bugFixes = listOf(),
+        bugFixes = listOf(
+            "Stopped overriding the energy value when opening the product update form."
+        ),
         translations = listOf(),
         notes = null
     )

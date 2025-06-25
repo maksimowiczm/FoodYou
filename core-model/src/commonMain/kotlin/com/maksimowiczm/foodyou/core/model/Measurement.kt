@@ -36,5 +36,15 @@ sealed interface Measurement {
             food.isLiquid -> Milliliter(100f)
             else -> Gram(100f)
         }
+
+        val comparator: Comparator<Measurement> = Comparator { a, b ->
+            when {
+                a is Gram && b is Gram -> a.value.compareTo(b.value)
+                a is Milliliter && b is Milliliter -> a.value.compareTo(b.value)
+                a is Package && b is Package -> a.quantity.compareTo(b.quantity)
+                a is Serving && b is Serving -> a.quantity.compareTo(b.quantity)
+                else -> 0
+            }
+        }
     }
 }
