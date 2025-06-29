@@ -1,10 +1,8 @@
 [*.{kt,kts}]
 ktlint_code_style = android_studio
-compose_preview_naming_enabled = true
-compose_preview_naming_strategy = suffix
 ktlint_function_naming_ignore_when_annotated_with = Composable
 compose_allowed_composition_locals = LocalNutrientsPalette, LocalNavigationSharedTransitionScope, LocalClipboardManager, LocalDateFormatter
-ij_kotlin_packages_to_use_import_on_demand = foodyou.app.generated.resources
+ij_kotlin_packages_to_use_import_on_demand = foodyou.app.generated.resources.*,androidx.compose.runtime.*
 
 [**/build/**]
 ktlint = disabled
