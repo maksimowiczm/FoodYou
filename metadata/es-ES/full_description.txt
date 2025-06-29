@@ -1,0 +1,15 @@
+<b>Food You</b> es un poderoso registro nutricional de código abierto con la interfaz moderna de Material You. Te ayuda a registrar no solo calorías, sino toda la ingesta de nutrientes con unos datos fiables, flexibles y modulares.
+
+<b>Características:</b>
+<ul>
+    <li><b>Diseño Material You:</b> Tema dinámico que se adapta a tu dispositivo para una experiencia visual fluida.</li>
+    <li><b>Base de datos alimentarios completas:</b> Accede a las bases de datos nutricionales de Open Food Facts, USDA FoodCentral y la Base de datos de Composición Alimentaria suiza.</li>
+    <li><b>Registro nutricional completo:</b> Registra calorías, macros, vitaminas, minerales y mucho más.</li>
+    <li><b>Creador de recetas:</b>Combina ingredientes para crear recetas con cálculo automático de nutrientes.</li>
+    <li><b>Objetivos diarios:</b>Establece y sigue objetivos nutricionales personalizados.</li>
+    <li><b>Pantalla de inicio modular:</b>Personaliza tu pantalla de inicio adaptada a tus necesidades.</li>
+</ul>
+
+Empieza a registrar tu nutrición con Food You. Sin distracciones, completo y únicamente tuyo.
+
+Icono hecho con <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer"> Icons8</a>
