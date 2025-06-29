@@ -43,7 +43,8 @@ object Changelog {
             "Show the product form discard dialog only when the form has been modified (i.e., when the user changes something)."
         ),
         bugFixes = listOf(
-            "Stopped overriding the energy value when opening the product update form."
+            "Stopped overriding the energy value when opening the product update form.",
+            "App will show default measurement for serving and package if food has no measurements."
         ),
         translations = listOf(
             "Added Catalan",

@@ -75,16 +75,18 @@ internal class MeasurementRepositoryImpl(
         val flow = foodRepository
             .observeFood(id)
             .filterNotNull()
-            .flatMapLatest {
-                val productId = (it.id as? FoodId.Product)?.id
-                val recipeId = (it.id as? FoodId.Recipe)?.id
+            .flatMapLatest { food ->
+                val productId = (food.id as? FoodId.Product)?.id
+                val recipeId = (food.id as? FoodId.Recipe)?.id
 
                 val packageSuggestion = measurementLocalDataSource.observeAllMeasurementsByType(
                     productId = productId,
                     recipeId = recipeId,
                     measurement = MeasurementEnum.Package
                 ).map {
-                    it.firstOrNull()
+                    it.firstOrNull() ?: MeasurementSuggestion(1f, MeasurementEnum.Package)
+                }.map {
+                    it.takeIf { food.totalWeight != null }
                 }
 
                 val servingSuggestion = measurementLocalDataSource.observeAllMeasurementsByType(
@@ -92,10 +94,12 @@ internal class MeasurementRepositoryImpl(
                     recipeId = recipeId,
                     measurement = MeasurementEnum.Serving
                 ).map {
-                    it.firstOrNull()
+                    it.firstOrNull() ?: MeasurementSuggestion(1f, MeasurementEnum.Serving)
+                }.map {
+                    it.takeIf { food.servingWeight != null }
                 }
 
-                val raw = if (it.isLiquid) {
+                val raw = if (food.isLiquid) {
                     measurementLocalDataSource.observeAllMeasurementsByType(
                         productId = productId,
                         recipeId = recipeId,
