@@ -40,7 +40,7 @@ data class MeasurementEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val mealId: Long,
-    val epochDay: Int,
+    val epochDay: Long,
 
     // Product or Recipe
     val productId: Long?,

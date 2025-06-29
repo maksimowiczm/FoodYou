@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.feature.meal.ui.card.MealsCards
 @Composable
 fun MealsCards(
     homeState: HomeState,
-    onAdd: (epochDay: Int, mealId: Long) -> Unit,
+    onAdd: (epochDay: Long, mealId: Long) -> Unit,
     onEditMeasurement: (measurementId: Long) -> Unit,
     onLongClick: () -> Unit,
     contentPadding: PaddingValues,

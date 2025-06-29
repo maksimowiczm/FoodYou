@@ -43,8 +43,8 @@ fun HomeScreen(
     onAbout: () -> Unit,
     onEditMeasurement: (measurementId: Long) -> Unit,
     onMealCardLongClick: () -> Unit,
-    onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
-    onGoalsCardClick: (epochDay: Int) -> Unit,
+    onMealCardAddClick: (epochDay: Long, mealId: Long) -> Unit,
+    onGoalsCardClick: (epochDay: Long) -> Unit,
     onGoalsCardLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     homeOrder: HomeOrder = userPreference()
@@ -72,8 +72,8 @@ fun HomeScreen(
     onAbout: () -> Unit,
     onEditMeasurement: (measurementId: Long) -> Unit,
     onMealCardLongClick: () -> Unit,
-    onMealCardAddClick: (epochDay: Int, mealId: Long) -> Unit,
-    onGoalsCardClick: (epochDay: Int) -> Unit,
+    onMealCardAddClick: (epochDay: Long, mealId: Long) -> Unit,
+    onGoalsCardClick: (epochDay: Long) -> Unit,
     onGoalsCardLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {

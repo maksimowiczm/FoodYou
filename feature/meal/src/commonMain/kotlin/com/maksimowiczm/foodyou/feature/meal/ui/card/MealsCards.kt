@@ -13,7 +13,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun MealsCards(
     homeState: HomeState,
-    onAdd: (epochDay: Int, mealId: Long) -> Unit,
+    onAdd: (epochDay: Long, mealId: Long) -> Unit,
     onEditMeasurement: (Long) -> Unit,
     onLongClick: () -> Unit,
     contentPadding: PaddingValues,

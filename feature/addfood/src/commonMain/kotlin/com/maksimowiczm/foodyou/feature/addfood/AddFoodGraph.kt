@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.feature.addfood.ui.AddFoodApp
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AddFood(val mealId: Long, val epochDay: Int)
+data class AddFood(val mealId: Long, val epochDay: Long)
 
 fun NavGraphBuilder.addFoodGraph(onBack: () -> Unit, onSwissFoodDatabase: () -> Unit) {
     crossfadeComposable<AddFood> {

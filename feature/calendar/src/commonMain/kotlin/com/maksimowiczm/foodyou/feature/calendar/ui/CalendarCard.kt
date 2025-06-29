@@ -54,14 +54,16 @@ import com.maksimowiczm.foodyou.core.ui.home.HomeState
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
@@ -153,7 +155,7 @@ private fun CalendarCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun CalendarCardDatePickerDialog(
     calendarState: CalendarState,
@@ -279,7 +281,7 @@ private fun DatePickerRowItem(
     val namesOfDayOfWeek = calendarState.namesOfDayOfWeek
     val referenceDate = calendarState.referenceDate
     val selectedDate = calendarState.selectedDate
-    val dayOfWeek = (date.dayOfWeek.value - 1) % 7
+    val dayOfWeek = (date.dayOfWeek.isoDayNumber - 1) % 7
 
     val backgroundColor by animateColorAsState(
         targetValue = when (date) {

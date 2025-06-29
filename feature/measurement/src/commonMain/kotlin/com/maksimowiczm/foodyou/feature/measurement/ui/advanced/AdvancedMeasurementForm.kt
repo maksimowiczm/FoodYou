@@ -27,12 +27,17 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.model.stringResource
 import com.maksimowiczm.foodyou.feature.measurement.ui.basic.MeasurementForm
 import foodyou.app.generated.resources.*
-import kotlinx.datetime.Instant
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalTime::class
+)
 @Composable
 internal fun AdvancedMeasurementForm(
     state: AdvancedMeasurementFormState,

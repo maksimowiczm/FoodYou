@@ -47,7 +47,7 @@ internal fun rememberAdvancedMeasurementFormState(
                 )
             },
             restore = { saved ->
-                val date = LocalDate.Saver.restore(saved[0] as Int) ?: initialDate
+                val date = LocalDate.Saver.restore(saved[0] as Long) ?: initialDate
                 val selectedMeal = saved[1] as Int?
                 val selectedMeasurement = saved[2] as Int?
 

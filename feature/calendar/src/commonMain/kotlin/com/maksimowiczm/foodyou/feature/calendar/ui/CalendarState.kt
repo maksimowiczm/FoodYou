@@ -13,11 +13,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -28,6 +29,7 @@ import kotlinx.datetime.until
 // 2106 seems reasonable for now
 private const val DIARY_DAYS_COUNT = 50_000
 
+@OptIn(ExperimentalTime::class)
 @Composable
 internal fun rememberCalendarState(
     namesOfDayOfWeek: List<String>,
@@ -39,7 +41,7 @@ internal fun rememberCalendarState(
     val coroutineScope = rememberCoroutineScope()
 
     val lazyListState = rememberLazyListState(
-        initialFirstVisibleItemIndex = zeroDay.until(selectedDate, DateTimeUnit.DAY) - 2
+        initialFirstVisibleItemIndex = (zeroDay.until(selectedDate, DateTimeUnit.DAY) - 2).toInt()
     )
 
     return remember(
@@ -60,6 +62,7 @@ internal fun rememberCalendarState(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Stable
 internal class CalendarState(
     private val coroutineScope: CoroutineScope,
@@ -97,7 +100,7 @@ internal class CalendarState(
         if (scroll) {
             coroutineScope.launch {
                 lazyListState.scrollToItem(
-                    index = zeroDate.until(date, DateTimeUnit.DAY),
+                    index = zeroDate.until(date, DateTimeUnit.DAY).toInt(),
                     scrollOffset = -lazyListState.layoutInfo.viewportEndOffset / 2
                 )
             }

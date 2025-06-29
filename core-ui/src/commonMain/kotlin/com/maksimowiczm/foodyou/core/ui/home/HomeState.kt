@@ -10,11 +10,13 @@ import androidx.compose.runtime.setValue
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun rememberHomeState(
     initialSelectedDate: LocalDate = Clock.System.now().toLocalDateTime(

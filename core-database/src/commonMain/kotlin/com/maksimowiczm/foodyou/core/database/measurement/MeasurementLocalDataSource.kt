@@ -23,7 +23,7 @@ interface MeasurementLocalDataSource {
             AND isDeleted = 0
         """
     )
-    fun observeMeasurements(mealId: Long, epochDay: Int): Flow<List<MeasurementEntity>>
+    fun observeMeasurements(mealId: Long, epochDay: Long): Flow<List<MeasurementEntity>>
 
     @Insert
     suspend fun addMeasurement(measurement: MeasurementEntity): Long
@@ -51,7 +51,7 @@ interface MeasurementLocalDataSource {
     fun observeMeasurementsByProductMealDay(
         productId: Long,
         mealId: Long,
-        epochDay: Int
+        epochDay: Long
     ): Flow<List<MeasurementEntity>>
 
     @Query(
@@ -68,7 +68,7 @@ interface MeasurementLocalDataSource {
     fun observeMeasurementsByRecipeMealDay(
         recipeId: Long,
         mealId: Long,
-        epochDay: Int
+        epochDay: Long
     ): Flow<List<MeasurementEntity>>
 
     @Query(

@@ -28,7 +28,7 @@ internal fun AddFoodApp(
     onBack: () -> Unit,
     onSwissFoodDatabase: () -> Unit,
     mealId: Long,
-    epochDay: Int,
+    epochDay: Long,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()

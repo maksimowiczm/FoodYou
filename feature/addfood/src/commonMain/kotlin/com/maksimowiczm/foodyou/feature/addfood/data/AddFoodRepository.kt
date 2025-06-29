@@ -10,6 +10,8 @@ import com.maksimowiczm.foodyou.core.domain.MeasurementMapper
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.feature.addfood.model.SearchFoodItem
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,9 +24,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
+@OptIn(ExperimentalTime::class)
 internal class AddFoodRepository(
     private val foodSearchLocalDataSource: FoodSearchLocalDataSource,
     private val measurementLocalDataSource: MeasurementLocalDataSource,
@@ -84,7 +86,7 @@ internal class AddFoodRepository(
     private fun mapToProduct(
         entity: FoodSearchEntity,
         mealId: Long,
-        epoch: Int
+        epoch: Long
     ): Flow<List<SearchFoodItem>>? = entity.productId?.let { productId ->
         val measurementsFlow = measurementLocalDataSource.observeMeasurementsByProductMealDay(
             productId = productId,
@@ -134,7 +136,7 @@ internal class AddFoodRepository(
     private fun mapToRecipe(
         entity: FoodSearchEntity,
         mealId: Long,
-        epoch: Int
+        epoch: Long
     ): Flow<List<SearchFoodItem>>? = entity.recipeId?.let { recipeId ->
         val measurementsFlow = measurementLocalDataSource.observeMeasurementsByRecipeMealDay(
             recipeId = recipeId,

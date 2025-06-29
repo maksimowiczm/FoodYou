@@ -8,8 +8,9 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
-import kotlinx.datetime.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -23,6 +24,7 @@ internal class MealCardStateWithoutMeal(
     override val isDirty = true
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 internal fun rememberMealCardState(): MealCardState {
     val nameInput = rememberTextFieldState()

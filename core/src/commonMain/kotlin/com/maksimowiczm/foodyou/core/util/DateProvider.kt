@@ -1,10 +1,11 @@
 package com.maksimowiczm.foodyou.core.util
 
 import co.touchlab.kermit.Logger
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -33,6 +34,7 @@ interface DateProvider {
     fun observeMinutes(): Flow<LocalTime>
 }
 
+@OptIn(ExperimentalTime::class)
 internal class DateProviderImpl : DateProvider {
     override fun observeDateTime(): Flow<LocalDateTime> = flow {
         while (true) {

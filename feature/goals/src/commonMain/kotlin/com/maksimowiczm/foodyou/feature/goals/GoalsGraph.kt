@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
 data object GoalsSettings
 
 @Serializable
-data class GoalsScreen(val epochDay: Int)
+data class GoalsScreen(val epochDay: Long)
 
 @Serializable
 data object GoalsCardSettings

@@ -10,6 +10,8 @@ import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.model.Recipe
 import kotlin.collections.map
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -20,7 +22,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapIfNotNull
 import kotlinx.coroutines.flow.mapValues
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
 interface MeasurementRepository {
@@ -64,6 +65,7 @@ interface MeasurementRepository {
     fun observeMeasurements(mealId: Long, date: LocalDate): Flow<List<FoodWithMeasurement>>
 }
 
+@OptIn(ExperimentalTime::class)
 internal class MeasurementRepositoryImpl(
     private val measurementLocalDataSource: MeasurementLocalDataSource,
     private val foodRepository: FoodRepository,
