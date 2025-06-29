@@ -48,3 +48,5 @@ include(":feature:goals")
 include(":feature:addfood")
 include(":feature:importexport")
 include(":feature:swissfoodcompositiondatabase")
+
+include(":composeApp")

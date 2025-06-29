@@ -19,3 +19,13 @@ local.properties
 *.kdbx
 *.apk
 *.idsig
+**/build/
+xcuserdata
+!src/**/build/
+captures
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+**/xcshareddata/WorkspaceSettings.xcsettings
