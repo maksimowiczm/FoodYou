@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_10_0,
             v2_9_0,
             v2_8_0,
             v2_7_2,
@@ -33,7 +33,9 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_10_0 = Version(
+        version = "2.10.0",
+        date = LocalDate(2025, 6, 29),
         newFeatures = listOf(
             "Added nutrition facts list size preference. You can now choose between compact and full nutrition facts list sizes in measurement screen.",
             "Added food note. You can now add a note to the food product. It will be displayed in the food measurement screen."
