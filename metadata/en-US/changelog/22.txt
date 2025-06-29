@@ -1,0 +1,15 @@
+New features
+- Added nutrition facts list size preference. You can now choose between compact and full sizes on the measurement screen.
+- Added food note. You can now add a note to a food, which will be displayed on the food measurement screen.
+
+Changes
+- Added background to the status bar on the food search screen.
+- The product form discard dialog will now appear only if the form has been modified (i.e., when the user makes a change).
+
+Bug fixes
+- Fixed an issue where the energy value was overridden when opening the product update form.
+- The app will now show the default measurement for serving and package if the food has no defined measurements.
+
+Translations
+- Added Catalan
+- Added Spanish
