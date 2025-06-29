@@ -45,7 +45,9 @@ object Changelog {
         bugFixes = listOf(
             "Stopped overriding the energy value when opening the product update form."
         ),
-        translations = listOf(),
+        translations = listOf(
+            "Added Catalan"
+        ),
         notes = null
     )
 
