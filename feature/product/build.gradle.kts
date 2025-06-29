@@ -51,10 +51,6 @@ buildConfig {
 
 kotlin {
 
-    compilerOptions {
-        freeCompilerArgs.add("-Xwhen-guards")
-    }
-
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.feature.product"
         compileSdk = libs.versions.android.compileSdk.get().toInt()

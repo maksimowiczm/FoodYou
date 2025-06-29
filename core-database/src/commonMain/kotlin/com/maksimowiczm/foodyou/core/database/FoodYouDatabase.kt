@@ -132,9 +132,9 @@ private val MIGRATION_1_2 = object : Migration(1, 2) {
 
 // API < 30 lack support for ALTER TABLE commands so there is a lot of temp tables
 private val MIGRATION_2_3 = object : Migration(2, 3) {
-    override fun migrate(database: SQLiteConnection) {
+    override fun migrate(connection: SQLiteConnection) {
         // Change OpenFoodFactsPagingKey to OpenFoodFactsPagingKeyEntity
-        database.execSQL(
+        connection.execSQL(
             """
             CREATE TABLE IF NOT EXISTS OpenFoodFactsPagingKeyEntity(
                 queryString TEXT NOT NULL,
@@ -145,16 +145,16 @@ private val MIGRATION_2_3 = object : Migration(2, 3) {
             )
             """.trimIndent()
         )
-        database.execSQL(
+        connection.execSQL(
             """
             INSERT INTO OpenFoodFactsPagingKeyEntity (queryString, country, fetchedCount, totalCount)
             SELECT queryString, country, fetchedCount, totalCount FROM OpenFoodFactsPagingKey
             """.trimIndent()
         )
-        database.execSQL("DROP TABLE OpenFoodFactsPagingKey")
+        connection.execSQL("DROP TABLE OpenFoodFactsPagingKey")
 
         // Create new ProductEntity structure
-        database.execSQL(
+        connection.execSQL(
             """
             CREATE TABLE IF NOT EXISTS ProductEntity_temp (
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -178,7 +178,7 @@ private val MIGRATION_2_3 = object : Migration(2, 3) {
         )
 
         // Move data to temp table
-        database.execSQL(
+        connection.execSQL(
             """
             INSERT INTO ProductEntity_temp (
                 id, name, brand, barcode,
@@ -195,11 +195,11 @@ private val MIGRATION_2_3 = object : Migration(2, 3) {
             """.trimIndent()
         )
 
-        database.execSQL("DROP TABLE ProductEntity")
-        database.execSQL("ALTER TABLE ProductEntity_temp RENAME TO ProductEntity")
+        connection.execSQL("DROP TABLE ProductEntity")
+        connection.execSQL("ALTER TABLE ProductEntity_temp RENAME TO ProductEntity")
 
         // Create ProductMeasurementEntity
-        database.execSQL(
+        connection.execSQL(
             """
             CREATE TABLE IF NOT EXISTS ProductMeasurementEntity (
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -217,21 +217,21 @@ private val MIGRATION_2_3 = object : Migration(2, 3) {
         )
 
         // Create proper indices for ProductMeasurementEntity
-        database.execSQL(
+        connection.execSQL(
             """
             CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_productId 
             ON ProductMeasurementEntity (productId)
             """.trimIndent()
         )
 
-        database.execSQL(
+        connection.execSQL(
             """
             CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_isDeleted 
             ON ProductMeasurementEntity (isDeleted)
             """.trimIndent()
         )
 
-        database.execSQL(
+        connection.execSQL(
             """
             CREATE INDEX IF NOT EXISTS index_ProductMeasurementEntity_mealId 
             ON ProductMeasurementEntity (mealId)
@@ -239,7 +239,7 @@ private val MIGRATION_2_3 = object : Migration(2, 3) {
         )
 
         // Migrate data from WeightMeasurementEntity to ProductMeasurementEntity
-        database.execSQL(
+        connection.execSQL(
             """
             INSERT INTO ProductMeasurementEntity (
                 id, mealId, diaryEpochDay, productId, measurement, quantity, createdAt, isDeleted
@@ -250,10 +250,10 @@ private val MIGRATION_2_3 = object : Migration(2, 3) {
             """.trimIndent()
         )
 
-        database.execSQL("DROP TABLE WeightMeasurementEntity")
+        connection.execSQL("DROP TABLE WeightMeasurementEntity")
 
         // Create SearchQueryEntity from ProductQueryEntity
-        database.execSQL(
+        connection.execSQL(
             """
             CREATE TABLE IF NOT EXISTS SearchQueryEntity (
                 query TEXT NOT NULL PRIMARY KEY,
@@ -263,14 +263,14 @@ private val MIGRATION_2_3 = object : Migration(2, 3) {
         )
 
         // Migrate data from ProductQueryEntity to SearchQueryEntity
-        database.execSQL(
+        connection.execSQL(
             """
             INSERT INTO SearchQueryEntity (query, epochSeconds)
             SELECT query, date FROM ProductQueryEntity
             """.trimIndent()
         )
 
-        database.execSQL("DROP TABLE ProductQueryEntity")
+        connection.execSQL("DROP TABLE ProductQueryEntity")
     }
 }
 
