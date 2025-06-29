@@ -257,10 +257,34 @@
     <string name="feature_in_app_download">Uygulama İçi İndirme</string>
     <string name="feature_manual_database_import">Manuel Veritabanı İçe Aktarma</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Paketten çıkar</string>
+    <string name="headline_sponsor">Sponsor</string>
+    <string name="description_sponsor_short">Her türlü katkı memnuniyetle karşılanır</string>
+    <string name="description_sponsor_1">Her dokunuşun izlendiği ve her özelliğin ödeme duvarı ardına kilitlendiği bir dünyada, bu yemek takipçisi farklı. Reklam yok. Abonelik yok. Gözetleme yok.</string>
+    <string name="description_sponsor_2">Yararlı araçların ücretsiz, açık ve gizliliğinize saygılı olması gerektiği inancıyla geliştirilen bu uygulama, uygulama mağazalarına hâkim olan sömürücü modellere karşı sessiz bir duruş sergiliyor.</string>
+    <string name="description_sponsor_3">Eğer bu sizin için önemliyse, bağış yapmayı düşünebilirsiniz. Bağışlarınız, projenin tam zamanlı geliştirilmesini doğrudan destekler.</string>
     <string name="headline_source_code">Kaynak kodu</string>
     <string name="description_source_code">Projenin kaynak kodunu GitHub'da görüntüle</string>
     <string name="action_write_an_email">E-posta yaz</string>
     <string name="headline_contact">İletişim</string>
+    <string name="description_sponsor_contact">Bağışlarla ilgili herhangi bir talebiniz varsa, lütfen bana e-posta veya GitHub üzerinden ulaşmaktan çekinmeyin.</string>
+    <string name="sponsor_bank_or_card">Banka hesabı veya kredi kartı</string>
     <string name="action_treat_as_liquid">Sıvı olarak kabul et</string>
     <string name="description_treat_as_liquid">Ölçüm yaparken mililitre kullanmayı tercih et</string>
+    <string name="headline_personalization">Kişiselleştirme</string>
+    <string name="description_personalization">Deneyiminizi özelleştirin</string>
+    <string name="headline_nutrition_facts">Besin bilgileri</string>
+    <string name="description_personalize_nutrition_facts">Hangi besin detaylarıyla ilgileniyorsunuz? Ayrıca bunların görünme sırasını da seçebilirsiniz.</string>
+    <string name="description_personalize_nutrition_facts_help">Açmak/kapatmak için dokunun, yeniden sıralamak için sürükleyin</string>
+    <string name="description_personalize_nutrition_facts_short">Besin bilgilerini gizle, sıralamayı değiştir</string>
+    <string name="action_reset_ordering">Sıralamayı sıfırla</string>
+    <string name="headline_reset_to_default">Varsayılana sıfırla</string>
+    <string name="action_reset" description="Confirm resetting">Sıfırla</string>
+    <string name="description_reset_nutrition_facts">Besin bilgileri kişiselleştirmesini varsayılana sıfırla</string>
+    <string name="description_warning_nutrition_facts_1">Enerji, protein, karbonhidrat veya yağları devre dışı bırakmak önerilmez. Bunlar, genel beslenme dengesini takip etmek için temel besin maddeleridir.</string>
+    <string name="description_warning_nutrition_facts_2">İsterseniz yine de devre dışı bırakabilirsiniz — sadece bu, yemek günlüğünüzün faydasını sınırlayabilir, bunu bilin.</string>
+    <string name="headline_enabled" description="Label indicating that something is currently enabled">Etkin</string>
+    <string name="headline_disabled" description="Label indicating that something is currently disabled">Devre dışı</string>
+    <string name="headline_note">Not</string>
+    <string name="description_add_note">Yemeğe eklemek istediğiniz ekstra bilgiler</string>
+    <string name="headline_extra" description="Something that is not a part of the main thing, additional information">Ekstra</string>
 </resources>

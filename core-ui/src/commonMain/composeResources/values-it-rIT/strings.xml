@@ -257,10 +257,28 @@
     <string name="feature_in_app_download">Download in-app</string>
     <string name="feature_manual_database_import">Importazione manuale del database</string>
     <string name="action_unpack" description="Unpack the recipe ingredients">Estrai</string>
+    <string name="description_sponsor_short">Sono benvenuti contributi di qualsiasi tipo</string>
+    <string name="description_sponsor_1">In un mondo in cui ogni tocco è tracciato e ogni funzionalità è bloccata da un pagamento, questo food tracker è diverso. Niente pubblicità. Niente abbonamenti. Nessun monitoraggio.</string>
+    <string name="description_sponsor_2">Basato sulla convinzione che gli strumenti utili debbano essere gratuiti, open source e rispettare la tua privacy, rappresenta una silenziosa forma di resistenza ai modelli sfruttatori che dominano gli app store.</string>
     <string name="headline_source_code">Codice sorgente</string>
     <string name="description_source_code">Visualizza il codice sorgente del progetto su GitHub</string>
     <string name="action_write_an_email">Scrivi una email</string>
     <string name="headline_contact">Contatti</string>
+    <string name="sponsor_bank_or_card">Conto bancario o carta di credito</string>
     <string name="action_treat_as_liquid">Considera come liquido</string>
     <string name="description_treat_as_liquid">Preferisci i millilitri per le misurazioni</string>
+    <string name="headline_personalization">Personalizzazione</string>
+    <string name="description_personalization">Personalizza la tua esperienza</string>
+    <string name="headline_nutrition_facts">Informazioni nutrizionali</string>
+    <string name="description_personalize_nutrition_facts">Di quali dettagli nutrizionali sei interessato? Puoi anche scegliere l'ordine in cui appaiono.</string>
+    <string name="description_personalize_nutrition_facts_help">Tocca per abilitare/disabilitare, trascina per riordinare</string>
+    <string name="description_personalize_nutrition_facts_short">Nascondi le informazioni nutrizionali, cambia l'ordine</string>
+    <string name="action_reset_ordering">Ripristina ordine</string>
+    <string name="headline_reset_to_default">Ripristina al valore predefinito</string>
+    <string name="action_reset" description="Confirm resetting">Ripristina</string>
+    <string name="description_reset_nutrition_facts">Ripristina la personalizzazione delle informazioni nutrizionali ai valori predefiniti</string>
+    <string name="description_warning_nutrition_facts_1">Non è consigliato disabilitare l'energia, le proteine, i carboidrati o i grassi. Questi sono nutrienti chiave per il monitoraggio complessivo del bilancio nutrizionale.</string>
+    <string name="description_warning_nutrition_facts_2">Puoi comunque disabilitarli, ma sappi che potrebbe limitare l'utilità del tuo diario alimentare.</string>
+    <string name="headline_enabled" description="Label indicating that something is currently enabled">Abilitato</string>
+    <string name="headline_disabled" description="Label indicating that something is currently disabled">Disabilitato</string>
 </resources>

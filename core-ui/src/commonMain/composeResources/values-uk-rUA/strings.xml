@@ -29,9 +29,31 @@
     <string name="headline_whats_new">Що нового</string>
     <string name="headline_changelog">Перелік змін</string>
     <string name="headline_installed" description="Installed version of the app">Встановлено</string>
+    <string name="headline_home" description="Home screen">Головна</string>
+    <string name="headline_home_settings" description="Home screen settings">Налаштування головної</string>
+    <string name="headline_calendar">Календар</string>
+    <string name="headline_meals_settings">Налаштування прийомів їжі</string>
+    <string name="headline_meals_cards_settings">Налаштування карток прийомів їжі</string>
+    <string name="headline_horizontal">Горизонтально</string>
+    <string name="headline_vertical">Вертикально</string>
+    <string name="headline_values_per">Значення на</string>
+    <string name="headline_other">Інше</string>
+    <string name="headline_vitamins">Вітаміни</string>
+    <string name="headline_minerals">Мінерали</string>
+    <string name="headline_supported_URLs" description="URLs that can be used to add products">Підтримувані URL</string>
+    <string name="headline_import_and_export">Імпорт та експорт</string>
+    <string name="headline_experimental" description="Experimental feature">Експериментальне</string>
+    <string name="headline_experimental_feature">Експериментальна функція</string>
+    <string name="headline_copy" description="A noun, thing that is a copy">Копіювати</string>
+    <string name="headline_something_went_wrong">Ой! Щось пішло не так</string>
+    <string name="headline_daily_goals_settings">Налаштування денних цілей</string>
+    <string name="headline_api_key">Ключ API</string>
+    <string name="headline_source" description="Source of the food product, e.g. Open Food Facts, USDA, Swiss Food Composition Database">Джерело</string>
+    <string name="headline_features">Функції</string>
     <string name="in_x" description="Used in the context of 'in 100g' or 'in 1 serving'">В %1$s</string>
     <string name="weight">Вага</string>
     <string name="unit_calories">Калорії</string>
+    <string name="unit_energy" description="Energy as calories">Енергетична цінність</string>
     <string name="unit_kcal">ккал</string>
     <plurals name="unit_gram">
         <item quantity="one">грам</item>
@@ -63,8 +85,39 @@
     <string name="nutriment_fats">Жири</string>
     <string name="nutriment_fats_short">Ж</string>
     <string name="nutriment_saturated_fats">Насичені жири</string>
+    <string name="nutriment_polyunsaturated_fats">Поліненасичені жири</string>
+    <string name="nutriment_monounsaturated_fats">Мононенасичені жири</string>
+    <string name="nutriment_omega_3">Омега-3 жирні кислоти</string>
+    <string name="nutriment_omega_6">Омега-6 жирні кислоти</string>
     <string name="nutriment_salt">Сіль</string>
     <string name="nutriment_fiber">Клітковина</string>
+    <string name="nutriment_cholesterol">Холестерин</string>
+    <string name="nutriment_caffeine">Кофеїн</string>
+    <string name="vitamin_a">Вітамін A</string>
+    <string name="vitamin_b1">Вітамін B1</string>
+    <string name="vitamin_b2">Вітамін B2</string>
+    <string name="vitamin_b3">Вітамін B3</string>
+    <string name="vitamin_b5">Вітамін B5</string>
+    <string name="vitamin_b6">Вітамін B6</string>
+    <string name="vitamin_b7">Вітамін B7</string>
+    <string name="vitamin_b9">Вітамін B9</string>
+    <string name="vitamin_b12">Вітамін B12</string>
+    <string name="vitamin_c">Вітамін C</string>
+    <string name="vitamin_d">Вітамін D</string>
+    <string name="vitamin_e">Вітамін E</string>
+    <string name="vitamin_k">Вітамін K</string>
+    <string name="mineral_manganese">Марганець</string>
+    <string name="mineral_magnesium">Магній</string>
+    <string name="mineral_potassium">Калій</string>
+    <string name="mineral_calcium">Кальцій</string>
+    <string name="mineral_copper">Мідь</string>
+    <string name="mineral_zinc">Цинк</string>
+    <string name="mineral_sodium">Натрій</string>
+    <string name="mineral_iron">Залізо</string>
+    <string name="mineral_phosphorus">Фосфор</string>
+    <string name="mineral_selenium">Селен</string>
+    <string name="mineral_iodine">Йод</string>
+    <string name="mineral_chromium">Хром</string>
     <string name="action_search">Пошук</string>
     <string name="action_scan_barcode">Просканувати штрихкод</string>
     <string name="action_add">Додати</string>
@@ -97,6 +150,7 @@
     <string name="action_move_up" description="reorder list item up">Вгору</string>
     <string name="action_move_down" description="reorder list item down">Вниз</string>
     <string name="action_use_time_based_ordering">Впорядковувати за часом</string>
+    <string name="action_ignore_all_day_meals">Ігнорувати прийоми їжі протягом дня</string>
     <string name="action_add_ingredient" description="Add ingredient to the recipe">Додати інгредієнт</string>
     <string name="action_edit_ingredient_measurement">Змінити одиниці виміру інгредієнту</string>
     <string name="action_delete_ingredient">Видалити інгредієнт</string>
@@ -104,9 +158,28 @@
     <string name="action_paste_url">Вставити посилання</string>
     <string name="action_browse_open_food_facts">Переглянути Open Food Facts</string>
     <string name="action_copy">Скопіювати</string>
+    <string name="action_choose_other_date">Обрати іншу дату</string>
+    <string name="action_choose_other_measurement">Обрати іншу одиницю вимірювання</string>
+    <string name="action_edit_your_home_page">Редагувати головний екран</string>
+    <string name="action_show_more" description="Show more settings/options/advanced settings">Показати більше</string>
+    <string name="action_download_product">Завантажити продукт</string>
+    <string name="action_suggest_external_database">Запропонувати зовнішню базу даних</string>
+    <string name="action_import_food_products">Імпортувати продукти</string>
+    <string name="action_import_food_products_from_csv">Імпортувати продукти з CSV-файлу</string>
+    <string name="action_export_food_products">Експортувати продукти</string>
+    <string name="action_export_food_products_to_csv">Експортувати продукти до CSV-файлу</string>
+    <string name="action_share">Поділитися</string>
+    <string name="action_copy_header" description="Copy CSV file header">Копіювати заголовок</string>
+    <string name="action_copy_and_open_bug_report">Скопіювати та відкрити звіт про помилку</string>
+    <string name="action_show_details">Показати деталі</string>
+    <string name="action_browse_usda">Переглянути Food Data Central (USDA)</string>
+    <string name="action_set_key">Встановити ключ</string>
+    <string name="action_obtain_key">Отримати ключ</string>
+    <string name="action_dont_show_again">Більше не показувати</string>
     <string name="neutral_barcode_scanner_camera_request">Надати доступ до вашої камери для сканування штрихкодів</string>
     <string name="neutral_barcode_scanner_camera_request_rationale">Ви маєте надати доступ, щоб мати змогу сканувати штрихкоди</string>
     <string name="neutral_barcode_scanner_camera_request_redirect_to_settings">Доступ до камери необхідний для сканування штрихкодів. Надайте його в налаштуваннях додатку.</string>
+    <string name="neutral_no_food_found">Продукти не знайдено</string>
     <plurals name="neutral_remaining_calories">
         <item quantity="one">Залишилася %1$d калорія</item>
         <item quantity="few">Залишилось %1$d калорій</item>
@@ -121,6 +194,9 @@
     <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Калорії обчислюються автоматично на основі макронутрієнтів</string>
     <string name="neutral_help_translating_the_app">Допомогти перекласти додаток</string>
     <string name="neutral_copied">Інформацію скопійовано в буфер обміну</string>
+    <string name="neutral_product_created">Продукт створено</string>
+    <string name="neutral_export_started">Експорт розпочато</string>
+    <string name="neutral_import_started">Імпорт розпочато</string>
     <string name="question_discard_product">Не зберігати продукт?</string>
     <string name="question_discard_changes">Не зберігати зміни?</string>
     <string name="question_discard_recipe">Не зберігати рецепт?</string>
@@ -130,6 +206,14 @@
     <string name="error_value_must_be_less_than">Значення повинно бути меншим за %1$s</string>
     <string name="error_value_must_be_integer">Значення повинно бути цілим</string>
     <string name="error_sum_of_percentages_must_be_100">Сума процентів має дорівнювати 100</string>
+    <string name="error_value_must_be_positive">Значення має бути додатним</string>
+    <string name="error_url_not_found">URL-адресу не знайдено</string>
+    <string name="error_url_is_not_supported">URL-адрес не підтримується</string>
+    <string name="error_failed_to_download_product">Не вдалося завантажити продукт</string>
+    <string name="error_product_not_found">Продукт не знайдено</string>
+    <string name="error_unknown_error">Невідома помилка</string>
+    <string name="error_measurement_error">Помилка вимірювання, перевірте вагу порції та паковання</string>
+    <string name="error_api_key_is_invalid">Ключ API недійсний</string>
     <string name="positive_goal_reached">Ціль досягнена</string>
     <string name="positive_ok">ОК</string>
     <plurals name="negative_exceeded_by_calories">
@@ -143,9 +227,72 @@
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">Цей запис буде видалено з вашого щоденнику. Ви зможете додати його знову в будь-який час.</string>
     <string name="description_about_setting">Дізнатися більше про додаток</string>
     <string name="description_time_based_meals_sorting">Якщо ввімкнене, то страви які відбуваються прямо зараз будуть показуватися першими</string>
+    <string name="description_action_ignore_all_day_meals">Прийоми їжі протягом дня будуть відображатися в кінці списку</string>
     <string name="description_incomplete_nutrition_data">У деяких з використаних продуктів відсутнє це значення; через це, показане значення може бути неточним</string>
     <string name="description_translation_warning">Переклади створені волонтерами. Вони можуть бути неточними або відсутніми в деяких місцях. Якщо ви бачите помилки, допоможіть нам виправити їх.</string>
     <string name="description_changelog">Подивитися що нового в додатку</string>
+    <string name="description_home_settings">Налаштуйте свій головний екран</string>
+    <string name="description_download_product">Вставте посилання на продукт, щоб автоматично отримати дані про його харчову цінність та деталі.</string>
+    <string name="description_download_product_hint">Ви можете вставити будь-який текст. Буде використано першу URL-адресу.</string>
+    <string name="description_import_and_export">Зберігайте та завантажуйте ваші дані</string>
+    <string name="description_import_and_export_hint">Усі операції синхронізації даних виконуються у фоновому режимі. Ви отримаєте сповіщення про їх завершення.</string>
+    <string name="description_experimental_feature">Це експериментальна функція. Вона може бути змінена або видалена в майбутніх версіях.</string>
+    <string name="description_notifications_permission_required_data_sync">Для відображення прогресу синхронізації даних потрібен дозвіл на сповіщення. Будь ласка, увімкніть його в налаштуваннях додатка.</string>
+    <string name="description_show_macronutrients_goals">Показувати цілі по макронутрієнтах</string>
+    <string name="description_recipe_missing_ingredients">Тут можуть бути не всі рецепти. Деякі рецепти приховано для уникнення циклічних посилань.</string>
+    <string name="description_please_wait_while_importing_products">Будь ласка, зачекайте, доки імпортуються продукти</string>
+    <string name="description_suggest_external_database">Запропонуйте загальнодоступну базу даних для додавання</string>
     <string name="headline_launcher_icon_by_icons8">Іконка додатку зроблена Icons8</string>
+    <string name="description_open_food_facts">Спільна, безкоштовна та відкрита база даних продуктів харчування з усього світу</string>
     <!-- Don't translate changelog strings -->
+    <string name="notification_exporting_products">Експорт продуктів</string>
+    <string name="notification_exporting_products_success">Експорт продуктів завершено</string>
+    <string name="notification_exporting_products_failure">Помилка експорту продуктів</string>
+    <string name="notification_importing_products">Імпорт продуктів</string>
+    <string name="notification_importing_products_success">Імпорт продуктів завершено</string>
+    <string name="notification_importing_products_failure">Помилка імпорту продуктів</string>
+    <string name="notification_data_sync_channel_name">Синхронізація даних</string>
+    <string name="notification_data_sync_progress_channel_name">Прогрес синхронізації даних</string>
+    <string name="description_food_data_central_usda">FoodData Central — це всеосяжне джерело даних про склад харчових продуктів від USDA з кількома різними типами даних</string>
+    <string name="error_usda_rate_limit">Перевищено ліміт запитів до API Food Data Central (USDA)</string>
+    <string name="error_usda_rate_limit_description">Ви перевищили дозволену кількість запитів. Будь ласка, зачекайте, перш ніж повторити спробу, або зареєструйтеся, щоб отримати ключ.</string>
+    <string name="description_swiss_food_composition_database">Ви можете розширити свій список продуктів, додавши Швейцарську базу даних складу харчових продуктів. Вона містить понад 1,100 продуктів англійською, німецькою, французькою або італійською мовами.</string>
+    <string name="description2_swiss_food_composition_database">Швейцарська база даних складу харчових продуктів містить інформацію про поживну цінність понад 1,100 загальних продуктів. Вона доступна чотирма мовами. Щоб імпортувати ці продукти до вашого щоденника, будь ласка, оберіть бажану мову.</string>
+    <string name="description3_swiss_food_composition_database">Ваша база даних буде поповнена 1,100 продуктами зі Швейцарської бази даних складу харчових продуктів</string>
+    <string name="headline_external_databases">Зовнішні бази даних</string>
+    <string name="description_external_databases">Переглянути підтримувані бази даних</string>
+    <string name="feature_share_url_with_food_you">Поділитися URL-адресою з Food You</string>
+    <string name="feature_in_app_download">Завантаження в додатку</string>
+    <string name="feature_manual_database_import">Ручний імпорт бази даних</string>
+    <string name="action_unpack" description="Unpack the recipe ingredients">Розпакувати</string>
+    <string name="headline_sponsor">Підтримати проєкт</string>
+    <string name="description_sponsor_short">Будь-які внески вітаються</string>
+    <string name="description_sponsor_1">У світі, де кожен дотик відстежується, а кожна функція закрита за платною підпискою, цей трекер харчування інший. Без реклами. Без підписок. Без стеження.</string>
+    <string name="description_sponsor_2">Створений на переконанні, що корисні інструменти мають бути безкоштовними, відкритими та поважати вашу приватність, він є тихою протидією експлуатаційним моделям, що домінують у магазинах додатків.</string>
+    <string name="description_sponsor_3">Якщо це важливо для вас, будь ласка, підтримайте проєкт. Ви безпосередньо підтримуєте його постійну розробку.</string>
+    <string name="headline_source_code">Вихідний код</string>
+    <string name="description_source_code">Переглянути вихідний код проєкту на GitHub</string>
+    <string name="action_write_an_email">Написати листа</string>
+    <string name="headline_contact">Контакти</string>
+    <string name="description_sponsor_contact">З питань спонсорства зв'яжіться зі мною електронною поштою або через GitHub.</string>
+    <string name="sponsor_bank_or_card">Банківський рахунок або кредитна картка</string>
+    <string name="action_treat_as_liquid">Вважати рідиною</string>
+    <string name="description_treat_as_liquid">Надавати перевагу вимірюванню в мілілітрах</string>
+    <string name="headline_personalization">Персоналізація</string>
+    <string name="description_personalization">Налаштуйте додаток під себе</string>
+    <string name="headline_nutrition_facts">Харчова цінність</string>
+    <string name="description_personalize_nutrition_facts">Які деталі харчування вас цікавлять? Ви також можете обрати порядок їх відображення.</string>
+    <string name="description_personalize_nutrition_facts_help">Натисніть, щоб увімкнути/вимкнути, перетягніть, щоб змінити порядок</string>
+    <string name="description_personalize_nutrition_facts_short">Приховати дані про харчування, змінити порядок</string>
+    <string name="action_reset_ordering">Скинути порядок</string>
+    <string name="headline_reset_to_default">Скинути до стандартних</string>
+    <string name="action_reset" description="Confirm resetting">Скинути</string>
+    <string name="description_reset_nutrition_facts">Скинути персоналізацію харчової цінності до стандартних налаштувань</string>
+    <string name="description_warning_nutrition_facts_1">Скинути персоналізацію харчової цінності до стандартних налаштувань.</string>
+    <string name="description_warning_nutrition_facts_2">Ви все ще можете вимкнути їх, якщо бажаєте, але майте на увазі, що це може обмежити корисність вашого щоденника харчування.</string>
+    <string name="headline_enabled" description="Label indicating that something is currently enabled">Увімкнено</string>
+    <string name="headline_disabled" description="Label indicating that something is currently disabled">Вимкнено</string>
+    <string name="headline_note">Примітка</string>
+    <string name="description_add_note">Додаткова інформація, яку ви хотіли б додати до страви</string>
+    <string name="headline_extra" description="Something that is not a part of the main thing, additional information">Додатково</string>
 </resources>

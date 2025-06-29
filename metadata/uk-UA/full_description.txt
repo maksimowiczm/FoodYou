@@ -1,15 +1,15 @@
-<b>Food You</b> is a powerful, open-source nutrition tracker built with a modern Material You aesthetic. It helps you track not just calories, but your entire nutrient intake — with reliable food data and a flexible, modular interface.
+<b>Food You</b> — це потужний трекер харчування з відкритим кодом у сучасному стилі Material You. Він допомагає відстежувати не лише калорії, а й усі спожиті нутрієнти — з надійними даними про продукти та гнучким модульним інтерфейсом.
 
 <b>Функції:</b>
 <ul>
-    <li><b>Material You Design:</b> Dynamic theming that adapts to your device for a seamless visual experience.</li>
-    <li><b>Comprehensive Food Databases:</b> Access nutrition data from Open Food Facts, USDA FoodCentral, and the Swiss Food Composition Database.</li>
-    <li><b>Full Nutrition Tracking:</b> Monitor calories, macros, vitamins, minerals, and more.</li>
-    <li><b>Recipe Creation:</b> Combine foods into custom recipes with automatic nutrition calculation.</li>
-    <li><b>Daily Goals:</b> Set and follow personalized nutrition targets.</li>
-    <li><b>Modular Home Screen:</b> Customize your home with cards tailored to your needs.</li>
+    <li><b>Дизайн Material You:</b> динамічні теми, що адаптуються до вашого пристрою для бездоганного візуального досвіду.</li>
+    <li><b>Вичерпні бази даних продуктів:</b> доступ до даних про харчування з Open Food Facts, USDA FoodCentral та Swiss Food Composition Database.</li>
+    <li><b>Повне відстеження нутрієнтів:</b> контролюйте калорії, макронутрієнти, вітаміни, мінерали тощо.</li>
+    <li><b>Створення рецептів:</b> об'єднуйте продукти у власні рецепти з автоматичним розрахунком харчової цінності.</li>
+    <li><b>Денні цілі:</b> встановлюйте та дотримуйтесь персоналізованих цілей щодо харчування.</li>
+    <li><b>Модульний головний екран:</b> налаштовуйте головний екран за допомогою карток, що відповідають вашим потребам.</li>
 </ul>
 
-Start tracking your nutrition today with Food You — clean, complete, and fully yours.
+Почніть відстежувати своє харчування вже сьогодні з Food You — простим, функціональним та повністю вашим.
 
-Launcher icon made by <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>
+Іконку запуску створено <a href="https://icons8.com/" target="_blank" rel="nofollow noopener noreferrer">Icons8</a>

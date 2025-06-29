@@ -290,6 +290,9 @@
     <string name="description_reset_nutrition_facts">Przywróć ustawienia personalizacji informacji żywieniowych do domyślnych</string>
     <string name="description_warning_nutrition_facts_1">Nie zaleca się wyłączania energii, białek, węglowodanów lub tłuszczów. Są to kluczowe składniki odżywcze do śledzenia ogólnej równowagi odżywczej.</string>
     <string name="description_warning_nutrition_facts_2">Jeśli wolisz, nadal możesz tę funkcję wyłączyć — pamiętaj jednak, że może to ograniczyć przydatność Twojego dziennika żywieniowego.</string>
-    <string name="headline_enabled" description="Label indicating that something is currently enabled">Włącz</string>
-    <string name="headline_disabled" description="Label indicating that something is currently disabled">Wyłącz</string>
+    <string name="headline_enabled" description="Label indicating that something is currently enabled">Włączony</string>
+    <string name="headline_disabled" description="Label indicating that something is currently disabled">Wyłączony</string>
+    <string name="headline_note">Notatka</string>
+    <string name="description_add_note">Dodatkowe informacje, które chcesz dołączyć do żywności</string>
+    <string name="headline_extra" description="Something that is not a part of the main thing, additional information">Dodatkowe</string>
 </resources>
