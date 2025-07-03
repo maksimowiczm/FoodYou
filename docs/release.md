@@ -4,8 +4,8 @@
 2. Update the `versionCode` and `versionName` in `libs.versions.toml` to the new version.
 3. Verify that the build is reproducible.
 4. Create a changelog for the new version in `metadata/en-US/changelog/<versionCode>.txt` and
-   `app/src/commonMain/kotlin/com/maksimowiczm/foodyou/feature/changelog/Changelog.kt`, patch
-   notes can be generated using the Github `Draft a new release` feature.
+   `feature3/about/src/commonMain/kotlin/com/maksimowiczm/foodyou/feature/about/data/Changelog.kt`,
+   patch notes can be generated using the Github `Draft a new release` feature.
 5. Ensure that all metadata in the `metadata` folder is up to date.
 6. Merge the branch into `main`.
 7. Tag the merge commit with the new version and push the tag. Tag format: `<version>`.

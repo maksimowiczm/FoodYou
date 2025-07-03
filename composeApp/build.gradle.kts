@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.room)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -30,24 +32,31 @@ kotlin {
     sourceSets {
 
         androidMain.dependencies {
-            implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
+
+            implementation(libs.sqlite.android)
         }
+
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.room.paging)
+
+            implementation(project(":core3"))
+            implementation(project(":feature3:about"))
         }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
     }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 android {
@@ -56,8 +65,8 @@ android {
 
     defaultConfig {
         applicationId = "com.maksimowiczm.foodyou.preview"
-        minSdk = 26
-        targetSdk = 36
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 100
         versionName = "3.0.0-alpha01"
     }
@@ -69,6 +78,19 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        create("devRelease") {
+            initWith(getByName("release"))
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        create("miniDevRelease") {
+            initWith(getByName("devRelease"))
+            isMinifyEnabled = true
         }
     }
     compileOptions {
@@ -79,4 +101,14 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+
+    listOf(
+        "kspCommonMainMetadata",
+        "kspAndroid",
+        "kspIosX64",
+        "kspIosArm64",
+        "kspIosSimulatorArm64"
+    ).forEach {
+        add(it, libs.androidx.room.compiler)
+    }
 }

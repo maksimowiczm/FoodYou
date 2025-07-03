@@ -1,0 +1,82 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "00577450682a2286118df95b6811f400",
+    "entities": [
+      {
+        "tableName": "Sponsorship",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `sponsorName` TEXT, `message` TEXT, `amount` TEXT NOT NULL, `currency` TEXT NOT NULL, `inEuro` TEXT NOT NULL, `sponsorshipEpochSeconds` INTEGER NOT NULL, `method` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sponsorName",
+            "columnName": "sponsorName",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "message",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currency",
+            "columnName": "currency",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "inEuro",
+            "columnName": "inEuro",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sponsorshipEpochSeconds",
+            "columnName": "sponsorshipEpochSeconds",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "method",
+            "columnName": "method",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Sponsorship_sponsorshipEpochSeconds",
+            "unique": false,
+            "columnNames": [
+              "sponsorshipEpochSeconds"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Sponsorship_sponsorshipEpochSeconds` ON `${TABLE_NAME}` (`sponsorshipEpochSeconds`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '00577450682a2286118df95b6811f400')"
+    ]
+  }
+}

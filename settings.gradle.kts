@@ -50,3 +50,5 @@ include(":feature:importexport")
 include(":feature:swissfoodcompositiondatabase")
 
 include(":composeApp")
+include(":core3")
+include(":feature3:about")

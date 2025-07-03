@@ -13,6 +13,7 @@
     </queries>
 
     <application
+        android:name=".infrastructure.android.FoodYouApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -25,7 +26,7 @@
         android:theme="@style/Theme.FoodYou"
         tools:targetApi="36">
         <activity
-            android:name=".MainActivity"
+            android:name=".infrastructure.android.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
