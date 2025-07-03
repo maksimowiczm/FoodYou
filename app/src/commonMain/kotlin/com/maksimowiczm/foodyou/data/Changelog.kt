@@ -35,7 +35,7 @@ object Changelog {
 
     val v2_10_0 = Version(
         version = "2.10.0",
-        date = LocalDate(2025, 6, 29),
+        date = LocalDate(2025, 7, 3),
         newFeatures = listOf(
             "Added nutrition facts list size preference. You can now choose between compact and full sizes on the measurement screen.",
             "Added food note. You can now add a note to a food, which will be displayed on the food measurement screen."
