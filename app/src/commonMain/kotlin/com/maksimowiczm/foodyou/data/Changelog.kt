@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
-            next,
+            v2_10_0,
             v2_9_0,
             v2_8_0,
             v2_7_2,
@@ -33,22 +33,24 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
+    val v2_10_0 = Version(
+        version = "2.10.0",
+        date = LocalDate(2025, 7, 3),
         newFeatures = listOf(
-            "Added nutrition facts list size preference. You can now choose between compact and full nutrition facts list sizes in measurement screen.",
-            "Added food note. You can now add a note to the food product. It will be displayed in the food measurement screen."
+            "Added nutrition facts list size preference. You can now choose between compact and full sizes on the measurement screen.",
+            "Added food note. You can now add a note to a food, which will be displayed on the food measurement screen."
         ),
         changes = listOf(
-            "Added background to the status bar in food search screen",
-            "Show the product form discard dialog only when the form has been modified (i.e., when the user changes something)."
+            "Added background to the status bar on the food search screen.",
+            "The product form discard dialog will now appear only if the form has been modified (i.e., when the user makes a change)."
         ),
         bugFixes = listOf(
-            "Stopped overriding the energy value when opening the product update form.",
-            "App will show default measurement for serving and package if food has no measurements."
+            "Fixed an issue where the energy value was overridden when opening the product update form.",
+            "The app will now show the default measurement for serving and package if the food has no defined measurements."
         ),
         translations = listOf(
-            "Added Catalan",
-            "Added Spanish"
+            "Added Catalan.",
+            "Added Spanish."
         ),
         notes = null
     )
