@@ -30,8 +30,9 @@ sealed interface Measurement {
 
     companion object {
 
-        val comparator: Comparator<Measurement> = Comparator { a, b ->
+        val comparator: Comparator<Measurement?> = Comparator { a, b ->
             when {
+                a == null && b == null -> 0
                 a is Gram && b is Gram -> a.value.compareTo(b.value)
                 a is Milliliter && b is Milliliter -> a.value.compareTo(b.value)
                 a is Package && b is Package -> a.quantity.compareTo(b.quantity)

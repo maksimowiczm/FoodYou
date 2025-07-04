@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.model
+package com.maksimowiczm.foodyou.feature.food.domain
 
 sealed interface Food {
     val id: FoodId

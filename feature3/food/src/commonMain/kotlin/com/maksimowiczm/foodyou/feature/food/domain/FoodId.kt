@@ -1,4 +1,6 @@
-package com.maksimowiczm.foodyou.core.model
+package com.maksimowiczm.foodyou.feature.food.domain
+
+import kotlin.jvm.JvmInline
 
 sealed interface FoodId {
 

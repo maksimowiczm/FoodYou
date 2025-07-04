@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.model
+package com.maksimowiczm.foodyou.feature.food.domain
 
 data class Product(
     override val id: FoodId.Product,
@@ -6,11 +6,11 @@ data class Product(
     val brand: String?,
     override val nutritionFacts: NutritionFacts,
     val barcode: String?,
-    override val totalWeight: Float?,
+    val packageWeight: Float?,
     override val servingWeight: Float?,
     override val isLiquid: Boolean,
     override val note: String?
 ) : Food {
-    override val headline: String
-        get() = if (brand.isNullOrBlank()) name else "$name ($brand)"
+    override val headline: String = if (brand.isNullOrBlank()) name else "$name ($brand)"
+    override val totalWeight: Float? = packageWeight
 }

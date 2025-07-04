@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.model
+package com.maksimowiczm.foodyou.feature.food.domain
 
 enum class NutritionFactsField {
     Energy,
@@ -39,7 +39,5 @@ enum class NutritionFactsField {
     Phosphorus,
     Selenium,
     Iodine,
-    Chromium;
-
-    companion object
+    Chromium
 }
