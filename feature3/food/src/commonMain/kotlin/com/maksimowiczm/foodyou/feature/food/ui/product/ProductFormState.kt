@@ -15,7 +15,7 @@ internal class ProductFormState(
     val brand: FormField<String, ProductFormFieldError>,
     val barcode: FormField<String, ProductFormFieldError>,
     // Weight
-    private val isLiquidState: MutableState<Boolean>,
+    isLiquidState: MutableState<Boolean>,
     private val measurementState: MutableState<Measurement?>,
     val packageWeight: FormField<Float?, ProductFormFieldError>,
     val servingWeight: FormField<Float?, ProductFormFieldError>,
@@ -65,7 +65,8 @@ internal class ProductFormState(
     val iodineMicro: FormField<Float?, ProductFormFieldError>,
     // Extra
     val note: FormField<String, ProductFormFieldError>,
-    isModifiedState: State<Boolean>
+    isModifiedState: State<Boolean>,
+    autoCalculateEnergyState: MutableState<Boolean>
 ) {
     val isValid: Boolean
         get() = name.error == null &&
@@ -111,7 +112,8 @@ internal class ProductFormState(
             ironMilli.error == null &&
             phosphorusMilli.error == null &&
             seleniumMicro.error == null &&
-            iodineMicro.error == null
+            iodineMicro.error == null &&
+            chromiumMicro.error == null
 
     var isLiquid: Boolean by isLiquidState
 
@@ -122,4 +124,6 @@ internal class ProductFormState(
         }
 
     val isModified: Boolean by isModifiedState
+
+    var autoCalculateEnergy: Boolean by autoCalculateEnergyState
 }
