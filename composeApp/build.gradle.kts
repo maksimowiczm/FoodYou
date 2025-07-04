@@ -47,6 +47,8 @@ kotlin {
 
             implementation(project(":core3"))
             implementation(project(":feature3:about"))
+            implementation(project(":feature3:food"))
+            implementation(project(":feature3:measurement"))
         }
 
         commonTest.dependencies {

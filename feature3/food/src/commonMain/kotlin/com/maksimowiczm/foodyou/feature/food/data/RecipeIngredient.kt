@@ -1,28 +1,28 @@
-package com.maksimowiczm.foodyou.core.database.food
+package com.maksimowiczm.foodyou.feature.food.data
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.maksimowiczm.foodyou.core.database.measurement.Measurement
-import com.maksimowiczm.foodyou.core.database.measurement.WithMeasurement
+import com.maksimowiczm.foodyou.feature.measurement.data.Measurement
+import com.maksimowiczm.foodyou.feature.measurement.data.WithMeasurement
 
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = RecipeEntity::class,
+            entity = Recipe::class,
             parentColumns = ["id"],
             childColumns = ["recipeId"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = ProductEntity::class,
+            entity = Product::class,
             parentColumns = ["id"],
             childColumns = ["ingredientProductId"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = RecipeEntity::class,
+            entity = Recipe::class,
             parentColumns = ["id"],
             childColumns = ["ingredientRecipeId"],
             onDelete = ForeignKey.CASCADE
@@ -34,7 +34,7 @@ import com.maksimowiczm.foodyou.core.database.measurement.WithMeasurement
         Index(value = ["ingredientRecipeId"])
     ]
 )
-data class RecipeIngredientEntity(
+data class RecipeIngredient(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val recipeId: Long = 0,

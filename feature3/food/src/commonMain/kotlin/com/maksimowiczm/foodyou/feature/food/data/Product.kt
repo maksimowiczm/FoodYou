@@ -1,13 +1,13 @@
-package com.maksimowiczm.foodyou.core.database.food
+package com.maksimowiczm.foodyou.feature.food.data
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class ProductEntity(
+data class Product(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
+    val id: Long,
     val name: String,
     val brand: String?,
     val barcode: String?,
