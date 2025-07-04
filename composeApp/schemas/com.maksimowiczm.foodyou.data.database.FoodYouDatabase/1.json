@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "00577450682a2286118df95b6811f400",
+    "identityHash": "367937d9fcac942b9613d364fc3e13a0",
     "entities": [
       {
         "tableName": "Sponsorship",
@@ -72,11 +72,416 @@
             "createSql": "CREATE INDEX IF NOT EXISTS `index_Sponsorship_sponsorshipEpochSeconds` ON `${TABLE_NAME}` (`sponsorshipEpochSeconds`)"
           }
         ]
+      },
+      {
+        "tableName": "Product",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `isLiquid` INTEGER NOT NULL, `note` TEXT, `proteins` REAL NOT NULL, `carbohydrates` REAL NOT NULL, `fats` REAL NOT NULL, `calories` REAL NOT NULL, `saturatedFats` REAL, `monounsaturatedFats` REAL, `polyunsaturatedFats` REAL, `omega3` REAL, `omega6` REAL, `sugars` REAL, `salt` REAL, `fiber` REAL, `cholesterolMilli` REAL, `caffeineMilli` REAL, `vitaminAMicro` REAL, `vitaminB1Milli` REAL, `vitaminB2Milli` REAL, `vitaminB3Milli` REAL, `vitaminB5Milli` REAL, `vitaminB6Milli` REAL, `vitaminB7Micro` REAL, `vitaminB9Micro` REAL, `vitaminB12Micro` REAL, `vitaminCMilli` REAL, `vitaminDMicro` REAL, `vitaminEMilli` REAL, `vitaminKMicro` REAL, `manganeseMilli` REAL, `magnesiumMilli` REAL, `potassiumMilli` REAL, `calciumMilli` REAL, `copperMilli` REAL, `zincMilli` REAL, `sodiumMilli` REAL, `ironMilli` REAL, `phosphorusMilli` REAL, `seleniumMicro` REAL, `iodineMicro` REAL, `chromiumMicro` REAL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "brand",
+            "columnName": "brand",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "barcode",
+            "columnName": "barcode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "packageWeight",
+            "columnName": "packageWeight",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "servingWeight",
+            "columnName": "servingWeight",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "isLiquid",
+            "columnName": "isLiquid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "nutrients.proteins",
+            "columnName": "proteins",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.carbohydrates",
+            "columnName": "carbohydrates",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.fats",
+            "columnName": "fats",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.calories",
+            "columnName": "calories",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nutrients.saturatedFats",
+            "columnName": "saturatedFats",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.monounsaturatedFats",
+            "columnName": "monounsaturatedFats",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.polyunsaturatedFats",
+            "columnName": "polyunsaturatedFats",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.omega3",
+            "columnName": "omega3",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.omega6",
+            "columnName": "omega6",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.sugars",
+            "columnName": "sugars",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.salt",
+            "columnName": "salt",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.fiber",
+            "columnName": "fiber",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.cholesterolMilli",
+            "columnName": "cholesterolMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.caffeineMilli",
+            "columnName": "caffeineMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminAMicro",
+            "columnName": "vitaminAMicro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB1Milli",
+            "columnName": "vitaminB1Milli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB2Milli",
+            "columnName": "vitaminB2Milli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB3Milli",
+            "columnName": "vitaminB3Milli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB5Milli",
+            "columnName": "vitaminB5Milli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB6Milli",
+            "columnName": "vitaminB6Milli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB7Micro",
+            "columnName": "vitaminB7Micro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB9Micro",
+            "columnName": "vitaminB9Micro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminB12Micro",
+            "columnName": "vitaminB12Micro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminCMilli",
+            "columnName": "vitaminCMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminDMicro",
+            "columnName": "vitaminDMicro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminEMilli",
+            "columnName": "vitaminEMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "vitamins.vitaminKMicro",
+            "columnName": "vitaminKMicro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.manganeseMilli",
+            "columnName": "manganeseMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.magnesiumMilli",
+            "columnName": "magnesiumMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.potassiumMilli",
+            "columnName": "potassiumMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.calciumMilli",
+            "columnName": "calciumMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.copperMilli",
+            "columnName": "copperMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.zincMilli",
+            "columnName": "zincMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.sodiumMilli",
+            "columnName": "sodiumMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.ironMilli",
+            "columnName": "ironMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.phosphorusMilli",
+            "columnName": "phosphorusMilli",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.seleniumMicro",
+            "columnName": "seleniumMicro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.iodineMicro",
+            "columnName": "iodineMicro",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "minerals.chromiumMicro",
+            "columnName": "chromiumMicro",
+            "affinity": "REAL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "Recipe",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `servings` INTEGER NOT NULL, `isLiquid` INTEGER NOT NULL, `note` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "servings",
+            "columnName": "servings",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isLiquid",
+            "columnName": "isLiquid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "RecipeIngredient",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recipeId` INTEGER NOT NULL, `ingredientProductId` INTEGER, `ingredientRecipeId` INTEGER, `measurement` INTEGER NOT NULL, `quantity` REAL NOT NULL, FOREIGN KEY(`recipeId`) REFERENCES `Recipe`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ingredientProductId`) REFERENCES `Product`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ingredientRecipeId`) REFERENCES `Recipe`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recipeId",
+            "columnName": "recipeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ingredientProductId",
+            "columnName": "ingredientProductId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "ingredientRecipeId",
+            "columnName": "ingredientRecipeId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "measurement",
+            "columnName": "measurement",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_RecipeIngredient_recipeId",
+            "unique": false,
+            "columnNames": [
+              "recipeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeIngredient_recipeId` ON `${TABLE_NAME}` (`recipeId`)"
+          },
+          {
+            "name": "index_RecipeIngredient_ingredientProductId",
+            "unique": false,
+            "columnNames": [
+              "ingredientProductId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeIngredient_ingredientProductId` ON `${TABLE_NAME}` (`ingredientProductId`)"
+          },
+          {
+            "name": "index_RecipeIngredient_ingredientRecipeId",
+            "unique": false,
+            "columnNames": [
+              "ingredientRecipeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_RecipeIngredient_ingredientRecipeId` ON `${TABLE_NAME}` (`ingredientRecipeId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Recipe",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "recipeId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "Product",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ingredientProductId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "Recipe",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ingredientRecipeId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '00577450682a2286118df95b6811f400')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '367937d9fcac942b9613d364fc3e13a0')"
     ]
   }
 }

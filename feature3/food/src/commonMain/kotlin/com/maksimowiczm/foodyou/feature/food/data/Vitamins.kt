@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.database.food
+package com.maksimowiczm.foodyou.feature.food.data
 
 data class Vitamins(
     val vitaminAMicro: Float?,

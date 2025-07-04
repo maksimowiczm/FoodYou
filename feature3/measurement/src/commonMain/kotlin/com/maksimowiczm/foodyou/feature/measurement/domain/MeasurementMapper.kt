@@ -1,8 +1,8 @@
-package com.maksimowiczm.foodyou.core.domain
+package com.maksimowiczm.foodyou.feature.food.domain
 
-import com.maksimowiczm.foodyou.core.database.measurement.Measurement as MeasurementEntity
-import com.maksimowiczm.foodyou.core.database.measurement.WithMeasurement
-import com.maksimowiczm.foodyou.core.model.Measurement
+import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementEntity
+import com.maksimowiczm.foodyou.feature.measurement.data.WithMeasurement
+import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 
 interface MeasurementMapper {
     fun toMeasurement(entity: WithMeasurement): Measurement
@@ -12,7 +12,7 @@ interface MeasurementMapper {
     fun toQuantity(measurement: Measurement): Float
 }
 
-internal object MeasurementMapperImpl : MeasurementMapper {
+internal class MeasurementMapperImpl : MeasurementMapper {
     override fun toMeasurement(entity: WithMeasurement): Measurement = with(entity) {
         when (measurement) {
             MeasurementEntity.Gram -> Measurement.Gram(quantity)

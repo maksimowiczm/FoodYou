@@ -1,16 +1,16 @@
-package com.maksimowiczm.foodyou.core.database.food
+package com.maksimowiczm.foodyou.feature.food.data
 
 import androidx.room.Embedded
 import androidx.room.Relation
 
 data class RecipeWithIngredients(
     @Embedded
-    val recipeEntity: RecipeEntity,
+    val recipeEntity: Recipe,
 
     @Relation(
         parentColumn = "id",
         entityColumn = "recipeId",
-        entity = RecipeIngredientEntity::class
+        entity = RecipeIngredient::class
     )
-    val ingredients: List<RecipeIngredientEntity>
+    val ingredients: List<RecipeIngredient>
 )

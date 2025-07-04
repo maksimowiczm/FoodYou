@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.database.measurement
+package com.maksimowiczm.foodyou.feature.measurement.data
 
 /**
  * Represents how the weight of the product is measured.
