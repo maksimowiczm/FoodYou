@@ -1,12 +1,49 @@
 package com.maksimowiczm.foodyou.feature.food.ui.product
 
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.maksimowiczm.foodyou.core.ui.form.FormField
+import com.maksimowiczm.foodyou.core.ui.form.nullableStringParser
+import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
+import com.maksimowiczm.foodyou.core.ui.form.stringParser
+import com.maksimowiczm.foodyou.feature.food.data.Product
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
+
+@Composable
+internal fun rememberProductFormState(product: Product? = null): ProductFormState {
+    val name = rememberFormField(
+        initialValue = product?.name ?: "",
+        parser = stringParser(
+            onBlank = { ProductFormFieldError.Required }
+        ),
+        textFieldState = rememberTextFieldState(product?.name ?: "")
+    )
+
+    val brand = rememberFormField<String?, Nothing>(
+        initialValue = product?.brand,
+        parser = nullableStringParser(),
+        textFieldState = rememberTextFieldState(product?.brand ?: "")
+    )
+
+    val barcode = rememberFormField<String?, Nothing>(
+        initialValue = product?.barcode ?: "",
+        parser = nullableStringParser(),
+        textFieldState = rememberTextFieldState(product?.barcode ?: "")
+    )
+
+    val note = rememberFormField<String?, Nothing>(
+        initialValue = product?.note ?: "",
+        parser = nullableStringParser(),
+        textFieldState = rememberTextFieldState(product?.note ?: "")
+    )
+
+    TODO()
+}
 
 @Stable
 internal class ProductFormState(
@@ -15,7 +52,6 @@ internal class ProductFormState(
     val brand: FormField<String, ProductFormFieldError>,
     val barcode: FormField<String, ProductFormFieldError>,
     // Weight
-    isLiquidState: MutableState<Boolean>,
     private val measurementState: MutableState<Measurement?>,
     val packageWeight: FormField<Float?, ProductFormFieldError>,
     val servingWeight: FormField<Float?, ProductFormFieldError>,
@@ -70,52 +106,50 @@ internal class ProductFormState(
 ) {
     val isValid: Boolean
         get() = name.error == null &&
-            brand.error == null &&
-            barcode.error == null &&
-            measurementState.value != null &&
-            packageWeight.error == null &&
-            servingWeight.error == null &&
-            proteins.error == null &&
-            carbohydrates.error == null &&
-            fats.error == null &&
-            calories.error == null &&
-            saturatedFats.error == null &&
-            monounsaturatedFats.error == null &&
-            polyunsaturatedFats.error == null &&
-            omega3.error == null &&
-            omega6.error == null &&
-            sugars.error == null &&
-            salt.error == null &&
-            fiber.error == null &&
-            cholesterolMilli.error == null &&
-            caffeineMilli.error == null &&
-            vitaminAMicro.error == null &&
-            vitaminB1Milli.error == null &&
-            vitaminB2Milli.error == null &&
-            vitaminB3Milli.error == null &&
-            vitaminB5Milli.error == null &&
-            vitaminB6Milli.error == null &&
-            vitaminB7Micro.error == null &&
-            vitaminB9Micro.error == null &&
-            vitaminB12Micro.error == null &&
-            vitaminCMilli.error == null &&
-            vitaminDMicro.error == null &&
-            vitaminEMilli.error == null &&
-            vitaminKMicro.error == null &&
-            manganeseMilli.error == null &&
-            magnesiumMilli.error == null &&
-            potassiumMilli.error == null &&
-            calciumMilli.error == null &&
-            copperMilli.error == null &&
-            zincMilli.error == null &&
-            sodiumMilli.error == null &&
-            ironMilli.error == null &&
-            phosphorusMilli.error == null &&
-            seleniumMicro.error == null &&
-            iodineMicro.error == null &&
-            chromiumMicro.error == null
-
-    var isLiquid: Boolean by isLiquidState
+                brand.error == null &&
+                barcode.error == null &&
+                measurementState.value != null &&
+                packageWeight.error == null &&
+                servingWeight.error == null &&
+                proteins.error == null &&
+                carbohydrates.error == null &&
+                fats.error == null &&
+                calories.error == null &&
+                saturatedFats.error == null &&
+                monounsaturatedFats.error == null &&
+                polyunsaturatedFats.error == null &&
+                omega3.error == null &&
+                omega6.error == null &&
+                sugars.error == null &&
+                salt.error == null &&
+                fiber.error == null &&
+                cholesterolMilli.error == null &&
+                caffeineMilli.error == null &&
+                vitaminAMicro.error == null &&
+                vitaminB1Milli.error == null &&
+                vitaminB2Milli.error == null &&
+                vitaminB3Milli.error == null &&
+                vitaminB5Milli.error == null &&
+                vitaminB6Milli.error == null &&
+                vitaminB7Micro.error == null &&
+                vitaminB9Micro.error == null &&
+                vitaminB12Micro.error == null &&
+                vitaminCMilli.error == null &&
+                vitaminDMicro.error == null &&
+                vitaminEMilli.error == null &&
+                vitaminKMicro.error == null &&
+                manganeseMilli.error == null &&
+                magnesiumMilli.error == null &&
+                potassiumMilli.error == null &&
+                calciumMilli.error == null &&
+                copperMilli.error == null &&
+                zincMilli.error == null &&
+                sodiumMilli.error == null &&
+                ironMilli.error == null &&
+                phosphorusMilli.error == null &&
+                seleniumMicro.error == null &&
+                iodineMicro.error == null &&
+                chromiumMicro.error == null
 
     var measurement: Measurement
         get() = measurementState.value!!

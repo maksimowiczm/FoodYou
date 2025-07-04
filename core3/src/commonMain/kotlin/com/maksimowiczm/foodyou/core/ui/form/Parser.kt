@@ -49,3 +49,11 @@ fun <E> stringParser(onBlank: () -> E): (String) -> ParseResult<String, E> = { i
 }
 
 fun <E> stringParser(): (String) -> ParseResult<String, E> = { ParseResult.Success(it) }
+
+fun <E> nullableStringParser(): (String) -> ParseResult<String?, E> = { input ->
+    if (input.isBlank()) {
+        ParseResult.Success(null)
+    } else {
+        ParseResult.Success(input)
+    }
+}
