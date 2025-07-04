@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.ui.simpleform
+package com.maksimowiczm.foodyou.core.ui.form
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 
 @Stable
 class FormField<T, E>(
@@ -25,25 +26,28 @@ class FormField<T, E>(
 @Composable
 fun <T, E> rememberFormField(
     initialValue: T,
-    parser: (String) -> ParseResult<T, E>,
-    validator: (T) -> E? = { null },
+    parser: Parser<T, E>,
+    validator: Validator<T, E> = defaultValidator(),
     initialError: E? = null,
     textFieldState: TextFieldState = rememberTextFieldState()
 ): FormField<T, E> {
-    var value = rememberSaveable { mutableStateOf(initialValue) }
-    var error = rememberSaveable { mutableStateOf(initialError) }
+    val valueState = rememberSaveable { mutableStateOf(initialValue) }
+    val errorState = rememberSaveable { mutableStateOf(initialError) }
+
+    var value by valueState
+    var error by errorState
 
     LaunchedEffect(textFieldState.text, parser, validator) {
         val text = textFieldState.text.toString()
-        val result = parser(text)
-        when (result) {
+
+        when (val result = parser(text)) {
             is ParseResult.Success -> {
-                value.value = result.value
-                error.value = validator(result.value)
+                value = result.value
+                error = validator(value)
             }
 
             is ParseResult.Failure -> {
-                error.value = result.error
+                error = result.error
             }
         }
     }
@@ -51,8 +55,8 @@ fun <T, E> rememberFormField(
     return remember(textFieldState, value, error) {
         FormField(
             textFieldState = textFieldState,
-            valueState = value,
-            errorState = error
+            valueState = valueState,
+            errorState = errorState
         )
     }
 }
