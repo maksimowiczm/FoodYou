@@ -536,51 +536,6 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
     }
 }
 
-private val nullableFloatParser: (String) -> ParseResult<Float?, ProductFormFieldError> = { input ->
-    if (input.isBlank()) {
-        ParseResult.Success(null)
-    } else {
-        val value = input.toFloatOrNull()
-        if (value == null) {
-            ParseResult.Failure(ProductFormFieldError.NotANumber)
-        } else {
-            ParseResult.Success(value)
-        }
-    }
-}
-
-private fun nonNegativeFloatValidator(): (Float?) -> ProductFormFieldError? = {
-    when {
-        it == null -> null
-        it < 0f -> ProductFormFieldError.Negative
-        else -> null
-    }
-}
-
-private fun requireNonNegativeFloatValidator(): (Float?) -> ProductFormFieldError? = {
-    when {
-        it == null -> ProductFormFieldError.Required
-        it < 0f -> ProductFormFieldError.Negative
-        else -> null
-    }
-}
-
-private fun positiveFloatValidator(): (Float?) -> ProductFormFieldError? = {
-    when {
-        it == null -> null
-        it <= 0f -> ProductFormFieldError.NotPositive
-        else -> null
-    }
-}
-
-private fun requirePositiveFloatValidator(): (Float?) -> ProductFormFieldError? = {
-    when {
-        it == null -> ProductFormFieldError.Required
-        it <= 0f -> ProductFormFieldError.NotPositive
-        else -> null
-    }
-}
-
 @Composable
 private fun rememberNotRequiredFormField(initialValue: Float? = null) =
     rememberFormField<Float?, ProductFormFieldError>(

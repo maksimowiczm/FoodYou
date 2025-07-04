@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.core.ui.form
 
+import kotlin.compareTo
+
 fun interface Validator<T, E> {
     /**
      * Validates the given value and returns an error if validation fails.
@@ -13,3 +15,25 @@ fun interface Validator<T, E> {
 }
 
 fun <T, E> defaultValidator(): Validator<T, E> = Validator { null }
+
+fun <E> nonNegativeFloatValidator(
+    onNegative: () -> E,
+    onNull: () -> E? = { null }
+): (Float?) -> E? = {
+    when {
+        it == null -> onNull()
+        it < 0f -> onNegative()
+        else -> null
+    }
+}
+
+fun <E> positiveFloatValidator(
+    onNotPositive: () -> E,
+    onNull: () -> E? = { null }
+): (Float?) -> E? = {
+    when {
+        it == null -> onNull()
+        it <= 0f -> onNotPositive()
+        else -> null
+    }
+}
