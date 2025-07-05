@@ -5,7 +5,7 @@ data class Nutrients(
     val proteins: Float,
     val carbohydrates: Float,
     val fats: Float,
-    val calories: Float,
+    val energy: Float,
     // Fats
     val saturatedFats: Float?,
     val monounsaturatedFats: Float?,

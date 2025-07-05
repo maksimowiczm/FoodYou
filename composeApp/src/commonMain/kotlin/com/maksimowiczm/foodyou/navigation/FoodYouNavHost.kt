@@ -23,7 +23,12 @@ fun FoodYouNavHost(
         modifier = modifier
     ) {
         composable("product") {
-            CreateProductScreen()
+            CreateProductScreen(
+                onBack = {},
+                onCreate = {
+                    navController.navigate(About)
+                }
+            )
         }
 
         aboutGraph(
