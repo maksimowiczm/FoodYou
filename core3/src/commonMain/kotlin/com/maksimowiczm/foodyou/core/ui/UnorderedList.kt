@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.ui
+package com.maksimowiczm.foodyou.core.ui
 
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
@@ -12,11 +12,11 @@ import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
 
 @Composable
-internal fun unorderedList(items: List<String>, prefix: String = "\u2022\t\t") =
+fun unorderedList(items: List<String>, prefix: String = "\u2022\t\t") =
     unorderedList(*items.toTypedArray(), prefix = prefix)
 
 @Composable
-internal fun unorderedList(vararg items: String, prefix: String = "\u2022\t\t"): AnnotatedString {
+fun unorderedList(vararg items: String, prefix: String = "\u2022\t\t"): AnnotatedString {
     val textStyle = LocalTextStyle.current
     val textMeasurer = rememberTextMeasurer()
     val bulletStringWidth = remember(textStyle, textMeasurer) {

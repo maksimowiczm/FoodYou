@@ -202,7 +202,6 @@
     <string name="neutral_permanently_delete_meal">Permanently delete meal?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Meal will be deleted permanently. All data related to this meal will be lost.</string>
     <string name="neutral_required">Required</string>
-    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calories are calculated automatically based on macronutrients</string>
     <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_copied">Info copied to clipboard</string>
     <string name="neutral_product_created">Product created</string>
@@ -350,5 +349,8 @@
 
     <string name="headline_now" description="Current time, now">Now</string>
     <string name="action_try_again">Try again</string>
+
+    <string name="description_calories_are_calculated">Energy is automatically calculated from macronutrients. You can disable this feature and enter the value manually if needed. Alcohol is not included in the calculation.</string>
+    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
 
 </resources>

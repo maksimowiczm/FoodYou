@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.food.ui.product
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,16 +13,24 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.Calculate
+import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.SplitButtonDefaults
 import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +45,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.form.FormField
+import com.maksimowiczm.foodyou.core.ui.unorderedList
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.ui.stringResource
 import foodyou.app.generated.resources.*
@@ -73,14 +83,12 @@ internal fun ProductForm(
             label = stringResource(Res.string.product_name),
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
             required = true,
-            imeAction = ImeAction.Next,
             suffix = null
         )
 
         state.brand.TextField(
             label = stringResource(Res.string.product_brand),
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
-            imeAction = ImeAction.Next
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )
 
         BarcodeTextField(
@@ -88,14 +96,12 @@ internal fun ProductForm(
             onBarcodeScanner = {
                 // TODO
             },
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
-            imeAction = ImeAction.Next
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )
 
         state.note.TextField(
             label = stringResource(Res.string.headline_note),
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
-            imeAction = ImeAction.Next,
             supportingText = stringResource(Res.string.description_add_note)
         )
 
@@ -103,9 +109,53 @@ internal fun ProductForm(
             selected = state.measurement,
             onSelect = { state.measurement = it },
             modifier = Modifier
-                .padding(vertical = 8.dp)
+                .padding(8.dp)
                 .padding(horizontalPadding)
                 .fillMaxWidth()
+        )
+
+        state.packageWeight.TextField(
+            label = stringResource(Res.string.product_package_weight),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            required = state.measurement is Measurement.Package
+        )
+
+        state.servingWeight.TextField(
+            label = stringResource(Res.string.product_serving_weight),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            required = state.measurement is Measurement.Serving
+        )
+
+        Text(
+            text = stringResource(Res.string.headline_macronutrients),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        state.proteins.TextField(
+            label = stringResource(Res.string.nutriment_proteins),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            required = true
+        )
+
+        state.carbohydrates.TextField(
+            label = stringResource(Res.string.nutriment_carbohydrates),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            required = true
+        )
+
+        state.fats.TextField(
+            label = stringResource(Res.string.nutriment_fats),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            required = true
+        )
+
+        EnergyTextField(
+            state = state.energy,
+            autoCalculate = state.autoCalculateEnergy,
+            onAutoCalculateToggle = { state.autoCalculateEnergy = it },
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )
     }
 }
@@ -115,7 +165,7 @@ private inline fun <reified T> FormField<T, ProductFormFieldError>.TextField(
     label: String,
     modifier: Modifier = Modifier,
     required: Boolean = false,
-    imeAction: ImeAction? = null,
+    imeAction: ImeAction = ImeAction.Next,
     suffix: String? = stringResource(Res.string.unit_gram_short)
 ) {
     OutlinedTextField(
@@ -135,12 +185,12 @@ private inline fun <reified T> FormField<T, ProductFormFieldError>.TextField(
         keyboardOptions = if (T::class == Float::class) {
             KeyboardOptions(
                 keyboardType = KeyboardType.Decimal,
-                imeAction = imeAction ?: ImeAction.Next
+                imeAction = imeAction
             )
         } else {
             KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = imeAction ?: ImeAction.Next
+                imeAction = imeAction
             )
         }
     )
@@ -150,7 +200,7 @@ private inline fun <reified T> FormField<T, ProductFormFieldError>.TextField(
 private inline fun <reified T> FormField<T, Nothing>.TextField(
     label: String,
     modifier: Modifier = Modifier,
-    imeAction: ImeAction? = null,
+    imeAction: ImeAction = ImeAction.Next,
     supportingText: String? = null
 ) {
     OutlinedTextField(
@@ -161,12 +211,12 @@ private inline fun <reified T> FormField<T, Nothing>.TextField(
         keyboardOptions = if (T::class == Float::class) {
             KeyboardOptions(
                 keyboardType = KeyboardType.Decimal,
-                imeAction = imeAction ?: ImeAction.Next
+                imeAction = imeAction
             )
         } else {
             KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = imeAction ?: ImeAction.Next
+                imeAction = imeAction
             )
         }
     )
@@ -273,6 +323,100 @@ private fun MeasurementPicker(
                     }
                 }
             }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+private fun EnergyTextField(
+    state: FormField<Float?, ProductFormFieldError>,
+    autoCalculate: Boolean,
+    onAutoCalculateToggle: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        OutlinedTextField(
+            state = state.textFieldState,
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(Res.string.unit_energy)) },
+            supportingText = {
+                val error = state.error
+                if (error != null) {
+                    Text(error.stringResource())
+                } else {
+                    Text(stringResource(Res.string.neutral_required))
+                }
+            },
+            trailingIcon = {
+                TooltipBox(
+                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
+                    tooltip = {
+                        PlainTooltip {
+                            Text(
+                                text = if (autoCalculate) {
+                                    "Auto-calculate energy"
+                                } else {
+                                    "Manual energy input"
+                                },
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    },
+                    state = rememberTooltipState(
+                        isPersistent = true
+                    )
+                ) {
+                    IconButton(
+                        onClick = { onAutoCalculateToggle(!autoCalculate) }
+                    ) {
+                        if (autoCalculate) {
+                            Icon(
+                                imageVector = Icons.Outlined.Calculate,
+                                contentDescription = null
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Outlined.Keyboard,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }
+            },
+            isError = state.error != null,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Decimal,
+                imeAction = ImeAction.Done
+            ),
+            suffix = { Text(stringResource(Res.string.unit_kcal)) }
+        )
+        Text(
+            text = stringResource(Res.string.description_calories_are_calculated),
+            style = MaterialTheme.typography.bodySmall
+        )
+        Text(
+            text = unorderedList(
+                stringResource(
+                    Res.string.x_kcal_per_g,
+                    stringResource(Res.string.nutriment_proteins),
+                    4
+                ),
+                stringResource(
+                    Res.string.x_kcal_per_g,
+                    stringResource(Res.string.nutriment_carbohydrates),
+                    4
+                ),
+                stringResource(
+                    Res.string.x_kcal_per_g,
+                    stringResource(Res.string.nutriment_fats),
+                    9
+                )
+            ),
+            style = MaterialTheme.typography.bodySmall
         )
     }
 }

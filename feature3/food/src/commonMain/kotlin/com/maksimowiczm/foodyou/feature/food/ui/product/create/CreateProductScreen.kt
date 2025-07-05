@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.ui.product.create
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -14,7 +15,7 @@ import com.maksimowiczm.foodyou.feature.food.ui.product.rememberProductFormState
 internal fun CreateProductScreen(modifier: Modifier = Modifier) {
     Scaffold(modifier) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().imePadding(),
             contentPadding = paddingValues
         ) {
             item {
