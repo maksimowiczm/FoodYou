@@ -24,14 +24,20 @@ import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.core.ui.form.stringParser
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
+import com.maksimowiczm.foodyou.feature.food.data.Minerals
+import com.maksimowiczm.foodyou.feature.food.data.Nutrients
+import com.maksimowiczm.foodyou.feature.food.data.Product as ProductEntity
+import com.maksimowiczm.foodyou.feature.food.data.Vitamins
 import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.ui.Saver
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun rememberProductFormState(product: Product? = null): ProductFormState {
@@ -111,59 +117,78 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     val fats =
         rememberRequiredFormField(product?.nutritionFacts?.fats?.value)
     val energy =
-        rememberRequiredFormField(product?.nutritionFacts?.calories?.value)
+        rememberRequiredFormField(product?.nutritionFacts?.energy?.value)
 
-    val autoCalculateEnergyState = rememberSaveable { mutableStateOf(true) }
+    val autoCalculateEnergyState = rememberSaveable {
+        val energy = product?.nutritionFacts?.energy?.value
+        val proteins = product?.nutritionFacts?.proteins?.value
+        val carbohydrates = product?.nutritionFacts?.carbohydrates?.value
+        val fats = product?.nutritionFacts?.fats?.value
 
-    LaunchedEffect(autoCalculateEnergyState.value) {
-        if (autoCalculateEnergyState.value) {
-            val proteinsValue = proteins.value
-            val carbohydratesValue = carbohydrates.value
-            val fatsValue = fats.value
-
-            if (proteinsValue != null && carbohydratesValue != null && fatsValue != null) {
-                val kcal = NutrientsHelper.calculateEnergy(
-                    proteins = proteinsValue,
-                    carbohydrates = carbohydratesValue,
-                    fats = fatsValue
-                )
-
-                val text = kcal.formatClipZeros()
-                energy.textFieldState.setTextAndPlaceCursorAtEnd(text)
-            }
-        }
-    }
-
-    LaunchedEffect(proteins, carbohydrates, fats, autoCalculateEnergyState) {
-        val caloriesFlow = combine(
-            snapshotFlow { proteins.value },
-            snapshotFlow { carbohydrates.value },
-            snapshotFlow { fats.value }
-        ) { it }.drop(1).mapNotNull {
-            val (proteins, carbohydrates, fats) = it
-            if (proteins == null || carbohydrates == null || fats == null) {
-                return@mapNotNull null
-            }
-
+        val initialState = energy != null &&
+            proteins != null &&
+            carbohydrates != null &&
+            fats != null &&
             NutrientsHelper.calculateEnergy(
                 proteins = proteins,
                 carbohydrates = carbohydrates,
                 fats = fats
-            )
+            ) == energy
+
+        mutableStateOf(initialState)
+    }
+
+    LaunchedEffect(autoCalculateEnergyState, proteins, carbohydrates, fats) {
+        launch {
+            snapshotFlow { autoCalculateEnergyState.value }.drop(1).filter { it }.collectLatest {
+                val proteinsValue = proteins.value
+                val carbohydratesValue = carbohydrates.value
+                val fatsValue = fats.value
+
+                if (proteinsValue != null && carbohydratesValue != null && fatsValue != null) {
+                    val kcal = NutrientsHelper.calculateEnergy(
+                        proteins = proteinsValue,
+                        carbohydrates = carbohydratesValue,
+                        fats = fatsValue
+                    )
+
+                    val text = kcal.formatClipZeros()
+                    energy.textFieldState.setTextAndPlaceCursorAtEnd(text)
+                }
+            }
         }
 
-        combine(
-            snapshotFlow { autoCalculateEnergyState.value },
-            caloriesFlow
-        ) { autoCalculateEnergy, calories ->
-            if (!autoCalculateEnergy) {
-                return@combine null
+        launch {
+            val caloriesFlow = combine(
+                snapshotFlow { proteins.value },
+                snapshotFlow { carbohydrates.value },
+                snapshotFlow { fats.value }
+            ) { it }.drop(1).mapNotNull {
+                val (proteins, carbohydrates, fats) = it
+                if (proteins == null || carbohydrates == null || fats == null) {
+                    return@mapNotNull null
+                }
+
+                NutrientsHelper.calculateEnergy(
+                    proteins = proteins,
+                    carbohydrates = carbohydrates,
+                    fats = fats
+                )
             }
 
-            calories
-        }.filterNotNull().collectLatest { kcal ->
-            val text = kcal.formatClipZeros()
-            energy.textFieldState.setTextAndPlaceCursorAtEnd(text)
+            combine(
+                snapshotFlow { autoCalculateEnergyState.value },
+                caloriesFlow
+            ) { autoCalculateEnergy, calories ->
+                if (!autoCalculateEnergy) {
+                    return@combine null
+                }
+
+                calories
+            }.filterNotNull().collectLatest { kcal ->
+                val text = kcal.formatClipZeros()
+                energy.textFieldState.setTextAndPlaceCursorAtEnd(text)
+            }
         }
     }
 
@@ -252,7 +277,7 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                     product.nutritionFacts.proteins.value != proteins.value ||
                     product.nutritionFacts.carbohydrates.value != carbohydrates.value ||
                     product.nutritionFacts.fats.value != fats.value ||
-                    product.nutritionFacts.calories.value != energy.value ||
+                    product.nutritionFacts.energy.value != energy.value ||
                     product.nutritionFacts.saturatedFats.value != saturatedFats.value ||
                     product.nutritionFacts.monounsaturatedFats.value !=
                     monounsaturatedFats.value ||
@@ -405,6 +430,32 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     }
 }
 
+@Composable
+private fun rememberNotRequiredFormField(initialValue: Float? = null) = rememberFormField(
+    initialValue = initialValue,
+    parser = nullableFloatParser(
+        onNotANumber = { ProductFormFieldError.NotANumber }
+    ),
+    validator = nonNegativeFloatValidator(
+        onNegative = { ProductFormFieldError.NotPositive }
+    ),
+    textFieldState = rememberTextFieldState(initialValue?.formatClipZeros("%.4f") ?: "")
+)
+
+@Composable
+private fun rememberRequiredFormField(initialValue: Float? = null) = rememberFormField(
+    initialValue = initialValue,
+    parser = nullableFloatParser(
+        onNotANumber = { ProductFormFieldError.NotANumber },
+        onNull = { ProductFormFieldError.Required }
+    ),
+    validator = positiveFloatValidator(
+        onNotPositive = { ProductFormFieldError.NotPositive },
+        onNull = { ProductFormFieldError.Required }
+    ),
+    textFieldState = rememberTextFieldState(initialValue?.formatClipZeros("%.4f") ?: "")
+)
+
 @Stable
 internal class ProductFormState(
     // General
@@ -513,28 +564,82 @@ internal class ProductFormState(
     var autoCalculateEnergy: Boolean by autoCalculateEnergyState
 }
 
-@Composable
-private fun rememberNotRequiredFormField(initialValue: Float? = null) = rememberFormField(
-    initialValue = initialValue,
-    parser = nullableFloatParser(
-        onNotANumber = { ProductFormFieldError.NotANumber }
-    ),
-    validator = nonNegativeFloatValidator(
-        onNegative = { ProductFormFieldError.NotPositive }
-    ),
-    textFieldState = rememberTextFieldState(initialValue?.formatClipZeros("%.4f") ?: "")
-)
+/**
+ * Converts the [ProductFormState] to a [ProductEntity].
+ *
+ * @param multiplier The multiplier to apply to the nutrient values.
+ * @return A [Result] containing the [ProductEntity] or an error if conversion fails.
+ */
+internal fun ProductFormState.toProductEntity(multiplier: Float): Result<ProductEntity> =
+    runCatching {
+        val proteins = proteins.value
+        checkNotNull(proteins) { "Proteins cannot be null" }
 
-@Composable
-private fun rememberRequiredFormField(initialValue: Float? = null) = rememberFormField(
-    initialValue = initialValue,
-    parser = nullableFloatParser(
-        onNotANumber = { ProductFormFieldError.NotANumber },
-        onNull = { ProductFormFieldError.Required }
-    ),
-    validator = positiveFloatValidator(
-        onNotPositive = { ProductFormFieldError.NotPositive },
-        onNull = { ProductFormFieldError.Required }
-    ),
-    textFieldState = rememberTextFieldState(initialValue?.formatClipZeros("%.4f") ?: "")
-)
+        val carbohydrates = carbohydrates.value
+        checkNotNull(carbohydrates) { "Carbohydrates cannot be null" }
+
+        val fats = fats.value
+        checkNotNull(fats) { "Fats cannot be null" }
+
+        val energy = energy.value
+        checkNotNull(energy) { "Energy cannot be null" }
+
+        return Result.success(
+            ProductEntity(
+                name = name.value,
+                brand = brand.value,
+                barcode = barcode.value,
+                nutrients = Nutrients(
+                    proteins = proteins * multiplier,
+                    carbohydrates = carbohydrates * multiplier,
+                    fats = fats * multiplier,
+                    energy = energy * multiplier,
+                    saturatedFats = saturatedFats.value.applyMultiplier(multiplier),
+                    monounsaturatedFats = monounsaturatedFats.value.applyMultiplier(multiplier),
+                    polyunsaturatedFats = polyunsaturatedFats.value.applyMultiplier(multiplier),
+                    omega3 = omega3.value.applyMultiplier(multiplier),
+                    omega6 = omega6.value.applyMultiplier(multiplier),
+                    sugars = sugars.value.applyMultiplier(multiplier),
+                    salt = salt.value.applyMultiplier(multiplier),
+                    fiber = fiber.value.applyMultiplier(multiplier),
+                    cholesterolMilli = cholesterolMilli.value.applyMultiplier(multiplier),
+                    caffeineMilli = caffeineMilli.value.applyMultiplier(multiplier)
+                ),
+                vitamins = Vitamins(
+                    vitaminAMicro = vitaminAMicro.value.applyMultiplier(multiplier),
+                    vitaminB1Milli = vitaminB1Milli.value.applyMultiplier(multiplier),
+                    vitaminB2Milli = vitaminB2Milli.value.applyMultiplier(multiplier),
+                    vitaminB3Milli = vitaminB3Milli.value.applyMultiplier(multiplier),
+                    vitaminB5Milli = vitaminB5Milli.value.applyMultiplier(multiplier),
+                    vitaminB6Milli = vitaminB6Milli.value.applyMultiplier(multiplier),
+                    vitaminB7Micro = vitaminB7Micro.value.applyMultiplier(multiplier),
+                    vitaminB9Micro = vitaminB9Micro.value.applyMultiplier(multiplier),
+                    vitaminB12Micro = vitaminB12Micro.value.applyMultiplier(multiplier),
+                    vitaminCMilli = vitaminCMilli.value.applyMultiplier(multiplier),
+                    vitaminDMicro = vitaminDMicro.value.applyMultiplier(multiplier),
+                    vitaminEMilli = vitaminEMilli.value.applyMultiplier(multiplier),
+                    vitaminKMicro = vitaminKMicro.value.applyMultiplier(multiplier)
+                ),
+                minerals = Minerals(
+                    manganeseMilli = manganeseMilli.value.applyMultiplier(multiplier),
+                    magnesiumMilli = magnesiumMilli.value.applyMultiplier(multiplier),
+                    potassiumMilli = potassiumMilli.value.applyMultiplier(multiplier),
+                    calciumMilli = calciumMilli.value.applyMultiplier(multiplier),
+                    copperMilli = copperMilli.value.applyMultiplier(multiplier),
+                    zincMilli = zincMilli.value.applyMultiplier(multiplier),
+                    sodiumMilli = sodiumMilli.value.applyMultiplier(multiplier),
+                    ironMilli = ironMilli.value.applyMultiplier(multiplier),
+                    phosphorusMilli = phosphorusMilli.value.applyMultiplier(multiplier),
+                    seleniumMicro = seleniumMicro.value.applyMultiplier(multiplier),
+                    iodineMicro = iodineMicro.value.applyMultiplier(multiplier),
+                    chromiumMicro = chromiumMicro.value.applyMultiplier(multiplier)
+
+                ),
+                packageWeight = packageWeight.value,
+                servingWeight = servingWeight.value,
+                note = note.value
+            )
+        )
+    }
+
+private fun Float?.applyMultiplier(multiplier: Float): Float? = this?.let { it * multiplier }

@@ -5,7 +5,7 @@ data class NutritionFacts(
     val proteins: NutrientValue.Complete,
     val carbohydrates: NutrientValue.Complete,
     val fats: NutrientValue.Complete,
-    val calories: NutrientValue.Complete,
+    val energy: NutrientValue.Complete,
     // Fats
     val saturatedFats: NutrientValue,
     val monounsaturatedFats: NutrientValue,
@@ -51,7 +51,7 @@ data class NutritionFacts(
             NutritionFactsField.Proteins -> proteins
             NutritionFactsField.Carbohydrates -> carbohydrates
             NutritionFactsField.Fats -> fats
-            NutritionFactsField.Energy -> calories
+            NutritionFactsField.Energy -> energy
             NutritionFactsField.SaturatedFats -> saturatedFats
             NutritionFactsField.MonounsaturatedFats -> monounsaturatedFats
             NutritionFactsField.PolyunsaturatedFats -> polyunsaturatedFats
@@ -100,7 +100,7 @@ data class NutritionFacts(
             proteins,
             carbohydrates,
             fats,
-            calories,
+            energy,
             saturatedFats,
             monounsaturatedFats,
             polyunsaturatedFats,
@@ -141,7 +141,7 @@ data class NutritionFacts(
         proteins = this.proteins + other.proteins,
         carbohydrates = this.carbohydrates + other.carbohydrates,
         fats = this.fats + other.fats,
-        calories = this.calories + other.calories,
+        energy = this.energy + other.energy,
         saturatedFats = this.saturatedFats + other.saturatedFats,
         monounsaturatedFats = this.monounsaturatedFats + other.monounsaturatedFats,
         polyunsaturatedFats = this.polyunsaturatedFats + other.polyunsaturatedFats,
@@ -183,7 +183,7 @@ data class NutritionFacts(
         proteins = this.proteins * multiplier,
         carbohydrates = this.carbohydrates * multiplier,
         fats = this.fats * multiplier,
-        calories = this.calories * multiplier,
+        energy = this.energy * multiplier,
         saturatedFats = this.saturatedFats * multiplier,
         monounsaturatedFats = this.monounsaturatedFats * multiplier,
         polyunsaturatedFats = this.polyunsaturatedFats * multiplier,
@@ -225,7 +225,7 @@ data class NutritionFacts(
         proteins = this.proteins / divisor,
         carbohydrates = this.carbohydrates / divisor,
         fats = this.fats / divisor,
-        calories = this.calories / divisor,
+        energy = this.energy / divisor,
         saturatedFats = this.saturatedFats / divisor,
         monounsaturatedFats = this.monounsaturatedFats / divisor,
         polyunsaturatedFats = this.polyunsaturatedFats / divisor,
@@ -268,7 +268,7 @@ data class NutritionFacts(
             proteins = NutrientValue.Complete(0f),
             carbohydrates = NutrientValue.Complete(0f),
             fats = NutrientValue.Complete(0f),
-            calories = NutrientValue.Complete(0f),
+            energy = NutrientValue.Complete(0f),
             saturatedFats = NutrientValue.Complete(0f),
             monounsaturatedFats = NutrientValue.Complete(0f),
             polyunsaturatedFats = NutrientValue.Complete(0f),

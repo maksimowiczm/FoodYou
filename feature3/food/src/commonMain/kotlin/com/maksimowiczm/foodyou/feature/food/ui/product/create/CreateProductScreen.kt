@@ -43,13 +43,12 @@ internal fun CreateProductScreen(
     viewModel: CreateProductViewModel = koinViewModel()
 ) {
     val latestOnCreate = rememberUpdatedState(onCreate)
-    LaunchedCollectWithLifecycle(viewModel.eventBus) { event ->
+    LaunchedCollectWithLifecycle(viewModel.events) { event ->
         when (event) {
             is CreateProductEvent.Created -> latestOnCreate.value(event.productId)
         }
     }
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val productForm = rememberProductFormState()
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
@@ -74,6 +73,8 @@ internal fun CreateProductScreen(
             }
         )
     }
+
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
         modifier = modifier,

@@ -9,7 +9,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun <T> LaunchedCollectWithLifecycle(
@@ -22,7 +21,7 @@ fun <T> LaunchedCollectWithLifecycle(
 
     LaunchedEffect(lifecycleOwner, flow) {
         lifecycleOwner.repeatOnLifecycle(minActiveState) {
-            flow.collectLatest(latestAction)
+            flow.collect(latestAction)
         }
     }
 }

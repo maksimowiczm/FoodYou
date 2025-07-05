@@ -1,19 +1,16 @@
-package com.maksimowiczm.foodyou.core.domain
+package com.maksimowiczm.foodyou.feature.food.domain
 
-import com.maksimowiczm.foodyou.core.database.food.Minerals
-import com.maksimowiczm.foodyou.core.database.food.Nutrients
-import com.maksimowiczm.foodyou.core.database.food.ProductEntity
-import com.maksimowiczm.foodyou.core.database.food.Vitamins
-import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.core.model.NutritionFacts
-import com.maksimowiczm.foodyou.core.model.Product
+import com.maksimowiczm.foodyou.feature.food.data.Minerals
+import com.maksimowiczm.foodyou.feature.food.data.Nutrients
+import com.maksimowiczm.foodyou.feature.food.data.Product as ProductEntity
+import com.maksimowiczm.foodyou.feature.food.data.Vitamins
+import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue.Companion.toNutrientValue
 
 interface ProductMapper {
     fun toModel(entity: ProductEntity): Product
 }
 
-internal object ProductMapperImpl : ProductMapper {
+internal class ProductMapperImpl : ProductMapper {
     override fun toModel(entity: ProductEntity): Product = Product(
         id = FoodId.Product(entity.id),
         name = entity.name,
@@ -24,15 +21,14 @@ internal object ProductMapperImpl : ProductMapper {
             vitamins = entity.vitamins,
             minerals = entity.minerals
         ),
-        totalWeight = entity.packageWeight,
+        packageWeight = entity.packageWeight,
         servingWeight = entity.servingWeight,
-        isLiquid = entity.isLiquid,
         note = entity.note
     )
 
     private fun toNutritionFacts(nutrients: Nutrients, vitamins: Vitamins, minerals: Minerals) =
         NutritionFacts(
-            calories = nutrients.calories.toNutrientValue(),
+            energy = nutrients.energy.toNutrientValue(),
             proteins = nutrients.proteins.toNutrientValue(),
             carbohydrates = nutrients.carbohydrates.toNutrientValue(),
             sugars = nutrients.sugars.toNutrientValue(),

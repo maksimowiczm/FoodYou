@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -49,6 +50,8 @@ kotlin {
             implementation(project(":feature3:about"))
             implementation(project(":feature3:food"))
             implementation(project(":feature3:measurement"))
+
+            implementation(libs.kotlinx.serialization.json)
         }
 
         commonTest.dependencies {
