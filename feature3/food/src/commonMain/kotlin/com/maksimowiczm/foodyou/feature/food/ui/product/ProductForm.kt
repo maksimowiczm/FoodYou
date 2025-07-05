@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -18,6 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.form.FormField
 import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -38,7 +41,7 @@ internal fun ProductForm(
 
     Column(
         modifier = modifier.padding(verticalPadding),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
             text = stringResource(Res.string.headline_general),
@@ -51,7 +54,8 @@ internal fun ProductForm(
             label = stringResource(Res.string.product_name),
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
             required = true,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+            suffix = null
         )
 
         state.brand.TextField(
@@ -60,26 +64,33 @@ internal fun ProductForm(
             imeAction = ImeAction.Next
         )
 
-        // TODO barcode
+        BarcodeTextField(
+            state = state.barcode,
+            onBarcodeScanner = {
+                // TODO
+            },
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            imeAction = ImeAction.Next
+        )
 
         state.note.TextField(
             label = stringResource(Res.string.headline_note),
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
             imeAction = ImeAction.Next,
-            supportingText = "Optional notes (e.g., ingredients, vegan status, allergens, additives) or any other non-nutrient details"
+            supportingText = stringResource(Res.string.description_add_note)
         )
     }
 }
 
 @Composable
-internal inline fun <reified T> FormField<T, ProductFormFieldError>.TextField(
+private inline fun <reified T> FormField<T, ProductFormFieldError>.TextField(
     label: String,
     modifier: Modifier = Modifier,
     required: Boolean = false,
     imeAction: ImeAction? = null,
     suffix: String? = stringResource(Res.string.unit_gram_short)
 ) {
-    TextField(
+    OutlinedTextField(
         state = textFieldState,
         modifier = modifier,
         label = { Text(label) },
@@ -108,13 +119,13 @@ internal inline fun <reified T> FormField<T, ProductFormFieldError>.TextField(
 }
 
 @Composable
-internal inline fun <reified T> FormField<T, Nothing>.TextField(
+private inline fun <reified T> FormField<T, Nothing>.TextField(
     label: String,
     modifier: Modifier = Modifier,
     imeAction: ImeAction? = null,
     supportingText: String? = null
 ) {
-    TextField(
+    OutlinedTextField(
         state = textFieldState,
         modifier = modifier,
         label = { Text(label) },
@@ -129,6 +140,34 @@ internal inline fun <reified T> FormField<T, Nothing>.TextField(
                 keyboardType = KeyboardType.Text,
                 imeAction = imeAction ?: ImeAction.Next
             )
+        }
+    )
+}
+
+@Composable
+private fun BarcodeTextField(
+    state: FormField<String?, Nothing>,
+    onBarcodeScanner: () -> Unit,
+    modifier: Modifier = Modifier,
+    imeAction: ImeAction = ImeAction.Next
+) {
+    OutlinedTextField(
+        state = state.textFieldState,
+        modifier = modifier,
+        label = { Text(stringResource(Res.string.product_barcode)) },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = imeAction
+        ),
+        trailingIcon = {
+            FilledTonalIconButton(
+                onClick = onBarcodeScanner
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_barcode_scanner),
+                    contentDescription = null
+                )
+            }
         }
     )
 }
