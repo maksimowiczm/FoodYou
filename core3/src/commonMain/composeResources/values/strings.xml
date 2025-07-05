@@ -103,17 +103,17 @@
     <string name="nutriment_cholesterol">Cholesterol</string>
     <string name="nutriment_caffeine">Caffeine</string>
 
-    <string name="vitamin_a">Vitamin A</string>
-    <string name="vitamin_b1">Vitamin B1</string>
-    <string name="vitamin_b2">Vitamin B2</string>
-    <string name="vitamin_b3">Vitamin B3</string>
-    <string name="vitamin_b5">Vitamin B5</string>
-    <string name="vitamin_b6">Vitamin B6</string>
-    <string name="vitamin_b7">Vitamin B7</string>
-    <string name="vitamin_b9">Vitamin B9</string>
-    <string name="vitamin_b12">Vitamin B12</string>
-    <string name="vitamin_c">Vitamin C</string>
-    <string name="vitamin_d">Vitamin D</string>
+    <string name="vitamin_a">Vitamin A (Retinol)</string>
+    <string name="vitamin_b1">Vitamin B1 (Thamin)</string>
+    <string name="vitamin_b2">Vitamin B2 (Riboflavin)</string>
+    <string name="vitamin_b3">Vitamin B3 (Niacin)</string>
+    <string name="vitamin_b5">Vitamin B5 (Pantothenic acid)</string>
+    <string name="vitamin_b6">Vitamin B6 (Pyridoxine)</string>
+    <string name="vitamin_b7">Vitamin B7 (Biotin)</string>
+    <string name="vitamin_b9">Vitamin B9 (Folate)</string>
+    <string name="vitamin_b12">Vitamin B12 (Cobalamins)</string>
+    <string name="vitamin_c">Vitamin C (Ascorbic acid)</string>
+    <string name="vitamin_d">Vitamin D (Calciferols)</string>
     <string name="vitamin_e">Vitamin E</string>
     <string name="vitamin_k">Vitamin K</string>
 

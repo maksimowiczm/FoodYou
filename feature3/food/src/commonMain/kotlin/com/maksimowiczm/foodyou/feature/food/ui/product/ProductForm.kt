@@ -388,7 +388,8 @@ internal fun ProductForm(
         state.chromiumMicro.TextField(
             label = stringResource(Res.string.mineral_chromium),
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
-            suffix = stringResource(Res.string.unit_microgram_short)
+            suffix = stringResource(Res.string.unit_microgram_short),
+            imeAction = ImeAction.Done
         )
     }
 }
