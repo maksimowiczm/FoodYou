@@ -2,7 +2,9 @@ package com.maksimowiczm.foodyou.feature.barcodescanner
 
 import android.view.View
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGesturesPadding
@@ -13,6 +15,8 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -23,9 +27,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource as androidStringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
+import com.google.zxing.client.android.R as zxingR
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
@@ -64,14 +73,14 @@ fun ZxingCameraBarcodeScannerScreen(
 
         barcodeView?.setTorchListener(torchListener)
 
+        barcodeView?.setStatusText("")
+
         onDispose {
             barcodeView?.pause()
         }
     }
 
-    Box(
-        modifier = modifier.navigationBarsPadding()
-    ) {
+    Box(modifier) {
         AndroidView(
             factory = { context ->
                 View.inflate(context, R.layout.camera_barcode_layout, null)
@@ -81,21 +90,41 @@ fun ZxingCameraBarcodeScannerScreen(
                 barcodeView = binding.barcodeView
             }
         )
-        FlashlightButton(
-            enabled = torchOn,
-            onClick = {
-                if (torchOn) {
-                    barcodeView?.setTorchOff()
-                } else {
-                    barcodeView?.setTorchOn()
-                }
-            },
+
+        Column(
             modifier = Modifier
                 .safeGesturesPadding()
-                .padding(bottom = 16.dp)
-                .align(Alignment.BottomEnd)
-                .zIndex(1f)
-        )
+                .align(Alignment.BottomCenter)
+                .zIndex(1f),
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            FlashlightButton(
+                enabled = torchOn,
+                onClick = {
+                    if (torchOn) {
+                        barcodeView?.setTorchOff()
+                    } else {
+                        barcodeView?.setTorchOn()
+                    }
+                }
+            )
+            Surface(
+                color = MaterialTheme.colorScheme.scrim,
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .alpha(.5f),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text(
+                    text = androidStringResource(zxingR.string.zxing_msg_default_status),
+                    modifier = Modifier.padding(8.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     }
 }
 
