@@ -119,23 +119,23 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     val energy =
         rememberRequiredFormField(product?.nutritionFacts?.energy?.value)
 
-    val autoCalculateEnergyState = rememberSaveable {
-        val energy = product?.nutritionFacts?.energy?.value
-        val proteins = product?.nutritionFacts?.proteins?.value
-        val carbohydrates = product?.nutritionFacts?.carbohydrates?.value
-        val fats = product?.nutritionFacts?.fats?.value
+    val autoCalculateEnergyState = rememberSaveable(product) {
+        if (product == null) {
+            mutableStateOf(true)
+        } else {
+            val energy = product.nutritionFacts.energy.value
+            val proteins = product.nutritionFacts.proteins.value
+            val carbohydrates = product.nutritionFacts.carbohydrates.value
+            val fats = product.nutritionFacts.fats.value
 
-        val initialState = energy != null &&
-            proteins != null &&
-            carbohydrates != null &&
-            fats != null &&
-            NutrientsHelper.calculateEnergy(
+            val initialState = NutrientsHelper.calculateEnergy(
                 proteins = proteins,
                 carbohydrates = carbohydrates,
                 fats = fats
             ) == energy
 
-        mutableStateOf(initialState)
+            mutableStateOf(initialState)
+        }
     }
 
     LaunchedEffect(autoCalculateEnergyState, proteins, carbohydrates, fats) {
@@ -270,8 +270,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
         if (product != null) {
             derivedStateOf {
                 product.name != name.value ||
-                    (product.brand ?: "") != brand.value ||
-                    (product.barcode ?: "") != barcode.value ||
+                    product.brand != brand.value ||
+                    product.barcode != barcode.value ||
                     product.totalWeight != packageWeight.value ||
                     product.servingWeight != servingWeight.value ||
                     product.nutritionFacts.proteins.value != proteins.value ||
@@ -315,11 +315,11 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                     product.nutritionFacts.seleniumMicro.value != selenium.value ||
                     product.nutritionFacts.iodineMicro.value != iodine.value ||
                     product.nutritionFacts.chromiumMicro.value != chromium.value ||
-                    (product.note ?: "") != note.value ||
-                    Measurement.comparator.compare(
+                    product.note != note.value ||
+                    Measurement.notEqual(
                         measurement.value,
                         Measurement.Gram(100f)
-                    ) != 0
+                    )
             }
         } else {
             derivedStateOf {
@@ -368,10 +368,10 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                     selenium.value != null ||
                     iodine.value != null ||
                     chromium.value != null ||
-                    Measurement.comparator.compare(
+                    Measurement.notEqual(
                         measurement.value,
                         Measurement.Gram(100f)
-                    ) != 0
+                    )
             }
         }
     }
