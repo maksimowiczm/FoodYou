@@ -15,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import com.maksimowiczm.foodyou.core.ui.form.FormField
+import com.maksimowiczm.foodyou.core.ui.form.nonBlankStringValidator
 import com.maksimowiczm.foodyou.core.ui.form.nonNegativeFloatValidator
 import com.maksimowiczm.foodyou.core.ui.form.nullableFloatParser
 import com.maksimowiczm.foodyou.core.ui.form.nullableStringParser
@@ -36,8 +37,9 @@ import kotlinx.coroutines.flow.mapNotNull
 internal fun rememberProductFormState(product: Product? = null): ProductFormState {
     val name = rememberFormField(
         initialValue = product?.name ?: "",
-        parser = stringParser(
-            onBlank = { ProductFormFieldError.Required }
+        parser = stringParser(),
+        validator = nonBlankStringValidator(
+            onEmpty = { ProductFormFieldError.Required }
         ),
         textFieldState = rememberTextFieldState(product?.name ?: "")
     )

@@ -40,14 +40,6 @@ fun <E> nullableFloatParser(
     }
 }
 
-fun <E> stringParser(onBlank: () -> E): (String) -> ParseResult<String, E> = { input ->
-    if (input.isBlank()) {
-        ParseResult.Failure(onBlank())
-    } else {
-        ParseResult.Success(input)
-    }
-}
-
 fun <E> stringParser(): (String) -> ParseResult<String, E> = { ParseResult.Success(it) }
 
 fun <E> nullableStringParser(): (String) -> ParseResult<String?, E> = { input ->

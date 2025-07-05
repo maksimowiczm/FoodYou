@@ -1,7 +1,5 @@
 package com.maksimowiczm.foodyou.core.ui.form
 
-import kotlin.compareTo
-
 fun interface Validator<T, E> {
     /**
      * Validates the given value and returns an error if validation fails.
@@ -35,5 +33,13 @@ fun <E> positiveFloatValidator(
         it == null -> onNull()
         it <= 0f -> onNotPositive()
         else -> null
+    }
+}
+
+fun <E> nonBlankStringValidator(onEmpty: () -> E): (String) -> E? = {
+    if (it.isBlank()) {
+        onEmpty()
+    } else {
+        null
     }
 }
