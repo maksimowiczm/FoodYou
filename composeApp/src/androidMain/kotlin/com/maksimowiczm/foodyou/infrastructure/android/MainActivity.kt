@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.os.Bundle
-import com.maksimowiczm.foodyou.FoodYouApp
+import com.maksimowiczm.foodyou.ui.FoodYouApp
 
 class MainActivity : FoodYouAbstractActivity() {
 
