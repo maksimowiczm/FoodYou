@@ -2,7 +2,7 @@
 ktlint_code_style = android_studio
 ktlint_function_naming_ignore_when_annotated_with = Composable
 compose_allowed_composition_locals = LocalNutrientsPalette, LocalNavigationSharedTransitionScope, LocalClipboardManager, LocalDateFormatter
-ij_kotlin_packages_to_use_import_on_demand = foodyou.app.generated.resources.*,androidx.compose.runtime.*
+ij_kotlin_packages_to_use_import_on_demand = foodyou.app.generated.resources.*,androidx.compose.runtime.*,com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField.*
 
 [**/build/**]
 ktlint = disabled
