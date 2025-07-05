@@ -28,7 +28,7 @@ kotlin {
             implementation(project(":core-database"))
             implementation(project(":core-domain"))
             implementation(project(":feature:measurement"))
-            implementation(project(":feature:barcodescanner"))
+            implementation(project(":feature3:barcodescanner"))
 
             implementation(libs.kotlinx.serialization.json)
         }

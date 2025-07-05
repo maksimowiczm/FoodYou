@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.ui.component
+package com.maksimowiczm.foodyou.core.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface

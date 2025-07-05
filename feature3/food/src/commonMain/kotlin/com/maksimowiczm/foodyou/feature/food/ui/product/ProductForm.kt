@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Calculate
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.form.FormField
 import com.maksimowiczm.foodyou.core.ui.unorderedList
+import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.ui.stringResource
 import foodyou.app.generated.resources.*
@@ -67,6 +69,19 @@ internal fun ProductForm(
         top = contentPadding.calculateTopPadding(),
         bottom = contentPadding.calculateBottomPadding()
     )
+
+    var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
+
+    if (showBarcodeScanner) {
+        FullScreenCameraBarcodeScanner(
+            onBarcodeScan = {
+                state.barcode.textFieldState.setTextAndPlaceCursorAtEnd(it)
+            },
+            onClose = {
+                showBarcodeScanner = false
+            }
+        )
+    }
 
     Column(
         modifier = modifier.padding(verticalPadding),
@@ -94,7 +109,7 @@ internal fun ProductForm(
         BarcodeTextField(
             state = state.barcode,
             onBarcodeScanner = {
-                // TODO
+                showBarcodeScanner = true
             },
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )

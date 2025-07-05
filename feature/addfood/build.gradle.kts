@@ -30,7 +30,7 @@ kotlin {
             implementation(project(":feature:product"))
             implementation(project(":feature:recipe"))
             implementation(project(":feature:measurement"))
-            implementation(project(":feature:barcodescanner"))
+            implementation(project(":feature3:barcodescanner"))
             implementation(project(":feature:swissfoodcompositiondatabase"))
 
             implementation(libs.kotlinx.serialization.json)

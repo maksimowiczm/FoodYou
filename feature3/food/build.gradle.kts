@@ -54,6 +54,7 @@ kotlin {
             implementation(project(":core3"))
 
             implementation(project(":feature3:measurement"))
+            implementation(project(":feature3:barcodescanner"))
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)

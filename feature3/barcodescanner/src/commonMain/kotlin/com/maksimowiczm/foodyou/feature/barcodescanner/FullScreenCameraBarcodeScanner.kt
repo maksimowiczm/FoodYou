@@ -1,10 +1,11 @@
 package com.maksimowiczm.foodyou.feature.barcodescanner
 
 import androidx.compose.runtime.Composable
-import com.maksimowiczm.foodyou.core.ui.component.FullScreenDialog
+import com.maksimowiczm.foodyou.core.ui.FullScreenDialog
 
+// Don't care about predictive back because multiplatform API is awful
 @Composable
-actual fun FullScreenCameraBarcodeScanner(onBarcodeScan: (String) -> Unit, onClose: () -> Unit) {
+fun FullScreenCameraBarcodeScanner(onBarcodeScan: (String) -> Unit, onClose: () -> Unit) {
     FullScreenDialog(
         onDismissRequest = onClose
     ) {
