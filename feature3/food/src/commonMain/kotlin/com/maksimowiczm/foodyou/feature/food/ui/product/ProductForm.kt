@@ -157,6 +157,239 @@ internal fun ProductForm(
             onAutoCalculateToggle = { state.autoCalculateEnergy = it },
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )
+
+        Text(
+            text = stringResource(Res.string.nutriment_fats),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .padding(horizontalPadding)
+                .fillMaxWidth(),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        state.saturatedFats.TextField(
+            label = stringResource(Res.string.nutriment_saturated_fats),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        state.monounsaturatedFats.TextField(
+            label = stringResource(Res.string.nutriment_monounsaturated_fats),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        state.polyunsaturatedFats.TextField(
+            label = stringResource(Res.string.nutriment_polyunsaturated_fats),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        state.omega3.TextField(
+            label = stringResource(Res.string.nutriment_omega_3),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        state.omega6.TextField(
+            label = stringResource(Res.string.nutriment_omega_6),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        Text(
+            text = stringResource(Res.string.headline_other),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        state.sugars.TextField(
+            label = stringResource(Res.string.nutriment_sugars),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        state.salt.TextField(
+            label = stringResource(Res.string.nutriment_salt),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        state.fiber.TextField(
+            label = stringResource(Res.string.nutriment_fiber),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        state.cholesterolMilli.TextField(
+            label = stringResource(Res.string.nutriment_cholesterol),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.caffeineMilli.TextField(
+            label = stringResource(Res.string.nutriment_caffeine),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        Text(
+            text = stringResource(Res.string.headline_vitamins),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        state.vitaminAMicro.TextField(
+            label = stringResource(Res.string.vitamin_a),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.vitaminB1Milli.TextField(
+            label = stringResource(Res.string.vitamin_b1),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminB2Milli.TextField(
+            label = stringResource(Res.string.vitamin_b2),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminB3Milli.TextField(
+            label = stringResource(Res.string.vitamin_b3),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminB5Milli.TextField(
+            label = stringResource(Res.string.vitamin_b5),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminB6Milli.TextField(
+            label = stringResource(Res.string.vitamin_b6),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminB7Micro.TextField(
+            label = stringResource(Res.string.vitamin_b7),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.vitaminB9Micro.TextField(
+            label = stringResource(Res.string.vitamin_b9),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.vitaminB12Micro.TextField(
+            label = stringResource(Res.string.vitamin_b12),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.vitaminCMilli.TextField(
+            label = stringResource(Res.string.vitamin_c),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminDMicro.TextField(
+            label = stringResource(Res.string.vitamin_d),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.vitaminEMilli.TextField(
+            label = stringResource(Res.string.vitamin_e),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.vitaminKMicro.TextField(
+            label = stringResource(Res.string.vitamin_k),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        Text(
+            text = stringResource(Res.string.headline_minerals),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        state.manganeseMilli.TextField(
+            label = stringResource(Res.string.mineral_manganese),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.magnesiumMilli.TextField(
+            label = stringResource(Res.string.mineral_magnesium),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.potassiumMilli.TextField(
+            label = stringResource(Res.string.mineral_potassium),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.calciumMilli.TextField(
+            label = stringResource(Res.string.mineral_calcium),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.copperMilli.TextField(
+            label = stringResource(Res.string.mineral_copper),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.zincMilli.TextField(
+            label = stringResource(Res.string.mineral_zinc),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.sodiumMilli.TextField(
+            label = stringResource(Res.string.mineral_sodium),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.ironMilli.TextField(
+            label = stringResource(Res.string.mineral_iron),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.phosphorusMilli.TextField(
+            label = stringResource(Res.string.mineral_phosphorus),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_milligram_short)
+        )
+
+        state.seleniumMicro.TextField(
+            label = stringResource(Res.string.mineral_selenium),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.iodineMicro.TextField(
+            label = stringResource(Res.string.mineral_iodine),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
+
+        state.chromiumMicro.TextField(
+            label = stringResource(Res.string.mineral_chromium),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            suffix = stringResource(Res.string.unit_microgram_short)
+        )
     }
 }
 
