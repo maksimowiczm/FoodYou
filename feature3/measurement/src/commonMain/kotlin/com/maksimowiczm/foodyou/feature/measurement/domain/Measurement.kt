@@ -30,14 +30,14 @@ sealed interface Measurement {
 
     companion object {
 
-        val comparator: Comparator<Measurement> = Comparator { a, b ->
-            when {
-                a is Gram && b is Gram -> a.value.compareTo(b.value)
-                a is Milliliter && b is Milliliter -> a.value.compareTo(b.value)
-                a is Package && b is Package -> a.quantity.compareTo(b.quantity)
-                a is Serving && b is Serving -> a.quantity.compareTo(b.quantity)
-                else -> 0
-            }
+        fun equal(a: Measurement, b: Measurement): Boolean = when {
+            a is Gram && b is Gram -> a.value == b.value
+            a is Milliliter && b is Milliliter -> a.value == b.value
+            a is Package && b is Package -> a.quantity == b.quantity
+            a is Serving && b is Serving -> a.quantity == b.quantity
+            else -> false
         }
+
+        fun notEqual(a: Measurement, b: Measurement): Boolean = !equal(a, b)
     }
 }

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou
+package com.maksimowiczm.foodyou.ui
 
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*

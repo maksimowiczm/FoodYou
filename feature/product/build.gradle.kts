@@ -70,7 +70,7 @@ kotlin {
             implementation(project(":core-model"))
             implementation(project(":core-domain"))
             implementation(project(":core-database"))
-            implementation(project(":feature:barcodescanner"))
+            implementation(project(":feature3:barcodescanner"))
 
             implementation(libs.kotlinx.serialization.json)
 

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProductDao {
 
     @Query("SELECT * FROM Product WHERE id = :productId")
-    fun observe(productId: Int): Flow<Product?>
+    fun observe(productId: Long): Flow<Product?>
 
     @Insert
     suspend fun insert(product: Product): Long

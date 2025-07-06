@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
@@ -52,6 +54,7 @@ kotlin {
             implementation(project(":core3"))
 
             implementation(project(":feature3:measurement"))
+            implementation(project(":feature3:barcodescanner"))
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)

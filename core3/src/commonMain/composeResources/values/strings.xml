@@ -103,17 +103,17 @@
     <string name="nutriment_cholesterol">Cholesterol</string>
     <string name="nutriment_caffeine">Caffeine</string>
 
-    <string name="vitamin_a">Vitamin A</string>
-    <string name="vitamin_b1">Vitamin B1</string>
-    <string name="vitamin_b2">Vitamin B2</string>
-    <string name="vitamin_b3">Vitamin B3</string>
-    <string name="vitamin_b5">Vitamin B5</string>
-    <string name="vitamin_b6">Vitamin B6</string>
-    <string name="vitamin_b7">Vitamin B7</string>
-    <string name="vitamin_b9">Vitamin B9</string>
-    <string name="vitamin_b12">Vitamin B12</string>
-    <string name="vitamin_c">Vitamin C</string>
-    <string name="vitamin_d">Vitamin D</string>
+    <string name="vitamin_a">Vitamin A (Retinol)</string>
+    <string name="vitamin_b1">Vitamin B1 (Thamin)</string>
+    <string name="vitamin_b2">Vitamin B2 (Riboflavin)</string>
+    <string name="vitamin_b3">Vitamin B3 (Niacin)</string>
+    <string name="vitamin_b5">Vitamin B5 (Pantothenic acid)</string>
+    <string name="vitamin_b6">Vitamin B6 (Pyridoxine)</string>
+    <string name="vitamin_b7">Vitamin B7 (Biotin)</string>
+    <string name="vitamin_b9">Vitamin B9 (Folate)</string>
+    <string name="vitamin_b12">Vitamin B12 (Cobalamins)</string>
+    <string name="vitamin_c">Vitamin C (Ascorbic acid)</string>
+    <string name="vitamin_d">Vitamin D (Calciferols)</string>
     <string name="vitamin_e">Vitamin E</string>
     <string name="vitamin_k">Vitamin K</string>
 
@@ -202,7 +202,6 @@
     <string name="neutral_permanently_delete_meal">Permanently delete meal?</string>
     <string name="neutral_meal_will_be_deleted_permanently" description="Warning message when deleting a meal. User must know that this action is irreversible and will delete all data related to the meal.">Meal will be deleted permanently. All data related to this meal will be lost.</string>
     <string name="neutral_required">Required</string>
-    <string name="neutral_calories_are_calculated" description="Calories are calculated using macronutrients (protein, carbs, fats).">Calories are calculated automatically based on macronutrients</string>
     <string name="neutral_help_translating_the_app">Help translate the app</string>
     <string name="neutral_copied">Info copied to clipboard</string>
     <string name="neutral_product_created">Product created</string>
@@ -345,10 +344,13 @@
     <string name="headline_disabled" description="Label indicating that something is currently disabled">Disabled</string>
 
     <string name="headline_note">Note</string>
-    <string name="description_add_note">Extra information you would like to attach to the food</string>
+    <string name="description_add_note">Optional notes (e.g., ingredients, vegan status, allergens, additives) or any other non-nutrient details</string>
     <string name="headline_extra" description="Something that is not a part of the main thing, additional information">Extra</string>
 
     <string name="headline_now" description="Current time, now">Now</string>
     <string name="action_try_again">Try again</string>
+
+    <string name="description_calories_are_calculated">Energy is automatically calculated from macronutrients. You can disable this feature and enter the value manually if needed. Alcohol is not included in the calculation.</string>
+    <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
 
 </resources>
