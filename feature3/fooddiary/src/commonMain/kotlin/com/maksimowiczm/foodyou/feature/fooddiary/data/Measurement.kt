@@ -1,29 +1,30 @@
-package com.maksimowiczm.foodyou.core.database.measurement
+package com.maksimowiczm.foodyou.feature.fooddiary.data
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.maksimowiczm.foodyou.core.database.diary.MealEntity
-import com.maksimowiczm.foodyou.core.database.food.ProductEntity
-import com.maksimowiczm.foodyou.core.database.food.RecipeEntity
+import com.maksimowiczm.foodyou.feature.food.data.Product
+import com.maksimowiczm.foodyou.feature.food.data.Recipe
+import com.maksimowiczm.foodyou.feature.measurement.data.Measurement
+import com.maksimowiczm.foodyou.feature.measurement.data.WithMeasurement
 
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = MealEntity::class,
+            entity = Meal::class,
             parentColumns = ["id"],
             childColumns = ["mealId"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = ProductEntity::class,
+            entity = Product::class,
             parentColumns = ["id"],
             childColumns = ["productId"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = RecipeEntity::class,
+            entity = Recipe::class,
             parentColumns = ["id"],
             childColumns = ["recipeId"],
             onDelete = ForeignKey.CASCADE
@@ -36,7 +37,7 @@ import com.maksimowiczm.foodyou.core.database.food.RecipeEntity
         Index(value = ["recipeId"])
     ]
 )
-data class MeasurementEntity(
+data class Measurement(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val mealId: Long,

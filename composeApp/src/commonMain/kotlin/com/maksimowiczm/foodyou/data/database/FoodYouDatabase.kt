@@ -10,6 +10,13 @@ import com.maksimowiczm.foodyou.feature.food.data.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.Product
 import com.maksimowiczm.foodyou.feature.food.data.Recipe
 import com.maksimowiczm.foodyou.feature.food.data.RecipeIngredient
+import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
+import com.maksimowiczm.foodyou.feature.fooddiary.data.InitializeMealsCallback
+import com.maksimowiczm.foodyou.feature.fooddiary.data.Meal
+import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement
+import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsDatabase
+import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsPagingKey
+import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverter
 
 @Database(
@@ -17,7 +24,11 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
         Sponsorship::class,
         Product::class,
         Recipe::class,
-        RecipeIngredient::class
+        RecipeIngredient::class,
+        Meal::class,
+        Measurement::class,
+        OpenFoodFactsProduct::class,
+        OpenFoodFactsPagingKey::class
     ],
     version = FoodYouDatabase.VERSION,
     exportSchema = true
@@ -29,11 +40,15 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
 abstract class FoodYouDatabase :
     RoomDatabase(),
     AboutDatabase,
-    FoodDatabase {
+    FoodDatabase,
+    FoodDiaryDatabase,
+    OpenFoodFactsDatabase {
 
     companion object {
         const val VERSION = 1
 
-        fun Builder<FoodYouDatabase>.buildDatabase(): FoodYouDatabase = build()
+        fun Builder<FoodYouDatabase>.buildDatabase(): FoodYouDatabase = this
+            .addCallback(InitializeMealsCallback())
+            .build()
     }
 }

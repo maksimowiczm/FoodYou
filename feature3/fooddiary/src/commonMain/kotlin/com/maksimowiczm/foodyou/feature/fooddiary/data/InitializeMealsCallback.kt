@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.core.database.diary
+package com.maksimowiczm.foodyou.feature.fooddiary.data
 
 import androidx.compose.ui.text.intl.Locale
 import androidx.room.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
 import co.touchlab.kermit.Logger
-import foodyou.app.generated.resources.Res
+import foodyou.feature3.fooddiary.generated.resources.Res
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -20,7 +20,7 @@ class InitializeMealsCallback : RoomDatabase.Callback() {
         try {
             meals.forEach { meal ->
                 val query = """
-                    INSERT INTO MealEntity (name, fromHour, fromMinute, toHour, toMinute, rank) 
+                    INSERT INTO Meal (name, fromHour, fromMinute, toHour, toMinute, rank) 
                     VALUES ($1, $2, $3, $4, $5, $6)
                 """.trimIndent()
 
@@ -45,7 +45,7 @@ class InitializeMealsCallback : RoomDatabase.Callback() {
         }
     }
 
-    fun getMeals(): List<MealEntity> = runBlocking {
+    fun getMeals(): List<Meal> = runBlocking {
         val tag = Locale.current.toLanguageTag()
 
         val content = try {
@@ -59,9 +59,9 @@ class InitializeMealsCallback : RoomDatabase.Callback() {
         }
 
         val meals = Json
-            .decodeFromString<List<MealJson>>(content.toString(Charsets.UTF_8))
+            .decodeFromString<List<MealJson>>(content.decodeToString())
             .mapIndexed { index, mealJson ->
-                MealEntity(
+                Meal(
                     name = mealJson.name,
                     fromHour = mealJson.from.substringBefore(':').toInt(),
                     fromMinute = mealJson.from.substringAfter(':').toInt(),

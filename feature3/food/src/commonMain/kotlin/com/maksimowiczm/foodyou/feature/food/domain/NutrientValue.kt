@@ -39,6 +39,10 @@ sealed interface NutrientValue {
         fun Float?.toNutrientValue() = from(this)
 
         fun Float.toNutrientValue() = from(this)
+
+        fun Double?.toNutrientValue() = from(this?.toFloat())
+
+        fun Double.toNutrientValue() = from(this.toFloat())
     }
 
     operator fun plus(other: NutrientValue): NutrientValue = when (this) {

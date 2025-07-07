@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
 import com.maksimowiczm.foodyou.core.model.Measurement
 import com.maksimowiczm.foodyou.core.ui.nutrition.FoodErrorListItem
-import com.maksimowiczm.foodyou.core.ui.nutrition.FoodListItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt

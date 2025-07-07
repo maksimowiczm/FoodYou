@@ -1,6 +1,7 @@
-package com.maksimowiczm.foodyou.core.ui.nutrition
+package com.maksimowiczm.foodyou.feature.fooddiary.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,30 +19,23 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.model.NutritionFactsField
-import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.preferences.getBlocking
-import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.error_measurement_error
+import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun FoodListItem(
+internal fun FoodListItem(
     name: @Composable () -> Unit,
     proteins: @Composable () -> Unit,
     carbohydrates: @Composable () -> Unit,
@@ -54,12 +48,9 @@ fun FoodListItem(
     containerColor: Color = Color.Transparent,
     contentColor: Color = LocalContentColor.current,
     shape: Shape = RectangleShape,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-    preference: NutritionFactsListPreference = userPreference()
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
-
-    val preferences by preference.collectAsStateWithLifecycle(preference.getBlocking())
 
     val headlineContent = @Composable {
         CompositionLocalProvider(
@@ -80,37 +71,38 @@ fun FoodListItem(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    preferences.orderedEnabled.forEach { field ->
-                        when (field) {
-                            NutritionFactsField.Proteins -> CompositionLocalProvider(
-                                LocalContentColor provides
-                                    nutrientsPalette.proteinsOnSurfaceContainer
-                            ) {
-                                proteins()
-                            }
-
-                            NutritionFactsField.Carbohydrates -> CompositionLocalProvider(
-                                LocalContentColor provides
-                                    nutrientsPalette.carbohydratesOnSurfaceContainer
-                            ) {
-                                carbohydrates()
-                            }
-
-                            NutritionFactsField.Fats -> CompositionLocalProvider(
-                                LocalContentColor provides nutrientsPalette.fatsOnSurfaceContainer
-                            ) {
-                                fats()
-                            }
-
-                            NutritionFactsField.Energy -> calories()
-
-                            else -> Unit
-                        }
+                    CompositionLocalProvider(
+                        LocalContentColor provides
+                            nutrientsPalette.proteinsOnSurfaceContainer,
+                        LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                    ) {
+                        proteins()
+                    }
+                    CompositionLocalProvider(
+                        LocalContentColor provides
+                            nutrientsPalette.carbohydratesOnSurfaceContainer,
+                        LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                    ) {
+                        carbohydrates()
+                    }
+                    CompositionLocalProvider(
+                        LocalContentColor provides nutrientsPalette.fatsOnSurfaceContainer,
+                        LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                    ) {
+                        fats()
+                    }
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                    ) {
+                        calories()
                     }
                 }
-
-                measurement()
             }
+        }
+        CompositionLocalProvider(
+            LocalTextStyle provides MaterialTheme.typography.bodyMedium
+        ) {
+            measurement()
         }
     }
 
@@ -152,11 +144,20 @@ fun FoodListItem(
 }
 
 @Composable
-fun FoodErrorListItem(headline: String, modifier: Modifier = Modifier) {
+internal fun FoodErrorListItem(
+    headline: String,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    errorMessage: String = stringResource(Res.string.error_measurement_error)
+) {
     ListItem(
         headlineContent = { Text(headline) },
-        modifier = modifier,
-        supportingContent = { Text(stringResource(Res.string.error_measurement_error)) },
+        modifier = if (onClick != null) {
+            Modifier.clickable { onClick }
+        } else {
+            Modifier
+        }.then(modifier),
+        supportingContent = { Text(errorMessage) },
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.errorContainer,
             headlineColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -169,7 +170,7 @@ fun FoodErrorListItem(headline: String, modifier: Modifier = Modifier) {
 // TODO
 //  Update skeleton to match the design
 @Composable
-fun FoodListItemSkeleton(
+internal fun FoodListItemSkeleton(
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
     trailingContent: (@Composable () -> Unit)? = null

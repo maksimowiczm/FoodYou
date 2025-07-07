@@ -6,18 +6,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
+import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.Sponsor
 import com.maksimowiczm.foodyou.feature.about.SponsorMessages
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
-import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.ui.CreateProductScreen
-import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class Update(val productId: Long)
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
+import kotlinx.datetime.LocalDate
 
 @Composable
 fun FoodYouNavHost(
@@ -26,30 +22,32 @@ fun FoodYouNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Update(1),
+        startDestination = "search",
         modifier = modifier
     ) {
-        composable("create") {
-            CreateProductScreen(
+        composable("search") {
+            FoodSearchScreen(
+                mealId = 1L,
+                date = LocalDate.now(),
                 onBack = {
+                    navController.popBackStack("search", true)
                 },
-                onCreate = { productId ->
-                    navController.navigate(Update(productId.id)) {
+                onCreateProduct = {
+                    navController.navigate("create") {
                         launchSingleTop = true
                     }
                 }
             )
         }
 
-        composable<Update> {
-            val (productId) = it.toRoute<Update>()
-
-            UpdateProductScreen(
-                onBack = {},
-                onUpdate = {
-                    navController.navigate(About)
+        composable("create") {
+            CreateProductScreen(
+                onBack = {
+                    navController.popBackStack("create", true)
                 },
-                productId = FoodId.Product(productId)
+                onCreate = {
+                    navController.popBackStack("create", true)
+                }
             )
         }
 

@@ -1,6 +1,6 @@
 [versions]
-version-name = "2.10.0"
-android-versionCode = "22"
+version-name = "3.0.0-alpha01"
+android-versionCode = "100"
 android-compileSdk = "36"
 android-minSdk = "26"
 android-targetSdk = "36"
@@ -37,6 +37,7 @@ runner = "1.6.2"
 sqliteAndroid = "3.49.0"
 workRuntime = "2.10.2"
 zxingAndroidEmbedded = "4.3.0"
+kotlinStdlib = "2.2.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -79,6 +80,7 @@ reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reo
 sqlite-android = { module = "com.github.requery:sqlite-android", version.ref = "sqliteAndroid" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

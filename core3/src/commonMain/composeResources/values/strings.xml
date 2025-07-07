@@ -353,4 +353,14 @@
     <string name="description_calories_are_calculated">Energy is automatically calculated from macronutrients. You can disable this feature and enter the value manually if needed. Alcohol is not included in the calculation.</string>
     <string name="x_kcal_per_g">%1$s %2$d kcal/g</string>
 
+    <string name="neutral_an_error_occurred">An error occurred</string>
+    <string name="neutral_x_products_found">%1$d product(s) found</string>
+    <string name="neutral_loading">Loading</string>
+    <string name="neutral_action_required">Action required</string>
+    <string name="neutral_open_food_facts_error">Couldn't download product from Open Food Facts. You can still view your previously downloaded products.</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_agree">Agree</string>
+    <string name="description_open_food_facts_privacy_dialog_text">Enhance your food search with the Open Food Facts database. To proceed, please agree to the {Terms of Use:https://world.openfoodfacts.org/terms-of-use} and {Privacy Policy:https://world.openfoodfacts.org/privacy}</string>
+    <string name="headline_browse_open_food_facts">Browse Open Food Facts</string>
+
 </resources>

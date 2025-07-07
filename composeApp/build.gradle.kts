@@ -50,6 +50,8 @@ kotlin {
             implementation(project(":feature3:about"))
             implementation(project(":feature3:food"))
             implementation(project(":feature3:measurement"))
+            implementation(project(":feature3:fooddiary"))
+            implementation(project(":feature3:openfoodfacts"))
 
             implementation(libs.kotlinx.serialization.json)
         }
@@ -72,8 +74,8 @@ android {
         applicationId = "com.maksimowiczm.foodyou.preview"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 100
-        versionName = "3.0.0-alpha01"
+        versionCode = libs.versions.android.versionCode.get().toInt()
+        versionName = libs.versions.version.name.get()
     }
     packaging {
         resources {

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.product.data.network.openfoodfacts.model.v2
+package com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.model.v2
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

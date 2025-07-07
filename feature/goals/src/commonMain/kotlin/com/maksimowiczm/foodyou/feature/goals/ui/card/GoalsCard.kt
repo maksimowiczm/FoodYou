@@ -34,7 +34,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.model.NutritionFactsField
-import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.getBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
