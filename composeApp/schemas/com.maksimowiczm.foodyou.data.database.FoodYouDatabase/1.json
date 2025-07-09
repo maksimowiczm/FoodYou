@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7e15e0c5c1daf489d1b29f5c164de7a3",
+    "identityHash": "a1bb793a295ddf9ea8645368e209acc1",
     "entities": [
       {
         "tableName": "Sponsorship",
@@ -75,7 +75,7 @@
       },
       {
         "tableName": "Product",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `note` TEXT, `proteins` REAL NOT NULL, `carbohydrates` REAL NOT NULL, `fats` REAL NOT NULL, `energy` REAL NOT NULL, `saturatedFats` REAL, `monounsaturatedFats` REAL, `polyunsaturatedFats` REAL, `omega3` REAL, `omega6` REAL, `sugars` REAL, `salt` REAL, `fiber` REAL, `cholesterolMilli` REAL, `caffeineMilli` REAL, `vitaminAMicro` REAL, `vitaminB1Milli` REAL, `vitaminB2Milli` REAL, `vitaminB3Milli` REAL, `vitaminB5Milli` REAL, `vitaminB6Milli` REAL, `vitaminB7Micro` REAL, `vitaminB9Micro` REAL, `vitaminB12Micro` REAL, `vitaminCMilli` REAL, `vitaminDMicro` REAL, `vitaminEMilli` REAL, `vitaminKMicro` REAL, `manganeseMilli` REAL, `magnesiumMilli` REAL, `potassiumMilli` REAL, `calciumMilli` REAL, `copperMilli` REAL, `zincMilli` REAL, `sodiumMilli` REAL, `ironMilli` REAL, `phosphorusMilli` REAL, `seleniumMicro` REAL, `iodineMicro` REAL, `chromiumMicro` REAL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `note` TEXT, `energy` REAL NOT NULL, `proteins` REAL NOT NULL, `fats` REAL NOT NULL, `saturatedFats` REAL, `transFats` REAL, `monounsaturatedFats` REAL, `polyunsaturatedFats` REAL, `omega3` REAL, `omega6` REAL, `carbohydrates` REAL NOT NULL, `sugars` REAL, `addedSugars` REAL, `dietaryFiber` REAL, `solubleFiber` REAL, `insolubleFiber` REAL, `salt` REAL, `cholesterolMilli` REAL, `caffeineMilli` REAL, `vitaminAMicro` REAL, `vitaminB1Milli` REAL, `vitaminB2Milli` REAL, `vitaminB3Milli` REAL, `vitaminB5Milli` REAL, `vitaminB6Milli` REAL, `vitaminB7Micro` REAL, `vitaminB9Micro` REAL, `vitaminB12Micro` REAL, `vitaminCMilli` REAL, `vitaminDMicro` REAL, `vitaminEMilli` REAL, `vitaminKMicro` REAL, `manganeseMilli` REAL, `magnesiumMilli` REAL, `potassiumMilli` REAL, `calciumMilli` REAL, `copperMilli` REAL, `zincMilli` REAL, `sodiumMilli` REAL, `ironMilli` REAL, `phosphorusMilli` REAL, `seleniumMicro` REAL, `iodineMicro` REAL, `chromiumMicro` REAL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -115,14 +115,14 @@
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "nutrients.proteins",
-            "columnName": "proteins",
+            "fieldPath": "nutrients.energy",
+            "columnName": "energy",
             "affinity": "REAL",
             "notNull": true
           },
           {
-            "fieldPath": "nutrients.carbohydrates",
-            "columnName": "carbohydrates",
+            "fieldPath": "nutrients.proteins",
+            "columnName": "proteins",
             "affinity": "REAL",
             "notNull": true
           },
@@ -133,14 +133,13 @@
             "notNull": true
           },
           {
-            "fieldPath": "nutrients.energy",
-            "columnName": "energy",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
             "fieldPath": "nutrients.saturatedFats",
             "columnName": "saturatedFats",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.transFats",
+            "columnName": "transFats",
             "affinity": "REAL"
           },
           {
@@ -164,18 +163,39 @@
             "affinity": "REAL"
           },
           {
+            "fieldPath": "nutrients.carbohydrates",
+            "columnName": "carbohydrates",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
             "fieldPath": "nutrients.sugars",
             "columnName": "sugars",
             "affinity": "REAL"
           },
           {
-            "fieldPath": "nutrients.salt",
-            "columnName": "salt",
+            "fieldPath": "nutrients.addedSugars",
+            "columnName": "addedSugars",
             "affinity": "REAL"
           },
           {
-            "fieldPath": "nutrients.fiber",
-            "columnName": "fiber",
+            "fieldPath": "nutrients.dietaryFiber",
+            "columnName": "dietaryFiber",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.solubleFiber",
+            "columnName": "solubleFiber",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.insolubleFiber",
+            "columnName": "insolubleFiber",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "nutrients.salt",
+            "columnName": "salt",
             "affinity": "REAL"
           },
           {
@@ -907,7 +927,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7e15e0c5c1daf489d1b29f5c164de7a3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a1bb793a295ddf9ea8645368e209acc1')"
     ]
   }
 }

@@ -4,18 +4,22 @@ data class NutritionFacts(
     // Macronutrients
     val proteins: NutrientValue.Complete,
     val carbohydrates: NutrientValue.Complete,
-    val fats: NutrientValue.Complete,
     val energy: NutrientValue.Complete,
     // Fats
+    val fats: NutrientValue.Complete,
     val saturatedFats: NutrientValue,
+    val transFats: NutrientValue,
     val monounsaturatedFats: NutrientValue,
     val polyunsaturatedFats: NutrientValue,
     val omega3: NutrientValue,
     val omega6: NutrientValue,
     // Other
     val sugars: NutrientValue,
+    val addedSugars: NutrientValue,
+    val dietaryFiber: NutrientValue,
+    val solubleFiber: NutrientValue,
+    val insolubleFiber: NutrientValue,
     val salt: NutrientValue,
-    val fiber: NutrientValue,
     val cholesterolMilli: NutrientValue,
     val caffeineMilli: NutrientValue,
     // Vitamins
@@ -59,7 +63,6 @@ data class NutritionFacts(
             NutritionFactsField.Omega6 -> omega6
             NutritionFactsField.Sugars -> sugars
             NutritionFactsField.Salt -> salt
-            NutritionFactsField.Fiber -> fiber
             NutritionFactsField.Cholesterol -> cholesterolMilli
             NutritionFactsField.Caffeine -> caffeineMilli
             NutritionFactsField.VitaminA -> vitaminAMicro
@@ -87,6 +90,11 @@ data class NutritionFacts(
             NutritionFactsField.Selenium -> seleniumMicro
             NutritionFactsField.Iodine -> iodineMicro
             NutritionFactsField.Chromium -> chromiumMicro
+            NutritionFactsField.TransFats -> transFats
+            NutritionFactsField.AddedSugars -> addedSugars
+            NutritionFactsField.DietaryFiber -> dietaryFiber
+            NutritionFactsField.SolubleFiber -> solubleFiber
+            NutritionFactsField.InsolubleFiber -> insolubleFiber
         }
     }
 
@@ -96,60 +104,25 @@ data class NutritionFacts(
         get() = this == Empty
 
     val isComplete: Boolean
-        get() = listOf(
-            proteins,
-            carbohydrates,
-            fats,
-            energy,
-            saturatedFats,
-            monounsaturatedFats,
-            polyunsaturatedFats,
-            omega3,
-            omega6,
-            sugars,
-            salt,
-            fiber,
-            cholesterolMilli,
-            caffeineMilli,
-            vitaminAMicro,
-            vitaminB1Milli,
-            vitaminB2Milli,
-            vitaminB3Milli,
-            vitaminB5Milli,
-            vitaminB6Milli,
-            vitaminB7Micro,
-            vitaminB9Micro,
-            vitaminB12Micro,
-            vitaminCMilli,
-            vitaminDMicro,
-            vitaminEMilli,
-            vitaminKMicro,
-            manganeseMilli,
-            magnesiumMilli,
-            potassiumMilli,
-            calciumMilli,
-            copperMilli,
-            zincMilli,
-            sodiumMilli,
-            ironMilli,
-            phosphorusMilli,
-            seleniumMicro,
-            iodineMicro
-        ).all { it is NutrientValue.Complete }
+        get() = map.values.all { it is NutrientValue.Complete }
 
     operator fun plus(other: NutritionFacts): NutritionFacts = NutritionFacts(
         proteins = this.proteins + other.proteins,
         carbohydrates = this.carbohydrates + other.carbohydrates,
-        fats = this.fats + other.fats,
         energy = this.energy + other.energy,
+        fats = this.fats + other.fats,
         saturatedFats = this.saturatedFats + other.saturatedFats,
+        transFats = this.transFats + other.transFats,
         monounsaturatedFats = this.monounsaturatedFats + other.monounsaturatedFats,
         polyunsaturatedFats = this.polyunsaturatedFats + other.polyunsaturatedFats,
         omega3 = this.omega3 + other.omega3,
         omega6 = this.omega6 + other.omega6,
         sugars = this.sugars + other.sugars,
+        addedSugars = this.addedSugars + other.addedSugars,
+        dietaryFiber = this.dietaryFiber + other.dietaryFiber,
+        solubleFiber = this.solubleFiber + other.solubleFiber,
+        insolubleFiber = this.insolubleFiber + other.insolubleFiber,
         salt = this.salt + other.salt,
-        fiber = this.fiber + other.fiber,
         cholesterolMilli = this.cholesterolMilli + other.cholesterolMilli,
         caffeineMilli = this.caffeineMilli + other.caffeineMilli,
         vitaminAMicro = this.vitaminAMicro + other.vitaminAMicro,
@@ -182,16 +155,20 @@ data class NutritionFacts(
     operator fun times(multiplier: Float): NutritionFacts = NutritionFacts(
         proteins = this.proteins * multiplier,
         carbohydrates = this.carbohydrates * multiplier,
-        fats = this.fats * multiplier,
         energy = this.energy * multiplier,
+        fats = this.fats * multiplier,
         saturatedFats = this.saturatedFats * multiplier,
+        transFats = this.transFats * multiplier,
         monounsaturatedFats = this.monounsaturatedFats * multiplier,
         polyunsaturatedFats = this.polyunsaturatedFats * multiplier,
         omega3 = this.omega3 * multiplier,
         omega6 = this.omega6 * multiplier,
         sugars = this.sugars * multiplier,
+        addedSugars = this.addedSugars * multiplier,
+        dietaryFiber = this.dietaryFiber * multiplier,
+        solubleFiber = this.solubleFiber * multiplier,
+        insolubleFiber = this.insolubleFiber * multiplier,
         salt = this.salt * multiplier,
-        fiber = this.fiber * multiplier,
         cholesterolMilli = this.cholesterolMilli * multiplier,
         caffeineMilli = this.caffeineMilli * multiplier,
         vitaminAMicro = this.vitaminAMicro * multiplier,
@@ -224,16 +201,20 @@ data class NutritionFacts(
     operator fun div(divisor: Float): NutritionFacts = NutritionFacts(
         proteins = this.proteins / divisor,
         carbohydrates = this.carbohydrates / divisor,
-        fats = this.fats / divisor,
         energy = this.energy / divisor,
+        fats = this.fats / divisor,
         saturatedFats = this.saturatedFats / divisor,
+        transFats = this.transFats / divisor,
         monounsaturatedFats = this.monounsaturatedFats / divisor,
         polyunsaturatedFats = this.polyunsaturatedFats / divisor,
         omega3 = this.omega3 / divisor,
         omega6 = this.omega6 / divisor,
         sugars = this.sugars / divisor,
+        addedSugars = this.addedSugars / divisor,
+        dietaryFiber = this.dietaryFiber / divisor,
+        solubleFiber = this.solubleFiber / divisor,
+        insolubleFiber = this.insolubleFiber / divisor,
         salt = this.salt / divisor,
-        fiber = this.fiber / divisor,
         cholesterolMilli = this.cholesterolMilli / divisor,
         caffeineMilli = this.caffeineMilli / divisor,
         vitaminAMicro = this.vitaminAMicro / divisor,
@@ -267,16 +248,20 @@ data class NutritionFacts(
         val Empty = NutritionFacts(
             proteins = NutrientValue.Complete(0f),
             carbohydrates = NutrientValue.Complete(0f),
-            fats = NutrientValue.Complete(0f),
             energy = NutrientValue.Complete(0f),
+            fats = NutrientValue.Complete(0f),
             saturatedFats = NutrientValue.Complete(0f),
+            transFats = NutrientValue.Complete(0f),
             monounsaturatedFats = NutrientValue.Complete(0f),
             polyunsaturatedFats = NutrientValue.Complete(0f),
             omega3 = NutrientValue.Complete(0f),
             omega6 = NutrientValue.Complete(0f),
             sugars = NutrientValue.Complete(0f),
+            addedSugars = NutrientValue.Complete(0f),
+            dietaryFiber = NutrientValue.Complete(0f),
+            solubleFiber = NutrientValue.Complete(0f),
+            insolubleFiber = NutrientValue.Complete(0f),
             salt = NutrientValue.Complete(0f),
-            fiber = NutrientValue.Complete(0f),
             cholesterolMilli = NutrientValue.Complete(0f),
             caffeineMilli = NutrientValue.Complete(0f),
             vitaminAMicro = NutrientValue.Complete(0f),

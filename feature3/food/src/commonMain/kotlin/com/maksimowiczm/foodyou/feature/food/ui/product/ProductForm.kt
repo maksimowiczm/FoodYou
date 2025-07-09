@@ -187,6 +187,11 @@ internal fun ProductForm(
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )
 
+        state.transFats.TextField(
+            label = stringResource(Res.string.nutriment_trans_fats),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
         state.monounsaturatedFats.TextField(
             label = stringResource(Res.string.nutriment_monounsaturated_fats),
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
@@ -208,8 +213,11 @@ internal fun ProductForm(
         )
 
         Text(
-            text = stringResource(Res.string.headline_other),
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            text = stringResource(Res.string.nutriment_carbohydrates),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .padding(horizontalPadding)
+                .fillMaxWidth(),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary
         )
@@ -219,13 +227,35 @@ internal fun ProductForm(
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )
 
-        state.salt.TextField(
-            label = stringResource(Res.string.nutriment_salt),
+        state.addedSugars.TextField(
+            label = stringResource(Res.string.nutriment_added_sugars),
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )
 
-        state.fiber.TextField(
+        state.dietaryFiber.TextField(
             label = stringResource(Res.string.nutriment_fiber),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        state.solubleFiber.TextField(
+            label = stringResource(Res.string.nutriment_soluble_fiber),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        state.insolubleFiber.TextField(
+            label = stringResource(Res.string.nutriment_insoluble_fiber),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+        )
+
+        Text(
+            text = stringResource(Res.string.headline_other),
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        state.salt.TextField(
+            label = stringResource(Res.string.nutriment_salt),
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )
 
@@ -482,7 +512,7 @@ private fun BarcodeTextField(
         modifier = modifier,
         label = { Text(stringResource(Res.string.product_barcode)) },
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
+            keyboardType = KeyboardType.Number,
             imeAction = imeAction
         ),
         trailingIcon = {

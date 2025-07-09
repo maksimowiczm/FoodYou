@@ -99,9 +99,13 @@
     <string name="nutriment_omega_3">Omega-3 fatty acids</string>
     <string name="nutriment_omega_6">Omega-6 fatty acids</string>
     <string name="nutriment_salt">Salt</string>
-    <string name="nutriment_fiber">Fiber</string>
+    <string name="nutriment_fiber">Dietary fiber</string>
     <string name="nutriment_cholesterol">Cholesterol</string>
     <string name="nutriment_caffeine">Caffeine</string>
+    <string name="nutriment_trans_fats">Trans fats</string>
+    <string name="nutriment_added_sugars">Added sugars</string>
+    <string name="nutriment_soluble_fiber">Soluble fiber</string>
+    <string name="nutriment_insoluble_fiber">Insoluble fiber</string>
 
     <string name="vitamin_a">Vitamin A (Retinol)</string>
     <string name="vitamin_b1">Vitamin B1 (Thamin)</string>

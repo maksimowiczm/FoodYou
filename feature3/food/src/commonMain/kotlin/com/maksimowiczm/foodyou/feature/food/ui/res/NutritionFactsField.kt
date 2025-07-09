@@ -19,7 +19,7 @@ fun NutritionFactsField.stringResource(): String = when (this) {
     Omega6 -> stringResource(Res.string.nutriment_omega_6)
     Sugars -> stringResource(Res.string.nutriment_sugars)
     Salt -> stringResource(Res.string.nutriment_salt)
-    Fiber -> stringResource(Res.string.nutriment_fiber)
+    DietaryFiber -> stringResource(Res.string.nutriment_fiber)
     Cholesterol -> stringResource(Res.string.nutriment_cholesterol)
     Caffeine -> stringResource(Res.string.nutriment_caffeine)
     VitaminA -> stringResource(Res.string.vitamin_a)
@@ -47,4 +47,8 @@ fun NutritionFactsField.stringResource(): String = when (this) {
     Selenium -> stringResource(Res.string.mineral_selenium)
     Iodine -> stringResource(Res.string.mineral_iodine)
     Chromium -> stringResource(Res.string.mineral_chromium)
+    NutritionFactsField.TransFats -> stringResource(Res.string.nutriment_trans_fats)
+    NutritionFactsField.AddedSugars -> stringResource(Res.string.nutriment_added_sugars)
+    NutritionFactsField.SolubleFiber -> stringResource(Res.string.nutriment_soluble_fiber)
+    NutritionFactsField.InsolubleFiber -> stringResource(Res.string.nutriment_insoluble_fiber)
 }

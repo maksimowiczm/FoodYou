@@ -194,6 +194,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
 
     val saturatedFats =
         rememberNotRequiredFormField(product?.nutritionFacts?.saturatedFats?.value)
+    val transFats =
+        rememberNotRequiredFormField(product?.nutritionFacts?.transFats?.value)
     val monounsaturatedFats =
         rememberNotRequiredFormField(product?.nutritionFacts?.monounsaturatedFats?.value)
     val polyunsaturatedFats =
@@ -205,10 +207,16 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
 
     val sugars =
         rememberNotRequiredFormField(product?.nutritionFacts?.sugars?.value)
+    val addedSugars =
+        rememberNotRequiredFormField(product?.nutritionFacts?.addedSugars?.value)
     val salt =
         rememberNotRequiredFormField(product?.nutritionFacts?.salt?.value)
-    val fiber =
-        rememberNotRequiredFormField(product?.nutritionFacts?.fiber?.value)
+    val dietaryFiber =
+        rememberNotRequiredFormField(product?.nutritionFacts?.dietaryFiber?.value)
+    val solubleFiber =
+        rememberNotRequiredFormField(product?.nutritionFacts?.solubleFiber?.value)
+    val insolubleFiber =
+        rememberNotRequiredFormField(product?.nutritionFacts?.insolubleFiber?.value)
     val cholesterol =
         rememberNotRequiredFormField(product?.nutritionFacts?.cholesterolMilli?.value)
     val caffeine =
@@ -269,53 +277,57 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     val isModified = remember(product) {
         if (product != null) {
             derivedStateOf {
-                product.name != name.value ||
-                    product.brand != brand.value ||
-                    product.barcode != barcode.value ||
-                    product.totalWeight != packageWeight.value ||
-                    product.servingWeight != servingWeight.value ||
-                    product.nutritionFacts.proteins.value != proteins.value ||
-                    product.nutritionFacts.carbohydrates.value != carbohydrates.value ||
-                    product.nutritionFacts.fats.value != fats.value ||
-                    product.nutritionFacts.energy.value != energy.value ||
-                    product.nutritionFacts.saturatedFats.value != saturatedFats.value ||
-                    product.nutritionFacts.monounsaturatedFats.value !=
-                    monounsaturatedFats.value ||
-                    product.nutritionFacts.polyunsaturatedFats.value !=
-                    polyunsaturatedFats.value ||
-                    product.nutritionFacts.omega3.value != omega3.value ||
-                    product.nutritionFacts.omega6.value != omega6.value ||
-                    product.nutritionFacts.sugars.value != sugars.value ||
-                    product.nutritionFacts.salt.value != salt.value ||
-                    product.nutritionFacts.fiber.value != fiber.value ||
-                    product.nutritionFacts.cholesterolMilli.value != cholesterol.value ||
-                    product.nutritionFacts.caffeineMilli.value != caffeine.value ||
-                    product.nutritionFacts.vitaminAMicro.value != vitaminA.value ||
-                    product.nutritionFacts.vitaminB1Milli.value != vitaminB1.value ||
-                    product.nutritionFacts.vitaminB2Milli.value != vitaminB2.value ||
-                    product.nutritionFacts.vitaminB3Milli.value != vitaminB3.value ||
-                    product.nutritionFacts.vitaminB5Milli.value != vitaminB5.value ||
-                    product.nutritionFacts.vitaminB6Milli.value != vitaminB6.value ||
-                    product.nutritionFacts.vitaminB7Micro.value != vitaminB7.value ||
-                    product.nutritionFacts.vitaminB9Micro.value != vitaminB9.value ||
-                    product.nutritionFacts.vitaminB12Micro.value != vitaminB12.value ||
-                    product.nutritionFacts.vitaminCMilli.value != vitaminC.value ||
-                    product.nutritionFacts.vitaminDMicro.value != vitaminD.value ||
-                    product.nutritionFacts.vitaminEMilli.value != vitaminE.value ||
-                    product.nutritionFacts.vitaminKMicro.value != vitaminK.value ||
-                    product.nutritionFacts.manganeseMilli.value != manganese.value ||
-                    product.nutritionFacts.magnesiumMilli.value != magnesium.value ||
-                    product.nutritionFacts.potassiumMilli.value != potassium.value ||
-                    product.nutritionFacts.calciumMilli.value != calcium.value ||
-                    product.nutritionFacts.copperMilli.value != copper.value ||
-                    product.nutritionFacts.zincMilli.value != zinc.value ||
-                    product.nutritionFacts.sodiumMilli.value != sodium.value ||
-                    product.nutritionFacts.ironMilli.value != iron.value ||
-                    product.nutritionFacts.phosphorusMilli.value != phosphorus.value ||
-                    product.nutritionFacts.seleniumMicro.value != selenium.value ||
-                    product.nutritionFacts.iodineMicro.value != iodine.value ||
-                    product.nutritionFacts.chromiumMicro.value != chromium.value ||
-                    product.note != note.value ||
+                name.value != product.name ||
+                    brand.value != product.brand ||
+                    barcode.value != product.barcode ||
+                    note.value != product.note ||
+                    packageWeight.value != product.packageWeight ||
+                    servingWeight.value != product.servingWeight ||
+                    proteins.value != product.nutritionFacts.proteins.value ||
+                    carbohydrates.value != product.nutritionFacts.carbohydrates.value ||
+                    fats.value != product.nutritionFacts.fats.value ||
+                    energy.value != product.nutritionFacts.energy.value ||
+                    saturatedFats.value != product.nutritionFacts.saturatedFats.value ||
+                    transFats.value != product.nutritionFacts.transFats.value ||
+                    monounsaturatedFats.value !=
+                    product.nutritionFacts.monounsaturatedFats.value ||
+                    polyunsaturatedFats.value !=
+                    product.nutritionFacts.polyunsaturatedFats.value ||
+                    omega3.value != product.nutritionFacts.omega3.value ||
+                    omega6.value != product.nutritionFacts.omega6.value ||
+                    sugars.value != product.nutritionFacts.sugars.value ||
+                    addedSugars.value != product.nutritionFacts.addedSugars.value ||
+                    dietaryFiber.value != product.nutritionFacts.dietaryFiber.value ||
+                    solubleFiber.value != product.nutritionFacts.solubleFiber.value ||
+                    insolubleFiber.value != product.nutritionFacts.insolubleFiber.value ||
+                    salt.value != product.nutritionFacts.salt.value ||
+                    cholesterol.value != product.nutritionFacts.cholesterolMilli.value ||
+                    caffeine.value != product.nutritionFacts.caffeineMilli.value ||
+                    vitaminA.value != product.nutritionFacts.vitaminAMicro.value ||
+                    vitaminB1.value != product.nutritionFacts.vitaminB1Milli.value ||
+                    vitaminB2.value != product.nutritionFacts.vitaminB2Milli.value ||
+                    vitaminB3.value != product.nutritionFacts.vitaminB3Milli.value ||
+                    vitaminB5.value != product.nutritionFacts.vitaminB5Milli.value ||
+                    vitaminB6.value != product.nutritionFacts.vitaminB6Milli.value ||
+                    vitaminB7.value != product.nutritionFacts.vitaminB7Micro.value ||
+                    vitaminB9.value != product.nutritionFacts.vitaminB9Micro.value ||
+                    vitaminB12.value != product.nutritionFacts.vitaminB12Micro.value ||
+                    vitaminC.value != product.nutritionFacts.vitaminCMilli.value ||
+                    vitaminD.value != product.nutritionFacts.vitaminDMicro.value ||
+                    vitaminE.value != product.nutritionFacts.vitaminEMilli.value ||
+                    vitaminK.value != product.nutritionFacts.vitaminKMicro.value ||
+                    manganese.value != product.nutritionFacts.manganeseMilli.value ||
+                    magnesium.value != product.nutritionFacts.magnesiumMilli.value ||
+                    potassium.value != product.nutritionFacts.potassiumMilli.value ||
+                    calcium.value != product.nutritionFacts.calciumMilli.value ||
+                    copper.value != product.nutritionFacts.copperMilli.value ||
+                    zinc.value != product.nutritionFacts.zincMilli.value ||
+                    sodium.value != product.nutritionFacts.sodiumMilli.value ||
+                    iron.value != product.nutritionFacts.ironMilli.value ||
+                    phosphorus.value != product.nutritionFacts.phosphorusMilli.value ||
+                    selenium.value != product.nutritionFacts.seleniumMicro.value ||
+                    iodine.value != product.nutritionFacts.iodineMicro.value ||
+                    chromium.value != product.nutritionFacts.chromiumMicro.value ||
                     Measurement.notEqual(
                         measurement.value,
                         Measurement.Gram(100f)
@@ -334,13 +346,17 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                     fats.value != null ||
                     energy.value != null ||
                     saturatedFats.value != null ||
+                    transFats.value != null ||
                     monounsaturatedFats.value != null ||
                     polyunsaturatedFats.value != null ||
                     omega3.value != null ||
                     omega6.value != null ||
                     sugars.value != null ||
+                    addedSugars.value != null ||
+                    dietaryFiber.value != null ||
+                    solubleFiber.value != null ||
+                    insolubleFiber.value != null ||
                     salt.value != null ||
-                    fiber.value != null ||
                     cholesterol.value != null ||
                     caffeine.value != null ||
                     vitaminA.value != null ||
@@ -382,21 +398,25 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
             brand = brand,
             barcode = barcode,
             note = note,
+            measurementState = measurement,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
-            measurementState = measurement,
-            proteins = proteins,
-            carbohydrates = carbohydrates,
-            fats = fats,
             energy = energy,
+            proteins = proteins,
+            fats = fats,
             saturatedFats = saturatedFats,
+            transFats = transFats,
             monounsaturatedFats = monounsaturatedFats,
             polyunsaturatedFats = polyunsaturatedFats,
             omega3 = omega3,
             omega6 = omega6,
+            carbohydrates = carbohydrates,
             sugars = sugars,
+            addedSugars = addedSugars,
+            dietaryFiber = dietaryFiber,
+            solubleFiber = solubleFiber,
+            insolubleFiber = insolubleFiber,
             salt = salt,
-            fiber = fiber,
             cholesterolMilli = cholesterol,
             caffeineMilli = caffeine,
             vitaminAMicro = vitaminA,
@@ -467,21 +487,27 @@ internal class ProductFormState(
     measurementState: MutableState<Measurement>,
     val packageWeight: FormField<Float?, ProductFormFieldError>,
     val servingWeight: FormField<Float?, ProductFormFieldError>,
-    // Macronutrients
-    val proteins: FormField<Float?, ProductFormFieldError>,
-    val carbohydrates: FormField<Float?, ProductFormFieldError>,
-    val fats: FormField<Float?, ProductFormFieldError>,
+    // Nutrients
     val energy: FormField<Float?, ProductFormFieldError>,
+    // Proteins
+    val proteins: FormField<Float?, ProductFormFieldError>,
     // Fats
+    val fats: FormField<Float?, ProductFormFieldError>,
     val saturatedFats: FormField<Float?, ProductFormFieldError>,
+    val transFats: FormField<Float?, ProductFormFieldError>,
     val monounsaturatedFats: FormField<Float?, ProductFormFieldError>,
     val polyunsaturatedFats: FormField<Float?, ProductFormFieldError>,
     val omega3: FormField<Float?, ProductFormFieldError>,
     val omega6: FormField<Float?, ProductFormFieldError>,
-    // Other
+    // Carbohydrates
+    val carbohydrates: FormField<Float?, ProductFormFieldError>,
     val sugars: FormField<Float?, ProductFormFieldError>,
+    val addedSugars: FormField<Float?, ProductFormFieldError>,
+    val dietaryFiber: FormField<Float?, ProductFormFieldError>,
+    val solubleFiber: FormField<Float?, ProductFormFieldError>,
+    val insolubleFiber: FormField<Float?, ProductFormFieldError>,
+    // Other
     val salt: FormField<Float?, ProductFormFieldError>,
-    val fiber: FormField<Float?, ProductFormFieldError>,
     val cholesterolMilli: FormField<Float?, ProductFormFieldError>,
     val caffeineMilli: FormField<Float?, ProductFormFieldError>,
     // Vitamins
@@ -530,7 +556,7 @@ internal class ProductFormState(
             omega6.error == null &&
             sugars.error == null &&
             salt.error == null &&
-            fiber.error == null &&
+            dietaryFiber.error == null &&
             cholesterolMilli.error == null &&
             caffeineMilli.error == null &&
             vitaminAMicro.error == null &&
@@ -590,18 +616,22 @@ internal fun ProductFormState.toProductEntity(multiplier: Float): Result<Product
                 brand = brand.value,
                 barcode = barcode.value,
                 nutrients = Nutrients(
-                    proteins = proteins * multiplier,
-                    carbohydrates = carbohydrates * multiplier,
-                    fats = fats * multiplier,
                     energy = energy * multiplier,
+                    proteins = proteins * multiplier,
+                    fats = fats * multiplier,
                     saturatedFats = saturatedFats.value.applyMultiplier(multiplier),
+                    transFats = transFats.value.applyMultiplier(multiplier),
                     monounsaturatedFats = monounsaturatedFats.value.applyMultiplier(multiplier),
                     polyunsaturatedFats = polyunsaturatedFats.value.applyMultiplier(multiplier),
                     omega3 = omega3.value.applyMultiplier(multiplier),
                     omega6 = omega6.value.applyMultiplier(multiplier),
+                    carbohydrates = carbohydrates * multiplier,
                     sugars = sugars.value.applyMultiplier(multiplier),
+                    addedSugars = addedSugars.value.applyMultiplier(multiplier),
+                    dietaryFiber = dietaryFiber.value.applyMultiplier(multiplier),
+                    solubleFiber = solubleFiber.value.applyMultiplier(multiplier),
+                    insolubleFiber = insolubleFiber.value.applyMultiplier(multiplier),
                     salt = salt.value.applyMultiplier(multiplier),
-                    fiber = fiber.value.applyMultiplier(multiplier),
                     cholesterolMilli = cholesterolMilli.value.applyMultiplier(multiplier),
                     caffeineMilli = caffeineMilli.value.applyMultiplier(multiplier)
                 ),
