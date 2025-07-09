@@ -94,7 +94,7 @@ private val OpenFoodFactsProduct.defaultMeasurement: Measurement
 
 private fun OpenFoodFactsProduct.weight(measurement: Measurement): Float? = when (measurement) {
     is Measurement.Gram,
-    is Measurement.Milliliter -> 100f
+    is Measurement.Milliliter -> null
 
     is Measurement.Package -> packageWeight
     is Measurement.Serving -> servingWeight

@@ -148,23 +148,28 @@ internal fun FoodErrorListItem(
     headline: String,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    errorMessage: String = stringResource(Res.string.error_measurement_error)
+    errorMessage: String = stringResource(Res.string.error_measurement_error),
+    shape: Shape = RectangleShape
 ) {
-    ListItem(
-        headlineContent = { Text(headline) },
-        modifier = if (onClick != null) {
-            Modifier.clickable { onClick }
-        } else {
-            Modifier
-        }.then(modifier),
-        supportingContent = { Text(errorMessage) },
-        colors = ListItemDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            headlineColor = MaterialTheme.colorScheme.onErrorContainer,
-            supportingColor = MaterialTheme.colorScheme.onErrorContainer,
-            overlineColor = MaterialTheme.colorScheme.onErrorContainer
+    Surface(
+        shape = shape
+    ) {
+        ListItem(
+            headlineContent = { Text(headline) },
+            modifier = if (onClick != null) {
+                Modifier.clickable { onClick }
+            } else {
+                Modifier
+            }.then(modifier),
+            supportingContent = { Text(errorMessage) },
+            colors = ListItemDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                headlineColor = MaterialTheme.colorScheme.onErrorContainer,
+                supportingColor = MaterialTheme.colorScheme.onErrorContainer,
+                overlineColor = MaterialTheme.colorScheme.onErrorContainer
+            )
         )
-    )
+    }
 }
 
 // TODO

@@ -1,8 +1,7 @@
-package com.maksimowiczm.foodyou.feature.food.domain
+package com.maksimowiczm.foodyou.feature.measurement.domain
 
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.feature.measurement.data.WithMeasurement
-import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 
 interface MeasurementMapper {
     fun toMeasurement(entity: WithMeasurement): Measurement

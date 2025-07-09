@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.feature.food.domain.MeasurementMapper
-import com.maksimowiczm.foodyou.feature.food.domain.MeasurementMapperImpl
+import com.maksimowiczm.foodyou.feature.measurement.domain.MeasurementMapper
+import com.maksimowiczm.foodyou.feature.measurement.domain.MeasurementMapperImpl
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

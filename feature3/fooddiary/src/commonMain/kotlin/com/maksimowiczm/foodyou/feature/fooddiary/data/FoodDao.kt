@@ -53,10 +53,13 @@ interface FoodDao {
             p.phosphorusMilli,
             p.seleniumMicro,
             p.iodineMicro,
-            p.chromiumMicro
+            p.chromiumMicro,
+            p.packageWeight as totalWeight,
+            p.servingWeight as servingWeight
         FROM Product p
+        WHERE (:query IS NULL OR p.name LIKE '%' || :query || '%')
         ORDER BY headline ASC
         """
     )
-    fun observeFood(): PagingSource<Int, Food>
+    fun observeFood(query: String?): PagingSource<Int, Food>
 }

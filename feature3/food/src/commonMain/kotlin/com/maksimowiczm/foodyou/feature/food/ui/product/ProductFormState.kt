@@ -449,8 +449,8 @@ private fun rememberRequiredFormField(initialValue: Float? = null) = rememberFor
         onNotANumber = { ProductFormFieldError.NotANumber },
         onNull = { ProductFormFieldError.Required }
     ),
-    validator = positiveFloatValidator(
-        onNotPositive = { ProductFormFieldError.NotPositive },
+    validator = nonNegativeFloatValidator(
+        onNegative = { ProductFormFieldError.Negative },
         onNull = { ProductFormFieldError.Required }
     ),
     textFieldState = rememberTextFieldState(initialValue?.formatClipZeros("%.4f") ?: "")

@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.feature.food.data.Product
 import com.maksimowiczm.foodyou.feature.food.data.Recipe
-import com.maksimowiczm.foodyou.feature.measurement.data.Measurement
+import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.data.WithMeasurement
 
 @Entity(
@@ -47,7 +47,7 @@ data class Measurement(
     val productId: Long?,
     val recipeId: Long?,
 
-    override val measurement: Measurement,
+    override val measurement: MeasurementType,
     override val quantity: Float,
 
     /**

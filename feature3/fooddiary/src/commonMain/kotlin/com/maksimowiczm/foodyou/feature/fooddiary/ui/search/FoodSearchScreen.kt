@@ -75,13 +75,13 @@ import androidx.paging.compose.error
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.getBlocking
-import com.maksimowiczm.foodyou.core.preferences.setBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.Food
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.feature.fooddiary.preferences.UseOpenFoodFacts
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsPrivacyDialog
@@ -102,13 +102,13 @@ internal fun FoodSearchScreen(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProduct) -> Unit,
+    onFood: (Food) -> Unit,
     viewModel: FoodSearchViewModel,
     modifier: Modifier = Modifier,
     useOpenFoodFactsPreference: UseOpenFoodFacts = userPreference()
 ) {
     val localPages = viewModel.localPages.collectAsLazyPagingItems()
     val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
-    val openFoodFactsCount = viewModel.openFoodFactsProductCount.collectAsStateWithLifecycle().value
     val meal = viewModel.meal.collectAsStateWithLifecycle().value
     val date = viewModel.date.collectAsStateWithLifecycle().value
     val useOpenFoodFacts = useOpenFoodFactsPreference
@@ -126,8 +126,7 @@ internal fun FoodSearchScreen(
             FoodSearchState.Local.name -> onBack()
             FoodSearchState.OpenFoodFacts.name -> navController.popBackStack(
                 route = FoodSearchState.OpenFoodFacts.name,
-                inclusive = true,
-                saveState = true
+                inclusive = true
             )
 
             else -> error("Unknown backstack state: ${backstack?.destination?.route}")
@@ -139,8 +138,10 @@ internal fun FoodSearchScreen(
         OpenFoodFactsPrivacyDialog(
             onDismissRequest = { showOpenFoodFactsPrivacyDialog = false },
             onConfirm = {
-                useOpenFoodFactsPreference.setBlocking(true)
                 showOpenFoodFactsPrivacyDialog = false
+                coroutineScope.launch {
+                    useOpenFoodFactsPreference.set(true)
+                }
             }
         )
     }
@@ -169,19 +170,18 @@ internal fun FoodSearchScreen(
     ) {
     }
 
-    if (showBarcodeScanner) {
-        FullScreenCameraBarcodeScanner(
-            onBarcodeScan = {
-                viewModel.search(it)
-                searchTextFieldState.setTextAndPlaceCursorAtEnd(it)
-                showBarcodeScanner = false
-                coroutineScope.launch {
-                    searchState.animateToCollapsed()
-                }
-            },
-            onClose = { showBarcodeScanner = false }
-        )
-    }
+    FullScreenCameraBarcodeScanner(
+        visible = showBarcodeScanner,
+        onBarcodeScan = {
+            viewModel.search(it)
+            searchTextFieldState.setTextAndPlaceCursorAtEnd(it)
+            showBarcodeScanner = false
+            coroutineScope.launch {
+                searchState.animateToCollapsed()
+            }
+        },
+        onClose = { showBarcodeScanner = false }
+    )
 
     Scaffold(
         modifier = modifier,
@@ -214,7 +214,7 @@ internal fun FoodSearchScreen(
                     ArrowBackIconButton(handleBack)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
                 )
             )
         }
@@ -243,7 +243,11 @@ internal fun FoodSearchScreen(
                     .onSizeChanged { searchBarHeight = it.height }
                     .padding(top = paddingValues.calculateTopPadding())
                     .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                colors = SearchBarDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                ),
+                shadowElevation = 2.dp
             )
 
             when (state) {
@@ -279,9 +283,24 @@ internal fun FoodSearchScreen(
             startDestination = FoodSearchState.Local.name
         ) {
             forwardBackwardComposable(FoodSearchState.Local.name) {
+                val measurements = viewModel.measurements
+                    .collectAsStateWithLifecycle().value
+                val openFoodFactsCount = viewModel.openFoodFactsProductCount
+                    .collectAsStateWithLifecycle().value
+
                 LocalSearchList(
                     pages = localPages,
+                    measurements = measurements,
                     onCreateProduct = onCreateProduct,
+                    onMeasurement = { food, measurement ->
+                        if (meal != null) {
+                            viewModel.measureFood(food, measurement, meal, date)
+                        }
+                    },
+                    onDeleteMeasurement = { measurementId ->
+                        viewModel.deleteMeasurement(measurementId)
+                    },
+                    onFoodClick = onFood,
                     useOpenFoodFacts = useOpenFoodFacts,
                     openFoodFactsCount = openFoodFactsCount,
                     openFoodFactsLoadState = openFoodFactsPages.loadState,
@@ -291,7 +310,6 @@ internal fun FoodSearchScreen(
                     onOpenFoodFacts = {
                         navController.navigate(FoodSearchState.OpenFoodFacts.name) {
                             launchSingleTop = true
-                            restoreState = true
                         }
                     },
                     contentPadding = contentPadding.add(
@@ -304,7 +322,6 @@ internal fun FoodSearchScreen(
             forwardBackwardComposable(FoodSearchState.OpenFoodFacts.name) {
                 OpenFoodFactsSearchList(
                     pages = openFoodFactsPages,
-                    onClick = onOpenFoodFactsProduct,
                     contentPadding = contentPadding.add(
                         top = LocalDensity.current.run {
                             val errorHeight = if (openFoodFactsPages.loadState.error != null) {
@@ -316,6 +333,7 @@ internal fun FoodSearchScreen(
                             searchBarHeight.toDp() + errorHeight
                         }
                     ),
+                    onClick = onOpenFoodFactsProduct,
                     modifier = Modifier.fillMaxSize()
                 )
             }

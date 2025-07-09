@@ -21,6 +21,9 @@ fun FoodSearchScreen(
         onOpenFoodFactsProduct = {
             // TODO
         },
+        onFood = {
+            // TODO
+        },
         viewModel = koinViewModel(
             parameters = { parametersOf(mealId, date) }
         ),

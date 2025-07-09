@@ -71,17 +71,16 @@ internal fun ProductForm(
     )
 
     var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
-
-    if (showBarcodeScanner) {
-        FullScreenCameraBarcodeScanner(
-            onBarcodeScan = {
-                state.barcode.textFieldState.setTextAndPlaceCursorAtEnd(it)
-            },
-            onClose = {
-                showBarcodeScanner = false
-            }
-        )
-    }
+    FullScreenCameraBarcodeScanner(
+        visible = showBarcodeScanner,
+        onBarcodeScan = {
+            state.barcode.textFieldState.setTextAndPlaceCursorAtEnd(it)
+            showBarcodeScanner = false
+        },
+        onClose = {
+            showBarcodeScanner = false
+        }
+    )
 
     Column(
         modifier = modifier.padding(verticalPadding),

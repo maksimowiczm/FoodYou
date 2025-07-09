@@ -15,3 +15,14 @@ fun FullScreenCameraBarcodeScanner(onBarcodeScan: (String) -> Unit, onClose: () 
         )
     }
 }
+
+@Composable
+fun FullScreenCameraBarcodeScanner(
+    visible: Boolean,
+    onBarcodeScan: (String) -> Unit,
+    onClose: () -> Unit
+) {
+    if (visible) {
+        FullScreenCameraBarcodeScanner(onBarcodeScan, onClose)
+    }
+}
