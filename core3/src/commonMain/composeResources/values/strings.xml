@@ -367,5 +367,7 @@
     <string name="action_agree">Agree</string>
     <string name="description_open_food_facts_privacy_dialog_text">Enhance your food search with the Open Food Facts database. To proceed, please agree to the {Terms of Use:https://world.openfoodfacts.org/terms-of-use} and {Privacy Policy:https://world.openfoodfacts.org/privacy}</string>
     <string name="headline_browse_open_food_facts">Browse Open Food Facts</string>
+    <string name="description_import_open_food_facts_product">You need to import this product first to use it in your diary</string>
+    <string name="action_import">Import</string>
 
 </resources>

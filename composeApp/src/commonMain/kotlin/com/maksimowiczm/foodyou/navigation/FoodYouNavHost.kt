@@ -4,15 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.Sponsor
 import com.maksimowiczm.foodyou.feature.about.SponsorMessages
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
-import com.maksimowiczm.foodyou.feature.food.ui.CreateProductScreen
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
-import kotlin.random.Random
+import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import kotlinx.datetime.LocalDate
 
 @Composable
@@ -22,39 +20,55 @@ fun FoodYouNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "search",
+        startDestination = FoodSearch(
+            mealId = 1L,
+            epochDay = LocalDate.now().toEpochDays()
+        ),
         modifier = modifier
     ) {
-        composable("search") {
-            FoodSearchScreen(
-                mealId = Random.nextLong(1, 4),
-                // Use random date
-                date = LocalDate(
-                    year = Random.nextInt(2020, 2025),
-                    month = Random.nextInt(1, 13),
-                    day = Random.nextInt(1, 29)
-                ),
-                onBack = {
-                    navController.popBackStack("search", true)
-                },
-                onCreateProduct = {
-                    navController.navigate("create") {
-                        launchSingleTop = true
-                    }
+        foodDiaryGraph(
+            foodSearchOnBack = {
+                navController.popBackStack<FoodSearch>(true)
+            },
+            foodSearchOnCreateProduct = {
+                navController.navigate(CreateProduct) {
+                    launchSingleTop = true
                 }
-            )
-        }
+            },
+            foodSearchOnOpenFoodFactsProduct = {
+                navController.navigate(OpenFoodFactsProduct(it)) {
+                    launchSingleTop = true
+                }
+            },
+            foodSearchOnFood = {
+                // TODO
+                val route = when (it) {
+                    is FoodId.Product -> UpdateProduct.from(it)
+                    is FoodId.Recipe -> TODO()
+                }
 
-        composable("create") {
-            CreateProductScreen(
-                onBack = {
-                    navController.popBackStack("create", true)
-                },
-                onCreate = {
-                    navController.popBackStack("create", true)
+                navController.navigate(route) {
+                    launchSingleTop = true
                 }
-            )
-        }
+            },
+            openFoodFactsProductOnBack = {
+                navController.popBackStack<OpenFoodFactsProduct>(true)
+            },
+            openFoodFactsProductOnImport = {
+            },
+            createProductOnBack = {
+                navController.popBackStack<CreateProduct>(true)
+            },
+            createProductOnCreate = {
+                // TODO
+            },
+            updateProductOnBack = {
+                navController.popBackStack<UpdateProduct>(true)
+            },
+            updateProductOnUpdate = {
+                navController.popBackStack<UpdateProduct>(true)
+            }
+        )
 
         aboutGraph(
             aboutOnBack = {

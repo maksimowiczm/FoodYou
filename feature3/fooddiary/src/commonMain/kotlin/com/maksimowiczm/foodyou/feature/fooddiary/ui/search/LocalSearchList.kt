@@ -57,6 +57,7 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
     onOpenFoodFactsPrivacyDialog: () -> Unit,
     onOpenFoodFacts: () -> Unit,
     contentPadding: PaddingValues,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) = Box(modifier) {
     if (pages.itemCount == 0) {
@@ -76,7 +77,9 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
             .padding(16.dp)
             .windowInsetsPadding(WindowInsets.systemBars)
             .animateFloatingActionButton(
-                visible = !this@LocalSearchList.transition.isRunning,
+                visible =
+                !this@LocalSearchList.transition.isRunning &&
+                    !animatedVisibilityScope.transition.isRunning,
                 alignment = Alignment.BottomEnd
             )
     ) {

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -562,8 +563,12 @@ private fun Nutrient(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            label()
-            value()
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.bodyMedium
+            ) {
+                label()
+                value()
+            }
         }
     }
 }

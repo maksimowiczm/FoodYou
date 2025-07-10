@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.updateTransition
@@ -104,6 +105,7 @@ internal fun FoodSearchScreen(
     onOpenFoodFactsProduct: (OpenFoodFactsProduct) -> Unit,
     onFood: (Food) -> Unit,
     viewModel: FoodSearchViewModel,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
     useOpenFoodFactsPreference: UseOpenFoodFacts = userPreference()
 ) {
@@ -315,6 +317,7 @@ internal fun FoodSearchScreen(
                     contentPadding = contentPadding.add(
                         top = LocalDensity.current.run { searchBarHeight.toDp() }
                     ),
+                    animatedVisibilityScope = animatedVisibilityScope,
                     modifier = Modifier.fillMaxSize()
                 )
             }

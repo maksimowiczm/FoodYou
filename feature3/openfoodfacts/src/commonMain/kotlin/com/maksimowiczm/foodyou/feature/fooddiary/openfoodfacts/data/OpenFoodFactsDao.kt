@@ -117,4 +117,13 @@ abstract class OpenFoodFactsDao {
 
     @Upsert
     abstract suspend fun upsertPagingKey(pagingKey: OpenFoodFactsPagingKey)
+
+    @Query(
+        """
+        SELECT *
+        FROM OpenFoodFactsProduct
+        WHERE id = :id
+        """
+    )
+    abstract fun observeProductById(id: Long): Flow<OpenFoodFactsProduct?>
 }

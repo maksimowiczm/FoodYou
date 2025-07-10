@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.ui.nutrition
+package com.maksimowiczm.foodyou.feature.food.ui
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.defaultMinSize
@@ -9,29 +9,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.model.NutritionFactsField
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.getBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
-import com.maksimowiczm.foodyou.core.ui.component.MultiColorProgressIndicator
-import com.maksimowiczm.foodyou.core.ui.component.MultiColorProgressIndicatorItem
+import com.maksimowiczm.foodyou.core.ui.MultiColorProgressIndicator
+import com.maksimowiczm.foodyou.core.ui.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
 import kotlin.math.max
 
 /**
  * Indicator with goal.
  */
 @Composable
-fun CaloriesProgressIndicator(
+fun EnergyProgressIndicator(
     calories: Float,
     proteins: Float,
     carbohydrates: Float,
     fats: Float,
     goal: Float,
     modifier: Modifier = Modifier,
-    preference: NutritionFactsListPreference = userPreference()
+    preference: NutrientsOrderPreference = userPreference()
 ) {
-    val preferences by preference.collectAsStateWithLifecycle(preference.getBlocking())
+    val order = preference
+        .collectAsStateWithLifecycle(preference.getBlocking())
+        .value
 
     val nutrientsPalette = LocalNutrientsPalette.current
 
@@ -42,30 +45,20 @@ fun CaloriesProgressIndicator(
     val max = max(goal, calories)
     val animatedMax by animateFloatAsState(max.toFloat())
 
-    val order = remember(preferences) {
-        preferences.orderedEnabled.filter {
-            it in listOf(
-                NutritionFactsField.Proteins,
-                NutritionFactsField.Carbohydrates,
-                NutritionFactsField.Fats
-            )
-        }
-    }
-
     MultiColorProgressIndicator(
         items = order.mapNotNull {
             when (it) {
-                NutritionFactsField.Proteins -> MultiColorProgressIndicatorItem(
+                NutrientsOrder.Proteins -> MultiColorProgressIndicatorItem(
                     progress = animatedProteins / animatedMax,
                     color = nutrientsPalette.proteinsOnSurfaceContainer
                 )
 
-                NutritionFactsField.Carbohydrates -> MultiColorProgressIndicatorItem(
+                NutrientsOrder.Carbohydrates -> MultiColorProgressIndicatorItem(
                     progress = animatedCarbohydrates / animatedMax,
                     color = nutrientsPalette.carbohydratesOnSurfaceContainer
                 )
 
-                NutritionFactsField.Fats -> MultiColorProgressIndicatorItem(
+                NutrientsOrder.Fats -> MultiColorProgressIndicatorItem(
                     progress = animatedFats / animatedMax,
                     color = nutrientsPalette.fatsOnSurfaceContainer
                 )
@@ -84,37 +77,34 @@ fun CaloriesProgressIndicator(
  */
 // Somehow padding reduces the height of the indicator. Not sure why.
 @Composable
-fun CaloriesProgressIndicator(
+fun EnergyProgressIndicator(
     proteins: Float,
     carbohydrates: Float,
     fats: Float,
     modifier: Modifier = Modifier,
-    preference: NutritionFactsListPreference = userPreference()
+    preference: NutrientsOrderPreference = userPreference()
 ) {
-    val preferences by preference.collectAsStateWithLifecycle(preference.getBlocking())
+    val order = preference
+        .collectAsStateWithLifecycle(preference.getBlocking())
+        .value
+
     val nutrientsPalette = LocalNutrientsPalette.current
 
     val sum = proteins + carbohydrates + fats
-    val items = remember(preferences, sum, proteins, carbohydrates, fats) {
-        preferences.orderedEnabled.filter {
-            it in listOf(
-                NutritionFactsField.Proteins,
-                NutritionFactsField.Carbohydrates,
-                NutritionFactsField.Fats
-            )
-        }.mapNotNull {
+    val items = remember(order, sum, proteins, carbohydrates, fats) {
+        order.mapNotNull {
             when (it) {
-                NutritionFactsField.Proteins -> MultiColorProgressIndicatorItem(
+                NutrientsOrder.Proteins -> MultiColorProgressIndicatorItem(
                     progress = proteins / sum,
                     color = nutrientsPalette.proteinsOnSurfaceContainer
                 )
 
-                NutritionFactsField.Carbohydrates -> MultiColorProgressIndicatorItem(
+                NutrientsOrder.Carbohydrates -> MultiColorProgressIndicatorItem(
                     progress = carbohydrates / sum,
                     color = nutrientsPalette.carbohydratesOnSurfaceContainer
                 )
 
-                NutritionFactsField.Fats -> MultiColorProgressIndicatorItem(
+                NutrientsOrder.Fats -> MultiColorProgressIndicatorItem(
                     progress = fats / sum,
                     color = nutrientsPalette.fatsOnSurfaceContainer
                 )

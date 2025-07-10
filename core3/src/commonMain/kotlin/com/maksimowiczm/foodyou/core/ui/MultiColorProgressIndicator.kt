@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.ui.component
+package com.maksimowiczm.foodyou.core.ui
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Canvas

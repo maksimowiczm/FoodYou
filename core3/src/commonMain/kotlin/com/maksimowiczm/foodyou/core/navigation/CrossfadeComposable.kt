@@ -14,6 +14,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import com.maksimowiczm.foodyou.core.motion.crossfadeIn
 import com.maksimowiczm.foodyou.core.motion.crossfadeOut
+import kotlin.jvm.JvmSuppressWildcards
 import kotlin.reflect.KType
 
 @Suppress("ktlint:standard:max-line-length")
