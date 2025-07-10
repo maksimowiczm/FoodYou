@@ -8,23 +8,23 @@ import kotlinx.coroutines.flow.map
 /**
  * Base abstract class for DataStore user preferences with common functionality.
  */
-abstract class BaseDataStoreUserPreference<S, T>(
+abstract class BaseDataStoreUserPreference<K, T>(
     protected val dataStore: DataStore<Preferences>,
-    protected val key: Preferences.Key<S>
+    protected val key: Preferences.Key<K>
 ) {
     /**
      * Maps the stored value to the desired type.
      * @return The mapped value of type T.
      */
-    abstract fun S?.toValue(): T
+    abstract fun K?.toValue(): T
 
     /**
      * Converts the value of type T to the stored type S.
      * @return The value to be stored in the DataStore.
      */
-    abstract fun T.toStore(): S?
+    abstract fun T.toStore(): K?
 
-    protected fun observeRaw(): Flow<S?> = dataStore.data.map { preferences ->
+    protected fun observeRaw(): Flow<K?> = dataStore.data.map { preferences ->
         preferences[key]
     }
 }

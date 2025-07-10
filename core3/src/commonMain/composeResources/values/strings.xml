@@ -61,6 +61,7 @@
     <string name="unit_calories">Calories</string>
     <string name="unit_energy" description="Energy as calories">Energy</string>
     <string name="unit_kcal">kcal</string>
+    <string name="unit_kilojules">kJ</string>
     <string name="unit_gram_short" translatable="false">g</string>
     <string name="unit_milliliter_short" translatable="false">ml</string>
     <string name="unit_milligram_short" translatable="false">mg</string>

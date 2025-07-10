@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.map
 /**
  * DataStore user preference for non-nullable values.
  */
-abstract class DataStoreUserPreference<S, T>(
+abstract class DataStoreUserPreference<K, T>(
     dataStore: DataStore<Preferences>,
-    key: Preferences.Key<S>
-) : BaseDataStoreUserPreference<S, T>(dataStore, key),
+    key: Preferences.Key<K>
+) : BaseDataStoreUserPreference<K, T>(dataStore, key),
     UserPreference<T> {
 
     override fun observe(): Flow<T> = observeRaw().map { it.toValue() }
@@ -32,5 +32,5 @@ abstract class DataStoreUserPreference<S, T>(
      * Maps the stored value to the desired type.
      * For non-nullable preferences, this should handle null stored values appropriately.
      */
-    abstract override fun S?.toValue(): T
+    abstract override fun K?.toValue(): T
 }

@@ -24,4 +24,6 @@ object NutrientsHelper {
     fun carbohydratesToEnergy(carbohydrates: Number) = carbohydrates.toFloat() * CARBOHYDRATES
 
     fun fatsToEnergy(fats: Number) = fats.toFloat() * FATS
+
+    fun caloriesToKilojoules(calories: Number): Float = calories.toFloat() * 4.184f
 }
