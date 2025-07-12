@@ -369,5 +369,8 @@
     <string name="headline_browse_open_food_facts">Browse Open Food Facts</string>
     <string name="description_import_open_food_facts_product">You need to import this product first to use it in your diary</string>
     <string name="action_import">Import</string>
+    <string name="headline_today" description="Today, date">Today, %1$s</string>
+    <string name="headline_yesterday" description="Yesterday, date">Yesterday, %1$s</string>
+    <string name="headline_tomorrow" description="Tomorrow, date">Tomorrow, %1$s</string>
 
 </resources>

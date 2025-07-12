@@ -89,7 +89,7 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                 onNotPositive = { ProductFormFieldError.NotPositive }
             )
         },
-        textFieldState = rememberTextFieldState(product?.packageWeight?.toString() ?: "")
+        textFieldState = rememberTextFieldState(product?.packageWeight?.formatClipZeros() ?: "")
     )
 
     val servingWeight = rememberFormField(
@@ -107,7 +107,7 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                 onNotPositive = { ProductFormFieldError.NotPositive }
             )
         },
-        textFieldState = rememberTextFieldState(product?.servingWeight?.toString() ?: "")
+        textFieldState = rememberTextFieldState(product?.servingWeight?.formatClipZeros() ?: "")
     )
 
     val proteins =

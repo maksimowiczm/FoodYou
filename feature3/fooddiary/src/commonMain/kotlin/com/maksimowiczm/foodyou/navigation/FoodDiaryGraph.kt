@@ -6,10 +6,13 @@ import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.ui.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateMeasurementScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.FoodSearchScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsProductScreen
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Serializable
 data class FoodSearch(val mealId: Long, val epochDay: Long) {
@@ -21,7 +24,12 @@ data class FoodSearch(val mealId: Long, val epochDay: Long) {
 data class OpenFoodFactsProduct(val id: Long)
 
 @Serializable
-data object CreateProduct
+data class CreateProduct(val mealId: Long, val date: Long) {
+    constructor(mealId: Long, date: LocalDate) : this(mealId, date.toEpochDays())
+
+    val localDate: LocalDate
+        get() = LocalDate.fromEpochDays(date)
+}
 
 @Serializable
 data class UpdateProduct(val id: Long) {
@@ -33,31 +41,48 @@ data class UpdateProduct(val id: Long) {
     }
 }
 
+@Serializable
+data class CreateProductMeasurement(val productId: Long, val mealId: Long, val date: Long) {
+    constructor(
+        foodId: FoodId.Product,
+        mealId: Long,
+        date: LocalDate
+    ) : this(foodId.id, mealId, date.toEpochDays())
+
+    val foodId: FoodId.Product
+        get() = FoodId.Product(productId)
+}
+
 fun NavGraphBuilder.foodDiaryGraph(
     foodSearchOnBack: () -> Unit,
-    foodSearchOnCreateProduct: () -> Unit,
+    foodSearchOnCreateProduct: (mealId: Long, date: LocalDate) -> Unit,
     foodSearchOnOpenFoodFactsProduct: (id: Long) -> Unit,
-    foodSearchOnFood: (id: FoodId) -> Unit,
+    foodSearchOnFood: (FoodId, mealId: Long, date: LocalDate) -> Unit,
     openFoodFactsProductOnBack: () -> Unit,
     openFoodFactsProductOnImport: (id: FoodId.Product) -> Unit,
     createProductOnBack: () -> Unit,
-    createProductOnCreate: (FoodId.Product) -> Unit,
+    createProductOnCreate: (FoodId.Product, mealId: Long, date: LocalDate) -> Unit,
     updateProductOnBack: () -> Unit,
-    updateProductOnUpdate: () -> Unit
+    updateProductOnUpdate: () -> Unit,
+    createMeasurementOnBack: () -> Unit,
+    createMeasurementOnEditProduct: (FoodId.Product) -> Unit,
+    createMeasurementOnDeleteProduct: () -> Unit,
+    createMeasurementOnCreateMeasurement: () -> Unit
 ) {
-    forwardBackwardComposable<FoodSearch> {
-        val route = it.toRoute<FoodSearch>()
+    forwardBackwardComposable<FoodSearch> { backStack ->
+        val route = backStack.toRoute<FoodSearch>()
         val mealId = route.mealId
         val date = route.date
 
         FoodSearchScreen(
-            mealId = mealId,
-            date = date,
             onBack = foodSearchOnBack,
-            onCreateProduct = foodSearchOnCreateProduct,
-            onOpenFoodFactsProduct = foodSearchOnOpenFoodFactsProduct,
-            animatedVisibilityScope = this,
-            onFood = foodSearchOnFood
+            onCreateProduct = { foodSearchOnCreateProduct(mealId, date) },
+            onOpenFoodFactsProduct = { foodSearchOnOpenFoodFactsProduct(it.id) },
+            onFood = { foodSearchOnFood(it.id, mealId, date) },
+            viewModel = koinViewModel(
+                parameters = { parametersOf(mealId, date) }
+            ),
+            animatedVisibilityScope = this
         )
     }
     forwardBackwardComposable<OpenFoodFactsProduct> {
@@ -69,10 +94,14 @@ fun NavGraphBuilder.foodDiaryGraph(
             productId = id
         )
     }
-    forwardBackwardComposable<CreateProduct> {
+    forwardBackwardComposable<CreateProduct> { backStack ->
+        val route = backStack.toRoute<CreateProduct>()
+
         CreateProductScreen(
             onBack = createProductOnBack,
-            onCreate = createProductOnCreate
+            onCreate = {
+                createProductOnCreate(it, route.mealId, route.localDate)
+            }
         )
     }
     forwardBackwardComposable<UpdateProduct> {
@@ -82,6 +111,19 @@ fun NavGraphBuilder.foodDiaryGraph(
             onBack = updateProductOnBack,
             onUpdate = updateProductOnUpdate,
             productId = route.productId
+        )
+    }
+    forwardBackwardComposable<CreateProductMeasurement> {
+        val route = it.toRoute<CreateProductMeasurement>()
+
+        CreateMeasurementScreen(
+            onBack = createMeasurementOnBack,
+            onEdit = { createMeasurementOnEditProduct(route.foodId) },
+            onDelete = createMeasurementOnDeleteProduct,
+            onCreateMeasurement = createMeasurementOnCreateMeasurement,
+            productId = route.foodId,
+            mealId = route.mealId,
+            animatedVisibilityScope = this
         )
     }
 }

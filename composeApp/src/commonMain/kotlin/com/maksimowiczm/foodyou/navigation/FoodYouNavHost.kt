@@ -30,8 +30,13 @@ fun FoodYouNavHost(
             foodSearchOnBack = {
                 navController.popBackStack<FoodSearch>(true)
             },
-            foodSearchOnCreateProduct = {
-                navController.navigate(CreateProduct) {
+            foodSearchOnCreateProduct = { mealId, date ->
+                navController.navigate(
+                    CreateProduct(
+                        mealId = mealId,
+                        date = date
+                    )
+                ) {
                     launchSingleTop = true
                 }
             },
@@ -40,10 +45,14 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
-            foodSearchOnFood = {
-                // TODO
-                val route = when (it) {
-                    is FoodId.Product -> UpdateProduct.from(it)
+            foodSearchOnFood = { id, mealId, date ->
+                val route = when (id) {
+                    is FoodId.Product -> CreateProductMeasurement(
+                        foodId = id,
+                        mealId = mealId,
+                        date = date
+                    )
+
                     is FoodId.Recipe -> TODO()
                 }
 
@@ -59,14 +68,40 @@ fun FoodYouNavHost(
             createProductOnBack = {
                 navController.popBackStack<CreateProduct>(true)
             },
-            createProductOnCreate = {
-                // TODO
+            createProductOnCreate = { id, mealId, date ->
+                navController.navigate(
+                    CreateProductMeasurement(
+                        foodId = id,
+                        mealId = mealId,
+                        date = date
+                    )
+                ) {
+                    launchSingleTop = true
+
+                    popUpTo<CreateProduct> {
+                        inclusive = true
+                    }
+                }
             },
             updateProductOnBack = {
                 navController.popBackStack<UpdateProduct>(true)
             },
             updateProductOnUpdate = {
                 navController.popBackStack<UpdateProduct>(true)
+            },
+            createMeasurementOnBack = {
+                navController.popBackStack<CreateProductMeasurement>(true)
+            },
+            createMeasurementOnEditProduct = {
+                navController.navigate(UpdateProduct.from(it)) {
+                    launchSingleTop = true
+                }
+            },
+            createMeasurementOnDeleteProduct = {
+                navController.popBackStack<CreateProductMeasurement>(true)
+            },
+            createMeasurementOnCreateMeasurement = {
+                navController.popBackStack<CreateProductMeasurement>(true)
             }
         )
 

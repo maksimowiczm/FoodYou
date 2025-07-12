@@ -9,4 +9,7 @@ interface MealDao {
 
     @Query("SELECT * FROM meal WHERE id = :mealId")
     fun observeMealById(mealId: Long): Flow<Meal?>
+
+    @Query("SELECT * FROM meal")
+    fun observeMeals(): Flow<List<Meal>>
 }

@@ -44,4 +44,19 @@ interface MeasurementDao {
         """
     )
     fun observeMeasurements(mealId: Long, epochDay: Long): Flow<List<Measurement>>
+
+    @Query(
+        """
+        SELECT DISTINCT measurement, quantity
+        FROM Measurement
+        WHERE 
+            productId = :productId 
+        ORDER BY createdAt DESC
+        LIMIT :limit
+        """
+    )
+    fun observeMeasurementSuggestions(
+        productId: Long,
+        limit: Int
+    ): Flow<List<MeasurementSuggestion>>
 }
