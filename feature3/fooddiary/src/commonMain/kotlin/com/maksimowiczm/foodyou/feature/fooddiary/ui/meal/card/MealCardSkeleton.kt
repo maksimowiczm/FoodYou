@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal.ui.card
+package com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,8 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.ui.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
-import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
 

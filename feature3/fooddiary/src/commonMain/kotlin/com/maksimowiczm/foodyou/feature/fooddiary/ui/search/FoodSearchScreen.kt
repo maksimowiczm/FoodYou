@@ -76,6 +76,7 @@ import androidx.paging.compose.error
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.setBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
@@ -142,9 +143,7 @@ internal fun FoodSearchScreen(
             onDismissRequest = { showOpenFoodFactsPrivacyDialog = false },
             onConfirm = {
                 showOpenFoodFactsPrivacyDialog = false
-                coroutineScope.launch {
-                    useOpenFoodFactsPreference.set(true)
-                }
+                useOpenFoodFactsPreference.setBlocking(true)
             }
         )
     }

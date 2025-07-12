@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal.ui.card
+package com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.card
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -9,33 +9,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.ui.nutrition.FoodErrorListItem
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.FoodWithMeasurement
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodErrorListItem
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodListItem
+import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun FoodListItem(
+internal fun MealFoodListItem(
     foodWithMeasurement: FoodWithMeasurement,
     color: Color,
     contentColor: Color,
     shape: Shape,
     modifier: Modifier = Modifier
 ) {
+    val g = stringResource(Res.string.unit_gram_short)
+
     val proteinsString = foodWithMeasurement.proteins?.let {
-        it.formatClipZeros("%.1f") + " " + stringResource(Res.string.unit_gram_short)
+        it.formatClipZeros("%.1f") + " $g"
     }
 
     val carbohydratesString = foodWithMeasurement.carbohydrates?.let {
-        it.formatClipZeros("%.1f") + " " + stringResource(Res.string.unit_gram_short)
+        it.formatClipZeros("%.1f") + " $g"
     }
 
     val fatsString = foodWithMeasurement.fats?.let {
-        it.formatClipZeros("%.1f") + " " + stringResource(Res.string.unit_gram_short)
+        it.formatClipZeros("%.1f") + " $g"
     }
 
     val caloriesString = foodWithMeasurement.caloriesString
@@ -121,11 +124,7 @@ private val FoodWithMeasurement.measurementString: String?
     @Composable get() {
         val short = measurementStringShort
         val weight = weight?.formatClipZeros() ?: return null
-        val suffix = if (food.isLiquid) {
-            stringResource(Res.string.unit_milliliter_short)
-        } else {
-            stringResource(Res.string.unit_gram_short)
-        }
+        val suffix = stringResource(Res.string.unit_gram_short)
 
         return when (measurement) {
             is Measurement.Gram,
@@ -139,7 +138,7 @@ private val FoodWithMeasurement.measurementString: String?
 
 private val FoodWithMeasurement.caloriesString: String?
     @Composable get() = weight?.let {
-        val calories = food.nutritionFacts.calories * it / 100f
+        val calories = food.nutritionFacts.energy * it / 100f
         val value = calories.value.roundToInt()
         "$value " + stringResource(Res.string.unit_kcal)
     }

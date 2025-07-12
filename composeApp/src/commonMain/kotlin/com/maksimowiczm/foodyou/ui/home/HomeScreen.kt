@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.ui.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +21,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.MealsCards
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_go_to_settings
 import foodyou.app.generated.resources.app_name
@@ -27,7 +29,13 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onSettings: () -> Unit, onAbout: () -> Unit, modifier: Modifier = Modifier) {
+fun HomeScreen(
+    onSettings: () -> Unit,
+    onAbout: () -> Unit,
+    mealCardOnAdd: (epochDay: Long, mealId: Long) -> Unit,
+    mealCardOnEditMeasurement: (measurementId: Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val homeState = rememberHomeState()
 
@@ -71,6 +79,15 @@ fun HomeScreen(onSettings: () -> Unit, onAbout: () -> Unit, modifier: Modifier =
                     modifier = Modifier.padding(
                         horizontal = 8.dp
                     )
+                )
+            }
+
+            item {
+                MealsCards(
+                    homeState = homeState,
+                    onAdd = mealCardOnAdd,
+                    onEditMeasurement = mealCardOnEditMeasurement,
+                    contentPadding = PaddingValues(8.dp)
                 )
             }
         }

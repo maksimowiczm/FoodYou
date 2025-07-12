@@ -96,27 +96,23 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
         )
     ) {
         item {
-            val cardState = remember(
+            val cardState by remember(
                 useOpenFoodFacts,
                 openFoodFactsCount,
                 openFoodFactsLoadState
             ) {
-                if (!useOpenFoodFacts) {
-                    return@remember OpenFoodFactsState.PrivacyPolicyRequested
-                }
+                derivedStateOf {
+                    when {
+                        !useOpenFoodFacts -> OpenFoodFactsState.PrivacyPolicyRequested
+                        openFoodFactsLoadState.refresh is LoadState.Loading ||
+                            openFoodFactsLoadState.append is LoadState.Loading ||
+                            openFoodFactsLoadState.prepend is LoadState.Loading ->
+                            OpenFoodFactsState.Loading
 
-                if (openFoodFactsLoadState.refresh is LoadState.Loading ||
-                    openFoodFactsLoadState.append is LoadState.Loading ||
-                    openFoodFactsLoadState.prepend is LoadState.Loading
-                ) {
-                    return@remember OpenFoodFactsState.Loading
+                        openFoodFactsLoadState.hasError -> OpenFoodFactsState.Error
+                        else -> OpenFoodFactsState.Loaded(openFoodFactsCount)
+                    }
                 }
-
-                if (openFoodFactsLoadState.hasError) {
-                    return@remember OpenFoodFactsState.Error
-                }
-
-                OpenFoodFactsState.Loaded(openFoodFactsCount)
             }
 
             OpenFoodFactsCard(

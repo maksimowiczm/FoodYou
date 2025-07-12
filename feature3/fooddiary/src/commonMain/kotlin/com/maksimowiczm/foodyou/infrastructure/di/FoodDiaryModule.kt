@@ -2,6 +2,9 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.FoodMapper
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.FoodMapperImpl
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMealsUseCase
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMealsUseCaseImpl
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.card.MealsCardsViewModel
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateMeasurementScreenViewModel
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateProductMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.FoodSearchViewModel
@@ -14,5 +17,7 @@ val foodDiaryModule = module {
     viewModelOf(::FoodSearchViewModel)
     factoryOf(::FoodMapperImpl).bind<FoodMapper>()
     viewModelOf(::CreateMeasurementScreenViewModel)
+    factoryOf(::ObserveMealsUseCaseImpl).bind<ObserveMealsUseCase>()
     viewModelOf(::UpdateProductMeasurementViewModel)
+    viewModelOf(::MealsCardsViewModel)
 }

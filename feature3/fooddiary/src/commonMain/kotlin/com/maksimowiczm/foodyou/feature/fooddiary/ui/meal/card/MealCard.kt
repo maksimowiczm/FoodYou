@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal.ui.card
+package com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.card
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.CallSplit
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -35,15 +34,8 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,40 +44,28 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.ext.lambda
-import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.FoodWithMeasurement
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.core.model.NutritionFactsField
-import com.maksimowiczm.foodyou.core.model.Recipe
-import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.preferences.getBlocking
-import com.maksimowiczm.foodyou.core.preferences.userPreference
-import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.core.ui.nutrition.NutritionFactsListPreference
+import com.maksimowiczm.foodyou.core.ui.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
-import com.maksimowiczm.foodyou.feature.meal.domain.Meal
-import com.maksimowiczm.foodyou.feature.meal.ui.animatePlacement
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.FoodWithMeasurement
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.Meal
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun MealCard(
     meal: Meal,
+    order: List<NutrientsOrder>,
     onAddFood: () -> Unit,
-    onLongClick: () -> Unit,
     onEditMeasurement: (Long) -> Unit,
-    onUnpackRecipe: (FoodId.Recipe, Measurement, measurementId: Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
-    modifier: Modifier = Modifier,
-    preference: NutritionFactsListPreference = userPreference()
+    modifier: Modifier = Modifier
 ) {
-    val preferences = preference.collectAsStateWithLifecycle(preference.getBlocking()).value
-
     val nutrientsPalette = LocalNutrientsPalette.current
     val dateFormatter = LocalDateFormatter.current
     val enDash = stringResource(Res.string.en_dash)
@@ -105,8 +85,7 @@ internal fun MealCard(
 
     FoodYouHomeCard(
         modifier = modifier,
-        onClick = onAddFood,
-        onLongClick = onLongClick
+        onClick = onAddFood
     ) {
         Column(
             modifier = Modifier
@@ -129,7 +108,6 @@ internal fun MealCard(
             FoodContainer(
                 food = meal.food,
                 onEditMeasurement = onEditMeasurement,
-                onUnpackRecipe = onUnpackRecipe,
                 onDeleteEntry = onDeleteEntry,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -154,30 +132,30 @@ internal fun MealCard(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                preferences.orderedEnabled.forEach { field ->
-                    when (field) {
-                        NutritionFactsField.Energy -> ValueColumn(
-                            label = stringResource(Res.string.unit_kcal),
-                            value = meal.calories.roundToInt().toString(),
-                            suffix = null,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
+                ValueColumn(
+                    label = stringResource(Res.string.unit_kcal),
+                    value = meal.energy.roundToInt().toString(),
+                    suffix = null,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
 
-                        NutritionFactsField.Proteins -> ValueColumn(
+                order.forEach { field ->
+                    when (field) {
+                        NutrientsOrder.Proteins -> ValueColumn(
                             label = stringResource(Res.string.nutriment_proteins_short),
                             value = meal.proteins.formatClipZeros("%.1f"),
                             suffix = stringResource(Res.string.unit_gram_short),
                             color = nutrientsPalette.proteinsOnSurfaceContainer
                         )
 
-                        NutritionFactsField.Carbohydrates -> ValueColumn(
+                        NutrientsOrder.Carbohydrates -> ValueColumn(
                             label = stringResource(Res.string.nutriment_carbohydrates_short),
                             value = meal.carbohydrates.formatClipZeros("%.1f"),
                             suffix = stringResource(Res.string.unit_gram_short),
                             color = nutrientsPalette.carbohydratesOnSurfaceContainer
                         )
 
-                        NutritionFactsField.Fats -> ValueColumn(
+                        NutrientsOrder.Fats -> ValueColumn(
                             label = stringResource(Res.string.nutriment_fats_short),
                             value = meal.fats.formatClipZeros("%.1f"),
                             suffix = stringResource(Res.string.unit_gram_short),
@@ -208,7 +186,6 @@ internal fun MealCard(
 private fun FoodContainer(
     food: List<FoodWithMeasurement>,
     onEditMeasurement: (Long) -> Unit,
-    onUnpackRecipe: (FoodId.Recipe, Measurement, measurementId: Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -227,16 +204,8 @@ private fun FoodContainer(
                 FoodContainerItem(
                     foodWithMeasurement = foodWithMeasurement,
                     onEditMeasurement = onEditMeasurement,
-                    onUnpackRecipe = {
-                        onUnpackRecipe(
-                            it,
-                            foodWithMeasurement.measurement,
-                            foodWithMeasurement.measurementId
-                        )
-                    },
                     onDeleteEntry = onDeleteEntry,
-                    shape = shape,
-                    modifier = Modifier.animatePlacement()
+                    shape = shape
                 )
             }
         }
@@ -270,7 +239,6 @@ private fun <T> List<T>.animateBottomCornerRadius(index: Int, defaultRadius: Dp 
 private fun FoodContainerItem(
     foodWithMeasurement: FoodWithMeasurement,
     onEditMeasurement: (Long) -> Unit,
-    onUnpackRecipe: (FoodId.Recipe) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     shape: Shape,
     modifier: Modifier = Modifier
@@ -287,26 +255,25 @@ private fun FoodContainerItem(
         ) {
             BottomSheetContent(
                 food = foodWithMeasurement,
-                onEdit = coroutineScope.lambda {
-                    onEditMeasurement(foodWithMeasurement.measurementId)
-                    sheetState.hide()
-                    showBottomSheet = false
+                onEdit = {
+                    coroutineScope.launch {
+                        onEditMeasurement(foodWithMeasurement.measurementId)
+                        sheetState.hide()
+                        showBottomSheet = false
+                    }
                 },
-                onUnpackRecipe = coroutineScope.lambda<FoodId.Recipe> {
-                    onUnpackRecipe(it)
-                    sheetState.hide()
-                    showBottomSheet = false
-                },
-                onDelete = coroutineScope.lambda {
-                    sheetState.hide()
-                    onDeleteEntry(foodWithMeasurement.measurementId)
-                    showBottomSheet = false
+                onDelete = {
+                    coroutineScope.launch {
+                        sheetState.hide()
+                        onDeleteEntry(foodWithMeasurement.measurementId)
+                        showBottomSheet = false
+                    }
                 }
             )
         }
     }
 
-    FoodListItem(
+    MealFoodListItem(
         foodWithMeasurement = foodWithMeasurement,
         modifier = modifier.clickable { showBottomSheet = true },
         color = MaterialTheme.colorScheme.surfaceVariant,
@@ -341,7 +308,7 @@ private fun ValueColumn(
                 text = if (value == "0") {
                     stringResource(Res.string.em_dash)
                 } else {
-                    value.toString() + (suffix?.let { " $suffix" } ?: "")
+                    value + (suffix?.let { " $suffix" } ?: "")
                 }
             )
         }
@@ -354,7 +321,6 @@ private fun BottomSheetContent(
     food: FoodWithMeasurement,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onUnpackRecipe: (FoodId.Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
@@ -372,7 +338,7 @@ private fun BottomSheetContent(
     Column(
         modifier = modifier
     ) {
-        FoodListItem(
+        MealFoodListItem(
             foodWithMeasurement = food,
             color = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.onSurface,
@@ -394,26 +360,6 @@ private fun BottomSheetContent(
                 containerColor = Color.Transparent
             )
         )
-
-        val food = food.food
-        if (food is Recipe) {
-            ListItem(
-                headlineContent = {
-                    Text(stringResource(Res.string.action_unpack))
-                },
-                modifier = Modifier.clickable { onUnpackRecipe(food.id) },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.CallSplit,
-                        contentDescription = null
-                    )
-                },
-                colors = ListItemDefaults.colors(
-                    containerColor = Color.Transparent
-                )
-            )
-        }
-
         ListItem(
             headlineContent = {
                 Text(stringResource(Res.string.action_delete_entry))

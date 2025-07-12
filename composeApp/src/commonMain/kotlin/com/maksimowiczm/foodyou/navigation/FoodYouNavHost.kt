@@ -18,7 +18,7 @@ fun FoodYouNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = UpdateProductMeasurement(1L),
+        startDestination = Home,
         modifier = modifier
     ) {
         appGraph(
@@ -29,6 +29,21 @@ fun FoodYouNavHost(
             },
             homeOnAbout = {
                 navController.navigate(About) {
+                    launchSingleTop = true
+                }
+            },
+            homeMealCardOnAdd = { epochDay, mealId ->
+                navController.navigate(
+                    FoodSearch(
+                        mealId = mealId,
+                        epochDay = epochDay
+                    )
+                ) {
+                    launchSingleTop = true
+                }
+            },
+            homeMealCardOnEditMeasurement = {
+                navController.navigate(UpdateProductMeasurement(it)) {
                     launchSingleTop = true
                 }
             },

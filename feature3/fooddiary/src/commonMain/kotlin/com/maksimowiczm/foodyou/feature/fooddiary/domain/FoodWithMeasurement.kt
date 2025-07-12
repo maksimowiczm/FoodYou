@@ -1,5 +1,7 @@
-package com.maksimowiczm.foodyou.core.model
+package com.maksimowiczm.foodyou.feature.fooddiary.domain
 
+import com.maksimowiczm.foodyou.feature.food.domain.Food
+import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import kotlinx.datetime.LocalDate
 
 data class FoodWithMeasurement(
@@ -30,6 +32,6 @@ data class FoodWithMeasurement(
     val fats: Float?
         get() = weight?.let { food.nutritionFacts.fats.value * it / 100f }
 
-    val calories: Float?
-        get() = weight?.let { food.nutritionFacts.calories.value * it / 100f }
+    val energy: Float?
+        get() = weight?.let { food.nutritionFacts.energy.value * it / 100f }
 }
