@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
+import kotlinx.datetime.LocalDate
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -19,6 +20,7 @@ internal fun CreateProductMeasurementScreen(
     onCreateMeasurement: () -> Unit,
     productId: FoodId.Product,
     mealId: Long,
+    date: LocalDate,
     measurement: Measurement?,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
@@ -57,7 +59,7 @@ internal fun CreateProductMeasurementScreen(
             onMeasure = viewModel::createMeasurement,
             product = product,
             today = today,
-            selectedDate = today,
+            selectedDate = date,
             meals = meals,
             selectedMeal = meals.first { it.id == mealId },
             suggestions = suggestions,

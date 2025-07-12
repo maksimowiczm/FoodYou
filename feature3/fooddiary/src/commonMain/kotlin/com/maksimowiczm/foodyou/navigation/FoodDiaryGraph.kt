@@ -51,7 +51,7 @@ data class UpdateProduct(val id: Long) {
 data class CreateProductMeasurement(
     val productId: Long,
     val mealId: Long,
-    val date: Long,
+    val epochDay: Long,
     val measurementType: MeasurementType?,
     val quantity: Float?
 ) {
@@ -71,6 +71,9 @@ data class CreateProductMeasurement(
         } else {
             null
         }
+
+    val date: LocalDate
+        get() = LocalDate.fromEpochDays(epochDay)
 }
 
 @Serializable
@@ -152,6 +155,7 @@ fun NavGraphBuilder.foodDiaryGraph(
             onCreateMeasurement = createMeasurementOnCreateMeasurement,
             productId = route.foodId,
             mealId = route.mealId,
+            date = route.date,
             measurement = route.measurement,
             animatedVisibilityScope = this
         )
