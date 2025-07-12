@@ -123,15 +123,18 @@ private fun LocalDate.stringResource(today: LocalDate): String {
 @Composable
 internal fun rememberChipsDatePickerState(
     today: LocalDate = LocalDate.now(),
-    initialDates: Set<LocalDate> = setOf(LocalDate.now(), LocalDate.now().minus(1.days))
+    initialDates: Set<LocalDate> = setOf(LocalDate.now(), LocalDate.now().minus(1.days)),
+    selectedDate: LocalDate = initialDates.first()
 ): ChipsDatePickerState = rememberSaveable(
     today,
     initialDates,
+    selectedDate,
     saver = ChipsDatePickerState.saver
 ) {
     ChipsDatePickerState(
         today = today,
-        initialDates = initialDates
+        initialDates = initialDates,
+        initialSelectedDate = selectedDate
     )
 }
 
@@ -139,7 +142,7 @@ internal fun rememberChipsDatePickerState(
 internal class ChipsDatePickerState(
     val today: LocalDate,
     initialDates: Set<LocalDate>,
-    initialSelectedDate: LocalDate? = initialDates.firstOrNull()
+    initialSelectedDate: LocalDate?
 ) {
     private var datesSet by mutableStateOf(initialDates.ifEmpty { setOf(LocalDate.now()) })
 

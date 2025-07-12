@@ -31,7 +31,7 @@ interface MeasurementDao {
             AND isDeleted = 0
         """
     )
-    fun observeMeasurementById(measurementId: Long): Flow<Measurement>
+    fun observeMeasurementById(measurementId: Long): Flow<Measurement?>
 
     @Query(
         """

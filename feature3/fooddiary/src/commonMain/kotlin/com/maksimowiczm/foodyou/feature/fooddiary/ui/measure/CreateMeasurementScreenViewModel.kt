@@ -135,7 +135,7 @@ internal class CreateMeasurementScreenViewModel(
             initialValue = null
         )
 
-    private val eventBus = Channel<CreateMeasurementEvent>()
+    private val eventBus = Channel<MeasurementEvent>()
     val events = eventBus.receiveAsFlow()
 
     fun deleteProduct() {
@@ -144,7 +144,7 @@ internal class CreateMeasurementScreenViewModel(
 
             if (product != null) {
                 productsDao.delete(product)
-                eventBus.send(CreateMeasurementEvent.Deleted)
+                eventBus.send(MeasurementEvent.Deleted)
             }
         }
     }
@@ -163,7 +163,7 @@ internal class CreateMeasurementScreenViewModel(
 
         viewModelScope.launch {
             measurementDao.insertMeasurement(entity)
-            eventBus.send(CreateMeasurementEvent.Saved)
+            eventBus.send(MeasurementEvent.Saved)
         }
     }
 }

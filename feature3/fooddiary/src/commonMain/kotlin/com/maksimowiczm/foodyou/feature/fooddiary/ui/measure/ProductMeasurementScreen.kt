@@ -29,109 +29,46 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ext.minus
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ext.add
-import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Meal
-import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.days
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
-
-@Composable
-internal fun CreateMeasurementScreen(
-    onBack: () -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-    onCreateMeasurement: () -> Unit,
-    productId: FoodId.Product,
-    mealId: Long,
-    measurement: Measurement?,
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    modifier: Modifier = Modifier
-) {
-    val viewModel = koinViewModel<CreateMeasurementScreenViewModel>(
-        parameters = { parametersOf(productId) }
-    )
-
-    val product = viewModel.product.collectAsStateWithLifecycle().value
-    val meals = viewModel.meals.collectAsStateWithLifecycle().value
-    val today = viewModel.today.collectAsStateWithLifecycle().value
-    val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
-    val selectedMeasurement = viewModel.selectedMeasurement.collectAsStateWithLifecycle().value
-    val possibleTypes = viewModel.possibleMeasurementTypes.collectAsStateWithLifecycle().value
-
-    val latestOnDelete by rememberUpdatedState(onDelete)
-    val latestOnCreateMeasurement by rememberUpdatedState(onCreateMeasurement)
-    LaunchedCollectWithLifecycle(viewModel.events) {
-        when (it) {
-            CreateMeasurementEvent.Deleted -> latestOnDelete()
-            CreateMeasurementEvent.Saved -> latestOnCreateMeasurement()
-        }
-    }
-
-    if (product == null ||
-        suggestions == null ||
-        selectedMeasurement == null ||
-        possibleTypes == null
-    ) {
-        // TODO loading state
-    } else {
-        CreateMeasurementScreen(
-            onBack = onBack,
-            onEdit = onEdit,
-            onDelete = viewModel::deleteProduct,
-            onMeasure = viewModel::createMeasurement,
-            product = product,
-            today = today,
-            meals = meals,
-            selectedMeal = meals.first { it.id == mealId },
-            suggestions = suggestions,
-            possibleTypes = possibleTypes,
-            animatedVisibilityScope = animatedVisibilityScope,
-            modifier = modifier,
-            selectedMeasurement = measurement ?: selectedMeasurement
-        )
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun CreateMeasurementScreen(
+internal fun ProductMeasurementScreen(
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     onMeasure: (Measurement, mealId: Long, date: LocalDate) -> Unit,
     product: Product,
     today: LocalDate,
+    selectedDate: LocalDate,
     meals: List<Meal>,
     selectedMeal: Meal,
     suggestions: List<Measurement>,
-    possibleTypes: List<MeasurementType>,
+    possibleTypes: List<com.maksimowiczm.foodyou.feature.measurement.data.Measurement>,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.Companion,
     selectedMeasurement: Measurement = suggestions.first()
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     val state = rememberProductMeasurementFormState(
         today = today,
-        possibleDates = setOf(today, today.minus(1.days)),
+        possibleDates = setOf(selectedDate, today.minus(1.days), today),
+        selectedDate = selectedDate,
         meals = meals.toSet(),
         selectedMeal = selectedMeal,
         suggestions = suggestions.toSet(),
@@ -160,14 +97,14 @@ internal fun CreateMeasurementScreen(
                     if (state.isValid) {
                         onMeasure(
                             state.measurementState.measurement,
-                            selectedMeal.id,
+                            meals.first { it.name == state.mealsState.selectedMeal }.id,
                             state.dateState.selectedDate
                         )
                     }
                 },
-                modifier = Modifier.animateFloatingActionButton(
+                modifier = Modifier.Companion.animateFloatingActionButton(
                     visible = !animatedVisibilityScope.transition.isRunning && state.isValid,
-                    alignment = Alignment.BottomEnd
+                    alignment = Alignment.Companion.BottomEnd
                 ),
                 icon = {
                     Icon(
@@ -182,7 +119,7 @@ internal fun CreateMeasurementScreen(
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
+            modifier = Modifier.Companion
                 .fillMaxSize()
                 .padding(
                     horizontal = 8.dp
@@ -210,7 +147,7 @@ internal fun CreateMeasurementScreen(
                         HorizontalDivider()
                         Note(
                             note = note,
-                            modifier = Modifier.padding(
+                            modifier = Modifier.Companion.padding(
                                 vertical = 16.dp,
                                 horizontal = 8.dp
                             )
@@ -223,7 +160,11 @@ internal fun CreateMeasurementScreen(
 }
 
 @Composable
-private fun Menu(onEdit: () -> Unit, onDelete: () -> Unit, modifier: Modifier = Modifier) {
+private fun Menu(
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier.Companion
+) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -269,7 +210,7 @@ private fun Menu(onEdit: () -> Unit, onDelete: () -> Unit, modifier: Modifier = 
 private fun DeleteDialog(
     onDismissRequest: () -> Unit,
     onDelete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.Companion
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -304,14 +245,14 @@ private fun DeleteDialog(
 }
 
 @Composable
-private fun Note(note: String, modifier: Modifier = Modifier) {
+private fun Note(note: String, modifier: Modifier = Modifier.Companion) {
     Column(modifier) {
         Text(
             text = stringResource(Res.string.headline_note),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary
         )
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.Companion.height(8.dp))
         Text(
             text = note,
             style = MaterialTheme.typography.bodyMedium

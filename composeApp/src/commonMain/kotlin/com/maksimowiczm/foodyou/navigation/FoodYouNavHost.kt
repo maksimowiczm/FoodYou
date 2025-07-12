@@ -18,7 +18,7 @@ fun FoodYouNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Home,
+        startDestination = UpdateProductMeasurement(1L),
         modifier = modifier
     ) {
         appGraph(
@@ -114,6 +114,24 @@ fun FoodYouNavHost(
             },
             createMeasurementOnCreateMeasurement = {
                 navController.popBackStack<CreateProductMeasurement>(true)
+            },
+            updateMeasurementOnBack = {
+                navController.popBackStack<UpdateProductMeasurement>(true)
+            },
+            updateMeasurementOnEdit = {
+                when (it) {
+                    is FoodId.Product -> navController.navigate(UpdateProduct.from(it)) {
+                        launchSingleTop = true
+                    }
+
+                    is FoodId.Recipe -> TODO()
+                }
+            },
+            updateMeasurementOnDelete = {
+                navController.popBackStack<UpdateProductMeasurement>(true)
+            },
+            updateMeasurementOnUpdate = {
+                navController.popBackStack<UpdateProductMeasurement>(true)
             }
         )
 

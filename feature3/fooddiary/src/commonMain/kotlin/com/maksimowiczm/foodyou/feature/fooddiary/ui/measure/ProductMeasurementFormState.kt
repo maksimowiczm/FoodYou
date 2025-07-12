@@ -10,6 +10,7 @@ import kotlinx.datetime.LocalDate
 internal fun rememberProductMeasurementFormState(
     today: LocalDate,
     possibleDates: Set<LocalDate>,
+    selectedDate: LocalDate,
     meals: Set<Meal>,
     selectedMeal: Meal,
     suggestions: Set<Measurement>,
@@ -18,7 +19,8 @@ internal fun rememberProductMeasurementFormState(
 ): ProductMeasurementFormState {
     val dateState = rememberChipsDatePickerState(
         today = today,
-        initialDates = possibleDates
+        initialDates = possibleDates,
+        selectedDate = selectedDate
     )
     val mealsState = rememberChipsMealPickerState(
         meals = meals.map { it.name }.toSet(),

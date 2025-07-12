@@ -9,7 +9,8 @@ import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.from
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.rawValue
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.type
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateMeasurementScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateProductMeasurementScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateProductMeasurementScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.FoodSearchScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsProductScreen
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
@@ -72,6 +73,9 @@ data class CreateProductMeasurement(
         }
 }
 
+@Serializable
+data class UpdateProductMeasurement(val measurementId: Long)
+
 fun NavGraphBuilder.foodDiaryGraph(
     foodSearchOnBack: () -> Unit,
     foodSearchOnCreateProduct: (mealId: Long, date: LocalDate) -> Unit,
@@ -86,7 +90,11 @@ fun NavGraphBuilder.foodDiaryGraph(
     createMeasurementOnBack: () -> Unit,
     createMeasurementOnEditProduct: (FoodId.Product) -> Unit,
     createMeasurementOnDeleteProduct: () -> Unit,
-    createMeasurementOnCreateMeasurement: () -> Unit
+    createMeasurementOnCreateMeasurement: () -> Unit,
+    updateMeasurementOnBack: () -> Unit,
+    updateMeasurementOnEdit: (FoodId) -> Unit,
+    updateMeasurementOnDelete: () -> Unit,
+    updateMeasurementOnUpdate: () -> Unit
 ) {
     forwardBackwardComposable<FoodSearch> { backStack ->
         val route = backStack.toRoute<FoodSearch>()
@@ -137,7 +145,7 @@ fun NavGraphBuilder.foodDiaryGraph(
     forwardBackwardComposable<CreateProductMeasurement> {
         val route = it.toRoute<CreateProductMeasurement>()
 
-        CreateMeasurementScreen(
+        CreateProductMeasurementScreen(
             onBack = createMeasurementOnBack,
             onEdit = { createMeasurementOnEditProduct(route.foodId) },
             onDelete = createMeasurementOnDeleteProduct,
@@ -145,6 +153,18 @@ fun NavGraphBuilder.foodDiaryGraph(
             productId = route.foodId,
             mealId = route.mealId,
             measurement = route.measurement,
+            animatedVisibilityScope = this
+        )
+    }
+    forwardBackwardComposable<UpdateProductMeasurement> {
+        val route = it.toRoute<UpdateProductMeasurement>()
+
+        UpdateProductMeasurementScreen(
+            onBack = updateMeasurementOnBack,
+            onEdit = updateMeasurementOnEdit,
+            onDelete = updateMeasurementOnDelete,
+            onUpdateMeasurement = updateMeasurementOnUpdate,
+            measurementId = route.measurementId,
             animatedVisibilityScope = this
         )
     }
