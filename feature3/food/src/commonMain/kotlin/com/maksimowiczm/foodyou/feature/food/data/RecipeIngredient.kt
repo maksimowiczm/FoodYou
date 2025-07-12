@@ -5,7 +5,6 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement
-import com.maksimowiczm.foodyou.feature.measurement.data.WithMeasurement
 
 @Entity(
     foreignKeys = [
@@ -42,6 +41,6 @@ data class RecipeIngredient(
     val ingredientProductId: Long?,
     val ingredientRecipeId: Long?,
 
-    override val measurement: Measurement,
-    override val quantity: Float
-) : WithMeasurement
+    val measurement: Measurement,
+    val quantity: Float
+)

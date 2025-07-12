@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.domain
 
+import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.feature.fooddiary.data.MeasurementSuggestion
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
-import com.maksimowiczm.foodyou.feature.measurement.data.WithMeasurement
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 
 val Measurement.rawValue: Float
@@ -30,4 +30,4 @@ fun Measurement.Companion.from(type: MeasurementType, rawValue: Float): Measurem
 
 fun MeasurementSuggestion.toMeasurement(): Measurement = Measurement.from(measurement, quantity)
 
-fun WithMeasurement.toMeasurement(): Measurement = Measurement.from(measurement, quantity)
+fun MeasurementEntity.toMeasurement(): Measurement = Measurement.from(measurement, quantity)

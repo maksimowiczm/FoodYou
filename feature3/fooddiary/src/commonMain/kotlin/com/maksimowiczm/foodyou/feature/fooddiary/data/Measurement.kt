@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 import com.maksimowiczm.foodyou.feature.food.data.Product
 import com.maksimowiczm.foodyou.feature.food.data.Recipe
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
-import com.maksimowiczm.foodyou.feature.measurement.data.WithMeasurement
 
 @Entity(
     foreignKeys = [
@@ -47,12 +46,12 @@ data class Measurement(
     val productId: Long?,
     val recipeId: Long?,
 
-    override val measurement: MeasurementType,
-    override val quantity: Float,
+    val measurement: MeasurementType,
+    val quantity: Float,
 
     /**
      * Epoch seconds
      */
     val createdAt: Long,
     val isDeleted: Boolean = false
-) : WithMeasurement
+)
