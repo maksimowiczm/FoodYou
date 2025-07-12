@@ -15,16 +15,17 @@ import com.maksimowiczm.foodyou.feature.fooddiary.data.Meal
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.Food
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.FoodMapper
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.rawValue
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.type
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.domain.ObserveOpenFoodFactsProductCountUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.domain.ObserveOpenFoodFactsProductPagesUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.preferences.UseOpenFoodFacts
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
-import com.maksimowiczm.foodyou.feature.measurement.domain.MeasurementMapper
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
@@ -41,7 +42,6 @@ internal class FoodSearchViewModel(
     date: LocalDate,
     database: FoodDiaryDatabase,
     dataStore: DataStore<Preferences>,
-    private val measurementMapper: MeasurementMapper,
     private val foodMapper: FoodMapper,
     private val observeOpenFoodFactsProduct: ObserveOpenFoodFactsProductPagesUseCase,
     private val observeOpenFoodFactsProductCount: ObserveOpenFoodFactsProductCountUseCase
@@ -55,7 +55,7 @@ internal class FoodSearchViewModel(
     val meal = mealDao.observeMealById(mealId).stateIn(
         scope = viewModelScope,
         initialValue = null,
-        started = WhileSubscribed(2_000)
+        started = SharingStarted.WhileSubscribed(2_000)
     )
 
     val date = MutableStateFlow(date).asStateFlow()
@@ -99,7 +99,7 @@ internal class FoodSearchViewModel(
     }.stateIn(
         scope = viewModelScope,
         initialValue = 0,
-        started = WhileSubscribed(2_000)
+        started = SharingStarted.WhileSubscribed(2_000)
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -116,7 +116,7 @@ internal class FoodSearchViewModel(
     }.stateIn(
         scope = viewModelScope,
         initialValue = emptyList(),
-        started = WhileSubscribed(2_000)
+        started = SharingStarted.Lazily
     )
 
     @OptIn(ExperimentalTime::class)
@@ -126,8 +126,8 @@ internal class FoodSearchViewModel(
             epochDay = date.toEpochDays(),
             productId = (food.id as? FoodId.Product)?.id,
             recipeId = (food.id as? FoodId.Recipe)?.id,
-            measurement = measurementMapper.toEntity(measurement),
-            quantity = measurementMapper.toQuantity(measurement),
+            measurement = measurement.type,
+            quantity = measurement.rawValue,
             createdAt = Clock.System.now().epochSeconds
         )
 

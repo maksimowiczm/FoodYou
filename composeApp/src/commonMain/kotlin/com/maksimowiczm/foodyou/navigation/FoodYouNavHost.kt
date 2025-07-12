@@ -45,12 +45,13 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
-            foodSearchOnFood = { id, mealId, date ->
+            foodSearchOnFood = { id, measurement, mealId, date ->
                 val route = when (id) {
                     is FoodId.Product -> CreateProductMeasurement(
                         foodId = id,
                         mealId = mealId,
-                        date = date
+                        date = date,
+                        measurement = measurement
                     )
 
                     is FoodId.Recipe -> TODO()
@@ -73,7 +74,8 @@ fun FoodYouNavHost(
                     CreateProductMeasurement(
                         foodId = id,
                         mealId = mealId,
-                        date = date
+                        date = date,
+                        measurement = null
                     )
                 ) {
                     launchSingleTop = true

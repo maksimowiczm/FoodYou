@@ -61,6 +61,7 @@ internal fun CreateMeasurementScreen(
     onCreateMeasurement: () -> Unit,
     productId: FoodId.Product,
     mealId: Long,
+    measurement: Measurement?,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
@@ -104,7 +105,7 @@ internal fun CreateMeasurementScreen(
             possibleTypes = possibleTypes,
             animatedVisibilityScope = animatedVisibilityScope,
             modifier = modifier,
-            selectedMeasurement = selectedMeasurement
+            selectedMeasurement = measurement ?: selectedMeasurement
         )
     }
 }

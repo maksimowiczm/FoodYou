@@ -50,7 +50,7 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
     onCreateProduct: () -> Unit,
     onMeasurement: (Food, Measurement) -> Unit,
     onDeleteMeasurement: (measurementId: Long) -> Unit,
-    onFoodClick: (Food) -> Unit,
+    onFoodClick: (Food, Measurement) -> Unit,
     useOpenFoodFacts: Boolean,
     openFoodFactsCount: Int,
     openFoodFactsLoadState: CombinedLoadStates,
@@ -150,7 +150,7 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
                             )
                         }
                         .ifEmpty {
-                            listOf(Triple(Measurement.Gram(100f), null, false))
+                            listOf(Triple(food.defaultMeasurement, null, false))
                         }
                 }
 
@@ -209,7 +209,7 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
                                 food = food,
                                 measurement = measurement,
                                 checked = isChecked,
-                                onClick = { onFoodClick(food) },
+                                onClick = { onFoodClick(food, measurement) },
                                 onCheckedChange = { checked ->
                                     if (checked) {
                                         onMeasurement(food, measurement)

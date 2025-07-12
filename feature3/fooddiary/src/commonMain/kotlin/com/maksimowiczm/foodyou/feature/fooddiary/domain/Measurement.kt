@@ -1,6 +1,8 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.domain
 
+import com.maksimowiczm.foodyou.feature.fooddiary.data.MeasurementSuggestion
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
+import com.maksimowiczm.foodyou.feature.measurement.data.WithMeasurement
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 
 val Measurement.rawValue: Float
@@ -18,3 +20,14 @@ val Measurement.type: MeasurementType
         is Measurement.Package -> MeasurementType.Package
         is Measurement.Serving -> MeasurementType.Serving
     }
+
+fun Measurement.Companion.from(type: MeasurementType, rawValue: Float): Measurement = when (type) {
+    MeasurementType.Gram -> Measurement.Gram(rawValue)
+    MeasurementType.Milliliter -> Measurement.Milliliter(rawValue)
+    MeasurementType.Package -> Measurement.Package(rawValue)
+    MeasurementType.Serving -> Measurement.Serving(rawValue)
+}
+
+fun MeasurementSuggestion.toMeasurement(): Measurement = Measurement.from(measurement, quantity)
+
+fun WithMeasurement.toMeasurement(): Measurement = Measurement.from(measurement, quantity)

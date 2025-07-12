@@ -6,9 +6,14 @@ import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.ui.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.from
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.rawValue
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.type
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.FoodSearchScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsProductScreen
+import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
+import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -42,22 +47,36 @@ data class UpdateProduct(val id: Long) {
 }
 
 @Serializable
-data class CreateProductMeasurement(val productId: Long, val mealId: Long, val date: Long) {
+data class CreateProductMeasurement(
+    val productId: Long,
+    val mealId: Long,
+    val date: Long,
+    val measurementType: MeasurementType?,
+    val quantity: Float?
+) {
     constructor(
         foodId: FoodId.Product,
         mealId: Long,
-        date: LocalDate
-    ) : this(foodId.id, mealId, date.toEpochDays())
+        date: LocalDate,
+        measurement: Measurement?
+    ) : this(foodId.id, mealId, date.toEpochDays(), measurement?.type, measurement?.rawValue)
 
     val foodId: FoodId.Product
         get() = FoodId.Product(productId)
+
+    val measurement: Measurement?
+        get() = if (measurementType != null && quantity != null) {
+            Measurement.from(measurementType, quantity)
+        } else {
+            null
+        }
 }
 
 fun NavGraphBuilder.foodDiaryGraph(
     foodSearchOnBack: () -> Unit,
     foodSearchOnCreateProduct: (mealId: Long, date: LocalDate) -> Unit,
     foodSearchOnOpenFoodFactsProduct: (id: Long) -> Unit,
-    foodSearchOnFood: (FoodId, mealId: Long, date: LocalDate) -> Unit,
+    foodSearchOnFood: (FoodId, Measurement, mealId: Long, date: LocalDate) -> Unit,
     openFoodFactsProductOnBack: () -> Unit,
     openFoodFactsProductOnImport: (id: FoodId.Product) -> Unit,
     createProductOnBack: () -> Unit,
@@ -78,7 +97,9 @@ fun NavGraphBuilder.foodDiaryGraph(
             onBack = foodSearchOnBack,
             onCreateProduct = { foodSearchOnCreateProduct(mealId, date) },
             onOpenFoodFactsProduct = { foodSearchOnOpenFoodFactsProduct(it.id) },
-            onFood = { foodSearchOnFood(it.id, mealId, date) },
+            onFood = { food, measurement ->
+                foodSearchOnFood(food.id, measurement, mealId, date)
+            },
             viewModel = koinViewModel(
                 parameters = { parametersOf(mealId, date) }
             ),
@@ -123,6 +144,7 @@ fun NavGraphBuilder.foodDiaryGraph(
             onCreateMeasurement = createMeasurementOnCreateMeasurement,
             productId = route.foodId,
             mealId = route.mealId,
+            measurement = route.measurement,
             animatedVisibilityScope = this
         )
     }

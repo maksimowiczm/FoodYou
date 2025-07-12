@@ -5,7 +5,6 @@ import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue.Companion.toNu
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Food as FoodEntity
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement
-import com.maksimowiczm.foodyou.feature.measurement.domain.MeasurementMapper as MeasurementEntityMapper
 
 interface FoodMapper {
     fun toFoodMeasurement(entity: Measurement): FoodMeasurement
@@ -73,7 +72,7 @@ interface FoodMapper {
     }
 }
 
-internal class FoodMapperImpl(private val measurementMapper: MeasurementEntityMapper) : FoodMapper {
+internal class FoodMapperImpl : FoodMapper {
     override fun toFoodMeasurement(entity: Measurement): FoodMeasurement = with(entity) {
         val foodId = when {
             productId != null -> FoodId.Product(productId)
@@ -84,7 +83,7 @@ internal class FoodMapperImpl(private val measurementMapper: MeasurementEntityMa
         FoodMeasurement(
             foodId = foodId,
             measurementId = id,
-            measurement = measurementMapper.toMeasurement(entity)
+            measurement = toMeasurement()
         )
     }
 }

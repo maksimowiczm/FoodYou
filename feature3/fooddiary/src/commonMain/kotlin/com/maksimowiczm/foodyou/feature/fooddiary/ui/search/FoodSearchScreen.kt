@@ -87,6 +87,7 @@ import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFac
 import com.maksimowiczm.foodyou.feature.fooddiary.preferences.UseOpenFoodFacts
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsPrivacyDialog
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsSearchList
+import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
@@ -103,7 +104,7 @@ internal fun FoodSearchScreen(
     onBack: () -> Unit,
     onCreateProduct: () -> Unit,
     onOpenFoodFactsProduct: (OpenFoodFactsProduct) -> Unit,
-    onFood: (Food) -> Unit,
+    onFood: (Food, Measurement) -> Unit,
     viewModel: FoodSearchViewModel,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,

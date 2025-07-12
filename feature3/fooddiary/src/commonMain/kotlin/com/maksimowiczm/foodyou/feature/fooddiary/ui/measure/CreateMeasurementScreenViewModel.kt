@@ -9,9 +9,12 @@ import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement as MeasurementEntity
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.defaultMeasurement
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.rawValue
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.toMeasurement
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.type
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
-import com.maksimowiczm.foodyou.feature.measurement.domain.MeasurementMapper
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,7 +34,6 @@ internal class CreateMeasurementScreenViewModel(
     foodDatabase: FoodDatabase,
     foodDiaryDatabase: FoodDiaryDatabase,
     productMapper: ProductMapper,
-    private val measurementMapper: MeasurementMapper,
     dateProvider: DateProvider,
     private val productId: FoodId.Product
 ) : ViewModel() {
@@ -66,14 +68,13 @@ internal class CreateMeasurementScreenViewModel(
         .observeMeasurementSuggestions(productId.id, 5)
         .flatMapLatest { list ->
             product.filterNotNull().map { product ->
-                val measurements =
-                    list.map(measurementMapper::toMeasurement).filter { measurement ->
-                        when (measurement) {
-                            is Measurement.Gram, is Measurement.Milliliter -> true
-                            is Measurement.Package -> product.packageWeight != null
-                            is Measurement.Serving -> product.servingWeight != null
-                        }
-                    }.toMutableList()
+                val measurements = list.map { it.toMeasurement() }.filter {
+                    when (it) {
+                        is Measurement.Gram, is Measurement.Milliliter -> true
+                        is Measurement.Package -> product.packageWeight != null
+                        is Measurement.Serving -> product.servingWeight != null
+                    }
+                }.toMutableList()
 
                 // Fill missing measurements
                 measurements.add(Measurement.Gram(100f))
@@ -116,7 +117,7 @@ internal class CreateMeasurementScreenViewModel(
         .observeMeasurementSuggestions(productId.id, 1)
         .flatMapLatest { list ->
             product.filterNotNull().map { product ->
-                list.map(measurementMapper::toMeasurement).filter {
+                list.map { it.toMeasurement() }.filter {
                     when (it) {
                         is Measurement.Gram -> true
                         is Measurement.Milliliter -> true
@@ -124,7 +125,7 @@ internal class CreateMeasurementScreenViewModel(
                         is Measurement.Serving -> product.servingWeight != null
                     }
                 }.ifEmpty {
-                    listOf(Measurement.Gram(100f))
+                    listOf(product.defaultMeasurement)
                 }.first()
             }
         }
@@ -155,8 +156,8 @@ internal class CreateMeasurementScreenViewModel(
             epochDay = date.toEpochDays(),
             productId = productId.id,
             recipeId = null,
-            measurement = measurementMapper.toEntity(measurement),
-            quantity = measurementMapper.toQuantity(measurement),
+            measurement = measurement.type,
+            quantity = measurement.rawValue,
             createdAt = Clock.System.now().epochSeconds
         )
 
