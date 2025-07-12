@@ -3,3 +3,5 @@
 -keepclassmembers class * extends com.maksimowiczm.foodyou.core.preferences.BaseDataStoreUserPreference {
     <init>(...);
 }
+
+-keep enum com.maksimowiczm.foodyou.feature.measurement.data.Measurement
