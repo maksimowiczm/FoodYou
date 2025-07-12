@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.ui.home
+package com.maksimowiczm.foodyou.core.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -7,22 +7,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import com.maksimowiczm.foodyou.core.ext.now
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun rememberHomeState(
-    initialSelectedDate: LocalDate = Clock.System.now().toLocalDateTime(
-        TimeZone.currentSystemDefault()
-    ).date
-): HomeState {
+fun rememberHomeState(initialSelectedDate: LocalDate = LocalDate.now()): HomeState {
     val shimmer = rememberShimmer(
         shimmerBounds = ShimmerBounds.Window
     )

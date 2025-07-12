@@ -5,15 +5,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import kotlin.time.Clock
+import androidx.compose.runtime.*
+import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.core.ext.plus
+import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.CoroutineScope
@@ -34,8 +29,7 @@ private const val DIARY_DAYS_COUNT = 50_000
 internal fun rememberCalendarState(
     namesOfDayOfWeek: List<String>,
     zeroDay: LocalDate = LocalDate.fromEpochDays(0),
-    referenceDate: LocalDate = Clock.System.now()
-        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    referenceDate: LocalDate = LocalDate.now(),
     selectedDate: LocalDate = referenceDate
 ): CalendarState {
     val coroutineScope = rememberCoroutineScope()
@@ -70,25 +64,24 @@ internal class CalendarState(
     val lazyListCount: Int,
     val lazyListState: LazyListState,
     val zeroDate: LocalDate,
-    initialSelectedDate: LocalDate = Clock.System.now()
-        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    initialSelectedDate: LocalDate = LocalDate.now(),
     initialReferenceDate: LocalDate = initialSelectedDate
 ) {
     val referenceDate: LocalDate = initialReferenceDate
     private val referenceDateVisible
         get() = lazyListState.layoutInfo.visibleItemsInfo.any {
-            zeroDate.plus(it.index.toLong(), DateTimeUnit.DAY) == referenceDate
+            zeroDate.plus(it.index.days) == referenceDate
         }
 
     val firstVisibleDate by derivedStateOf {
         lazyListState.layoutInfo.visibleItemsInfo.firstOrNull()?.let {
-            zeroDate.plus(it.index.toLong(), DateTimeUnit.DAY)
+            zeroDate.plus(it.index.days)
         }
     }
 
     private val selectedDateVisible
         get() = lazyListState.layoutInfo.visibleItemsInfo.any {
-            zeroDate.plus(it.index.toLong(), DateTimeUnit.DAY) == selectedDate
+            zeroDate.plus(it.index.days) == selectedDate
         }
 
     var selectedDate by mutableStateOf(initialSelectedDate)

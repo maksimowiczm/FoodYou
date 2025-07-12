@@ -52,7 +52,6 @@ kotlin {
             implementation(project(":core-model"))
             implementation(project(":core-domain"))
             implementation(project(":feature:language"))
-            implementation(project(":feature:calendar"))
             implementation(project(":feature:product"))
             implementation(project(":feature:measurement"))
             implementation(project(":feature:recipe"))

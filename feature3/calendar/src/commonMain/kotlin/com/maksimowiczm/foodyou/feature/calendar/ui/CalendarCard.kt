@@ -27,15 +27,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,20 +38,17 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
-import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.core.ui.home.HomeState
+import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.core.ui.FoodYouHomeCard
+import com.maksimowiczm.foodyou.core.ui.HomeState
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.core.util.DateProvider
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -67,30 +57,26 @@ import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
-internal fun CalendarCard(
-    homeState: HomeState,
-    modifier: Modifier = Modifier,
-    viewModel: CalendarViewModel = koinViewModel()
-) {
+internal fun CalendarCard(homeState: HomeState, modifier: Modifier = Modifier) {
+    val dateProvider = koinInject<DateProvider>()
+    val today = dateProvider.observeDate().collectAsStateWithLifecycle(LocalDate.now()).value
+
     val dateFormatter = LocalDateFormatter.current
 
-    val today by viewModel.today.collectAsStateWithLifecycle()
-
     val calendarState = rememberCalendarState(
-        namesOfDayOfWeek = remember { dateFormatter.weekDayNamesShort },
+        namesOfDayOfWeek = remember(dateFormatter) { dateFormatter.weekDayNamesShort },
         referenceDate = today,
         selectedDate = homeState.selectedDate
     )
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(calendarState) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            snapshotFlow { calendarState.selectedDate }.drop(1).collectLatest {
-                homeState.selectDate(it)
-            }
+    LaunchedEffect(calendarState.selectedDate) {
+        val date = calendarState.selectedDate
+
+        if (date != homeState.selectedDate) {
+            homeState.selectDate(date)
         }
     }
 
@@ -323,7 +309,7 @@ private fun DatePickerRowItem(
                 textAlign = TextAlign.Center
             )
             Text(
-                text = date.dayOfMonth.toString(),
+                text = date.day.toString(),
                 style = MaterialTheme.typography.bodyMedium,
                 color = color,
                 textAlign = TextAlign.Center

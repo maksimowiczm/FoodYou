@@ -1,17 +1,15 @@
 package com.maksimowiczm.foodyou.navigation
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.Sponsor
 import com.maksimowiczm.foodyou.feature.about.SponsorMessages
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import kotlinx.datetime.LocalDate
 
 @Composable
 fun FoodYouNavHost(
@@ -20,12 +18,24 @@ fun FoodYouNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = FoodSearch(
-            mealId = 1L,
-            epochDay = LocalDate.now().toEpochDays()
-        ),
+        startDestination = Home,
         modifier = modifier
     ) {
+        appGraph(
+            homeOnSettings = {
+                navController.navigate(Settings) {
+                    launchSingleTop = true
+                }
+            },
+            homeOnAbout = {
+                navController.navigate(About) {
+                    launchSingleTop = true
+                }
+            },
+            settingsOnBack = {
+                navController.popBackStack<Settings>(true)
+            }
+        )
         foodDiaryGraph(
             foodSearchOnBack = {
                 navController.popBackStack<FoodSearch>(true)

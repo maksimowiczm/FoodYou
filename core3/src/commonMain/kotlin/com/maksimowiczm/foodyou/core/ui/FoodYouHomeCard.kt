@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.core.ui.home
+package com.maksimowiczm.foodyou.core.ui
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box

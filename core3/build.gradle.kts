@@ -91,6 +91,9 @@ kotlin {
 
             // Logger
             api(libs.kermit)
+
+            // Shimmer
+            api(libs.compose.shimmer)
         }
 
         commonTest.dependencies {

@@ -52,6 +52,7 @@ kotlin {
             implementation(project(":feature3:measurement"))
             implementation(project(":feature3:fooddiary"))
             implementation(project(":feature3:openfoodfacts"))
+            implementation(project(":feature3:calendar"))
 
             implementation(libs.kotlinx.serialization.json)
         }

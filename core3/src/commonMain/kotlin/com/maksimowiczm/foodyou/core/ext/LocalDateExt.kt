@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.core.ext
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
-import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -18,16 +18,10 @@ fun LocalDateTime.Companion.now(
 
 @OptIn(ExperimentalTime::class)
 fun LocalDate.Companion.now(timeZone: TimeZone = TimeZone.currentSystemDefault()): LocalDate =
-    Clock.System.now().toLocalDateTime(timeZone).date
+    LocalDateTime.now(timeZone).date
 
-fun LocalDate.plus(duration: Duration): LocalDate {
-    require(duration.isPositive()) { "Duration must be positive" }
-    require(duration.inWholeDays >= 0) { "Duration must be non-negative whole days" }
-    return this.plus(DatePeriod(days = duration.inWholeDays.toInt()))
-}
+fun LocalDate.plus(duration: Duration): LocalDate =
+    this.plus(duration.inWholeDays, DateTimeUnit.DAY)
 
-fun LocalDate.minus(duration: Duration): LocalDate {
-    require(duration.isPositive()) { "Duration must be positive" }
-    require(duration.inWholeDays >= 0) { "Duration must be non-negative whole days" }
-    return this.minus(DatePeriod(days = duration.inWholeDays.toInt()))
-}
+operator fun LocalDate.minus(duration: Duration): LocalDate =
+    minus(duration.inWholeDays, DateTimeUnit.DAY)
