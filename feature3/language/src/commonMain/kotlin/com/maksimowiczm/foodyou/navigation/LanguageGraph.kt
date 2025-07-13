@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.language
+package com.maksimowiczm.foodyou.navigation
 
 import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable

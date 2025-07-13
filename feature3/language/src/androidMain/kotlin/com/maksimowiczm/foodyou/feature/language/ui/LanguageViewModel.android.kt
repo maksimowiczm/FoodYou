@@ -12,7 +12,7 @@ import com.maksimowiczm.foodyou.feature.language.preferences.ShowTranslationWarn
 import java.util.Locale
 import kotlinx.coroutines.launch
 
-actual class LanguageViewModel(
+internal actual class LanguageViewModel(
     private val androidSystemDetails: SystemDetails,
     dataStore: DataStore<Preferences>,
     private val showTranslationWarning: ShowTranslationWarning = dataStore.userPreference()

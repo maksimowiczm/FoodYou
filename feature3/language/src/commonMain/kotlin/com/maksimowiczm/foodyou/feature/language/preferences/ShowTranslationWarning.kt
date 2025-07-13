@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 
-class ShowTranslationWarning(dataStore: DataStore<Preferences>) :
+internal class ShowTranslationWarning(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<Boolean, Boolean>(
         dataStore = dataStore,
         key = booleanPreferencesKey("show_translation_warning")

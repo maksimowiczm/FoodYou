@@ -171,5 +171,10 @@ fun FoodYouNavHost(
                 navController.popBackStack<Sponsor>(true)
             }
         )
+        languageGraph(
+            onBack = {
+                navController.popBackStack<Language>(true)
+            }
+        )
     }
 }
