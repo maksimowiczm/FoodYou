@@ -315,6 +315,7 @@
 
     <string name="headline_sponsor">Sponsor</string>
     <string name="description_sponsor_short">Contributions in any form are welcome</string>
+    <string name="description_sponsor_short_2">Support the app's growth</string>
     <string name="description_sponsor_1">In a world where every tap is tracked and every feature locked behind a paywall, this food tracker is different. No ads. No subscriptions. No surveillance.</string>
     <string name="description_sponsor_2">Built on the belief that useful tools should be free, open, and respect your privacy, it offers a quiet stand against the exploitative models dominating app stores.</string>
     <string name="description_sponsor_3">If this matters to you, consider supporting. You directly support full-time development of the project.</string>
@@ -375,5 +376,7 @@
 
     <string name="headline_user" description="User, person who uses the app">User</string>
     <string name="description_food_source">Specify where the food data comes from. You can include a link here</string>
+
+    <string name="thank_you_for_your_support">Thank you for your support!</string>
 
 </resources>

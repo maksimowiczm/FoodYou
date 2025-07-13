@@ -115,8 +115,8 @@ internal object ChatBubbleDefaults {
         @Composable get() = MaterialTheme.colorScheme.onSurface
 
     val sentContainerColor: Color
-        @Composable get() = MaterialTheme.colorScheme.primaryContainer
+        @Composable get() = MaterialTheme.colorScheme.secondaryContainer
 
     val sentContentColor: Color
-        @Composable get() = MaterialTheme.colorScheme.onPrimaryContainer
+        @Composable get() = MaterialTheme.colorScheme.onSecondaryContainer
 }

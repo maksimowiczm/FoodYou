@@ -17,6 +17,9 @@ fun NavGraphBuilder.appGraph(
     homeOnSettings: () -> Unit,
     homeMealCardOnAdd: (epochDay: Long, mealId: Long) -> Unit,
     homeMealCardOnEditMeasurement: (measurementId: Long) -> Unit,
+    settingsOnLanguage: () -> Unit,
+    settingsOnSponsor: () -> Unit,
+    settingsOnAbout: () -> Unit,
     settingsOnBack: () -> Unit
 ) {
     forwardBackwardComposable<Home> {
@@ -29,7 +32,10 @@ fun NavGraphBuilder.appGraph(
     }
     forwardBackwardComposable<Settings> {
         SettingsScreen(
-            onBack = settingsOnBack
+            onBack = settingsOnBack,
+            onLanguage = settingsOnLanguage,
+            onSponsor = settingsOnSponsor,
+            onAbout = settingsOnAbout
         )
     }
 }

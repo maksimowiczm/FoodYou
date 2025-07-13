@@ -1,7 +1,7 @@
-package com.maksimowiczm.foodyou.feature.language
+package com.maksimowiczm.foodyou.feature.about
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Translate
+import androidx.compose.material.icons.outlined.VolunteerActivism
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -9,35 +9,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import com.maksimowiczm.foodyou.core.ui.SettingsListItem
-import com.maksimowiczm.foodyou.feature.language.ui.LanguageViewModel
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LanguageSettingsListItem(
+fun SponsorSettingsListItem(
     onClick: () -> Unit,
     shape: Shape,
-    containerColor: Color,
+    color: Color,
     contentColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val viewModel = koinViewModel<LanguageViewModel>()
-    val language = remember(viewModel) { viewModel.languageName }
-
     SettingsListItem(
         icon = {
             Icon(
-                imageVector = Icons.Outlined.Translate,
+                imageVector = Icons.Outlined.VolunteerActivism,
                 contentDescription = null
             )
         },
-        label = { Text(stringResource(Res.string.headline_language)) },
-        supportingContent = { Text(language) },
+        label = {
+            Text(stringResource(Res.string.headline_sponsor))
+        },
+        supportingContent = {
+            Text(stringResource(Res.string.description_sponsor_short_2))
+        },
         onClick = onClick,
         modifier = modifier,
         shape = shape,
-        color = containerColor,
+        color = color,
         contentColor = contentColor
     )
 }

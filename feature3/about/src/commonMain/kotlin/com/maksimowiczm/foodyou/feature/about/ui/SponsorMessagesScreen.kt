@@ -17,12 +17,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.VolunteerActivism
@@ -44,12 +44,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.about.data.database.Sponsorship
 import com.maksimowiczm.foodyou.feature.about.data.database.SponsorshipMethod
@@ -190,7 +192,7 @@ private fun SponsorMessagesScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
             reverseLayout = true,
-            contentPadding = paddingValues
+            contentPadding = paddingValues.add(vertical = 8.dp)
         ) {
             item {
                 BottomMessages(
@@ -313,7 +315,7 @@ private fun BottomMessages(onSponsor: () -> Unit, modifier: Modifier = Modifier)
                 icon = null,
                 author = null,
                 authorExtra = null,
-                message = "Thank you for your support!",
+                message = stringResource(Res.string.thank_you_for_your_support),
                 shape = RoundedCornerShape(
                     topStart = 16.dp,
                     topEnd = 16.dp,
@@ -330,26 +332,32 @@ private fun BottomMessages(onSponsor: () -> Unit, modifier: Modifier = Modifier)
         Sent {
             Surface(
                 onClick = onSponsor,
+                modifier = Modifier.height(96.dp),
                 shape = RoundedCornerShape(
-                    topStart = 16.dp,
-                    topEnd = 16.dp,
-                    bottomStart = 16.dp,
+                    topStart = 28.dp,
+                    topEnd = 28.dp,
+                    bottomStart = 28.dp,
                     bottomEnd = 4.dp
                 ),
-                color = ChatBubbleDefaults.sentContainerColor,
-                contentColor = ChatBubbleDefaults.sentContentColor
+                color = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             ) {
                 Row(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier.padding(
+                        horizontal = 48.dp
+                    ),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.VolunteerActivism,
-                        contentDescription = null
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp)
                     )
                     Text(
                         text = stringResource(Res.string.headline_sponsor),
-                        style = MaterialTheme.typography.bodyMediumEmphasized
+                        fontSize = 24.sp,
+                        lineHeight = 32.sp
                     )
                 }
             }

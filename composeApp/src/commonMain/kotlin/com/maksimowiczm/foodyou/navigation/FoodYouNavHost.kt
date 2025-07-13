@@ -49,6 +49,21 @@ fun FoodYouNavHost(
             },
             settingsOnBack = {
                 navController.popBackStack<Settings>(true)
+            },
+            settingsOnLanguage = {
+                navController.navigate(Language) {
+                    launchSingleTop = true
+                }
+            },
+            settingsOnSponsor = {
+                navController.navigate(SponsorMessages) {
+                    launchSingleTop = true
+                }
+            },
+            settingsOnAbout = {
+                navController.navigate(About) {
+                    launchSingleTop = true
+                }
             }
         )
         foodDiaryGraph(
@@ -149,7 +164,6 @@ fun FoodYouNavHost(
                 navController.popBackStack<UpdateProductMeasurement>(true)
             }
         )
-
         aboutGraph(
             aboutOnBack = {
                 navController.popBackStack<About>(true)

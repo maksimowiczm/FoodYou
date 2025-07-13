@@ -42,6 +42,7 @@ import androidx.compose.material.icons.outlined.VolunteerActivism
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
@@ -433,7 +434,7 @@ private fun AboutButtons(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
-        OutlinedButton(
+        FilledTonalButton(
             onClick = onSponsor,
             shape = CircleShape,
             modifier = Modifier.size(72.dp, 56.dp)
