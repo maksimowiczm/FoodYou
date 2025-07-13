@@ -373,4 +373,7 @@
     <string name="headline_yesterday" description="Yesterday, date">Yesterday, %1$s</string>
     <string name="headline_tomorrow" description="Tomorrow, date">Tomorrow, %1$s</string>
 
+    <string name="headline_user" description="User, person who uses the app">User</string>
+    <string name="description_food_source">Specify where the food data comes from. You can include a link here</string>
+
 </resources>

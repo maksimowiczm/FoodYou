@@ -28,6 +28,7 @@ import com.maksimowiczm.foodyou.feature.food.data.Minerals
 import com.maksimowiczm.foodyou.feature.food.data.Nutrients
 import com.maksimowiczm.foodyou.feature.food.data.Product as ProductEntity
 import com.maksimowiczm.foodyou.feature.food.data.Vitamins
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.ui.Saver
@@ -274,6 +275,15 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
     val chromium =
         rememberNotRequiredFormField(product?.nutritionFacts?.chromiumMicro?.value)
 
+    val sourceType = rememberSaveable(product) {
+        mutableStateOf(product?.source?.type ?: FoodSource.Type.User)
+    }
+    val sourceUrl = rememberFormField<String?, Nothing>(
+        initialValue = product?.source?.url,
+        parser = nullableStringParser(),
+        textFieldState = rememberTextFieldState(product?.source?.url ?: "")
+    )
+
     val isModified = remember(product) {
         if (product != null) {
             derivedStateOf {
@@ -328,6 +338,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                     selenium.value != product.nutritionFacts.seleniumMicro.value ||
                     iodine.value != product.nutritionFacts.iodineMicro.value ||
                     chromium.value != product.nutritionFacts.chromiumMicro.value ||
+                    sourceType.value != product.source.type ||
+                    sourceUrl.value != product.source.url ||
                     Measurement.notEqual(
                         measurement.value,
                         Measurement.Gram(100f)
@@ -384,6 +396,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                     selenium.value != null ||
                     iodine.value != null ||
                     chromium.value != null ||
+                    sourceType.value != FoodSource.Type.User ||
+                    sourceUrl.value != null ||
                     Measurement.notEqual(
                         measurement.value,
                         Measurement.Gram(100f)
@@ -398,6 +412,8 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
             brand = brand,
             barcode = barcode,
             note = note,
+            sourceTypeState = sourceType,
+            sourceUrl = sourceUrl,
             measurementState = measurement,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
@@ -483,6 +499,8 @@ internal class ProductFormState(
     val brand: FormField<String?, Nothing>,
     val barcode: FormField<String?, Nothing>,
     val note: FormField<String?, Nothing>,
+    sourceTypeState: MutableState<FoodSource.Type>,
+    val sourceUrl: FormField<String?, Nothing>,
     // Weight
     measurementState: MutableState<Measurement>,
     val packageWeight: FormField<Float?, ProductFormFieldError>,
@@ -585,6 +603,7 @@ internal class ProductFormState(
             iodineMicro.error == null &&
             chromiumMicro.error == null
 
+    var sourceType: FoodSource.Type by sourceTypeState
     var measurement: Measurement by measurementState
     val isModified: Boolean by isModifiedState
     var autoCalculateEnergy: Boolean by autoCalculateEnergyState
@@ -667,7 +686,9 @@ internal fun ProductFormState.toProductEntity(multiplier: Float): Result<Product
                 ),
                 packageWeight = packageWeight.value,
                 servingWeight = servingWeight.value,
-                note = note.value
+                note = note.value,
+                sourceType = sourceType,
+                sourceUrl = sourceUrl.value
             )
         )
     }

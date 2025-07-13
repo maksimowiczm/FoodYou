@@ -9,6 +9,9 @@ import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFac
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsPagingKey
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.model.OpenFoodFactsProduct as NetworkOpenFoodFactsProduct
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediator(
@@ -21,6 +24,7 @@ internal class OpenFoodFactsRemoteMediator(
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, OpenFoodFactsProduct>
@@ -94,8 +98,9 @@ internal class OpenFoodFactsRemoteMediator(
                 )
             )
 
+            val timestamp = Clock.System.now()
             val products = response.products.map { remoteProduct ->
-                remoteProduct.toEntity().also {
+                remoteProduct.toEntity(timestamp).also {
                     if (it == null) {
                         Logger.w(TAG) {
                             "Failed to convert product: (name=${remoteProduct.name}, code=${remoteProduct.barcode})"
@@ -124,7 +129,10 @@ internal class OpenFoodFactsRemoteMediator(
     }
 }
 
-private fun NetworkOpenFoodFactsProduct.toEntity(): OpenFoodFactsProduct? {
+@OptIn(ExperimentalTime::class)
+private fun NetworkOpenFoodFactsProduct.toEntity(
+    timestamp: Instant = Clock.System.now()
+): OpenFoodFactsProduct? {
     val name = name
     if (name == null) {
         return null
@@ -144,6 +152,7 @@ private fun NetworkOpenFoodFactsProduct.toEntity(): OpenFoodFactsProduct? {
         barcode = barcode,
         packageWeight = packageWeight,
         servingWeight = servingWeight,
-        nutritionFacts = nutritionFacts
+        nutritionFacts = nutritionFacts,
+        downloadedAtEpochSeconds = timestamp.epochSeconds
     )
 }

@@ -1,10 +1,15 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.ui.measure
 
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,7 +42,11 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ext.minus
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
+import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.Product
+import com.maksimowiczm.foodyou.feature.food.ui.Icon
+import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Meal
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import foodyou.app.generated.resources.*
@@ -60,7 +69,7 @@ internal fun ProductMeasurementScreen(
     suggestions: List<Measurement>,
     possibleTypes: List<com.maksimowiczm.foodyou.feature.measurement.data.Measurement>,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     selectedMeasurement: Measurement = suggestions.first()
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -102,7 +111,7 @@ internal fun ProductMeasurementScreen(
                         )
                     }
                 },
-                modifier = Modifier.Companion.animateFloatingActionButton(
+                modifier = Modifier.animateFloatingActionButton(
                     visible = !animatedVisibilityScope.transition.isRunning && state.isValid,
                     alignment = Alignment.Companion.BottomEnd
                 ),
@@ -119,7 +128,7 @@ internal fun ProductMeasurementScreen(
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(
                     horizontal = 8.dp
@@ -136,7 +145,10 @@ internal fun ProductMeasurementScreen(
             item {
                 ProductMeasurementForm(
                     state = state,
-                    product = product
+                    product = product,
+                    modifier = Modifier.padding(
+                        bottom = 8.dp
+                    )
                 )
             }
 
@@ -147,7 +159,7 @@ internal fun ProductMeasurementScreen(
                         HorizontalDivider()
                         Note(
                             note = note,
-                            modifier = Modifier.Companion.padding(
+                            modifier = Modifier.padding(
                                 vertical = 16.dp,
                                 horizontal = 8.dp
                             )
@@ -155,16 +167,41 @@ internal fun ProductMeasurementScreen(
                     }
                 }
             }
+
+            item {
+                HorizontalDivider()
+
+                val clipboardManger = LocalClipboardManager.current
+                val sourceStr = stringResource(Res.string.headline_source)
+
+                Source(
+                    source = product.source,
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = {
+                                val url = product.source.url
+                                if (url != null) {
+                                    clipboardManger.copy(
+                                        label = sourceStr,
+                                        text = url
+                                    )
+                                }
+                            }
+                        )
+                        .padding(
+                            vertical = 16.dp,
+                            horizontal = 8.dp
+                        )
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun Menu(
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-    modifier: Modifier = Modifier.Companion
-) {
+private fun Menu(onEdit: () -> Unit, onDelete: () -> Unit, modifier: Modifier = Modifier) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -210,7 +247,7 @@ private fun Menu(
 private fun DeleteDialog(
     onDismissRequest: () -> Unit,
     onDelete: () -> Unit,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -245,17 +282,53 @@ private fun DeleteDialog(
 }
 
 @Composable
-private fun Note(note: String, modifier: Modifier = Modifier.Companion) {
+private fun Note(note: String, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(
             text = stringResource(Res.string.headline_note),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary
         )
-        Spacer(Modifier.Companion.height(8.dp))
+        Spacer(Modifier.height(8.dp))
         Text(
             text = note,
             style = MaterialTheme.typography.bodyMedium
         )
+    }
+}
+
+@Composable
+private fun Source(source: FoodSource, modifier: Modifier = Modifier) {
+    val url = source.url
+
+    Column(modifier) {
+        Text(
+            text = stringResource(Res.string.headline_source),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Spacer(Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            source.type.Icon()
+
+            Column {
+                Text(
+                    text = source.type.stringResource(),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                if (url != null) {
+                    Text(
+                        text = url,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }

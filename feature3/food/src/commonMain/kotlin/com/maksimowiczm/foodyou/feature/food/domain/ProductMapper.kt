@@ -23,7 +23,11 @@ internal class ProductMapperImpl : ProductMapper {
         ),
         packageWeight = entity.packageWeight,
         servingWeight = entity.servingWeight,
-        note = entity.note
+        note = entity.note,
+        source = FoodSource(
+            type = entity.sourceType,
+            url = entity.sourceUrl
+        )
     )
 
     private fun toNutritionFacts(nutrients: Nutrients, vitamins: Vitamins, minerals: Minerals) =

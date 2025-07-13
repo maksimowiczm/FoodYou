@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a1bb793a295ddf9ea8645368e209acc1",
+    "identityHash": "e1728d4471bae4a67cfaec1bc1b855a3",
     "entities": [
       {
         "tableName": "Sponsorship",
@@ -75,7 +75,7 @@
       },
       {
         "tableName": "Product",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `note` TEXT, `energy` REAL NOT NULL, `proteins` REAL NOT NULL, `fats` REAL NOT NULL, `saturatedFats` REAL, `transFats` REAL, `monounsaturatedFats` REAL, `polyunsaturatedFats` REAL, `omega3` REAL, `omega6` REAL, `carbohydrates` REAL NOT NULL, `sugars` REAL, `addedSugars` REAL, `dietaryFiber` REAL, `solubleFiber` REAL, `insolubleFiber` REAL, `salt` REAL, `cholesterolMilli` REAL, `caffeineMilli` REAL, `vitaminAMicro` REAL, `vitaminB1Milli` REAL, `vitaminB2Milli` REAL, `vitaminB3Milli` REAL, `vitaminB5Milli` REAL, `vitaminB6Milli` REAL, `vitaminB7Micro` REAL, `vitaminB9Micro` REAL, `vitaminB12Micro` REAL, `vitaminCMilli` REAL, `vitaminDMicro` REAL, `vitaminEMilli` REAL, `vitaminKMicro` REAL, `manganeseMilli` REAL, `magnesiumMilli` REAL, `potassiumMilli` REAL, `calciumMilli` REAL, `copperMilli` REAL, `zincMilli` REAL, `sodiumMilli` REAL, `ironMilli` REAL, `phosphorusMilli` REAL, `seleniumMicro` REAL, `iodineMicro` REAL, `chromiumMicro` REAL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `note` TEXT, `sourceType` INTEGER NOT NULL, `sourceUrl` TEXT, `energy` REAL NOT NULL, `proteins` REAL NOT NULL, `fats` REAL NOT NULL, `saturatedFats` REAL, `transFats` REAL, `monounsaturatedFats` REAL, `polyunsaturatedFats` REAL, `omega3` REAL, `omega6` REAL, `carbohydrates` REAL NOT NULL, `sugars` REAL, `addedSugars` REAL, `dietaryFiber` REAL, `solubleFiber` REAL, `insolubleFiber` REAL, `salt` REAL, `cholesterolMilli` REAL, `caffeineMilli` REAL, `vitaminAMicro` REAL, `vitaminB1Milli` REAL, `vitaminB2Milli` REAL, `vitaminB3Milli` REAL, `vitaminB5Milli` REAL, `vitaminB6Milli` REAL, `vitaminB7Micro` REAL, `vitaminB9Micro` REAL, `vitaminB12Micro` REAL, `vitaminCMilli` REAL, `vitaminDMicro` REAL, `vitaminEMilli` REAL, `vitaminKMicro` REAL, `manganeseMilli` REAL, `magnesiumMilli` REAL, `potassiumMilli` REAL, `calciumMilli` REAL, `copperMilli` REAL, `zincMilli` REAL, `sodiumMilli` REAL, `ironMilli` REAL, `phosphorusMilli` REAL, `seleniumMicro` REAL, `iodineMicro` REAL, `chromiumMicro` REAL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -112,6 +112,17 @@
           {
             "fieldPath": "note",
             "columnName": "note",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "sourceType",
+            "columnName": "sourceType",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceUrl",
+            "columnName": "sourceUrl",
             "affinity": "TEXT"
           },
           {
@@ -685,7 +696,7 @@
       },
       {
         "tableName": "OpenFoodFactsProduct",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `proteins` REAL, `carbohydrates` REAL, `fats` REAL, `calories` REAL, `saturatedFats` REAL, `sugars` REAL, `salt` REAL, `fiber` REAL, `vitaminA` REAL, `vitaminB1` REAL, `vitaminB2` REAL, `vitaminB3` REAL, `vitaminB5` REAL, `vitaminB6` REAL, `vitaminB7` REAL, `vitaminB9` REAL, `vitaminB12` REAL, `vitaminC` REAL, `vitaminD` REAL, `vitaminE` REAL, `vitaminK` REAL, `manganese` REAL, `magnesium` REAL, `potassium` REAL, `calcium` REAL, `copper` REAL, `zinc` REAL, `sodium` REAL, `iron` REAL, `phosphorus` REAL, `selenium` REAL, `iodine` REAL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `downloadedAtEpochSeconds` INTEGER NOT NULL, `proteins` REAL, `carbohydrates` REAL, `fats` REAL, `calories` REAL, `saturatedFats` REAL, `sugars` REAL, `salt` REAL, `fiber` REAL, `vitaminA` REAL, `vitaminB1` REAL, `vitaminB2` REAL, `vitaminB3` REAL, `vitaminB5` REAL, `vitaminB6` REAL, `vitaminB7` REAL, `vitaminB9` REAL, `vitaminB12` REAL, `vitaminC` REAL, `vitaminD` REAL, `vitaminE` REAL, `vitaminK` REAL, `manganese` REAL, `magnesium` REAL, `potassium` REAL, `calcium` REAL, `copper` REAL, `zinc` REAL, `sodium` REAL, `iron` REAL, `phosphorus` REAL, `selenium` REAL, `iodine` REAL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -718,6 +729,12 @@
             "fieldPath": "servingWeight",
             "columnName": "servingWeight",
             "affinity": "REAL"
+          },
+          {
+            "fieldPath": "downloadedAtEpochSeconds",
+            "columnName": "downloadedAtEpochSeconds",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "nutritionFacts.proteins",
@@ -927,7 +944,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a1bb793a295ddf9ea8645368e209acc1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e1728d4471bae4a67cfaec1bc1b855a3')"
     ]
   }
 }

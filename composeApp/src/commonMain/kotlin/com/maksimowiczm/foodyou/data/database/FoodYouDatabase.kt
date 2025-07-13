@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.feature.food.data.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.Product
 import com.maksimowiczm.foodyou.feature.food.data.Recipe
 import com.maksimowiczm.foodyou.feature.food.data.RecipeIngredient
+import com.maksimowiczm.foodyou.feature.food.data.SourceTypeConverter
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.feature.fooddiary.data.InitializeMealsCallback
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Meal
@@ -35,7 +36,8 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
 )
 @TypeConverters(
     SponsorMethodConverter::class,
-    MeasurementTypeConverter::class
+    MeasurementTypeConverter::class,
+    SourceTypeConverter::class
 )
 abstract class FoodYouDatabase :
     RoomDatabase(),

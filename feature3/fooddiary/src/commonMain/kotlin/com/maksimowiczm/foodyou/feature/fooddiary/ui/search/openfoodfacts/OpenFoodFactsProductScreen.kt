@@ -62,8 +62,9 @@ internal fun OpenFoodFactsProductScreen(
     val product = database.openFoodFactsDao.observeProductById(productId)
         .collectAsStateWithLifecycle(null).value
 
-    val onOpenFoodFacts = if (!product?.barcode.isNullOrBlank()) {
-        { uriHandler.openUri("https://world.openfoodfacts.org/product/${product.barcode}") }
+    val url = product?.url
+    val onOpenFoodFacts = if (url != null) {
+        { uriHandler.openUri(url) }
     } else {
         null
     }

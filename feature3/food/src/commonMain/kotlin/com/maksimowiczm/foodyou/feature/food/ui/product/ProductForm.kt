@@ -48,6 +48,9 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.form.FormField
 import com.maksimowiczm.foodyou.core.ui.unorderedList
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
+import com.maksimowiczm.foodyou.feature.food.ui.Icon
+import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.ui.stringResource
 import foodyou.app.generated.resources.*
@@ -117,6 +120,13 @@ internal fun ProductForm(
             label = stringResource(Res.string.headline_note),
             modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
             supportingText = stringResource(Res.string.description_add_note)
+        )
+
+        SourcePicker(
+            url = state.sourceUrl,
+            type = state.sourceType,
+            onTypeChange = { state.sourceType = it },
+            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
         )
 
         MeasurementPicker(
@@ -697,4 +707,54 @@ private fun EnergyTextField(
             style = MaterialTheme.typography.bodySmall
         )
     }
+}
+
+@Composable
+private fun SourcePicker(
+    url: FormField<String?, Nothing>,
+    type: FoodSource.Type,
+    onTypeChange: (FoodSource.Type) -> Unit,
+    modifier: Modifier = Modifier,
+    imeAction: ImeAction = ImeAction.Next
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    val dropdownMenu = @Composable {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            FoodSource.Type.entries.forEach {
+                DropdownMenuItem(
+                    leadingIcon = { it.Icon() },
+                    text = { Text(it.stringResource()) },
+                    onClick = {
+                        expanded = false
+                        onTypeChange(it)
+                    }
+                )
+            }
+        }
+    }
+
+    OutlinedTextField(
+        state = url.textFieldState,
+        modifier = modifier,
+        label = { Text(stringResource(Res.string.headline_source)) },
+        supportingText = {
+            Text(stringResource(Res.string.description_food_source))
+        },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = imeAction
+        ),
+        trailingIcon = {
+            dropdownMenu()
+            FilledTonalIconButton(
+                onClick = { expanded = true }
+            ) {
+                type.Icon()
+            }
+        }
+    )
 }

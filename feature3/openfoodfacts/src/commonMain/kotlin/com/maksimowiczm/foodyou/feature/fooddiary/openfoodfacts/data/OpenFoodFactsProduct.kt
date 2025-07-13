@@ -15,5 +15,11 @@ data class OpenFoodFactsProduct(
     val packageWeight: Float?,
     val servingWeight: Float?,
     @Embedded
-    val nutritionFacts: OpenFoodFactsNutrients?
-)
+    val nutritionFacts: OpenFoodFactsNutrients?,
+    val downloadedAtEpochSeconds: Long
+) {
+    val url: String?
+        get() = barcode?.let {
+            "https://world.openfoodfacts.org/product/$it"
+        }
+}
