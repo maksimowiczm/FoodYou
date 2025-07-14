@@ -2,9 +2,7 @@ package com.maksimowiczm.foodyou.feature.fooddiary.ui.search
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -26,7 +24,6 @@ import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.paging.CombinedLoadStates
@@ -35,7 +32,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.Food
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.FoodMeasurement
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsCard
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsState
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
@@ -46,10 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun AnimatedVisibilityScope.LocalSearchList(
     pages: LazyPagingItems<Food>,
-    measurements: List<FoodMeasurement>,
     onCreateProduct: () -> Unit,
-    onMeasurement: (Food, Measurement) -> Unit,
-    onDeleteMeasurement: (measurementId: Long) -> Unit,
     onFoodClick: (Food, Measurement) -> Unit,
     useOpenFoodFacts: Boolean,
     openFoodFactsCount: Int,
@@ -77,8 +70,7 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
             .padding(16.dp)
             .windowInsetsPadding(WindowInsets.systemBars)
             .animateFloatingActionButton(
-                visible =
-                !this@LocalSearchList.transition.isRunning &&
+                visible = !this@LocalSearchList.transition.isRunning &&
                     !animatedVisibilityScope.transition.isRunning,
                 alignment = Alignment.BottomEnd
             )
@@ -135,92 +127,47 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
             val food = pages[i]
 
             if (food != null) {
-                val measurements = remember(measurements) {
-                    measurements
-                        .filter { it.foodId == food.id }
-                        .map {
-                            Triple<Measurement, Long?, Boolean>(
-                                it.measurement,
-                                it.measurementId,
-                                true
-                            )
-                        }
-                        .ifEmpty {
-                            listOf(Triple(food.defaultMeasurement, null, false))
-                        }
-                }
+                val measurement = food.defaultMeasurement
 
-                Column(
-                    modifier = Modifier.graphicsLayer {
-                        clip = true
-                        this.shape = shape
+                val topStart = animateDpAsState(
+                    targetValue = if (i == 0) 16.dp else 0.dp,
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
+
+                val topEnd = animateDpAsState(
+                    targetValue = if (i == 0) 16.dp else 0.dp,
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
+
+                val bottomStart = animateDpAsState(
+                    targetValue = if (i == pages.itemCount - 1) {
+                        16.dp
+                    } else {
+                        0.dp
                     },
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    measurements.forEachIndexed { index, (measurement, measurementId, isChecked) ->
-                        val key = if (index == 0) {
-                            index.toLong()
-                        } else {
-                            measurementId!!
-                        }
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
 
-                        key(key) {
-                            val topStart = animateDpAsState(
-                                targetValue = if (i == 0 && index == 0) 16.dp else 0.dp,
-                                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                            ).value.coerceAtLeast(0.dp)
+                val bottomEnd = animateDpAsState(
+                    targetValue = if (i == pages.itemCount - 1) {
+                        16.dp
+                    } else {
+                        0.dp
+                    },
+                    animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
+                ).value.coerceAtLeast(0.dp)
 
-                            val topEnd = animateDpAsState(
-                                targetValue = if (i == 0 && index == 0) 16.dp else 0.dp,
-                                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                            ).value.coerceAtLeast(0.dp)
+                val shape = RoundedCornerShape(topStart, topEnd, bottomStart, bottomEnd)
 
-                            val bottomStart = animateDpAsState(
-                                targetValue = if (
-                                    i == pages.itemCount - 1 &&
-                                    index == measurements.lastIndex
-                                ) {
-                                    16.dp
-                                } else {
-                                    0.dp
-                                },
-                                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                            ).value.coerceAtLeast(0.dp)
-
-                            val bottomEnd = animateDpAsState(
-                                targetValue = if (
-                                    i == pages.itemCount - 1 &&
-                                    index == measurements.lastIndex
-                                ) {
-                                    16.dp
-                                } else {
-                                    0.dp
-                                },
-                                animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-                            ).value.coerceAtLeast(0.dp)
-
-                            val shape = RoundedCornerShape(topStart, topEnd, bottomStart, bottomEnd)
-
-                            FoodSearchListItem(
-                                food = food,
-                                measurement = measurement,
-                                checked = isChecked,
-                                onClick = { onFoodClick(food, measurement) },
-                                onCheckedChange = { checked ->
-                                    if (checked) {
-                                        onMeasurement(food, measurement)
-                                    } else if (measurementId != null) {
-                                        onDeleteMeasurement(measurementId)
-                                    }
-                                },
-                                shape = shape
-                            )
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(2.dp))
+                FoodSearchListItem(
+                    food = food,
+                    measurement = measurement,
+                    onClick = { onFoodClick(food, measurement) },
+                    shape = shape
+                )
             }
+
+            Spacer(Modifier.height(2.dp))
         }
     }
 }

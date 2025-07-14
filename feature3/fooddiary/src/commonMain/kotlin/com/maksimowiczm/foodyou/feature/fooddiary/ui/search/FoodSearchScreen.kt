@@ -285,23 +285,12 @@ internal fun FoodSearchScreen(
             startDestination = FoodSearchState.Local.name
         ) {
             forwardBackwardComposable(FoodSearchState.Local.name) {
-                val measurements = viewModel.measurements
-                    .collectAsStateWithLifecycle().value
                 val openFoodFactsCount = viewModel.openFoodFactsProductCount
                     .collectAsStateWithLifecycle().value
 
                 LocalSearchList(
                     pages = localPages,
-                    measurements = measurements,
                     onCreateProduct = onCreateProduct,
-                    onMeasurement = { food, measurement ->
-                        if (meal != null) {
-                            viewModel.measureFood(food, measurement, meal, date)
-                        }
-                    },
-                    onDeleteMeasurement = { measurementId ->
-                        viewModel.deleteMeasurement(measurementId)
-                    },
                     onFoodClick = onFood,
                     useOpenFoodFacts = useOpenFoodFacts,
                     openFoodFactsCount = openFoodFactsCount,
