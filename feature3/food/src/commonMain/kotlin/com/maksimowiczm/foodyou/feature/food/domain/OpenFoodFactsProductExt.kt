@@ -1,8 +1,7 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.domain
+package com.maksimowiczm.foodyou.feature.food.domain
 
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue.Companion.toNutrientValue
-import com.maksimowiczm.foodyou.feature.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsProduct
 
 val OpenFoodFactsProduct.headline: String

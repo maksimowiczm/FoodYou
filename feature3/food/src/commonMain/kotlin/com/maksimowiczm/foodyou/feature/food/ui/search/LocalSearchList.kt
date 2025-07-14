@@ -1,6 +1,5 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.ui.search
+package com.maksimowiczm.foodyou.feature.food.ui.search
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,6 +17,7 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.animateFloatingActionButton
@@ -26,31 +26,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.ui.ext.add
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.Food
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsCard
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsState
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun AnimatedVisibilityScope.LocalSearchList(
-    pages: LazyPagingItems<Food>,
+internal fun LocalSearchList(
+    pages: LazyPagingItems<FoodSearch>,
+    onFoodClick: (FoodSearch, Measurement) -> Unit,
     onCreateProduct: () -> Unit,
-    onFoodClick: (Food, Measurement) -> Unit,
-    useOpenFoodFacts: Boolean,
-    openFoodFactsCount: Int,
-    openFoodFactsLoadState: CombinedLoadStates,
-    onOpenFoodFactsPrivacyDialog: () -> Unit,
-    onOpenFoodFacts: () -> Unit,
     contentPadding: PaddingValues,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    fabVisible: Boolean,
     modifier: Modifier = Modifier
 ) = Box(modifier) {
     if (pages.itemCount == 0) {
@@ -62,6 +54,19 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
         )
     }
 
+    if (pages.loadState.refresh is LoadState.Loading ||
+        pages.loadState.append is LoadState.Loading
+    ) {
+        LoadingIndicator(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(
+                    top = contentPadding.calculateTopPadding()
+                )
+                .zIndex(10f)
+        )
+    }
+
     FloatingActionButton(
         onClick = onCreateProduct,
         modifier = Modifier
@@ -70,8 +75,7 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
             .padding(16.dp)
             .windowInsetsPadding(WindowInsets.systemBars)
             .animateFloatingActionButton(
-                visible = !this@LocalSearchList.transition.isRunning &&
-                    !animatedVisibilityScope.transition.isRunning,
+                visible = fabVisible,
                 alignment = Alignment.BottomEnd
             )
     ) {
@@ -87,39 +91,6 @@ internal fun AnimatedVisibilityScope.LocalSearchList(
             bottom = 56.dp + 32.dp // FAB
         )
     ) {
-        item {
-            val cardState by remember(
-                useOpenFoodFacts,
-                openFoodFactsCount,
-                openFoodFactsLoadState
-            ) {
-                derivedStateOf {
-                    when {
-                        !useOpenFoodFacts -> OpenFoodFactsState.PrivacyPolicyRequested
-                        openFoodFactsLoadState.refresh is LoadState.Loading ||
-                            openFoodFactsLoadState.append is LoadState.Loading ||
-                            openFoodFactsLoadState.prepend is LoadState.Loading ->
-                            OpenFoodFactsState.Loading
-
-                        openFoodFactsLoadState.hasError -> OpenFoodFactsState.Error
-                        else -> OpenFoodFactsState.Loaded(openFoodFactsCount)
-                    }
-                }
-            }
-
-            OpenFoodFactsCard(
-                onClick = {
-                    if (!useOpenFoodFacts) {
-                        onOpenFoodFactsPrivacyDialog()
-                    } else {
-                        onOpenFoodFacts()
-                    }
-                },
-                state = cardState,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-        }
-
         items(
             count = pages.itemCount,
             key = pages.itemKey { it.id.toString() }

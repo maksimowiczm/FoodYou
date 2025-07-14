@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.data
+package com.maksimowiczm.foodyou.feature.food.data
 
 import androidx.room.Embedded
-import com.maksimowiczm.foodyou.feature.food.data.Minerals
-import com.maksimowiczm.foodyou.feature.food.data.Nutrients
-import com.maksimowiczm.foodyou.feature.food.data.Vitamins
 
-data class Food(
+/**
+ * Data class representing a food search result. It can be either a product or a recipe.
+ */
+data class FoodSearch(
     val productId: Long?,
     val recipeId: Long?,
     val headline: String,

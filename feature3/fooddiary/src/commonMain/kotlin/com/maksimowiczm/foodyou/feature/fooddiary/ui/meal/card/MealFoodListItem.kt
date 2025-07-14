@@ -10,9 +10,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.feature.food.ui.FoodErrorListItem
+import com.maksimowiczm.foodyou.feature.food.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.FoodWithMeasurement
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodErrorListItem
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt

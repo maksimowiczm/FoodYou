@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.ui
+package com.maksimowiczm.foodyou.feature.food.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,7 +38,7 @@ import com.valentinilk.shimmer.shimmer
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun FoodListItem(
+fun FoodListItem(
     name: @Composable () -> Unit,
     proteins: @Composable () -> Unit,
     carbohydrates: @Composable () -> Unit,
@@ -160,7 +160,7 @@ internal fun FoodListItem(
 }
 
 @Composable
-internal fun FoodErrorListItem(
+fun FoodErrorListItem(
     headline: String,
     errorMessage: String,
     modifier: Modifier = Modifier,
@@ -191,7 +191,7 @@ internal fun FoodErrorListItem(
 // TODO
 //  Update skeleton to match the design
 @Composable
-internal fun FoodListItemSkeleton(
+fun FoodListItemSkeleton(
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
     trailingContent: (@Composable () -> Unit)? = null

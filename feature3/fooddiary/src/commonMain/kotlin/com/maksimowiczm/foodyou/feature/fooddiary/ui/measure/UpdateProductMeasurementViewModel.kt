@@ -6,7 +6,6 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.core.util.DateProvider
 import com.maksimowiczm.foodyou.feature.food.data.FoodDatabase
-import com.maksimowiczm.foodyou.feature.food.domain.Food
 import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
@@ -63,7 +62,7 @@ internal class UpdateProductMeasurementViewModel(
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val food: StateFlow<Food?> = measurementEntity.flatMapLatest { measurement ->
+    val food = measurementEntity.flatMapLatest { measurement ->
         when {
             measurement.productId != null ->
                 productDao

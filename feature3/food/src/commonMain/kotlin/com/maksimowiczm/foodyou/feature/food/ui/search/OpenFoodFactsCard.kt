@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts
+package com.maksimowiczm.foodyou.feature.food.ui.search
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
@@ -14,9 +14,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -140,6 +143,48 @@ internal fun OpenFoodFactsCard(
                 OpenFoodFactsState.Loading -> ContainedLoadingIndicator()
 
                 OpenFoodFactsState.PrivacyPolicyRequested -> Unit
+            }
+        }
+    }
+}
+
+@Composable
+internal fun BrowsingOpenFoodFactsCard(onClose: () -> Unit, modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(Res.drawable.openfoodfacts_logo),
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+            Text(
+                text = stringResource(Res.string.description_you_are_browsing_open_food_facts),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1f)
+            )
+            FilledIconButton(
+                onClick = onClose,
+                modifier = Modifier.size(48.dp),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = null
+                )
             }
         }
     }

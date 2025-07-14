@@ -36,10 +36,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
+import com.maksimowiczm.foodyou.feature.food.domain.domainFacts
+import com.maksimowiczm.foodyou.feature.food.domain.headline
 import com.maksimowiczm.foodyou.feature.food.ui.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.feature.food.ui.NutrientList
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.domainFacts
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.headline
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsDatabase
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement

@@ -7,14 +7,12 @@ import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMealsUseCaseImpl
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.card.MealsCardsViewModel
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateMeasurementScreenViewModel
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateProductMeasurementViewModel
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.FoodSearchViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val foodDiaryModule = module {
-    viewModelOf(::FoodSearchViewModel)
     factoryOf(::FoodMapperImpl).bind<FoodMapper>()
     viewModelOf(::CreateMeasurementScreenViewModel)
     factoryOf(::ObserveMealsUseCaseImpl).bind<ObserveMealsUseCase>()

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts
+package com.maksimowiczm.foodyou.feature.food.ui.search
 
 import androidx.compose.foundation.Image
 import androidx.compose.material3.AlertDialog

@@ -1,9 +1,12 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapper
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapperImpl
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapperImpl
 import com.maksimowiczm.foodyou.feature.food.ui.product.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.feature.food.ui.product.update.UpdateProductScreenViewModel
+import com.maksimowiczm.foodyou.feature.food.ui.search.FoodSearchViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
@@ -14,4 +17,7 @@ val foodModule = module {
     viewModelOf(::UpdateProductScreenViewModel)
 
     factoryOf(::ProductMapperImpl).bind<ProductMapper>()
+    factoryOf(::FoodSearchMapperImpl).bind<FoodSearchMapper>()
+
+    viewModelOf(::FoodSearchViewModel)
 }

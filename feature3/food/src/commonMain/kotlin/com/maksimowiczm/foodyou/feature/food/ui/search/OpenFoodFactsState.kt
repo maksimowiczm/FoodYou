@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts
+package com.maksimowiczm.foodyou.feature.food.ui.search
 
 internal sealed interface OpenFoodFactsState {
     data object PrivacyPolicyRequested : OpenFoodFactsState

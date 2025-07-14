@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.data
+package com.maksimowiczm.foodyou.feature.food.data
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
@@ -65,5 +65,5 @@ interface FoodDao {
         ORDER BY headline ASC
         """
     )
-    fun observeFood(query: String?): PagingSource<Int, Food>
+    fun observeFood(query: String?): PagingSource<Int, FoodSearch>
 }

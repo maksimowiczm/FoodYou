@@ -1,11 +1,12 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.preferences
+package com.maksimowiczm.foodyou.feature.food.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 
-internal class UseOpenFoodFacts(dataStore: DataStore<Preferences>) :
+// TODO internal
+class UseOpenFoodFacts(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<Boolean, Boolean>(
         dataStore = dataStore,
         key = booleanPreferencesKey("fooddiary:use_open_food_facts")

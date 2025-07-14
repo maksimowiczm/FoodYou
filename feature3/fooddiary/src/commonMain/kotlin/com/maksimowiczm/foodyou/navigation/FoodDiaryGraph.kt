@@ -9,16 +9,14 @@ import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.from
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.rawValue
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.type
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateProductMeasurementScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateProductMeasurementScreen
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.FoodSearchScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsProductScreen
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Serializable
 data class FoodSearch(val mealId: Long, val epochDay: Long) {
@@ -107,13 +105,12 @@ fun NavGraphBuilder.foodDiaryGraph(
         FoodSearchScreen(
             onBack = foodSearchOnBack,
             onCreateProduct = { foodSearchOnCreateProduct(mealId, date) },
-            onOpenFoodFactsProduct = { foodSearchOnOpenFoodFactsProduct(it.id) },
-            onFood = { food, measurement ->
-                foodSearchOnFood(food.id, measurement, mealId, date)
+            onOpenFoodFactsProduct = foodSearchOnOpenFoodFactsProduct,
+            onFoodClick = { foodId, measurement ->
+                foodSearchOnFood(foodId, measurement, mealId, date)
             },
-            viewModel = koinViewModel(
-                parameters = { parametersOf(mealId, date) }
-            ),
+            mealId = mealId,
+            date = date,
             animatedVisibilityScope = this
         )
     }
