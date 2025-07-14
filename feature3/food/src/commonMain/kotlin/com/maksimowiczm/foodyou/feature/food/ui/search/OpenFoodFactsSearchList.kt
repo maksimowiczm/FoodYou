@@ -97,10 +97,6 @@ internal fun OpenFoodFactsSearchList(
             ) {
                 ContainedLoadingIndicator(
                     modifier = Modifier
-                        .padding(
-                            top = contentPadding.calculateTopPadding()
-                        )
-                        .zIndex(10f)
                 )
             }
         }
