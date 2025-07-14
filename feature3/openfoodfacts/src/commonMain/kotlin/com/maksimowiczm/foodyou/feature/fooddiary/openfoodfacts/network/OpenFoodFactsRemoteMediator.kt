@@ -146,6 +146,11 @@ private fun NetworkOpenFoodFactsProduct.toEntity(
         return null
     }
 
+    val nutritionFacts = nutritionFacts
+    if (nutritionFacts == null) {
+        return null
+    }
+
     return OpenFoodFactsProduct(
         name = name,
         brand = brand,

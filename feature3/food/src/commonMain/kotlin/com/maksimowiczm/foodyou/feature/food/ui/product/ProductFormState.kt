@@ -129,11 +129,16 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
             val carbohydrates = product.nutritionFacts.carbohydrates.value
             val fats = product.nutritionFacts.fats.value
 
-            val initialState = NutrientsHelper.calculateEnergy(
-                proteins = proteins,
-                carbohydrates = carbohydrates,
-                fats = fats
-            ) == energy
+            val initialState =
+                if (energy == null || proteins == null || carbohydrates == null || fats == null) {
+                    true
+                } else {
+                    NutrientsHelper.calculateEnergy(
+                        proteins = proteins,
+                        carbohydrates = carbohydrates,
+                        fats = fats
+                    ) == energy
+                }
 
             mutableStateOf(initialState)
         }

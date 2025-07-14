@@ -24,14 +24,30 @@ data class FoodWithMeasurement(
         }
 
     val proteins: Float?
-        get() = weight?.let { food.nutritionFacts.proteins.value * it / 100f }
+        get() {
+            val weight = weight ?: return null
+            val proteinValue = food.nutritionFacts.proteins.value ?: return null
+            return proteinValue * weight / 100f
+        }
 
     val carbohydrates: Float?
-        get() = weight?.let { food.nutritionFacts.carbohydrates.value * it / 100f }
+        get() {
+            val weight = weight ?: return null
+            val carbohydrateValue = food.nutritionFacts.carbohydrates.value ?: return null
+            return carbohydrateValue * weight / 100f
+        }
 
     val fats: Float?
-        get() = weight?.let { food.nutritionFacts.fats.value * it / 100f }
+        get() {
+            val weight = weight ?: return null
+            val fatValue = food.nutritionFacts.fats.value ?: return null
+            return fatValue * weight / 100f
+        }
 
     val energy: Float?
-        get() = weight?.let { food.nutritionFacts.energy.value * it / 100f }
+        get() {
+            val weight = weight ?: return null
+            val energyValue = food.nutritionFacts.energy.value ?: return null
+            return energyValue * weight / 100f
+        }
 }

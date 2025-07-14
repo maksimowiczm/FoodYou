@@ -12,7 +12,7 @@ data class OpenFoodFactsNutrients(
     @SerialName("fat_100g")
     val fats: Double? = null,
     @SerialName("energy-kcal_100g")
-    val calories: Double? = null,
+    val energy: Double? = null,
     @SerialName("saturated-fat_100g")
     val saturatedFats: Double? = null,
     @SerialName("sugars_100g")

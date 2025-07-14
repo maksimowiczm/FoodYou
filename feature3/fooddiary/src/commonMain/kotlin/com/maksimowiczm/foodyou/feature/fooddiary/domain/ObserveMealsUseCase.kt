@@ -45,7 +45,7 @@ internal class ObserveMealsUseCaseImpl(
                         food = food.map(foodMapper::toFoodWithMeasurement)
                     )
                 }
-            }.combine { it.toList() }
+            }.combine()
         }
     }
 }

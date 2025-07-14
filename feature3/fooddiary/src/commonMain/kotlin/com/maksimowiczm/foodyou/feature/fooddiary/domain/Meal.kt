@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.domain
 
-import com.maksimowiczm.foodyou.core.ext.sumOf
+import com.maksimowiczm.foodyou.feature.food.domain.sum
 import kotlinx.datetime.LocalTime
 
 internal data class Meal(
@@ -14,15 +14,15 @@ internal data class Meal(
     val isAllDay: Boolean
         get() = from == to
 
-    val energy: Float = food
-        .sumOf { it.food.nutritionFacts.energy.value * (it.weight ?: 0f) / 100f }
+    val energy: Float
+        get() = food.map { it.food.nutritionFacts.energy }.sum().value ?: 0f
 
-    val proteins: Float = food
-        .sumOf { it.food.nutritionFacts.proteins.value * (it.weight ?: 0f) / 100f }
+    val proteins: Float
+        get() = food.map { it.food.nutritionFacts.proteins }.sum().value ?: 0f
 
-    val carbohydrates: Float = food
-        .sumOf { it.food.nutritionFacts.carbohydrates.value * (it.weight ?: 0f) / 100f }
+    val carbohydrates: Float
+        get() = food.map { it.food.nutritionFacts.carbohydrates }.sum().value ?: 0f
 
-    val fats: Float = food
-        .sumOf { it.food.nutritionFacts.fats.value * (it.weight ?: 0f) / 100f }
+    val fats: Float
+        get() = food.map { it.food.nutritionFacts.fats }.sum().value ?: 0f
 }

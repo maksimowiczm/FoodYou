@@ -44,15 +44,21 @@ internal fun MealFoodListItem(
     val caloriesString = foodWithMeasurement.caloriesString
     val measurementString = foodWithMeasurement.measurementString
 
-    if (
+    if (measurementString == null) {
+        FoodErrorListItem(
+            headline = foodWithMeasurement.food.headline,
+            errorMessage = stringResource(Res.string.error_measurement_error),
+            modifier = modifier
+        )
+    } else if (
         proteinsString == null ||
         carbohydratesString == null ||
         fatsString == null ||
-        caloriesString == null ||
-        measurementString == null
+        caloriesString == null
     ) {
         FoodErrorListItem(
             headline = foodWithMeasurement.food.headline,
+            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
             modifier = modifier
         )
     } else {
@@ -137,8 +143,7 @@ private val FoodWithMeasurement.measurementString: String?
     }
 
 private val FoodWithMeasurement.caloriesString: String?
-    @Composable get() = weight?.let {
-        val calories = food.nutritionFacts.energy * it / 100f
-        val value = calories.value.roundToInt()
-        "$value " + stringResource(Res.string.unit_kcal)
+    @Composable get() {
+        val value = energy?.roundToInt() ?: return null
+        return "$value " + stringResource(Res.string.unit_kcal)
     }

@@ -63,6 +63,7 @@ internal fun FoodSearchListItem(
     if (factor == null) {
         return FoodErrorListItem(
             headline = food.headline,
+            errorMessage = stringResource(Res.string.error_measurement_error),
             modifier = modifier,
             onClick = onClick,
             shape = shape
@@ -70,6 +71,20 @@ internal fun FoodSearchListItem(
     }
 
     val measurementFacts = food.nutritionFacts * factor
+    val proteins = measurementFacts.proteins.value
+    val carbohydrates = measurementFacts.carbohydrates.value
+    val fats = measurementFacts.fats.value
+    val energy = measurementFacts.energy.value
+
+    if (proteins == null || carbohydrates == null || fats == null || energy == null) {
+        return FoodErrorListItem(
+            headline = food.headline,
+            modifier = modifier,
+            onClick = onClick,
+            shape = shape,
+            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields)
+        )
+    }
 
     val verticalPadding by animateDpAsState(
         targetValue = if (checked) 8.dp else 0.dp,
@@ -100,20 +115,20 @@ internal fun FoodSearchListItem(
             Text(text = food.headline)
         },
         proteins = {
-            val text = measurementFacts.proteins.value.formatClipZeros()
+            val text = proteins.formatClipZeros()
             Text("$text $g")
         },
         carbohydrates = {
-            val text = measurementFacts.carbohydrates.value.formatClipZeros()
+            val text = carbohydrates.formatClipZeros()
             Text("$text $g")
         },
         fats = {
-            val text = measurementFacts.fats.value.formatClipZeros()
+            val text = fats.formatClipZeros()
             Text("$text $g")
         },
         calories = {
             val kcal = stringResource(Res.string.unit_kcal)
-            val text = measurementFacts.energy.value.formatClipZeros("%.0f")
+            val text = energy.formatClipZeros("%.0f")
             Text("$text $kcal")
         },
         measurement = {

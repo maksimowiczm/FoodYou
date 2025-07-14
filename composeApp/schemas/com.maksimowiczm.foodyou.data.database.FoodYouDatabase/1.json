@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e1728d4471bae4a67cfaec1bc1b855a3",
+    "identityHash": "40b069d9d04ecfba066532d915bd5a28",
     "entities": [
       {
         "tableName": "Sponsorship",
@@ -696,7 +696,7 @@
       },
       {
         "tableName": "OpenFoodFactsProduct",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `downloadedAtEpochSeconds` INTEGER NOT NULL, `proteins` REAL, `carbohydrates` REAL, `fats` REAL, `calories` REAL, `saturatedFats` REAL, `sugars` REAL, `salt` REAL, `fiber` REAL, `vitaminA` REAL, `vitaminB1` REAL, `vitaminB2` REAL, `vitaminB3` REAL, `vitaminB5` REAL, `vitaminB6` REAL, `vitaminB7` REAL, `vitaminB9` REAL, `vitaminB12` REAL, `vitaminC` REAL, `vitaminD` REAL, `vitaminE` REAL, `vitaminK` REAL, `manganese` REAL, `magnesium` REAL, `potassium` REAL, `calcium` REAL, `copper` REAL, `zinc` REAL, `sodium` REAL, `iron` REAL, `phosphorus` REAL, `selenium` REAL, `iodine` REAL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `downloadedAtEpochSeconds` INTEGER NOT NULL, `proteins` REAL, `carbohydrates` REAL, `fats` REAL, `energy` REAL, `saturatedFats` REAL, `sugars` REAL, `salt` REAL, `fiber` REAL, `vitaminA` REAL, `vitaminB1` REAL, `vitaminB2` REAL, `vitaminB3` REAL, `vitaminB5` REAL, `vitaminB6` REAL, `vitaminB7` REAL, `vitaminB9` REAL, `vitaminB12` REAL, `vitaminC` REAL, `vitaminD` REAL, `vitaminE` REAL, `vitaminK` REAL, `manganese` REAL, `magnesium` REAL, `potassium` REAL, `calcium` REAL, `copper` REAL, `zinc` REAL, `sodium` REAL, `iron` REAL, `phosphorus` REAL, `selenium` REAL, `iodine` REAL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -752,8 +752,8 @@
             "affinity": "REAL"
           },
           {
-            "fieldPath": "nutritionFacts.calories",
-            "columnName": "calories",
+            "fieldPath": "nutritionFacts.energy",
+            "columnName": "energy",
             "affinity": "REAL"
           },
           {
@@ -944,7 +944,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e1728d4471bae4a67cfaec1bc1b855a3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '40b069d9d04ecfba066532d915bd5a28')"
     ]
   }
 }

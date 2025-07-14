@@ -67,3 +67,11 @@ sealed interface NutrientValue {
         is Incomplete -> Incomplete(value?.div(other))
     }
 }
+
+fun List<NutrientValue>.sum(): NutrientValue =
+    this.fold<NutrientValue, NutrientValue>(NutrientValue.Complete(0f)) {
+            acc,
+            nutrientValue
+        ->
+        acc + nutrientValue
+    }

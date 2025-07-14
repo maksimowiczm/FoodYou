@@ -12,25 +12,28 @@ val OpenFoodFactsProduct.headline: String
         "$name ($brand)"
     }
 
-val OpenFoodFactsProduct.domainFacts: NutritionFacts?
+val OpenFoodFactsProduct.domainFacts: NutritionFacts
     get() {
-        val nutritionFacts = this.nutritionFacts
-        if (nutritionFacts == null) return null
-
-        val proteins = nutritionFacts.proteins ?: return null
-        val carbohydrates = nutritionFacts.carbohydrates ?: return null
-        val fats = nutritionFacts.fats ?: return null
-        val energy = nutritionFacts.calories ?: NutrientsHelper.calculateEnergy(
-            proteins = proteins,
-            carbohydrates = carbohydrates,
-            fats = fats
-        )
+        val proteins = nutritionFacts.proteins
+        val carbohydrates = nutritionFacts.carbohydrates
+        val fats = nutritionFacts.fats
+        val energy = if (nutritionFacts.energy != null) {
+            nutritionFacts.energy
+        } else if (proteins != null && carbohydrates != null && fats != null) {
+            NutrientsHelper.calculateEnergy(
+                proteins = proteins,
+                carbohydrates = carbohydrates,
+                fats = fats
+            )
+        } else {
+            null
+        }
 
         return NutritionFacts(
-            proteins = proteins.toNutrientValue(),
-            carbohydrates = carbohydrates.toNutrientValue(),
+            proteins = nutritionFacts.proteins.toNutrientValue(),
+            carbohydrates = nutritionFacts.carbohydrates.toNutrientValue(),
             energy = energy.toNutrientValue(),
-            fats = fats.toNutrientValue(),
+            fats = nutritionFacts.fats.toNutrientValue(),
             saturatedFats = nutritionFacts.saturatedFats.toNutrientValue(),
             transFats = null.toNutrientValue(),
             monounsaturatedFats = null.toNutrientValue(),

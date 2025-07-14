@@ -83,12 +83,18 @@ internal fun ProductMeasurementForm(
                 )
             }
 
-            EnergyProgressIndicator(
-                proteins = facts.proteins.value,
-                carbohydrates = facts.carbohydrates.value,
-                fats = facts.fats.value,
-                modifier = Modifier.weight(1f)
-            )
+            val proteins = facts.proteins.value
+            val carbohydrates = facts.carbohydrates.value
+            val fats = facts.fats.value
+
+            if (proteins != null && carbohydrates != null && fats != null) {
+                EnergyProgressIndicator(
+                    proteins = proteins,
+                    carbohydrates = carbohydrates,
+                    fats = fats,
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
 
         val weight = measurement.weight(product)

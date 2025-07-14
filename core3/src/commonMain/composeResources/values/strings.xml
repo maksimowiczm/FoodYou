@@ -379,4 +379,6 @@
 
     <string name="thank_you_for_your_support">Thank you for your support!</string>
 
+    <string name="error_food_is_missing_required_fields">Food is missing required fields</string>
+
 </resources>

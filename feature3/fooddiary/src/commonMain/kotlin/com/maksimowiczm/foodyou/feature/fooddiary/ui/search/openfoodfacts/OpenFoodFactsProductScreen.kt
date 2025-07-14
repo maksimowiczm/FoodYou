@@ -151,8 +151,8 @@ private fun OpenFoodFactsProductScreen(
                 Surface(
                     modifier = Modifier.padding(horizontal = 8.dp),
                     shape = MaterialTheme.shapes.large,
-                    color = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ) {
                     Column(
                         modifier = Modifier
@@ -196,12 +196,18 @@ private fun OpenFoodFactsProductScreen(
                             )
                         }
 
-                        EnergyProgressIndicator(
-                            proteins = facts.proteins.value,
-                            carbohydrates = facts.carbohydrates.value,
-                            fats = facts.fats.value,
-                            modifier = Modifier.weight(1f)
-                        )
+                        val proteins = facts.proteins.value
+                        val carbohydrates = facts.carbohydrates.value
+                        val fats = facts.fats.value
+
+                        if (proteins != null && carbohydrates != null && fats != null) {
+                            EnergyProgressIndicator(
+                                proteins = proteins,
+                                carbohydrates = carbohydrates,
+                                fats = fats,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
                     }
 
                     Text(

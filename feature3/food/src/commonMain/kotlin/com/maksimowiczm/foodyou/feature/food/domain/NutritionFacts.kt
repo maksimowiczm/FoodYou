@@ -2,11 +2,11 @@ package com.maksimowiczm.foodyou.feature.food.domain
 
 data class NutritionFacts(
     // Macronutrients
-    val proteins: NutrientValue.Complete,
-    val carbohydrates: NutrientValue.Complete,
-    val energy: NutrientValue.Complete,
+    val proteins: NutrientValue,
+    val carbohydrates: NutrientValue,
+    val energy: NutrientValue,
     // Fats
-    val fats: NutrientValue.Complete,
+    val fats: NutrientValue,
     val saturatedFats: NutrientValue,
     val transFats: NutrientValue,
     val monounsaturatedFats: NutrientValue,

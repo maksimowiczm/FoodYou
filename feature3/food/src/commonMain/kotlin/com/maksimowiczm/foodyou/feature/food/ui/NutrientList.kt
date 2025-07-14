@@ -48,7 +48,7 @@ fun NutrientList(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Energy(facts.energy.value)
+        Energy(facts, incompleteValue)
 
         order.forEach {
             when (it) {
@@ -65,28 +65,39 @@ fun NutrientList(
 
 @Composable
 private fun Energy(
-    calories: Float,
+    facts: NutritionFacts,
+    incompleteValue: (NutrientValue.Incomplete) -> (@Composable () -> Unit),
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(8.dp)
 ) {
-    val kcal = stringResource(Res.string.unit_kcal)
-    val kj = stringResource(Res.string.unit_kilojules)
-    val str = buildString {
-        append(calories.roundToInt())
-        append(" ")
-        append(kcal)
-        append(" (")
-        append(NutrientsHelper.caloriesToKilojoules(calories).roundToInt())
-        append(" ")
-        append(kj)
-        append(")")
-    }
-
     Nutrient(
         label = { Text(stringResource(Res.string.unit_energy)) },
-        value = { Text(str) },
-        contentPadding = contentPadding,
-        modifier = modifier
+        value = {
+            when (facts.energy) {
+                is NutrientValue.Complete -> {
+                    val value = facts.energy.value
+                    val kcal = stringResource(Res.string.unit_kcal)
+                    val kj = stringResource(Res.string.unit_kilojules)
+                    val str = buildString {
+                        append(value.roundToInt())
+                        append(" ")
+                        append(kcal)
+                        append(" (")
+                        append(NutrientsHelper.caloriesToKilojoules(value).roundToInt())
+                        append(" ")
+                        append(kj)
+                        append(")")
+                    }
+                    Text(str)
+                }
+
+                is NutrientValue.Incomplete -> {
+                    incompleteValue(facts.energy)()
+                }
+            }
+        },
+        modifier = modifier,
+        contentPadding = contentPadding
     )
 }
 
