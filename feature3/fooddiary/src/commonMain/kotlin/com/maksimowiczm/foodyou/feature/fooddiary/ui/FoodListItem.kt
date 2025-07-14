@@ -26,12 +26,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
-import foodyou.app.generated.resources.*
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -51,6 +54,8 @@ internal fun FoodListItem(
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val orderPreference = userPreference<NutrientsOrderPreference>()
+    val order = orderPreference.collectAsStateWithLifecycle(orderPreference.getBlocking()).value
 
     val headlineContent = @Composable {
         CompositionLocalProvider(
@@ -72,29 +77,40 @@ internal fun FoodListItem(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     CompositionLocalProvider(
-                        LocalContentColor provides
-                            nutrientsPalette.proteinsOnSurfaceContainer,
-                        LocalTextStyle provides MaterialTheme.typography.bodyMedium
-                    ) {
-                        proteins()
-                    }
-                    CompositionLocalProvider(
-                        LocalContentColor provides
-                            nutrientsPalette.carbohydratesOnSurfaceContainer,
-                        LocalTextStyle provides MaterialTheme.typography.bodyMedium
-                    ) {
-                        carbohydrates()
-                    }
-                    CompositionLocalProvider(
-                        LocalContentColor provides nutrientsPalette.fatsOnSurfaceContainer,
-                        LocalTextStyle provides MaterialTheme.typography.bodyMedium
-                    ) {
-                        fats()
-                    }
-                    CompositionLocalProvider(
                         LocalTextStyle provides MaterialTheme.typography.bodyMedium
                     ) {
                         calories()
+                    }
+
+                    order.forEach { field ->
+                        when (field) {
+                            NutrientsOrder.Proteins -> CompositionLocalProvider(
+                                LocalContentColor provides
+                                    nutrientsPalette.proteinsOnSurfaceContainer,
+                                LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                            ) {
+                                proteins()
+                            }
+
+                            NutrientsOrder.Fats -> CompositionLocalProvider(
+                                LocalContentColor provides nutrientsPalette.fatsOnSurfaceContainer,
+                                LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                            ) {
+                                fats()
+                            }
+
+                            NutrientsOrder.Carbohydrates -> CompositionLocalProvider(
+                                LocalContentColor provides
+                                    nutrientsPalette.carbohydratesOnSurfaceContainer,
+                                LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                            ) {
+                                carbohydrates()
+                            }
+
+                            NutrientsOrder.Other,
+                            NutrientsOrder.Vitamins,
+                            NutrientsOrder.Minerals -> Unit
+                        }
                     }
                 }
             }
@@ -146,9 +162,9 @@ internal fun FoodListItem(
 @Composable
 internal fun FoodErrorListItem(
     headline: String,
+    errorMessage: String,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    errorMessage: String = stringResource(Res.string.error_measurement_error),
     shape: Shape = RectangleShape
 ) {
     Surface(

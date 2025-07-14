@@ -162,7 +162,9 @@ internal fun MealCard(
                             color = nutrientsPalette.fatsOnSurfaceContainer
                         )
 
-                        else -> Unit
+                        NutrientsOrder.Other,
+                        NutrientsOrder.Vitamins,
+                        NutrientsOrder.Minerals -> Unit
                     }
                 }
 

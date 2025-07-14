@@ -4,6 +4,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder.Carbohydrates
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder.Fats
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder.Minerals
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder.Other
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder.Proteins
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder.Vitamins
 
 enum class NutrientsOrder {
     Proteins,
@@ -11,11 +17,7 @@ enum class NutrientsOrder {
     Carbohydrates,
     Other,
     Vitamins,
-    Minerals;
-
-    companion object {
-        val defaultOrder = listOf(Proteins, Fats, Carbohydrates, Other, Vitamins, Minerals)
-    }
+    Minerals
 }
 
 class NutrientsOrderPreference(dataStore: DataStore<Preferences>) :
@@ -24,9 +26,9 @@ class NutrientsOrderPreference(dataStore: DataStore<Preferences>) :
         key = stringSetPreferencesKey("food:nutrients_order")
     ) {
     override fun Set<String>?.toValue(): List<NutrientsOrder> = runCatching {
-        this?.map { NutrientsOrder.valueOf(it) } ?: NutrientsOrder.defaultOrder
+        this?.map { NutrientsOrder.valueOf(it) } ?: defaultOrder
     }.getOrElse {
-        NutrientsOrder.defaultOrder
+        defaultOrder
     }
 
     override fun List<NutrientsOrder>.toStore(): Set<String>? = runCatching {
@@ -34,4 +36,7 @@ class NutrientsOrderPreference(dataStore: DataStore<Preferences>) :
     }.getOrElse {
         null
     }
+
+    val defaultOrder: List<NutrientsOrder>
+        get() = listOf(Proteins, Fats, Carbohydrates, Other, Vitamins, Minerals)
 }
