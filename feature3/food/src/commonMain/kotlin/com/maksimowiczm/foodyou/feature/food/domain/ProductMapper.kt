@@ -1,9 +1,9 @@
 package com.maksimowiczm.foodyou.feature.food.domain
 
-import com.maksimowiczm.foodyou.feature.food.data.Minerals
-import com.maksimowiczm.foodyou.feature.food.data.Nutrients
-import com.maksimowiczm.foodyou.feature.food.data.Product as ProductEntity
-import com.maksimowiczm.foodyou.feature.food.data.Vitamins
+import com.maksimowiczm.foodyou.feature.food.data.database.food.Minerals
+import com.maksimowiczm.foodyou.feature.food.data.database.food.Nutrients
+import com.maksimowiczm.foodyou.feature.food.data.database.food.Product as ProductEntity
+import com.maksimowiczm.foodyou.feature.food.data.database.food.Vitamins
 import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue.Companion.toNutrientValue
 
 interface ProductMapper {

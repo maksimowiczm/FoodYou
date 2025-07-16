@@ -6,18 +6,16 @@ import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.feature.about.data.database.AboutDatabase
 import com.maksimowiczm.foodyou.feature.about.data.database.SponsorMethodConverter
 import com.maksimowiczm.foodyou.feature.about.data.database.Sponsorship
-import com.maksimowiczm.foodyou.feature.food.data.FoodDatabase
-import com.maksimowiczm.foodyou.feature.food.data.Product
-import com.maksimowiczm.foodyou.feature.food.data.Recipe
-import com.maksimowiczm.foodyou.feature.food.data.RecipeIngredient
-import com.maksimowiczm.foodyou.feature.food.data.SourceTypeConverter
+import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
+import com.maksimowiczm.foodyou.feature.food.data.database.SourceTypeConverter
+import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
+import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe
+import com.maksimowiczm.foodyou.feature.food.data.database.food.RecipeIngredient
+import com.maksimowiczm.foodyou.feature.food.data.database.openfoodfacts.OpenFoodFactsPagingKey
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.feature.fooddiary.data.InitializeMealsCallback
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Meal
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement
-import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsDatabase
-import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsPagingKey
-import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverter
 
 @Database(
@@ -28,7 +26,6 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
         RecipeIngredient::class,
         Meal::class,
         Measurement::class,
-        OpenFoodFactsProduct::class,
         OpenFoodFactsPagingKey::class
     ],
     version = FoodYouDatabase.VERSION,
@@ -43,8 +40,7 @@ abstract class FoodYouDatabase :
     RoomDatabase(),
     AboutDatabase,
     FoodDatabase,
-    FoodDiaryDatabase,
-    OpenFoodFactsDatabase {
+    FoodDiaryDatabase {
 
     companion object {
         const val VERSION = 1

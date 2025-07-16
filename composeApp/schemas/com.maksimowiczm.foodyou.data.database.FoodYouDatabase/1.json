@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "40b069d9d04ecfba066532d915bd5a28",
+    "identityHash": "59415dcc3bedfcdf650c7abe6962943d",
     "entities": [
       {
         "tableName": "Sponsorship",
@@ -75,7 +75,7 @@
       },
       {
         "tableName": "Product",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `note` TEXT, `sourceType` INTEGER NOT NULL, `sourceUrl` TEXT, `energy` REAL NOT NULL, `proteins` REAL NOT NULL, `fats` REAL NOT NULL, `saturatedFats` REAL, `transFats` REAL, `monounsaturatedFats` REAL, `polyunsaturatedFats` REAL, `omega3` REAL, `omega6` REAL, `carbohydrates` REAL NOT NULL, `sugars` REAL, `addedSugars` REAL, `dietaryFiber` REAL, `solubleFiber` REAL, `insolubleFiber` REAL, `salt` REAL, `cholesterolMilli` REAL, `caffeineMilli` REAL, `vitaminAMicro` REAL, `vitaminB1Milli` REAL, `vitaminB2Milli` REAL, `vitaminB3Milli` REAL, `vitaminB5Milli` REAL, `vitaminB6Milli` REAL, `vitaminB7Micro` REAL, `vitaminB9Micro` REAL, `vitaminB12Micro` REAL, `vitaminCMilli` REAL, `vitaminDMicro` REAL, `vitaminEMilli` REAL, `vitaminKMicro` REAL, `manganeseMilli` REAL, `magnesiumMilli` REAL, `potassiumMilli` REAL, `calciumMilli` REAL, `copperMilli` REAL, `zincMilli` REAL, `sodiumMilli` REAL, `ironMilli` REAL, `phosphorusMilli` REAL, `seleniumMicro` REAL, `iodineMicro` REAL, `chromiumMicro` REAL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `note` TEXT, `sourceType` INTEGER NOT NULL, `sourceUrl` TEXT, `energy` REAL, `proteins` REAL, `fats` REAL, `saturatedFats` REAL, `transFats` REAL, `monounsaturatedFats` REAL, `polyunsaturatedFats` REAL, `omega3` REAL, `omega6` REAL, `carbohydrates` REAL NOT NULL, `sugars` REAL, `addedSugars` REAL, `dietaryFiber` REAL, `solubleFiber` REAL, `insolubleFiber` REAL, `salt` REAL, `cholesterolMilli` REAL, `caffeineMilli` REAL, `vitaminAMicro` REAL, `vitaminB1Milli` REAL, `vitaminB2Milli` REAL, `vitaminB3Milli` REAL, `vitaminB5Milli` REAL, `vitaminB6Milli` REAL, `vitaminB7Micro` REAL, `vitaminB9Micro` REAL, `vitaminB12Micro` REAL, `vitaminCMilli` REAL, `vitaminDMicro` REAL, `vitaminEMilli` REAL, `vitaminKMicro` REAL, `manganeseMilli` REAL, `magnesiumMilli` REAL, `potassiumMilli` REAL, `calciumMilli` REAL, `copperMilli` REAL, `zincMilli` REAL, `sodiumMilli` REAL, `ironMilli` REAL, `phosphorusMilli` REAL, `seleniumMicro` REAL, `iodineMicro` REAL, `chromiumMicro` REAL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -128,20 +128,17 @@
           {
             "fieldPath": "nutrients.energy",
             "columnName": "energy",
-            "affinity": "REAL",
-            "notNull": true
+            "affinity": "REAL"
           },
           {
             "fieldPath": "nutrients.proteins",
             "columnName": "proteins",
-            "affinity": "REAL",
-            "notNull": true
+            "affinity": "REAL"
           },
           {
             "fieldPath": "nutrients.fats",
             "columnName": "fats",
-            "affinity": "REAL",
-            "notNull": true
+            "affinity": "REAL"
           },
           {
             "fieldPath": "nutrients.saturatedFats",
@@ -695,216 +692,6 @@
         ]
       },
       {
-        "tableName": "OpenFoodFactsProduct",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `brand` TEXT, `barcode` TEXT, `packageWeight` REAL, `servingWeight` REAL, `downloadedAtEpochSeconds` INTEGER NOT NULL, `proteins` REAL, `carbohydrates` REAL, `fats` REAL, `energy` REAL, `saturatedFats` REAL, `sugars` REAL, `salt` REAL, `fiber` REAL, `vitaminA` REAL, `vitaminB1` REAL, `vitaminB2` REAL, `vitaminB3` REAL, `vitaminB5` REAL, `vitaminB6` REAL, `vitaminB7` REAL, `vitaminB9` REAL, `vitaminB12` REAL, `vitaminC` REAL, `vitaminD` REAL, `vitaminE` REAL, `vitaminK` REAL, `manganese` REAL, `magnesium` REAL, `potassium` REAL, `calcium` REAL, `copper` REAL, `zinc` REAL, `sodium` REAL, `iron` REAL, `phosphorus` REAL, `selenium` REAL, `iodine` REAL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "brand",
-            "columnName": "brand",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "barcode",
-            "columnName": "barcode",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "packageWeight",
-            "columnName": "packageWeight",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "servingWeight",
-            "columnName": "servingWeight",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "downloadedAtEpochSeconds",
-            "columnName": "downloadedAtEpochSeconds",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "nutritionFacts.proteins",
-            "columnName": "proteins",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.carbohydrates",
-            "columnName": "carbohydrates",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.fats",
-            "columnName": "fats",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.energy",
-            "columnName": "energy",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.saturatedFats",
-            "columnName": "saturatedFats",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.sugars",
-            "columnName": "sugars",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.salt",
-            "columnName": "salt",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.fiber",
-            "columnName": "fiber",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminA",
-            "columnName": "vitaminA",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminB1",
-            "columnName": "vitaminB1",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminB2",
-            "columnName": "vitaminB2",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminB3",
-            "columnName": "vitaminB3",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminB5",
-            "columnName": "vitaminB5",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminB6",
-            "columnName": "vitaminB6",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminB7",
-            "columnName": "vitaminB7",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminB9",
-            "columnName": "vitaminB9",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminB12",
-            "columnName": "vitaminB12",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminC",
-            "columnName": "vitaminC",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminD",
-            "columnName": "vitaminD",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminE",
-            "columnName": "vitaminE",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.vitaminK",
-            "columnName": "vitaminK",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.manganese",
-            "columnName": "manganese",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.magnesium",
-            "columnName": "magnesium",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.potassium",
-            "columnName": "potassium",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.calcium",
-            "columnName": "calcium",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.copper",
-            "columnName": "copper",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.zinc",
-            "columnName": "zinc",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.sodium",
-            "columnName": "sodium",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.iron",
-            "columnName": "iron",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.phosphorus",
-            "columnName": "phosphorus",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.selenium",
-            "columnName": "selenium",
-            "affinity": "REAL"
-          },
-          {
-            "fieldPath": "nutritionFacts.iodine",
-            "columnName": "iodine",
-            "affinity": "REAL"
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        }
-      },
-      {
         "tableName": "OpenFoodFactsPagingKey",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`queryString` TEXT NOT NULL, `country` TEXT NOT NULL, `fetchedCount` INTEGER NOT NULL, `totalCount` INTEGER NOT NULL, PRIMARY KEY(`queryString`, `country`))",
         "fields": [
@@ -944,7 +731,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '40b069d9d04ecfba066532d915bd5a28')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '59415dcc3bedfcdf650c7abe6962943d')"
     ]
   }
 }

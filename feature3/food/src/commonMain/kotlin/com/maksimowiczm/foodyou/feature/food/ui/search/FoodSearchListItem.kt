@@ -1,11 +1,9 @@
 package com.maksimowiczm.foodyou.feature.food.ui.search
 
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.feature.food.ui.FoodErrorListItem
@@ -21,7 +19,6 @@ fun FoodSearchListItem(
     food: FoodSearch,
     measurement: Measurement,
     onClick: () -> Unit,
-    shape: Shape,
     modifier: Modifier = Modifier
 ) {
     val factor = when (measurement) {
@@ -42,8 +39,7 @@ fun FoodSearchListItem(
             headline = food.headline,
             errorMessage = stringResource(Res.string.error_measurement_error),
             modifier = modifier,
-            onClick = onClick,
-            shape = shape
+            onClick = onClick
         )
     }
 
@@ -58,7 +54,6 @@ fun FoodSearchListItem(
             headline = food.headline,
             modifier = modifier,
             onClick = onClick,
-            shape = shape,
             errorMessage = stringResource(Res.string.error_food_is_missing_required_fields)
         )
     }
@@ -105,9 +100,6 @@ fun FoodSearchListItem(
             Text(text)
         },
         modifier = modifier,
-        onClick = onClick,
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        contentColor = MaterialTheme.colorScheme.onSurface,
-        shape = shape
+        onClick = onClick
     )
 }

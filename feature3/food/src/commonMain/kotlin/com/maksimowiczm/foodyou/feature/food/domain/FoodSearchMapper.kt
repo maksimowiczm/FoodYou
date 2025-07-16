@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.food.domain
 
-import com.maksimowiczm.foodyou.feature.food.data.FoodSearch as FoodSearchData
+import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodSearch as FoodSearchData
 import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue.Companion.toNutrientValue
 
 interface FoodSearchMapper {

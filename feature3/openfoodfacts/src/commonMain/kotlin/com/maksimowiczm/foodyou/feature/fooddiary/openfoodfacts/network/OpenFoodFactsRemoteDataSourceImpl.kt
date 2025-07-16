@@ -35,6 +35,7 @@ internal class OpenFoodFactsRemoteDataSourceImpl(private val client: HttpClient)
 
             countries?.let { parameter("countries", countries) }
             parameter("fields", FIELDS)
+            parameter("sort_by", "product_name")
         }
 
         if (response.status == HttpStatusCode.Companion.NotFound) {

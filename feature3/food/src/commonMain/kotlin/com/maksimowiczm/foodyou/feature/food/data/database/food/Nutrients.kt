@@ -1,10 +1,10 @@
-package com.maksimowiczm.foodyou.feature.food.data
+package com.maksimowiczm.foodyou.feature.food.data.database.food
 
 data class Nutrients(
-    val energy: Float,
-    val proteins: Float,
+    val energy: Float?,
+    val proteins: Float?,
     // Fats
-    val fats: Float,
+    val fats: Float?,
     val saturatedFats: Float?,
     val transFats: Float?,
     val monounsaturatedFats: Float?,

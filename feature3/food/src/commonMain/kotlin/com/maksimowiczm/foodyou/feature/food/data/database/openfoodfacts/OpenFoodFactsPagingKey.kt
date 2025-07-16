@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data
+package com.maksimowiczm.foodyou.feature.food.data.database.openfoodfacts
 
 import androidx.room.Entity
 

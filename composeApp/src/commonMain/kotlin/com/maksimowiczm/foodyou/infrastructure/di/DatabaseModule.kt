@@ -2,9 +2,8 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.data.database.FoodYouDatabase
 import com.maksimowiczm.foodyou.feature.about.data.database.AboutDatabase
-import com.maksimowiczm.foodyou.feature.food.data.FoodDatabase
+import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
-import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.data.OpenFoodFactsDatabase
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
 import org.koin.dsl.binds
@@ -19,8 +18,7 @@ val databaseModule = module {
         arrayOf(
             AboutDatabase::class,
             FoodDatabase::class,
-            FoodDiaryDatabase::class,
-            OpenFoodFactsDatabase::class
+            FoodDiaryDatabase::class
         )
     )
 }

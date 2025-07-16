@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.food.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -167,16 +166,9 @@ fun FoodErrorListItem(
     onClick: (() -> Unit)? = null,
     shape: Shape = RectangleShape
 ) {
-    Surface(
-        shape = shape
-    ) {
+    val content = @Composable {
         ListItem(
             headlineContent = { Text(headline) },
-            modifier = if (onClick != null) {
-                Modifier.clickable { onClick }
-            } else {
-                Modifier
-            }.then(modifier),
             supportingContent = { Text(errorMessage) },
             colors = ListItemDefaults.colors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -184,6 +176,21 @@ fun FoodErrorListItem(
                 supportingColor = MaterialTheme.colorScheme.onErrorContainer,
                 overlineColor = MaterialTheme.colorScheme.onErrorContainer
             )
+        )
+    }
+
+    if (onClick != null) {
+        Surface(
+            onClick = onClick,
+            modifier = modifier,
+            shape = shape,
+            content = content
+        )
+    } else {
+        Surface(
+            modifier = modifier,
+            shape = shape,
+            content = content
         )
     }
 }

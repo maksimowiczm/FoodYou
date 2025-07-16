@@ -12,7 +12,6 @@ import com.maksimowiczm.foodyou.feature.fooddiary.domain.type
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateProductMeasurementScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateProductMeasurementScreen
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.search.openfoodfacts.OpenFoodFactsProductScreen
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import kotlinx.datetime.LocalDate
@@ -23,9 +22,6 @@ data class FoodSearch(val mealId: Long, val epochDay: Long) {
     val date: LocalDate
         get() = LocalDate.fromEpochDays(epochDay)
 }
-
-@Serializable
-data class OpenFoodFactsProduct(val id: Long)
 
 @Serializable
 data class CreateProduct(val mealId: Long, val date: Long) {
@@ -80,10 +76,7 @@ data class UpdateProductMeasurement(val measurementId: Long)
 fun NavGraphBuilder.foodDiaryGraph(
     foodSearchOnBack: () -> Unit,
     foodSearchOnCreateProduct: (mealId: Long, date: LocalDate) -> Unit,
-    foodSearchOnOpenFoodFactsProduct: (id: Long) -> Unit,
     foodSearchOnFood: (FoodId, Measurement, mealId: Long, date: LocalDate) -> Unit,
-    openFoodFactsProductOnBack: () -> Unit,
-    openFoodFactsProductOnImport: (id: FoodId.Product) -> Unit,
     createProductOnBack: () -> Unit,
     createProductOnCreate: (FoodId.Product, mealId: Long, date: LocalDate) -> Unit,
     updateProductOnBack: () -> Unit,
@@ -105,22 +98,12 @@ fun NavGraphBuilder.foodDiaryGraph(
         FoodSearchScreen(
             onBack = foodSearchOnBack,
             onCreateProduct = { foodSearchOnCreateProduct(mealId, date) },
-            onOpenFoodFactsProduct = foodSearchOnOpenFoodFactsProduct,
             onFoodClick = { foodId, measurement ->
                 foodSearchOnFood(foodId, measurement, mealId, date)
             },
             mealId = mealId,
             date = date,
             animatedVisibilityScope = this
-        )
-    }
-    forwardBackwardComposable<OpenFoodFactsProduct> {
-        val (id) = it.toRoute<OpenFoodFactsProduct>()
-
-        OpenFoodFactsProductScreen(
-            onBack = openFoodFactsProductOnBack,
-            onImport = openFoodFactsProductOnImport,
-            productId = id
         )
     }
     forwardBackwardComposable<CreateProduct> { backStack ->

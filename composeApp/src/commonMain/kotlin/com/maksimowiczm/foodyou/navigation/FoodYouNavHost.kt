@@ -80,11 +80,6 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
-            foodSearchOnOpenFoodFactsProduct = {
-                navController.navigate(OpenFoodFactsProduct(it)) {
-                    launchSingleTop = true
-                }
-            },
             foodSearchOnFood = { id, measurement, mealId, date ->
                 val route = when (id) {
                     is FoodId.Product -> CreateProductMeasurement(
@@ -100,11 +95,6 @@ fun FoodYouNavHost(
                 navController.navigate(route) {
                     launchSingleTop = true
                 }
-            },
-            openFoodFactsProductOnBack = {
-                navController.popBackStack<OpenFoodFactsProduct>(true)
-            },
-            openFoodFactsProductOnImport = {
             },
             createProductOnBack = {
                 navController.popBackStack<CreateProduct>(true)

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.data
+package com.maksimowiczm.foodyou.feature.food.data.database.food
 
 import androidx.room.Embedded
 

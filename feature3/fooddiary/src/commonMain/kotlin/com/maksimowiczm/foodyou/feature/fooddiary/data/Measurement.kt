@@ -4,8 +4,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.maksimowiczm.foodyou.feature.food.data.Product
-import com.maksimowiczm.foodyou.feature.food.data.Recipe
+import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
+import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 
 @Entity(

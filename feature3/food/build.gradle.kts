@@ -7,6 +7,11 @@ plugins {
 
 kotlin {
 
+    compilerOptions {
+        // It's not required for kotlin 2.2.0 anymore but IDE won't shut up about it.
+        freeCompilerArgs.add("-Xwhen-guards")
+    }
+
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.feature.food"
         compileSdk = libs.versions.android.compileSdk.get().toInt()

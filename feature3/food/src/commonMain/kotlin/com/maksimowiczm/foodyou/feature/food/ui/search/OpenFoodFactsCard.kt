@@ -43,8 +43,8 @@ internal fun OpenFoodFactsCard(
     val color by animateColorAsState(
         targetValue = when (state) {
             is OpenFoodFactsState.Error -> MaterialTheme.colorScheme.errorContainer
-            is OpenFoodFactsState.Loaded -> MaterialTheme.colorScheme.surfaceContainer
-            OpenFoodFactsState.Loading -> MaterialTheme.colorScheme.surfaceContainer
+            is OpenFoodFactsState.Loaded -> MaterialTheme.colorScheme.surfaceContainerHigh
+            OpenFoodFactsState.Loading -> MaterialTheme.colorScheme.surfaceContainerHigh
             OpenFoodFactsState.PrivacyPolicyRequested -> MaterialTheme.colorScheme.errorContainer
         }
     )
@@ -63,7 +63,8 @@ internal fun OpenFoodFactsCard(
         modifier = modifier,
         color = color,
         contentColor = contentColor,
-        shape = MaterialTheme.shapes.medium
+        shape = MaterialTheme.shapes.medium,
+        shadowElevation = 2.dp
     ) {
         Row(
             modifier = Modifier
@@ -96,6 +97,7 @@ internal fun OpenFoodFactsCard(
                         is OpenFoodFactsState.Error -> stringResource(
                             Res.string.neutral_an_error_occurred
                         )
+
                         is OpenFoodFactsState.Loaded -> stringResource(
                             Res.string.neutral_x_products_found,
                             state.productsFound
@@ -152,9 +154,10 @@ internal fun OpenFoodFactsCard(
 internal fun BrowsingOpenFoodFactsCard(onClose: () -> Unit, modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
         contentColor = MaterialTheme.colorScheme.onSurface,
-        shape = MaterialTheme.shapes.medium
+        shape = MaterialTheme.shapes.medium,
+        shadowElevation = 2.dp
     ) {
         Row(
             modifier = Modifier

@@ -87,9 +87,6 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core3"))
 
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.paging)
-
             implementation(libs.kotlinx.serialization.json)
 
             // Ktor

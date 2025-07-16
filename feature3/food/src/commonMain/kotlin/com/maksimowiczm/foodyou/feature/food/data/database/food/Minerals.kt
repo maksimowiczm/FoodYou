@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.data
+package com.maksimowiczm.foodyou.feature.food.data.database.food
 
 data class Minerals(
     val manganeseMilli: Float?,

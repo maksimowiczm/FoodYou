@@ -5,22 +5,42 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OpenFoodFactsNutrients(
+    @SerialName("energy-kcal_100g")
+    val energy: Double? = null,
     @SerialName("proteins_100g")
     val proteins: Double? = null,
     @SerialName("carbohydrates_100g")
     val carbohydrates: Double? = null,
     @SerialName("fat_100g")
     val fats: Double? = null,
-    @SerialName("energy-kcal_100g")
-    val energy: Double? = null,
     @SerialName("saturated-fat_100g")
     val saturatedFats: Double? = null,
+    @SerialName("trans-fat_100")
+    val transFats: Double? = null,
+    @SerialName("monounsaturated-fat_100g")
+    val monounsaturatedFats: Double? = null,
+    @SerialName("polyunsaturated-fat_100g")
+    val polyunsaturatedFats: Double? = null,
+    @SerialName("omega-3-fat_100g")
+    val omega3Fats: Double? = null,
+    @SerialName("omega-6-fat_100g")
+    val omega6Fats: Double? = null,
     @SerialName("sugars_100g")
     val sugars: Double? = null,
+    @SerialName("added-sugars_100g")
+    val addedSugars: Double? = null,
     @SerialName("salt_100g")
     val salt: Double? = null,
     @SerialName("fiber_100g")
     val fiber: Double? = null,
+    @SerialName("soluble-fiber_100g")
+    val solubleFiber: Double? = null,
+    @SerialName("insoluble-fiber_100g")
+    val insolubleFiber: Double? = null,
+    @SerialName("cholesterol_100g")
+    val cholesterol: Double? = null,
+    @SerialName("caffeine_100g")
+    val caffeine: Double? = null,
     // Vitamins
     @SerialName("vitamin-a_100g")
     val vitaminA: Double? = null,
@@ -28,13 +48,13 @@ data class OpenFoodFactsNutrients(
     val vitaminB1: Double? = null,
     @SerialName("vitamin-b2_100g")
     val vitaminB2: Double? = null,
-    @SerialName("vitamin-b3_100g")
+    @SerialName("vitamin-pp_100g")
     val vitaminB3: Double? = null,
-    @SerialName("vitamin-b5_100g")
+    @SerialName("pantothenic-acid_100g")
     val vitaminB5: Double? = null,
     @SerialName("vitamin-b6_100g")
     val vitaminB6: Double? = null,
-    @SerialName("vitamin-b7_100g")
+    @SerialName("biotin_100g")
     val vitaminB7: Double? = null,
     @SerialName("vitamin-b9_100g")
     val vitaminB9: Double? = null,
@@ -70,5 +90,7 @@ data class OpenFoodFactsNutrients(
     @SerialName("selenium_100g")
     val selenium: Double? = null,
     @SerialName("iodine_100g")
-    val iodine: Double? = null
+    val iodine: Double? = null,
+    @SerialName("chormium_100g")
+    val chromium: Double? = null
 )

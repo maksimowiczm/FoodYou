@@ -48,7 +48,6 @@ fun FoodSearchScreen(
     onBack: () -> Unit,
     onFoodClick: (foodId: FoodId, measurement: Measurement) -> Unit,
     onCreateProduct: () -> Unit,
-    onOpenFoodFactsProduct: (Long) -> Unit,
     mealId: Long,
     date: LocalDate,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -101,7 +100,6 @@ fun FoodSearchScreen(
                 onFoodClick(food.id, measurement)
             },
             onCreateProduct = onCreateProduct,
-            onOpenFoodFactsProduct = { onOpenFoodFactsProduct(it.id) },
             animatedVisibilityScope = animatedVisibilityScope,
             modifier = Modifier
                 .padding(paddingValues)

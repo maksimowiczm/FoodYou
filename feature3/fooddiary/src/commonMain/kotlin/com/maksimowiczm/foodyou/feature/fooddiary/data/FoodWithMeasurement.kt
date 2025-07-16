@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.fooddiary.data
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.maksimowiczm.foodyou.feature.food.data.Product
-import com.maksimowiczm.foodyou.feature.food.data.Recipe
+import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
+import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe
 
 data class FoodWithMeasurement(
     @Embedded
