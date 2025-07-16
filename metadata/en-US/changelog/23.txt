@@ -1,0 +1,2 @@
+Bug fixes
+- Fixed search bar not working on the food search screen on Android 8.1 and below.
