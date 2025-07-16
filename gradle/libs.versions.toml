@@ -1,5 +1,5 @@
 [versions]
-version-name = "3.0.0-alpha01"
+version-name = "3.0.0-beta.1"
 android-versionCode = "100"
 android-compileSdk = "36"
 android-minSdk = "26"

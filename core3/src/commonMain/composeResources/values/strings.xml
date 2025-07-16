@@ -383,4 +383,7 @@
 
     <string name="description_you_are_browsing_open_food_facts">You’re browsing the Open Food Facts database. You will see only Open Food Facts products.</string>
 
+    <string name="headline_preview_release">Preview release</string>
+    <string name="description_preview_release">You are currently using a preview version. It may be incomplete, unstable, or subject to change.</string>
+
 </resources>

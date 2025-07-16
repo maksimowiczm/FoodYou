@@ -19,7 +19,8 @@ data class Version(
     val changes: List<String> = emptyList(),
     val bugFixes: List<String> = emptyList(),
     val translations: List<String> = emptyList(),
-    val notes: String? = null
+    val notes: String? = null,
+    val isPreview: Boolean = false
 ) {
     val isCurrentVersion: Boolean
         get() = BuildConfig.VERSION_NAME == version
@@ -67,7 +68,8 @@ data class Version(
             changes = changes,
             bugFixes = bugFixes,
             translations = translations,
-            notes = notes
+            notes = notes,
+            isPreview = true
         )
     }
 }

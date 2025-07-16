@@ -81,6 +81,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.RoundedPolygon
+import com.maksimowiczm.foodyou.feature.about.domain.Changelog
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
@@ -386,7 +387,7 @@ private fun LogoLabel(modifier: Modifier = Modifier) {
             text = buildString {
                 append(stringResource(Res.string.headline_version))
                 append(" ")
-                append(BuildConfig.VERSION_NAME)
+                append(Changelog.currentVersion?.version)
             },
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant

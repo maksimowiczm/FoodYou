@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -71,6 +72,16 @@ private fun SheetContent(modifier: Modifier = Modifier) {
         .add(WindowInsets(bottom = 8.dp))
         .asPaddingValues()
 
+    val versions = remember(Changelog) {
+        val currentVersion = Changelog.currentVersion
+
+        if (currentVersion?.isPreview == true) {
+            Changelog.versions
+        } else {
+            Changelog.versions.filterNot { it.isPreview }
+        }
+    }
+
     LazyColumn(
         modifier = modifier,
         contentPadding = paddingValues,
@@ -86,7 +97,7 @@ private fun SheetContent(modifier: Modifier = Modifier) {
         }
 
         items(
-            items = Changelog.versions
+            items = versions
         ) { version ->
             ChangelogItem(
                 version = version,

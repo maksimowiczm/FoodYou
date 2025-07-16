@@ -5,8 +5,12 @@ package com.maksimowiczm.foodyou.feature.about.domain
 import kotlinx.datetime.LocalDate
 
 object Changelog {
-    val versions
-        get() = listOf(
+    val currentVersion: Version?
+        get() = versions.firstOrNull { it.isCurrentVersion } ?: next
+
+    val versions: List<Version>
+        get() = listOfNotNull(
+            next,
             v2_10_1,
             v2_10_0,
             v2_9_0,
@@ -25,6 +29,14 @@ object Changelog {
             v2_1_0,
             v2_0_0
         )
+
+    val next = Version.next(
+        newFeatures = listOf(),
+        changes = listOf(),
+        bugFixes = listOf(),
+        translations = listOf(),
+        notes = null
+    )
 
     val v2_10_1 = Version(
         version = "2.10.1",

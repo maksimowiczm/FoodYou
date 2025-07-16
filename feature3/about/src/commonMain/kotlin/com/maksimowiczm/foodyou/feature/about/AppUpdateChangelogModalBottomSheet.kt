@@ -1,13 +1,10 @@
 package com.maksimowiczm.foodyou.feature.about
 
-import FoodYou.feature3.about.BuildConfig
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.userPreference
+import com.maksimowiczm.foodyou.feature.about.domain.Changelog
 import com.maksimowiczm.foodyou.feature.about.preferences.LatestRememberedVersion
 import com.maksimowiczm.foodyou.feature.about.ui.ChangelogModalBottomSheet
 import kotlinx.coroutines.launch
@@ -18,7 +15,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AppUpdateChangelogModalBottomSheet(modifier: Modifier = Modifier) {
     val lastRememberedVersion = userPreference<LatestRememberedVersion>()
-    val currentVersion = remember { BuildConfig.VERSION_NAME }
+    val currentVersion = remember { Changelog.currentVersion?.version }
     val coroutineScope = rememberCoroutineScope()
     val latestRememberedVersion by lastRememberedVersion.collectAsStateWithLifecycle(null)
 
