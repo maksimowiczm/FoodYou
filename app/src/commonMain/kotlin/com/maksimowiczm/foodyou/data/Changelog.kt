@@ -15,6 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 object Changelog {
     val versions
         get() = listOf(
+            next,
             v2_10_0,
             v2_9_0,
             v2_8_0,
@@ -32,6 +33,16 @@ object Changelog {
             v2_1_0,
             v2_0_0
         )
+
+    val next = Version.next(
+        newFeatures = listOf(),
+        changes = listOf(),
+        bugFixes = listOf(
+            "Fixed searchbar not working on the food search screen on Android 8.1 and below"
+        ),
+        translations = listOf(),
+        notes = null
+    )
 
     val v2_10_0 = Version(
         version = "2.10.0",
