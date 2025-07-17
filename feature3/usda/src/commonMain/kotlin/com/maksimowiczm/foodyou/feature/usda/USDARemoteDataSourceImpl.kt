@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.usda
 
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.usda.model.AbridgedFoodItem
+import com.maksimowiczm.foodyou.feature.usda.model.NullableAbridgedFoodItem
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -38,7 +39,7 @@ internal class USDARemoteDataSourceImpl(private val client: HttpClient) : USDARe
                 return Result.failure(error)
             }
 
-            val product = response.body<AbridgedFoodItem>()
+            val product = response.body<NullableAbridgedFoodItem>()
 
             return Result.success(product)
         } catch (e: Exception) {
