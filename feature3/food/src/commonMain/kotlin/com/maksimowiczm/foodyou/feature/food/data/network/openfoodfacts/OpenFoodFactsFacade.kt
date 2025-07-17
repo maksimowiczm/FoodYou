@@ -32,7 +32,7 @@ internal class OpenFoodFactsFacade(
 
 private val regex by lazy {
     Regex(
-        pattern = "(?:https://)?(?:www\\.)?(?:.+\\.)?openfoodfacts\\.org/product/(\\d+)/*",
+        pattern = "(?:https://)?(?:www\\.)?(?:.+\\.)?openfoodfacts\\.org/.+/(\\d+)/*",
         options = setOf(RegexOption.IGNORE_CASE)
     )
 }
