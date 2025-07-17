@@ -16,6 +16,7 @@ import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodDao
 import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodSearch
+import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFoodFactsProductMapper
 import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFoodFactsRemoteMediator
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
@@ -35,7 +36,8 @@ internal class FoodSearchViewModel(
     foodDatabase: FoodDatabase,
     private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource,
     dataStore: DataStore<Preferences>,
-    private val foodSearchMapper: FoodSearchMapper
+    private val foodSearchMapper: FoodSearchMapper,
+    private val openFoodFactsMapper: OpenFoodFactsProductMapper
 ) : ViewModel() {
     private val foodDao = foodDatabase.foodDao
 
@@ -71,7 +73,8 @@ internal class FoodSearchViewModel(
                     foodDatabase = foodDatabase,
                     query = query,
                     country = null,
-                    isBarcode = isBarcode
+                    isBarcode = isBarcode,
+                    mapper = openFoodFactsMapper
                 )
             } else {
                 null

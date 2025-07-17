@@ -1,6 +1,9 @@
 package com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts
 
-import com.maksimowiczm.foodyou.feature.food.data.network.multiplierForUnit
+import com.maksimowiczm.foodyou.feature.food.data.network.UnitType
+import com.maksimowiczm.foodyou.feature.food.data.network.UnitType.MICROGRAMS
+import com.maksimowiczm.foodyou.feature.food.data.network.UnitType.MILLIGRAMS
+import com.maksimowiczm.foodyou.feature.food.data.network.multiplier
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteNutritionFacts
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProduct
@@ -38,56 +41,33 @@ internal class OpenFoodFactsProductMapper {
                 fiber = it.fiber?.toFloat(),
                 solubleFiber = it.solubleFiber?.toFloat(),
                 insolubleFiber = it.insolubleFiber?.toFloat(),
-                cholesterolMilli = it.cholesterol?.times(
-                    multiplierForUnit(it.cholesterolUnit, "mg")
-                )?.toFloat(),
-                caffeineMilli = it.caffeine?.times(multiplierForUnit(it.caffeineUnit, "mg"))
-                    ?.toFloat(),
-                vitaminAMicro = it.vitaminA?.times(multiplierForUnit(it.vitaminAUnit, "mcg"))
-                    ?.toFloat(),
-                vitaminB1Milli = it.vitaminB1?.times(multiplierForUnit(it.vitaminB1Unit, "mg"))
-                    ?.toFloat(),
-                vitaminB2Milli = it.vitaminB2?.times(multiplierForUnit(it.vitaminB2Unit, "mg"))
-                    ?.toFloat(),
-                vitaminB3Milli = it.vitaminB3?.times(multiplierForUnit(it.vitaminB3Unit, "mg"))
-                    ?.toFloat(),
-                vitaminB5Milli = it.vitaminB5?.times(multiplierForUnit(it.vitaminB5Unit, "mg"))
-                    ?.toFloat(),
-                vitaminB6Milli = it.vitaminB6?.times(multiplierForUnit(it.vitaminB6Unit, "mg"))
-                    ?.toFloat(),
-                vitaminB7Micro = it.vitaminB7?.times(multiplierForUnit(it.vitaminB7Unit, "mcg"))
-                    ?.toFloat(),
-                vitaminB9Micro = it.vitaminB9?.times(multiplierForUnit(it.vitaminB9Unit, "mcg"))
-                    ?.toFloat(),
-                vitaminB12Micro = it.vitaminB12?.times(multiplierForUnit(it.vitaminB12Unit, "mcg"))
-                    ?.toFloat(),
-                vitaminCMilli = it.vitaminC?.times(multiplierForUnit(it.vitaminCUnit, "mg"))
-                    ?.toFloat(),
-                vitaminDMicro = it.vitaminD?.times(multiplierForUnit(it.vitaminDUnit, "mcg"))
-                    ?.toFloat(),
-                vitaminEMilli = it.vitaminE?.times(multiplierForUnit(it.vitaminEUnit, "mg"))
-                    ?.toFloat(),
-                vitaminKMicro = it.vitaminK?.times(multiplierForUnit(it.vitaminKUnit, "mcg"))
-                    ?.toFloat(),
-                manganeseMilli = it.manganese?.times(multiplierForUnit(it.manganeseUnit, "mg"))
-                    ?.toFloat(),
-                magnesiumMilli = it.magnesium?.times(multiplierForUnit(it.magnesiumUnit, "mg"))
-                    ?.toFloat(),
-                potassiumMilli = it.potassium?.times(multiplierForUnit(it.potassiumUnit, "mg"))
-                    ?.toFloat(),
-                calciumMilli = it.calcium?.times(multiplierForUnit(it.calciumUnit, "mg"))
-                    ?.toFloat(),
-                copperMilli = it.copper?.times(multiplierForUnit(it.copperUnit, "mg"))?.toFloat(),
-                zincMilli = it.zinc?.times(multiplierForUnit(it.zincUnit, "mg"))?.toFloat(),
-                sodiumMilli = it.sodium?.times(multiplierForUnit(it.sodiumUnit, "mg"))?.toFloat(),
-                ironMilli = it.iron?.times(multiplierForUnit(it.ironUnit, "mg"))?.toFloat(),
-                phosphorusMilli = it.phosphorus?.times(multiplierForUnit(it.phosphorusUnit, "mg"))
-                    ?.toFloat(),
-                seleniumMicro = it.selenium?.times(multiplierForUnit(it.seleniumUnit, "mcg"))
-                    ?.toFloat(),
-                iodineMicro = it.iodine?.times(multiplierForUnit(it.iodineUnit, "mcg"))?.toFloat(),
-                chromiumMicro = it.chromium?.times(multiplierForUnit(it.chromiumUnit, "mcg"))
-                    ?.toFloat()
+                cholesterolMilli = it.cholesterol?.normalize(MILLIGRAMS),
+                caffeineMilli = it.caffeine?.normalize(MILLIGRAMS),
+                vitaminAMicro = it.vitaminA?.normalize(MICROGRAMS),
+                vitaminB1Milli = it.vitaminB1?.normalize(MILLIGRAMS),
+                vitaminB2Milli = it.vitaminB2?.normalize(MILLIGRAMS),
+                vitaminB3Milli = it.vitaminB3?.normalize(MILLIGRAMS),
+                vitaminB5Milli = it.vitaminB5?.normalize(MILLIGRAMS),
+                vitaminB6Milli = it.vitaminB6?.normalize(MILLIGRAMS),
+                vitaminB7Micro = it.vitaminB7?.normalize(MICROGRAMS),
+                vitaminB9Micro = it.vitaminB9?.normalize(MICROGRAMS),
+                vitaminB12Micro = it.vitaminB12?.normalize(MICROGRAMS),
+                vitaminCMilli = it.vitaminC?.normalize(MILLIGRAMS),
+                vitaminDMicro = it.vitaminD?.normalize(MICROGRAMS),
+                vitaminEMilli = it.vitaminE?.normalize(MILLIGRAMS),
+                vitaminKMicro = it.vitaminK?.normalize(MICROGRAMS),
+                manganeseMilli = it.manganese?.normalize(MILLIGRAMS),
+                magnesiumMilli = it.magnesium?.normalize(MILLIGRAMS),
+                potassiumMilli = it.potassium?.normalize(MILLIGRAMS),
+                calciumMilli = it.calcium?.normalize(MILLIGRAMS),
+                copperMilli = it.copper?.normalize(MILLIGRAMS),
+                zincMilli = it.zinc?.normalize(MILLIGRAMS),
+                sodiumMilli = it.sodium?.normalize(MILLIGRAMS),
+                ironMilli = it.iron?.normalize(MILLIGRAMS),
+                phosphorusMilli = it.phosphorus?.normalize(MILLIGRAMS),
+                seleniumMicro = it.selenium?.normalize(MICROGRAMS),
+                iodineMicro = it.iodine?.normalize(MICROGRAMS),
+                chromiumMicro = it.chromium?.normalize(MICROGRAMS)
             )
         }
 
@@ -102,3 +82,5 @@ internal class OpenFoodFactsProductMapper {
         )
     }
 }
+
+private fun Double?.normalize(targetUnit: UnitType) = this?.times(multiplier(targetUnit))?.toFloat()

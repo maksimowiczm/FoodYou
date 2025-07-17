@@ -15,7 +15,6 @@ import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.ProductNotFoundException
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.model.OpenFoodFactsProduct as NetworkOpenFoodFactsProduct
-import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediator<T : Any>(
@@ -23,7 +22,8 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
     foodDatabase: FoodDatabase,
     private val query: String,
     private val country: String?,
-    private val isBarcode: Boolean
+    private val isBarcode: Boolean,
+    mapper: OpenFoodFactsProductMapper
 ) : RemoteMediator<Int, T>() {
 
     private val productDao = foodDatabase.productDao
@@ -31,7 +31,6 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
 
-    @OptIn(ExperimentalTime::class)
     override suspend fun load(loadType: LoadType, state: PagingState<Int, T>): MediatorResult {
         try {
             val page = when (loadType) {
@@ -130,96 +129,88 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
         // Feeling good about this page size might adjust later
         private const val PAGE_SIZE = 50
     }
-}
 
-@OptIn(ExperimentalTime::class)
-private fun NetworkOpenFoodFactsProduct.toEntity(): Product? {
-    // Use brand as name if name is not available. When using brand as name, brand will be null
-    val (name, brand) = run {
-        val name = name?.takeIf { it.isNotBlank() }
-        val brand = brand?.takeIf { it.isNotBlank() }
+    private val m = mapper
+    private fun NetworkOpenFoodFactsProduct.toEntity(): Product? = m.toRemoteProduct(this).run {
+        // Use brand as name if name is not available. When using brand as name, brand will be null
+        val (name, brand) = run {
+            val name = name?.takeIf { it.isNotBlank() }
+            val brand = brand?.takeIf { it.isNotBlank() }
+
+            if (name == null) {
+                brand to null
+            } else {
+                name to brand
+            }
+        }
 
         if (name == null) {
-            brand to null
-        } else {
-            name to brand
+            return null
         }
-    }
 
-    if (name == null) {
-        return null
-    }
+        val nutritionFacts = nutritionFacts
+        if (nutritionFacts == null) {
+            return null
+        }
 
-    if (packageQuantityUnit != null && packageQuantityUnit != "g" && packageQuantityUnit != "ml") {
-        return null
+        return Product(
+            name = name,
+            brand = brand?.takeIf { it.isNotBlank() },
+            barcode = barcode?.takeIf { it.isNotBlank() },
+            packageWeight = packageWeight,
+            servingWeight = servingWeight,
+            nutrients = Nutrients(
+                energy = nutritionFacts.energy,
+                proteins = nutritionFacts.proteins,
+                fats = nutritionFacts.fats,
+                saturatedFats = nutritionFacts.saturatedFats,
+                transFats = nutritionFacts.transFats,
+                monounsaturatedFats = nutritionFacts.monounsaturatedFats,
+                polyunsaturatedFats = nutritionFacts.polyunsaturatedFats,
+                omega3 = nutritionFacts.omega3,
+                omega6 = nutritionFacts.omega6,
+                carbohydrates = nutritionFacts.carbohydrates ?: 0f,
+                sugars = nutritionFacts.sugars,
+                addedSugars = nutritionFacts.addedSugars,
+                dietaryFiber = nutritionFacts.fiber,
+                solubleFiber = nutritionFacts.solubleFiber,
+                insolubleFiber = nutritionFacts.insolubleFiber,
+                salt = nutritionFacts.salt,
+                cholesterolMilli = nutritionFacts.cholesterolMilli,
+                caffeineMilli = nutritionFacts.caffeineMilli
+            ),
+            vitamins = Vitamins(
+                vitaminAMicro = nutritionFacts.vitaminAMicro,
+                vitaminB1Milli = nutritionFacts.vitaminB1Milli,
+                vitaminB2Milli = nutritionFacts.vitaminB2Milli,
+                vitaminB3Milli = nutritionFacts.vitaminB3Milli,
+                vitaminB5Milli = nutritionFacts.vitaminB5Milli,
+                vitaminB6Milli = nutritionFacts.vitaminB6Milli,
+                vitaminB7Micro = nutritionFacts.vitaminB7Micro,
+                vitaminB9Micro = nutritionFacts.vitaminB9Micro,
+                vitaminB12Micro = nutritionFacts.vitaminB12Micro,
+                vitaminCMilli = nutritionFacts.vitaminCMilli,
+                vitaminDMicro = nutritionFacts.vitaminDMicro,
+                vitaminEMilli = nutritionFacts.vitaminEMilli,
+                vitaminKMicro = nutritionFacts.vitaminKMicro
+            ),
+            minerals = Minerals(
+                manganeseMilli = nutritionFacts.manganeseMilli,
+                magnesiumMilli = nutritionFacts.magnesiumMilli,
+                potassiumMilli = nutritionFacts.potassiumMilli,
+                calciumMilli = nutritionFacts.calciumMilli,
+                copperMilli = nutritionFacts.copperMilli,
+                zincMilli = nutritionFacts.zincMilli,
+                sodiumMilli = nutritionFacts.sodiumMilli,
+                ironMilli = nutritionFacts.ironMilli,
+                phosphorusMilli = nutritionFacts.phosphorusMilli,
+                seleniumMicro = nutritionFacts.seleniumMicro,
+                iodineMicro = nutritionFacts.iodineMicro,
+                chromiumMicro = nutritionFacts.chromiumMicro
+            ),
+            note = null,
+            sourceType = FoodSource.Type.OpenFoodFacts,
+            sourceUrl = this@toEntity.url
+        )
     }
-
-    if (servingQuantityUnit != null && servingQuantityUnit != "g" && servingQuantityUnit != "ml") {
-        return null
-    }
-
-    val nutritionFacts = nutritionFacts
-    if (nutritionFacts == null) {
-        return null
-    }
-
-    return Product(
-        name = name,
-        brand = brand?.takeIf { it.isNotBlank() },
-        barcode = barcode?.takeIf { it.isNotBlank() },
-        packageWeight = packageWeight,
-        servingWeight = servingWeight,
-        nutrients = Nutrients(
-            energy = nutritionFacts.energy?.toFloat(),
-            proteins = nutritionFacts.proteins?.toFloat(),
-            fats = nutritionFacts.fats?.toFloat(),
-            saturatedFats = nutritionFacts.saturatedFats?.toFloat(),
-            transFats = nutritionFacts.transFats?.toFloat(),
-            monounsaturatedFats = nutritionFacts.monounsaturatedFats?.toFloat(),
-            polyunsaturatedFats = nutritionFacts.polyunsaturatedFats?.toFloat(),
-            omega3 = nutritionFacts.omega3Fats?.toFloat(),
-            omega6 = nutritionFacts.omega6Fats?.toFloat(),
-            carbohydrates = nutritionFacts.carbohydrates?.toFloat() ?: 0f,
-            sugars = nutritionFacts.sugars?.toFloat(),
-            addedSugars = nutritionFacts.addedSugars?.toFloat(),
-            dietaryFiber = nutritionFacts.fiber?.toFloat(),
-            solubleFiber = nutritionFacts.solubleFiber?.toFloat(),
-            insolubleFiber = nutritionFacts.insolubleFiber?.toFloat(),
-            salt = nutritionFacts.salt?.toFloat(),
-            cholesterolMilli = nutritionFacts.cholesterol?.toFloat(),
-            caffeineMilli = nutritionFacts.caffeine?.toFloat()
-        ),
-        vitamins = Vitamins(
-            vitaminAMicro = nutritionFacts.vitaminA?.toFloat(),
-            vitaminB1Milli = nutritionFacts.vitaminB1?.toFloat(),
-            vitaminB2Milli = nutritionFacts.vitaminB2?.toFloat(),
-            vitaminB3Milli = nutritionFacts.vitaminB3?.toFloat(),
-            vitaminB5Milli = nutritionFacts.vitaminB5?.toFloat(),
-            vitaminB6Milli = nutritionFacts.vitaminB6?.toFloat(),
-            vitaminB7Micro = nutritionFacts.vitaminB7?.toFloat(),
-            vitaminB9Micro = nutritionFacts.vitaminB9?.toFloat(),
-            vitaminB12Micro = nutritionFacts.vitaminB12?.toFloat(),
-            vitaminCMilli = nutritionFacts.vitaminC?.toFloat(),
-            vitaminDMicro = nutritionFacts.vitaminD?.toFloat(),
-            vitaminEMilli = nutritionFacts.vitaminE?.toFloat(),
-            vitaminKMicro = nutritionFacts.vitaminK?.toFloat()
-        ),
-        minerals = Minerals(
-            manganeseMilli = nutritionFacts.manganese?.toFloat(),
-            magnesiumMilli = nutritionFacts.magnesium?.toFloat(),
-            potassiumMilli = nutritionFacts.potassium?.toFloat(),
-            calciumMilli = nutritionFacts.calcium?.toFloat(),
-            copperMilli = nutritionFacts.copper?.toFloat(),
-            zincMilli = nutritionFacts.zinc?.toFloat(),
-            sodiumMilli = nutritionFacts.sodium?.toFloat(),
-            ironMilli = nutritionFacts.iron?.toFloat(),
-            phosphorusMilli = nutritionFacts.phosphorus?.toFloat(),
-            seleniumMicro = nutritionFacts.selenium?.toFloat(),
-            iodineMicro = nutritionFacts.iodine?.toFloat(),
-            chromiumMicro = nutritionFacts.chromium?.toFloat()
-        ),
-        note = null,
-        sourceType = FoodSource.Type.OpenFoodFacts,
-        sourceUrl = url
-    )
 }

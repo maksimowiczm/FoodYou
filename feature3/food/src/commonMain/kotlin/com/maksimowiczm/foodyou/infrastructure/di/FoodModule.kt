@@ -31,20 +31,11 @@ val foodModule = module {
 
     factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
 
-    factory {
-        OpenFoodFactsFacade(
-            remoteDataSource = get(),
-            openFoodFactsProductMapper = OpenFoodFactsProductMapper()
-        )
-    }
+    factoryOf(::OpenFoodFactsProductMapper)
+    factoryOf(::OpenFoodFactsFacade)
 
-    factory {
-        USDAFacade(
-            dataSource = get(),
-            dataStore = get(),
-            mapper = USDAProductMapper()
-        )
-    }
+    factoryOf(::USDAFacade)
+    factoryOf(::USDAProductMapper)
 
     viewModel { (url: String?) ->
         DownloadProductViewModel(

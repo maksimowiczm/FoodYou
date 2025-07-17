@@ -1,125 +1,118 @@
 package com.maksimowiczm.foodyou.feature.food.data.network.usda
 
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
-import com.maksimowiczm.foodyou.feature.food.data.network.multiplierForUnit
+import com.maksimowiczm.foodyou.feature.food.data.network.UnitType
+import com.maksimowiczm.foodyou.feature.food.data.network.UnitType.GRAMS
+import com.maksimowiczm.foodyou.feature.food.data.network.UnitType.MICROGRAMS
+import com.maksimowiczm.foodyou.feature.food.data.network.UnitType.MILLIGRAMS
+import com.maksimowiczm.foodyou.feature.food.data.network.multiplier
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteNutritionFacts
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProduct
 import com.maksimowiczm.foodyou.feature.usda.model.AbridgedFoodItem
+import com.maksimowiczm.foodyou.feature.usda.model.AbridgedFoodNutrient
 import com.maksimowiczm.foodyou.feature.usda.model.Nutrient
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.ADDED_SUGARS
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.CAFFEINE
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.CALCIUM
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.CALORIES
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.CALORIES_ALTERNATIVE
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.CARBOHYDRATE
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.CHOLESTEROL
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.COPPER
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.FAT
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.FIBER
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.IRON
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.MAGNESIUM
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.MANGANESE
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.MONOUNSATURATED_FAT
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.PHOSPHORUS
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.POLYUNSATURATED_FAT
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.POTASSIUM
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.PROTEIN
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.SATURATED_FAT
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.SELENIUM
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.SODIUM
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.SUGARS
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.TRANS_FAT
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_A
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_B1
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_B12
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_B2
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_B3
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_B5
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_B6
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_B9
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_C
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_D
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_E
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_K
+import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.ZINC
 
 internal class USDAProductMapper {
     fun toRemoteProduct(abridgedFoodItem: AbridgedFoodItem) = with(abridgedFoodItem) {
-        val proteins = getNutrient(Nutrient.PROTEIN)?.amount ?: 0.0
-        val carbohydrates = getNutrient(Nutrient.CARBOHYDRATE)?.amount ?: 0.0
-        val fats = getNutrient(Nutrient.FAT)?.amount ?: 0.0
+        val proteins = getNutrient(PROTEIN)?.normalize(GRAMS)
+        val carbohydrates = getNutrient(CARBOHYDRATE)?.normalize(GRAMS)
+        val fats = getNutrient(FAT)?.normalize(GRAMS)
 
-        val calories = getNutrient(Nutrient.CALORIES)?.amount
-            ?: getNutrient(Nutrient.CALORIES_ALTERNATIVE)?.amount
-            ?: NutrientsHelper.calculateEnergy(
-                proteins = proteins,
-                carbohydrates = carbohydrates,
-                fats = fats
-            )
+        val calories: Float? = getNutrient(CALORIES)?.amount?.toFloat()
+            ?: getNutrient(CALORIES_ALTERNATIVE)?.amount?.toFloat()
+            ?: if (proteins == null || carbohydrates == null || fats == null) {
+                null
+            } else {
+                NutrientsHelper.calculateEnergy(
+                    proteins = proteins,
+                    carbohydrates = carbohydrates,
+                    fats = fats
+                )
+            }
 
         RemoteProduct(
             name = description.trim(),
             brand = brand?.trim(),
             barcode = barcode?.trim(),
             nutritionFacts = RemoteNutritionFacts(
-                proteins = proteins.toFloat(),
-                carbohydrates = carbohydrates.toFloat(),
-                fats = fats.toFloat(),
-                energy = calories.toFloat(),
-                saturatedFats = getNutrient(Nutrient.SATURATED_FAT)?.amount?.toFloat(),
-                transFats = getNutrient(Nutrient.TRANS_FAT)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "g"))
-                }?.toFloat(),
-                monounsaturatedFats = getNutrient(Nutrient.MONOUNSATURATED_FAT)?.amount?.toFloat(),
-                polyunsaturatedFats = getNutrient(Nutrient.POLYUNSATURATED_FAT)?.amount?.toFloat(),
+                proteins = proteins,
+                carbohydrates = carbohydrates,
+                fats = fats,
+                energy = calories,
+                saturatedFats = getNutrient(SATURATED_FAT)?.normalize(GRAMS),
+                transFats = getNutrient(TRANS_FAT)?.normalize(GRAMS),
+                monounsaturatedFats = getNutrient(MONOUNSATURATED_FAT)?.normalize(GRAMS),
+                polyunsaturatedFats = getNutrient(POLYUNSATURATED_FAT)?.normalize(GRAMS),
                 omega3 = null,
                 omega6 = null,
-                sugars = getNutrient(Nutrient.SUGARS)?.amount?.toFloat(),
-                addedSugars = getNutrient(Nutrient.ADDED_SUGARS)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "g"))
-                }?.toFloat(),
+                sugars = getNutrient(SUGARS)?.normalize(GRAMS),
+                addedSugars = getNutrient(ADDED_SUGARS)?.normalize(GRAMS),
                 salt = null,
-                fiber = getNutrient(Nutrient.FIBER)?.amount?.toFloat(),
+                fiber = getNutrient(FIBER)?.normalize(GRAMS),
                 solubleFiber = null,
                 insolubleFiber = null,
-                cholesterolMilli = getNutrient(Nutrient.CHOLESTEROL)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                caffeineMilli = getNutrient(Nutrient.CAFFEINE)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                vitaminAMicro = getNutrient(Nutrient.VITAMIN_A)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mcg"))
-                }?.toFloat(),
-                vitaminB1Milli = getNutrient(Nutrient.VITAMIN_B1)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                vitaminB2Milli = getNutrient(Nutrient.VITAMIN_B2)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                vitaminB3Milli = getNutrient(Nutrient.VITAMIN_B3)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                vitaminB5Milli = getNutrient(Nutrient.VITAMIN_B5)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                vitaminB6Milli = getNutrient(Nutrient.VITAMIN_B6)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                vitaminB7Micro = null,
-                vitaminB9Micro = getNutrient(Nutrient.VITAMIN_B9)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mcg"))
-                }?.toFloat(),
-                vitaminB12Micro = getNutrient(Nutrient.VITAMIN_B12)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mcg"))
-                }?.toFloat(),
-                vitaminCMilli = getNutrient(Nutrient.VITAMIN_C)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                vitaminDMicro = getNutrient(Nutrient.VITAMIN_D)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mcg"))
-                }?.toFloat(),
-                vitaminEMilli = getNutrient(Nutrient.VITAMIN_E)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                vitaminKMicro = getNutrient(Nutrient.VITAMIN_K)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mcg"))
-                }?.toFloat(),
-                manganeseMilli = getNutrient(Nutrient.MANGANESE)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                magnesiumMilli = getNutrient(Nutrient.MAGNESIUM)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                potassiumMilli = getNutrient(Nutrient.POTASSIUM)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                calciumMilli = getNutrient(Nutrient.CALCIUM)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                copperMilli = getNutrient(Nutrient.COPPER)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                zincMilli = getNutrient(Nutrient.ZINC)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                sodiumMilli = getNutrient(Nutrient.SODIUM)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                ironMilli = getNutrient(Nutrient.IRON)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                phosphorusMilli = getNutrient(Nutrient.PHOSPHORUS)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mg"))
-                }?.toFloat(),
-                seleniumMicro = getNutrient(Nutrient.SELENIUM)?.let {
-                    it.amount.times(multiplierForUnit(it.unit, "mcg"))
-                }?.toFloat(),
+                cholesterolMilli = getNutrient(CHOLESTEROL)?.normalize(MILLIGRAMS),
+                caffeineMilli = getNutrient(CAFFEINE)?.normalize(MILLIGRAMS),
+                vitaminAMicro = getNutrient(VITAMIN_A)?.normalize(MICROGRAMS),
+                vitaminB1Milli = getNutrient(VITAMIN_B1)?.normalize(MILLIGRAMS),
+                vitaminB2Milli = getNutrient(VITAMIN_B2)?.normalize(MILLIGRAMS),
+                vitaminB3Milli = getNutrient(VITAMIN_B3)?.normalize(MILLIGRAMS),
+                vitaminB5Milli = getNutrient(VITAMIN_B5)?.normalize(MILLIGRAMS),
+                vitaminB6Milli = getNutrient(VITAMIN_B6)?.normalize(MILLIGRAMS),
+                vitaminB7Micro = getNutrient(Nutrient.VITAMIN_B7)?.normalize(MICROGRAMS),
+                vitaminB9Micro = getNutrient(VITAMIN_B9)?.normalize(MICROGRAMS),
+                vitaminB12Micro = getNutrient(VITAMIN_B12)?.normalize(MICROGRAMS),
+                vitaminCMilli = getNutrient(VITAMIN_C)?.normalize(MILLIGRAMS),
+                vitaminDMicro = getNutrient(VITAMIN_D)?.normalize(MICROGRAMS),
+                vitaminEMilli = getNutrient(VITAMIN_E)?.normalize(MILLIGRAMS),
+                vitaminKMicro = getNutrient(VITAMIN_K)?.normalize(MICROGRAMS),
+                manganeseMilli = getNutrient(MANGANESE)?.normalize(MILLIGRAMS),
+                magnesiumMilli = getNutrient(MAGNESIUM)?.normalize(MILLIGRAMS),
+                potassiumMilli = getNutrient(POTASSIUM)?.normalize(MILLIGRAMS),
+                calciumMilli = getNutrient(CALCIUM)?.normalize(MILLIGRAMS),
+                copperMilli = getNutrient(COPPER)?.normalize(MILLIGRAMS),
+                zincMilli = getNutrient(ZINC)?.normalize(MILLIGRAMS),
+                sodiumMilli = getNutrient(SODIUM)?.normalize(MILLIGRAMS),
+                ironMilli = getNutrient(IRON)?.normalize(MILLIGRAMS),
+                phosphorusMilli = getNutrient(PHOSPHORUS)?.normalize(MILLIGRAMS),
+                seleniumMicro = getNutrient(SELENIUM)?.normalize(MICROGRAMS),
                 iodineMicro = null,
                 chromiumMicro = null
             ),
@@ -131,4 +124,10 @@ internal class USDAProductMapper {
             )
         )
     }
+}
+
+private fun AbridgedFoodNutrient.normalize(target: UnitType): Float? {
+    val amount = amount
+    val from = UnitType.fromString(unit) ?: return null
+    return (amount * multiplier(target, from)).toFloat()
 }

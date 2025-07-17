@@ -30,7 +30,7 @@ enum class Nutrient(val number: String) {
     VITAMIN_B5("410"),
     VITAMIN_B6("415"),
 
-    // VITAMIN_B7(""),
+    VITAMIN_B7("416"),
     VITAMIN_B9("417"),
     VITAMIN_B12("418"),
     VITAMIN_C("401"),
