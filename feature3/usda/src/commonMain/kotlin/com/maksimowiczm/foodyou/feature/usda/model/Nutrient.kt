@@ -10,18 +10,27 @@ enum class Nutrient(val number: String) {
     SATURATED_FAT("606"),
     MONOUNSATURATED_FAT("645"),
     POLYUNSATURATED_FAT("646"),
+    TRANS_FAT("605"),
+    // OMEGA_3(""),
+    // OMEGA_6(""),
 
     SUGARS("269"),
+    ADDED_SUGARS("539"),
     FIBER("291"),
+    // SOLUBLE_FIBER(""),
+    // INSOLUBLE_FIBER(""),
+
     CHOLESTEROL("601"),
     CAFFEINE("262"),
 
+    VITAMIN_A("320"), // 318 ?
     VITAMIN_B1("404"),
     VITAMIN_B2("405"),
     VITAMIN_B3("406"),
     VITAMIN_B5("410"),
     VITAMIN_B6("415"),
-    VITAMIN_B7("416"),
+
+    // VITAMIN_B7(""),
     VITAMIN_B9("417"),
     VITAMIN_B12("418"),
     VITAMIN_C("401"),
@@ -39,4 +48,6 @@ enum class Nutrient(val number: String) {
     IRON("303"),
     PHOSPHORUS("305"),
     SELENIUM("317")
+    // IODINE(""),
+    // CHROMIUM("")
 }
