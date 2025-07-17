@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts
 
+import com.maksimowiczm.foodyou.feature.food.data.network.multiplierForUnit
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteNutritionFacts
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProduct
@@ -100,29 +101,4 @@ internal class OpenFoodFactsProductMapper {
             source = source
         )
     }
-}
-
-private fun multiplierForUnit(unit: String?, targetUnit: String): Double = when (targetUnit) {
-    "g" -> when (unit) {
-        "g" -> 1.0
-        "mg" -> 0.001
-        "µg", "mcg" -> 0.000001
-        else -> 1.0
-    }
-
-    "mg" -> when (unit) {
-        "g" -> 1000.0
-        "mg" -> 1.0
-        "µg", "mcg" -> 0.001
-        else -> 1.0
-    }
-
-    "mcg" -> when (unit) {
-        "g" -> 1000000.0
-        "mg" -> 1000.0
-        "µg", "mcg" -> 1.0
-        else -> 1.0
-    }
-
-    else -> 1.0
 }

@@ -1,20 +1,11 @@
 package com.maksimowiczm.foodyou.feature.usda.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+interface AbridgedFoodItem {
+    val description: String
+    val foodNutrients: List<AbridgedFoodNutrient>
+    val brand: String?
+    val barcode: String?
 
-@Serializable
-data class AbridgedFoodItem(
-    @SerialName("dataType")
-    val dataType: String,
-    @SerialName("description")
-    val description: String,
-    @SerialName("foodNutrients")
-    val foodNutrients: List<AbridgedFoodNutrient>,
-    @SerialName("brandOwner")
-    val brand: String? = null,
-    @SerialName("gtinUpc")
-    val barcode: String? = null
-) {
-    fun getNutrient(nutrient: Nutrient) = foodNutrients.firstOrNull { it.number == nutrient.number }
+    fun getNutrient(nutrient: Nutrient): AbridgedFoodNutrient? =
+        foodNutrients.firstOrNull { it.number == nutrient.number }
 }
