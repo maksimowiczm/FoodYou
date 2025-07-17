@@ -544,19 +544,19 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
     )
 
     val proteins =
-        rememberRequiredFormField(product.nutritionFacts.proteins)
+        rememberRequiredFormField(product.nutritionFacts?.proteins)
     val carbohydrates =
-        rememberRequiredFormField(product.nutritionFacts.carbohydrates)
+        rememberRequiredFormField(product.nutritionFacts?.carbohydrates)
     val fats =
-        rememberRequiredFormField(product.nutritionFacts.fats)
+        rememberRequiredFormField(product.nutritionFacts?.fats)
     val energy =
-        rememberRequiredFormField(product.nutritionFacts.energy)
+        rememberRequiredFormField(product.nutritionFacts?.energy)
 
     val autoCalculateEnergyState = rememberSaveable(product) {
-        val energy = product.nutritionFacts.energy
-        val proteins = product.nutritionFacts.proteins
-        val carbohydrates = product.nutritionFacts.carbohydrates
-        val fats = product.nutritionFacts.fats
+        val energy = product.nutritionFacts?.energy
+        val proteins = product.nutritionFacts?.proteins
+        val carbohydrates = product.nutritionFacts?.carbohydrates
+        val fats = product.nutritionFacts?.fats
 
         val initialState =
             if (energy == null || proteins == null || carbohydrates == null || fats == null) {
@@ -627,86 +627,86 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
     }
 
     val saturatedFats =
-        rememberNotRequiredFormField(product.nutritionFacts.saturatedFats)
+        rememberNotRequiredFormField(product.nutritionFacts?.saturatedFats)
     val transFats =
-        rememberNotRequiredFormField(product.nutritionFacts.transFats)
+        rememberNotRequiredFormField(product.nutritionFacts?.transFats)
     val monounsaturatedFats =
-        rememberNotRequiredFormField(product.nutritionFacts.monounsaturatedFats)
+        rememberNotRequiredFormField(product.nutritionFacts?.monounsaturatedFats)
     val polyunsaturatedFats =
-        rememberNotRequiredFormField(product.nutritionFacts.polyunsaturatedFats)
+        rememberNotRequiredFormField(product.nutritionFacts?.polyunsaturatedFats)
     val omega3 =
-        rememberNotRequiredFormField(product.nutritionFacts.omega3)
+        rememberNotRequiredFormField(product.nutritionFacts?.omega3)
     val omega6 =
-        rememberNotRequiredFormField(product.nutritionFacts.omega6)
+        rememberNotRequiredFormField(product.nutritionFacts?.omega6)
 
     val sugars =
-        rememberNotRequiredFormField(product.nutritionFacts.sugars)
+        rememberNotRequiredFormField(product.nutritionFacts?.sugars)
     val addedSugars =
-        rememberNotRequiredFormField(product.nutritionFacts.addedSugars)
+        rememberNotRequiredFormField(product.nutritionFacts?.addedSugars)
     val salt =
-        rememberNotRequiredFormField(product.nutritionFacts.salt)
+        rememberNotRequiredFormField(product.nutritionFacts?.salt)
     val dietaryFiber =
-        rememberNotRequiredFormField(product.nutritionFacts.fiber)
+        rememberNotRequiredFormField(product.nutritionFacts?.fiber)
     val solubleFiber =
-        rememberNotRequiredFormField(product.nutritionFacts.solubleFiber)
+        rememberNotRequiredFormField(product.nutritionFacts?.solubleFiber)
     val insolubleFiber =
-        rememberNotRequiredFormField(product.nutritionFacts.insolubleFiber)
+        rememberNotRequiredFormField(product.nutritionFacts?.insolubleFiber)
     val cholesterol =
-        rememberNotRequiredFormField(product.nutritionFacts.cholesterolMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.cholesterolMilli)
     val caffeine =
-        rememberNotRequiredFormField(product.nutritionFacts.caffeineMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.caffeineMilli)
 
     val vitaminA =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminAMicro)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminAMicro)
     val vitaminB1 =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminB1Milli)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminB1Milli)
     val vitaminB2 =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminB2Milli)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminB2Milli)
     val vitaminB3 =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminB3Milli)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminB3Milli)
     val vitaminB5 =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminB5Milli)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminB5Milli)
     val vitaminB6 =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminB6Milli)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminB6Milli)
     val vitaminB7 =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminB7Micro)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminB7Micro)
     val vitaminB9 =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminB9Micro)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminB9Micro)
     val vitaminB12 =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminB12Micro)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminB12Micro)
     val vitaminC =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminCMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminCMilli)
     val vitaminD =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminDMicro)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminDMicro)
     val vitaminE =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminEMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminEMilli)
     val vitaminK =
-        rememberNotRequiredFormField(product.nutritionFacts.vitaminKMicro)
+        rememberNotRequiredFormField(product.nutritionFacts?.vitaminKMicro)
 
     val manganese =
-        rememberNotRequiredFormField(product.nutritionFacts.manganeseMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.manganeseMilli)
     val magnesium =
-        rememberNotRequiredFormField(product.nutritionFacts.magnesiumMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.magnesiumMilli)
     val potassium =
-        rememberNotRequiredFormField(product.nutritionFacts.potassiumMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.potassiumMilli)
     val calcium =
-        rememberNotRequiredFormField(product.nutritionFacts.calciumMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.calciumMilli)
     val copper =
-        rememberNotRequiredFormField(product.nutritionFacts.copperMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.copperMilli)
     val zinc =
-        rememberNotRequiredFormField(product.nutritionFacts.zincMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.zincMilli)
     val sodium =
-        rememberNotRequiredFormField(product.nutritionFacts.sodiumMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.sodiumMilli)
     val iron =
-        rememberNotRequiredFormField(product.nutritionFacts.ironMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.ironMilli)
     val phosphorus =
-        rememberNotRequiredFormField(product.nutritionFacts.phosphorusMilli)
+        rememberNotRequiredFormField(product.nutritionFacts?.phosphorusMilli)
     val selenium =
-        rememberNotRequiredFormField(product.nutritionFacts.seleniumMicro)
+        rememberNotRequiredFormField(product.nutritionFacts?.seleniumMicro)
     val iodine =
-        rememberNotRequiredFormField(product.nutritionFacts.iodineMicro)
+        rememberNotRequiredFormField(product.nutritionFacts?.iodineMicro)
     val chromium =
-        rememberNotRequiredFormField(product.nutritionFacts.chromiumMicro)
+        rememberNotRequiredFormField(product.nutritionFacts?.chromiumMicro)
 
     val sourceType = rememberSaveable(product) {
         mutableStateOf(product.source.type)
@@ -725,49 +725,49 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
                 note.value != null ||
                 packageWeight.value != product.packageWeight ||
                 servingWeight.value != product.servingWeight ||
-                proteins.value != product.nutritionFacts.proteins ||
-                carbohydrates.value != product.nutritionFacts.carbohydrates ||
-                fats.value != product.nutritionFacts.fats ||
-                energy.value != product.nutritionFacts.energy ||
-                saturatedFats.value != product.nutritionFacts.saturatedFats ||
-                transFats.value != product.nutritionFacts.transFats ||
-                monounsaturatedFats.value != product.nutritionFacts.monounsaturatedFats ||
-                polyunsaturatedFats.value != product.nutritionFacts.polyunsaturatedFats ||
-                omega3.value != product.nutritionFacts.omega3 ||
-                omega6.value != product.nutritionFacts.omega6 ||
-                sugars.value != product.nutritionFacts.sugars ||
-                addedSugars.value != product.nutritionFacts.addedSugars ||
-                dietaryFiber.value != product.nutritionFacts.fiber ||
-                solubleFiber.value != product.nutritionFacts.solubleFiber ||
-                insolubleFiber.value != product.nutritionFacts.insolubleFiber ||
-                salt.value != product.nutritionFacts.salt ||
-                cholesterol.value != product.nutritionFacts.cholesterolMilli ||
-                caffeine.value != product.nutritionFacts.caffeineMilli ||
-                vitaminA.value != product.nutritionFacts.vitaminAMicro ||
-                vitaminB1.value != product.nutritionFacts.vitaminB1Milli ||
-                vitaminB2.value != product.nutritionFacts.vitaminB2Milli ||
-                vitaminB3.value != product.nutritionFacts.vitaminB3Milli ||
-                vitaminB5.value != product.nutritionFacts.vitaminB5Milli ||
-                vitaminB6.value != product.nutritionFacts.vitaminB6Milli ||
-                vitaminB7.value != product.nutritionFacts.vitaminB7Micro ||
-                vitaminB9.value != product.nutritionFacts.vitaminB9Micro ||
-                vitaminB12.value != product.nutritionFacts.vitaminB12Micro ||
-                vitaminC.value != product.nutritionFacts.vitaminCMilli ||
-                vitaminD.value != product.nutritionFacts.vitaminDMicro ||
-                vitaminE.value != product.nutritionFacts.vitaminEMilli ||
-                vitaminK.value != product.nutritionFacts.vitaminKMicro ||
-                manganese.value != product.nutritionFacts.manganeseMilli ||
-                magnesium.value != product.nutritionFacts.magnesiumMilli ||
-                potassium.value != product.nutritionFacts.potassiumMilli ||
-                calcium.value != product.nutritionFacts.calciumMilli ||
-                copper.value != product.nutritionFacts.copperMilli ||
-                zinc.value != product.nutritionFacts.zincMilli ||
-                sodium.value != product.nutritionFacts.sodiumMilli ||
-                iron.value != product.nutritionFacts.ironMilli ||
-                phosphorus.value != product.nutritionFacts.phosphorusMilli ||
-                selenium.value != product.nutritionFacts.seleniumMicro ||
-                iodine.value != product.nutritionFacts.iodineMicro ||
-                chromium.value != product.nutritionFacts.chromiumMicro ||
+                proteins.value != product.nutritionFacts?.proteins ||
+                carbohydrates.value != product.nutritionFacts?.carbohydrates ||
+                fats.value != product.nutritionFacts?.fats ||
+                energy.value != product.nutritionFacts?.energy ||
+                saturatedFats.value != product.nutritionFacts?.saturatedFats ||
+                transFats.value != product.nutritionFacts?.transFats ||
+                monounsaturatedFats.value != product.nutritionFacts?.monounsaturatedFats ||
+                polyunsaturatedFats.value != product.nutritionFacts?.polyunsaturatedFats ||
+                omega3.value != product.nutritionFacts?.omega3 ||
+                omega6.value != product.nutritionFacts?.omega6 ||
+                sugars.value != product.nutritionFacts?.sugars ||
+                addedSugars.value != product.nutritionFacts?.addedSugars ||
+                dietaryFiber.value != product.nutritionFacts?.fiber ||
+                solubleFiber.value != product.nutritionFacts?.solubleFiber ||
+                insolubleFiber.value != product.nutritionFacts?.insolubleFiber ||
+                salt.value != product.nutritionFacts?.salt ||
+                cholesterol.value != product.nutritionFacts?.cholesterolMilli ||
+                caffeine.value != product.nutritionFacts?.caffeineMilli ||
+                vitaminA.value != product.nutritionFacts?.vitaminAMicro ||
+                vitaminB1.value != product.nutritionFacts?.vitaminB1Milli ||
+                vitaminB2.value != product.nutritionFacts?.vitaminB2Milli ||
+                vitaminB3.value != product.nutritionFacts?.vitaminB3Milli ||
+                vitaminB5.value != product.nutritionFacts?.vitaminB5Milli ||
+                vitaminB6.value != product.nutritionFacts?.vitaminB6Milli ||
+                vitaminB7.value != product.nutritionFacts?.vitaminB7Micro ||
+                vitaminB9.value != product.nutritionFacts?.vitaminB9Micro ||
+                vitaminB12.value != product.nutritionFacts?.vitaminB12Micro ||
+                vitaminC.value != product.nutritionFacts?.vitaminCMilli ||
+                vitaminD.value != product.nutritionFacts?.vitaminDMicro ||
+                vitaminE.value != product.nutritionFacts?.vitaminEMilli ||
+                vitaminK.value != product.nutritionFacts?.vitaminKMicro ||
+                manganese.value != product.nutritionFacts?.manganeseMilli ||
+                magnesium.value != product.nutritionFacts?.magnesiumMilli ||
+                potassium.value != product.nutritionFacts?.potassiumMilli ||
+                calcium.value != product.nutritionFacts?.calciumMilli ||
+                copper.value != product.nutritionFacts?.copperMilli ||
+                zinc.value != product.nutritionFacts?.zincMilli ||
+                sodium.value != product.nutritionFacts?.sodiumMilli ||
+                iron.value != product.nutritionFacts?.ironMilli ||
+                phosphorus.value != product.nutritionFacts?.phosphorusMilli ||
+                selenium.value != product.nutritionFacts?.seleniumMicro ||
+                iodine.value != product.nutritionFacts?.iodineMicro ||
+                chromium.value != product.nutritionFacts?.chromiumMicro ||
                 sourceType.value != product.source.type ||
                 sourceUrl.value != product.source.url ||
                 Measurement.notEqual(

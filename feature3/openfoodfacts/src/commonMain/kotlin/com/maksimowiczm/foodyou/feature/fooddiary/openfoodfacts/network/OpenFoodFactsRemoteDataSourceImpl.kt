@@ -35,11 +35,10 @@ internal class OpenFoodFactsRemoteDataSourceImpl(private val client: HttpClient)
 
             countries?.let { parameter("countries", countries) }
             parameter("fields", FIELDS)
-            parameter("sort_by", "product_name")
         }
 
-        if (response.status == HttpStatusCode.Companion.NotFound) {
-            Logger.Companion.d(TAG) { "Product not found for code: $barcode" }
+        if (response.status == HttpStatusCode.NotFound) {
+            Logger.d(TAG) { "Product not found for code: $barcode" }
             return Result.failure(ProductNotFoundException())
         }
 
@@ -59,6 +58,7 @@ internal class OpenFoodFactsRemoteDataSourceImpl(private val client: HttpClient)
             parameter("countries", countries)
             parameter("page", page)
             parameter("page_size", pageSize)
+            parameter("sort_by", "product_name")
             parameter("fields", FIELDS)
         }.body<OpenFoodFactsPageResponseV1>()
 
@@ -76,4 +76,5 @@ private const val FIELDS = "" +
     ",serving_quantity" +
     ",serving_quantity_unit" +
     ",product_quantity" +
-    ",product_quantity_unit"
+    ",product_quantity_unit" +
+    ",url"

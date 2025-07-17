@@ -39,4 +39,6 @@ internal data class OpenFoodFactsProductV2(
     override val servingQuantityUnit: String? = null,
     @SerialName("nutriments")
     override val nutritionFacts: OpenFoodFactsNutrients? = null
-) : OpenFoodFactsProduct
+) : OpenFoodFactsProduct {
+    override val url: String? = barcode?.let { "https://world.openfoodfacts.org/product/$it" }
+}

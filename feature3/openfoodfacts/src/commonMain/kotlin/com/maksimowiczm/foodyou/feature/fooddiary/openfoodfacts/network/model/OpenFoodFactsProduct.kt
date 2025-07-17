@@ -9,7 +9,5 @@ interface OpenFoodFactsProduct {
     val servingWeight: Float?
     val servingQuantityUnit: String?
     val nutritionFacts: OpenFoodFactsNutrients?
-
     val url: String?
-        get() = barcode?.let { "https://world.openfoodfacts.org/product/$it" }
 }

@@ -22,5 +22,7 @@ internal data class OpenFoodFactsProductV1(
     @SerialName("serving_quantity")
     override val servingWeight: Float? = null,
     @SerialName("serving_quantity_unit")
-    override val servingQuantityUnit: String? = null
+    override val servingQuantityUnit: String? = null,
+    @SerialName("url")
+    override val url: String? = null
 ) : OpenFoodFactsProduct
