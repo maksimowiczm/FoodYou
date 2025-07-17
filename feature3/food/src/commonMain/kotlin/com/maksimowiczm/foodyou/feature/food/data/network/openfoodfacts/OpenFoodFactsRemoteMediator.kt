@@ -134,7 +134,18 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
 
 @OptIn(ExperimentalTime::class)
 private fun NetworkOpenFoodFactsProduct.toEntity(): Product? {
-    val name = name?.takeIf { it.isNotBlank() }
+    // Use brand as name if name is not available. When using brand as name, brand will be null
+    val (name, brand) = run {
+        val name = name?.takeIf { it.isNotBlank() }
+        val brand = brand?.takeIf { it.isNotBlank() }
+
+        if (name == null) {
+            brand to null
+        } else {
+            name to brand
+        }
+    }
+
     if (name == null) {
         return null
     }

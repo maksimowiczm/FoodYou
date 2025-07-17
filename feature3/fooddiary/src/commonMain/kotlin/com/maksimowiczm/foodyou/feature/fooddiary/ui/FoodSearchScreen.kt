@@ -21,10 +21,11 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
@@ -58,6 +59,7 @@ fun FoodSearchScreen(
 
     val dateFormatter = LocalDateFormatter.current
 
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -86,9 +88,7 @@ fun FoodSearchScreen(
                 },
                 titleHorizontalAlignment = Alignment.CenterHorizontally,
                 navigationIcon = { ArrowBackIconButton(onBack) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                )
+                scrollBehavior = scrollBehavior
             )
         },
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(
@@ -104,6 +104,7 @@ fun FoodSearchScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .consumeWindowInsets(paddingValues)
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
         )
     }
 }

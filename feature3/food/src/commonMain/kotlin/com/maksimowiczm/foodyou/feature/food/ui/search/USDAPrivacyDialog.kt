@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -20,7 +19,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun OpenFoodFactsPrivacyDialog(
+internal fun USDAPrivacyDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier
@@ -40,13 +39,13 @@ internal fun OpenFoodFactsPrivacyDialog(
         },
         icon = {
             Image(
-                painter = painterResource(Res.drawable.openfoodfacts_logo),
+                painter = painterResource(Res.drawable.usda_logo),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp)
             )
         },
         title = {
-            Text(stringResource(Res.string.headline_open_food_facts))
+            Text(stringResource(Res.string.headline_food_data_central_usda))
         },
         text = { DialogText() }
     )
@@ -55,7 +54,7 @@ internal fun OpenFoodFactsPrivacyDialog(
 @Composable
 private fun DialogText(modifier: Modifier = Modifier) {
     val iterator =
-        stringResource(Res.string.description_open_food_facts_privacy_dialog_text).iterator()
+        stringResource(Res.string.description_usda_privacy_dialog_text).iterator()
 
     val text = remember(iterator) {
         buildAnnotatedString {

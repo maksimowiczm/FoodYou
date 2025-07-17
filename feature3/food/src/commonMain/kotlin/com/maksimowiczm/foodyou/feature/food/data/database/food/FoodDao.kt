@@ -21,7 +21,7 @@ interface FoodDao {
         ORDER BY headline ASC
         """
     )
-    fun observeFood(query: String?, source: FoodSource.Type?): PagingSource<Int, FoodSearch>
+    fun observeFoodByQuery(query: String?, source: FoodSource.Type?): PagingSource<Int, FoodSearch>
 
     @Query(
         """
