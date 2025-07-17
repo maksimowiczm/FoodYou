@@ -63,6 +63,7 @@ kotlin {
             implementation(project(":feature3:openfoodfacts"))
             implementation(project(":feature3:calendar"))
             implementation(project(":feature3:language"))
+            implementation(project(":feature3:usda"))
 
             implementation(libs.kotlinx.serialization.json)
         }

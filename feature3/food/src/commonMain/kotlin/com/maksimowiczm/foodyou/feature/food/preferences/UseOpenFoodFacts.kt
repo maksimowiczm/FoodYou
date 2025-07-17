@@ -5,11 +5,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 
-// TODO internal
-class UseOpenFoodFacts(dataStore: DataStore<Preferences>) :
+internal class UseOpenFoodFacts(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<Boolean, Boolean>(
         dataStore = dataStore,
-        key = booleanPreferencesKey("fooddiary:use_open_food_facts")
+        key = booleanPreferencesKey("food:use_open_food_facts")
     ) {
 
     override fun Boolean?.toValue() = this ?: false

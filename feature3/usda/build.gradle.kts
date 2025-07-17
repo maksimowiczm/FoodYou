@@ -1,20 +1,35 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.gmazzo.buildconfig)
 }
 
+buildConfig {
+    packageName("com.maksimowiczm.foodyou.feature.usda")
+    className("BuildConfig")
+
+    val versionName = libs.versions.version.name.get()
+
+    buildConfigField(
+        "String",
+        "USER_AGENT",
+        "\"FoodYou/$versionName (https://github.com/maksimowiczm/FoodYou)\""
+    )
+
+    buildConfigField(
+        "String",
+        "USDA_URL",
+        "\"https://api.nal.usda.gov\""
+    )
+}
 kotlin {
 
-    compilerOptions {
-        // It's not required for kotlin 2.2.0 anymore but IDE won't shut up about it.
-        freeCompilerArgs.add("-Xwhen-guards")
-    }
-
+    // Target declarations - add or remove as needed below. These define
+    // which platforms this KMP module supports.
+    // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "com.maksimowiczm.foodyou.feature.food"
+        namespace = "com.maksimowiczm.foodyou.feature.usda"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
@@ -35,7 +50,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "feature3:foodKit"
+    val xcfName = "feature3:usdaKit"
 
     iosX64 {
         binaries.framework {
@@ -59,15 +74,12 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core3"))
 
-            implementation(project(":feature3:measurement"))
-            implementation(project(":feature3:barcodescanner"))
-            implementation(project(":feature3:openfoodfacts"))
-            implementation(project(":feature3:usda"))
-
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.paging)
-
             implementation(libs.kotlinx.serialization.json)
+
+            // Ktor
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.serialization.kotlinx.json)
         }
 
         commonTest.dependencies {
@@ -75,6 +87,9 @@ kotlin {
         }
 
         androidMain.dependencies {
+
+            // Ktor
+            implementation(libs.ktor.client.okhttp)
         }
 
         getByName("androidDeviceTest").dependencies {
@@ -84,6 +99,9 @@ kotlin {
         }
 
         iosMain.dependencies {
+
+            // Ktor
+            implementation(libs.ktor.client.darwin)
         }
     }
 }

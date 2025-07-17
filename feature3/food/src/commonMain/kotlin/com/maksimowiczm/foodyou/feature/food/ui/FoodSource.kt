@@ -10,9 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.headline_food_data_central_usda
 import foodyou.app.generated.resources.headline_open_food_facts
 import foodyou.app.generated.resources.headline_user
 import foodyou.app.generated.resources.openfoodfacts_logo
+import foodyou.app.generated.resources.usda_logo
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -30,6 +32,12 @@ fun FoodSource.Type.Icon(modifier: Modifier = Modifier) {
             contentDescription = null,
             modifier = Modifier.size(24.dp).then(modifier)
         )
+
+        FoodSource.Type.USDA -> Image(
+            painter = painterResource(Res.drawable.usda_logo),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp).then(modifier)
+        )
     }
 }
 
@@ -37,4 +45,5 @@ fun FoodSource.Type.Icon(modifier: Modifier = Modifier) {
 fun FoodSource.Type.stringResource(): String = when (this) {
     FoodSource.Type.User -> stringResource(Res.string.headline_user)
     FoodSource.Type.OpenFoodFacts -> stringResource(Res.string.headline_open_food_facts)
+    FoodSource.Type.USDA -> stringResource(Res.string.headline_food_data_central_usda)
 }

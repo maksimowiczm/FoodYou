@@ -209,6 +209,6 @@ private fun NetworkOpenFoodFactsProduct.toEntity(): Product? {
         ),
         note = null,
         sourceType = FoodSource.Type.OpenFoodFacts,
-        sourceUrl = "https://world.openfoodfacts.org/product/$barcode"
+        sourceUrl = url
     )
 }

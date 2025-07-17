@@ -275,6 +275,9 @@ internal fun FoodSearchApp(
                         .padding(horizontal = 16.dp)
                         .zIndex(10f)
                 )
+
+                // TODO
+                FoodSource.Type.USDA -> Unit
             }
 
             val error = pages.loadState.error

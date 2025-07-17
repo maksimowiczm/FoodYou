@@ -3,10 +3,15 @@ package com.maksimowiczm.foodyou.feature.food.ui.product.create
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -15,52 +20,37 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.BackHandler
-import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
-import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.ui.product.ProductForm
-import com.maksimowiczm.foodyou.feature.food.ui.product.rememberProductFormState
+import com.maksimowiczm.foodyou.feature.food.ui.product.ProductFormState
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CreateProductScreen(
+    state: ProductFormState,
     onBack: () -> Unit,
-    onCreate: (FoodId.Product) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: CreateProductViewModel = koinViewModel()
+    onCreate: (ProductFormState) -> Unit,
+    onDownload: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val latestOnCreate = rememberUpdatedState(onCreate)
-    LaunchedCollectWithLifecycle(viewModel.events) { event ->
-        when (event) {
-            is CreateProductEvent.Created -> latestOnCreate.value(event.productId)
-        }
-    }
-
-    val productForm = rememberProductFormState()
-
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     val handleBack = {
-        if (!productForm.isModified) {
+        if (!state.isModified) {
             onBack()
         } else {
             showDiscardDialog = true
         }
     }
     BackHandler(
-        enabled = productForm.isModified
+        enabled = state.isModified
     ) {
         showDiscardDialog = true
     }
@@ -84,10 +74,8 @@ internal fun CreateProductScreen(
                 navigationIcon = { ArrowBackIconButton(handleBack) },
                 actions = {
                     FilledIconButton(
-                        onClick = {
-                            viewModel.createProduct(productForm)
-                        },
-                        enabled = productForm.isValid
+                        onClick = { onCreate(state) },
+                        enabled = state.isValid
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Save,
@@ -107,8 +95,23 @@ internal fun CreateProductScreen(
             contentPadding = paddingValues
         ) {
             item {
+                AssistChip(
+                    onClick = onDownload,
+                    label = { Text(stringResource(Res.string.action_download_product)) },
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Download,
+                            contentDescription = null,
+                            modifier = Modifier.size(AssistChipDefaults.IconSize)
+                        )
+                    }
+                )
+            }
+
+            item {
                 ProductForm(
-                    state = productForm,
+                    state = state,
                     contentPadding = PaddingValues(horizontal = 16.dp)
                 )
             }

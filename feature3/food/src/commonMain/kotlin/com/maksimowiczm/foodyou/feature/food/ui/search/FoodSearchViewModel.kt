@@ -121,6 +121,7 @@ internal class FoodSearchViewModel(
         when (it) {
             FoodSource.Type.User -> localPages
             FoodSource.Type.OpenFoodFacts -> openFoodFactsPages
+            FoodSource.Type.USDA -> TODO()
         }.mapData(foodSearchMapper::toModel)
     }
 
