@@ -19,7 +19,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core"))
             implementation(project(":core-database"))
             implementation(project(":core-model"))
         }

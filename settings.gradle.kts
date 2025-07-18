@@ -32,17 +32,14 @@ dependencyResolutionManagement {
 
 rootProject.name = "FoodYou"
 include(":app")
-include(":core")
 include(":core-database")
 include(":core-model")
 include(":core-domain")
 include(":core-ui")
-include(":feature:product")
 include(":feature:recipe")
 include(":feature:measurement")
 include(":feature:meal")
 include(":feature:goals")
-include(":feature:addfood")
 include(":feature:importexport")
 include(":feature:swissfoodcompositiondatabase")
 

@@ -22,7 +22,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core"))
             implementation(project(":core-ui"))
             implementation(project(":core-model"))
             implementation(project(":core-database"))
