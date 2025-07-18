@@ -155,10 +155,30 @@ internal fun FoodSearchApp(
         )
     }
 
+    // Observe even when not expanded, it's small and user won't have to wait for it
+    val recentSearches by viewModel.recentSearches.collectAsStateWithLifecycle()
     ExpandedFullScreenSearchBar(
         state = searchState,
         inputField = inputField
     ) {
+        FoodSearchView(
+            availableSources = listOfNotNull(
+                FoodSource.Type.User,
+                if (useOpenFoodFacts) FoodSource.Type.OpenFoodFacts else null,
+                if (useUSDA) FoodSource.Type.USDA else null
+            ),
+            source = source,
+            recentSearches = recentSearches,
+            onSource = viewModel::setSource,
+            onFill = { searchTextFieldState.setTextAndPlaceCursorAtEnd(it) },
+            onSearch = {
+                viewModel.search(it)
+                searchTextFieldState.setTextAndPlaceCursorAtEnd(it)
+                coroutineScope.launch {
+                    searchState.animateToCollapsed()
+                }
+            }
+        )
     }
 
     FullScreenCameraBarcodeScanner(

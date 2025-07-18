@@ -389,4 +389,6 @@
     <string name="description_usda_privacy_dialog_text">Enhance your food search with the FoodData Central database. To proceed, please agree to {Privacy Policy:https://www.usda.gov/privacy-policy}</string>
     <string name="headline_your_food">Your food</string>
 
+    <string name="headline_filters">Filters</string>
+
 </resources>

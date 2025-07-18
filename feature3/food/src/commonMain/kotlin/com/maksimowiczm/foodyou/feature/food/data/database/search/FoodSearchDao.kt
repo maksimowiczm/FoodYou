@@ -1,13 +1,28 @@
-package com.maksimowiczm.foodyou.feature.food.data.database.food
+package com.maksimowiczm.foodyou.feature.food.data.database.search
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Upsert
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface FoodDao {
+interface FoodSearchDao {
+
+    @Query(
+        """
+        SELECT *
+        FROM SearchEntry
+        ORDER BY epochSeconds DESC
+        LIMIT :limit
+        """
+    )
+    fun observeRecentSearches(limit: Int): Flow<List<SearchEntry>>
+
+    @Upsert
+    suspend fun upsertSearchEntry(entry: SearchEntry)
+
     @Query(
         """
         SELECT $FOOD_SEARCH_SQL_SELECT

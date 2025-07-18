@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "59415dcc3bedfcdf650c7abe6962943d",
+    "identityHash": "5f345bf7b60ec0dd8e70b832eed4a6ea",
     "entities": [
       {
         "tableName": "Sponsorship",
@@ -727,11 +727,46 @@
             "country"
           ]
         }
+      },
+      {
+        "tableName": "SearchEntry",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`epochSeconds` INTEGER NOT NULL, `query` TEXT NOT NULL, PRIMARY KEY(`query`))",
+        "fields": [
+          {
+            "fieldPath": "epochSeconds",
+            "columnName": "epochSeconds",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "query",
+            "columnName": "query",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "query"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_SearchEntry_epochSeconds",
+            "unique": false,
+            "columnNames": [
+              "epochSeconds"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_SearchEntry_epochSeconds` ON `${TABLE_NAME}` (`epochSeconds`)"
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '59415dcc3bedfcdf650c7abe6962943d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5f345bf7b60ec0dd8e70b832eed4a6ea')"
     ]
   }
 }
