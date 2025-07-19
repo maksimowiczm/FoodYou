@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -158,25 +157,32 @@ fun FoodListItem(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FoodErrorListItem(
     headline: String,
     errorMessage: String,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    shape: Shape = RectangleShape
+    shape: Shape = RectangleShape,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
 ) {
     val content = @Composable {
-        ListItem(
-            headlineContent = { Text(headline) },
-            supportingContent = { Text(errorMessage) },
-            colors = ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.errorContainer,
-                headlineColor = MaterialTheme.colorScheme.onErrorContainer,
-                supportingColor = MaterialTheme.colorScheme.onErrorContainer,
-                overlineColor = MaterialTheme.colorScheme.onErrorContainer
-            )
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(contentPadding),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
+            ) {
+                Text(headline)
+            }
+            CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
+                Text(errorMessage)
+            }
+        }
     }
 
     if (onClick != null) {
@@ -184,12 +190,16 @@ fun FoodErrorListItem(
             onClick = onClick,
             modifier = modifier,
             shape = shape,
+            color = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer,
             content = content
         )
     } else {
         Surface(
             modifier = modifier,
             shape = shape,
+            color = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer,
             content = content
         )
     }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,15 +44,22 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ext.minus
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
+import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import com.maksimowiczm.foodyou.feature.food.domain.Food
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.Product
+import com.maksimowiczm.foodyou.feature.food.domain.Recipe
+import com.maksimowiczm.foodyou.feature.food.domain.RecipeIngredient
+import com.maksimowiczm.foodyou.feature.food.ui.FoodErrorListItem
+import com.maksimowiczm.foodyou.feature.food.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.food.ui.Icon
 import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Meal
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
+import com.maksimowiczm.foodyou.feature.measurement.ui.stringResource
 import foodyou.app.generated.resources.*
+import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.days
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
@@ -151,6 +159,19 @@ internal fun FoodMeasurementScreen(
                         bottom = 8.dp
                     )
                 )
+            }
+
+            if (food is Recipe) {
+                item {
+                    HorizontalDivider()
+                    Ingredients(
+                        ingredients = food.ingredients,
+                        modifier = Modifier.padding(
+                            vertical = 16.dp,
+                            horizontal = 8.dp
+                        )
+                    )
+                }
             }
 
             when (val note = food.note) {
@@ -331,6 +352,63 @@ private fun Source(source: FoodSource, modifier: Modifier = Modifier) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun Ingredients(ingredients: List<RecipeIngredient>, modifier: Modifier = Modifier) {
+    val g = stringResource(Res.string.unit_gram_short)
+    val kcal = stringResource(Res.string.unit_kcal)
+
+    val contentPadding = PaddingValues(
+        horizontal = 0.dp,
+        vertical = 8.dp
+    )
+
+    Column(modifier) {
+        Text(
+            text = stringResource(Res.string.headline_ingredients),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+        ingredients.forEach { ingredient ->
+
+            val facts = ingredient.nutritionFacts
+            val proteins = facts?.proteins?.value
+            val carbs = facts?.carbohydrates?.value
+            val fats = facts?.fats?.value
+            val energy = facts?.energy?.value
+
+            if (proteins == null || carbs == null || fats == null || energy == null) {
+                FoodErrorListItem(
+                    headline = ingredient.food.headline,
+                    errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
+                    contentPadding = contentPadding
+                )
+            } else {
+                FoodListItem(
+                    name = { Text(ingredient.food.headline) },
+                    proteins = {
+                        val text = proteins.formatClipZeros() + " $g"
+                        Text(text)
+                    },
+                    carbohydrates = {
+                        val text = carbs.formatClipZeros() + " $g"
+                        Text(text)
+                    },
+                    fats = {
+                        val text = fats.formatClipZeros() + " $g"
+                        Text(text)
+                    },
+                    calories = {
+                        val text = energy.roundToInt().toString() + " $kcal"
+                        Text(text)
+                    },
+                    measurement = { Text(ingredient.measurement.stringResource()) },
+                    contentPadding = contentPadding
+                )
             }
         }
     }
