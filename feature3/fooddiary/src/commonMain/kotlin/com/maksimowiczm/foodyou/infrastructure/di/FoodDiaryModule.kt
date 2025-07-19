@@ -1,7 +1,5 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.FoodMapper
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.FoodMapperImpl
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMealsUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMealsUseCaseImpl
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.card.MealsCardsViewModel
@@ -13,7 +11,6 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val foodDiaryModule = module {
-    factoryOf(::FoodMapperImpl).bind<FoodMapper>()
     viewModelOf(::CreateMeasurementViewModel)
     factoryOf(::ObserveMealsUseCaseImpl).bind<ObserveMealsUseCase>()
     viewModelOf(::UpdateMeasurementViewModel)
