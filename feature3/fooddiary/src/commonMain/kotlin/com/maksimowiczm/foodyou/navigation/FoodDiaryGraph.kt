@@ -9,8 +9,8 @@ import com.maksimowiczm.foodyou.feature.food.ui.CreateRecipeScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateRecipeScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateProductMeasurementScreen
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateProductMeasurementScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateMeasurementScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.domain.from
@@ -62,22 +62,34 @@ data class UpdateRecipe(val recipeId: Long) {
 }
 
 @Serializable
-data class CreateProductMeasurement(
-    val productId: Long,
+data class CreateMeasurement(
+    val productId: Long?,
+    val recipeId: Long?,
     val mealId: Long,
     val epochDay: Long,
     val measurementType: MeasurementType?,
     val quantity: Float?
 ) {
     constructor(
-        foodId: FoodId.Product,
+        foodId: FoodId,
         mealId: Long,
         date: LocalDate,
         measurement: Measurement?
-    ) : this(foodId.id, mealId, date.toEpochDays(), measurement?.type, measurement?.rawValue)
+    ) : this(
+        productId = (foodId as? FoodId.Product)?.id,
+        recipeId = (foodId as? FoodId.Recipe)?.id,
+        mealId = mealId,
+        epochDay = date.toEpochDays(),
+        measurementType = measurement?.type,
+        quantity = measurement?.rawValue
+    )
 
-    val foodId: FoodId.Product
-        get() = FoodId.Product(productId)
+    val foodId: FoodId
+        get() = when {
+            productId != null -> FoodId.Product(productId)
+            recipeId != null -> FoodId.Recipe(recipeId)
+            else -> throw IllegalStateException("Either productId or recipeId must be provided")
+        }
 
     val measurement: Measurement?
         get() = if (measurementType != null && quantity != null) {
@@ -107,8 +119,8 @@ fun NavGraphBuilder.foodDiaryGraph(
     updateRecipeOnBack: () -> Unit,
     updateRecipeOnUpdate: () -> Unit,
     createMeasurementOnBack: () -> Unit,
-    createMeasurementOnEditProduct: (FoodId.Product) -> Unit,
-    createMeasurementOnDeleteProduct: () -> Unit,
+    createMeasurementOnEditFood: (FoodId) -> Unit,
+    createMeasurementOnDeleteFood: () -> Unit,
     createMeasurementOnCreateMeasurement: () -> Unit,
     updateMeasurementOnBack: () -> Unit,
     updateMeasurementOnEdit: (FoodId) -> Unit,
@@ -151,15 +163,15 @@ fun NavGraphBuilder.foodDiaryGraph(
             productId = route.productId
         )
     }
-    forwardBackwardComposable<CreateProductMeasurement> {
-        val route = it.toRoute<CreateProductMeasurement>()
+    forwardBackwardComposable<CreateMeasurement> {
+        val route = it.toRoute<CreateMeasurement>()
 
-        CreateProductMeasurementScreen(
+        CreateMeasurementScreen(
             onBack = createMeasurementOnBack,
-            onEdit = { createMeasurementOnEditProduct(route.foodId) },
-            onDelete = createMeasurementOnDeleteProduct,
+            onEdit = { createMeasurementOnEditFood(route.foodId) },
+            onDelete = createMeasurementOnDeleteFood,
             onCreateMeasurement = createMeasurementOnCreateMeasurement,
-            productId = route.foodId,
+            foodId = route.foodId,
             mealId = route.mealId,
             date = route.date,
             measurement = route.measurement,
@@ -169,7 +181,7 @@ fun NavGraphBuilder.foodDiaryGraph(
     forwardBackwardComposable<UpdateProductMeasurement> {
         val route = it.toRoute<UpdateProductMeasurement>()
 
-        UpdateProductMeasurementScreen(
+        UpdateMeasurementScreen(
             onBack = updateMeasurementOnBack,
             onEdit = updateMeasurementOnEdit,
             onDelete = updateMeasurementOnDelete,

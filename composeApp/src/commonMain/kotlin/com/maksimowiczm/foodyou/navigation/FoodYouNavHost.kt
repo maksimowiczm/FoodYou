@@ -91,18 +91,14 @@ fun FoodYouNavHost(
                 }
             },
             foodSearchOnFood = { id, measurement, mealId, date ->
-                val route = when (id) {
-                    is FoodId.Product -> CreateProductMeasurement(
+                navController.navigate(
+                    CreateMeasurement(
                         foodId = id,
                         mealId = mealId,
                         date = date,
                         measurement = measurement
                     )
-
-                    is FoodId.Recipe -> TODO()
-                }
-
-                navController.navigate(route) {
+                ) {
                     launchSingleTop = true
                 }
             },
@@ -111,7 +107,7 @@ fun FoodYouNavHost(
             },
             createProductOnCreate = { id, mealId, date ->
                 navController.navigate(
-                    CreateProductMeasurement(
+                    CreateMeasurement(
                         foodId = id,
                         mealId = mealId,
                         date = date,
@@ -129,7 +125,20 @@ fun FoodYouNavHost(
                 navController.popBackStack<CreateRecipe>(true)
             },
             createRecipeOnCreate = { id, mealId, date ->
-                // TODO
+                navController.navigate(
+                    CreateMeasurement(
+                        foodId = id,
+                        mealId = mealId,
+                        date = date,
+                        measurement = null
+                    )
+                ) {
+                    launchSingleTop = true
+
+                    popUpTo<CreateRecipe> {
+                        inclusive = true
+                    }
+                }
             },
             updateProductOnBack = {
                 navController.popBackStack<UpdateProduct>(true)
@@ -144,18 +153,24 @@ fun FoodYouNavHost(
                 navController.popBackStack<UpdateRecipe>(true)
             },
             createMeasurementOnBack = {
-                navController.popBackStack<CreateProductMeasurement>(true)
+                navController.popBackStack<CreateMeasurement>(true)
             },
-            createMeasurementOnEditProduct = {
-                navController.navigate(UpdateProduct.from(it)) {
-                    launchSingleTop = true
+            createMeasurementOnEditFood = {
+                when (it) {
+                    is FoodId.Product -> navController.navigate(UpdateProduct.from(it)) {
+                        launchSingleTop = true
+                    }
+
+                    is FoodId.Recipe -> navController.navigate(UpdateRecipe.from(it)) {
+                        launchSingleTop = true
+                    }
                 }
             },
-            createMeasurementOnDeleteProduct = {
-                navController.popBackStack<CreateProductMeasurement>(true)
+            createMeasurementOnDeleteFood = {
+                navController.popBackStack<CreateMeasurement>(true)
             },
             createMeasurementOnCreateMeasurement = {
-                navController.popBackStack<CreateProductMeasurement>(true)
+                navController.popBackStack<CreateMeasurement>(true)
             },
             updateMeasurementOnBack = {
                 navController.popBackStack<UpdateProductMeasurement>(true)
@@ -166,7 +181,9 @@ fun FoodYouNavHost(
                         launchSingleTop = true
                     }
 
-                    is FoodId.Recipe -> TODO()
+                    is FoodId.Recipe -> navController.navigate(UpdateRecipe.from(it)) {
+                        launchSingleTop = true
+                    }
                 }
             },
             updateMeasurementOnDelete = {

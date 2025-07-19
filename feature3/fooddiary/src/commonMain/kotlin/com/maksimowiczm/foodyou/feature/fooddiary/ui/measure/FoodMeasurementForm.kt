@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.feature.food.domain.Product
+import com.maksimowiczm.foodyou.feature.food.domain.Food
 import com.maksimowiczm.foodyou.feature.food.domain.weight
 import com.maksimowiczm.foodyou.feature.food.ui.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.feature.food.ui.NutrientList
@@ -30,17 +30,17 @@ import foodyou.app.generated.resources.unit_gram_short
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun ProductMeasurementForm(
+internal fun FoodMeasurementForm(
     state: ProductMeasurementFormState,
-    product: Product,
+    food: Food,
     modifier: Modifier = Modifier
 ) {
     val measurement = state.measurementState.measurement
 
-    val facts = remember(product, measurement) {
-        val weight = measurement.weight(product)
-            ?: error("Invalid measurement: $measurement for product: ${product.name}")
-        product.nutritionFacts * (weight / 100)
+    val facts = remember(food, measurement) {
+        val weight = measurement.weight(food)
+            ?: error("Invalid measurement: $measurement for food: ${food.headline}")
+        food.nutritionFacts * (weight / 100)
     }
 
     Column(
@@ -98,8 +98,8 @@ internal fun ProductMeasurementForm(
             }
         }
 
-        val weight = measurement.weight(product)
-            ?: error("Invalid measurement: $measurement for product: ${product.name}")
+        val weight = measurement.weight(food)
+            ?: error("Invalid measurement: $measurement for food: ${food.headline}")
 
         val text = buildString {
             append(measurement.stringResource())

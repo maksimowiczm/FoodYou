@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.core.util.DateProvider
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
+import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement as MeasurementEntity
@@ -30,26 +31,32 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
-internal class CreateMeasurementScreenViewModel(
+internal class CreateMeasurementViewModel(
     foodDatabase: FoodDatabase,
     foodDiaryDatabase: FoodDiaryDatabase,
     productMapper: ProductMapper,
+    observeRecipeUseCase: ObserveRecipeUseCase,
     dateProvider: DateProvider,
-    private val productId: FoodId.Product
+    private val foodId: FoodId
 ) : ViewModel() {
-    private val productsDao = foodDatabase.productDao
+    private val productDao = foodDatabase.productDao
+    private val recipeDao = foodDatabase.recipeDao
     private val mealsDao = foodDiaryDatabase.mealDao
     private val measurementDao = foodDiaryDatabase.measurementDao
 
-    val product = productsDao
-        .observe(productId.id)
-        .filterNotNull()
-        .map(productMapper::toModel)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = null
-        )
+    val food = when (foodId) {
+        is FoodId.Product ->
+            productDao
+                .observe(foodId.id)
+                .filterNotNull()
+                .map(productMapper::toModel)
+
+        is FoodId.Recipe -> observeRecipeUseCase(foodId).filterNotNull()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(2_000),
+        initialValue = null
+    )
 
     val meals = mealsDao.observeMeals().stateIn(
         scope = viewModelScope,
@@ -65,13 +72,17 @@ internal class CreateMeasurementScreenViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val suggestions: StateFlow<List<Measurement>?> = measurementDao
-        .observeMeasurementSuggestions(productId.id, 5)
+        .observeMeasurementSuggestions(
+            productId = (foodId as? FoodId.Product)?.id,
+            recipeId = (foodId as? FoodId.Recipe)?.id,
+            limit = 5
+        )
         .flatMapLatest { list ->
-            product.filterNotNull().map { product ->
+            food.filterNotNull().map { product ->
                 val measurements = list.map { it.toMeasurement() }.filter {
                     when (it) {
                         is Measurement.Gram, is Measurement.Milliliter -> true
-                        is Measurement.Package -> product.packageWeight != null
+                        is Measurement.Package -> product.totalWeight != null
                         is Measurement.Serving -> product.servingWeight != null
                     }
                 }.toMutableList()
@@ -79,7 +90,7 @@ internal class CreateMeasurementScreenViewModel(
                 // Fill missing measurements
                 measurements.add(Measurement.Gram(100f))
 
-                if (product.packageWeight != null) {
+                if (product.totalWeight != null) {
                     measurements.add(Measurement.Package(1f))
                 }
                 if (product.servingWeight != null) {
@@ -95,13 +106,13 @@ internal class CreateMeasurementScreenViewModel(
             initialValue = null
         )
 
-    val possibleMeasurementTypes = product.filterNotNull().map {
+    val possibleMeasurementTypes = food.filterNotNull().map {
         it.let { product ->
             MeasurementType.entries.filter { type ->
                 when (type) {
                     MeasurementType.Gram -> true
                     MeasurementType.Milliliter -> true
-                    MeasurementType.Package -> product.packageWeight != null
+                    MeasurementType.Package -> product.totalWeight != null
                     MeasurementType.Serving -> product.servingWeight != null
                 }
             }
@@ -114,14 +125,18 @@ internal class CreateMeasurementScreenViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val selectedMeasurement = measurementDao
-        .observeMeasurementSuggestions(productId.id, 1)
+        .observeMeasurementSuggestions(
+            productId = (foodId as? FoodId.Product)?.id,
+            recipeId = (foodId as? FoodId.Recipe)?.id,
+            limit = 1
+        )
         .flatMapLatest { list ->
-            product.filterNotNull().map { product ->
+            food.filterNotNull().map { product ->
                 list.map { it.toMeasurement() }.filter {
                     when (it) {
                         is Measurement.Gram -> true
                         is Measurement.Milliliter -> true
-                        is Measurement.Package -> product.packageWeight != null
+                        is Measurement.Package -> product.totalWeight != null
                         is Measurement.Serving -> product.servingWeight != null
                     }
                 }.ifEmpty {
@@ -138,13 +153,26 @@ internal class CreateMeasurementScreenViewModel(
     private val eventBus = Channel<MeasurementEvent>()
     val events = eventBus.receiveAsFlow()
 
-    fun deleteProduct() {
+    fun deleteFood() {
         viewModelScope.launch {
-            val product = productsDao.observe(productId.id).firstOrNull()
+            when (foodId) {
+                is FoodId.Product -> {
+                    val product = productDao.observe(foodId.id).firstOrNull()
 
-            if (product != null) {
-                productsDao.delete(product)
-                eventBus.send(MeasurementEvent.Deleted)
+                    if (product != null) {
+                        productDao.delete(product)
+                        eventBus.send(MeasurementEvent.Deleted)
+                    }
+                }
+
+                is FoodId.Recipe -> {
+                    val recipe = recipeDao.observe(foodId.id).firstOrNull()
+
+                    if (recipe != null) {
+                        recipeDao.delete(recipe)
+                        eventBus.send(MeasurementEvent.Deleted)
+                    }
+                }
             }
         }
     }
@@ -154,8 +182,8 @@ internal class CreateMeasurementScreenViewModel(
         val entity = MeasurementEntity(
             mealId = mealId,
             epochDay = date.toEpochDays(),
-            productId = productId.id,
-            recipeId = null,
+            productId = (foodId as? FoodId.Product)?.id,
+            recipeId = (foodId as? FoodId.Recipe)?.id,
             measurement = measurement.type,
             quantity = measurement.rawValue,
             createdAt = Clock.System.now().epochSeconds

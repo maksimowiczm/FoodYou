@@ -44,6 +44,7 @@ import com.maksimowiczm.foodyou.core.ext.minus
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
+import com.maksimowiczm.foodyou.feature.food.domain.Food
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.food.ui.Icon
@@ -57,12 +58,12 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun ProductMeasurementScreen(
+internal fun FoodMeasurementScreen(
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     onMeasure: (Measurement, mealId: Long, date: LocalDate) -> Unit,
-    product: Product,
+    food: Food,
     today: LocalDate,
     selectedDate: LocalDate,
     meals: List<Meal>,
@@ -90,7 +91,7 @@ internal fun ProductMeasurementScreen(
         modifier = modifier,
         topBar = {
             MediumTopAppBar(
-                title = { Text(product.headline) },
+                title = { Text(food.headline) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 actions = {
                     Menu(
@@ -143,16 +144,16 @@ internal fun ProductMeasurementScreen(
             }
 
             item {
-                ProductMeasurementForm(
+                FoodMeasurementForm(
                     state = state,
-                    product = product,
+                    food = food,
                     modifier = Modifier.padding(
                         bottom = 8.dp
                     )
                 )
             }
 
-            when (val note = product.note) {
+            when (val note = food.note) {
                 null -> Unit
                 else -> {
                     item {
@@ -168,33 +169,35 @@ internal fun ProductMeasurementScreen(
                 }
             }
 
-            item {
-                HorizontalDivider()
+            if (food is Product) {
+                item {
+                    HorizontalDivider()
 
-                val clipboardManger = LocalClipboardManager.current
-                val sourceStr = stringResource(Res.string.headline_source)
+                    val clipboardManger = LocalClipboardManager.current
+                    val sourceStr = stringResource(Res.string.headline_source)
 
-                Source(
-                    source = product.source,
-                    modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = {
-                                val url = product.source.url
-                                if (url != null) {
-                                    clipboardManger.copy(
-                                        label = sourceStr,
-                                        text = url
-                                    )
+                    Source(
+                        source = food.source,
+                        modifier = Modifier
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = {
+                                    val url = food.source.url
+                                    if (url != null) {
+                                        clipboardManger.copy(
+                                            label = sourceStr,
+                                            text = url
+                                        )
+                                    }
                                 }
-                            }
-                        )
-                        .padding(
-                            vertical = 16.dp,
-                            horizontal = 8.dp
-                        )
-                )
+                            )
+                            .padding(
+                                vertical = 16.dp,
+                                horizontal = 8.dp
+                            )
+                    )
+                }
             }
         }
     }

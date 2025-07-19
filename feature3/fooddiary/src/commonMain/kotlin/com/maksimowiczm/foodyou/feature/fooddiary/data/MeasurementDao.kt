@@ -49,14 +49,18 @@ interface MeasurementDao {
         """
         SELECT DISTINCT measurement, quantity
         FROM Measurement
-        WHERE 
-            productId = :productId 
+        WHERE CASE 
+            WHEN :productId IS NOT NULL THEN productId = :productId
+            WHEN :recipeId IS NOT NULL THEN recipeId = :recipeId
+            ELSE 0 
+        END
         ORDER BY createdAt DESC
         LIMIT :limit
         """
     )
     fun observeMeasurementSuggestions(
-        productId: Long,
+        productId: Long?,
+        recipeId: Long?,
         limit: Int
     ): Flow<List<MeasurementSuggestion>>
 

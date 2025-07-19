@@ -6,8 +6,11 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.core.util.DateProvider
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
+import com.maksimowiczm.foodyou.feature.food.domain.FoodId
+import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
+import com.maksimowiczm.foodyou.feature.food.domain.Recipe
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.toMeasurement
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
@@ -28,10 +31,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
-internal class UpdateProductMeasurementViewModel(
+internal class UpdateMeasurementViewModel(
     foodDatabase: FoodDatabase,
     foodDiaryDatabase: FoodDiaryDatabase,
     productMapper: ProductMapper,
+    observeRecipeUseCase: ObserveRecipeUseCase,
     dateProvider: DateProvider,
     measurementId: Long
 ) : ViewModel() {
@@ -39,6 +43,7 @@ internal class UpdateProductMeasurementViewModel(
     private val measurementDao = foodDiaryDatabase.measurementDao
     private val mealsDao = foodDiaryDatabase.mealDao
     private val productDao = foodDatabase.productDao
+    private val recipeDao = foodDatabase.recipeDao
 
     private val measurementEntity =
         foodDiaryDatabase.measurementDao.observeMeasurementById(measurementId).filterNotNull()
@@ -70,6 +75,10 @@ internal class UpdateProductMeasurementViewModel(
                     .filterNotNull()
                     .map(productMapper::toModel)
 
+            measurement.recipeId != null ->
+                observeRecipeUseCase(FoodId.Recipe(measurement.recipeId))
+                    .filterNotNull()
+
             else -> error("Measurement does not have a productId")
         }
     }.stateIn(
@@ -92,28 +101,30 @@ internal class UpdateProductMeasurementViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val suggestions: StateFlow<List<Measurement>?> = food.filterNotNull().flatMapLatest { food ->
-        when (food) {
-            is Product -> measurementDao.observeMeasurementSuggestions(food.id.id, 5).map { list ->
-                val measurements = list.map { it.toMeasurement() }.filter {
-                    when (it) {
-                        is Measurement.Gram, is Measurement.Milliliter -> true
-                        is Measurement.Package -> food.packageWeight != null
-                        is Measurement.Serving -> food.servingWeight != null
-                    }
-                }.toMutableList()
-
-                // Fill missing measurements
-                measurements.add(Measurement.Gram(100f))
-
-                if (food.packageWeight != null) {
-                    measurements.add(Measurement.Package(1f))
+        measurementDao.observeMeasurementSuggestions(
+            productId = (food.id as? FoodId.Product)?.id,
+            recipeId = (food.id as? FoodId.Recipe)?.id,
+            limit = 5
+        ).map { list ->
+            val measurements = list.map { it.toMeasurement() }.filter {
+                when (it) {
+                    is Measurement.Gram, is Measurement.Milliliter -> true
+                    is Measurement.Package -> food.totalWeight != null
+                    is Measurement.Serving -> food.servingWeight != null
                 }
-                if (food.servingWeight != null) {
-                    measurements.add(Measurement.Serving(1f))
-                }
+            }.toMutableList()
 
-                measurements.distinct()
+            // Fill missing measurements
+            measurements.add(Measurement.Gram(100f))
+
+            if (food.totalWeight != null) {
+                measurements.add(Measurement.Package(1f))
             }
+            if (food.servingWeight != null) {
+                measurements.add(Measurement.Serving(1f))
+            }
+
+            measurements.distinct()
         }
     }.stateIn(
         scope = viewModelScope,
@@ -123,15 +134,13 @@ internal class UpdateProductMeasurementViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val possibleMeasurementTypes = food.filterNotNull().map {
-        when (it) {
-            is Product -> it.let { product ->
-                MeasurementType.entries.filter { type ->
-                    when (type) {
-                        MeasurementType.Gram -> true
-                        MeasurementType.Milliliter -> true
-                        MeasurementType.Package -> product.packageWeight != null
-                        MeasurementType.Serving -> product.servingWeight != null
-                    }
+        it.let { product ->
+            MeasurementType.entries.filter { type ->
+                when (type) {
+                    MeasurementType.Gram -> true
+                    MeasurementType.Milliliter -> true
+                    MeasurementType.Package -> product.totalWeight != null
+                    MeasurementType.Serving -> product.servingWeight != null
                 }
             }
         }
@@ -145,19 +154,27 @@ internal class UpdateProductMeasurementViewModel(
     val events = eventBus.receiveAsFlow()
 
     fun deleteProduct() {
+        val food = food.value
+
+        if (food == null) {
+            Logger.w(TAG) { " Food is null, cannot delete product measurement" }
+            return
+        }
+
         viewModelScope.launch {
-            val food = food.value
-
-            if (food == null) {
-                Logger.w(TAG) { " Food is null, cannot delete product measurement" }
-                return@launch
-            }
-
             when (food) {
                 is Product -> {
                     val product = productDao.observe(food.id.id).firstOrNull()
                     if (product != null) {
                         productDao.delete(product)
+                        eventBus.send(MeasurementEvent.Deleted)
+                    }
+                }
+
+                is Recipe -> {
+                    val recipe = recipeDao.observe(food.id.id).firstOrNull()
+                    if (recipe != null) {
+                        recipeDao.delete(recipe)
                         eventBus.send(MeasurementEvent.Deleted)
                     }
                 }
@@ -188,6 +205,6 @@ internal class UpdateProductMeasurementViewModel(
     }
 
     private companion object {
-        const val TAG = "UpdateProductMeasurementViewModel"
+        const val TAG = "UpdateMeasurementViewModel"
     }
 }
