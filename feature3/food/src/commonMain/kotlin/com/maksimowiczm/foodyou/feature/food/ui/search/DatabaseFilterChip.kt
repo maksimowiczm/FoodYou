@@ -16,11 +16,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 
 @Immutable
 internal sealed interface DatabaseFilterChipState {
@@ -78,6 +85,19 @@ internal fun DatabaseFilterChip(
         }
     }
 
+    var realState by remember { mutableStateOf(state) }
+    LaunchedEffect(state) {
+        when (state) {
+            is DatabaseFilterChipState.Loaded if (realState == DatabaseFilterChipState.Loading) -> {
+                delay(100L)
+                ensureActive()
+                realState = state
+            }
+
+            else -> realState = state
+        }
+    }
+
     Surface(
         onClick = onClick,
         modifier = modifier,
@@ -101,7 +121,7 @@ internal fun DatabaseFilterChip(
             CompositionLocalProvider(
                 LocalTextStyle provides MaterialTheme.typography.bodySmall
             ) {
-                when (state) {
+                when (val state = realState) {
                     DatabaseFilterChipState.ActionRequired -> Icon(
                         imageVector = Icons.Outlined.Warning,
                         contentDescription = null

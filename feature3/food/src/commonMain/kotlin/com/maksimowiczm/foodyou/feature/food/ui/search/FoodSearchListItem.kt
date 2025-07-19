@@ -1,9 +1,14 @@
 package com.maksimowiczm.foodyou.feature.food.ui.search
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
@@ -16,6 +21,7 @@ import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.ui.stringResource
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -137,7 +143,16 @@ internal fun FoodSearchListItem(
 
     FoodListItem(
         name = {
-            Text(text = food.headline)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = food.headline)
+                Icon(
+                    painter = painterResource(Res.drawable.ic_skillet_filled),
+                    contentDescription = stringResource(Res.string.headline_recipe)
+                )
+            }
         },
         proteins = {
             val text = proteins.formatClipZeros()

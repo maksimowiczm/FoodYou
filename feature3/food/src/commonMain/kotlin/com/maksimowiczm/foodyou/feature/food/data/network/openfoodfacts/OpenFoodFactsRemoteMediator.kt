@@ -116,7 +116,12 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
             val skipped = products.count { it == null }
             val endOfPaginationReached = (products.size + skipped) < PAGE_SIZE
 
-            return MediatorResult.Success(endOfPaginationReached)
+            // Load until there is anything inserted
+            return if (skipped == PAGE_SIZE) {
+                load(loadType, state)
+            } else {
+                MediatorResult.Success(endOfPaginationReached)
+            }
         } catch (e: Exception) {
             Logger.e(TAG, e) { "Error loading page" }
             return MediatorResult.Error(e)
@@ -132,24 +137,8 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
 
     private val m = mapper
     private fun NetworkOpenFoodFactsProduct.toEntity(): Product? = m.toRemoteProduct(this).run {
-        // Use brand as name if name is not available. When using brand as name, brand will be null
-        val (name, brand) = run {
-            val name = name?.takeIf { it.isNotBlank() }
-            val brand = brand?.takeIf { it.isNotBlank() }
-
-            if (name == null) {
-                brand to null
-            } else {
-                name to brand
-            }
-        }
-
-        if (name == null) {
-            return null
-        }
-
-        val nutritionFacts = nutritionFacts
-        if (nutritionFacts == null) {
+        // Ignore products with no name or nutrition facts
+        if (name == null || nutritionFacts == null) {
             return null
         }
 

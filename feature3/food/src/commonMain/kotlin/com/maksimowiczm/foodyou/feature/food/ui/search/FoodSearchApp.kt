@@ -88,6 +88,9 @@ import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -240,18 +243,13 @@ internal fun FoodSearchApp(
                 },
                 label = { Text(stringResource(Res.string.headline_your_food)) }
             )
+
+            val offIsLoading = openFoodFactsPages.delayedLoadingState()
             DatabaseFilterChip(
-                state = remember(
-                    openFoodFactsCount,
-                    useOpenFoodFacts,
-                    openFoodFactsPages.loadState
-                ) {
+                state = remember(openFoodFactsCount, useOpenFoodFacts, offIsLoading) {
                     if (!useOpenFoodFacts) {
                         DatabaseFilterChipState.ActionRequired
-                    } else if (
-                        openFoodFactsPages.loadState.append is LoadState.Loading ||
-                        openFoodFactsPages.loadState.refresh is LoadState.Loading
-                    ) {
+                    } else if (offIsLoading) {
                         DatabaseFilterChipState.Loading
                     } else {
                         DatabaseFilterChipState.Loaded(openFoodFactsCount)
@@ -274,14 +272,13 @@ internal fun FoodSearchApp(
                 },
                 label = { Text(stringResource(Res.string.headline_open_food_facts)) }
             )
+
+            val usdaIsLoading = usdaPages.delayedLoadingState()
             DatabaseFilterChip(
-                state = remember(usdaCount, useUSDA, usdaPages.loadState) {
+                state = remember(usdaCount, useUSDA, usdaIsLoading) {
                     if (!useUSDA) {
                         DatabaseFilterChipState.ActionRequired
-                    } else if (
-                        usdaPages.loadState.append is LoadState.Loading ||
-                        usdaPages.loadState.refresh is LoadState.Loading
-                    ) {
+                    } else if (usdaIsLoading) {
                         DatabaseFilterChipState.Loading
                     } else {
                         DatabaseFilterChipState.Loaded(usdaCount)
@@ -500,7 +497,7 @@ private fun ErrorCard(message: String, onRetry: () -> Unit, modifier: Modifier =
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, FlowPreview::class)
 @Composable
 private fun SearchList(
     pages: LazyPagingItems<FoodSearch>,
@@ -519,9 +516,7 @@ private fun SearchList(
         )
     }
 
-    if (pages.loadState.refresh is LoadState.Loading ||
-        pages.loadState.append is LoadState.Loading
-    ) {
+    if (pages.delayedLoadingState()) {
         ContainedLoadingIndicator(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -609,4 +604,19 @@ private fun SearchList(
             }
         }
     }
+}
+
+@Composable
+@OptIn(FlowPreview::class)
+private fun <T : Any> LazyPagingItems<T>.delayedLoadingState(): Boolean {
+    var isLoading by remember { mutableStateOf(false) }
+    LaunchedEffect(this) {
+        snapshotFlow {
+            loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading
+        }
+            .debounce(100L)
+            .collectLatest { isLoading = it }
+    }
+
+    return isLoading
 }
