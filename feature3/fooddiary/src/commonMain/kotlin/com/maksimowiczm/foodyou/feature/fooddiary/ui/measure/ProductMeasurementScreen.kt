@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -130,9 +131,8 @@ internal fun ProductMeasurementScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    horizontal = 8.dp
-                )
+                .imePadding()
+                .padding(horizontal = 8.dp)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = paddingValues
                 .add(vertical = 8.dp)
