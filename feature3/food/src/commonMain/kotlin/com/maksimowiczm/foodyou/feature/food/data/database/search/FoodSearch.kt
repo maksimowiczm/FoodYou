@@ -13,11 +13,11 @@ data class FoodSearch(
     val recipeId: Long?,
     val headline: String,
     @Embedded
-    val nutrients: Nutrients,
+    val nutrients: Nutrients?,
     @Embedded
-    val vitamins: Vitamins,
+    val vitamins: Vitamins?,
     @Embedded
-    val minerals: Minerals,
+    val minerals: Minerals?,
     val totalWeight: Float?,
     val servingWeight: Float?
 )

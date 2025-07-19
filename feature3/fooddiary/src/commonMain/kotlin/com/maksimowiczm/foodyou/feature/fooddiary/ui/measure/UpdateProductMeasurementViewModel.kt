@@ -9,11 +9,11 @@ import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.rawValue
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.toMeasurement
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.type
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
+import com.maksimowiczm.foodyou.feature.measurement.domain.rawValue
+import com.maksimowiczm.foodyou.feature.measurement.domain.type
 import kotlin.collections.map
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel

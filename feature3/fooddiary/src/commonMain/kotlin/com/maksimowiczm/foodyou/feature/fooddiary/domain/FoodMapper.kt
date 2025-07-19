@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.fooddiary.domain
 
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodWithMeasurement as FoodWithMeasurementEntity
-import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement
+import com.maksimowiczm.foodyou.feature.measurement.domain.from
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.TimeZone

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5f345bf7b60ec0dd8e70b832eed4a6ea",
+    "identityHash": "b52a13b442e416f9eed561c1c216fe70",
     "entities": [
       {
         "tableName": "Sponsorship",
@@ -351,7 +351,7 @@
       },
       {
         "tableName": "Recipe",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `servings` INTEGER NOT NULL, `isLiquid` INTEGER NOT NULL, `note` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `servings` INTEGER NOT NULL, `note` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -368,12 +368,6 @@
           {
             "fieldPath": "servings",
             "columnName": "servings",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isLiquid",
-            "columnName": "isLiquid",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -764,9 +758,15 @@
         ]
       }
     ],
+    "views": [
+      {
+        "viewName": "RecipeAllIngredientsView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH RECURSIVE recipeIngredients AS (\n        -- Base case: Direct ingredients of all recipes\n        SELECT \n            ri.recipeId AS targetRecipeId,\n            ri.recipeId AS parentRecipeId,\n            ri.ingredientProductId AS productId,\n            ri.ingredientRecipeId AS recipeId,\n            ri.measurement,\n            ri.quantity,\n            1 AS depthLevel\n        FROM RecipeIngredient ri\n        \n        UNION ALL\n        \n        -- Recursive case: Ingredients of sub-recipes\n        SELECT \n            prev.targetRecipeId,\n            subRi.recipeId AS parentRecipeId,\n            subRi.ingredientProductId AS productId,\n            subRi.ingredientRecipeId AS recipeId,\n            subRi.measurement,\n            subRi.quantity,\n            prev.depthLevel + 1 AS depthLevel\n        FROM RecipeIngredient subRi\n        INNER JOIN recipeIngredients prev ON subRi.recipeId = prev.recipeId\n        WHERE prev.recipeId IS NOT NULL\n    )\n    SELECT DISTINCT\n        targetRecipeId,\n        COALESCE(productId, recipeId) AS ingredientId\n    FROM recipeIngredients"
+      }
+    ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5f345bf7b60ec0dd8e70b832eed4a6ea')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b52a13b442e416f9eed561c1c216fe70')"
     ]
   }
 }

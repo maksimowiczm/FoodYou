@@ -28,7 +28,6 @@ kotlin {
             implementation(project(":core-model"))
             implementation(project(":core-database"))
             implementation(project(":core-domain"))
-            implementation(project(":feature:recipe"))
 
             implementation(libs.kotlinx.serialization.json)
 

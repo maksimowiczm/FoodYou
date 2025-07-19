@@ -6,13 +6,11 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -27,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.BackHandler
+import com.maksimowiczm.foodyou.core.ui.DiscardDialog
 import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.feature.food.ui.product.ProductForm
 import com.maksimowiczm.foodyou.feature.food.ui.product.rememberProductFormState
@@ -73,11 +72,13 @@ internal fun UpdateProductScreen(
         if (showDiscardDialog) {
             DiscardDialog(
                 onDismissRequest = { showDiscardDialog = false },
-                onConfirm = {
+                onDiscard = {
                     showDiscardDialog = false
                     onBack()
                 }
-            )
+            ) {
+                Text(stringResource(Res.string.question_discard_changes))
+            }
         }
 
         Scaffold(
@@ -123,33 +124,4 @@ internal fun UpdateProductScreen(
             }
         }
     }
-}
-
-@Composable
-private fun DiscardDialog(
-    onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        modifier = modifier,
-        confirmButton = {
-            TextButton(
-                onClick = onConfirm
-            ) {
-                Text(stringResource(Res.string.action_discard))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = onDismissRequest
-            ) {
-                Text(stringResource(Res.string.action_cancel))
-            }
-        },
-        text = {
-            Text(stringResource(Res.string.question_discard_changes))
-        }
-    )
 }

@@ -23,6 +23,7 @@ import com.maksimowiczm.foodyou.feature.food.domain.weight
 import com.maksimowiczm.foodyou.feature.food.ui.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.feature.food.ui.NutrientList
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
+import com.maksimowiczm.foodyou.feature.measurement.ui.MeasurementPicker
 import com.maksimowiczm.foodyou.feature.measurement.ui.stringResource
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.unit_gram_short

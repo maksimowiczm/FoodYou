@@ -5,15 +5,17 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.ui.CreateProductScreen
+import com.maksimowiczm.foodyou.feature.food.ui.CreateRecipeScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.from
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.rawValue
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.type
+import com.maksimowiczm.foodyou.feature.food.ui.UpdateRecipeScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateProductMeasurementScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateProductMeasurementScreen
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
+import com.maksimowiczm.foodyou.feature.measurement.domain.from
+import com.maksimowiczm.foodyou.feature.measurement.domain.rawValue
+import com.maksimowiczm.foodyou.feature.measurement.domain.type
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -38,6 +40,24 @@ data class UpdateProduct(val id: Long) {
 
     companion object {
         fun from(productId: FoodId.Product) = UpdateProduct(productId.id)
+    }
+}
+
+@Serializable
+data class CreateRecipe(val mealId: Long, val date: Long) {
+    constructor(mealId: Long, date: LocalDate) : this(mealId, date.toEpochDays())
+
+    val localDate: LocalDate
+        get() = LocalDate.fromEpochDays(date)
+}
+
+@Serializable
+data class UpdateRecipe(val recipeId: Long) {
+    val foodId: FoodId.Recipe
+        get() = FoodId.Recipe(recipeId)
+
+    companion object {
+        fun from(foodId: FoodId.Recipe) = UpdateRecipe(foodId.id)
     }
 }
 
@@ -76,11 +96,16 @@ data class UpdateProductMeasurement(val measurementId: Long)
 fun NavGraphBuilder.foodDiaryGraph(
     foodSearchOnBack: () -> Unit,
     foodSearchOnCreateProduct: (mealId: Long, date: LocalDate) -> Unit,
+    foodSearchOnCreateRecipe: (mealId: Long, date: LocalDate) -> Unit,
     foodSearchOnFood: (FoodId, Measurement, mealId: Long, date: LocalDate) -> Unit,
     createProductOnBack: () -> Unit,
     createProductOnCreate: (FoodId.Product, mealId: Long, date: LocalDate) -> Unit,
+    createRecipeOnBack: () -> Unit,
+    createRecipeOnCreate: (FoodId.Recipe, mealId: Long, date: LocalDate) -> Unit,
     updateProductOnBack: () -> Unit,
     updateProductOnUpdate: () -> Unit,
+    updateRecipeOnBack: () -> Unit,
+    updateRecipeOnUpdate: () -> Unit,
     createMeasurementOnBack: () -> Unit,
     createMeasurementOnEditProduct: (FoodId.Product) -> Unit,
     createMeasurementOnDeleteProduct: () -> Unit,
@@ -98,6 +123,7 @@ fun NavGraphBuilder.foodDiaryGraph(
         FoodSearchScreen(
             onBack = foodSearchOnBack,
             onCreateProduct = { foodSearchOnCreateProduct(mealId, date) },
+            onCreateRecipe = { foodSearchOnCreateRecipe(mealId, date) },
             onFoodClick = { foodId, measurement ->
                 foodSearchOnFood(foodId, measurement, mealId, date)
             },
@@ -150,6 +176,25 @@ fun NavGraphBuilder.foodDiaryGraph(
             onUpdateMeasurement = updateMeasurementOnUpdate,
             measurementId = route.measurementId,
             animatedVisibilityScope = this
+        )
+    }
+    forwardBackwardComposable<CreateRecipe> {
+        val route = it.toRoute<CreateRecipe>()
+
+        CreateRecipeScreen(
+            onBack = createRecipeOnBack,
+            onCreate = { id ->
+                createRecipeOnCreate(id, route.mealId, route.localDate)
+            }
+        )
+    }
+    forwardBackwardComposable<UpdateRecipe> {
+        val route = it.toRoute<UpdateRecipe>()
+
+        UpdateRecipeScreen(
+            id = route.foodId,
+            onBack = updateRecipeOnBack,
+            onUpdate = updateRecipeOnUpdate
         )
     }
 }

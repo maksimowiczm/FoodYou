@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.measurement.domain
 
+import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import kotlin.jvm.JvmInline
 
 sealed interface Measurement {
@@ -40,4 +41,27 @@ sealed interface Measurement {
 
         fun notEqual(a: Measurement, b: Measurement): Boolean = !equal(a, b)
     }
+}
+
+val Measurement.rawValue: Float
+    get() = when (this) {
+        is Measurement.Gram -> value
+        is Measurement.Milliliter -> value
+        is Measurement.Package -> quantity
+        is Measurement.Serving -> quantity
+    }
+
+val Measurement.type: MeasurementType
+    get() = when (this) {
+        is Measurement.Gram -> MeasurementType.Gram
+        is Measurement.Milliliter -> MeasurementType.Milliliter
+        is Measurement.Package -> MeasurementType.Package
+        is Measurement.Serving -> MeasurementType.Serving
+    }
+
+fun Measurement.Companion.from(type: MeasurementType, rawValue: Float): Measurement = when (type) {
+    MeasurementType.Gram -> Measurement.Gram(rawValue)
+    MeasurementType.Milliliter -> Measurement.Milliliter(rawValue)
+    MeasurementType.Package -> Measurement.Package(rawValue)
+    MeasurementType.Serving -> Measurement.Serving(rawValue)
 }

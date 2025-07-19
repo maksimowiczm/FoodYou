@@ -12,6 +12,7 @@ import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe
 import com.maksimowiczm.foodyou.feature.food.data.database.food.RecipeIngredient
 import com.maksimowiczm.foodyou.feature.food.data.database.openfoodfacts.OpenFoodFactsPagingKey
+import com.maksimowiczm.foodyou.feature.food.data.database.search.RecipeAllIngredientsView
 import com.maksimowiczm.foodyou.feature.food.data.database.search.SearchEntry
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.feature.fooddiary.data.InitializeMealsCallback
@@ -29,6 +30,9 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
         Measurement::class,
         OpenFoodFactsPagingKey::class,
         SearchEntry::class
+    ],
+    views = [
+        RecipeAllIngredientsView::class
     ],
     version = FoodYouDatabase.VERSION,
     exportSchema = true

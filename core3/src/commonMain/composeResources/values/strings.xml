@@ -391,4 +391,9 @@
 
     <string name="headline_filters">Filters</string>
 
+    <string name="headline_choose_ingredient" description="Choose ingredient for the recipe">Choose ingredient</string>
+
+    <string name="headline_edit_recipe">Edit recipe</string>
+    <string name="description_delete_ingredient">Ingredient will be removed from the recipe</string>
+
 </resources>

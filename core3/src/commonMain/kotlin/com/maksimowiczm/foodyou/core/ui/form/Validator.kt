@@ -43,3 +43,11 @@ fun <E> nonBlankStringValidator(onEmpty: () -> E): (String) -> E? = {
         null
     }
 }
+
+fun <E> positiveIntValidator(onNotPositive: () -> E, onNull: () -> E? = { null }): (Int?) -> E? = {
+    when {
+        it == null -> onNull()
+        it <= 0 -> onNotPositive()
+        else -> null
+    }
+}

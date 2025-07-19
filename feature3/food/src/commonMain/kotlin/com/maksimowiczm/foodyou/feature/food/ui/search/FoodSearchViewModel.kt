@@ -19,6 +19,7 @@ import com.maksimowiczm.foodyou.feature.food.data.database.search.FoodSearchDao
 import com.maksimowiczm.foodyou.feature.food.data.database.search.SearchEntry
 import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFoodFactsProductMapper
 import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFoodFactsRemoteMediator
+import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
@@ -38,6 +39,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class FoodSearchViewModel(
+    private val excludedRecipeId: FoodId.Recipe?,
     foodDatabase: FoodDatabase,
     private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource,
     dataStore: DataStore<Preferences>,
@@ -195,7 +197,8 @@ internal class FoodSearchViewModel(
         } else {
             observeFoodCountByQuery(
                 query = query,
-                source = source
+                source = source,
+                excludedRecipeId = excludedRecipeId?.id
             )
         }
     }
@@ -214,7 +217,8 @@ internal class FoodSearchViewModel(
         } else {
             observeFoodByQuery(
                 query = query,
-                source = source
+                source = source,
+                excludedRecipeId = excludedRecipeId?.id
             )
         }
     }

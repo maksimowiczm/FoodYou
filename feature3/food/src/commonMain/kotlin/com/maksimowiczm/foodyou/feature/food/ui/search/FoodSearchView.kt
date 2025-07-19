@@ -52,7 +52,10 @@ internal fun FoodSearchView(
 
         if (availableSources.size > 1) {
             item {
-                HorizontalDivider()
+                if (recentSearches.isNotEmpty()) {
+                    HorizontalDivider()
+                }
+
                 Column(
                     modifier = Modifier.padding(vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -82,7 +85,10 @@ internal fun FoodSearchView(
                         }
                     }
                 }
-                HorizontalDivider()
+
+                if (recentSearches.size > 3) {
+                    HorizontalDivider()
+                }
             }
         }
 

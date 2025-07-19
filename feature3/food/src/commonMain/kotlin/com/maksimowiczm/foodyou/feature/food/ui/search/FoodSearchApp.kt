@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.food.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.stopScroll
@@ -33,17 +32,18 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -55,7 +55,6 @@ import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -79,6 +78,7 @@ import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
@@ -92,15 +92,17 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FoodSearchApp(
     onFoodClick: (FoodSearch, Measurement) -> Unit,
-    onCreateProduct: () -> Unit,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    excludedFood: FoodId.Recipe?,
     modifier: Modifier = Modifier,
-    viewModel: FoodSearchViewModel = koinViewModel(),
+    viewModel: FoodSearchViewModel = koinViewModel {
+        parametersOf(excludedFood)
+    },
     useOpenFoodFactsPreference: UseOpenFoodFacts = userPreference(),
     useUSDAPreference: UseUSDA = userPreference()
 ) {
@@ -305,23 +307,7 @@ internal fun FoodSearchApp(
         }
     }
 
-    Scaffold(
-        modifier = modifier,
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onCreateProduct,
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = !animatedVisibilityScope.transition.isRunning,
-                    alignment = Alignment.BottomEnd
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = null
-                )
-            }
-        }
-    ) { paddingValues ->
+    Scaffold(modifier) { paddingValues ->
 
         Box(Modifier.focusable().size(1.dp))
 
@@ -380,6 +366,7 @@ internal fun FoodSearchApp(
                 bottom = 56.dp + 32.dp // FAB
             ),
             listState = listState,
+            excludes = excludedFood != null,
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -520,6 +507,7 @@ private fun SearchList(
     onFoodClick: (FoodSearch, Measurement) -> Unit,
     contentPadding: PaddingValues,
     listState: LazyListState,
+    excludes: Boolean,
     modifier: Modifier = Modifier
 ) = Box(modifier) {
     if (pages.itemCount == 0) {
@@ -547,6 +535,38 @@ private fun SearchList(
         state = listState,
         contentPadding = contentPadding
     ) {
+        if (excludes) {
+            item {
+                Card(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = null
+                        )
+                        Text(
+                            text = stringResource(
+                                Res.string.description_recipe_missing_ingredients
+                            ),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+        }
+
         if (pages.loadState.refresh is LoadState.Loading) {
             items(10) {
                 FoodListItemSkeleton(shimmer)
@@ -559,16 +579,27 @@ private fun SearchList(
         ) { i ->
             val food = pages[i]
 
-            if (food == null) {
-                FoodListItemSkeleton(shimmer)
-            } else {
-                val measurement = food.defaultMeasurement
+            when (food) {
+                null -> FoodListItemSkeleton(shimmer)
+                is FoodSearch.Product -> {
+                    val measurement = food.defaultMeasurement
+                    FoodSearchListItem(
+                        food = food,
+                        measurement = measurement,
+                        onClick = { onFoodClick(food, measurement) }
+                    )
+                }
 
-                FoodSearchListItem(
-                    food = food,
-                    measurement = measurement,
-                    onClick = { onFoodClick(food, measurement) }
-                )
+                is FoodSearch.Recipe -> {
+                    val measurement = food.defaultMeasurement
+
+                    FoodSearchListItem(
+                        food = food,
+                        measurement = measurement,
+                        onClick = { onFoodClick(food, measurement) },
+                        shimmer = shimmer
+                    )
+                }
             }
         }
 

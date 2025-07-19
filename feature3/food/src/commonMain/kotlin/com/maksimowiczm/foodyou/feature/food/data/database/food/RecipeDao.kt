@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class RecipeDao {
 
     @Query("SELECT * FROM Recipe WHERE id = :recipeId")
-    abstract fun observe(recipeId: Int): Flow<Recipe?>
+    abstract fun observe(recipeId: Long): Flow<Recipe?>
 
     @Transaction
     @Query(
@@ -23,7 +23,7 @@ abstract class RecipeDao {
         WHERE r.id = :recipeId
         """
     )
-    abstract fun observeWithIngredients(recipeId: Int): Flow<RecipeWithIngredients?>
+    abstract fun observeWithIngredients(recipeId: Long): Flow<RecipeWithIngredients?>
 
     @Insert
     protected abstract suspend fun insertRecipe(recipe: Recipe): Long

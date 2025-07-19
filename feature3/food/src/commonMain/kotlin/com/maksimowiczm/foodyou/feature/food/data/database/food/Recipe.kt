@@ -9,6 +9,5 @@ data class Recipe(
     val id: Long = 0,
     val name: String,
     val servings: Int,
-    val isLiquid: Boolean,
     val note: String?
 )

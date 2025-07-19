@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.measurement.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -28,6 +29,14 @@ fun Measurement.stringResource() = when (this) {
     is Measurement.Milliliter -> {
         value.formatClipZeros() + " " + stringResource(Res.string.unit_milliliter_short)
     }
+}
+
+@Composable
+fun MeasurementType.stringResource(): String = when (this) {
+    MeasurementType.Gram -> stringResource(Res.string.unit_gram_short)
+    MeasurementType.Milliliter -> stringResource(Res.string.unit_milliliter_short)
+    MeasurementType.Package -> stringResource(Res.string.product_package)
+    MeasurementType.Serving -> stringResource(Res.string.product_serving)
 }
 
 val Measurement.Companion.NullableSaver: Saver<Measurement?, ArrayList<Any>>
