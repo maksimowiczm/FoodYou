@@ -6,12 +6,28 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 @Dao
 interface MeasurementDao {
 
     @Insert
     suspend fun insertMeasurement(measurement: Measurement)
+
+    @Insert
+    suspend fun insertMeasurements(measurements: List<Measurement>)
+
+    @Transaction
+    suspend fun replaceMeasurement(measurementId: Long, measurements: List<Measurement>) {
+        val measurement = observeMeasurementById(measurementId).first()
+
+        if (measurement == null) {
+            return
+        }
+
+        deleteMeasurement(measurement)
+        insertMeasurements(measurements)
+    }
 
     @Update
     suspend fun updateMeasurement(measurement: Measurement)
@@ -49,14 +65,18 @@ interface MeasurementDao {
         """
         SELECT DISTINCT measurement, quantity
         FROM Measurement
-        WHERE 
-            productId = :productId 
+        WHERE CASE 
+            WHEN :productId IS NOT NULL THEN productId = :productId
+            WHEN :recipeId IS NOT NULL THEN recipeId = :recipeId
+            ELSE 0 
+        END
         ORDER BY createdAt DESC
         LIMIT :limit
         """
     )
     fun observeMeasurementSuggestions(
-        productId: Long,
+        productId: Long?,
+        recipeId: Long?,
         limit: Int
     ): Flow<List<MeasurementSuggestion>>
 

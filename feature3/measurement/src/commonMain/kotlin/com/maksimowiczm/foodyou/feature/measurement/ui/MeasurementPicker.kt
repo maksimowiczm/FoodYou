@@ -240,7 +240,8 @@ fun rememberMeasurementPickerState(
             onNotPositive = { "Value must be positive" },
             onNull = { "Value cannot be empty" }
         ),
-        textFieldState = rememberTextFieldState(selectedMeasurement.rawValue.formatClipZeros())
+        textFieldState = rememberTextFieldState(selectedMeasurement.rawValue.formatClipZeros()),
+        validateFirst = true
     )
     val typeState = rememberSaveable {
         mutableStateOf(selectedMeasurement.type)

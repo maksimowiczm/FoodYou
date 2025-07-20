@@ -52,74 +52,34 @@ data class Recipe(
     }.distinct()
 
     /**
-     * Returns a list of ingredients with their measurements based on the given [measurement].
-     * The weight is calculated based on the total weight of the recipe and the serving size.
-     *
-     * The returned list contains pairs of [Food] and nullable [Measurement].
-     * If an ingredient does not have a valid measurement, it will be paired with `null`.
+     * Calculates measurements for each ingredient based on the given weight.
      */
-    fun measuredIngredients(measurement: Measurement): List<Pair<Food, Measurement?>> {
-        val weight = when (measurement) {
-            is Measurement.Milliliter -> measurement.value
-            is Measurement.Gram -> measurement.value
-            is Measurement.Package -> measurement.quantity * totalWeight
-            is Measurement.Serving -> measurement.quantity * servingWeight
-        }
+    fun measuredIngredients(weight: Float): List<RecipeIngredient> {
+        val fraction = weight / totalWeight
 
-        return measuredIngredients(weight)
-    }
+        return ingredients.map { (food, measurement) ->
+            val newMeasurement = when (measurement) {
+                is Measurement.Gram -> Measurement.Gram(
+                    measurement.value * fraction
+                )
 
-    /**
-     * Returns a list of ingredients with their measurements based on the given [weight].
-     * The weight is calculated based on the total weight of the recipe.
-     *
-     * The returned list contains pairs of [Food] and nullable [Measurement].
-     * If an ingredient does not have a valid measurement, it will be paired with `null`.
-     */
-    fun measuredIngredients(weight: Float): List<Pair<Food, Measurement?>> {
-        val fractions = ingredients
-            .mapNotNull { it.weight?.let { weight -> it.food.id to weight } }
-            .groupBy({ it.first }, { it.second })
-            .mapValues { (_, weights) -> weights.sum() / totalWeight }
+                is Measurement.Milliliter -> Measurement.Milliliter(
+                    measurement.value * fraction
+                )
 
-        val measurements = ingredients.map { ingredient ->
-            val fraction = fractions[ingredient.food.id]
+                is Measurement.Package -> Measurement.Package(
+                    measurement.quantity * fraction
+                )
 
-            if (fraction == null) {
-                return@map ingredient.food to null
+                is Measurement.Serving -> Measurement.Serving(
+                    measurement.quantity * fraction
+                )
             }
 
-            val ingredientWeight = weight * fraction
-            val measurement = when (ingredient.measurement) {
-                is Measurement.Milliliter -> Measurement.Milliliter(ingredientWeight)
-                is Measurement.Gram -> Measurement.Gram(ingredientWeight)
-
-                is Measurement.Package -> {
-                    val packageWeight = ingredient.food.totalWeight
-
-                    if (packageWeight == null) {
-                        return@map ingredient.food to null
-                    }
-
-                    val quantity = ingredientWeight / packageWeight
-                    Measurement.Package(quantity)
-                }
-
-                is Measurement.Serving -> {
-                    val servingWeight = ingredient.food.servingWeight
-
-                    if (servingWeight == null) {
-                        return@map ingredient.food to null
-                    }
-
-                    val quantity = ingredientWeight / servingWeight
-                    Measurement.Serving(quantity)
-                }
-            }
-
-            ingredient.food to measurement
+            RecipeIngredient(
+                food = food,
+                measurement = newMeasurement
+            )
         }
-
-        return measurements
     }
 }

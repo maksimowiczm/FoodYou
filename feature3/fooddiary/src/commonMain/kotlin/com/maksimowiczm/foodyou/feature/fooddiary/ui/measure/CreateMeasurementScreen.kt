@@ -13,23 +13,23 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-internal fun CreateProductMeasurementScreen(
+internal fun CreateMeasurementScreen(
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     onCreateMeasurement: () -> Unit,
-    productId: FoodId.Product,
+    foodId: FoodId,
     mealId: Long,
     date: LocalDate,
     measurement: Measurement?,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
-    val viewModel = koinViewModel<CreateMeasurementScreenViewModel>(
-        parameters = { parametersOf(productId) }
+    val viewModel = koinViewModel<CreateMeasurementViewModel>(
+        parameters = { parametersOf(foodId) }
     )
 
-    val product = viewModel.product.collectAsStateWithLifecycle().value
+    val food = viewModel.food.collectAsStateWithLifecycle().value
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
     val today = viewModel.today.collectAsStateWithLifecycle().value
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
@@ -45,19 +45,20 @@ internal fun CreateProductMeasurementScreen(
         }
     }
 
-    if (product == null ||
+    if (food == null ||
         suggestions == null ||
         selectedMeasurement == null ||
         possibleTypes == null
     ) {
         // TODO loading state
     } else {
-        ProductMeasurementScreen(
+        FoodMeasurementScreen(
             onBack = onBack,
             onEdit = onEdit,
-            onDelete = viewModel::deleteProduct,
+            onDelete = viewModel::deleteFood,
             onMeasure = viewModel::createMeasurement,
-            product = product,
+            onUnpack = viewModel::unpack,
+            food = food,
             today = today,
             selectedDate = date,
             meals = meals,

@@ -7,8 +7,9 @@ plugins {
 
 kotlin {
 
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
+    sourceSets.all {
+        languageSettings.enableLanguageFeature("WhenGuards")
+        languageSettings.enableLanguageFeature("ExpectActualClasses")
     }
 
     // Target declarations - add or remove as needed below. These define

@@ -8,12 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.Product
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-internal fun UpdateProductMeasurementScreen(
+internal fun UpdateMeasurementScreen(
     onBack: () -> Unit,
     onEdit: (FoodId) -> Unit,
     onDelete: () -> Unit,
@@ -22,7 +21,7 @@ internal fun UpdateProductMeasurementScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier.Companion
 ) {
-    val viewModel = koinViewModel<UpdateProductMeasurementViewModel>(
+    val viewModel = koinViewModel<UpdateMeasurementViewModel>(
         parameters = { parametersOf(measurementId) }
     )
 
@@ -51,23 +50,22 @@ internal fun UpdateProductMeasurementScreen(
     ) {
         // TODO loading state
     } else {
-        when (food) {
-            is Product -> ProductMeasurementScreen(
-                onBack = onBack,
-                onEdit = { onEdit(food.id) },
-                onDelete = viewModel::deleteProduct,
-                onMeasure = viewModel::updateMeasurement,
-                product = food,
-                today = today,
-                selectedDate = measurementDate,
-                meals = meals,
-                selectedMeal = meals.first { it.id == mealId },
-                suggestions = suggestions,
-                possibleTypes = possibleTypes,
-                animatedVisibilityScope = animatedVisibilityScope,
-                modifier = modifier,
-                selectedMeasurement = selectedMeasurement
-            )
-        }
+        FoodMeasurementScreen(
+            onBack = onBack,
+            onEdit = { onEdit(food.id) },
+            onDelete = viewModel::deleteProduct,
+            onMeasure = viewModel::updateMeasurement,
+            onUnpack = viewModel::unpack,
+            food = food,
+            today = today,
+            selectedDate = measurementDate,
+            meals = meals,
+            selectedMeal = meals.first { it.id == mealId },
+            suggestions = suggestions,
+            possibleTypes = possibleTypes,
+            animatedVisibilityScope = animatedVisibilityScope,
+            modifier = modifier,
+            selectedMeasurement = selectedMeasurement
+        )
     }
 }
