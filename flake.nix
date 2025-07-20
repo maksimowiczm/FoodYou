@@ -3,15 +3,15 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    # Make sure that the version of ktlint is 1.5.0
-    ktlint_1_5_0.url = "github:nixos/nixpkgs/d98abf5cf5914e5e4e9d57205e3af55ca90ffc1d";
+    # Make sure that the version of ktlint is 1.6.0
+    ktlint_1_6_0.url = "github:nixos/nixpkgs/e6f23dc08d3624daab7094b701aa3954923c6bbb";
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      ktlint_1_5_0,
+      ktlint_1_6_0,
       ...
     }@inputs:
     let
@@ -35,8 +35,8 @@
       };
 
       ktlintComposeJar = pkgs.fetchurl {
-        url = "https://github.com/mrmans0n/compose-rules/releases/download/v0.4.22/ktlint-compose-0.4.22-all.jar";
-        sha256 = "98118356601fa5817145aebf3887bedd311791a4599ae644c602c52453d9dda2";
+        url = "https://github.com/mrmans0n/compose-rules/releases/download/v0.4.24/ktlint-compose-0.4.24-all.jar";
+        sha256 = "196a8aed6ca2bde9c02efeb13672881d99c733b3606fe65fe87a241655bb5d31";
       };
 
       pythonEnv = pkgs.python3.withPackages (ps: with ps; [ pandas openpyxl ]);
@@ -51,7 +51,7 @@
         ];
 
         nativeBuildInputs = [
-          ktlint_1_5_0.legacyPackages.${system}.ktlint
+          ktlint_1_6_0.legacyPackages.${system}.ktlint
         ];
 
         KTLINT_COMPOSE_JAR = "${ktlintComposeJar}";
