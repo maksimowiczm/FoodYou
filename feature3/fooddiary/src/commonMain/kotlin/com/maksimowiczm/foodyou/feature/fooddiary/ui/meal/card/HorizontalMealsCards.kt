@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal.ui.card
+package com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.card
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -12,29 +12,33 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.model.FoodId
-import com.maksimowiczm.foodyou.core.model.Measurement
-import com.maksimowiczm.foodyou.feature.meal.domain.Meal
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.userPreference
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.Meal
 import com.valentinilk.shimmer.Shimmer
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalAnimationApi::class)
 @Composable
 internal fun HorizontalMealsCards(
     meals: List<Meal>?,
     onAdd: (mealId: Long) -> Unit,
     onEditMeasurement: (Long) -> Unit,
-    onUnpackRecipe: (FoodId.Recipe, mealId: Long, Measurement, measurementId: Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
-    onLongClick: () -> Unit,
+    onLongClick: (mealId: Long) -> Unit,
     shimmer: Shimmer,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
+    val orderPreference = userPreference<NutrientsOrderPreference>()
+    val order = orderPreference.collectAsStateWithLifecycle(orderPreference.getBlocking()).value
+
     // Must be same as meals count or more but since we don't have meals count yet set it to some
     // extreme value. If it is less than actual meals count pager will scroll back to the
     // last item which is annoying for the user.
@@ -69,13 +73,11 @@ internal fun HorizontalMealsCards(
             if (it != null && meal != null) {
                 MealCard(
                     meal = meal,
+                    order = order,
                     onAddFood = { onAdd(meal.id) },
                     onEditMeasurement = onEditMeasurement,
-                    onUnpackRecipe = { recipeId, measurement, measurementId ->
-                        onUnpackRecipe(recipeId, meal.id, measurement, measurementId)
-                    },
                     onDeleteEntry = onDeleteEntry,
-                    onLongClick = onLongClick
+                    onLongClick = { onLongClick(meal.id) }
                 )
             } else {
                 MealCardSkeleton(

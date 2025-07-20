@@ -1,18 +1,15 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.card
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.getBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.HomeState
-import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
+import com.maksimowiczm.foodyou.feature.fooddiary.preferences.MealsCardsLayout
+import com.maksimowiczm.foodyou.feature.fooddiary.preferences.MealsCardsLayoutPreference
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -20,12 +17,14 @@ internal fun MealsCards(
     homeState: HomeState,
     onAdd: (epochDay: Long, mealId: Long) -> Unit,
     onEditMeasurement: (Long) -> Unit,
+    onLongClick: (mealId: Long) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     val viewModel: MealsCardsViewModel = koinViewModel()
-    val orderPreference = userPreference<NutrientsOrderPreference>()
-    val order = orderPreference.collectAsStateWithLifecycle(orderPreference.getBlocking()).value
+    val layoutPreference: MealsCardsLayoutPreference = userPreference()
+
+    val layout = layoutPreference.collectAsStateWithLifecycle(layoutPreference.getBlocking()).value
 
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
 
@@ -33,24 +32,27 @@ internal fun MealsCards(
         viewModel.setDate(homeState.selectedDate)
     }
 
-    Column(
-        modifier = modifier.padding(contentPadding),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        if (meals == null) {
-            repeat(4) {
-                MealCardSkeleton(shimmer = homeState.shimmer)
-            }
-        } else {
-            meals.forEach { meal ->
-                MealCard(
-                    meal = meal,
-                    order = order,
-                    onAddFood = { onAdd(homeState.selectedDate.toEpochDays(), meal.id) },
-                    onEditMeasurement = onEditMeasurement,
-                    onDeleteEntry = viewModel::onDeleteMeasurement
-                )
-            }
-        }
+    when (layout) {
+        MealsCardsLayout.Horizontal -> HorizontalMealsCards(
+            meals = meals,
+            onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
+            onEditMeasurement = onEditMeasurement,
+            onDeleteEntry = viewModel::onDeleteMeasurement,
+            onLongClick = onLongClick,
+            shimmer = homeState.shimmer,
+            contentPadding = contentPadding,
+            modifier = modifier
+        )
+
+        MealsCardsLayout.Vertical -> VerticalMealsCards(
+            meals = meals,
+            onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
+            onEditMeasurement = onEditMeasurement,
+            onDeleteEntry = viewModel::onDeleteMeasurement,
+            onLongClick = onLongClick,
+            shimmer = homeState.shimmer,
+            contentPadding = contentPadding,
+            modifier = modifier
+        )
     }
 }

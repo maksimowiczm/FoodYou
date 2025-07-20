@@ -22,13 +22,13 @@ fun FoodYouNavHost(
         modifier = modifier
     ) {
         appGraph(
-            homeOnSettings = {
-                navController.navigate(Settings) {
+            homeOnAbout = {
+                navController.navigate(About) {
                     launchSingleTop = true
                 }
             },
-            homeOnAbout = {
-                navController.navigate(About) {
+            homeOnSettings = {
+                navController.navigate(Settings) {
                     launchSingleTop = true
                 }
             },
@@ -47,8 +47,15 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
-            settingsOnBack = {
-                navController.popBackStack<Settings>(true)
+            homeMealCardOnLongClick = {
+                navController.navigate(MealsCardsSettings) {
+                    launchSingleTop = true
+                }
+            },
+            settingsOnMeals = {
+                navController.navigate(MealSettings) {
+                    launchSingleTop = true
+                }
             },
             settingsOnLanguage = {
                 navController.navigate(Language) {
@@ -64,6 +71,9 @@ fun FoodYouNavHost(
                 navController.navigate(About) {
                     launchSingleTop = true
                 }
+            },
+            settingsOnBack = {
+                navController.popBackStack<Settings>(true)
             }
         )
         foodDiaryGraph(
@@ -191,6 +201,24 @@ fun FoodYouNavHost(
             },
             updateMeasurementOnUpdate = {
                 navController.popBackStack<UpdateProductMeasurement>(true)
+            },
+            mealSettingsOnBack = {
+                navController.popBackStack<MealSettings>(true)
+            },
+            mealSettingsOnMealsCardsSettings = {
+                navController.navigate(MealsCardsSettings) {
+                    launchSingleTop = true
+                    popUpTo<MealsCardsSettings>()
+                }
+            },
+            mealsCardsSettingsOnBack = {
+                navController.popBackStack<MealsCardsSettings>(true)
+            },
+            mealsCardsOnMealSettings = {
+                navController.navigate(MealSettings) {
+                    launchSingleTop = true
+                    popUpTo<MealSettings>()
+                }
             }
         )
         aboutGraph(

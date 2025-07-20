@@ -9,8 +9,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 
 @Suppress("ktlint:compose:parameter-naming")
 @Composable
+context(scope: ReorderableCollectionItemScope)
 fun Modifier.hapticDraggableHandle(
-    scope: ReorderableCollectionItemScope,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
     onDragStarted: (startedPosition: Offset) -> Unit = {},

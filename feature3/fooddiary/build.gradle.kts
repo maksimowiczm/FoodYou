@@ -8,6 +8,10 @@ plugins {
 
 kotlin {
 
+    sourceSets.all {
+        languageSettings.enableLanguageFeature("ContextParameters")
+    }
+
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.feature.fooddiary"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -68,9 +72,6 @@ kotlin {
             implementation(libs.androidx.room.paging)
 
             implementation(libs.kotlinx.serialization.json)
-
-            // Shimmer
-            api(libs.compose.shimmer)
         }
 
         commonTest.dependencies {

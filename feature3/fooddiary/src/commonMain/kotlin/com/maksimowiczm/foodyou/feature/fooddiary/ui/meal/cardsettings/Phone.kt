@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal.ui.cardsettings
+package com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.cardsettings
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape

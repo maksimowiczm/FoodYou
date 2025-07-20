@@ -34,6 +34,7 @@ fun HomeScreen(
     onAbout: () -> Unit,
     mealCardOnAdd: (epochDay: Long, mealId: Long) -> Unit,
     mealCardOnEditMeasurement: (measurementId: Long) -> Unit,
+    mealCardOnLongClick: (mealId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -87,6 +88,7 @@ fun HomeScreen(
                     homeState = homeState,
                     onAdd = mealCardOnAdd,
                     onEditMeasurement = mealCardOnEditMeasurement,
+                    onLongClick = mealCardOnLongClick,
                     contentPadding = PaddingValues(8.dp)
                 )
             }

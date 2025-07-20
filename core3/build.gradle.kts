@@ -10,6 +10,7 @@ kotlin {
     sourceSets.all {
         languageSettings.enableLanguageFeature("WhenGuards")
         languageSettings.enableLanguageFeature("ExpectActualClasses")
+        languageSettings.enableLanguageFeature("ContextParameters")
     }
 
     // Target declarations - add or remove as needed below. These define
@@ -95,6 +96,9 @@ kotlin {
 
             // Shimmer
             api(libs.compose.shimmer)
+
+            // Reorderable
+            api(libs.reorderable)
         }
 
         commonTest.dependencies {

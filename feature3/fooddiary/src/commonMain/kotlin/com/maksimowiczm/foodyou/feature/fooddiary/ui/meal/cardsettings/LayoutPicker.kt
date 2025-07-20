@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal.ui.cardsettings
+package com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.cardsettings
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
@@ -21,15 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.meal.data.MealCardsLayout
+import com.maksimowiczm.foodyou.feature.fooddiary.preferences.MealsCardsLayout
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun LayoutPicker(
-    layout: MealCardsLayout,
-    onLayoutChange: (MealCardsLayout) -> Unit,
+    layout: MealsCardsLayout,
+    onLayoutChange: (MealsCardsLayout) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -37,8 +37,8 @@ internal fun LayoutPicker(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         LayoutContainer(
-            selected = layout == MealCardsLayout.Horizontal,
-            onClick = { onLayoutChange(MealCardsLayout.Horizontal) },
+            selected = layout == MealsCardsLayout.Horizontal,
+            onClick = { onLayoutChange(MealsCardsLayout.Horizontal) },
             layout = { LayoutHorizontal() },
             label = {
                 Text(
@@ -49,8 +49,8 @@ internal fun LayoutPicker(
         )
 
         LayoutContainer(
-            selected = layout == MealCardsLayout.Vertical,
-            onClick = { onLayoutChange(MealCardsLayout.Vertical) },
+            selected = layout == MealsCardsLayout.Vertical,
+            onClick = { onLayoutChange(MealsCardsLayout.Vertical) },
             layout = { LayoutVertical() },
             label = {
                 Text(

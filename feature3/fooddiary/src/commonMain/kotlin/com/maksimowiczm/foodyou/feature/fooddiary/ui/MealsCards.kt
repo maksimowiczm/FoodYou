@@ -11,6 +11,7 @@ fun MealsCards(
     homeState: HomeState,
     onAdd: (epochDay: Long, mealId: Long) -> Unit,
     onEditMeasurement: (Long) -> Unit,
+    onLongClick: (mealId: Long) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -18,6 +19,7 @@ fun MealsCards(
         homeState = homeState,
         onAdd = onAdd,
         onEditMeasurement = onEditMeasurement,
+        onLongClick = onLongClick,
         contentPadding = contentPadding,
         modifier = modifier
     )

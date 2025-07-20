@@ -35,6 +35,7 @@ import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
 import com.maksimowiczm.foodyou.feature.about.SponsorSettingsListItem
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.MealSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.headline_settings
@@ -46,6 +47,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onMeals: () -> Unit,
     onLanguage: () -> Unit,
     onSponsor: () -> Unit,
     onAbout: () -> Unit,
@@ -94,6 +96,15 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .padding(vertical = 24.dp)
                         .height(16.dp)
+                )
+            }
+
+            item {
+                MealSettingsListItem(
+                    onClick = onMeals,
+                    shape = shape,
+                    color = color,
+                    contentColor = contentColor
                 )
             }
 

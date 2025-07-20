@@ -9,6 +9,8 @@ import com.maksimowiczm.foodyou.feature.food.ui.CreateRecipeScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateRecipeScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.cardsettings.MealsCardsSettings
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.settings.MealSettingsScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
@@ -105,6 +107,12 @@ data class CreateMeasurement(
 @Serializable
 data class UpdateProductMeasurement(val measurementId: Long)
 
+@Serializable
+data object MealSettings
+
+@Serializable
+data object MealsCardsSettings
+
 fun NavGraphBuilder.foodDiaryGraph(
     foodSearchOnBack: () -> Unit,
     foodSearchOnCreateProduct: (mealId: Long, date: LocalDate) -> Unit,
@@ -125,7 +133,11 @@ fun NavGraphBuilder.foodDiaryGraph(
     updateMeasurementOnBack: () -> Unit,
     updateMeasurementOnEdit: (FoodId) -> Unit,
     updateMeasurementOnDelete: () -> Unit,
-    updateMeasurementOnUpdate: () -> Unit
+    updateMeasurementOnUpdate: () -> Unit,
+    mealSettingsOnBack: () -> Unit,
+    mealSettingsOnMealsCardsSettings: () -> Unit,
+    mealsCardsSettingsOnBack: () -> Unit,
+    mealsCardsOnMealSettings: () -> Unit
 ) {
     forwardBackwardComposable<FoodSearch> { backStack ->
         val route = backStack.toRoute<FoodSearch>()
@@ -207,6 +219,18 @@ fun NavGraphBuilder.foodDiaryGraph(
             id = route.foodId,
             onBack = updateRecipeOnBack,
             onUpdate = updateRecipeOnUpdate
+        )
+    }
+    forwardBackwardComposable<MealSettings> {
+        MealSettingsScreen(
+            onBack = mealSettingsOnBack,
+            onMealsCardsSettings = mealSettingsOnMealsCardsSettings
+        )
+    }
+    forwardBackwardComposable<MealsCardsSettings> {
+        MealsCardsSettings(
+            onBack = mealsCardsSettingsOnBack,
+            onMealSettings = mealsCardsOnMealSettings
         )
     }
 }

@@ -20,7 +20,7 @@ fun LocalDateTime.Companion.now(
 fun LocalDate.Companion.now(timeZone: TimeZone = TimeZone.currentSystemDefault()): LocalDate =
     LocalDateTime.now(timeZone).date
 
-fun LocalDate.plus(duration: Duration): LocalDate =
+operator fun LocalDate.plus(duration: Duration): LocalDate =
     this.plus(duration.inWholeDays, DateTimeUnit.DAY)
 
 operator fun LocalDate.minus(duration: Duration): LocalDate =

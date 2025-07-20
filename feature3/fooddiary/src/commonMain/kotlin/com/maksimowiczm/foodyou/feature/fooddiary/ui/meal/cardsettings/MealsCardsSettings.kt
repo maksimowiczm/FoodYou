@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.meal.ui.cardsettings
+package com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.cardsettings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,81 +7,85 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ext.lambda
-import com.maksimowiczm.foodyou.core.ext.observe
-import com.maksimowiczm.foodyou.core.ext.set
-import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.userPreference
+import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.ext.performToggle
-import com.maksimowiczm.foodyou.feature.meal.data.MealCardsLayout
-import com.maksimowiczm.foodyou.feature.meal.data.MealPreferences
-import com.maksimowiczm.foodyou.feature.meal.data.collectMealCardsLayout
-import com.maksimowiczm.foodyou.feature.meal.data.setMealCardsLayout
+import com.maksimowiczm.foodyou.feature.fooddiary.preferences.IgnoreAllDayMeals
+import com.maksimowiczm.foodyou.feature.fooddiary.preferences.MealsCardsLayout
+import com.maksimowiczm.foodyou.feature.fooddiary.preferences.MealsCardsLayoutPreference
+import com.maksimowiczm.foodyou.feature.fooddiary.preferences.UseTimeBasedSorting
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
-internal fun MealCardSettings(
-    onMealsSettings: () -> Unit,
+internal fun MealsCardsSettings(
     onBack: () -> Unit,
+    onMealSettings: () -> Unit,
     modifier: Modifier = Modifier,
-    dataStore: DataStore<Preferences> = koinInject()
+    layoutPreference: MealsCardsLayoutPreference = userPreference(),
+    useTimeBasedSortingPreference: UseTimeBasedSorting = userPreference(),
+    ignoreAllDayMealsPreference: IgnoreAllDayMeals = userPreference()
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val useTimeBasedSorting = dataStore
-        .observe(MealPreferences.timeBasedSorting)
-        .collectAsStateWithLifecycle(false).value ?: false
+    val useTimeBasedSorting = useTimeBasedSortingPreference
+        .collectAsStateWithLifecycle(useTimeBasedSortingPreference.getBlocking()).value
 
-    val includeAllDayMeals = dataStore
-        .observe(MealPreferences.ignoreAllDayMeals)
-        .collectAsStateWithLifecycle(false).value ?: false
+    val ignoreAllDayMeals = ignoreAllDayMealsPreference
+        .collectAsStateWithLifecycle(ignoreAllDayMealsPreference.getBlocking()).value
 
-    val layout = dataStore.collectMealCardsLayout().value
+    val layout = layoutPreference.collectAsStateWithLifecycle(layoutPreference.getBlocking()).value
 
     MealCardSettings(
         layout = layout,
-        onLayoutChange = coroutineScope.lambda<MealCardsLayout> {
-            dataStore.setMealCardsLayout(it)
+        onLayoutChange = {
+            coroutineScope.launch {
+                layoutPreference.set(it)
+            }
         },
         useTimeBasedSorting = useTimeBasedSorting,
-        toggleTimeBased = coroutineScope.lambda<Boolean> {
-            dataStore.set(MealPreferences.timeBasedSorting to it)
+        toggleTimeBased = {
+            coroutineScope.launch {
+                useTimeBasedSortingPreference.set(it)
+            }
         },
-        ignoreAllDayMeals = includeAllDayMeals,
-        toggleIgnoreAllDayMeals = coroutineScope.lambda<Boolean> {
-            dataStore.set(MealPreferences.ignoreAllDayMeals to it)
+        ignoreAllDayMeals = ignoreAllDayMeals,
+        toggleIgnoreAllDayMeals = {
+            coroutineScope.launch {
+                ignoreAllDayMealsPreference.set(it)
+            }
         },
-        onMealsSettings = onMealsSettings,
+        onMealsSettings = onMealSettings,
         onBack = onBack,
         modifier = modifier
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun MealCardSettings(
-    layout: MealCardsLayout,
-    onLayoutChange: (MealCardsLayout) -> Unit,
+    layout: MealsCardsLayout,
+    onLayoutChange: (MealsCardsLayout) -> Unit,
     useTimeBasedSorting: Boolean,
     toggleTimeBased: (Boolean) -> Unit,
     ignoreAllDayMeals: Boolean,
@@ -96,7 +100,7 @@ internal fun MealCardSettings(
 
     Scaffold(
         topBar = {
-            MediumTopAppBar(
+            MediumFlexibleTopAppBar(
                 title = { Text(stringResource(Res.string.headline_meals)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 scrollBehavior = scrollBehavior
@@ -108,7 +112,7 @@ internal fun MealCardSettings(
             modifier = Modifier
                 .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
+            contentPadding = paddingValues.add(vertical = 8.dp)
         ) {
             item {
                 LayoutPicker(

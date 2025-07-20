@@ -64,6 +64,7 @@ internal fun MealCard(
     onAddFood: () -> Unit,
     onEditMeasurement: (Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
@@ -85,7 +86,8 @@ internal fun MealCard(
 
     FoodYouHomeCard(
         modifier = modifier,
-        onClick = onAddFood
+        onClick = onAddFood,
+        onLongClick = onLongClick
     ) {
         Column(
             modifier = Modifier
