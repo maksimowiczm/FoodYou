@@ -24,10 +24,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core-ui"))
-            implementation(project(":core-model"))
             implementation(project(":core-database"))
-            implementation(project(":core-domain"))
 
             implementation(libs.kotlinx.serialization.json)
 

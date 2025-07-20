@@ -46,12 +46,7 @@ kotlin {
             implementation(libs.androidx.browser)
         }
         commonMain.dependencies {
-            implementation(project(":core-ui"))
             implementation(project(":core-database"))
-            implementation(project(":core-model"))
-            implementation(project(":core-domain"))
-            implementation(project(":feature:measurement"))
-            implementation(project(":feature:meal"))
             implementation(project(":feature:goals"))
             implementation(project(":feature:importexport"))
             implementation(project(":feature:swissfoodcompositiondatabase"))
