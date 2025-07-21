@@ -11,6 +11,8 @@ import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCaseImpl
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapperImpl
+import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
+import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapperImpl
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductRequestFactoryImpl
 import com.maksimowiczm.foodyou.feature.food.ui.product.create.CreateProductViewModel
@@ -34,7 +36,17 @@ val foodModule = module {
     factoryOf(::FoodSearchMapperImpl).bind<FoodSearchMapper>()
 
     viewModel { (excludedFood: FoodId.Recipe?) ->
-        FoodSearchViewModel(excludedFood, get(), get(), get(), get(), get())
+        FoodSearchViewModel(
+            excludedFood,
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
     }
 
     factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
@@ -58,4 +70,6 @@ val foodModule = module {
     factoryOf(::ObserveRecipeUseCaseImpl).bind<ObserveRecipeUseCase>()
 
     viewModelOf(::UpdateRecipeViewModel)
+
+    factoryOf(::RemoteProductMapperImpl).bind<RemoteProductMapper>()
 }

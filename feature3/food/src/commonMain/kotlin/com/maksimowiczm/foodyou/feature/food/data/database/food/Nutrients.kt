@@ -12,7 +12,7 @@ data class Nutrients(
     val omega3: Float?,
     val omega6: Float?,
     // Carbs
-    val carbohydrates: Float,
+    val carbohydrates: Float?,
     val sugars: Float?,
     val addedSugars: Float?,
     val dietaryFiber: Float?,

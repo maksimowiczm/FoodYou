@@ -30,7 +30,7 @@ internal class USDAFacade(
      */
     suspend fun createRequest(id: String) = USDAProductRequest(
         dataSource = dataSource,
-        apiKey = apiKey.getBlocking() ?: "DEMO_KEY",
+        apiKey = apiKey.getBlocking(),
         id = id,
         mapper = mapper
     )

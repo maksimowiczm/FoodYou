@@ -84,7 +84,9 @@ import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
 import com.maksimowiczm.foodyou.feature.food.preferences.UseUSDA
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton
+import com.maksimowiczm.foodyou.feature.food.ui.UsdaErrorCard
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
+import com.maksimowiczm.foodyou.feature.usda.USDAException
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
@@ -245,9 +247,17 @@ internal fun FoodSearchApp(
             )
 
             val offIsLoading = openFoodFactsPages.delayedLoadingState()
+            val openFoodFactsError = openFoodFactsPages.loadState.error
             DatabaseFilterChip(
-                state = remember(openFoodFactsCount, useOpenFoodFacts, offIsLoading) {
-                    if (!useOpenFoodFacts) {
+                state = remember(
+                    openFoodFactsCount,
+                    useOpenFoodFacts,
+                    offIsLoading,
+                    openFoodFactsError
+                ) {
+                    if (openFoodFactsError != null) {
+                        DatabaseFilterChipState.Error
+                    } else if (!useOpenFoodFacts) {
                         DatabaseFilterChipState.ActionRequired
                     } else if (offIsLoading) {
                         DatabaseFilterChipState.Loading
@@ -274,9 +284,12 @@ internal fun FoodSearchApp(
             )
 
             val usdaIsLoading = usdaPages.delayedLoadingState()
+            val usdaError = usdaPages.loadState.error
             DatabaseFilterChip(
-                state = remember(usdaCount, useUSDA, usdaIsLoading) {
-                    if (!useUSDA) {
+                state = remember(usdaCount, useUSDA, usdaIsLoading, usdaError) {
+                    if (usdaError != null) {
+                        DatabaseFilterChipState.Error
+                    } else if (!useUSDA) {
                         DatabaseFilterChipState.ActionRequired
                     } else if (usdaIsLoading) {
                         DatabaseFilterChipState.Loading
@@ -342,8 +355,17 @@ internal fun FoodSearchApp(
             )
 
             val error = pages.loadState.error
-            if (pages.loadState.hasError) {
-                ErrorCard(
+
+            when (val ex = pages.loadState.error) {
+                null -> Unit
+                is USDAException -> UsdaErrorCard(
+                    error = ex,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+
+                else -> ErrorCard(
                     message = error?.message ?: stringResource(Res.string.error_unknown_error),
                     onRetry = pages::retry,
                     modifier = Modifier
@@ -453,7 +475,7 @@ private fun ErrorCard(message: String, onRetry: () -> Unit, modifier: Modifier =
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = stringResource(Res.string.neutral_open_food_facts_error),
+                text = stringResource(Res.string.neutral_remote_database_error),
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(Modifier.height(8.dp))

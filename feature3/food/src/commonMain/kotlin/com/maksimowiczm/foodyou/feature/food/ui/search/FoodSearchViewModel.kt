@@ -19,12 +19,17 @@ import com.maksimowiczm.foodyou.feature.food.data.database.search.FoodSearchDao
 import com.maksimowiczm.foodyou.feature.food.data.database.search.SearchEntry
 import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFoodFactsProductMapper
 import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFoodFactsRemoteMediator
+import com.maksimowiczm.foodyou.feature.food.data.network.usda.USDAProductMapper
+import com.maksimowiczm.foodyou.feature.food.data.network.usda.USDARemoteMediator
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
+import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
+import com.maksimowiczm.foodyou.feature.food.preferences.UsdaApiKey
 import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
 import com.maksimowiczm.foodyou.feature.food.preferences.UseUSDA
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.feature.usda.USDARemoteDataSource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,6 +37,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapValues
@@ -41,15 +47,19 @@ import kotlinx.coroutines.launch
 internal class FoodSearchViewModel(
     private val excludedRecipeId: FoodId.Recipe?,
     foodDatabase: FoodDatabase,
-    private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource,
     dataStore: DataStore<Preferences>,
     private val foodSearchMapper: FoodSearchMapper,
-    private val openFoodFactsMapper: OpenFoodFactsProductMapper
+    private val remoteProductMapper: RemoteProductMapper,
+    private val openFoodFactsMapper: OpenFoodFactsProductMapper,
+    private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource,
+    private val usdaRemoteDataSource: USDARemoteDataSource,
+    private val usdaMapper: USDAProductMapper
 ) : ViewModel() {
     private val foodSearchDao = foodDatabase.foodSearchDao
 
     private val useOpenFoodFacts = dataStore.userPreference<UseOpenFoodFacts>()
     private val useUSDA = dataStore.userPreference<UseUSDA>()
+    private val usdaApiKey = dataStore.userPreference<UsdaApiKey>()
 
     private val searchQuery = MutableStateFlow<String?>(null)
 
@@ -109,7 +119,8 @@ internal class FoodSearchViewModel(
                     query = query,
                     country = null,
                     isBarcode = isBarcode,
-                    mapper = openFoodFactsMapper
+                    offMapper = openFoodFactsMapper,
+                    remoteMapper = remoteProductMapper
                 )
             } else {
                 null
@@ -125,10 +136,29 @@ internal class FoodSearchViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
     val usdaPages = useUSDA.observe().filter { it }.flatMapLatest {
-        searchQuery.flatMapLatest { query ->
+        combine(
+            searchQuery,
+            usdaApiKey.observe()
+        ) { query, apiKey ->
+            val mediator = if (query != null) {
+                USDARemoteMediator<FoodSearch>(
+                    remoteDataSource = usdaRemoteDataSource,
+                    foodDatabase = foodDatabase,
+                    query = query,
+                    apiKey = apiKey,
+                    usdaMapper = usdaMapper,
+                    remoteMapper = remoteProductMapper
+                )
+            } else {
+                null
+            }
+
+            query to mediator
+        }.flatMapLatest { (query, mediator) ->
             pager(
                 query = query,
-                source = FoodSource.Type.USDA
+                source = FoodSource.Type.USDA,
+                mediator = mediator
             )
         }
     }.cachedIn(viewModelScope)

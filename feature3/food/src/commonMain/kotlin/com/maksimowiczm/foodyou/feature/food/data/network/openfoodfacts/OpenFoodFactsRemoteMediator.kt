@@ -6,12 +6,9 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
-import com.maksimowiczm.foodyou.feature.food.data.database.food.Minerals
-import com.maksimowiczm.foodyou.feature.food.data.database.food.Nutrients
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
-import com.maksimowiczm.foodyou.feature.food.data.database.food.Vitamins
 import com.maksimowiczm.foodyou.feature.food.data.database.openfoodfacts.OpenFoodFactsPagingKey
-import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
+import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.ProductNotFoundException
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.model.OpenFoodFactsProduct as NetworkOpenFoodFactsProduct
@@ -23,7 +20,8 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
     private val query: String,
     private val country: String?,
     private val isBarcode: Boolean,
-    mapper: OpenFoodFactsProductMapper
+    private val offMapper: OpenFoodFactsProductMapper,
+    private val remoteMapper: RemoteProductMapper
 ) : RemoteMediator<Int, T>() {
 
     private val productDao = foodDatabase.productDao
@@ -135,71 +133,9 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
         private const val PAGE_SIZE = 50
     }
 
-    private val m = mapper
-    private fun NetworkOpenFoodFactsProduct.toEntity(): Product? = m.toRemoteProduct(this).run {
-        // Ignore products with no name or nutrition facts
-        if (name == null || nutritionFacts == null) {
-            return null
-        }
-
-        return Product(
-            name = name,
-            brand = brand?.takeIf { it.isNotBlank() },
-            barcode = barcode?.takeIf { it.isNotBlank() },
-            packageWeight = packageWeight,
-            servingWeight = servingWeight,
-            nutrients = Nutrients(
-                energy = nutritionFacts.energy,
-                proteins = nutritionFacts.proteins,
-                fats = nutritionFacts.fats,
-                saturatedFats = nutritionFacts.saturatedFats,
-                transFats = nutritionFacts.transFats,
-                monounsaturatedFats = nutritionFacts.monounsaturatedFats,
-                polyunsaturatedFats = nutritionFacts.polyunsaturatedFats,
-                omega3 = nutritionFacts.omega3,
-                omega6 = nutritionFacts.omega6,
-                carbohydrates = nutritionFacts.carbohydrates ?: 0f,
-                sugars = nutritionFacts.sugars,
-                addedSugars = nutritionFacts.addedSugars,
-                dietaryFiber = nutritionFacts.fiber,
-                solubleFiber = nutritionFacts.solubleFiber,
-                insolubleFiber = nutritionFacts.insolubleFiber,
-                salt = nutritionFacts.salt,
-                cholesterolMilli = nutritionFacts.cholesterolMilli,
-                caffeineMilli = nutritionFacts.caffeineMilli
-            ),
-            vitamins = Vitamins(
-                vitaminAMicro = nutritionFacts.vitaminAMicro,
-                vitaminB1Milli = nutritionFacts.vitaminB1Milli,
-                vitaminB2Milli = nutritionFacts.vitaminB2Milli,
-                vitaminB3Milli = nutritionFacts.vitaminB3Milli,
-                vitaminB5Milli = nutritionFacts.vitaminB5Milli,
-                vitaminB6Milli = nutritionFacts.vitaminB6Milli,
-                vitaminB7Micro = nutritionFacts.vitaminB7Micro,
-                vitaminB9Micro = nutritionFacts.vitaminB9Micro,
-                vitaminB12Micro = nutritionFacts.vitaminB12Micro,
-                vitaminCMilli = nutritionFacts.vitaminCMilli,
-                vitaminDMicro = nutritionFacts.vitaminDMicro,
-                vitaminEMilli = nutritionFacts.vitaminEMilli,
-                vitaminKMicro = nutritionFacts.vitaminKMicro
-            ),
-            minerals = Minerals(
-                manganeseMilli = nutritionFacts.manganeseMilli,
-                magnesiumMilli = nutritionFacts.magnesiumMilli,
-                potassiumMilli = nutritionFacts.potassiumMilli,
-                calciumMilli = nutritionFacts.calciumMilli,
-                copperMilli = nutritionFacts.copperMilli,
-                zincMilli = nutritionFacts.zincMilli,
-                sodiumMilli = nutritionFacts.sodiumMilli,
-                ironMilli = nutritionFacts.ironMilli,
-                phosphorusMilli = nutritionFacts.phosphorusMilli,
-                seleniumMicro = nutritionFacts.seleniumMicro,
-                iodineMicro = nutritionFacts.iodineMicro,
-                chromiumMicro = nutritionFacts.chromiumMicro
-            ),
-            note = null,
-            sourceType = FoodSource.Type.OpenFoodFacts,
-            sourceUrl = this@toEntity.url
-        )
-    }
+    private fun NetworkOpenFoodFactsProduct.toEntity(): Product? = runCatching {
+        val remoteProduct = offMapper.toRemoteProduct(this)
+        val entity = remoteMapper.toEntity(remoteProduct)
+        return entity
+    }.getOrNull()
 }

@@ -9,8 +9,8 @@ import com.maksimowiczm.foodyou.feature.food.data.network.multiplier
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteNutritionFacts
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProduct
-import com.maksimowiczm.foodyou.feature.usda.model.AbridgedFoodItem
-import com.maksimowiczm.foodyou.feature.usda.model.AbridgedFoodNutrient
+import com.maksimowiczm.foodyou.feature.usda.model.Food
+import com.maksimowiczm.foodyou.feature.usda.model.FoodNutrient
 import com.maksimowiczm.foodyou.feature.usda.model.Nutrient
 import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.ADDED_SUGARS
 import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.CAFFEINE
@@ -50,7 +50,7 @@ import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_K
 import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.ZINC
 
 internal class USDAProductMapper {
-    fun toRemoteProduct(abridgedFoodItem: AbridgedFoodItem) = with(abridgedFoodItem) {
+    fun toRemoteProduct(food: Food) = with(food) {
         val proteins = getNutrient(PROTEIN)?.normalize(GRAMS)
         val carbohydrates = getNutrient(CARBOHYDRATE)?.normalize(GRAMS)
         val fats = getNutrient(FAT)?.normalize(GRAMS)
@@ -66,6 +66,17 @@ internal class USDAProductMapper {
                     fats = fats
                 )
             }
+
+        val source = FoodSource(
+            type = FoodSource.Type.USDA,
+            url = url
+        )
+
+        val servingWeight = if (servingSizeUnit == "g" || servingSizeUnit == "GRM") {
+            servingSize?.toFloat()
+        } else {
+            null
+        }
 
         RemoteProduct(
             name = description.trim(),
@@ -117,16 +128,13 @@ internal class USDAProductMapper {
                 chromiumMicro = null
             ),
             packageWeight = null,
-            servingWeight = null,
-            source = FoodSource(
-                type = FoodSource.Type.USDA,
-                url = null
-            )
+            servingWeight = servingWeight,
+            source = source
         )
     }
 }
 
-private fun AbridgedFoodNutrient.normalize(target: UnitType): Float? {
+private fun FoodNutrient.normalize(target: UnitType): Float? {
     val amount = amount
     val from = UnitType.fromString(unit) ?: return null
     return (amount * multiplier(target, from)).toFloat()

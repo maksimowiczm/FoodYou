@@ -10,6 +10,6 @@ interface OpenFoodFactsRemoteDataSource {
         query: String,
         countries: String? = null,
         page: Int? = null,
-        pageSize: Int = 30
+        pageSize: Int = 50
     ): OpenFoodPageResponse
 }

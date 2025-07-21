@@ -7,7 +7,7 @@ import com.maksimowiczm.foodyou.feature.usda.USDARemoteDataSource
 
 internal class USDAProductRequest(
     private val dataSource: USDARemoteDataSource,
-    private val apiKey: String,
+    private val apiKey: String?,
     private val id: String,
     private val mapper: USDAProductMapper
 ) : RemoteProductRequest {

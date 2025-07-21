@@ -33,6 +33,7 @@ import kotlinx.coroutines.ensureActive
 internal sealed interface DatabaseFilterChipState {
     data object Loading : DatabaseFilterChipState
     data object ActionRequired : DatabaseFilterChipState
+    data object Error : DatabaseFilterChipState
     data class Loaded(val count: Int) : DatabaseFilterChipState
 }
 
@@ -46,7 +47,9 @@ internal fun DatabaseFilterChip(
     modifier: Modifier = Modifier
 ) {
     val borderColor = when (state) {
+        DatabaseFilterChipState.Error,
         DatabaseFilterChipState.ActionRequired -> Color.Transparent
+
         is DatabaseFilterChipState.Loaded,
         DatabaseFilterChipState.Loading -> if (selected) {
             Color.Transparent
@@ -56,7 +59,9 @@ internal fun DatabaseFilterChip(
     }
 
     val borderWidth = when (state) {
+        DatabaseFilterChipState.Error,
         DatabaseFilterChipState.ActionRequired -> 0.dp
+
         is DatabaseFilterChipState.Loaded,
         DatabaseFilterChipState.Loading -> if (selected) {
             0.dp
@@ -66,7 +71,9 @@ internal fun DatabaseFilterChip(
     }
 
     val color = when (state) {
+        DatabaseFilterChipState.Error,
         DatabaseFilterChipState.ActionRequired -> MaterialTheme.colorScheme.errorContainer
+
         is DatabaseFilterChipState.Loaded,
         DatabaseFilterChipState.Loading -> if (selected) {
             MaterialTheme.colorScheme.secondaryContainer
@@ -76,7 +83,9 @@ internal fun DatabaseFilterChip(
     }
 
     val contentColor = when (state) {
+        DatabaseFilterChipState.Error,
         DatabaseFilterChipState.ActionRequired -> MaterialTheme.colorScheme.onErrorContainer
+
         is DatabaseFilterChipState.Loaded,
         DatabaseFilterChipState.Loading -> if (selected) {
             MaterialTheme.colorScheme.onSecondaryContainer
@@ -122,6 +131,7 @@ internal fun DatabaseFilterChip(
                 LocalTextStyle provides MaterialTheme.typography.bodySmall
             ) {
                 when (val state = realState) {
+                    DatabaseFilterChipState.Error,
                     DatabaseFilterChipState.ActionRequired -> Icon(
                         imageVector = Icons.Outlined.Warning,
                         contentDescription = null

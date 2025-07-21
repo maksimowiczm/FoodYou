@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.feature.usda
 
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.feature.usda.model.AbridgedFoodItem
-import com.maksimowiczm.foodyou.feature.usda.model.NullableAbridgedFoodItem
+import com.maksimowiczm.foodyou.feature.usda.model.DetailedFood
+import com.maksimowiczm.foodyou.feature.usda.model.UsdaFoodPageResponseImpl
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -12,15 +12,15 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.userAgent
 
 internal class USDARemoteDataSourceImpl(private val client: HttpClient) : USDARemoteDataSource {
-    override suspend fun getProduct(id: String, apiKey: String): Result<AbridgedFoodItem> {
+    override suspend fun getProduct(id: String, apiKey: String?): Result<DetailedFood> {
         try {
             val url = "${BuildConfig.USDA_URL}/fdc/v1/food/$id"
 
             val response = client.get(url) {
                 userAgent(BuildConfig.USER_AGENT)
 
-                parameter("format", "abridged")
-                parameter("api_key", apiKey)
+                parameter("format", "full")
+                parameter("api_key", apiKey ?: "DEMO_KEY")
             }
 
             if (response.status == HttpStatusCode.NotFound) {
@@ -39,12 +39,44 @@ internal class USDARemoteDataSourceImpl(private val client: HttpClient) : USDARe
                 return Result.failure(error)
             }
 
-            val product = response.body<NullableAbridgedFoodItem>()
+            val product = response.body<DetailedFood>()
 
             return Result.success(product)
         } catch (e: Exception) {
             return Result.failure(e)
         }
+    }
+
+    override suspend fun queryProducts(
+        query: String,
+        page: Int?,
+        pageSize: Int,
+        apiKey: String?
+    ): UsdaFoodPageResponseImpl {
+        val url = "${BuildConfig.USDA_URL}/fdc/v1/foods/search"
+
+        val response = client.get(url) {
+            userAgent(BuildConfig.USER_AGENT)
+
+            parameter("query", query)
+            parameter("dataType", "Branded")
+            parameter("pageSize", pageSize)
+            parameter("pageNumber", page)
+            parameter("api_key", apiKey ?: "DEMO_KEY")
+            parameter("sortBy", "dataType.keyword")
+            parameter("sortOrder", "asc")
+        }
+
+        if (response.status == HttpStatusCode.TooManyRequests) {
+            throw USDAException.RateLimitException()
+        }
+
+        if (response.status == HttpStatusCode.Forbidden) {
+            val error = response.getError()
+            throw error
+        }
+
+        return response.body()
     }
 
     private suspend fun HttpResponse.getError(): Exception = with(body<String>()) {
