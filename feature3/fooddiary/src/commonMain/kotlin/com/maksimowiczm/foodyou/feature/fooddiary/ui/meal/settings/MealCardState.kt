@@ -47,7 +47,7 @@ internal fun rememberMealCardState(meal: Meal?): MealCardState {
     ) {
         mutableStateOf(
             meal?.to ?: LocalTime(
-                hour = now.hour + 1,
+                hour = (now.hour + 1) % 24,
                 minute = now.minute
             )
         )
