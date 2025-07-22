@@ -27,8 +27,8 @@ fun SettingsListItem(
     supportingContent: (@Composable () -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
     shape: Shape = RectangleShape,
-    color: Color = Color.Unspecified,
-    contentColor: Color = Color.Unspecified
+    color: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Surface(
         onClick = onClick,
