@@ -301,7 +301,7 @@
     <string name="headline_swiss_food_composition_database" translatable="false">Swiss Food Composition Database</string>
     <string name="link_swiss_food_composition_database" translatable="false">https://www.naehrwertdaten.ch</string>
     <string name="description_swiss_food_composition_database">You can expand your food list by adding the Swiss Food Composition Database. It includes over 1,100 foods in English, German, French, or Italian.</string>
-    <string name="description2_swiss_food_composition_database">Swiss Food Composition Database includes nutritional information for over 1,100 general food products. It is available in four languages. To import these products into your food diary, please select your preferred language.</string>
+    <string name="description2_swiss_food_composition_database">Swiss Food Composition Database includes nutritional information for over 1,100 general food products. It is available in four languages. To import these products into your food diary, please select your preferred languages.</string>
     <string name="description3_swiss_food_composition_database">Your food database will be populated with 1,100 products from Swiss Food Composition Database</string>
 
     <string name="headline_external_databases">External databases</string>
@@ -396,5 +396,22 @@
     <string name="description_delete_ingredient">Ingredient will be removed from the recipe</string>
 
     <string name="neutral_remote_database_error">Couldn't download product from remote database. You can still view your previously downloaded products.</string>
+
+    <string name="headline_before_you_start">Before you start</string>
+    <string name="description_before_you_start">To provide you with a free and open-source food diary, we prioritize your privacy above all else. This app does not collect, store, or share any personal information. Your entries are saved locally on your device and remain fully under your control.</string>
+    <string name="action_view_privacy_policy">View privacy policy</string>
+    <string name="link_privacy_policy" translatable="false">https://</string>
+    <string name="action_agree_and_continue">Agree &amp; Continue</string>
+
+    <string name="headline_food_database">Food database</string>
+    <string name="description_food_database">You can choose whether to use these optional external services, which might have their own terms and privacy policies</string>
+    <string name="action_skip">Skip</string>
+
+    <string name="open_food_facts_terms_of_use_and_privacy_policy">{Terms of Use:https://world.openfoodfacts.org/terms-of-use} and {Privacy Policy:https://world.openfoodfacts.org/privacy}</string>
+    <string name="usda_privacy_policy">{Privacy Policy:https://www.usda.gov/privacy-policy}</string>
+
+    <string name="headline_almost_done">Almost done!</string>
+    <string name="headline_preparing_your_food_diary">Preparing your food diary</string>
+    <string name="headline_please_wait">Please wait</string>
 
 </resources>

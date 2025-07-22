@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 
-internal class UseUSDA(dataStore: DataStore<Preferences>) :
+class UseUSDA(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<Boolean, Boolean>(
         dataStore = dataStore,
         key = booleanPreferencesKey("food:use_usda")

@@ -64,6 +64,7 @@ kotlin {
             implementation(project(":feature3:calendar"))
             implementation(project(":feature3:language"))
             implementation(project(":feature3:usda"))
+            implementation(project(":feature3:onboarding"))
             implementation(project(":feature3:importexport"))
             implementation(project(":feature3:swissfoodcompositiondatabase"))
 
