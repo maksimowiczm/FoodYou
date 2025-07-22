@@ -38,6 +38,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
@@ -157,7 +158,17 @@ private fun LinkSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modifie
             )
         },
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        color = if (primary) {
+            MaterialTheme.colorScheme.primaryContainer
+        } else {
+            MaterialTheme.colorScheme.surfaceContainer
+        },
+        contentColor = if (primary) {
+            MaterialTheme.colorScheme.onPrimaryContainer
+        } else {
+            MaterialTheme.colorScheme.onSurface
+        }
     )
 }
 
@@ -198,6 +209,16 @@ private fun CryptoSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modif
             onClick = {
                 clicked = true
                 onClick()
+            },
+            color = if (primary) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.surfaceContainer
+            },
+            contentColor = if (primary) {
+                MaterialTheme.colorScheme.onPrimaryContainer
+            } else {
+                MaterialTheme.colorScheme.onSurface
             }
         )
     }
@@ -210,14 +231,16 @@ private fun SponsorCard(
     leadingIcon: @Composable () -> Unit,
     trailingIcon: @Composable () -> Unit,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.surfaceContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Surface(
         onClick = onClick,
         modifier = modifier.fillMaxWidth().heightIn(min = 56.dp),
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surfaceContainer,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        color = color,
+        contentColor = contentColor
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -241,8 +264,8 @@ private fun ContactCard(onContact: () -> Unit, modifier: Modifier = Modifier) {
         onClick = onContact,
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            contentColor = MaterialTheme.colorScheme.onSurface
         )
     ) {
         Column(

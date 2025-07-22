@@ -9,14 +9,16 @@ import org.jetbrains.compose.resources.painterResource
 
 internal sealed interface SponsorMethod {
     val name: String
+    val primary: Boolean
+        get() = false
 
     @Composable
     fun Icon(modifier: Modifier = Modifier)
 
     companion object {
         val fiat = listOf<LinkSponsorMethod>(
-            liberapay,
-            kofi
+            kofi,
+            liberapay
         )
 
         val crypto = listOf<CryptoSponsorMethod>(
@@ -37,6 +39,7 @@ internal interface CryptoSponsorMethod : SponsorMethod {
 private val bitcoin = object : CryptoSponsorMethod {
     override val name = "Bitcoin"
     override val address = "bc1qml4g4jwt6mqq2tsk9u7udhwysmjfknx68taln2"
+    override val primary = true
 
     @Composable
     override fun Icon(modifier: Modifier) {
@@ -65,7 +68,8 @@ private val monero = object : CryptoSponsorMethod {
 
 private val kofi = object : LinkSponsorMethod {
     override val name = "ko-fi.com/maksimowiczm"
-    override val url = "https://ko-fi.com/maksimowiczm"
+    override val url = "https://ko-fi.com/maksimowiczm/5"
+    override val primary = true
 
     @Composable
     override fun Icon(modifier: Modifier) {

@@ -26,6 +26,10 @@ buildConfig {
 
 kotlin {
 
+    sourceSets.all {
+        languageSettings.enableLanguageFeature("WhenGuards")
+    }
+
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.feature.about"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
