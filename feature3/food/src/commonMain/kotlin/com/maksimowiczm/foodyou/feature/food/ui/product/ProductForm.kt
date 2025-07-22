@@ -632,9 +632,9 @@ private fun MeasurementPicker(
                     Icon(
                         Icons.Filled.KeyboardArrowDown,
                         modifier =
-                            Modifier.size(SplitButtonDefaults.TrailingIconSize).graphicsLayer {
-                                this.rotationZ = rotation
-                            },
+                        Modifier.size(SplitButtonDefaults.TrailingIconSize).graphicsLayer {
+                            this.rotationZ = rotation
+                        },
                         contentDescription = null
                     )
                 }

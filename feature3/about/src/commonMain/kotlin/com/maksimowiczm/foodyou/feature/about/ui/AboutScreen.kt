@@ -1,7 +1,6 @@
 package com.maksimowiczm.foodyou.feature.about.ui
 
 import FoodYou.feature3.about.BuildConfig
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +31,6 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -49,6 +47,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.core.ui.InteractiveLogo
+import com.maksimowiczm.foodyou.core.ui.SettingsListItem
 import com.maksimowiczm.foodyou.feature.about.domain.Changelog
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
@@ -144,76 +143,78 @@ private fun AboutScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             )
-            ListItem(
-                headlineContent = { Text(stringResource(Res.string.headline_sponsor)) },
-                modifier = Modifier.clickable { onSponsor() },
-                leadingContent = {
+            SettingsListItem(
+                icon = {
                     Icon(
                         imageVector = Icons.Outlined.VolunteerActivism,
                         contentDescription = null
                     )
                 },
+                label = { Text(stringResource(Res.string.headline_sponsor)) },
+                onClick = onSponsor,
                 supportingContent = {
                     Text(stringResource(Res.string.description_sponsor_short))
                 }
             )
-            ListItem(
-                headlineContent = { Text(stringResource(Res.string.headline_source_code)) },
-                modifier = Modifier.clickable { onSourceCode() },
-                leadingContent = {
+            SettingsListItem(
+                icon = {
                     Icon(
                         imageVector = Icons.Outlined.Code,
                         contentDescription = null
                     )
                 },
+                label = { Text(stringResource(Res.string.headline_source_code)) },
+                onClick = onSourceCode,
                 supportingContent = {
                     Text(stringResource(Res.string.description_source_code))
                 }
             )
-            ListItem(
-                headlineContent = { Text(stringResource(Res.string.headline_changelog)) },
-                modifier = Modifier.clickable { onChangelog() },
-                leadingContent = {
+            SettingsListItem(
+                icon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
                         contentDescription = null
                     )
                 },
+                label = { Text(stringResource(Res.string.headline_changelog)) },
+                onClick = onChangelog,
                 supportingContent = { Text(stringResource(Res.string.description_changelog)) }
             )
-            ListItem(
-                headlineContent = {
+            SettingsListItem(
+                label = {
                     Text(stringResource(Res.string.action_feature_request_on_github))
                 },
-                leadingContent = {
+                icon = {
                     Icon(
                         imageVector = Icons.Outlined.Lightbulb,
                         contentDescription = null
                     )
                 },
-                modifier = Modifier.clickable { onFeatureRequest() }
+                onClick = onFeatureRequest
             )
-            ListItem(
-                headlineContent = {
-                    Text(stringResource(Res.string.action_bug_report_on_github))
-                },
-                leadingContent = {
+            SettingsListItem(
+                icon = {
                     Icon(
                         imageVector = Icons.Outlined.BugReport,
                         contentDescription = null
                     )
                 },
-                modifier = Modifier.clickable { onBugReport() }
+                label = {
+                    Text(stringResource(Res.string.action_bug_report_on_github))
+                },
+                onClick = onBugReport
             )
-            ListItem(
-                headlineContent = { Text(stringResource(Res.string.action_write_an_email)) },
-                leadingContent = {
+            SettingsListItem(
+                icon = {
                     Icon(
                         imageVector = Icons.Outlined.Email,
                         contentDescription = null
                     )
                 },
-                modifier = Modifier.clickable { onEmail() }
+                label = {
+                    Text(stringResource(Res.string.action_write_an_email))
+                },
+                onClick = onEmail
             )
         }
     }
