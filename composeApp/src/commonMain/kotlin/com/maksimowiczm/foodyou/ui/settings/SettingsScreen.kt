@@ -82,7 +82,8 @@ fun SettingsScreen(
                 },
                 navigationIcon = {
                     ArrowBackIconButton(onBack)
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { paddingValues ->
