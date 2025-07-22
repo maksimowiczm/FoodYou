@@ -336,7 +336,7 @@
     <string name="headline_nutrition_facts">Nutrition facts</string>
     <string name="description_personalize_nutrition_facts">Which nutrition details are you interested in? You can also choose the order they appear.</string>
     <string name="description_personalize_nutrition_facts_help">Tap to enable/disable, drag to reorder</string>
-    <string name="description_personalize_nutrition_facts_short">Hide nutrition facts, change the ordering</string>
+    <string name="description_personalize_nutrition_facts_short">Rearrange the nutritional information</string>
     <string name="action_reset_ordering">Reset ordering</string>
 
     <string name="headline_reset_to_default">Reset to default</string>

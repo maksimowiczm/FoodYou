@@ -37,6 +37,7 @@ import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
 import com.maksimowiczm.foodyou.feature.about.SponsorSettingsListItem
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.MealSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
+import com.maksimowiczm.foodyou.ui.personalization.PersonalizationSettingsListItem
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.headline_settings
 import kotlin.math.PI
@@ -47,6 +48,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onPersonalization: () -> Unit,
     onMeals: () -> Unit,
     onLanguage: () -> Unit,
     onSponsor: () -> Unit,
@@ -96,6 +98,15 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .padding(vertical = 24.dp)
                         .height(16.dp)
+                )
+            }
+
+            item {
+                PersonalizationSettingsListItem(
+                    onClick = onPersonalization,
+                    shape = shape,
+                    color = color,
+                    contentColor = contentColor
                 )
             }
 

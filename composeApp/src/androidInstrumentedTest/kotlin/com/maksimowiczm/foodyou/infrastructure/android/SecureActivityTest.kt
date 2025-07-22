@@ -38,7 +38,7 @@ class SecureActivityTest {
     }
 
     @Test
-    fun testSecureMainActivity() = testSecureFlag<FoodYouMainActivity>()
+    fun testSecureMainActivity() = testSecureFlag<MainActivity>()
 
     @Test
     fun testSecureShareProductActivity() = testSecureFlag<ShareProductActivity>()

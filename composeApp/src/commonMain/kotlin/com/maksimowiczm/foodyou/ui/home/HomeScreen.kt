@@ -19,9 +19,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.MealsCards
+import com.maksimowiczm.foodyou.preferences.HomeCard
+import com.maksimowiczm.foodyou.preferences.HomeCardsOrder
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_go_to_settings
 import foodyou.app.generated.resources.app_name
@@ -39,6 +44,8 @@ fun HomeScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val homeState = rememberHomeState()
+    val preference = userPreference<HomeCardsOrder>()
+    val order by preference.collectAsStateWithLifecycle(preference.getBlocking())
 
     Scaffold(
         modifier = modifier,
@@ -75,22 +82,24 @@ fun HomeScreen(
             contentPadding = paddingValues
         ) {
             item {
-                CalendarCard(
-                    homeState = homeState,
-                    modifier = Modifier.padding(
-                        horizontal = 8.dp
-                    )
-                )
-            }
+                order.forEach {
+                    when (it) {
+                        HomeCard.Calendar -> CalendarCard(
+                            homeState = homeState,
+                            modifier = Modifier.padding(
+                                horizontal = 8.dp
+                            )
+                        )
 
-            item {
-                MealsCards(
-                    homeState = homeState,
-                    onAdd = mealCardOnAdd,
-                    onEditMeasurement = mealCardOnEditMeasurement,
-                    onLongClick = mealCardOnLongClick,
-                    contentPadding = PaddingValues(8.dp)
-                )
+                        HomeCard.Meals -> MealsCards(
+                            homeState = homeState,
+                            onAdd = mealCardOnAdd,
+                            onEditMeasurement = mealCardOnEditMeasurement,
+                            onLongClick = mealCardOnLongClick,
+                            contentPadding = PaddingValues(8.dp)
+                        )
+                    }
+                }
             }
         }
     }

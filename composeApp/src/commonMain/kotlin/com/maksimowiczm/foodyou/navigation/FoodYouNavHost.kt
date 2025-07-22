@@ -52,6 +52,11 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
+            settingsOnPersonalization = {
+                navController.navigate(Personalization) {
+                    launchSingleTop = true
+                }
+            },
             settingsOnMeals = {
                 navController.navigate(MealSettings) {
                     launchSingleTop = true
@@ -74,6 +79,31 @@ fun FoodYouNavHost(
             },
             settingsOnBack = {
                 navController.popBackStack<Settings>(true)
+            },
+            personalizationOnBack = {
+                navController.popBackStack<Personalization>(true)
+            },
+            personalizationOnHomePersonalization = {
+                navController.navigate(HomePersonalization) {
+                    launchSingleTop = true
+                }
+            },
+            personalizationOnNutritionFactsPersonalization = {
+                navController.navigate(NutritionFactsPersonalization) {
+                    launchSingleTop = true
+                }
+            },
+            homePersonalizationOnBack = {
+                navController.popBackStack<HomePersonalization>(true)
+            },
+            homePersonalizationOnMealsSettings = {
+                navController.navigate(MealsCardsSettings) {
+                    launchSingleTop = true
+                    popUpTo<MealsCardsSettings>()
+                }
+            },
+            nutritionFactsPersonalizationOnBack = {
+                navController.popBackStack<NutritionFactsPersonalization>(true)
             }
         )
         foodDiaryGraph(

@@ -78,7 +78,7 @@ internal fun ProductForm(
     val orderPreference = userPreference<NutrientsOrderPreference>()
     val orderState = orderPreference.collectAsStateWithLifecycle(orderPreference.getBlocking())
     val order = if (!orderState.value.containsAll(NutrientsOrder.entries)) {
-        orderPreference.defaultOrder
+        NutrientsOrder.defaultOrder
     } else {
         orderState.value
     }
@@ -632,9 +632,9 @@ private fun MeasurementPicker(
                     Icon(
                         Icons.Filled.KeyboardArrowDown,
                         modifier =
-                        Modifier.size(SplitButtonDefaults.TrailingIconSize).graphicsLayer {
-                            this.rotationZ = rotation
-                        },
+                            Modifier.size(SplitButtonDefaults.TrailingIconSize).graphicsLayer {
+                                this.rotationZ = rotation
+                            },
                         contentDescription = null
                     )
                 }

@@ -24,6 +24,7 @@ fun SettingsListItem(
     supportingContent: @Composable () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    trailingContent: @Composable (() -> Unit)? = null,
     shape: Shape = RectangleShape,
     color: Color = Color.Unspecified,
     contentColor: Color = Color.Unspecified
@@ -47,7 +48,7 @@ fun SettingsListItem(
         ) {
             icon()
 
-            Column {
+            Column(Modifier.weight(1f)) {
                 CompositionLocalProvider(
                     LocalTextStyle provides MaterialTheme.typography.bodyLarge
                 ) {
@@ -60,6 +61,8 @@ fun SettingsListItem(
                     supportingContent()
                 }
             }
+
+            trailingContent?.invoke()
         }
     }
 }

@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringSetPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder.Carbohydrates
 import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder.Fats
@@ -17,26 +17,32 @@ enum class NutrientsOrder {
     Carbohydrates,
     Other,
     Vitamins,
-    Minerals
+    Minerals;
+
+    companion object {
+        val defaultOrder: List<NutrientsOrder>
+            get() = listOf(Proteins, Fats, Carbohydrates, Other, Vitamins, Minerals)
+    }
 }
 
 class NutrientsOrderPreference(dataStore: DataStore<Preferences>) :
-    DataStoreUserPreference<Set<String>, List<NutrientsOrder>>(
+    DataStoreUserPreference<String, List<NutrientsOrder>>(
         dataStore = dataStore,
-        key = stringSetPreferencesKey("food:nutrients_order")
+        key = stringPreferencesKey("food:nutrients_order")
     ) {
-    override fun Set<String>?.toValue(): List<NutrientsOrder> = runCatching {
-        this?.map { NutrientsOrder.valueOf(it) } ?: defaultOrder
-    }.getOrElse {
-        defaultOrder
-    }
+    override fun String?.toValue(): List<NutrientsOrder> = runCatching {
+        this
+            ?.split(",")
+            ?.map {
+                NutrientsOrder.entries[it.toInt()]
+            }
+    }.getOrNull() ?: NutrientsOrder.defaultOrder
 
-    override fun List<NutrientsOrder>.toStore(): Set<String>? = runCatching {
-        this.map { it.name }.toSet()
+    override fun List<NutrientsOrder>.toStore(): String? = runCatching {
+        joinToString(",") { it.ordinal.toString() }
     }.getOrElse {
         null
     }
 
-    val defaultOrder: List<NutrientsOrder>
-        get() = listOf(Proteins, Fats, Carbohydrates, Other, Vitamins, Minerals)
+    suspend fun reset() = set(NutrientsOrder.defaultOrder)
 }
