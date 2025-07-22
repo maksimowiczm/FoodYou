@@ -48,8 +48,6 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core-database"))
             implementation(project(":feature:goals"))
-            implementation(project(":feature:importexport"))
-            implementation(project(":feature:swissfoodcompositiondatabase"))
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)

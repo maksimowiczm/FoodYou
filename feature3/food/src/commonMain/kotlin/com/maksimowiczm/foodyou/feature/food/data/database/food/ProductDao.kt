@@ -46,8 +46,16 @@ abstract class ProductDao {
         source: FoodSource.Type
     ): Boolean
 
+    /**
+     * Inserts a list of products into the database, ensuring that only unique products are added.
+     * This method filters out products that already exist based on their name, brand, barcode, and
+     * source type.
+     *
+     * @param products The list of products to be inserted.
+     * @return The number of products inserted into the database.
+     */
     @Transaction
-    open suspend fun insertUniqueProducts(products: List<Product>) {
+    open suspend fun insertUniqueProducts(products: List<Product>): Int {
         val uniqueProducts = products.filterNot { product ->
             existsProductByNameAndBrand(
                 name = product.name,
@@ -60,6 +68,8 @@ abstract class ProductDao {
         if (uniqueProducts.isNotEmpty()) {
             insert(uniqueProducts)
         }
+
+        return uniqueProducts.size
     }
 
     @Transaction
