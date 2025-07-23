@@ -217,7 +217,7 @@ internal fun RecipeApp(
             if (ingredient != null) {
                 MeasureIngredientScreen(
                     onBack = {
-                        navController.popBackStack<IngredientMeasurement>(true)
+                        navController.popBackStack<EditIngredient>(true)
                     },
                     onSave = { measurement ->
                         state.updateIngredient(
