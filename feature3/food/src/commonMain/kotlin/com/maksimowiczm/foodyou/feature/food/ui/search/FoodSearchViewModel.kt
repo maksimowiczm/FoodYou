@@ -21,9 +21,11 @@ import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFood
 import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFoodFactsRemoteMediator
 import com.maksimowiczm.foodyou.feature.food.data.network.usda.USDAProductMapper
 import com.maksimowiczm.foodyou.feature.food.data.network.usda.USDARemoteMediator
+import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
+import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
 import com.maksimowiczm.foodyou.feature.food.preferences.UsdaApiKey
 import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
@@ -53,7 +55,9 @@ internal class FoodSearchViewModel(
     private val openFoodFactsMapper: OpenFoodFactsProductMapper,
     private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource,
     private val usdaRemoteDataSource: USDARemoteDataSource,
-    private val usdaMapper: USDAProductMapper
+    private val usdaMapper: USDAProductMapper,
+    private val createProductUseCase: CreateProductUseCase,
+    private val productMapper: ProductMapper
 ) : ViewModel() {
     private val foodSearchDao = foodDatabase.foodSearchDao
 
@@ -120,7 +124,9 @@ internal class FoodSearchViewModel(
                     country = null,
                     isBarcode = isBarcode,
                     offMapper = openFoodFactsMapper,
-                    remoteMapper = remoteProductMapper
+                    remoteMapper = remoteProductMapper,
+                    createProductUseCase = createProductUseCase,
+                    productMapper = productMapper
                 )
             } else {
                 null
@@ -147,7 +153,9 @@ internal class FoodSearchViewModel(
                     query = query,
                     apiKey = apiKey,
                     usdaMapper = usdaMapper,
-                    remoteMapper = remoteProductMapper
+                    remoteMapper = remoteProductMapper,
+                    createProductUseCase = createProductUseCase,
+                    productMapper = productMapper
                 )
             } else {
                 null

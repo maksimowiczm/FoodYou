@@ -24,9 +24,6 @@ abstract class ProductDao {
     @Delete
     abstract suspend fun delete(product: Product)
 
-    @Insert
-    protected abstract suspend fun insert(products: List<Product>)
-
     @Query(
         """
         SELECT EXISTS (
@@ -47,33 +44,14 @@ abstract class ProductDao {
     ): Boolean
 
     /**
-     * Inserts a list of products into the database, ensuring that only unique products are added.
-     * This method filters out products that already exist based on their name, brand, barcode, and
-     * source type.
+     * Inserts a single product into the database if it does not already exist.
+     * This method checks for uniqueness based on the product's name, brand, barcode, and source type.
      *
-     * @param products The list of products to be inserted.
-     * @return The number of products inserted into the database.
+     * @param product The product to be inserted.
+     * @return The ID of the inserted product, or null if the product already exists.
      */
     @Transaction
-    open suspend fun insertUniqueProducts(products: List<Product>): Int {
-        val uniqueProducts = products.filterNot { product ->
-            existsProductByNameAndBrand(
-                name = product.name,
-                brand = product.brand,
-                barcode = product.barcode,
-                source = product.sourceType
-            )
-        }
-
-        if (uniqueProducts.isNotEmpty()) {
-            insert(uniqueProducts)
-        }
-
-        return uniqueProducts.size
-    }
-
-    @Transaction
-    open suspend fun insertUniqueProduct(product: Product) {
+    open suspend fun insertUniqueProduct(product: Product): Long? =
         if (!existsProductByNameAndBrand(
                 name = product.name,
                 brand = product.brand,
@@ -82,6 +60,7 @@ abstract class ProductDao {
             )
         ) {
             insert(product)
+        } else {
+            null
         }
-    }
 }

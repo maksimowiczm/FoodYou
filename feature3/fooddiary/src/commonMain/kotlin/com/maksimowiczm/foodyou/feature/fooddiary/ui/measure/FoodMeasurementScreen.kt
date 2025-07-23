@@ -49,10 +49,13 @@ import com.maksimowiczm.foodyou.core.ext.minus
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.core.ui.unorderedList
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
+import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.food.domain.Food
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.Product
+import com.maksimowiczm.foodyou.feature.food.domain.ProductEvent
 import com.maksimowiczm.foodyou.feature.food.domain.Recipe
 import com.maksimowiczm.foodyou.feature.food.domain.RecipeIngredient
 import com.maksimowiczm.foodyou.feature.food.domain.weight
@@ -82,6 +85,7 @@ internal fun FoodMeasurementScreen(
     onMeasure: (Measurement, mealId: Long, LocalDate) -> Unit,
     onUnpack: (Measurement, mealId: Long, LocalDate) -> Unit,
     food: Food,
+    productEvents: List<ProductEvent>?,
     today: LocalDate,
     selectedDate: LocalDate,
     meals: List<Meal>,
@@ -269,6 +273,19 @@ internal fun FoodMeasurementScreen(
                                 vertical = 16.dp,
                                 horizontal = 8.dp
                             )
+                    )
+                }
+            }
+
+            if (!productEvents.isNullOrEmpty()) {
+                item {
+                    HorizontalDivider()
+                    ProductEvents(
+                        events = productEvents,
+                        modifier = Modifier.padding(
+                            vertical = 16.dp,
+                            horizontal = 8.dp
+                        )
                     )
                 }
             }
@@ -559,4 +576,35 @@ private fun FoodMeasurementForm(state: ProductMeasurementFormState, modifier: Mo
             modifier = Modifier.padding(vertical = 8.dp)
         )
     }
+}
+
+@Composable
+private fun ProductEvents(events: List<ProductEvent>, modifier: Modifier = Modifier) {
+    val dateFormatter = LocalDateFormatter.current
+    val strings = events.map {
+        it.stringResource() + ", " + dateFormatter.formatDateTime(it.date)
+    }
+    val list = unorderedList(strings)
+
+    Column(modifier) {
+        Text(
+            text = stringResource(Res.string.headline_history),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = list,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun ProductEvent.stringResource(): String = when (this) {
+    is ProductEvent.Created -> stringResource(Res.string.headline_created)
+    is ProductEvent.Downloaded -> stringResource(Res.string.headline_downloaded)
+    is ProductEvent.Imported -> stringResource(Res.string.headline_imported)
+    is ProductEvent.Edited -> stringResource(Res.string.headline_edited)
 }

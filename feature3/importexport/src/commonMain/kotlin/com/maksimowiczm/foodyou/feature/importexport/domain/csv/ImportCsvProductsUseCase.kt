@@ -1,12 +1,16 @@
 package com.maksimowiczm.foodyou.feature.importexport.domain.csv
 
-import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
+import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
+import com.maksimowiczm.foodyou.feature.food.domain.ProductEvent
+import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.importexport.domain.ProductField
 import com.maksimowiczm.foodyou.feature.importexport.domain.ProductFieldMapMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.chunked
+import kotlinx.datetime.LocalDateTime
 
 fun interface ImportCsvProductsUseCase {
 
@@ -27,11 +31,10 @@ fun interface ImportCsvProductsUseCase {
 }
 
 internal class ImportCsvProductsUseCaseImpl(
-    foodDatabase: FoodDatabase,
-    private val mapper: ProductFieldMapMapper
+    private val mapper: ProductFieldMapMapper,
+    private val createProductUseCase: CreateProductUseCase,
+    private val productMapper: ProductMapper
 ) : ImportCsvProductsUseCase {
-
-    private val productDao = foodDatabase.productDao
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun import(
@@ -41,9 +44,10 @@ internal class ImportCsvProductsUseCaseImpl(
     ): Int {
         var count = 0
         val parser = CsvParser()
+        val now = LocalDateTime.now()
 
         csvLines.chunked(CHUNK_SIZE).collect { line ->
-            val products = line
+            val importedProducts = line
                 .filter { it.isNotBlank() }
                 .map { csvLine ->
                     csvLine.lineToProduct(parser, fieldOrder)
@@ -56,9 +60,15 @@ internal class ImportCsvProductsUseCaseImpl(
                     entity.copy(
                         sourceUrl = source?.url ?: entity.sourceUrl
                     )
+                }.map {
+                    val model = productMapper.toModel(it)
+                    createProductUseCase.createUnique(
+                        product = model,
+                        event = ProductEvent.Imported(now)
+                    )
                 }
 
-            count += productDao.insertUniqueProducts(products)
+            count += importedProducts.size
         }
 
         return count

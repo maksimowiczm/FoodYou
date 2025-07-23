@@ -5,13 +5,18 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
+import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
 import com.maksimowiczm.foodyou.feature.food.data.database.openfoodfacts.OpenFoodFactsPagingKey
+import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
+import com.maksimowiczm.foodyou.feature.food.domain.ProductEvent
+import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.ProductNotFoundException
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.model.OpenFoodFactsProduct as NetworkOpenFoodFactsProduct
+import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediator<T : Any>(
@@ -21,10 +26,11 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
     private val country: String?,
     private val isBarcode: Boolean,
     private val offMapper: OpenFoodFactsProductMapper,
-    private val remoteMapper: RemoteProductMapper
+    private val remoteMapper: RemoteProductMapper,
+    private val createProductUseCase: CreateProductUseCase,
+    private val productMapper: ProductMapper
 ) : RemoteMediator<Int, T>() {
 
-    private val productDao = foodDatabase.productDao
     private val openFoodFactsDao = foodDatabase.openFoodFactsDao
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
@@ -57,7 +63,10 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
                     val product = response.toEntity()
 
                     if (product != null) {
-                        productDao.insertUniqueProduct(product)
+                        createProductUseCase.createUnique(
+                            product = productMapper.toModel(product),
+                            event = ProductEvent.Downloaded(LocalDateTime.now(), product.sourceUrl)
+                        )
                     }
                     return MediatorResult.Success(endOfPaginationReached = true)
                 }
@@ -109,7 +118,14 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
                 }
             }
 
-            productDao.insertUniqueProducts(products.filterNotNull())
+            val now = LocalDateTime.now()
+            products.filterNotNull().forEach {
+                val product = productMapper.toModel(it)
+                createProductUseCase.createUnique(
+                    product = product,
+                    event = ProductEvent.Downloaded(now, it.sourceUrl)
+                )
+            }
 
             val skipped = products.count { it == null }
             val endOfPaginationReached = (products.size + skipped) < PAGE_SIZE

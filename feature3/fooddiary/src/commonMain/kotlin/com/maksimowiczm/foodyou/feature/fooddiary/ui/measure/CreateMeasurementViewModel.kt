@@ -8,6 +8,7 @@ import com.maksimowiczm.foodyou.core.util.DateProvider
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.feature.food.domain.ProductEventMapper
 import com.maksimowiczm.foodyou.feature.food.domain.Recipe
 import com.maksimowiczm.foodyou.feature.food.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.feature.food.domain.weight
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapValues
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -40,14 +42,16 @@ internal class CreateMeasurementViewModel(
     foodDatabase: FoodDatabase,
     foodDiaryDatabase: FoodDiaryDatabase,
     dateProvider: DateProvider,
+    productEventMapper: ProductEventMapper,
     private val foodId: FoodId
 ) : ViewModel() {
     private val productDao = foodDatabase.productDao
     private val recipeDao = foodDatabase.recipeDao
     private val mealsDao = foodDiaryDatabase.mealDao
     private val measurementDao = foodDiaryDatabase.measurementDao
+    private val productEventDao = foodDatabase.productEventDao
 
-    val food = observeFoodUseCase(foodId).stateIn(
+    val food = observeFoodUseCase.observe(foodId).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(2_000),
         initialValue = null
@@ -111,6 +115,17 @@ internal class CreateMeasurementViewModel(
             started = SharingStarted.WhileSubscribed(2_000),
             initialValue = null
         )
+
+    val productEvents = (foodId as? FoodId.Product)?.let { productId ->
+        productEventDao
+            .observeEvents(productId.id)
+            .mapValues(productEventMapper::toModel)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = emptyList()
+            )
+    }
 
     private val eventBus = Channel<MeasurementEvent>()
     val events = eventBus.receiveAsFlow()

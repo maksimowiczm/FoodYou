@@ -26,6 +26,7 @@ internal fun UpdateMeasurementScreen(
     )
 
     val food = viewModel.food.collectAsStateWithLifecycle().value
+    val productEvents = viewModel.productEvents.collectAsStateWithLifecycle().value
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
     val mealId = viewModel.mealId.collectAsStateWithLifecycle().value
     val today = viewModel.today.collectAsStateWithLifecycle().value
@@ -57,6 +58,7 @@ internal fun UpdateMeasurementScreen(
             onMeasure = viewModel::updateMeasurement,
             onUnpack = viewModel::unpack,
             food = food,
+            productEvents = productEvents,
             today = today,
             selectedDate = measurementDate,
             meals = meals,

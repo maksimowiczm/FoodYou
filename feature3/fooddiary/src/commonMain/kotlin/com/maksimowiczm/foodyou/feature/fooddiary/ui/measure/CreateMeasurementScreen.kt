@@ -30,6 +30,7 @@ internal fun CreateMeasurementScreen(
     )
 
     val food = viewModel.food.collectAsStateWithLifecycle().value
+    val productEvents = viewModel.productEvents?.collectAsStateWithLifecycle()?.value
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
     val today = viewModel.today.collectAsStateWithLifecycle().value
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
@@ -59,6 +60,7 @@ internal fun CreateMeasurementScreen(
             onMeasure = viewModel::createMeasurement,
             onUnpack = viewModel::unpack,
             food = food,
+            productEvents = productEvents,
             today = today,
             selectedDate = date,
             meals = meals,

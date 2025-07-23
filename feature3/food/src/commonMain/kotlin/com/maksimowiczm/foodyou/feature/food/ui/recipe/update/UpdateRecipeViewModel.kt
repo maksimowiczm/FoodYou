@@ -6,8 +6,7 @@ import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe
 import com.maksimowiczm.foodyou.feature.food.data.database.food.RecipeIngredient
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
-import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
+import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.RecipeFormState
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.RecipeViewModel
 import com.maksimowiczm.foodyou.feature.measurement.domain.rawValue
@@ -19,19 +18,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class UpdateRecipeViewModel(
-    observeRecipeUseCase: ObserveRecipeUseCase,
     foodDatabase: FoodDatabase,
     private val foodId: FoodId.Recipe,
-    productMapper: ProductMapper
-) : RecipeViewModel(
-    productDao = foodDatabase.productDao,
-    productMapper = productMapper,
-    observeRecipeUseCase = observeRecipeUseCase
-) {
+    observeFoodUseCase: ObserveFoodUseCase
+) : RecipeViewModel(observeFoodUseCase) {
 
     private val recipeDao = foodDatabase.recipeDao
 
-    val recipe = observeRecipeUseCase(foodId).stateIn(
+    val recipe = observeFoodUseCase.observe(foodId).stateIn(
         scope = viewModelScope,
         initialValue = null,
         started = SharingStarted.WhileSubscribed(2_000)

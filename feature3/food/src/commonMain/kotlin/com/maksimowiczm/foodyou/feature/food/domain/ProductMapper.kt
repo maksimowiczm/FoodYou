@@ -8,9 +8,12 @@ import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue.Companion.toNu
 
 interface ProductMapper {
     fun toModel(entity: ProductEntity): Product
+
+    fun toEntity(model: Product): ProductEntity
 }
 
 internal class ProductMapperImpl : ProductMapper {
+
     override fun toModel(entity: ProductEntity): Product = Product(
         id = FoodId.Product(entity.id),
         name = entity.name,
@@ -30,6 +33,26 @@ internal class ProductMapperImpl : ProductMapper {
         ),
         isLiquid = entity.isLiquid
     )
+
+    override fun toEntity(model: Product): ProductEntity {
+        val (nutrients, vitamins, minerals) = toEntityNutrients(model.nutritionFacts)
+
+        return ProductEntity(
+            id = model.id.id,
+            name = model.name,
+            brand = model.brand,
+            barcode = model.barcode,
+            nutrients = nutrients,
+            vitamins = vitamins,
+            minerals = minerals,
+            packageWeight = model.packageWeight,
+            servingWeight = model.servingWeight,
+            note = model.note,
+            sourceType = model.source.type,
+            sourceUrl = model.source.url,
+            isLiquid = model.isLiquid
+        )
+    }
 
     private fun toNutritionFacts(nutrients: Nutrients, vitamins: Vitamins, minerals: Minerals) =
         NutritionFacts(
@@ -77,4 +100,59 @@ internal class ProductMapperImpl : ProductMapper {
             iodineMicro = minerals.iodineMicro.toNutrientValue(),
             chromiumMicro = minerals.chromiumMicro.toNutrientValue()
         )
+
+    private fun toEntityNutrients(
+        nutritionFacts: NutritionFacts
+    ): Triple<Nutrients, Vitamins, Minerals> {
+        val nutrients = Nutrients(
+            proteins = nutritionFacts.proteins.value,
+            carbohydrates = nutritionFacts.carbohydrates.value,
+            energy = nutritionFacts.energy.value,
+            fats = nutritionFacts.fats.value,
+            saturatedFats = nutritionFacts.saturatedFats.value,
+            transFats = nutritionFacts.transFats.value,
+            monounsaturatedFats = nutritionFacts.monounsaturatedFats.value,
+            polyunsaturatedFats = nutritionFacts.polyunsaturatedFats.value,
+            omega3 = nutritionFacts.omega3.value,
+            omega6 = nutritionFacts.omega6.value,
+            sugars = nutritionFacts.sugars.value,
+            addedSugars = nutritionFacts.addedSugars.value,
+            dietaryFiber = nutritionFacts.dietaryFiber.value,
+            solubleFiber = nutritionFacts.solubleFiber.value,
+            insolubleFiber = nutritionFacts.insolubleFiber.value,
+            salt = nutritionFacts.salt.value,
+            cholesterolMilli = nutritionFacts.cholesterolMilli.value,
+            caffeineMilli = nutritionFacts.caffeineMilli.value
+        )
+        val vitamins = Vitamins(
+            vitaminAMicro = nutritionFacts.vitaminAMicro.value,
+            vitaminB1Milli = nutritionFacts.vitaminB1Milli.value,
+            vitaminB2Milli = nutritionFacts.vitaminB2Milli.value,
+            vitaminB3Milli = nutritionFacts.vitaminB3Milli.value,
+            vitaminB5Milli = nutritionFacts.vitaminB5Milli.value,
+            vitaminB6Milli = nutritionFacts.vitaminB6Milli.value,
+            vitaminB7Micro = nutritionFacts.vitaminB7Micro.value,
+            vitaminB9Micro = nutritionFacts.vitaminB9Micro.value,
+            vitaminB12Micro = nutritionFacts.vitaminB12Micro.value,
+            vitaminCMilli = nutritionFacts.vitaminCMilli.value,
+            vitaminDMicro = nutritionFacts.vitaminDMicro.value,
+            vitaminEMilli = nutritionFacts.vitaminEMilli.value,
+            vitaminKMicro = nutritionFacts.vitaminKMicro.value
+        )
+        val minerals = Minerals(
+            manganeseMilli = nutritionFacts.manganeseMilli.value,
+            magnesiumMilli = nutritionFacts.magnesiumMilli.value,
+            potassiumMilli = nutritionFacts.potassiumMilli.value,
+            calciumMilli = nutritionFacts.calciumMilli.value,
+            copperMilli = nutritionFacts.copperMilli.value,
+            zincMilli = nutritionFacts.zincMilli.value,
+            sodiumMilli = nutritionFacts.sodiumMilli.value,
+            ironMilli = nutritionFacts.ironMilli.value,
+            phosphorusMilli = nutritionFacts.phosphorusMilli.value,
+            seleniumMicro = nutritionFacts.seleniumMicro.value,
+            iodineMicro = nutritionFacts.iodineMicro.value,
+            chromiumMicro = nutritionFacts.chromiumMicro.value
+        )
+        return Triple(nutrients, vitamins, minerals)
+    }
 }

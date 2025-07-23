@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.feature.food.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class NutritionFacts(
     // Macronutrients
     val proteins: NutrientValue,

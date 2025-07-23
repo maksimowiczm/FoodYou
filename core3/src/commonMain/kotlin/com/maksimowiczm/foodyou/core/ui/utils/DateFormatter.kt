@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 
 interface DateFormatter {
@@ -56,6 +57,13 @@ interface DateFormatter {
      * @return A string representing the formatted time.
      */
     fun formatTime(time: LocalTime): String
+
+    /**
+     * Formats the specified [dateTime] as a string in the "d MMMM yyyy, hh:mm" format.
+     *
+     * For example, in English (US), this could return "21 April 2025, 14:30".
+     */
+    fun formatDateTime(dateTime: LocalDateTime): String
 }
 
 private val defaultDateFormatter: DateFormatter = object : DateFormatter {
@@ -71,6 +79,8 @@ private val defaultDateFormatter: DateFormatter = object : DateFormatter {
     override fun formatDateSuperShort(date: LocalDate): String = date.toString()
 
     override fun formatTime(time: LocalTime): String = time.toString()
+
+    override fun formatDateTime(dateTime: LocalDateTime): String = dateTime.toString()
 }
 
 val LocalDateFormatter = staticCompositionLocalOf { defaultDateFormatter }

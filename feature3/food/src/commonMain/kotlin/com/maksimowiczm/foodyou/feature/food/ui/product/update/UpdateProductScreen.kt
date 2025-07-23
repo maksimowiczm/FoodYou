@@ -37,7 +37,7 @@ import org.jetbrains.compose.resources.stringResource
 internal fun UpdateProductScreen(
     onBack: () -> Unit,
     onUpdate: () -> Unit,
-    viewModel: UpdateProductScreenViewModel,
+    viewModel: UpdateProductViewModel,
     modifier: Modifier = Modifier
 ) {
     val latestOnUpdate by rememberUpdatedState(onUpdate)

@@ -4,6 +4,8 @@ import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFood
 import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFoodFactsProductMapper
 import com.maksimowiczm.foodyou.feature.food.data.network.usda.USDAFacade
 import com.maksimowiczm.foodyou.feature.food.data.network.usda.USDAProductMapper
+import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
+import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCaseImpl
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapperImpl
@@ -11,15 +13,19 @@ import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCaseImpl
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCaseImpl
+import com.maksimowiczm.foodyou.feature.food.domain.ProductEventMapper
+import com.maksimowiczm.foodyou.feature.food.domain.ProductEventMapperImpl
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapperImpl
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapperImpl
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductRequestFactoryImpl
+import com.maksimowiczm.foodyou.feature.food.domain.UpdateProductUseCase
+import com.maksimowiczm.foodyou.feature.food.domain.UpdateProductUseCaseImpl
 import com.maksimowiczm.foodyou.feature.food.ui.product.create.CreateProductViewModel
 import com.maksimowiczm.foodyou.feature.food.ui.product.download.DownloadProductViewModel
-import com.maksimowiczm.foodyou.feature.food.ui.product.update.UpdateProductScreenViewModel
+import com.maksimowiczm.foodyou.feature.food.ui.product.update.UpdateProductViewModel
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.MeasureIngredientViewModel
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.create.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.update.UpdateRecipeViewModel
@@ -32,7 +38,7 @@ import org.koin.dsl.module
 
 val foodModule = module {
     viewModelOf(::CreateProductViewModel)
-    viewModelOf(::UpdateProductScreenViewModel)
+    viewModelOf(::UpdateProductViewModel)
 
     factoryOf(::ProductMapperImpl).bind<ProductMapper>()
     factoryOf(::FoodSearchMapperImpl).bind<FoodSearchMapper>()
@@ -40,6 +46,8 @@ val foodModule = module {
     viewModel { (excludedFood: FoodId.Recipe?) ->
         FoodSearchViewModel(
             excludedFood,
+            get(),
+            get(),
             get(),
             get(),
             get(),
@@ -76,4 +84,10 @@ val foodModule = module {
     factoryOf(::RemoteProductMapperImpl).bind<RemoteProductMapper>()
 
     factoryOf(::ObserveFoodUseCaseImpl).bind<ObserveFoodUseCase>()
+
+    factoryOf(::ProductEventMapperImpl).bind<ProductEventMapper>()
+
+    factoryOf(::CreateProductUseCaseImpl).bind<CreateProductUseCase>()
+
+    factoryOf(::UpdateProductUseCaseImpl).bind<UpdateProductUseCase>()
 }

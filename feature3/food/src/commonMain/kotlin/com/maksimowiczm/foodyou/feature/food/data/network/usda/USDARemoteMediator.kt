@@ -5,12 +5,17 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
+import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
 import com.maksimowiczm.foodyou.feature.food.data.database.usda.USDAPagingKey
+import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
+import com.maksimowiczm.foodyou.feature.food.domain.ProductEvent
+import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
 import com.maksimowiczm.foodyou.feature.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.feature.usda.model.Food
+import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)
 internal class USDARemoteMediator<T : Any>(
@@ -19,10 +24,11 @@ internal class USDARemoteMediator<T : Any>(
     private val query: String,
     private val apiKey: String?,
     private val usdaMapper: USDAProductMapper,
-    private val remoteMapper: RemoteProductMapper
+    private val remoteMapper: RemoteProductMapper,
+    private val createProductUseCase: CreateProductUseCase,
+    private val productMapper: ProductMapper
 ) : RemoteMediator<Int, T>() {
 
-    private val productDao = foodDatabase.productDao
     private val usdaDao = foodDatabase.usdaPagingKeyDao
 
     override suspend fun initialize(): InitializeAction = InitializeAction.LAUNCH_INITIAL_REFRESH
@@ -68,7 +74,14 @@ internal class USDARemoteMediator<T : Any>(
                 }
             }
 
-            productDao.insertUniqueProducts(products.filterNotNull())
+            val now = LocalDateTime.now()
+            products.filterNotNull().forEach {
+                val product = productMapper.toModel(it)
+                createProductUseCase.createUnique(
+                    product,
+                    ProductEvent.Downloaded(now, it.sourceUrl)
+                )
+            }
 
             val skipped = products.count { it == null }
             val endOfPaginationReached = (products.size + skipped) < PAGE_SIZE

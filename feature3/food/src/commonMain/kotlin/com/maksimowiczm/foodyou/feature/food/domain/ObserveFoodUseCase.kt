@@ -4,7 +4,7 @@ import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapIfNotNull
 
-fun interface ObserveFoodUseCase {
+interface ObserveFoodUseCase {
     /**
      * Observes a food item by its ID.
      *
@@ -13,7 +13,9 @@ fun interface ObserveFoodUseCase {
      */
     fun observe(foodId: FoodId): Flow<Food?>
 
-    operator fun invoke(foodId: FoodId): Flow<Food?> = observe(foodId)
+    fun observe(foodId: FoodId.Product): Flow<Product?>
+
+    fun observe(foodId: FoodId.Recipe): Flow<Recipe?>
 }
 
 internal class ObserveFoodUseCaseImpl(
@@ -24,11 +26,13 @@ internal class ObserveFoodUseCaseImpl(
     private val productDao = foodDatabase.productDao
 
     override fun observe(foodId: FoodId): Flow<Food?> = when (foodId) {
-        is FoodId.Product ->
-            productDao
-                .observe(foodId.id)
-                .mapIfNotNull(productMapper::toModel)
-
+        is FoodId.Product -> observe(foodId)
         is FoodId.Recipe -> observeRecipe(foodId)
     }
+
+    override fun observe(foodId: FoodId.Product) = productDao
+        .observe(foodId.id)
+        .mapIfNotNull(productMapper::toModel)
+
+    override fun observe(foodId: FoodId.Recipe) = observeRecipe(foodId)
 }

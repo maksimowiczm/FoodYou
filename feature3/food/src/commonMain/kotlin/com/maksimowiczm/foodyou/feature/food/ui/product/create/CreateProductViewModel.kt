@@ -3,18 +3,20 @@ package com.maksimowiczm.foodyou.feature.food.ui.product.create
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
+import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
+import com.maksimowiczm.foodyou.feature.food.domain.ProductEvent
 import com.maksimowiczm.foodyou.feature.food.ui.product.ProductFormState
-import com.maksimowiczm.foodyou.feature.food.ui.product.toProductEntity
+import com.maksimowiczm.foodyou.feature.food.ui.product.toProduct
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
 
-internal class CreateProductViewModel(foodDatabase: FoodDatabase) : ViewModel() {
-    private val productDao = foodDatabase.productDao
-
+internal class CreateProductViewModel(private val createProductUseCase: CreateProductUseCase) :
+    ViewModel() {
     private val eventBus = Channel<CreateProductEvent>()
     val events = eventBus.receiveAsFlow()
 
@@ -36,14 +38,17 @@ internal class CreateProductViewModel(foodDatabase: FoodDatabase) : ViewModel() 
             return
         }
 
-        val entity = form.toProductEntity(multiplier).getOrElse {
+        val product = form.toProduct(multiplier, FoodId.Product(-1L)).getOrElse {
             Logger.w(TAG) { "Failed to convert form state to Product entity: ${it.message}" }
             return
         }
 
         viewModelScope.launch {
-            val id = productDao.insert(entity)
-            eventBus.send(CreateProductEvent.Created(FoodId.Product(id)))
+            val id = createProductUseCase.create(
+                product = product,
+                event = ProductEvent.Created(LocalDateTime.now())
+            )
+            eventBus.send(CreateProductEvent.Created(id))
         }
     }
 

@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.feature.food.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Product(
     override val id: FoodId.Product,
     val name: String,

@@ -40,10 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.form.FormField
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
-import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
-import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
+import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.weight
 import com.maksimowiczm.foodyou.feature.food.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItem
@@ -54,7 +51,6 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.mapIfNotNull
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -226,18 +222,10 @@ private fun IngredientListItem(
     shimmer: Shimmer,
     modifier: Modifier = Modifier
 ) {
-    val foodDatabase: FoodDatabase = koinInject()
-    val productMapper: ProductMapper = koinInject()
-    val observeRecipeUseCase: ObserveRecipeUseCase = koinInject()
+    val observeFoodUseCase: ObserveFoodUseCase = koinInject()
 
-    val food = when (val foodId = ingredient.foodId) {
-        is FoodId.Product ->
-            foodDatabase.productDao
-                .observe(foodId.id)
-                .mapIfNotNull(productMapper::toModel)
-
-        is FoodId.Recipe -> observeRecipeUseCase(foodId)
-    }.collectAsStateWithLifecycle(null).value
+    val food = observeFoodUseCase.observe(ingredient.foodId)
+        .collectAsStateWithLifecycle(null).value
 
     if (food == null) {
         return FoodListItemSkeleton(shimmer, modifier)

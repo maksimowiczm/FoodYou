@@ -1,7 +1,17 @@
 package com.maksimowiczm.foodyou.feature.food.domain
 
 import kotlin.jvm.JvmInline
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.nullable
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
+@Serializable(with = NutrientValueAsNullableFloatSerializer::class)
 sealed interface NutrientValue {
     val value: Float?
 
@@ -75,3 +85,32 @@ fun List<NutrientValue>.sum(): NutrientValue =
         ->
         acc + nutrientValue
     }
+
+@OptIn(ExperimentalSerializationApi::class)
+object NutrientValueAsNullableFloatSerializer : KSerializer<NutrientValue> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
+        serialName = "NutrientValue",
+        kind = PrimitiveKind.FLOAT
+    ).nullable
+
+    override fun serialize(encoder: Encoder, value: NutrientValue) {
+        when (value) {
+            is NutrientValue.Complete -> encoder.encodeFloat(value.value)
+            is NutrientValue.Incomplete -> {
+                if (value.value != null) {
+                    encoder.encodeFloat(value.value)
+                } else {
+                    encoder.encodeNull()
+                }
+            }
+        }
+    }
+
+    override fun deserialize(decoder: Decoder): NutrientValue = if (decoder.decodeNotNullMark()) {
+        val floatValue = decoder.decodeFloat()
+        NutrientValue.Complete(floatValue)
+    } else {
+        decoder.decodeNull()
+        NutrientValue.Incomplete(null)
+    }
+}

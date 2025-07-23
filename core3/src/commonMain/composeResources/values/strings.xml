@@ -414,4 +414,11 @@
     <string name="headline_preparing_your_food_diary">Preparing your food diary</string>
     <string name="headline_please_wait">Please wait</string>
 
+    <string name="headline_created">Created</string>
+    <string name="headline_imported">Imported</string>
+    <string name="headline_downloaded">Downloaded</string>
+    <string name="headline_edited">Edited</string>
+    <string name="headline_history">History</string>
+
+
 </resources>

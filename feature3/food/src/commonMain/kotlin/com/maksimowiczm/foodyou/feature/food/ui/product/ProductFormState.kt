@@ -24,11 +24,11 @@ import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.core.ui.form.stringParser
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
-import com.maksimowiczm.foodyou.feature.food.data.database.food.Minerals
-import com.maksimowiczm.foodyou.feature.food.data.database.food.Nutrients
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Product as ProductEntity
-import com.maksimowiczm.foodyou.feature.food.data.database.food.Vitamins
+import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
+import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.feature.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProduct
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
@@ -1119,9 +1119,9 @@ internal class ProductFormState(
  * Converts the [ProductFormState] to a [ProductEntity].
  *
  * @param multiplier The multiplier to apply to the nutrient values.
- * @return A [Result] containing the [ProductEntity] or an error if conversion fails.
+ * @return A [Result] containing the [Product] or an error if conversion fails.
  */
-internal fun ProductFormState.toProductEntity(multiplier: Float): Result<ProductEntity> =
+internal fun ProductFormState.toProduct(multiplier: Float, id: FoodId.Product): Result<Product> =
     runCatching {
         val proteins = proteins.value
         checkNotNull(proteins) { "Proteins cannot be null" }
@@ -1135,66 +1135,68 @@ internal fun ProductFormState.toProductEntity(multiplier: Float): Result<Product
         val energy = energy.value
         checkNotNull(energy) { "Energy cannot be null" }
 
+        val facts = NutritionFacts(
+            proteins = proteins.applyMultiplier(multiplier).toNutrientValue(),
+            carbohydrates = carbohydrates.applyMultiplier(multiplier).toNutrientValue(),
+            energy = energy.applyMultiplier(multiplier).toNutrientValue(),
+            fats = fats.applyMultiplier(multiplier).toNutrientValue(),
+            saturatedFats = saturatedFats.value.applyMultiplier(multiplier).toNutrientValue(),
+            transFats = transFats.value.applyMultiplier(multiplier).toNutrientValue(),
+            monounsaturatedFats = monounsaturatedFats.value
+                .applyMultiplier(multiplier).toNutrientValue(),
+            polyunsaturatedFats = polyunsaturatedFats.value
+                .applyMultiplier(multiplier).toNutrientValue(),
+            omega3 = omega3.value.applyMultiplier(multiplier).toNutrientValue(),
+            omega6 = omega6.value.applyMultiplier(multiplier).toNutrientValue(),
+            sugars = sugars.value.applyMultiplier(multiplier).toNutrientValue(),
+            addedSugars = addedSugars.value.applyMultiplier(multiplier).toNutrientValue(),
+            dietaryFiber = dietaryFiber.value.applyMultiplier(multiplier).toNutrientValue(),
+            solubleFiber = solubleFiber.value.applyMultiplier(multiplier).toNutrientValue(),
+            insolubleFiber = insolubleFiber.value.applyMultiplier(multiplier).toNutrientValue(),
+            salt = salt.value.applyMultiplier(multiplier).toNutrientValue(),
+            cholesterolMilli = cholesterolMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            caffeineMilli = caffeineMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminAMicro = vitaminAMicro.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminB1Milli = vitaminB1Milli.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminB2Milli = vitaminB2Milli.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminB3Milli = vitaminB3Milli.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminB5Milli = vitaminB5Milli.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminB6Milli = vitaminB6Milli.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminB7Micro = vitaminB7Micro.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminB9Micro = vitaminB9Micro.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminB12Micro = vitaminB12Micro.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminCMilli = vitaminCMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminDMicro = vitaminDMicro.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminEMilli = vitaminEMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            vitaminKMicro = vitaminKMicro.value.applyMultiplier(multiplier).toNutrientValue(),
+            manganeseMilli = manganeseMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            magnesiumMilli = magnesiumMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            potassiumMilli = potassiumMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            calciumMilli = calciumMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            copperMilli = copperMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            zincMilli = zincMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            sodiumMilli = sodiumMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            ironMilli = ironMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            phosphorusMilli = phosphorusMilli.value.applyMultiplier(multiplier).toNutrientValue(),
+            seleniumMicro = seleniumMicro.value.applyMultiplier(multiplier).toNutrientValue(),
+            iodineMicro = iodineMicro.value.applyMultiplier(multiplier).toNutrientValue(),
+            chromiumMicro = chromiumMicro.value.applyMultiplier(multiplier).toNutrientValue()
+        )
+
         return Result.success(
-            ProductEntity(
+            Product(
+                id = id,
                 name = name.value,
                 brand = brand.value,
                 barcode = barcode.value,
-                nutrients = Nutrients(
-                    energy = energy * multiplier,
-                    proteins = proteins * multiplier,
-                    fats = fats * multiplier,
-                    saturatedFats = saturatedFats.value.applyMultiplier(multiplier),
-                    transFats = transFats.value.applyMultiplier(multiplier),
-                    monounsaturatedFats = monounsaturatedFats.value.applyMultiplier(multiplier),
-                    polyunsaturatedFats = polyunsaturatedFats.value.applyMultiplier(multiplier),
-                    omega3 = omega3.value.applyMultiplier(multiplier),
-                    omega6 = omega6.value.applyMultiplier(multiplier),
-                    carbohydrates = carbohydrates * multiplier,
-                    sugars = sugars.value.applyMultiplier(multiplier),
-                    addedSugars = addedSugars.value.applyMultiplier(multiplier),
-                    dietaryFiber = dietaryFiber.value.applyMultiplier(multiplier),
-                    solubleFiber = solubleFiber.value.applyMultiplier(multiplier),
-                    insolubleFiber = insolubleFiber.value.applyMultiplier(multiplier),
-                    salt = salt.value.applyMultiplier(multiplier),
-                    cholesterolMilli = cholesterolMilli.value.applyMultiplier(multiplier),
-                    caffeineMilli = caffeineMilli.value.applyMultiplier(multiplier)
-                ),
-                vitamins = Vitamins(
-                    vitaminAMicro = vitaminAMicro.value.applyMultiplier(multiplier),
-                    vitaminB1Milli = vitaminB1Milli.value.applyMultiplier(multiplier),
-                    vitaminB2Milli = vitaminB2Milli.value.applyMultiplier(multiplier),
-                    vitaminB3Milli = vitaminB3Milli.value.applyMultiplier(multiplier),
-                    vitaminB5Milli = vitaminB5Milli.value.applyMultiplier(multiplier),
-                    vitaminB6Milli = vitaminB6Milli.value.applyMultiplier(multiplier),
-                    vitaminB7Micro = vitaminB7Micro.value.applyMultiplier(multiplier),
-                    vitaminB9Micro = vitaminB9Micro.value.applyMultiplier(multiplier),
-                    vitaminB12Micro = vitaminB12Micro.value.applyMultiplier(multiplier),
-                    vitaminCMilli = vitaminCMilli.value.applyMultiplier(multiplier),
-                    vitaminDMicro = vitaminDMicro.value.applyMultiplier(multiplier),
-                    vitaminEMilli = vitaminEMilli.value.applyMultiplier(multiplier),
-                    vitaminKMicro = vitaminKMicro.value.applyMultiplier(multiplier)
-                ),
-                minerals = Minerals(
-                    manganeseMilli = manganeseMilli.value.applyMultiplier(multiplier),
-                    magnesiumMilli = magnesiumMilli.value.applyMultiplier(multiplier),
-                    potassiumMilli = potassiumMilli.value.applyMultiplier(multiplier),
-                    calciumMilli = calciumMilli.value.applyMultiplier(multiplier),
-                    copperMilli = copperMilli.value.applyMultiplier(multiplier),
-                    zincMilli = zincMilli.value.applyMultiplier(multiplier),
-                    sodiumMilli = sodiumMilli.value.applyMultiplier(multiplier),
-                    ironMilli = ironMilli.value.applyMultiplier(multiplier),
-                    phosphorusMilli = phosphorusMilli.value.applyMultiplier(multiplier),
-                    seleniumMicro = seleniumMicro.value.applyMultiplier(multiplier),
-                    iodineMicro = iodineMicro.value.applyMultiplier(multiplier),
-                    chromiumMicro = chromiumMicro.value.applyMultiplier(multiplier)
-
-                ),
+                nutritionFacts = facts,
                 packageWeight = packageWeight.value,
                 servingWeight = servingWeight.value,
                 note = note.value,
-                sourceType = sourceType,
-                sourceUrl = sourceUrl.value,
+                source = FoodSource(
+                    type = sourceType,
+                    url = sourceUrl.value
+                ),
                 isLiquid = isLiquid
             )
         )

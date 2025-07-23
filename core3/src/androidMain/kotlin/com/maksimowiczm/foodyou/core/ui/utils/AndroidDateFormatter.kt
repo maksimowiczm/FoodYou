@@ -8,8 +8,10 @@ import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toJavaLocalTime
 
 class AndroidDateFormatter(private val context: Context) : DateFormatter {
@@ -49,5 +51,17 @@ class AndroidDateFormatter(private val context: Context) : DateFormatter {
         DateTimeFormatter
             .ofPattern("hh:mm a", defaultLocale)
             .format(time.toJavaLocalTime())
+    }
+
+    override fun formatDateTime(dateTime: LocalDateTime): String {
+        val pattern = if (DateFormat.is24HourFormat(context)) {
+            "d MMMM yyyy, HH:mm"
+        } else {
+            "d MMMM yyyy, hh:mm a"
+        }
+
+        return DateTimeFormatter
+            .ofPattern(pattern, defaultLocale)
+            .format(dateTime.toJavaLocalDateTime())
     }
 }

@@ -6,8 +6,7 @@ import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe as RecipeEntity
 import com.maksimowiczm.foodyou.feature.food.data.database.food.RecipeIngredient as RecipeIngredientEntity
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
-import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
+import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.RecipeFormState
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.RecipeViewModel
 import com.maksimowiczm.foodyou.feature.measurement.domain.rawValue
@@ -18,13 +17,8 @@ import kotlinx.coroutines.launch
 
 internal class CreateRecipeViewModel(
     foodDatabase: FoodDatabase,
-    productMapper: ProductMapper,
-    observeRecipeUseCase: ObserveRecipeUseCase
-) : RecipeViewModel(
-    productDao = foodDatabase.productDao,
-    productMapper = productMapper,
-    observeRecipeUseCase = observeRecipeUseCase
-) {
+    observeFoodUseCase: ObserveFoodUseCase
+) : RecipeViewModel(observeFoodUseCase) {
 
     private val recipeDao = foodDatabase.recipeDao
 
