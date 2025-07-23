@@ -1,8 +1,5 @@
 package com.maksimowiczm.foodyou.feature.onboarding.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,21 +26,12 @@ import androidx.compose.ui.zIndex
 import com.maksimowiczm.foodyou.core.ui.InteractiveLogo
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import foodyou.app.generated.resources.*
-import kotlinx.coroutines.flow.filter
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun BeforeYouStartScreen(onAgree: () -> Unit, modifier: Modifier = Modifier) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val listState = rememberLazyListState()
-
-    var everAllScrolled by remember { mutableStateOf(false) }
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.canScrollForward }.filter { !it }.collect {
-            everAllScrolled = true
-        }
-    }
 
     Scaffold(
         modifier = modifier,
@@ -74,8 +61,7 @@ internal fun BeforeYouStartScreen(onAgree: () -> Unit, modifier: Modifier = Modi
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = paddingValues
                     .add(bottom = 72.dp) // Button height + padding
-                    .add(vertical = 8.dp),
-                state = listState
+                    .add(vertical = 8.dp)
             ) {
                 item {
                     InteractiveLogo(Modifier.fillMaxWidth())
@@ -89,26 +75,17 @@ internal fun BeforeYouStartScreen(onAgree: () -> Unit, modifier: Modifier = Modi
                 }
             }
 
-            AnimatedVisibility(
-                visible = everAllScrolled,
+            Button(
+                onClick = onAgree,
+                shapes = ButtonDefaults.shapes(),
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
                     .padding(bottom = 8.dp)
+                    .padding(bottom = paddingValues.calculateBottomPadding())
+                    .height(56.dp)
+                    .align(Alignment.BottomCenter)
                     .zIndex(1f)
-                    .padding(
-                        bottom = paddingValues.calculateBottomPadding()
-                    ),
-                enter = slideInVertically { it } + fadeIn()
             ) {
-                Button(
-                    onClick = onAgree,
-                    shapes = ButtonDefaults.shapes(),
-                    modifier = Modifier.height(56.dp)
-                ) {
-                    Text(
-                        stringResource(Res.string.action_agree_and_continue)
-                    )
-                }
+                Text(stringResource(Res.string.action_agree_and_continue))
             }
         }
     }
