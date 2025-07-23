@@ -27,7 +27,8 @@ internal class ProductMapperImpl : ProductMapper {
         source = FoodSource(
             type = entity.sourceType,
             url = entity.sourceUrl
-        )
+        ),
+        isLiquid = entity.isLiquid
     )
 
     private fun toNutritionFacts(nutrients: Nutrients, vitamins: Vitamins, minerals: Minerals) =

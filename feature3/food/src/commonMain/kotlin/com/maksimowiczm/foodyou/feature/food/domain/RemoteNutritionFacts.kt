@@ -23,7 +23,7 @@ data class RemoteNutritionFacts(
     val sugars: Float?,
     val addedSugars: Float?,
     val salt: Float?,
-    val fiber: Float?,
+    val dietaryFiber: Float?,
     val solubleFiber: Float?,
     val insolubleFiber: Float?,
     val cholesterolMilli: Float?,

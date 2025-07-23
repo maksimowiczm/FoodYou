@@ -37,7 +37,8 @@ internal class ObserveRecipeUseCaseImpl(
                         name = entity.name,
                         servings = entity.servings,
                         ingredients = emptyList(),
-                        note = entity.note
+                        note = entity.note,
+                        isLiquid = entity.isLiquid
                     )
                 )
             }
@@ -84,7 +85,8 @@ internal class ObserveRecipeUseCaseImpl(
                     name = entity.name,
                     servings = entity.servings,
                     ingredients = ingredientsList.toList(),
-                    note = entity.note
+                    note = entity.note,
+                    isLiquid = entity.isLiquid
                 )
             }
         }

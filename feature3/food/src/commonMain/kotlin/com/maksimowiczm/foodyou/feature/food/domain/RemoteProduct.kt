@@ -10,5 +10,6 @@ data class RemoteProduct(
     val nutritionFacts: RemoteNutritionFacts?,
     val packageWeight: Float?,
     val servingWeight: Float?,
-    val source: FoodSource
+    val source: FoodSource,
+    val isLiquid: Boolean
 )

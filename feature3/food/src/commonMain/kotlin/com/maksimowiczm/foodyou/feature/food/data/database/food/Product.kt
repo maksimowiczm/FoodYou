@@ -22,5 +22,6 @@ data class Product(
     val servingWeight: Float?,
     val note: String?,
     val sourceType: FoodSource.Type,
-    val sourceUrl: String? = null
+    val sourceUrl: String? = null,
+    val isLiquid: Boolean
 )

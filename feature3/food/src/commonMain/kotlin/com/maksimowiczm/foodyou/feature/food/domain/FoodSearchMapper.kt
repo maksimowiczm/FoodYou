@@ -19,6 +19,7 @@ internal class FoodSearchMapperImpl : FoodSearchMapper {
             is FoodId.Product -> FoodSearch.Product(
                 id = foodId,
                 headline = data.headline,
+                isLiquid = data.isLiquid,
                 nutritionFacts = NutritionFacts(
                     proteins = nutrients?.proteins.toNutrientValue(),
                     carbohydrates = nutrients?.carbohydrates.toNutrientValue(),
@@ -70,7 +71,8 @@ internal class FoodSearchMapperImpl : FoodSearchMapper {
 
             is FoodId.Recipe -> FoodSearch.Recipe(
                 id = foodId,
-                headline = data.headline
+                headline = data.headline,
+                isLiquid = data.isLiquid
             )
         }
     }

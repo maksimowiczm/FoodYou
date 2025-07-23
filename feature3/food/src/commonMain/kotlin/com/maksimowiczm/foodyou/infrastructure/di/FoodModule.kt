@@ -7,6 +7,8 @@ import com.maksimowiczm.foodyou.feature.food.data.network.usda.USDAProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapperImpl
+import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCaseImpl
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCaseImpl
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
@@ -72,4 +74,6 @@ val foodModule = module {
     viewModelOf(::UpdateRecipeViewModel)
 
     factoryOf(::RemoteProductMapperImpl).bind<RemoteProductMapper>()
+
+    factoryOf(::ObserveFoodUseCaseImpl).bind<ObserveFoodUseCase>()
 }

@@ -94,7 +94,13 @@ internal fun FoodSearchListItem(
             val text = buildString {
                 append(measurement.stringResource())
                 if (weight != null) {
-                    append(" (${weight.formatClipZeros()} $g)")
+                    val suffix = if (food.isLiquid) {
+                        stringResource(Res.string.unit_milliliter_short)
+                    } else {
+                        g
+                    }
+
+                    append(" (${weight.formatClipZeros()} $suffix)")
                 }
             }
 
@@ -183,7 +189,13 @@ internal fun FoodSearchListItem(
             val text = buildString {
                 append(measurement.stringResource())
                 if (weight != null) {
-                    append(" (${weight.formatClipZeros()} $g)")
+                    val suffix = if (food.isLiquid) {
+                        stringResource(Res.string.unit_milliliter_short)
+                    } else {
+                        g
+                    }
+
+                    append(" (${weight.formatClipZeros()} $suffix)")
                 }
             }
 

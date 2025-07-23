@@ -85,7 +85,8 @@ internal class ProductFieldMapMapperImpl : ProductFieldMapMapper {
             servingWeight = fieldMap[ProductField.SERVING_WEIGHT]?.toFloatOrNull(),
             note = fieldMap[ProductField.NOTE],
             sourceType = sourceType,
-            sourceUrl = fieldMap[ProductField.SOURCE_URL]
+            sourceUrl = fieldMap[ProductField.SOURCE_URL],
+            isLiquid = fieldMap[ProductField.IS_LIQUID]?.toBooleanStrictOrNull() ?: false
         )
     }
 }

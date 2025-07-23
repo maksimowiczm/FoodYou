@@ -63,6 +63,7 @@ import com.maksimowiczm.foodyou.feature.food.ui.Icon
 import com.maksimowiczm.foodyou.feature.food.ui.NutrientList
 import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Meal
+import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.ui.MeasurementPicker
 import com.maksimowiczm.foodyou.feature.measurement.ui.stringResource
@@ -86,7 +87,7 @@ internal fun FoodMeasurementScreen(
     meals: List<Meal>,
     selectedMeal: Meal,
     suggestions: List<Measurement>,
-    possibleTypes: List<com.maksimowiczm.foodyou.feature.measurement.data.Measurement>,
+    possibleTypes: Set<MeasurementType>,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
     selectedMeasurement: Measurement = suggestions.first()
@@ -516,9 +517,15 @@ private fun NutrientList(food: Food, measurement: Measurement, modifier: Modifie
                 is Measurement.Milliliter -> Unit
 
                 is Measurement.Package,
-                is Measurement.Serving -> append(
-                    " (${weight.formatClipZeros()} ${stringResource(Res.string.unit_gram_short)})"
-                )
+                is Measurement.Serving -> {
+                    val suffix = if (food.isLiquid) {
+                        stringResource(Res.string.unit_milliliter_short)
+                    } else {
+                        stringResource(Res.string.unit_gram_short)
+                    }
+
+                    append(" (${weight.formatClipZeros()} $suffix)")
+                }
             }
         }
 

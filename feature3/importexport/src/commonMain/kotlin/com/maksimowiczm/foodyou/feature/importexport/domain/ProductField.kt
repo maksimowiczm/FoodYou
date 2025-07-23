@@ -50,5 +50,6 @@ enum class ProductField {
     PACKAGE_WEIGHT,
     SERVING_WEIGHT,
     NOTE,
-    SOURCE_URL
+    SOURCE_URL,
+    IS_LIQUID
 }

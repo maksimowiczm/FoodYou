@@ -42,6 +42,7 @@ internal fun rememberRecipeFormState(
     initialName: String,
     initialServings: Int,
     initialNote: String?,
+    initialIsLiquid: Boolean,
     initialIngredients: List<MinimalIngredient>
 ): RecipeFormState {
     val name = rememberFormField(
@@ -77,20 +78,37 @@ internal fun rememberRecipeFormState(
         mutableStateOf(initialIngredients)
     }
 
-    val isModified = remember(initialName, initialName, initialServings) {
+    val isLiquidState = rememberSaveable { mutableStateOf(initialIsLiquid) }
+
+    val isModified = remember(
+        initialName,
+        initialServings,
+        initialNote,
+        initialIsLiquid,
+        ingredientsState.value
+    ) {
         derivedStateOf {
             initialName != name.value ||
                 initialServings != servings.value ||
                 initialIngredients != ingredientsState.value ||
-                initialNote != note.value
+                initialNote != note.value ||
+                initialIsLiquid != isLiquidState.value
         }
     }
 
-    return remember {
+    return remember(
+        name,
+        servings,
+        note,
+        isLiquidState,
+        ingredientsState,
+        isModified
+    ) {
         RecipeFormState(
             name = name,
             servings = servings,
             note = note,
+            isLiquidState = isLiquidState,
             ingredientsState = ingredientsState,
             isModifiedState = isModified
         )
@@ -102,12 +120,15 @@ internal class RecipeFormState(
     val name: FormField<String, RecipeFormFieldError>,
     val servings: FormField<Int, RecipeFormFieldError>,
     val note: FormField<String?, RecipeFormFieldError>,
+    isLiquidState: MutableState<Boolean>,
     ingredientsState: MutableState<List<MinimalIngredient>>,
     isModifiedState: State<Boolean>
 ) {
     val isValid by derivedStateOf {
         name.error == null && servings.error == null && ingredients.isNotEmpty()
     }
+
+    var isLiquid by isLiquidState
 
     var ingredients by ingredientsState
         private set

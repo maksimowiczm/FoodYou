@@ -38,7 +38,7 @@ internal class OpenFoodFactsProductMapper {
                 omega6 = it.omega6Fats?.toFloat(),
                 proteins = it.proteins?.toFloat(),
                 salt = it.salt?.toFloat(),
-                fiber = it.fiber?.toFloat(),
+                dietaryFiber = it.fiber?.toFloat(),
                 solubleFiber = it.solubleFiber?.toFloat(),
                 insolubleFiber = it.insolubleFiber?.toFloat(),
                 cholesterolMilli = it.cholesterol?.normalize(MILLIGRAMS),
@@ -71,6 +71,10 @@ internal class OpenFoodFactsProductMapper {
             )
         }
 
+        val isLiquid =
+            product.packageQuantityUnit ?.equals("ml", ignoreCase = true) == true ||
+                product.servingQuantityUnit ?.equals("ml", ignoreCase = true) == true
+
         return RemoteProduct(
             name = name,
             brand = brand,
@@ -78,7 +82,8 @@ internal class OpenFoodFactsProductMapper {
             nutritionFacts = nutritionFacts,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
-            source = source
+            source = source,
+            isLiquid = isLiquid
         )
     }
 }

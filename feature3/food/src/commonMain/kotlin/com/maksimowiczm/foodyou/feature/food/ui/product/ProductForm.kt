@@ -2,7 +2,9 @@ package com.maksimowiczm.foodyou.feature.food.ui.product
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Calculate
 import androidx.compose.material.icons.outlined.Keyboard
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -83,81 +86,13 @@ internal fun ProductForm(
         orderState.value
     }
 
-    var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
-    FullScreenCameraBarcodeScanner(
-        visible = showBarcodeScanner,
-        onBarcodeScan = {
-            state.barcode.textFieldState.setTextAndPlaceCursorAtEnd(it)
-            showBarcodeScanner = false
-        },
-        onClose = {
-            showBarcodeScanner = false
-        }
-    )
-
     Column(
         modifier = modifier.padding(verticalPadding),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = stringResource(Res.string.headline_general),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
-        )
-
-        state.name.TextField(
-            label = stringResource(Res.string.product_name),
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
-            required = true,
-            suffix = null
-        )
-
-        state.brand.TextField(
-            label = stringResource(Res.string.product_brand),
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
-        )
-
-        BarcodeTextField(
-            state = state.barcode,
-            onBarcodeScanner = {
-                showBarcodeScanner = true
-            },
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
-        )
-
-        state.note.TextField(
-            label = stringResource(Res.string.headline_note),
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
-            supportingText = stringResource(Res.string.description_add_note)
-        )
-
-        SourcePicker(
-            url = state.sourceUrl,
-            type = state.sourceType,
-            onTypeChange = { state.sourceType = it },
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
-        )
-
-        MeasurementPicker(
-            selected = state.measurement,
-            onSelect = { state.measurement = it },
-            modifier = Modifier
-                .padding(8.dp)
-                .padding(horizontalPadding)
-                .fillMaxWidth()
-        )
-
-        state.packageWeight.TextField(
-            label = stringResource(Res.string.product_package_weight),
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
-            required = state.measurement is Measurement.Package
-        )
-
-        state.servingWeight.TextField(
-            label = stringResource(Res.string.product_serving_weight),
-            modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
-            required = state.measurement is Measurement.Serving
+        General(
+            state = state,
+            horizontalPadding = horizontalPadding
         )
 
         Text(
@@ -211,6 +146,125 @@ internal fun ProductForm(
             }
         }
     }
+}
+
+@Composable
+private fun ColumnScope.General(state: ProductFormState, horizontalPadding: PaddingValues) {
+    var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
+    FullScreenCameraBarcodeScanner(
+        visible = showBarcodeScanner,
+        onBarcodeScan = {
+            state.barcode.textFieldState.setTextAndPlaceCursorAtEnd(it)
+            showBarcodeScanner = false
+        },
+        onClose = {
+            showBarcodeScanner = false
+        }
+    )
+
+    Text(
+        text = stringResource(Res.string.headline_general),
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+    )
+
+    state.name.TextField(
+        label = stringResource(Res.string.product_name),
+        modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+        required = true,
+        suffix = null
+    )
+
+    state.brand.TextField(
+        label = stringResource(Res.string.product_brand),
+        modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+    )
+
+    BarcodeTextField(
+        state = state.barcode,
+        onBarcodeScanner = {
+            showBarcodeScanner = true
+        },
+        modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+    )
+
+    state.note.TextField(
+        label = stringResource(Res.string.headline_note),
+        modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+        supportingText = stringResource(Res.string.description_add_note)
+    )
+
+    SourcePicker(
+        url = state.sourceUrl,
+        type = state.sourceType,
+        onTypeChange = { state.sourceType = it },
+        modifier = Modifier.padding(horizontalPadding).fillMaxWidth()
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { state.isLiquid = !state.isLiquid }
+            .padding(vertical = 8.dp)
+            .padding(horizontalPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.size(48.dp),
+            contentAlignment = Alignment.Center,
+            content = {
+                Checkbox(
+                    checked = state.isLiquid,
+                    onCheckedChange = null
+                )
+            }
+        )
+        Column {
+            Text(
+                text = stringResource(Res.string.action_treat_as_liquid),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = stringResource(Res.string.description_treat_as_liquid),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+
+    MeasurementPicker(
+        isLiquid = state.isLiquid,
+        selected = state.measurement,
+        onSelect = { state.measurement = it },
+        modifier = Modifier
+            .padding(8.dp)
+            .padding(horizontalPadding)
+            .fillMaxWidth()
+    )
+
+    state.packageWeight.TextField(
+        label = stringResource(Res.string.product_package_weight),
+        modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+        required = state.measurement is Measurement.Package,
+        suffix = if (state.isLiquid) {
+            stringResource(Res.string.unit_milliliter_short)
+        } else {
+            stringResource(Res.string.unit_gram_short)
+        }
+    )
+
+    state.servingWeight.TextField(
+        label = stringResource(Res.string.product_serving_weight),
+        modifier = Modifier.padding(horizontalPadding).fillMaxWidth(),
+        required = state.measurement is Measurement.Serving,
+        suffix = if (state.isLiquid) {
+            stringResource(Res.string.unit_milliliter_short)
+        } else {
+            stringResource(Res.string.unit_gram_short)
+        }
+    )
 }
 
 @Composable
@@ -585,16 +639,26 @@ private fun BarcodeTextField(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun MeasurementPicker(
+    isLiquid: Boolean,
     selected: Measurement,
     onSelect: (Measurement) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-    val possibleValues = remember {
+    val latestOnSelect by rememberUpdatedState(onSelect)
+    LaunchedEffect(isLiquid, selected) {
+        // If changes and gram or milliliter is selected, switch to proper
+        if (selected is Measurement.Gram && isLiquid) {
+            latestOnSelect(Measurement.Milliliter(selected.value))
+        } else if (selected is Measurement.Milliliter && !isLiquid) {
+            latestOnSelect(Measurement.Gram(selected.value))
+        }
+    }
+
+    val possibleValues = remember(isLiquid) {
         listOf(
-            Measurement.Gram(100f),
-            Measurement.Milliliter(100f),
+            if (isLiquid) Measurement.Milliliter(100f) else Measurement.Gram(100f),
             Measurement.Serving(1f),
             Measurement.Package(1f)
         )

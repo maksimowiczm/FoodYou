@@ -40,6 +40,7 @@ fun CreateRecipeScreen(
         initialName = "",
         initialServings = 1,
         initialNote = null,
+        initialIsLiquid = false,
         initialIngredients = emptyList()
     )
     val asRecipe = remember(formState.ingredients) {

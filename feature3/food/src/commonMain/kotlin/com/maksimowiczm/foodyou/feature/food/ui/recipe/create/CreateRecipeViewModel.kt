@@ -48,7 +48,8 @@ internal class CreateRecipeViewModel(
         val recipe = RecipeEntity(
             name = form.name.value,
             servings = form.servings.value,
-            note = form.note.value
+            note = form.note.value,
+            isLiquid = form.isLiquid
         )
 
         viewModelScope.launch {

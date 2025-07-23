@@ -7,19 +7,18 @@ import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.core.util.DateProvider
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
+import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.Product
-import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.Recipe
+import com.maksimowiczm.foodyou.feature.food.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.feature.food.domain.weight
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement as MeasurementEntity
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMeasurementSuggestionsUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.toMeasurement
-import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.maksimowiczm.foodyou.feature.measurement.domain.rawValue
 import com.maksimowiczm.foodyou.feature.measurement.domain.type
-import kotlin.collections.map
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,10 +35,10 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
 internal class UpdateMeasurementViewModel(
+    observeFoodUseCase: ObserveFoodUseCase,
+    observeMeasurementSuggestionsUseCase: ObserveMeasurementSuggestionsUseCase,
     foodDatabase: FoodDatabase,
     foodDiaryDatabase: FoodDiaryDatabase,
-    productMapper: ProductMapper,
-    observeRecipeUseCase: ObserveRecipeUseCase,
     dateProvider: DateProvider,
     private val measurementId: Long
 ) : ViewModel() {
@@ -72,19 +71,13 @@ internal class UpdateMeasurementViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val food = measurementEntity.flatMapLatest { measurement ->
-        when {
-            measurement.productId != null ->
-                productDao
-                    .observe(measurement.productId)
-                    .filterNotNull()
-                    .map(productMapper::toModel)
-
-            measurement.recipeId != null ->
-                observeRecipeUseCase(FoodId.Recipe(measurement.recipeId))
-                    .filterNotNull()
-
-            else -> error("Measurement does not have a productId")
+        val foodId = when {
+            measurement.productId != null -> FoodId.Product(measurement.productId)
+            measurement.recipeId != null -> FoodId.Recipe(measurement.recipeId)
+            else -> error("Measurement does not have a productId or recipeId")
         }
+
+        observeFoodUseCase.observe(foodId)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(2_000),
@@ -105,54 +98,24 @@ internal class UpdateMeasurementViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val suggestions: StateFlow<List<Measurement>?> = food.filterNotNull().flatMapLatest { food ->
-        measurementDao.observeMeasurementSuggestions(
-            productId = (food.id as? FoodId.Product)?.id,
-            recipeId = (food.id as? FoodId.Recipe)?.id,
+        observeMeasurementSuggestionsUseCase.observe(
+            food = food,
             limit = 5
-        ).map { list ->
-            val measurements = list.map { it.toMeasurement() }.filter {
-                when (it) {
-                    is Measurement.Gram, is Measurement.Milliliter -> true
-                    is Measurement.Package -> food.totalWeight != null
-                    is Measurement.Serving -> food.servingWeight != null
-                }
-            }.toMutableList()
-
-            // Fill missing measurements
-            measurements.add(Measurement.Gram(100f))
-
-            if (food.totalWeight != null) {
-                measurements.add(Measurement.Package(1f))
-            }
-            if (food.servingWeight != null) {
-                measurements.add(Measurement.Serving(1f))
-            }
-
-            measurements.distinct()
-        }
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(2_000),
         initialValue = null
     )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val possibleMeasurementTypes = food.filterNotNull().map {
-        it.let { product ->
-            MeasurementType.entries.filter { type ->
-                when (type) {
-                    MeasurementType.Gram -> true
-                    MeasurementType.Milliliter -> true
-                    MeasurementType.Package -> product.totalWeight != null
-                    MeasurementType.Serving -> product.servingWeight != null
-                }
-            }
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = null
-    )
+    val possibleMeasurementTypes = food
+        .filterNotNull()
+        .map { food -> food.possibleMeasurementTypes }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = null
+        )
 
     private val eventBus = Channel<MeasurementEvent>()
     val events = eventBus.receiveAsFlow()

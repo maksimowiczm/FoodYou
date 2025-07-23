@@ -73,7 +73,8 @@ internal class UpdateRecipeViewModel(
             id = foodId.id,
             name = form.name.value,
             servings = form.servings.value,
-            note = form.note.value
+            note = form.note.value,
+            isLiquid = form.isLiquid
         )
 
         viewModelScope.launch {

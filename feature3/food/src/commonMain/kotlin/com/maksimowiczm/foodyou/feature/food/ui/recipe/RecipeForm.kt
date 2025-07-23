@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.ui.recipe
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -149,10 +151,42 @@ internal fun RecipeForm(
                 imeAction = ImeAction.Done,
                 supportingText = stringResource(Res.string.description_add_note)
             )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { state.isLiquid = !state.isLiquid }
+                    .padding(vertical = 8.dp)
+                    .padding(horizontalPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier.size(48.dp),
+                    contentAlignment = Alignment.Center,
+                    content = {
+                        Checkbox(
+                            checked = state.isLiquid,
+                            onCheckedChange = null
+                        )
+                    }
+                )
+                Column {
+                    Text(
+                        text = stringResource(Res.string.action_treat_as_liquid),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = stringResource(Res.string.description_treat_as_liquid),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
 
         HorizontalDivider(
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
 
         Text(

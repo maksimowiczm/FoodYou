@@ -289,14 +289,27 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
         parser = nullableStringParser(),
         textFieldState = rememberTextFieldState(product?.source?.url ?: "")
     )
+    val isLiquid = rememberSaveable(product) {
+        mutableStateOf(product?.isLiquid ?: false)
+    }
 
     val isModified = remember(product) {
         if (product != null) {
+            val defaultMeasurement = if (product.isLiquid) {
+                Measurement.Milliliter(100f)
+            } else {
+                Measurement.Gram(100f)
+            }
+
             derivedStateOf {
                 name.value != product.name ||
                     brand.value != product.brand ||
                     barcode.value != product.barcode ||
                     note.value != product.note ||
+                    sourceType.value != product.source.type ||
+                    sourceUrl.value != product.source.url ||
+                    Measurement.notEqual(measurement.value, defaultMeasurement) ||
+                    isLiquid.value != product.isLiquid ||
                     packageWeight.value != product.packageWeight ||
                     servingWeight.value != product.servingWeight ||
                     proteins.value != product.nutritionFacts.proteins.value ||
@@ -343,20 +356,24 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                     phosphorus.value != product.nutritionFacts.phosphorusMilli.value ||
                     selenium.value != product.nutritionFacts.seleniumMicro.value ||
                     iodine.value != product.nutritionFacts.iodineMicro.value ||
-                    chromium.value != product.nutritionFacts.chromiumMicro.value ||
-                    sourceType.value != product.source.type ||
-                    sourceUrl.value != product.source.url ||
-                    Measurement.notEqual(
-                        measurement.value,
-                        Measurement.Gram(100f)
-                    )
+                    chromium.value != product.nutritionFacts.chromiumMicro.value
             }
         } else {
             derivedStateOf {
+                val defaultMeasurement = if (isLiquid.value) {
+                    Measurement.Milliliter(100f)
+                } else {
+                    Measurement.Gram(100f)
+                }
+
                 name.value.isNotBlank() ||
                     brand.value != null ||
                     barcode.value != null ||
                     note.value != null ||
+                    sourceType.value != FoodSource.Type.User ||
+                    sourceUrl.value != null ||
+                    isLiquid.value ||
+                    Measurement.notEqual(measurement.value, defaultMeasurement) ||
                     packageWeight.value != null ||
                     servingWeight.value != null ||
                     proteins.value != null ||
@@ -401,18 +418,67 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
                     phosphorus.value != null ||
                     selenium.value != null ||
                     iodine.value != null ||
-                    chromium.value != null ||
-                    sourceType.value != FoodSource.Type.User ||
-                    sourceUrl.value != null ||
-                    Measurement.notEqual(
-                        measurement.value,
-                        Measurement.Gram(100f)
-                    )
+                    chromium.value != null
             }
         }
     }
 
-    return remember {
+    return remember(
+        name,
+        brand,
+        barcode,
+        note,
+        sourceType,
+        sourceUrl,
+        isLiquid,
+        measurement,
+        packageWeight,
+        servingWeight,
+        energy,
+        proteins,
+        fats,
+        saturatedFats,
+        transFats,
+        monounsaturatedFats,
+        polyunsaturatedFats,
+        omega3,
+        omega6,
+        carbohydrates,
+        sugars,
+        addedSugars,
+        dietaryFiber,
+        solubleFiber,
+        insolubleFiber,
+        salt,
+        cholesterol,
+        caffeine,
+        vitaminA,
+        vitaminB1,
+        vitaminB2,
+        vitaminB3,
+        vitaminB5,
+        vitaminB6,
+        vitaminB7,
+        vitaminB9,
+        vitaminB12,
+        vitaminC,
+        vitaminD,
+        vitaminE,
+        vitaminK,
+        manganese,
+        magnesium,
+        potassium,
+        calcium,
+        copper,
+        zinc,
+        sodium,
+        iron,
+        phosphorus,
+        selenium,
+        iodine,
+        chromium,
+        isModified
+    ) {
         ProductFormState(
             name = name,
             brand = brand,
@@ -420,6 +486,7 @@ internal fun rememberProductFormState(product: Product? = null): ProductFormStat
             note = note,
             sourceTypeState = sourceType,
             sourceUrl = sourceUrl,
+            isLiquidState = isLiquid,
             measurementState = measurement,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
@@ -646,7 +713,7 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
     val salt =
         rememberNotRequiredFormField(product.nutritionFacts?.salt)
     val dietaryFiber =
-        rememberNotRequiredFormField(product.nutritionFacts?.fiber)
+        rememberNotRequiredFormField(product.nutritionFacts?.dietaryFiber)
     val solubleFiber =
         rememberNotRequiredFormField(product.nutritionFacts?.solubleFiber)
     val insolubleFiber =
@@ -716,13 +783,26 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
         parser = nullableStringParser(),
         textFieldState = rememberTextFieldState(product.source.url ?: "")
     )
+    val isLiquid = rememberSaveable(product) {
+        mutableStateOf(product.isLiquid)
+    }
 
     val isModified = remember(product) {
         derivedStateOf {
+            val defaultMeasurement = if (isLiquid.value) {
+                Measurement.Milliliter(100f)
+            } else {
+                Measurement.Gram(100f)
+            }
+
             name.value != product.name ||
                 brand.value != product.brand ||
                 barcode.value != product.barcode ||
                 note.value != null ||
+                sourceType.value != product.source.type ||
+                sourceUrl.value != product.source.url ||
+                isLiquid.value != product.isLiquid ||
+                Measurement.notEqual(measurement.value, defaultMeasurement) ||
                 packageWeight.value != product.packageWeight ||
                 servingWeight.value != product.servingWeight ||
                 proteins.value != product.nutritionFacts?.proteins ||
@@ -737,7 +817,7 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
                 omega6.value != product.nutritionFacts?.omega6 ||
                 sugars.value != product.nutritionFacts?.sugars ||
                 addedSugars.value != product.nutritionFacts?.addedSugars ||
-                dietaryFiber.value != product.nutritionFacts?.fiber ||
+                dietaryFiber.value != product.nutritionFacts?.dietaryFiber ||
                 solubleFiber.value != product.nutritionFacts?.solubleFiber ||
                 insolubleFiber.value != product.nutritionFacts?.insolubleFiber ||
                 salt.value != product.nutritionFacts?.salt ||
@@ -767,17 +847,65 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
                 phosphorus.value != product.nutritionFacts?.phosphorusMilli ||
                 selenium.value != product.nutritionFacts?.seleniumMicro ||
                 iodine.value != product.nutritionFacts?.iodineMicro ||
-                chromium.value != product.nutritionFacts?.chromiumMicro ||
-                sourceType.value != product.source.type ||
-                sourceUrl.value != product.source.url ||
-                Measurement.notEqual(
-                    measurement.value,
-                    Measurement.Gram(100f)
-                )
+                chromium.value != product.nutritionFacts?.chromiumMicro
         }
     }
 
-    return remember {
+    return remember(
+        name,
+        brand,
+        barcode,
+        note,
+        sourceType,
+        sourceUrl,
+        isLiquid,
+        measurement,
+        packageWeight,
+        servingWeight,
+        energy,
+        proteins,
+        fats,
+        saturatedFats,
+        transFats,
+        monounsaturatedFats,
+        polyunsaturatedFats,
+        omega3,
+        omega6,
+        carbohydrates,
+        sugars,
+        addedSugars,
+        dietaryFiber,
+        solubleFiber,
+        insolubleFiber,
+        salt,
+        cholesterol,
+        caffeine,
+        vitaminA,
+        vitaminB1,
+        vitaminB2,
+        vitaminB3,
+        vitaminB5,
+        vitaminB6,
+        vitaminB7,
+        vitaminB9,
+        vitaminB12,
+        vitaminC,
+        vitaminD,
+        vitaminE,
+        vitaminK,
+        manganese,
+        magnesium,
+        potassium,
+        calcium,
+        copper,
+        zinc,
+        sodium,
+        iron,
+        phosphorus,
+        selenium,
+        iodine,
+        chromium
+    ) {
         ProductFormState(
             name = name,
             brand = brand,
@@ -785,6 +913,7 @@ internal fun rememberProductFormState(product: RemoteProduct): ProductFormState 
             note = note,
             sourceTypeState = sourceType,
             sourceUrl = sourceUrl,
+            isLiquidState = isLiquid,
             measurementState = measurement,
             packageWeight = packageWeight,
             servingWeight = servingWeight,
@@ -872,6 +1001,7 @@ internal class ProductFormState(
     val note: FormField<String?, Nothing>,
     sourceTypeState: MutableState<FoodSource.Type>,
     val sourceUrl: FormField<String?, Nothing>,
+    isLiquidState: MutableState<Boolean>,
     // Weight
     measurementState: MutableState<Measurement>,
     val packageWeight: FormField<Float?, ProductFormFieldError>,
@@ -939,13 +1069,17 @@ internal class ProductFormState(
             fats.error == null &&
             energy.error == null &&
             saturatedFats.error == null &&
+            transFats.error == null &&
             monounsaturatedFats.error == null &&
             polyunsaturatedFats.error == null &&
             omega3.error == null &&
             omega6.error == null &&
             sugars.error == null &&
+            addedSugars.error == null &&
             salt.error == null &&
             dietaryFiber.error == null &&
+            solubleFiber.error == null &&
+            insolubleFiber.error == null &&
             cholesterolMilli.error == null &&
             caffeineMilli.error == null &&
             vitaminAMicro.error == null &&
@@ -975,6 +1109,7 @@ internal class ProductFormState(
             chromiumMicro.error == null
 
     var sourceType: FoodSource.Type by sourceTypeState
+    var isLiquid: Boolean by isLiquidState
     var measurement: Measurement by measurementState
     val isModified: Boolean by isModifiedState
     var autoCalculateEnergy: Boolean by autoCalculateEnergyState
@@ -1059,7 +1194,8 @@ internal fun ProductFormState.toProductEntity(multiplier: Float): Result<Product
                 servingWeight = servingWeight.value,
                 note = note.value,
                 sourceType = sourceType,
-                sourceUrl = sourceUrl.value
+                sourceUrl = sourceUrl.value,
+                isLiquid = isLiquid
             )
         )
     }

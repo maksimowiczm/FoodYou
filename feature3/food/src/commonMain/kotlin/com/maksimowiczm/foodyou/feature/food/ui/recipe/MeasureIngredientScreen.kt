@@ -170,11 +170,15 @@ internal fun MeasureIngredientScreen(
                         is Measurement.Milliliter -> Unit
 
                         is Measurement.Package,
-                        is Measurement.Serving -> append(
-                            " (${weight.formatClipZeros()} ${stringResource(
-                                Res.string.unit_gram_short
-                            )})"
-                        )
+                        is Measurement.Serving -> {
+                            val suffix = if (food.isLiquid) {
+                                stringResource(Res.string.unit_milliliter_short)
+                            } else {
+                                stringResource(Res.string.unit_gram_short)
+                            }
+
+                            append(" (${weight.formatClipZeros()} $suffix)")
+                        }
                     }
                 }
 

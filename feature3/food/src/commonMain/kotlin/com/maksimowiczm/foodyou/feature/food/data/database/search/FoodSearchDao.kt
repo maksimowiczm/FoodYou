@@ -136,6 +136,7 @@ CASE
     WHEN p.brand IS NOT NULL THEN p.name || ' (' || p.brand || ')'
     ELSE p.name
 END AS headline,
+p.isLiquid AS isLiquid,
 p.energy,
 p.proteins,
 p.fats,
@@ -187,6 +188,7 @@ private const val RECIPE_FOOD_SEARCH_SQL_SELECT = """
 NULL AS productId,
 r.id AS recipeId,
 r.name AS headline,
+r.isLiquid AS isLiquid,
 NULL AS energy,
 NULL AS proteins,
 NULL AS fats,

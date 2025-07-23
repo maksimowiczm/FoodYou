@@ -43,7 +43,7 @@ internal class RemoteProductMapperImpl : RemoteProductMapper {
                     carbohydrates = nutritionFacts?.carbohydrates,
                     sugars = nutritionFacts?.sugars,
                     addedSugars = nutritionFacts?.addedSugars,
-                    dietaryFiber = nutritionFacts?.fiber,
+                    dietaryFiber = nutritionFacts?.dietaryFiber,
                     solubleFiber = nutritionFacts?.solubleFiber,
                     insolubleFiber = nutritionFacts?.insolubleFiber,
                     salt = nutritionFacts?.salt,
@@ -81,7 +81,8 @@ internal class RemoteProductMapperImpl : RemoteProductMapper {
                 ),
                 note = note,
                 sourceType = source.type,
-                sourceUrl = source.url
+                sourceUrl = source.url,
+                isLiquid = isLiquid
             )
         }
 }

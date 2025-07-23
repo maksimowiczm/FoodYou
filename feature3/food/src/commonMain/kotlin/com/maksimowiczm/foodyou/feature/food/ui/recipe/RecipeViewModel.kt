@@ -45,7 +45,8 @@ internal abstract class RecipeViewModel(
                 name = state.name.value,
                 servings = state.servings.value,
                 note = state.note.value,
-                ingredients = ingredients
+                ingredients = ingredients,
+                isLiquid = state.isLiquid
             )
         }
     }

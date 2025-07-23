@@ -49,6 +49,9 @@ import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_E
 import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.VITAMIN_K
 import com.maksimowiczm.foodyou.feature.usda.model.Nutrient.ZINC
 
+private val allowedServingUnits by lazy { setOf("g", "GRM", "ml", "MLT") }
+private val liquidServingUnits by lazy { setOf("ml", "MLT") }
+
 internal class USDAProductMapper {
     fun toRemoteProduct(food: Food) = with(food) {
         val proteins = getNutrient(PROTEIN)?.normalize(GRAMS)
@@ -72,11 +75,13 @@ internal class USDAProductMapper {
             url = url
         )
 
-        val servingWeight = if (servingSizeUnit == "g" || servingSizeUnit == "GRM") {
+        val servingWeight = if (allowedServingUnits.contains(servingSizeUnit)) {
             servingSize?.toFloat()
         } else {
             null
         }
+
+        val isLiquid = liquidServingUnits.contains(servingSizeUnit)
 
         RemoteProduct(
             name = description.trim(),
@@ -96,7 +101,7 @@ internal class USDAProductMapper {
                 sugars = getNutrient(SUGARS)?.normalize(GRAMS),
                 addedSugars = getNutrient(ADDED_SUGARS)?.normalize(GRAMS),
                 salt = null,
-                fiber = getNutrient(FIBER)?.normalize(GRAMS),
+                dietaryFiber = getNutrient(FIBER)?.normalize(GRAMS),
                 solubleFiber = null,
                 insolubleFiber = null,
                 cholesterolMilli = getNutrient(CHOLESTEROL)?.normalize(MILLIGRAMS),
@@ -129,7 +134,8 @@ internal class USDAProductMapper {
             ),
             packageWeight = null,
             servingWeight = servingWeight,
-            source = source
+            source = source,
+            isLiquid = isLiquid
         )
     }
 }

@@ -52,6 +52,7 @@ fun UpdateRecipeScreen(
         initialName = recipe.name,
         initialServings = recipe.servings,
         initialNote = recipe.note,
+        initialIsLiquid = recipe.isLiquid,
         initialIngredients = recipe.ingredients.map { it.toMinimalIngredient() }
     )
     val asRecipe = remember(formState.ingredients) {
