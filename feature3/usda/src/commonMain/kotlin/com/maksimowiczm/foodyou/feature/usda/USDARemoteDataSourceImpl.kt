@@ -59,7 +59,7 @@ internal class USDARemoteDataSourceImpl(private val client: HttpClient) : USDARe
             userAgent(BuildConfig.USER_AGENT)
 
             parameter("query", query)
-            parameter("dataType", "Branded")
+            parameter("dataType", "Branded,Foundation")
             parameter("pageSize", pageSize)
             parameter("pageNumber", page)
             parameter("api_key", apiKey ?: "DEMO_KEY")
