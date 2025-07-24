@@ -230,34 +230,6 @@ internal fun FoodSearchApp(
         )
     }
 
-    val sortChip = @Composable {
-        var ascending by rememberSaveable { mutableStateOf(true) }
-        val rotation by animateFloatAsState(
-            targetValue = if (ascending) 0f else 180f
-        )
-
-        AssistChip(
-            onClick = { ascending = !ascending },
-            label = {
-                Text("Name")
-            },
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.North,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(AssistChipDefaults.IconSize)
-                        .graphicsLayer {
-                            rotationZ = rotation
-                        }
-                )
-            },
-            colors = AssistChipDefaults.assistChipColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
-        )
-    }
-
     val filters = @Composable {
         FlowRow(
             modifier = Modifier
@@ -265,8 +237,6 @@ internal fun FoodSearchApp(
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            sortChip()
-
             DatabaseFilterChip(
                 state = remember(localCount) {
                     DatabaseFilterChipState.Loaded(localCount)
