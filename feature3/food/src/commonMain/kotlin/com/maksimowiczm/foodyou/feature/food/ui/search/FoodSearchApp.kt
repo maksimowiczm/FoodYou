@@ -88,7 +88,6 @@ import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
 import com.maksimowiczm.foodyou.feature.food.preferences.UseUSDA
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton
@@ -134,9 +133,9 @@ internal fun FoodSearchApp(
         .collectAsStateWithLifecycle(useOpenFoodFactsPreference.getBlocking()).value
     val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
     val openFoodFactsCount = viewModel.openFoodFactsFoodCount.collectAsStateWithLifecycle().value
-    LaunchedEffect(useOpenFoodFacts, filter.source) {
-        if (!useOpenFoodFacts && filter.source == FoodSource.Type.OpenFoodFacts) {
-            viewModel.setSource(FoodSource.Type.User)
+    LaunchedEffect(useOpenFoodFacts, filter.source, viewModel) {
+        if (!useOpenFoodFacts && filter.source == FoodFilter.Source.OpenFoodFacts) {
+            viewModel.setSource(FoodFilter.Source.YourFood)
         }
     }
 
@@ -146,9 +145,9 @@ internal fun FoodSearchApp(
         useUSDAPreference.collectAsStateWithLifecycle(useUSDAPreference.getBlocking()).value
     val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
     val usdaCount = viewModel.usdaFoodCount.collectAsStateWithLifecycle().value
-    LaunchedEffect(useUSDA, filter.source) {
-        if (!useUSDA && filter.source == FoodSource.Type.USDA) {
-            viewModel.setSource(FoodSource.Type.User)
+    LaunchedEffect(useUSDA, filter.source, viewModel) {
+        if (!useUSDA && filter.source == FoodFilter.Source.USDA) {
+            viewModel.setSource(FoodFilter.Source.YourFood)
         }
     }
 
@@ -178,11 +177,11 @@ internal fun FoodSearchApp(
     ) {
         FoodSearchView(
             availableSources = listOfNotNull(
-                FoodSource.Type.User,
-                if (useOpenFoodFacts) FoodSource.Type.OpenFoodFacts else null,
-                if (useUSDA) FoodSource.Type.USDA else null
+                FoodFilter.Source.YourFood,
+                if (useOpenFoodFacts) FoodFilter.Source.OpenFoodFacts else null,
+                if (useUSDA) FoodFilter.Source.USDA else null
             ),
-            source = filter.source ?: FoodSource.Type.User, // TODO
+            source = filter.source,
             recentSearches = recentSearches,
             onSource = viewModel::setSource,
             onFill = { searchTextFieldState.setTextAndPlaceCursorAtEnd(it) },
@@ -272,8 +271,8 @@ internal fun FoodSearchApp(
                 state = remember(localCount) {
                     DatabaseFilterChipState.Loaded(localCount)
                 },
-                selected = filter.isYourFood,
-                onClick = { viewModel.setSource(null) },
+                selected = filter.source == FoodFilter.Source.YourFood,
+                onClick = { viewModel.setSource(FoodFilter.Source.YourFood) },
                 logo = {
                     Icon(
                         imageVector = Icons.Outlined.Person,
@@ -303,10 +302,10 @@ internal fun FoodSearchApp(
                         DatabaseFilterChipState.Loaded(openFoodFactsCount)
                     }
                 },
-                selected = filter.source == FoodSource.Type.OpenFoodFacts,
+                selected = filter.source == FoodFilter.Source.OpenFoodFacts,
                 onClick = {
                     if (useOpenFoodFacts) {
-                        viewModel.setSource(FoodSource.Type.OpenFoodFacts)
+                        viewModel.setSource(FoodFilter.Source.OpenFoodFacts)
                     } else {
                         showOpenFoodFactsPrivacyDialog = true
                     }
@@ -335,10 +334,10 @@ internal fun FoodSearchApp(
                         DatabaseFilterChipState.Loaded(usdaCount)
                     }
                 },
-                selected = filter.source == FoodSource.Type.USDA,
+                selected = filter.source == FoodFilter.Source.USDA,
                 onClick = {
                     if (useUSDA) {
-                        viewModel.setSource(FoodSource.Type.USDA)
+                        viewModel.setSource(FoodFilter.Source.USDA)
                     } else {
                         showUSDAPrivacyDialog = true
                     }

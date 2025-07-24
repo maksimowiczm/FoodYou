@@ -99,7 +99,7 @@ internal class FoodSearchViewModel(
     private val _filter = MutableStateFlow(FoodFilter())
     val filter = _filter.asStateFlow()
 
-    fun setSource(source: FoodSource.Type?) {
+    fun setSource(source: FoodFilter.Source) {
         _filter.update {
             it.copy(source = source)
         }
@@ -194,12 +194,9 @@ internal class FoodSearchViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val pages = filter.flatMapLatest { filter ->
         when (filter.source) {
-            null,
-            FoodSource.Type.User -> localPages
-
-            FoodSource.Type.OpenFoodFacts -> openFoodFactsPages
-            FoodSource.Type.USDA -> usdaPages
-            FoodSource.Type.SwissFoodCompositionDatabase -> swissPages
+            FoodFilter.Source.YourFood -> localPages
+            FoodFilter.Source.OpenFoodFacts -> openFoodFactsPages
+            FoodFilter.Source.USDA -> usdaPages
         }.mapData(foodSearchMapper::toModel)
     }.cachedIn(viewModelScope)
 

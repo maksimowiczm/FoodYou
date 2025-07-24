@@ -18,23 +18,20 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
-import com.maksimowiczm.foodyou.feature.food.ui.Icon
-import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FoodSearchView(
-    availableSources: List<FoodSource.Type>,
-    source: FoodSource.Type,
+    availableSources: List<FoodFilter.Source>,
+    source: FoodFilter.Source,
     recentSearches: List<String>,
-    onSource: (FoodSource.Type) -> Unit,
+    onSource: (FoodFilter.Source) -> Unit,
     onFill: (String) -> Unit,
     onSearch: (String) -> Unit,
     modifier: Modifier = Modifier
