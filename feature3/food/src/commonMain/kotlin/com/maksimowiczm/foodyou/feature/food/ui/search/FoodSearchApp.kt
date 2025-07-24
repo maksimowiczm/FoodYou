@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.food.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.stopScroll
@@ -33,9 +34,14 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.North
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -60,6 +66,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -223,6 +230,34 @@ internal fun FoodSearchApp(
         )
     }
 
+    val sortChip = @Composable {
+        var ascending by rememberSaveable { mutableStateOf(true) }
+        val rotation by animateFloatAsState(
+            targetValue = if (ascending) 0f else 180f
+        )
+
+        AssistChip(
+            onClick = { ascending = !ascending },
+            label = {
+                Text("Name")
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.North,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(AssistChipDefaults.IconSize)
+                        .graphicsLayer {
+                            rotationZ = rotation
+                        }
+                )
+            },
+            colors = AssistChipDefaults.assistChipColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
+        )
+    }
+
     val filters = @Composable {
         FlowRow(
             modifier = Modifier
@@ -230,6 +265,7 @@ internal fun FoodSearchApp(
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            sortChip()
             DatabaseFilterChip(
                 state = remember(localCount) {
                     DatabaseFilterChipState.Loaded(localCount)
@@ -425,27 +461,49 @@ private fun SearchBarInputField(
             }
         },
         trailingIcon = {
-            if (textFieldState.text.isEmpty()) {
-                IconButton(
-                    onClick = onBarcodeScanner
-                ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_barcode_scanner),
-                        contentDescription = stringResource(Res.string.action_scan_barcode)
-                    )
+            Row {
+                if (textFieldState.text.isEmpty()) {
+                    IconButton(
+                        onClick = onBarcodeScanner
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_barcode_scanner),
+                            contentDescription = stringResource(Res.string.action_scan_barcode)
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = {
+                            textFieldState.setTextAndPlaceCursorAtEnd("")
+                            if (searchBarState.targetValue == SearchBarValue.Collapsed) {
+                                onSearch(null)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Clear,
+                            contentDescription = stringResource(Res.string.action_clear)
+                        )
+                    }
                 }
-            } else {
                 IconButton(
                     onClick = {
-                        textFieldState.setTextAndPlaceCursorAtEnd("")
-                        if (searchBarState.targetValue == SearchBarValue.Collapsed) {
-                            onSearch(null)
-                        }
+                        // TODO
                     }
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Clear,
-                        contentDescription = stringResource(Res.string.action_clear)
+                    BadgedBox(
+                        badge = {
+                            // TODO
+                            // Badge {
+                            //     Text("1")
+                            // }
+                        },
+                        content = {
+                            Icon(
+                                imageVector = Icons.Outlined.FilterAlt,
+                                contentDescription = stringResource(Res.string.action_filter_foods)
+                            )
+                        }
                     )
                 }
             }
