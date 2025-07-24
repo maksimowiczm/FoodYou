@@ -101,11 +101,14 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.maksimowiczm.foodyou.preview"
+        applicationId = "com.maksimowiczm.foodyou"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = libs.versions.android.versionCode.get().toInt()
         versionName = libs.versions.version.name.get()
+
+        manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher"
+        manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -131,8 +134,18 @@ android {
             initWith(getByName("devRelease"))
             isMinifyEnabled = true
         }
+        create("preview") {
+            initWith(getByName("release"))
+
+            applicationIdSuffix = ".preview"
+            versionNameSuffix = "-preview"
+            manifestPlaceholders["applicationIcon"] = "@mipmap/ic_launcher_preview"
+            manifestPlaceholders["applicationRoundIcon"] = "@mipmap/ic_launcher_round_preview"
+        }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -140,6 +153,7 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     listOf(
         "kspCommonMainMetadata",

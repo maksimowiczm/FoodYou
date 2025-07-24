@@ -2,7 +2,7 @@
 version-name = "3.0.0-beta.1"
 android-versionCode = "100"
 android-compileSdk = "36"
-android-minSdk = "26"
+android-minSdk = "24"
 android-targetSdk = "36"
 
 accompanistPermissions = "0.37.3"

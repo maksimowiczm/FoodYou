@@ -9,11 +9,24 @@ release:
     @./gradlew clean
     @./gradlew --no-daemon assembleRelease
     @zipalign -f -p -v 4 \
-      app/build/outputs/apk/release/app-release-unsigned.apk \
-      app/build/outputs/apk/release/aligned.apk
+      composeApp/build/outputs/apk/release/composeApp-release-unsigned.apk \
+      composeApp/build/outputs/apk/release/aligned.apk
     @apksigner sign \
       --alignment-preserved \
       --ks foodyou.keystore \
       --ks-key-alias foodyou \
       --out ./release-signed.apk \
-      app/build/outputs/apk/release/aligned.apk
+      composeApp/build/outputs/apk/release/aligned.apk
+
+preview:
+    @./gradlew clean
+    @./gradlew --no-daemon assemblePreview
+    @zipalign -f -p -v 4 \
+      composeApp/build/outputs/apk/preview/composeApp-preview-unsigned.apk \
+      composeApp/build/outputs/apk/preview/aligned.apk
+    @apksigner sign \
+      --alignment-preserved \
+      --ks foodyou.keystore \
+      --ks-key-alias foodyou \
+      --out ./preview-signed.apk \
+      composeApp/build/outputs/apk/preview/aligned.apk

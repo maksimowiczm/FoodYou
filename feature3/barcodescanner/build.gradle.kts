@@ -66,6 +66,9 @@ android {
             initWith(getByName("devRelease"))
             isMinifyEnabled = true
         }
+        create("preview") {
+            initWith(getByName("release"))
+        }
     }
 
     compileOptions {
