@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.about.ui
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -36,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
@@ -46,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -73,8 +76,12 @@ internal fun SponsorMessagesScreen(
     viewModel: SponsorMessagesViewModel = koinViewModel()
 ) {
     val pages = viewModel.sponsorshipPages.collectAsLazyPagingItems()
+    val sponsorsAllowed by viewModel.sponsorsAllowed.collectAsStateWithLifecycle()
 
     SponsorMessagesScreen(
+        sponsorsAllowed = sponsorsAllowed,
+        onOnlyOnce = viewModel::allowOnce,
+        onAllowAlways = viewModel::allowAlways,
         onBack = onBack,
         onSponsor = onSponsor,
         pages = pages,
@@ -89,6 +96,9 @@ internal fun SponsorMessagesScreen(
 )
 @Composable
 private fun SponsorMessagesScreen(
+    sponsorsAllowed: Boolean,
+    onOnlyOnce: () -> Unit,
+    onAllowAlways: () -> Unit,
     onBack: () -> Unit,
     onSponsor: () -> Unit,
     pages: LazyPagingItems<Sponsorship>,
@@ -196,6 +206,9 @@ private fun SponsorMessagesScreen(
         ) {
             item {
                 BottomMessages(
+                    sponsorsAllowed = sponsorsAllowed,
+                    onOnlyOnce = onOnlyOnce,
+                    onAllowAlways = onAllowAlways,
                     onSponsor = onSponsor
                 )
                 Spacer(Modifier.height(16.dp))
@@ -302,13 +315,65 @@ private fun SponsorMessagesScreen(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun BottomMessages(onSponsor: () -> Unit, modifier: Modifier = Modifier) {
+private fun BottomMessages(
+    sponsorsAllowed: Boolean,
+    onOnlyOnce: () -> Unit,
+    onAllowAlways: () -> Unit,
+    onSponsor: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
     ) {
         ChatGroupHeader(stringResource(Res.string.headline_now))
 
         Spacer(Modifier.height(4.dp))
+
+        AnimatedVisibility(!sponsorsAllowed) {
+            Column {
+                Sent {
+                    ChatBubble(
+                        shape = RoundedCornerShape(
+                            topStart = 16.dp,
+                            topEnd = 16.dp,
+                            bottomStart = 16.dp,
+                            bottomEnd = 4.dp
+                        ),
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(top = 16.dp, bottom = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = stringResource(
+                                    Res.string.description_sponsors_external_server
+                                ),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                TextButton(onOnlyOnce) {
+                                    Text(stringResource(Res.string.action_allow_only_once))
+                                }
+                                TextButton(onAllowAlways) {
+                                    Text(stringResource(Res.string.action_allow_always))
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(8.dp))
+            }
+        }
 
         Received {
             ChatBubble(

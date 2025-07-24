@@ -420,5 +420,9 @@
     <string name="headline_edited">Edited</string>
     <string name="headline_history">History</string>
 
+    <string name="action_allow_only_once">Only once</string>
+    <string name="action_allow_always">Allow always</string>
+    <string name="description_sponsors_external_server">To view the latest sponsors, we need to fetch updated data from our external server</string>
+
 
 </resources>

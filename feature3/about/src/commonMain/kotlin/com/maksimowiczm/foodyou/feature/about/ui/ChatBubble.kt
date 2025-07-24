@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,7 +21,6 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun ChatBubble(
     icon: (@Composable () -> Unit)?,
@@ -34,11 +32,11 @@ internal fun ChatBubble(
     contentColor: Color,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = modifier,
+    ChatBubble(
         shape = shape,
-        color = containerColor,
-        contentColor = contentColor
+        containerColor = containerColor,
+        contentColor = contentColor,
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -82,6 +80,23 @@ internal fun ChatBubble(
             }
         }
     }
+}
+
+@Composable
+internal fun ChatBubble(
+    shape: Shape,
+    containerColor: Color,
+    contentColor: Color,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Surface(
+        modifier = modifier,
+        shape = shape,
+        color = containerColor,
+        contentColor = contentColor,
+        content = content
+    )
 }
 
 @Composable
