@@ -44,6 +44,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapValues
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class FoodSearchViewModel(
@@ -95,11 +96,13 @@ internal class FoodSearchViewModel(
         }
     }
 
-    private val _source = MutableStateFlow(FoodSource.Type.User)
-    val source = _source.asStateFlow()
+    private val _filter = MutableStateFlow(FoodFilter())
+    val filter = _filter.asStateFlow()
 
-    fun setSource(source: FoodSource.Type) {
-        _source.value = source
+    fun setSource(source: FoodSource.Type?) {
+        _filter.update {
+            it.copy(source = source)
+        }
     }
 
     val recentSearches = foodSearchDao
@@ -189,9 +192,11 @@ internal class FoodSearchViewModel(
         }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pages = source.flatMapLatest {
-        when (it) {
+    val pages = filter.flatMapLatest { filter ->
+        when (filter.source) {
+            null,
             FoodSource.Type.User -> localPages
+
             FoodSource.Type.OpenFoodFacts -> openFoodFactsPages
             FoodSource.Type.USDA -> usdaPages
             FoodSource.Type.SwissFoodCompositionDatabase -> swissPages

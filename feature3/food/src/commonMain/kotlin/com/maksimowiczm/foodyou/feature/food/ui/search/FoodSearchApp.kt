@@ -41,6 +41,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -122,10 +123,10 @@ internal fun FoodSearchApp(
     val listState = rememberLazyListState()
 
     val pages = viewModel.pages.collectAsLazyPagingItems()
-    val source = viewModel.source.collectAsStateWithLifecycle().value
+    val filter by viewModel.filter.collectAsStateWithLifecycle()
 
     // Not sure if this is good idea, but it stops scroll from glitching when switching between sources
-    LaunchedEffect(source) {
+    LaunchedEffect(filter.source) {
         listState.stopScroll()
     }
 
@@ -133,21 +134,20 @@ internal fun FoodSearchApp(
         .collectAsStateWithLifecycle(useOpenFoodFactsPreference.getBlocking()).value
     val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
     val openFoodFactsCount = viewModel.openFoodFactsFoodCount.collectAsStateWithLifecycle().value
-    LaunchedEffect(useOpenFoodFacts, source) {
-        if (!useOpenFoodFacts && source == FoodSource.Type.OpenFoodFacts) {
+    LaunchedEffect(useOpenFoodFacts, filter.source) {
+        if (!useOpenFoodFacts && filter.source == FoodSource.Type.OpenFoodFacts) {
             viewModel.setSource(FoodSource.Type.User)
         }
     }
 
-    // val localPages = viewModel.localPages.collectAsLazyPagingItems()
     val localCount = viewModel.localFoodCount.collectAsStateWithLifecycle().value
 
     val useUSDA =
         useUSDAPreference.collectAsStateWithLifecycle(useUSDAPreference.getBlocking()).value
     val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
     val usdaCount = viewModel.usdaFoodCount.collectAsStateWithLifecycle().value
-    LaunchedEffect(useUSDA, source) {
-        if (!useUSDA && source == FoodSource.Type.USDA) {
+    LaunchedEffect(useUSDA, filter.source) {
+        if (!useUSDA && filter.source == FoodSource.Type.USDA) {
             viewModel.setSource(FoodSource.Type.User)
         }
     }
@@ -159,6 +159,7 @@ internal fun FoodSearchApp(
         SearchBarInputField(
             searchBarState = searchState,
             textFieldState = searchTextFieldState,
+            filtersCount = filter.filterCount,
             onSearch = {
                 viewModel.search(it)
                 coroutineScope.launch {
@@ -181,7 +182,7 @@ internal fun FoodSearchApp(
                 if (useOpenFoodFacts) FoodSource.Type.OpenFoodFacts else null,
                 if (useUSDA) FoodSource.Type.USDA else null
             ),
-            source = source,
+            source = filter.source ?: FoodSource.Type.User, // TODO
             recentSearches = recentSearches,
             onSource = viewModel::setSource,
             onFill = { searchTextFieldState.setTextAndPlaceCursorAtEnd(it) },
@@ -266,12 +267,13 @@ internal fun FoodSearchApp(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             sortChip()
+
             DatabaseFilterChip(
                 state = remember(localCount) {
                     DatabaseFilterChipState.Loaded(localCount)
                 },
-                selected = source == FoodSource.Type.User,
-                onClick = { viewModel.setSource(FoodSource.Type.User) },
+                selected = filter.isYourFood,
+                onClick = { viewModel.setSource(null) },
                 logo = {
                     Icon(
                         imageVector = Icons.Outlined.Person,
@@ -301,7 +303,7 @@ internal fun FoodSearchApp(
                         DatabaseFilterChipState.Loaded(openFoodFactsCount)
                     }
                 },
-                selected = source == FoodSource.Type.OpenFoodFacts,
+                selected = filter.source == FoodSource.Type.OpenFoodFacts,
                 onClick = {
                     if (useOpenFoodFacts) {
                         viewModel.setSource(FoodSource.Type.OpenFoodFacts)
@@ -333,7 +335,7 @@ internal fun FoodSearchApp(
                         DatabaseFilterChipState.Loaded(usdaCount)
                     }
                 },
-                selected = source == FoodSource.Type.USDA,
+                selected = filter.source == FoodSource.Type.USDA,
                 onClick = {
                     if (useUSDA) {
                         viewModel.setSource(FoodSource.Type.USDA)
@@ -432,6 +434,7 @@ internal fun FoodSearchApp(
 private fun SearchBarInputField(
     textFieldState: TextFieldState,
     searchBarState: SearchBarState,
+    filtersCount: Int,
     onSearch: (String?) -> Unit,
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
@@ -493,10 +496,9 @@ private fun SearchBarInputField(
                 ) {
                     BadgedBox(
                         badge = {
-                            // TODO
-                            // Badge {
-                            //     Text("1")
-                            // }
+                            if (filtersCount > 0) {
+                                Badge { Text(filtersCount.toString()) }
+                            }
                         },
                         content = {
                             Icon(
