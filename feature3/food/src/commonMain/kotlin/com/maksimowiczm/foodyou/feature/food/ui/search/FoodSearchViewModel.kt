@@ -179,12 +179,22 @@ internal class FoodSearchViewModel(
         )
     }.cachedIn(viewModelScope)
 
+    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
+    val swissPages
+        get() = searchQuery.flatMapLatest { query ->
+            pager(
+                query = query,
+                source = FoodSource.Type.SwissFoodCompositionDatabase
+            )
+        }.cachedIn(viewModelScope)
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val pages = source.flatMapLatest {
         when (it) {
             FoodSource.Type.User -> localPages
             FoodSource.Type.OpenFoodFacts -> openFoodFactsPages
             FoodSource.Type.USDA -> usdaPages
+            FoodSource.Type.SwissFoodCompositionDatabase -> swissPages
         }.mapData(foodSearchMapper::toModel)
     }.cachedIn(viewModelScope)
 

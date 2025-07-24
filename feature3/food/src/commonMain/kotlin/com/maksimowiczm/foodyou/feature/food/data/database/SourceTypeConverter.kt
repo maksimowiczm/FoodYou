@@ -9,6 +9,7 @@ class SourceTypeConverter {
         FoodSource.Type.User -> FoodSourceSQLConstants.USER
         FoodSource.Type.OpenFoodFacts -> FoodSourceSQLConstants.OPEN_FOOD_FACTS
         FoodSource.Type.USDA -> FoodSourceSQLConstants.USDA
+        FoodSource.Type.SwissFoodCompositionDatabase -> FoodSourceSQLConstants.SWISS
     }
 
     @TypeConverter
@@ -16,6 +17,7 @@ class SourceTypeConverter {
         FoodSourceSQLConstants.USER -> FoodSource.Type.User
         FoodSourceSQLConstants.OPEN_FOOD_FACTS -> FoodSource.Type.OpenFoodFacts
         FoodSourceSQLConstants.USDA -> FoodSource.Type.USDA
+        FoodSourceSQLConstants.SWISS -> FoodSource.Type.SwissFoodCompositionDatabase
         else -> error("SourceType not found")
     }
 }
@@ -24,4 +26,5 @@ object FoodSourceSQLConstants {
     const val USER = 0
     const val OPEN_FOOD_FACTS = 1
     const val USDA = 2
+    const val SWISS = 3
 }

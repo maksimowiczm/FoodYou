@@ -44,7 +44,7 @@ internal class ImportSwissDatabaseUseCaseImpl(
             fieldOrder = fieldOrder,
             csvLines = content.asFlow(),
             source = FoodSource(
-                type = FoodSource.Type.User,
+                type = FoodSource.Type.SwissFoodCompositionDatabase,
                 url = sourceUrl
             )
         )
