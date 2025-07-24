@@ -7,7 +7,6 @@ import androidx.paging.RemoteMediator
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.about.data.database.Sponsorship
 import com.maksimowiczm.foodyou.feature.about.data.database.SponsorshipDao
-import com.maksimowiczm.foodyou.feature.about.data.database.SponsorshipMethod
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.CancellationException
@@ -127,10 +126,5 @@ private fun NetworkSponsorship.toSponsorship(): Sponsorship = Sponsorship(
     currency = currency,
     inEuro = inEuro,
     sponsorshipEpochSeconds = Instant.parse(sponsorshipDate).epochSeconds,
-    method = when (method.lowercase()) {
-        "ko-fi" -> SponsorshipMethod.Kofi
-        "liberapay" -> SponsorshipMethod.Liberapay
-        "crypto" -> SponsorshipMethod.Crypto
-        else -> error("Unknown sponsorship method: $method")
-    }
+    method = method
 )

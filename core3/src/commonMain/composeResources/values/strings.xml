@@ -424,5 +424,5 @@
     <string name="action_allow_always">Allow always</string>
     <string name="description_sponsors_external_server">To view the latest sponsors, we need to fetch updated data from our external server</string>
 
-
+    <string name="headline_anonymous">Anonymous</string>
 </resources>

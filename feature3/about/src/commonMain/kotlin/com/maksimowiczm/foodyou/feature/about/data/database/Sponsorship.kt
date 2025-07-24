@@ -22,10 +22,19 @@ data class Sponsorship(
     val currency: String,
     val inEuro: String,
     val sponsorshipEpochSeconds: Long,
-    val method: SponsorshipMethod
+    val method: String
 ) {
     @OptIn(ExperimentalTime::class)
     fun sponsorshipDate(timeZone: TimeZone = TimeZone.UTC) = Instant
         .fromEpochSeconds(sponsorshipEpochSeconds)
         .toLocalDateTime(timeZone)
+
+    val typedMethod: SponsorshipMethod?
+        get() = when (method) {
+            "Ko-fi" -> SponsorshipMethod.Kofi
+            "Liberapay" -> SponsorshipMethod.Liberapay
+            "Crypto" -> SponsorshipMethod.Crypto
+            "PayPal" -> SponsorshipMethod.PayPal
+            else -> null
+        }
 }

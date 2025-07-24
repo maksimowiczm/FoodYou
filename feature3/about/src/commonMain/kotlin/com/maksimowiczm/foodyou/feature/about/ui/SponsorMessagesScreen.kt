@@ -57,7 +57,6 @@ import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.about.data.database.Sponsorship
-import com.maksimowiczm.foodyou.feature.about.data.database.SponsorshipMethod
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.defaultShimmerTheme
 import com.valentinilk.shimmer.rememberShimmer
@@ -232,18 +231,7 @@ private fun SponsorMessagesScreen(
                         previousSponsorship?.sponsorshipDate()?.date ==
                             sponsorship.sponsorshipDate().date
 
-                    val iconResource = when (sponsorship.method) {
-                        SponsorshipMethod.Kofi -> Res.drawable.kofi_logo
-                        SponsorshipMethod.Liberapay -> Res.drawable.liberapay_logo
-                        SponsorshipMethod.Crypto if (sponsorship.currency == "BTC") ->
-                            Res.drawable.bitcoin_logo
-
-                        SponsorshipMethod.Crypto if (sponsorship.currency == "XMR") ->
-                            Res.drawable.monero_logo
-
-                        else -> null
-                    }
-
+                    val iconResource = sponsorship.iconResource
                     val icon = if (iconResource != null) {
                         @Composable {
                             Image(
@@ -262,7 +250,8 @@ private fun SponsorMessagesScreen(
                     Sent {
                         ChatBubble(
                             icon = icon,
-                            author = sponsorship.sponsorName ?: "Annonymous",
+                            author = sponsorship.sponsorName
+                                ?: stringResource(Res.string.headline_anonymous),
                             authorExtra = if (sponsorship.currency == "EUR") {
                                 "€${sponsorship.amount}"
                             } else {

@@ -4,7 +4,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.maksimowiczm.foodyou.feature.about.data.database.AboutDatabase
-import com.maksimowiczm.foodyou.feature.about.data.database.SponsorMethodConverter
 import com.maksimowiczm.foodyou.feature.about.data.database.Sponsorship
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.SourceTypeConverter
@@ -43,7 +42,6 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
     exportSchema = true
 )
 @TypeConverters(
-    SponsorMethodConverter::class,
     MeasurementTypeConverter::class,
     SourceTypeConverter::class,
     ProductEventTypeConverter::class

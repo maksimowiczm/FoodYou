@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4cea9762659a58e9fc5364e6d55a4210",
+    "identityHash": "bd337823ff7d25aed39a2d717190d7d7",
     "entities": [
       {
         "tableName": "Sponsorship",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `sponsorName` TEXT, `message` TEXT, `amount` TEXT NOT NULL, `currency` TEXT NOT NULL, `inEuro` TEXT NOT NULL, `sponsorshipEpochSeconds` INTEGER NOT NULL, `method` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `sponsorName` TEXT, `message` TEXT, `amount` TEXT NOT NULL, `currency` TEXT NOT NULL, `inEuro` TEXT NOT NULL, `sponsorshipEpochSeconds` INTEGER NOT NULL, `method` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -51,7 +51,7 @@
           {
             "fieldPath": "method",
             "columnName": "method",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -861,7 +861,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4cea9762659a58e9fc5364e6d55a4210')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bd337823ff7d25aed39a2d717190d7d7')"
     ]
   }
 }
