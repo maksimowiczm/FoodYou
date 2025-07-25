@@ -69,7 +69,7 @@ kotlin {
             api(compose.runtime)
             api(compose.foundation)
             // implementation(compose.material3)
-            api(libs.androidx.material3)
+            api(libs.jetbrains.compose.material3)
             api(compose.materialIconsExtended)
             api(compose.ui)
             api(compose.components.resources)
@@ -82,7 +82,7 @@ kotlin {
             api(libs.kotlinx.datetime)
 
             // Paging
-            api(libs.androidx.paging.runtime)
+            api(libs.androidx.paging.common)
 
             implementation(kotlin("reflect"))
 
