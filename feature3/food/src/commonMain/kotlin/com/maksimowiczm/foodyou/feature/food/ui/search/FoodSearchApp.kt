@@ -1,10 +1,8 @@
 package com.maksimowiczm.foodyou.feature.food.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.gestures.stopScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,8 +25,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -36,11 +32,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.North
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ButtonDefaults
@@ -67,7 +60,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -111,45 +103,16 @@ import org.koin.core.parameter.parametersOf
 internal fun FoodSearchApp(
     onFoodClick: (FoodSearch, Measurement) -> Unit,
     excludedFood: FoodId.Recipe?,
-    modifier: Modifier = Modifier,
-    viewModel: FoodSearchViewModel = koinViewModel {
-        parametersOf(excludedFood)
-    },
-    useOpenFoodFactsPreference: UseOpenFoodFacts = userPreference(),
-    useUSDAPreference: UseUSDA = userPreference()
+    modifier: Modifier = Modifier
 ) {
+    val viewModel: FoodSearchViewModel = koinViewModel {
+        parametersOf(excludedFood)
+    }
+
     val coroutineScope = rememberCoroutineScope()
-    val listState = rememberLazyListState()
 
     val pages = viewModel.pages.collectAsLazyPagingItems()
     val filter by viewModel.filter.collectAsStateWithLifecycle()
-
-    // Not sure if this is good idea, but it stops scroll from glitching when switching between sources
-    LaunchedEffect(filter.source) {
-        listState.stopScroll()
-    }
-
-    val useOpenFoodFacts = useOpenFoodFactsPreference
-        .collectAsStateWithLifecycle(useOpenFoodFactsPreference.getBlocking()).value
-    val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
-    val openFoodFactsCount = viewModel.openFoodFactsFoodCount.collectAsStateWithLifecycle().value
-    LaunchedEffect(useOpenFoodFacts, filter.source, viewModel) {
-        if (!useOpenFoodFacts && filter.source == FoodFilter.Source.OpenFoodFacts) {
-            viewModel.setSource(FoodFilter.Source.YourFood)
-        }
-    }
-
-    val localCount = viewModel.localFoodCount.collectAsStateWithLifecycle().value
-
-    val useUSDA =
-        useUSDAPreference.collectAsStateWithLifecycle(useUSDAPreference.getBlocking()).value
-    val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
-    val usdaCount = viewModel.usdaFoodCount.collectAsStateWithLifecycle().value
-    LaunchedEffect(useUSDA, filter.source, viewModel) {
-        if (!useUSDA && filter.source == FoodFilter.Source.USDA) {
-            viewModel.setSource(FoodFilter.Source.YourFood)
-        }
-    }
 
     var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
     val searchState = rememberSearchBarState()
@@ -175,6 +138,11 @@ internal fun FoodSearchApp(
         state = searchState,
         inputField = inputField
     ) {
+        val useOpenFoodFacts = userPreference<UseOpenFoodFacts>()
+            .collectAsStateWithLifecycle(false).value
+        val useUSDA = userPreference<UseUSDA>()
+            .collectAsStateWithLifecycle(false).value
+
         FoodSearchView(
             availableSources = listOfNotNull(
                 FoodFilter.Source.YourFood,
@@ -208,6 +176,29 @@ internal fun FoodSearchApp(
         onClose = { showBarcodeScanner = false }
     )
 
+    FoodSearchApp(
+        searchState = searchState,
+        pages = pages,
+        onFoodClick = onFoodClick,
+        excludedFood = excludedFood,
+        inputField = inputField,
+        filters = {
+            FoodSearchFilters(
+                viewModel = viewModel,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun FoodSearchFilters(viewModel: FoodSearchViewModel, modifier: Modifier = Modifier) {
+    val useOpenFoodFactsPreference: UseOpenFoodFacts = userPreference()
+    val useUSDAPreference: UseUSDA = userPreference()
+
     var showOpenFoodFactsPrivacyDialog by rememberSaveable { mutableStateOf(false) }
     if (showOpenFoodFactsPrivacyDialog) {
         OpenFoodFactsPrivacyDialog(
@@ -230,172 +221,200 @@ internal fun FoodSearchApp(
         )
     }
 
-    val filters = @Composable {
-        FlowRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            DatabaseFilterChip(
-                state = remember(localCount) {
-                    DatabaseFilterChipState.Loaded(localCount)
-                },
-                selected = filter.source == FoodFilter.Source.YourFood,
-                onClick = { viewModel.setSource(FoodFilter.Source.YourFood) },
-                logo = {
-                    Icon(
-                        imageVector = Icons.Outlined.Person,
-                        contentDescription = null,
-                        modifier = Modifier.height(18.dp)
-                    )
-                },
-                label = { Text(stringResource(Res.string.headline_your_food)) }
-            )
+    val filter by viewModel.filter.collectAsStateWithLifecycle()
+    val localCount = viewModel.localFoodCount.collectAsStateWithLifecycle().value
 
-            val offIsLoading = openFoodFactsPages.delayedLoadingState()
-            val openFoodFactsError = openFoodFactsPages.loadState.error
-            DatabaseFilterChip(
-                state = remember(
-                    openFoodFactsCount,
-                    useOpenFoodFacts,
-                    offIsLoading,
-                    openFoodFactsError
-                ) {
-                    if (openFoodFactsError != null) {
-                        DatabaseFilterChipState.Error
-                    } else if (!useOpenFoodFacts) {
-                        DatabaseFilterChipState.ActionRequired
-                    } else if (offIsLoading) {
-                        DatabaseFilterChipState.Loading
-                    } else {
-                        DatabaseFilterChipState.Loaded(openFoodFactsCount)
-                    }
-                },
-                selected = filter.source == FoodFilter.Source.OpenFoodFacts,
-                onClick = {
-                    if (useOpenFoodFacts) {
-                        viewModel.setSource(FoodFilter.Source.OpenFoodFacts)
-                    } else {
-                        showOpenFoodFactsPrivacyDialog = true
-                    }
-                },
-                logo = {
-                    Image(
-                        painter = painterResource(Res.drawable.openfoodfacts_logo),
-                        contentDescription = null,
-                        modifier = Modifier.height(DatabaseFilterChipDefaults.logoSize)
-                    )
-                },
-                label = { Text(stringResource(Res.string.headline_open_food_facts)) }
-            )
-
-            val usdaIsLoading = usdaPages.delayedLoadingState()
-            val usdaError = usdaPages.loadState.error
-            DatabaseFilterChip(
-                state = remember(usdaCount, useUSDA, usdaIsLoading, usdaError) {
-                    if (usdaError != null) {
-                        DatabaseFilterChipState.Error
-                    } else if (!useUSDA) {
-                        DatabaseFilterChipState.ActionRequired
-                    } else if (usdaIsLoading) {
-                        DatabaseFilterChipState.Loading
-                    } else {
-                        DatabaseFilterChipState.Loaded(usdaCount)
-                    }
-                },
-                selected = filter.source == FoodFilter.Source.USDA,
-                onClick = {
-                    if (useUSDA) {
-                        viewModel.setSource(FoodFilter.Source.USDA)
-                    } else {
-                        showUSDAPrivacyDialog = true
-                    }
-                },
-                logo = {
-                    Image(
-                        painter = painterResource(Res.drawable.usda_logo),
-                        contentDescription = null,
-                        modifier = Modifier.height(DatabaseFilterChipDefaults.logoSize)
-                    )
-                },
-                label = { Text(stringResource(Res.string.headline_food_data_central_usda)) }
-            )
+    val useOpenFoodFacts = useOpenFoodFactsPreference
+        .collectAsStateWithLifecycle(useOpenFoodFactsPreference.getBlocking()).value
+    val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
+    val openFoodFactsCount = viewModel.openFoodFactsFoodCount.collectAsStateWithLifecycle().value
+    LaunchedEffect(useOpenFoodFacts, filter.source, viewModel) {
+        if (!useOpenFoodFacts && filter.source == FoodFilter.Source.OpenFoodFacts) {
+            viewModel.setSource(FoodFilter.Source.YourFood)
         }
     }
 
-    Scaffold(modifier) { paddingValues ->
+    val useUSDA =
+        useUSDAPreference.collectAsStateWithLifecycle(useUSDAPreference.getBlocking()).value
+    val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
+    val usdaCount = viewModel.usdaFoodCount.collectAsStateWithLifecycle().value
+    LaunchedEffect(useUSDA, filter.source, viewModel) {
+        if (!useUSDA && filter.source == FoodFilter.Source.USDA) {
+            viewModel.setSource(FoodFilter.Source.YourFood)
+        }
+    }
 
-        Box(Modifier.focusable().size(1.dp))
-
-        val layoutDirection = LocalLayoutDirection.current
-        val contentPadding = PaddingValues(
-            start = paddingValues.calculateStartPadding(layoutDirection),
-            end = paddingValues.calculateEndPadding(layoutDirection),
-            bottom = paddingValues.calculateBottomPadding()
+    FlowRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        DatabaseFilterChip(
+            state = remember(localCount) {
+                DatabaseFilterChipState.Loaded(localCount)
+            },
+            selected = filter.source == FoodFilter.Source.YourFood,
+            onClick = { viewModel.setSource(FoodFilter.Source.YourFood) },
+            logo = {
+                Icon(
+                    imageVector = Icons.Outlined.Person,
+                    contentDescription = null,
+                    modifier = Modifier.height(18.dp)
+                )
+            },
+            label = { Text(stringResource(Res.string.headline_your_food)) }
         )
 
-        var searchBarHeight by remember { mutableIntStateOf(0) }
+        val offIsLoading = openFoodFactsPages.delayedLoadingState()
+        val openFoodFactsError = openFoodFactsPages.loadState.error
+        DatabaseFilterChip(
+            state = remember(
+                openFoodFactsCount,
+                useOpenFoodFacts,
+                offIsLoading,
+                openFoodFactsError
+            ) {
+                if (openFoodFactsError != null) {
+                    DatabaseFilterChipState.Error
+                } else if (!useOpenFoodFacts) {
+                    DatabaseFilterChipState.ActionRequired
+                } else if (offIsLoading) {
+                    DatabaseFilterChipState.Loading
+                } else {
+                    DatabaseFilterChipState.Loaded(openFoodFactsCount)
+                }
+            },
+            selected = filter.source == FoodFilter.Source.OpenFoodFacts,
+            onClick = {
+                if (useOpenFoodFacts) {
+                    viewModel.setSource(FoodFilter.Source.OpenFoodFacts)
+                } else {
+                    showOpenFoodFactsPrivacyDialog = true
+                }
+            },
+            logo = {
+                Image(
+                    painter = painterResource(Res.drawable.openfoodfacts_logo),
+                    contentDescription = null,
+                    modifier = Modifier.height(DatabaseFilterChipDefaults.logoSize)
+                )
+            },
+            label = { Text(stringResource(Res.string.headline_open_food_facts)) }
+        )
 
-        Column(
+        val usdaIsLoading = usdaPages.delayedLoadingState()
+        val usdaError = usdaPages.loadState.error
+        DatabaseFilterChip(
+            state = remember(usdaCount, useUSDA, usdaIsLoading, usdaError) {
+                if (usdaError != null) {
+                    DatabaseFilterChipState.Error
+                } else if (!useUSDA) {
+                    DatabaseFilterChipState.ActionRequired
+                } else if (usdaIsLoading) {
+                    DatabaseFilterChipState.Loading
+                } else {
+                    DatabaseFilterChipState.Loaded(usdaCount)
+                }
+            },
+            selected = filter.source == FoodFilter.Source.USDA,
+            onClick = {
+                if (useUSDA) {
+                    viewModel.setSource(FoodFilter.Source.USDA)
+                } else {
+                    showUSDAPrivacyDialog = true
+                }
+            },
+            logo = {
+                Image(
+                    painter = painterResource(Res.drawable.usda_logo),
+                    contentDescription = null,
+                    modifier = Modifier.height(DatabaseFilterChipDefaults.logoSize)
+                )
+            },
+            label = { Text(stringResource(Res.string.headline_food_data_central_usda)) }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FoodSearchApp(
+    searchState: SearchBarState,
+    pages: LazyPagingItems<FoodSearch>,
+    onFoodClick: (FoodSearch, Measurement) -> Unit,
+    excludedFood: FoodId.Recipe?,
+    inputField: @Composable () -> Unit,
+    filters: @Composable () -> Unit,
+    modifier: Modifier = Modifier
+) = Scaffold(modifier) { paddingValues ->
+
+    Box(Modifier.focusable().size(1.dp))
+
+    val layoutDirection = LocalLayoutDirection.current
+    val contentPadding = PaddingValues(
+        start = paddingValues.calculateStartPadding(layoutDirection),
+        end = paddingValues.calculateEndPadding(layoutDirection),
+        bottom = paddingValues.calculateBottomPadding()
+    )
+
+    var searchBarHeight by remember { mutableIntStateOf(0) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .zIndex(10f)
+            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
+            .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+            .onSizeChanged { searchBarHeight = it.height }
+            .padding(vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        SearchBar(
+            state = searchState,
+            inputField = inputField,
             modifier = Modifier
-                .fillMaxWidth()
-                .zIndex(10f)
-                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .onSizeChanged { searchBarHeight = it.height }
-                .padding(vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            SearchBar(
-                state = searchState,
-                inputField = inputField,
-                modifier = Modifier
-                    .padding(top = paddingValues.calculateTopPadding())
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
-                colors = SearchBarDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                ),
-                shadowElevation = 2.dp
-            )
-
-            val error = pages.loadState.error
-
-            when (val ex = pages.loadState.error) {
-                null -> Unit
-                is USDAException -> UsdaErrorCard(
-                    error = ex,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-
-                else -> ErrorCard(
-                    message = error?.message ?: stringResource(Res.string.error_unknown_error),
-                    onRetry = pages::retry,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-
-            filters()
-        }
-
-        SearchList(
-            pages = pages,
-            onFoodClick = onFoodClick,
-            contentPadding = contentPadding.add(
-                top = LocalDensity.current.run { searchBarHeight.toDp() },
-                bottom = 56.dp + 32.dp // FAB
+                .padding(top = paddingValues.calculateTopPadding())
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+            colors = SearchBarDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
             ),
-            listState = listState,
-            excludes = excludedFood != null,
-            modifier = Modifier.fillMaxSize()
+            shadowElevation = 2.dp
         )
+
+        val error = pages.loadState.error
+
+        when (val ex = pages.loadState.error) {
+            null -> Unit
+            is USDAException -> UsdaErrorCard(
+                error = ex,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+
+            else -> ErrorCard(
+                message = error?.message ?: stringResource(Res.string.error_unknown_error),
+                onRetry = pages::retry,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
+
+        filters()
     }
+
+    SearchList(
+        pages = pages,
+        onFoodClick = onFoodClick,
+        contentPadding = contentPadding.add(
+            top = LocalDensity.current.run { searchBarHeight.toDp() },
+            bottom = 56.dp + 32.dp // FAB
+        ),
+        excludes = excludedFood != null,
+        modifier = Modifier.fillMaxSize()
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -554,7 +573,6 @@ private fun SearchList(
     pages: LazyPagingItems<FoodSearch>,
     onFoodClick: (FoodSearch, Measurement) -> Unit,
     contentPadding: PaddingValues,
-    listState: LazyListState,
     excludes: Boolean,
     modifier: Modifier = Modifier
 ) = Box(modifier) {
@@ -578,7 +596,6 @@ private fun SearchList(
 
     val shimmer = rememberShimmer(ShimmerBounds.View)
     LazyColumn(
-        state = listState,
         contentPadding = contentPadding
     ) {
         if (excludes) {
