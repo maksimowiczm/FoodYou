@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.feature.food.ui.search2.FoodFilter
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 

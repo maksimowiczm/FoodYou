@@ -84,6 +84,7 @@ import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
 import com.maksimowiczm.foodyou.feature.food.preferences.UseUSDA
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.feature.food.ui.UsdaErrorCard
+import com.maksimowiczm.foodyou.feature.food.ui.search2.FoodFilter
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.maksimowiczm.foodyou.feature.usda.USDAException
 import com.valentinilk.shimmer.ShimmerBounds

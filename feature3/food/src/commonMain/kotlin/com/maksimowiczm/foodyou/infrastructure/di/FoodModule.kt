@@ -90,4 +90,10 @@ val foodModule = module {
     factoryOf(::CreateProductUseCaseImpl).bind<CreateProductUseCase>()
 
     factoryOf(::UpdateProductUseCaseImpl).bind<UpdateProductUseCase>()
+
+    viewModel { (excludedFood: FoodId.Recipe?) ->
+        com.maksimowiczm.foodyou.feature.food.ui.search2.FoodSearchViewModel(
+            excludedFood
+        )
+    }
 }

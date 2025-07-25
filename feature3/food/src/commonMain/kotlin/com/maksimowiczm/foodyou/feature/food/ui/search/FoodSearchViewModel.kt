@@ -30,6 +30,7 @@ import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
 import com.maksimowiczm.foodyou.feature.food.preferences.UsdaApiKey
 import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
 import com.maksimowiczm.foodyou.feature.food.preferences.UseUSDA
+import com.maksimowiczm.foodyou.feature.food.ui.search2.FoodFilter
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.feature.usda.USDARemoteDataSource
 import kotlin.time.Clock

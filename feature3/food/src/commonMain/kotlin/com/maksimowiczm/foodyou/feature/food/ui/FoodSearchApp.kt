@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.feature.food.ui.search.FoodSearchApp
+import com.maksimowiczm.foodyou.feature.food.ui.search2.FoodSearchApp
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
