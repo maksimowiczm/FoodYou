@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.feature.food.ui.search2
 
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Person
@@ -8,7 +7,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.ui.Icon
 import com.maksimowiczm.foodyou.feature.food.ui.stringResource
@@ -45,13 +43,13 @@ internal data class FoodFilter(val source: Source = DefaultFilter) {
             Recent -> Icon(
                 imageVector = Icons.Filled.History,
                 contentDescription = null,
-                modifier = Modifier.size(24.dp).then(modifier)
+                modifier = modifier
             )
 
             YourFood -> Icon(
                 imageVector = Icons.Filled.Person,
                 contentDescription = null,
-                modifier = Modifier.size(24.dp).then(modifier)
+                modifier = modifier
             )
 
             OpenFoodFacts -> FoodSource.Type.OpenFoodFacts.Icon(modifier)
