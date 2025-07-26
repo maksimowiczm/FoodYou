@@ -206,7 +206,9 @@ internal class FoodSearchViewModel(
     ): PagingSource<Int, FoodSearch> {
         val isBarcode = query?.all { it.isDigit() } ?: false
 
-        return if (isBarcode) {
+        return if (source == FoodFilter.Source.Recent) {
+            observeRecentFood()
+        } else if (isBarcode) {
             observeFoodByBarcode(
                 barcode = query,
                 source = source.asDatabaseSource()
@@ -226,7 +228,9 @@ internal class FoodSearchViewModel(
     ): Flow<Int> {
         val isBarcode = query?.all { it.isDigit() } ?: false
 
-        return if (isBarcode) {
+        return if (source == FoodFilter.Source.Recent) {
+            observeRecentFoodCount()
+        } else if (isBarcode) {
             observeFoodCountByBarcode(
                 barcode = query,
                 source = source.asDatabaseSource()
