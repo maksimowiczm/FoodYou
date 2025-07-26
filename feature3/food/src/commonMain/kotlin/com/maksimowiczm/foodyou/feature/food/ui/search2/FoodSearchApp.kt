@@ -66,15 +66,11 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
-import com.maksimowiczm.foodyou.feature.food.preferences.UseUSDA
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.valentinilk.shimmer.ShimmerBounds
@@ -99,15 +95,11 @@ internal fun FoodSearchApp(
     val viewModel: FoodSearchViewModel = koinViewModel {
         parametersOf(excludedFood)
     }
-    val useOpenFoodFactsPreference = userPreference<UseOpenFoodFacts>()
-    val useUSDAPreference = userPreference<UseUSDA>()
     val coroutineScope = rememberCoroutineScope()
 
     val recentSearches by viewModel.recentSearches.collectAsStateWithLifecycle()
     val filter by viewModel.filter.collectAsStateWithLifecycle()
     val pages = viewModel.pages.collectAsLazyPagingItems()
-    val useOpenFoodFacts = useOpenFoodFactsPreference.collectAsStateWithLifecycle(false).value
-    val useUSDA = useUSDAPreference.collectAsStateWithLifecycle(false).value
 
     val searchState = rememberSearchBarState()
     val searchTextFieldState = rememberTextFieldState()
@@ -125,7 +117,10 @@ internal fun FoodSearchApp(
                     searchState.animateToCollapsed()
                 }
             },
-            onBarcodeScanner = { showBarcodeScanner = true }
+            onBarcodeScanner = { showBarcodeScanner = true },
+            onFilters = {
+                // TODO
+            }
         )
     }
     val filters = @Composable { contentPadding: PaddingValues ->
@@ -151,6 +146,9 @@ internal fun FoodSearchApp(
             }
         },
         onSource = viewModel::setSource,
+        onMoreDatabases = {
+            // TODO
+        },
         inputField = searchInputField
     )
 
@@ -186,6 +184,7 @@ private fun FoodSearchBarInputField(
     filter: FoodFilter,
     onSearch: (String?) -> Unit,
     onBarcodeScanner: () -> Unit,
+    onFilters: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -238,11 +237,7 @@ private fun FoodSearchBarInputField(
                         )
                     }
                 }
-                IconButton(
-                    onClick = {
-                        // TODO
-                    }
-                ) {
+                IconButton(onFilters) {
                     BadgedBox(
                         badge = {
                             if (filter.filterCount > 0) {
@@ -271,6 +266,7 @@ private fun FoodSearchView(
     onFill: (String) -> Unit,
     onSearch: (String?) -> Unit,
     onSource: (FoodFilter.Source) -> Unit,
+    onMoreDatabases: () -> Unit,
     inputField: @Composable () -> Unit
 ) {
     ExpandedFullScreenSearchBar(
@@ -281,9 +277,7 @@ private fun FoodSearchView(
             source = filter.source,
             recentSearches = recentSearches,
             onSource = onSource,
-            onMoreDatabases = {
-                // TODO
-            },
+            onMoreDatabases = onMoreDatabases,
             onFill = onFill,
             onSearch = onSearch
         )
