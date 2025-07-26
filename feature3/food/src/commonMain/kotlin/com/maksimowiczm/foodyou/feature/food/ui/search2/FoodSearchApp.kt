@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
@@ -20,6 +21,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -36,8 +39,11 @@ import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
@@ -124,6 +130,15 @@ internal fun FoodSearchApp(
             onBarcodeScanner = { showBarcodeScanner = true }
         )
     }
+    val filters = @Composable { contentPadding: PaddingValues ->
+        FoodSearchFilters(
+            viewModel = viewModel,
+            contentPadding = contentPadding,
+            modifier = Modifier
+                .height(32.dp + 8.dp + 32.dp)
+                .fillMaxWidth()
+        )
+    }
 
     FoodSearchView(
         availableSources = listOfNotNull(
@@ -163,6 +178,7 @@ internal fun FoodSearchApp(
         searchState = searchState,
         pages = pages,
         inputField = searchInputField,
+        filters = filters,
         onFoodClick = onFoodClick,
         excludes = excludedFood != null,
         modifier = modifier
@@ -280,12 +296,168 @@ private fun FoodSearchView(
     }
 }
 
+@Composable
+private fun FoodSearchFilters(
+    viewModel: FoodSearchViewModel,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier
+) {
+    val filter by viewModel.filter.collectAsStateWithLifecycle()
+
+    LazyHorizontalStaggeredGrid(
+        rows = StaggeredGridCells.Fixed(2),
+        modifier = modifier,
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalItemSpacing = 8.dp
+    ) {
+        item {
+            val count by viewModel.recentFoodCount.collectAsStateWithLifecycle()
+            FilterChip(
+                selected = filter.source == FoodFilter.Source.Recent,
+                onClick = {
+                    viewModel.setSource(FoodFilter.Source.Recent)
+                },
+                label = {
+                    Text(FoodFilter.Source.Recent.stringResource())
+                },
+                leadingIcon = {
+                    FoodFilter.Source.Recent.Icon(Modifier.size(FilterChipDefaults.IconSize))
+                },
+                trailingIcon = {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.bodySmall
+                    ) {
+                        Text(count.toString())
+                    }
+                },
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            )
+        }
+
+        item {
+            val count by viewModel.yourFoodCount.collectAsStateWithLifecycle()
+            FilterChip(
+                selected = filter.source == FoodFilter.Source.YourFood,
+                onClick = {
+                    viewModel.setSource(FoodFilter.Source.YourFood)
+                },
+                label = {
+                    Text(FoodFilter.Source.YourFood.stringResource())
+                },
+                leadingIcon = {
+                    FoodFilter.Source.YourFood.Icon(
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                },
+                trailingIcon = {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.bodySmall
+                    ) {
+                        Text(count.toString())
+                    }
+                },
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            )
+        }
+
+        item {
+            val count by viewModel.openFoodFactsCount.collectAsStateWithLifecycle()
+            FilterChip(
+                selected = filter.source == FoodFilter.Source.OpenFoodFacts,
+                onClick = {
+                    viewModel.setSource(FoodFilter.Source.OpenFoodFacts)
+                },
+                label = {
+                    Text(FoodFilter.Source.OpenFoodFacts.stringResource())
+                },
+                leadingIcon = {
+                    FoodFilter.Source.OpenFoodFacts.Icon(
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                },
+                trailingIcon = {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.bodySmall
+                    ) {
+                        Text(count.toString())
+                    }
+                },
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            )
+        }
+
+        item {
+            val count by viewModel.usdaCount.collectAsStateWithLifecycle()
+            FilterChip(
+                selected = filter.source == FoodFilter.Source.USDA,
+                onClick = {
+                    viewModel.setSource(FoodFilter.Source.USDA)
+                },
+                label = {
+                    Text(FoodFilter.Source.USDA.stringResource())
+                },
+                leadingIcon = {
+                    FoodFilter.Source.USDA.Icon(
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                },
+                trailingIcon = {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.bodySmall
+                    ) {
+                        Text(count.toString())
+                    }
+                },
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            )
+        }
+
+        item {
+            val count by viewModel.swissCount.collectAsStateWithLifecycle()
+            FilterChip(
+                selected = filter.source == FoodFilter.Source.SwissFoodCompositionDatabase,
+                onClick = {
+                    viewModel.setSource(FoodFilter.Source.SwissFoodCompositionDatabase)
+                },
+                label = {
+                    Text(FoodFilter.Source.SwissFoodCompositionDatabase.stringResource())
+                },
+                leadingIcon = {
+                    FoodFilter.Source.SwissFoodCompositionDatabase.Icon(
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                },
+                trailingIcon = {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.bodySmall
+                    ) {
+                        Text(count.toString())
+                    }
+                },
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FoodSearchApp(
     searchState: SearchBarState,
     pages: LazyPagingItems<FoodSearch>,
     inputField: @Composable () -> Unit,
+    filters: @Composable (contentPadding: PaddingValues) -> Unit,
     onFoodClick: (FoodSearch, Measurement) -> Unit,
     excludes: Boolean,
     modifier: Modifier = Modifier
@@ -323,6 +495,10 @@ private fun FoodSearchApp(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
             ),
             shadowElevation = 2.dp
+        )
+
+        filters(
+            PaddingValues(horizontal = 16.dp)
         )
     }
 

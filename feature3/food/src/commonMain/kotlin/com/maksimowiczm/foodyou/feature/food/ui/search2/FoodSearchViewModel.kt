@@ -17,8 +17,10 @@ import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -79,6 +81,27 @@ internal class FoodSearchViewModel(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
+    private fun foodCount(source: FoodFilter.Source): StateFlow<Int> =
+        searchQuery.flatMapLatest { query ->
+            foodSearchDao.observeFoodCount(
+                query = query,
+                source = source
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            initialValue = 0,
+            started = SharingStarted.WhileSubscribed(2_000)
+        )
+
+    // ViewModel must store the counts
+    val recentFoodCount = foodCount(FoodFilter.Source.Recent)
+    val yourFoodCount = foodCount(FoodFilter.Source.YourFood)
+    val openFoodFactsCount = foodCount(FoodFilter.Source.OpenFoodFacts)
+    val usdaCount = foodCount(FoodFilter.Source.USDA)
+    val swissCount =
+        foodCount(FoodFilter.Source.SwissFoodCompositionDatabase)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     val pages = combine(filter, searchQuery) { filter, query ->
         Pager(
             config = PagingConfig(
@@ -99,27 +122,48 @@ internal class FoodSearchViewModel(
         source: FoodFilter.Source
     ): PagingSource<Int, FoodSearch> {
         val isBarcode = query?.all { it.isDigit() } ?: false
-        val source = when (source) {
-            FoodFilter.Source.YourFood -> FoodSource.Type.User
-            FoodFilter.Source.OpenFoodFacts -> FoodSource.Type.OpenFoodFacts
-            FoodFilter.Source.USDA -> FoodSource.Type.USDA
-            FoodFilter.Source.Recent -> null
-            FoodFilter.Source.SwissFoodCompositionDatabase ->
-                FoodSource.Type.SwissFoodCompositionDatabase
-        }
 
         return if (isBarcode) {
             observeFoodByBarcode(
                 barcode = query,
-                source = source
+                source = source.asDatabaseSource()
             )
         } else {
             observeFoodByQuery(
                 query = query,
-                source = source,
+                source = source.asDatabaseSource(),
                 excludedRecipeId = excludedRecipeId?.id
             )
         }
+    }
+
+    private fun FoodSearchDao.observeFoodCount(
+        query: String?,
+        source: FoodFilter.Source
+    ): Flow<Int> {
+        val isBarcode = query?.all { it.isDigit() } ?: false
+
+        return if (isBarcode) {
+            observeFoodCountByBarcode(
+                barcode = query,
+                source = source.asDatabaseSource()
+            )
+        } else {
+            observeFoodCountByQuery(
+                query = query,
+                source = source.asDatabaseSource(),
+                excludedRecipeId = excludedRecipeId?.id
+            )
+        }
+    }
+
+    private fun FoodFilter.Source.asDatabaseSource(): FoodSource.Type? = when (this) {
+        FoodFilter.Source.YourFood -> FoodSource.Type.User
+        FoodFilter.Source.OpenFoodFacts -> FoodSource.Type.OpenFoodFacts
+        FoodFilter.Source.USDA -> FoodSource.Type.USDA
+        FoodFilter.Source.Recent -> null
+        FoodFilter.Source.SwissFoodCompositionDatabase ->
+            FoodSource.Type.SwissFoodCompositionDatabase
     }
 
     private companion object {

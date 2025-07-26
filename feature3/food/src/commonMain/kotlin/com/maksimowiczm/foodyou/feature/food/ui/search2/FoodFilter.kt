@@ -16,13 +16,17 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Immutable
-internal data class FoodFilter(val source: Source = Source.YourFood) {
+internal data class FoodFilter(val source: Source = DefaultFilter) {
+
+    companion object {
+        val DefaultFilter = Source.Recent
+    }
 
     val filterCount: Int
         get() {
             var count = 0
 
-            if (source != Source.YourFood) {
+            if (source != DefaultFilter) {
                 count++
             }
 
@@ -52,7 +56,7 @@ internal data class FoodFilter(val source: Source = Source.YourFood) {
 
             OpenFoodFacts -> FoodSource.Type.OpenFoodFacts.Icon(modifier)
             USDA -> FoodSource.Type.USDA.Icon(modifier)
-            SwissFoodCompositionDatabase -> Unit
+            SwissFoodCompositionDatabase -> FoodSource.Type.SwissFoodCompositionDatabase.Icon()
         }
 
         @Composable
