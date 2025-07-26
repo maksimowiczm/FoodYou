@@ -67,11 +67,16 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
+import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
+import com.maksimowiczm.foodyou.feature.food.preferences.UseUSDA
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.valentinilk.shimmer.ShimmerBounds
@@ -293,10 +298,15 @@ private fun FoodSearchFilters(
 ) {
     val filter by viewModel.filter.collectAsStateWithLifecycle()
 
+    val openFoodFactsPreference = userPreference<UseOpenFoodFacts>()
+    val openFoodFactsEnabled by openFoodFactsPreference
+        .collectAsStateWithLifecycle(openFoodFactsPreference.getBlocking())
     val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
     val openFoodFactsLoading = openFoodFactsPages.delayedLoadingState()
     val openFoodFactsCount by viewModel.openFoodFactsCount.collectAsStateWithLifecycle()
 
+    val usdaPreference = userPreference<UseUSDA>()
+    val usdaEnabled by usdaPreference.collectAsStateWithLifecycle(usdaPreference.getBlocking())
     val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
     val usdaLoading = usdaPages.delayedLoadingState()
     val usdaCount by viewModel.usdaCount.collectAsStateWithLifecycle()
@@ -364,70 +374,74 @@ private fun FoodSearchFilters(
             )
         }
 
-        item {
-            FilterChip(
-                selected = filter.source == FoodFilter.Source.OpenFoodFacts,
-                onClick = {
-                    viewModel.setSource(FoodFilter.Source.OpenFoodFacts)
-                },
-                label = {
-                    Text(FoodFilter.Source.OpenFoodFacts.stringResource())
-                },
-                leadingIcon = {
-                    FoodFilter.Source.OpenFoodFacts.Icon(
-                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+        if (openFoodFactsEnabled || openFoodFactsCount > 0) {
+            item {
+                FilterChip(
+                    selected = filter.source == FoodFilter.Source.OpenFoodFacts,
+                    onClick = {
+                        viewModel.setSource(FoodFilter.Source.OpenFoodFacts)
+                    },
+                    label = {
+                        Text(FoodFilter.Source.OpenFoodFacts.stringResource())
+                    },
+                    leadingIcon = {
+                        FoodFilter.Source.OpenFoodFacts.Icon(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    },
+                    trailingIcon = {
+                        if (openFoodFactsLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(FilterChipDefaults.IconSize),
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text(
+                                text = openFoodFactsCount.toString(),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
-                },
-                trailingIcon = {
-                    if (openFoodFactsLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                            strokeWidth = 2.dp
-                        )
-                    } else {
-                        Text(
-                            text = openFoodFactsCount.toString(),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = MaterialTheme.colorScheme.surface
                 )
-            )
+            }
         }
 
-        item {
-            FilterChip(
-                selected = filter.source == FoodFilter.Source.USDA,
-                onClick = {
-                    viewModel.setSource(FoodFilter.Source.USDA)
-                },
-                label = {
-                    Text(FoodFilter.Source.USDA.stringResource())
-                },
-                leadingIcon = {
-                    FoodFilter.Source.USDA.Icon(
-                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+        if (usdaEnabled || usdaCount > 0) {
+            item {
+                FilterChip(
+                    selected = filter.source == FoodFilter.Source.USDA,
+                    onClick = {
+                        viewModel.setSource(FoodFilter.Source.USDA)
+                    },
+                    label = {
+                        Text(FoodFilter.Source.USDA.stringResource())
+                    },
+                    leadingIcon = {
+                        FoodFilter.Source.USDA.Icon(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    },
+                    trailingIcon = {
+                        if (usdaLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(FilterChipDefaults.IconSize),
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text(
+                                text = usdaCount.toString(),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
-                },
-                trailingIcon = {
-                    if (usdaLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                            strokeWidth = 2.dp
-                        )
-                    } else {
-                        Text(
-                            text = usdaCount.toString(),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = MaterialTheme.colorScheme.surface
                 )
-            )
+            }
         }
 
         if (swissCount > 0) {
