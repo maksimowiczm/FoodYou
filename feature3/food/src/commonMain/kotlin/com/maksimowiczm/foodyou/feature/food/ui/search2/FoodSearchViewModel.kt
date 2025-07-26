@@ -1,19 +1,37 @@
 package com.maksimowiczm.foodyou.feature.food.ui.search2
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.PagingSource
+import androidx.paging.RemoteMediator
 import androidx.paging.cachedIn
 import com.maksimowiczm.foodyou.core.ext.mapData
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.search.FoodSearch
 import com.maksimowiczm.foodyou.feature.food.data.database.search.FoodSearchDao
 import com.maksimowiczm.foodyou.feature.food.data.database.search.SearchEntry
+import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFoodFactsProductMapper
+import com.maksimowiczm.foodyou.feature.food.data.network.openfoodfacts.OpenFoodFactsRemoteMediator
+import com.maksimowiczm.foodyou.feature.food.data.network.usda.USDAProductMapper
+import com.maksimowiczm.foodyou.feature.food.data.network.usda.USDARemoteMediator
+import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
+import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
+import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
+import com.maksimowiczm.foodyou.feature.food.preferences.UsdaApiKey
+import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
+import com.maksimowiczm.foodyou.feature.food.preferences.UseUSDA
+import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.feature.usda.USDARemoteDataSource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,9 +49,22 @@ import kotlinx.coroutines.launch
 
 internal class FoodSearchViewModel(
     private val excludedRecipeId: FoodId.Recipe?,
-    foodDatabase: FoodDatabase,
-    private val foodSearchMapper: FoodSearchMapper
+    private val foodDatabase: FoodDatabase,
+    private val foodSearchMapper: FoodSearchMapper,
+    dataStore: DataStore<Preferences>,
+    private val remoteProductMapper: RemoteProductMapper,
+    private val openFoodFactsMapper: OpenFoodFactsProductMapper,
+    private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource,
+    private val usdaRemoteDataSource: USDARemoteDataSource,
+    private val usdaMapper: USDAProductMapper,
+    private val createProductUseCase: CreateProductUseCase,
+    private val productMapper: ProductMapper
 ) : ViewModel() {
+
+    private val openFoodFacts = dataStore.userPreference<UseOpenFoodFacts>()
+    private val usda = dataStore.userPreference<UseUSDA>()
+
+    private val usdaApiKey = dataStore.userPreference<UsdaApiKey>()
 
     private val foodSearchDao = foodDatabase.foodSearchDao
 
@@ -101,21 +132,73 @@ internal class FoodSearchViewModel(
     val swissCount =
         foodCount(FoodFilter.Source.SwissFoodCompositionDatabase)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val pages = combine(filter, searchQuery) { filter, query ->
-        Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = {
-                foodSearchDao.observeFood(
-                    query = query,
-                    source = filter.source
-                )
-            }
-        ).flow.mapData(foodSearchMapper::toModel)
-    }.flatMapLatest { it }.cachedIn(viewModelScope)
+    @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
+    val openFoodFactsPages = combine(
+        openFoodFacts.observe(),
+        searchQuery
+    ) { openFoodFactsEnabled, query ->
+        val isBarcode = query?.all { it.isDigit() } ?: false
+
+        val mediator = if (openFoodFactsEnabled && query != null) {
+            OpenFoodFactsRemoteMediator<FoodSearch>(
+                remoteDataSource = openFoodFactsRemoteDataSource,
+                foodDatabase = foodDatabase,
+                query = query,
+                country = null,
+                isBarcode = isBarcode,
+                offMapper = openFoodFactsMapper,
+                remoteMapper = remoteProductMapper,
+                createProductUseCase = createProductUseCase,
+                productMapper = productMapper
+            )
+        } else {
+            null
+        }
+
+        pager(query, FoodFilter.Source.OpenFoodFacts, mediator)
+    }.flatMapLatest { it }
+
+    @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
+    val usdaPages = combine(
+        usda.observe(),
+        usdaApiKey.observe(),
+        searchQuery
+    ) { usdaEnabled, usdaApiKey, query ->
+        val mediator = if (usdaEnabled && usdaApiKey != null && query != null) {
+            USDARemoteMediator<FoodSearch>(
+                remoteDataSource = usdaRemoteDataSource,
+                foodDatabase = foodDatabase,
+                query = query,
+                apiKey = usdaApiKey,
+                usdaMapper = usdaMapper,
+                remoteMapper = remoteProductMapper,
+                createProductUseCase = createProductUseCase,
+                productMapper = productMapper
+            )
+        } else {
+            null
+        }
+
+        pager(query, FoodFilter.Source.USDA, mediator)
+    }.flatMapLatest { it }
+
+    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
+    val pages = combine(
+        filter,
+        searchQuery
+    ) { filter, query -> filter to query }.flatMapLatest { (filter, query) ->
+        when (filter.source) {
+            FoodFilter.Source.Recent,
+            FoodFilter.Source.YourFood,
+            FoodFilter.Source.SwissFoodCompositionDatabase -> pager(
+                query = query,
+                source = filter.source
+            )
+
+            FoodFilter.Source.OpenFoodFacts -> openFoodFactsPages
+            FoodFilter.Source.USDA -> usdaPages
+        }
+    }.mapData(foodSearchMapper::toModel).cachedIn(viewModelScope)
 
     private fun FoodSearchDao.observeFood(
         query: String?,
@@ -165,6 +248,24 @@ internal class FoodSearchViewModel(
         FoodFilter.Source.SwissFoodCompositionDatabase ->
             FoodSource.Type.SwissFoodCompositionDatabase
     }
+
+    @OptIn(ExperimentalPagingApi::class)
+    private fun pager(
+        query: String?,
+        source: FoodFilter.Source,
+        mediator: RemoteMediator<Int, FoodSearch>? = null
+    ): Flow<PagingData<FoodSearch>> = Pager(
+        config = PagingConfig(
+            pageSize = PAGE_SIZE
+        ),
+        remoteMediator = mediator,
+        pagingSourceFactory = {
+            foodSearchDao.observeFood(
+                query = query,
+                source = source
+            )
+        }
+    ).flow
 
     private companion object {
         private const val PAGE_SIZE = 30

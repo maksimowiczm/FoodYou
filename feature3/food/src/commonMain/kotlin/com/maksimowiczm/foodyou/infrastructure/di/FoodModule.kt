@@ -79,6 +79,14 @@ val foodModule = module {
         FoodSearchViewModel(
             excludedFood,
             get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
             get()
         )
     }

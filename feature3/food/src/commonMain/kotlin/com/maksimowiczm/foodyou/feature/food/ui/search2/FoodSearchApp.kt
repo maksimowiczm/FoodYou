@@ -100,6 +100,8 @@ internal fun FoodSearchApp(
     val recentSearches by viewModel.recentSearches.collectAsStateWithLifecycle()
     val filter by viewModel.filter.collectAsStateWithLifecycle()
     val pages = viewModel.pages.collectAsLazyPagingItems()
+    val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
+    val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
 
     val searchState = rememberSearchBarState()
     val searchTextFieldState = rememberTextFieldState()
