@@ -164,7 +164,7 @@ internal class FoodSearchViewModel(
         usdaApiKey.observe(),
         searchQuery
     ) { usdaEnabled, usdaApiKey, query ->
-        val mediator = if (usdaEnabled && usdaApiKey != null && query != null) {
+        val mediator = if (usdaEnabled && query != null) {
             USDARemoteMediator<FoodSearch>(
                 remoteDataSource = usdaRemoteDataSource,
                 foodDatabase = foodDatabase,
