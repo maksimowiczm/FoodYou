@@ -139,11 +139,6 @@ internal fun FoodSearchApp(
     }
 
     FoodSearchView(
-        availableSources = listOfNotNull(
-            FoodFilter.Source.YourFood,
-            if (useOpenFoodFacts) FoodFilter.Source.OpenFoodFacts else null,
-            if (useUSDA) FoodFilter.Source.USDA else null
-        ),
         searchState = searchState,
         filter = filter,
         recentSearches = recentSearches,
@@ -270,7 +265,6 @@ private fun FoodSearchBarInputField(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FoodSearchView(
-    availableSources: List<FoodFilter.Source>,
     searchState: SearchBarState,
     filter: FoodFilter,
     recentSearches: List<String>,
@@ -284,10 +278,12 @@ private fun FoodSearchView(
         inputField = inputField
     ) {
         FoodSearchView(
-            availableSources = availableSources,
             source = filter.source,
             recentSearches = recentSearches,
             onSource = onSource,
+            onMoreDatabases = {
+                // TODO
+            },
             onFill = onFill,
             onSearch = onSearch
         )

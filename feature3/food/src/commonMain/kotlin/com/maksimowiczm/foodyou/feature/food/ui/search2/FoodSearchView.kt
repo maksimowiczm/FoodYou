@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.ui.search2
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.NorthWest
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,17 +40,15 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FoodSearchView(
-    availableSources: List<FoodFilter.Source>,
     source: FoodFilter.Source,
     recentSearches: List<String>,
     onSource: (FoodFilter.Source) -> Unit,
+    onMoreDatabases: () -> Unit,
     onFill: (String) -> Unit,
     onSearch: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = modifier
-    ) {
+    LazyColumn(modifier) {
         items(recentSearches.take(3)) {
             FoodSearchItem(
                 search = it,
@@ -74,9 +74,9 @@ internal fun FoodSearchView(
                 )
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
+                    contentPadding = PaddingValues(horizontal = 8.dp)
                 ) {
-                    items(availableSources) {
+                    items(FoodFilter.Source.entries) {
                         DatabaseFilterIconButton(
                             selected = source == it,
                             onClick = { onSource(it) },
@@ -88,6 +88,10 @@ internal fun FoodSearchView(
                                 )
                             }
                         )
+                    }
+
+                    item {
+                        MoreDatabasesIconButton(onMoreDatabases)
                     }
                 }
             }
@@ -131,13 +135,36 @@ private fun FoodSearchItem(search: String, onFill: () -> Unit, modifier: Modifie
 }
 
 @Composable
-internal fun DatabaseFilterIconButton(
+private fun MoreDatabasesIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    DatabaseFilterIconButton(
+        selected = false,
+        onClick = onClick,
+        logo = {
+            Icon(
+                imageVector = Icons.Outlined.MoreVert,
+                contentDescription = null
+            )
+        },
+        label = {
+            Text(
+                text = "More databases",
+                textAlign = TextAlign.Center
+            )
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun DatabaseFilterIconButton(
     selected: Boolean,
     onClick: () -> Unit,
     logo: @Composable () -> Unit,
     label: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+
     val containerColor by animateColorAsState(
         targetValue = if (selected) {
             MaterialTheme.colorScheme.primaryContainer
@@ -162,11 +189,16 @@ internal fun DatabaseFilterIconButton(
     )
 
     Column(
-        modifier = modifier.clickable(
-            onClick = onClick,
-            indication = null,
-            interactionSource = null
-        ),
+        modifier = modifier
+            .clickable(
+                onClick = onClick,
+                indication = null,
+                interactionSource = interactionSource
+            )
+            .widthIn(
+                min = 64.dp,
+                max = 96.dp
+            ),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -175,7 +207,8 @@ internal fun DatabaseFilterIconButton(
             modifier = Modifier.size(48.dp),
             shape = CircleShape,
             color = containerColor,
-            contentColor = contentColor
+            contentColor = contentColor,
+            interactionSource = interactionSource
         ) {
             Box(
                 modifier = Modifier.padding(12.dp),
@@ -188,12 +221,7 @@ internal fun DatabaseFilterIconButton(
             LocalTextStyle provides MaterialTheme.typography.labelMedium,
             LocalContentColor provides labelColor
         ) {
-            Box(
-                modifier = Modifier.widthIn(max = 80.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                label()
-            }
+            label()
         }
     }
 }
