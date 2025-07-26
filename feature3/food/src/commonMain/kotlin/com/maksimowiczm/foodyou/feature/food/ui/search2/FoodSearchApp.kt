@@ -138,8 +138,36 @@ internal fun FoodSearchApp(
             }
         )
     }
+
+    val availableSources = run {
+        val openFoodFactsPreference = userPreference<UseOpenFoodFacts>()
+        val openFoodFactsEnabled by openFoodFactsPreference
+            .collectAsStateWithLifecycle(openFoodFactsPreference.getBlocking())
+        val openFoodFactsCount by viewModel.openFoodFactsCount.collectAsStateWithLifecycle()
+
+        val usdaPreference = userPreference<UseUSDA>()
+        val usdaEnabled by usdaPreference.collectAsStateWithLifecycle(usdaPreference.getBlocking())
+        val usdaCount by viewModel.usdaCount.collectAsStateWithLifecycle()
+
+        val swissCount by viewModel.swissCount.collectAsStateWithLifecycle()
+
+        listOfNotNull(
+            FoodFilter.Source.YourFood,
+            if (openFoodFactsEnabled ||
+                openFoodFactsCount > 0
+            ) {
+                FoodFilter.Source.OpenFoodFacts
+            } else {
+                null
+            },
+            if (usdaEnabled || usdaCount > 0) FoodFilter.Source.USDA else null,
+            if (swissCount > 0) FoodFilter.Source.SwissFoodCompositionDatabase else null
+        )
+    }
+
     val filters = @Composable { contentPadding: PaddingValues ->
         FoodSearchFilters(
+            availableSources = listOf(FoodFilter.Source.Recent) + availableSources,
             viewModel = viewModel,
             contentPadding = contentPadding,
             modifier = Modifier
@@ -150,6 +178,7 @@ internal fun FoodSearchApp(
 
     FoodSearchView(
         searchState = searchState,
+        availableSources = availableSources,
         filter = filter,
         recentSearches = recentSearches,
         onFill = { searchTextFieldState.setTextAndPlaceCursorAtEnd(it) },
@@ -276,6 +305,7 @@ private fun FoodSearchBarInputField(
 @Composable
 private fun FoodSearchView(
     searchState: SearchBarState,
+    availableSources: List<FoodFilter.Source>,
     filter: FoodFilter,
     recentSearches: List<String>,
     onFill: (String) -> Unit,
@@ -289,6 +319,7 @@ private fun FoodSearchView(
         inputField = inputField
     ) {
         FoodSearchView(
+            availableSources = availableSources,
             source = filter.source,
             recentSearches = recentSearches,
             onSource = onSource,
@@ -301,21 +332,17 @@ private fun FoodSearchView(
 
 @Composable
 private fun FoodSearchFilters(
+    availableSources: List<FoodFilter.Source>,
     viewModel: FoodSearchViewModel,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     val filter by viewModel.filter.collectAsStateWithLifecycle()
 
-    val openFoodFactsPreference = userPreference<UseOpenFoodFacts>()
-    val openFoodFactsEnabled by openFoodFactsPreference
-        .collectAsStateWithLifecycle(openFoodFactsPreference.getBlocking())
     val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
     val openFoodFactsLoading = openFoodFactsPages.delayedLoadingState()
     val openFoodFactsCount by viewModel.openFoodFactsCount.collectAsStateWithLifecycle()
 
-    val usdaPreference = userPreference<UseUSDA>()
-    val usdaEnabled by usdaPreference.collectAsStateWithLifecycle(usdaPreference.getBlocking())
     val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
     val usdaLoading = usdaPages.delayedLoadingState()
     val usdaCount by viewModel.usdaCount.collectAsStateWithLifecycle()
@@ -329,61 +356,65 @@ private fun FoodSearchFilters(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalItemSpacing = 8.dp
     ) {
-        item {
-            val count by viewModel.recentFoodCount.collectAsStateWithLifecycle()
-            FilterChip(
-                selected = filter.source == FoodFilter.Source.Recent,
-                onClick = {
-                    viewModel.setSource(FoodFilter.Source.Recent)
-                },
-                label = {
-                    Text(FoodFilter.Source.Recent.stringResource())
-                },
-                leadingIcon = {
-                    FoodFilter.Source.Recent.Icon(Modifier.size(FilterChipDefaults.IconSize))
-                },
-                trailingIcon = {
-                    CompositionLocalProvider(
-                        LocalTextStyle provides MaterialTheme.typography.bodySmall
-                    ) {
-                        Text(count.toString())
-                    }
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            )
-        }
-
-        item {
-            val count by viewModel.yourFoodCount.collectAsStateWithLifecycle()
-            FilterChip(
-                selected = filter.source == FoodFilter.Source.YourFood,
-                onClick = {
-                    viewModel.setSource(FoodFilter.Source.YourFood)
-                },
-                label = {
-                    Text(FoodFilter.Source.YourFood.stringResource())
-                },
-                leadingIcon = {
-                    FoodFilter.Source.YourFood.Icon(
-                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+        if (availableSources.contains(FoodFilter.Source.Recent)) {
+            item {
+                val count by viewModel.recentFoodCount.collectAsStateWithLifecycle()
+                FilterChip(
+                    selected = filter.source == FoodFilter.Source.Recent,
+                    onClick = {
+                        viewModel.setSource(FoodFilter.Source.Recent)
+                    },
+                    label = {
+                        Text(FoodFilter.Source.Recent.stringResource())
+                    },
+                    leadingIcon = {
+                        FoodFilter.Source.Recent.Icon(Modifier.size(FilterChipDefaults.IconSize))
+                    },
+                    trailingIcon = {
+                        CompositionLocalProvider(
+                            LocalTextStyle provides MaterialTheme.typography.bodySmall
+                        ) {
+                            Text(count.toString())
+                        }
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
-                },
-                trailingIcon = {
-                    CompositionLocalProvider(
-                        LocalTextStyle provides MaterialTheme.typography.bodySmall
-                    ) {
-                        Text(count.toString())
-                    }
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = MaterialTheme.colorScheme.surface
                 )
-            )
+            }
         }
 
-        if (openFoodFactsEnabled || openFoodFactsCount > 0) {
+        if (availableSources.contains(FoodFilter.Source.YourFood)) {
+            item {
+                val count by viewModel.yourFoodCount.collectAsStateWithLifecycle()
+                FilterChip(
+                    selected = filter.source == FoodFilter.Source.YourFood,
+                    onClick = {
+                        viewModel.setSource(FoodFilter.Source.YourFood)
+                    },
+                    label = {
+                        Text(FoodFilter.Source.YourFood.stringResource())
+                    },
+                    leadingIcon = {
+                        FoodFilter.Source.YourFood.Icon(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    },
+                    trailingIcon = {
+                        CompositionLocalProvider(
+                            LocalTextStyle provides MaterialTheme.typography.bodySmall
+                        ) {
+                            Text(count.toString())
+                        }
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                )
+            }
+        }
+
+        if (availableSources.contains(FoodFilter.Source.OpenFoodFacts)) {
             item {
                 FilterChip(
                     selected = filter.source == FoodFilter.Source.OpenFoodFacts,
@@ -418,7 +449,7 @@ private fun FoodSearchFilters(
             }
         }
 
-        if (usdaEnabled || usdaCount > 0) {
+        if (availableSources.contains(FoodFilter.Source.USDA)) {
             item {
                 FilterChip(
                     selected = filter.source == FoodFilter.Source.USDA,
@@ -453,7 +484,7 @@ private fun FoodSearchFilters(
             }
         }
 
-        if (swissCount > 0) {
+        if (availableSources.contains(FoodFilter.Source.SwissFoodCompositionDatabase)) {
             item {
                 FilterChip(
                     selected = filter.source == FoodFilter.Source.SwissFoodCompositionDatabase,
@@ -673,7 +704,7 @@ private fun SearchList(
 
 @Composable
 @OptIn(FlowPreview::class)
-private fun <T : Any> LazyPagingItems<T>.delayedLoadingState(timeout: Long = 100L): Boolean {
+internal fun <T : Any> LazyPagingItems<T>.delayedLoadingState(timeout: Long = 100L): Boolean {
     var isLoading by remember { mutableStateOf(false) }
     LaunchedEffect(this) {
         snapshotFlow {

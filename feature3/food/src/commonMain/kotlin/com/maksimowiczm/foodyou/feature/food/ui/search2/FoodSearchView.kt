@@ -29,7 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +39,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FoodSearchView(
+    availableSources: List<FoodFilter.Source>,
     source: FoodFilter.Source,
     recentSearches: List<String>,
     onSource: (FoodFilter.Source) -> Unit,
@@ -76,7 +76,7 @@ internal fun FoodSearchView(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(horizontal = 8.dp)
                 ) {
-                    items(FoodFilter.Source.entries) {
+                    items(availableSources) {
                         DatabaseFilterIconButton(
                             selected = source == it,
                             onClick = { onSource(it) },
