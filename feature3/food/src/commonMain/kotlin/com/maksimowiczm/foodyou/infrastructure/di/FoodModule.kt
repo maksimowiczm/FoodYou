@@ -94,6 +94,7 @@ val foodModule = module {
     viewModel { (excludedFood: FoodId.Recipe?) ->
         com.maksimowiczm.foodyou.feature.food.ui.search2.FoodSearchViewModel(
             excludedFood,
+            get(),
             get()
         )
     }

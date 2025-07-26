@@ -198,6 +198,8 @@ internal class FoodSearchViewModel(
             FoodFilter.Source.YourFood -> localPages
             FoodFilter.Source.OpenFoodFacts -> openFoodFactsPages
             FoodFilter.Source.USDA -> usdaPages
+            FoodFilter.Source.Recent -> TODO()
+            FoodFilter.Source.SwissFoodCompositionDatabase -> TODO()
         }.mapData(foodSearchMapper::toModel)
     }.cachedIn(viewModelScope)
 

@@ -47,6 +47,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
@@ -80,6 +82,7 @@ internal fun FoodSearchApp(
 
     val recentSearches by viewModel.recentSearches.collectAsStateWithLifecycle()
     val filter by viewModel.filter.collectAsStateWithLifecycle()
+    val pages = viewModel.pages.collectAsLazyPagingItems()
     val useOpenFoodFacts = useOpenFoodFactsPreference.collectAsStateWithLifecycle(false).value
     val useUSDA = useUSDAPreference.collectAsStateWithLifecycle(false).value
 
@@ -139,6 +142,7 @@ internal fun FoodSearchApp(
 
     FoodSearchApp(
         searchState = searchState,
+        pages = pages,
         inputField = searchInputField,
         modifier = modifier
     )
@@ -259,6 +263,7 @@ private fun FoodSearchView(
 @Composable
 private fun FoodSearchApp(
     searchState: SearchBarState,
+    pages: LazyPagingItems<FoodSearch>,
     inputField: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) = Scaffold(modifier) { paddingValues ->

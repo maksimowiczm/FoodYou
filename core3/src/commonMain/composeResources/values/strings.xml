@@ -428,4 +428,6 @@
 
     <string name="action_filter_foods" description="Filter foods in the list">Filter foods</string>
 
+    <string name="headline_recent">Recent</string>
+
 </resources>

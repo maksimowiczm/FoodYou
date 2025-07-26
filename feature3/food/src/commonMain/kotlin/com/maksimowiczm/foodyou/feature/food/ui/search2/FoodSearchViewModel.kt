@@ -2,17 +2,36 @@ package com.maksimowiczm.foodyou.feature.food.ui.search2
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
+import androidx.paging.cachedIn
+import com.maksimowiczm.foodyou.core.ext.mapData
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
+import com.maksimowiczm.foodyou.feature.food.data.database.search.FoodSearch
+import com.maksimowiczm.foodyou.feature.food.data.database.search.FoodSearchDao
+import com.maksimowiczm.foodyou.feature.food.data.database.search.SearchEntry
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapper
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapValues
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-internal class FoodSearchViewModel(excludedFood: FoodId.Recipe?, foodDatabase: FoodDatabase) :
-    ViewModel() {
+internal class FoodSearchViewModel(
+    private val excludedRecipeId: FoodId.Recipe?,
+    foodDatabase: FoodDatabase,
+    private val foodSearchMapper: FoodSearchMapper
+) : ViewModel() {
 
     private val foodSearchDao = foodDatabase.foodSearchDao
 
@@ -25,8 +44,29 @@ internal class FoodSearchViewModel(excludedFood: FoodId.Recipe?, foodDatabase: F
         }
     }
 
+    private val searchQuery = MutableStateFlow<String?>(null)
+
+    @OptIn(ExperimentalTime::class)
     fun search(query: String?) {
-        // TODO
+        searchQuery.value = query
+
+        viewModelScope.launch {
+            if (query == null) {
+                return@launch
+            }
+
+            val isBarcode = query.all { it.isDigit() }
+            if (isBarcode) {
+                return@launch
+            }
+
+            foodSearchDao.upsertSearchEntry(
+                SearchEntry(
+                    query = query,
+                    epochSeconds = Clock.System.now().epochSeconds
+                )
+            )
+        }
     }
 
     val recentSearches = foodSearchDao
@@ -37,4 +77,52 @@ internal class FoodSearchViewModel(excludedFood: FoodId.Recipe?, foodDatabase: F
             initialValue = emptyList(),
             started = SharingStarted.WhileSubscribed(2_000)
         )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pages = combine(filter, searchQuery) { filter, query ->
+        Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                foodSearchDao.observeFood(
+                    query = query,
+                    source = filter.source
+                )
+            }
+        ).flow.mapData(foodSearchMapper::toModel)
+    }.flatMapLatest { it }.cachedIn(viewModelScope)
+
+    private fun FoodSearchDao.observeFood(
+        query: String?,
+        source: FoodFilter.Source
+    ): PagingSource<Int, FoodSearch> {
+        val isBarcode = query?.all { it.isDigit() } ?: false
+        val source = when (source) {
+            FoodFilter.Source.YourFood -> FoodSource.Type.User
+            FoodFilter.Source.OpenFoodFacts -> FoodSource.Type.OpenFoodFacts
+            FoodFilter.Source.USDA -> FoodSource.Type.USDA
+            FoodFilter.Source.Recent -> null
+            FoodFilter.Source.SwissFoodCompositionDatabase ->
+                FoodSource.Type.SwissFoodCompositionDatabase
+        }
+
+        return if (isBarcode) {
+            observeFoodByBarcode(
+                barcode = query,
+                source = source
+            )
+        } else {
+            observeFoodByQuery(
+                query = query,
+                source = source,
+                excludedRecipeId = excludedRecipeId?.id
+            )
+        }
+    }
+
+    private companion object {
+        private const val PAGE_SIZE = 30
+    }
 }
