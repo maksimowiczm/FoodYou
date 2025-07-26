@@ -156,7 +156,7 @@ internal class FoodSearchViewModel(
         }
 
         pager(query, FoodFilter.Source.OpenFoodFacts, mediator)
-    }.flatMapLatest { it }
+    }.flatMapLatest { it }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
     val usdaPages = combine(
@@ -180,7 +180,7 @@ internal class FoodSearchViewModel(
         }
 
         pager(query, FoodFilter.Source.USDA, mediator)
-    }.flatMapLatest { it }
+    }.flatMapLatest { it }.cachedIn(viewModelScope)
 
     @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
     val pages = combine(

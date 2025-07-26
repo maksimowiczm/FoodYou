@@ -35,6 +35,7 @@ import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -100,8 +101,6 @@ internal fun FoodSearchApp(
     val recentSearches by viewModel.recentSearches.collectAsStateWithLifecycle()
     val filter by viewModel.filter.collectAsStateWithLifecycle()
     val pages = viewModel.pages.collectAsLazyPagingItems()
-    val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
-    val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
 
     val searchState = rememberSearchBarState()
     val searchTextFieldState = rememberTextFieldState()
@@ -294,6 +293,16 @@ private fun FoodSearchFilters(
 ) {
     val filter by viewModel.filter.collectAsStateWithLifecycle()
 
+    val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
+    val openFoodFactsLoading = openFoodFactsPages.delayedLoadingState()
+    val openFoodFactsCount by viewModel.openFoodFactsCount.collectAsStateWithLifecycle()
+
+    val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
+    val usdaLoading = usdaPages.delayedLoadingState()
+    val usdaCount by viewModel.usdaCount.collectAsStateWithLifecycle()
+
+    val swissCount by viewModel.swissCount.collectAsStateWithLifecycle()
+
     LazyHorizontalStaggeredGrid(
         rows = StaggeredGridCells.Fixed(2),
         modifier = modifier,
@@ -356,7 +365,6 @@ private fun FoodSearchFilters(
         }
 
         item {
-            val count by viewModel.openFoodFactsCount.collectAsStateWithLifecycle()
             FilterChip(
                 selected = filter.source == FoodFilter.Source.OpenFoodFacts,
                 onClick = {
@@ -371,10 +379,16 @@ private fun FoodSearchFilters(
                     )
                 },
                 trailingIcon = {
-                    CompositionLocalProvider(
-                        LocalTextStyle provides MaterialTheme.typography.bodySmall
-                    ) {
-                        Text(count.toString())
+                    if (openFoodFactsLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            text = openFoodFactsCount.toString(),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 },
                 colors = FilterChipDefaults.filterChipColors(
@@ -384,7 +398,6 @@ private fun FoodSearchFilters(
         }
 
         item {
-            val count by viewModel.usdaCount.collectAsStateWithLifecycle()
             FilterChip(
                 selected = filter.source == FoodFilter.Source.USDA,
                 onClick = {
@@ -399,10 +412,16 @@ private fun FoodSearchFilters(
                     )
                 },
                 trailingIcon = {
-                    CompositionLocalProvider(
-                        LocalTextStyle provides MaterialTheme.typography.bodySmall
-                    ) {
-                        Text(count.toString())
+                    if (usdaLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            text = usdaCount.toString(),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 },
                 colors = FilterChipDefaults.filterChipColors(
@@ -411,32 +430,33 @@ private fun FoodSearchFilters(
             )
         }
 
-        item {
-            val count by viewModel.swissCount.collectAsStateWithLifecycle()
-            FilterChip(
-                selected = filter.source == FoodFilter.Source.SwissFoodCompositionDatabase,
-                onClick = {
-                    viewModel.setSource(FoodFilter.Source.SwissFoodCompositionDatabase)
-                },
-                label = {
-                    Text(FoodFilter.Source.SwissFoodCompositionDatabase.stringResource())
-                },
-                leadingIcon = {
-                    FoodFilter.Source.SwissFoodCompositionDatabase.Icon(
-                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+        if (swissCount > 0) {
+            item {
+                FilterChip(
+                    selected = filter.source == FoodFilter.Source.SwissFoodCompositionDatabase,
+                    onClick = {
+                        viewModel.setSource(FoodFilter.Source.SwissFoodCompositionDatabase)
+                    },
+                    label = {
+                        Text(FoodFilter.Source.SwissFoodCompositionDatabase.stringResource())
+                    },
+                    leadingIcon = {
+                        FoodFilter.Source.SwissFoodCompositionDatabase.Icon(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    },
+                    trailingIcon = {
+                        CompositionLocalProvider(
+                            LocalTextStyle provides MaterialTheme.typography.bodySmall
+                        ) {
+                            Text(swissCount.toString())
+                        }
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
-                },
-                trailingIcon = {
-                    CompositionLocalProvider(
-                        LocalTextStyle provides MaterialTheme.typography.bodySmall
-                    ) {
-                        Text(count.toString())
-                    }
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = MaterialTheme.colorScheme.surface
                 )
-            )
+            }
         }
     }
 }
