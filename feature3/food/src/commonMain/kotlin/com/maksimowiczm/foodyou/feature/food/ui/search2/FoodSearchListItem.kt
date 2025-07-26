@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.ui.search
+package com.maksimowiczm.foodyou.feature.food.ui.search2
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

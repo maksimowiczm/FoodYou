@@ -76,8 +76,6 @@ import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
 import com.maksimowiczm.foodyou.feature.food.preferences.UseUSDA
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton
-import com.maksimowiczm.foodyou.feature.food.ui.search.FoodSearchListItem
-import com.maksimowiczm.foodyou.feature.food.ui.search.FoodSearchView
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer

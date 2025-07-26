@@ -29,7 +29,7 @@ import com.maksimowiczm.foodyou.feature.food.ui.product.update.UpdateProductView
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.MeasureIngredientViewModel
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.create.CreateRecipeViewModel
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.update.UpdateRecipeViewModel
-import com.maksimowiczm.foodyou.feature.food.ui.search.FoodSearchViewModel
+import com.maksimowiczm.foodyou.feature.food.ui.search2.FoodSearchViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -42,22 +42,6 @@ val foodModule = module {
 
     factoryOf(::ProductMapperImpl).bind<ProductMapper>()
     factoryOf(::FoodSearchMapperImpl).bind<FoodSearchMapper>()
-
-    viewModel { (excludedFood: FoodId.Recipe?) ->
-        FoodSearchViewModel(
-            excludedFood,
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get()
-        )
-    }
 
     factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
 
@@ -92,7 +76,7 @@ val foodModule = module {
     factoryOf(::UpdateProductUseCaseImpl).bind<UpdateProductUseCase>()
 
     viewModel { (excludedFood: FoodId.Recipe?) ->
-        com.maksimowiczm.foodyou.feature.food.ui.search2.FoodSearchViewModel(
+        FoodSearchViewModel(
             excludedFood,
             get(),
             get()
