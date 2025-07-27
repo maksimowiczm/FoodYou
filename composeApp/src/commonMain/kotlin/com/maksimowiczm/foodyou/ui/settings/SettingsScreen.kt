@@ -37,23 +37,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.SettingsListItem
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.MealSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.ui.personalization.PersonalizationSettingsListItem
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.description_sponsor_short_2
-import foodyou.app.generated.resources.headline_settings
-import foodyou.app.generated.resources.headline_sponsor
+import foodyou.app.generated.resources.*
 import kotlin.math.PI
 import kotlin.math.sin
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -65,6 +65,7 @@ fun SettingsScreen(
     onLanguage: () -> Unit,
     onSponsor: () -> Unit,
     onAbout: () -> Unit,
+    onDatabase: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -130,6 +131,15 @@ fun SettingsScreen(
             }
 
             item {
+                DatabaseSettingsListItem(
+                    onClick = onDatabase,
+                    shape = shape,
+                    containerColor = color,
+                    contentColor = contentColor
+                )
+            }
+
+            item {
                 LanguageSettingsListItem(
                     onClick = onLanguage,
                     shape = shape,
@@ -148,6 +158,35 @@ fun SettingsScreen(
             }
         }
     }
+}
+
+@Composable
+fun DatabaseSettingsListItem(
+    onClick: () -> Unit,
+    shape: Shape,
+    containerColor: Color,
+    contentColor: Color,
+    modifier: Modifier = Modifier
+) {
+    SettingsListItem(
+        icon = {
+            Icon(
+                painter = painterResource(Res.drawable.ic_database),
+                contentDescription = null
+            )
+        },
+        label = {
+            Text(stringResource(Res.string.headline_database))
+        },
+        supportingContent = {
+            Text(stringResource(Res.string.description_manage_database))
+        },
+        onClick = onClick,
+        modifier = modifier,
+        shape = shape,
+        color = containerColor,
+        contentColor = contentColor
+    )
 }
 
 @Composable

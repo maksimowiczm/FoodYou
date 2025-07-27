@@ -182,9 +182,6 @@ internal fun FoodSearchApp(
             }
         },
         onSource = viewModel::setSource,
-        onMoreDatabases = {
-            // TODO
-        },
         inputField = searchInputField
     )
 
@@ -301,7 +298,6 @@ private fun FoodSearchView(
     onFill: (String) -> Unit,
     onSearch: (String?) -> Unit,
     onSource: (FoodFilter.Source) -> Unit,
-    onMoreDatabases: () -> Unit,
     inputField: @Composable () -> Unit
 ) {
     ExpandedFullScreenSearchBar(
@@ -313,7 +309,6 @@ private fun FoodSearchView(
             source = filter.source,
             recentSearches = recentSearches,
             onSource = onSource,
-            onMoreDatabases = onMoreDatabases,
             onFill = onFill,
             onSearch = onSearch
         )

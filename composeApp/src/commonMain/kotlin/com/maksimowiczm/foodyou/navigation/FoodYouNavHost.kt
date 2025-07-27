@@ -77,6 +77,11 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
+            settingsOnDatabase = {
+                navController.navigate(Database) {
+                    launchSingleTop = true
+                }
+            },
             settingsOnBack = {
                 navController.popBackStack<Settings>(true)
             },
@@ -104,6 +109,22 @@ fun FoodYouNavHost(
             },
             nutritionFactsPersonalizationOnBack = {
                 navController.popBackStack<NutritionFactsPersonalization>(true)
+            },
+            externalDatabasesOnBack = {
+                navController.popBackStack<ExternalDatabases>(true)
+            },
+            externalDatabasesOnSwissFoodCompositionDatabase = {
+                navController.navigate(SwissFoodCompositionDatabase) {
+                    launchSingleTop = true
+                }
+            },
+            databaseOnBack = {
+                navController.popBackStack<Database>(true)
+            },
+            databaseOnExternalDatabases = {
+                navController.navigate(ExternalDatabases) {
+                    launchSingleTop = true
+                }
             }
         )
         foodDiaryGraph(
@@ -275,6 +296,11 @@ fun FoodYouNavHost(
         languageGraph(
             onBack = {
                 navController.popBackStack<Language>(true)
+            }
+        )
+        swissFoodCompositionDatabaseGraph(
+            swissFoodCompositionDatabaseOnBack = {
+                navController.popBackStack<SwissFoodCompositionDatabase>(true)
             }
         )
     }

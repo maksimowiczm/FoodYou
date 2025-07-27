@@ -2,10 +2,12 @@ package com.maksimowiczm.foodyou.navigation
 
 import androidx.navigation.NavGraphBuilder
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.feature.food.ui.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.ui.personalization.HomePersonalizationScreen
 import com.maksimowiczm.foodyou.ui.personalization.PersonalizationScreen
 import com.maksimowiczm.foodyou.ui.personalization.PersonalizeNutritionFactsScreen
+import com.maksimowiczm.foodyou.ui.settings.DatabaseScreen
 import com.maksimowiczm.foodyou.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
@@ -24,6 +26,12 @@ data object HomePersonalization
 @Serializable
 data object NutritionFactsPersonalization
 
+@Serializable
+data object ExternalDatabases
+
+@Serializable
+data object Database
+
 fun NavGraphBuilder.appGraph(
     homeOnAbout: () -> Unit,
     homeOnSettings: () -> Unit,
@@ -35,13 +43,18 @@ fun NavGraphBuilder.appGraph(
     settingsOnLanguage: () -> Unit,
     settingsOnSponsor: () -> Unit,
     settingsOnAbout: () -> Unit,
+    settingsOnDatabase: () -> Unit,
     settingsOnBack: () -> Unit,
     personalizationOnBack: () -> Unit,
     personalizationOnHomePersonalization: () -> Unit,
     personalizationOnNutritionFactsPersonalization: () -> Unit,
     homePersonalizationOnBack: () -> Unit,
     homePersonalizationOnMealsSettings: () -> Unit,
-    nutritionFactsPersonalizationOnBack: () -> Unit
+    nutritionFactsPersonalizationOnBack: () -> Unit,
+    externalDatabasesOnBack: () -> Unit,
+    externalDatabasesOnSwissFoodCompositionDatabase: () -> Unit,
+    databaseOnBack: () -> Unit,
+    databaseOnExternalDatabases: () -> Unit
 ) {
     forwardBackwardComposable<Home> {
         HomeScreen(
@@ -54,12 +67,13 @@ fun NavGraphBuilder.appGraph(
     }
     forwardBackwardComposable<Settings> {
         SettingsScreen(
+            onBack = settingsOnBack,
             onPersonalization = settingsOnPersonalization,
             onMeals = settingsOnMeals,
-            onBack = settingsOnBack,
             onLanguage = settingsOnLanguage,
             onSponsor = settingsOnSponsor,
-            onAbout = settingsOnAbout
+            onAbout = settingsOnAbout,
+            onDatabase = settingsOnDatabase
         )
     }
     forwardBackwardComposable<Personalization> {
@@ -78,6 +92,18 @@ fun NavGraphBuilder.appGraph(
     forwardBackwardComposable<NutritionFactsPersonalization> {
         PersonalizeNutritionFactsScreen(
             onBack = nutritionFactsPersonalizationOnBack
+        )
+    }
+    forwardBackwardComposable<ExternalDatabases> {
+        ExternalDatabasesScreen(
+            onBack = externalDatabasesOnBack,
+            onSwissFoodCompositionDatabase = externalDatabasesOnSwissFoodCompositionDatabase
+        )
+    }
+    forwardBackwardComposable<Database> {
+        DatabaseScreen(
+            onBack = databaseOnBack,
+            onExternalDatabases = databaseOnExternalDatabases
         )
     }
 }

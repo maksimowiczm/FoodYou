@@ -300,15 +300,15 @@
 
     <string name="headline_swiss_food_composition_database" translatable="false">Swiss Food Composition Database</string>
     <string name="link_swiss_food_composition_database" translatable="false">https://www.naehrwertdaten.ch</string>
-    <string name="description_swiss_food_composition_database">You can expand your food list by adding the Swiss Food Composition Database. It includes over 1,100 foods in English, German, French, or Italian.</string>
+    <string name="description_swiss_food_composition_database_short">Swiss Food Composition Database includes nutritional information for over 1,100 general food products</string>
     <string name="description2_swiss_food_composition_database">Swiss Food Composition Database includes nutritional information for over 1,100 general food products. It is available in four languages. To import these products into your food diary, please select your preferred languages.</string>
-    <string name="description3_swiss_food_composition_database">Your food database will be populated with 1,100 products from Swiss Food Composition Database</string>
 
     <string name="headline_external_databases">External databases</string>
-    <string name="description_external_databases">See supported databases</string>
+    <string name="description_external_databases">Check out supported databases</string>
 
     <string name="feature_share_url_with_food_you">Share URL with Food You</string>
     <string name="feature_in_app_download">In-app download</string>
+    <string name="feature_in_app_search">In-app search</string>
     <string name="feature_manual_database_import">Manual database import</string>
 
     <string name="action_unpack" description="Unpack the recipe ingredients">Unpack</string>
@@ -429,5 +429,10 @@
     <string name="action_filter_foods" description="Filter foods in the list">Filter foods</string>
 
     <string name="headline_recent">Recent</string>
+
+    <string name="headline_database">Database</string>
+    <string name="description_manage_database">Manage your database</string>
+
+    <string name="action_done">Done</string>
 
 </resources>

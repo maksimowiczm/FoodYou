@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.History
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.NorthWest
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -43,7 +42,6 @@ internal fun FoodSearchView(
     source: FoodFilter.Source,
     recentSearches: List<String>,
     onSource: (FoodFilter.Source) -> Unit,
-    onMoreDatabases: () -> Unit,
     onFill: (String) -> Unit,
     onSearch: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -89,10 +87,6 @@ internal fun FoodSearchView(
                             }
                         )
                     }
-
-                    item {
-                        MoreDatabasesIconButton(onMoreDatabases)
-                    }
                 }
             }
 
@@ -131,27 +125,6 @@ private fun FoodSearchItem(search: String, onFill: () -> Unit, modifier: Modifie
         colors = ListItemDefaults.colors(
             containerColor = Color.Transparent
         )
-    )
-}
-
-@Composable
-private fun MoreDatabasesIconButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    DatabaseFilterIconButton(
-        selected = false,
-        onClick = onClick,
-        logo = {
-            Icon(
-                imageVector = Icons.Outlined.MoreVert,
-                contentDescription = null
-            )
-        },
-        label = {
-            Text(
-                text = "More databases",
-                textAlign = TextAlign.Center
-            )
-        },
-        modifier = modifier
     )
 }
 

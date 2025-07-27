@@ -146,11 +146,11 @@ fun NavGraphBuilder.foodDiaryGraph(
 
         FoodSearchScreen(
             onBack = foodSearchOnBack,
-            onCreateProduct = { foodSearchOnCreateProduct(mealId, date) },
-            onCreateRecipe = { foodSearchOnCreateRecipe(mealId, date) },
             onFoodClick = { foodId, measurement ->
                 foodSearchOnFood(foodId, measurement, mealId, date)
             },
+            onCreateProduct = { foodSearchOnCreateProduct(mealId, date) },
+            onCreateRecipe = { foodSearchOnCreateRecipe(mealId, date) },
             mealId = mealId,
             date = date,
             animatedVisibilityScope = this

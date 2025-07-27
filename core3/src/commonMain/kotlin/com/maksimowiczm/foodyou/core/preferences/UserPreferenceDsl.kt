@@ -29,3 +29,15 @@ fun <T> UserPreference<T>.collectAsStateWithLifecycle(
     minActiveState = minActiveState,
     context = context
 )
+
+@Composable
+fun <T> UserPreference<T>.collectAsStateWithLifecycleInitialBlock(
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+    context: CoroutineContext = EmptyCoroutineContext
+) = this.observe().collectAsStateWithLifecycle(
+    initialValue = getBlocking(),
+    lifecycleOwner = lifecycleOwner,
+    minActiveState = minActiveState,
+    context = context
+)

@@ -9,10 +9,12 @@ import com.maksimowiczm.foodyou.feature.importexport.domain.ProductField
 import com.maksimowiczm.foodyou.feature.importexport.domain.ProductFieldMapMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.chunked
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDateTime
 
-fun interface ImportCsvProductsUseCase {
+interface ImportCsvProductsUseCase {
 
     /**
      * Imports products from a CSV file represented as a Flow of lines.
@@ -21,13 +23,29 @@ fun interface ImportCsvProductsUseCase {
      * @param csvLines A Flow of CSV lines to be imported.
      * @param source The source of the products being imported, be aware that this will override the
      * source url from the CSV file.
-     * @return The number of products successfully imported.
+     * @return The number of lines processed successfully.
      */
     suspend fun import(
         fieldOrder: List<ProductField>,
         csvLines: Flow<String>,
         source: FoodSource?
     ): Int
+
+    /**
+     * Imports products from a CSV file represented as a Flow of lines, providing feedback on the
+     * import process.
+     *
+     * @param fieldOrder The order of fields in the CSV file.
+     * @param csvLines A Flow of CSV lines to be imported.
+     * @param source The source of the products being imported, be aware that this will override the
+     * source url from the CSV file.
+     * @return A Flow emitting the number of lines processed successfully
+     */
+    suspend fun importWithFeedback(
+        fieldOrder: List<ProductField>,
+        csvLines: Flow<String>,
+        source: FoodSource?
+    ): Flow<Int>
 }
 
 internal class ImportCsvProductsUseCaseImpl(
@@ -72,6 +90,15 @@ internal class ImportCsvProductsUseCaseImpl(
         }
 
         return count
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override suspend fun importWithFeedback(
+        fieldOrder: List<ProductField>,
+        csvLines: Flow<String>,
+        source: FoodSource?
+    ): Flow<Int> = csvLines.chunked(CHUNK_SIZE).map { lines ->
+        import(fieldOrder, lines.asFlow(), source)
     }
 
     private fun String.lineToProduct(

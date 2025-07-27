@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -60,6 +61,8 @@ kotlin {
             implementation(project(":feature3:food"))
 
             implementation(compose.components.resources)
+
+            implementation(libs.kotlinx.serialization.json)
         }
 
         commonTest.dependencies {
