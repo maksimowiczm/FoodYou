@@ -43,9 +43,8 @@ val foodModule = module {
     factoryOf(::ProductMapperImpl).bind<ProductMapper>()
     factoryOf(::FoodSearchMapperImpl).bind<FoodSearchMapper>()
 
-    viewModel { (excludedFood: FoodId.Recipe?) ->
+    viewModel { (excludedRecipeId: FoodId.Recipe?) ->
         FoodSearchViewModel(
-            excludedFood,
             get(),
             get(),
             get(),
@@ -55,7 +54,8 @@ val foodModule = module {
             get(),
             get(),
             get(),
-            get()
+            get(),
+            excludedRecipeId = excludedRecipeId
         )
     }
 
