@@ -1,13 +1,10 @@
 package com.maksimowiczm.foodyou.feature.food.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.gestures.stopScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,26 +23,30 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
@@ -73,14 +74,12 @@ import androidx.paging.compose.error
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.getBlocking
-import com.maksimowiczm.foodyou.core.preferences.setBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.preferences.UseOpenFoodFacts
 import com.maksimowiczm.foodyou.feature.food.preferences.UseUSDA
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton
@@ -104,55 +103,27 @@ import org.koin.core.parameter.parametersOf
 internal fun FoodSearchApp(
     onFoodClick: (FoodSearch, Measurement) -> Unit,
     excludedFood: FoodId.Recipe?,
-    modifier: Modifier = Modifier,
-    viewModel: FoodSearchViewModel = koinViewModel {
-        parametersOf(excludedFood)
-    },
-    useOpenFoodFactsPreference: UseOpenFoodFacts = userPreference(),
-    useUSDAPreference: UseUSDA = userPreference()
+    modifier: Modifier = Modifier
 ) {
+    val viewModel: FoodSearchViewModel = koinViewModel {
+        parametersOf(excludedFood)
+    }
     val coroutineScope = rememberCoroutineScope()
-    val listState = rememberLazyListState()
 
+    val recentSearches by viewModel.recentSearches.collectAsStateWithLifecycle()
+    val filter by viewModel.filter.collectAsStateWithLifecycle()
     val pages = viewModel.pages.collectAsLazyPagingItems()
-    val source = viewModel.source.collectAsStateWithLifecycle().value
 
-    // Not sure if this is good idea, but it stops scroll from glitching when switching between sources
-    LaunchedEffect(source) {
-        listState.stopScroll()
-    }
-
-    val useOpenFoodFacts = useOpenFoodFactsPreference
-        .collectAsStateWithLifecycle(useOpenFoodFactsPreference.getBlocking()).value
-    val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
-    val openFoodFactsCount = viewModel.openFoodFactsFoodCount.collectAsStateWithLifecycle().value
-    LaunchedEffect(useOpenFoodFacts, source) {
-        if (!useOpenFoodFacts && source == FoodSource.Type.OpenFoodFacts) {
-            viewModel.setSource(FoodSource.Type.User)
-        }
-    }
-
-    // val localPages = viewModel.localPages.collectAsLazyPagingItems()
-    val localCount = viewModel.localFoodCount.collectAsStateWithLifecycle().value
-
-    val useUSDA =
-        useUSDAPreference.collectAsStateWithLifecycle(useUSDAPreference.getBlocking()).value
-    val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
-    val usdaCount = viewModel.usdaFoodCount.collectAsStateWithLifecycle().value
-    LaunchedEffect(useUSDA, source) {
-        if (!useUSDA && source == FoodSource.Type.USDA) {
-            viewModel.setSource(FoodSource.Type.User)
-        }
-    }
-
-    var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
     val searchState = rememberSearchBarState()
     val searchTextFieldState = rememberTextFieldState()
-    val inputField = @Composable {
-        SearchBarInputField(
+    var showBarcodeScanner by rememberSaveable { mutableStateOf(false) }
+
+    val searchInputField = @Composable {
+        FoodSearchBarInputField(
             searchBarState = searchState,
             textFieldState = searchTextFieldState,
             onSearch = {
+                searchTextFieldState.setTextAndPlaceCursorAtEnd(it ?: "")
                 viewModel.search(it)
                 coroutineScope.launch {
                     searchState.animateToCollapsed()
@@ -162,31 +133,60 @@ internal fun FoodSearchApp(
         )
     }
 
-    // Observe even when not expanded, it's small and user won't have to wait for it
-    val recentSearches by viewModel.recentSearches.collectAsStateWithLifecycle()
-    ExpandedFullScreenSearchBar(
-        state = searchState,
-        inputField = inputField
-    ) {
-        FoodSearchView(
-            availableSources = listOfNotNull(
-                FoodSource.Type.User,
-                if (useOpenFoodFacts) FoodSource.Type.OpenFoodFacts else null,
-                if (useUSDA) FoodSource.Type.USDA else null
-            ),
-            source = source,
-            recentSearches = recentSearches,
-            onSource = viewModel::setSource,
-            onFill = { searchTextFieldState.setTextAndPlaceCursorAtEnd(it) },
-            onSearch = {
-                viewModel.search(it)
-                searchTextFieldState.setTextAndPlaceCursorAtEnd(it)
-                coroutineScope.launch {
-                    searchState.animateToCollapsed()
-                }
-            }
+    val availableSources = run {
+        val openFoodFactsPreference = userPreference<UseOpenFoodFacts>()
+        val openFoodFactsEnabled by openFoodFactsPreference
+            .collectAsStateWithLifecycle(openFoodFactsPreference.getBlocking())
+        val openFoodFactsCount by viewModel.openFoodFactsCount.collectAsStateWithLifecycle()
+
+        val usdaPreference = userPreference<UseUSDA>()
+        val usdaEnabled by usdaPreference.collectAsStateWithLifecycle(usdaPreference.getBlocking())
+        val usdaCount by viewModel.usdaCount.collectAsStateWithLifecycle()
+
+        val swissCount by viewModel.swissCount.collectAsStateWithLifecycle()
+
+        listOfNotNull(
+            FoodFilter.Source.YourFood,
+            if (openFoodFactsEnabled || openFoodFactsCount > 0) {
+                FoodFilter.Source.OpenFoodFacts
+            } else {
+                null
+            },
+            if (usdaEnabled || usdaCount > 0) FoodFilter.Source.USDA else null,
+            if (swissCount > 0) FoodFilter.Source.SwissFoodCompositionDatabase else null
         )
     }
+
+    val filters = @Composable { contentPadding: PaddingValues ->
+        FoodSearchFilters(
+            availableSources = listOf(FoodFilter.Source.Recent) + availableSources,
+            viewModel = viewModel,
+            contentPadding = contentPadding,
+            modifier = Modifier
+                .height(32.dp + 8.dp + 32.dp)
+                .fillMaxWidth()
+        )
+    }
+
+    FoodSearchView(
+        searchState = searchState,
+        availableSources = availableSources,
+        filter = filter,
+        recentSearches = recentSearches,
+        onFill = { searchTextFieldState.setTextAndPlaceCursorAtEnd(it) },
+        onSearch = {
+            searchTextFieldState.setTextAndPlaceCursorAtEnd(it ?: "")
+            viewModel.search(it)
+            coroutineScope.launch {
+                searchState.animateToCollapsed()
+            }
+        },
+        onSource = viewModel::setSource,
+        onMoreDatabases = {
+            // TODO
+        },
+        inputField = searchInputField
+    )
 
     FullScreenCameraBarcodeScanner(
         visible = showBarcodeScanner,
@@ -201,201 +201,22 @@ internal fun FoodSearchApp(
         onClose = { showBarcodeScanner = false }
     )
 
-    var showOpenFoodFactsPrivacyDialog by rememberSaveable { mutableStateOf(false) }
-    if (showOpenFoodFactsPrivacyDialog) {
-        OpenFoodFactsPrivacyDialog(
-            onDismissRequest = { showOpenFoodFactsPrivacyDialog = false },
-            onConfirm = {
-                showOpenFoodFactsPrivacyDialog = false
-                useOpenFoodFactsPreference.setBlocking(true)
-            }
-        )
-    }
-
-    var showUSDAPrivacyDialog by rememberSaveable { mutableStateOf(false) }
-    if (showUSDAPrivacyDialog) {
-        USDAPrivacyDialog(
-            onDismissRequest = { showUSDAPrivacyDialog = false },
-            onConfirm = {
-                showUSDAPrivacyDialog = false
-                useUSDAPreference.setBlocking(true)
-            }
-        )
-    }
-
-    val filters = @Composable {
-        FlowRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            DatabaseFilterChip(
-                state = remember(localCount) {
-                    DatabaseFilterChipState.Loaded(localCount)
-                },
-                selected = source == FoodSource.Type.User,
-                onClick = { viewModel.setSource(FoodSource.Type.User) },
-                logo = {
-                    Icon(
-                        imageVector = Icons.Outlined.Person,
-                        contentDescription = null,
-                        modifier = Modifier.height(18.dp)
-                    )
-                },
-                label = { Text(stringResource(Res.string.headline_your_food)) }
-            )
-
-            val offIsLoading = openFoodFactsPages.delayedLoadingState()
-            val openFoodFactsError = openFoodFactsPages.loadState.error
-            DatabaseFilterChip(
-                state = remember(
-                    openFoodFactsCount,
-                    useOpenFoodFacts,
-                    offIsLoading,
-                    openFoodFactsError
-                ) {
-                    if (openFoodFactsError != null) {
-                        DatabaseFilterChipState.Error
-                    } else if (!useOpenFoodFacts) {
-                        DatabaseFilterChipState.ActionRequired
-                    } else if (offIsLoading) {
-                        DatabaseFilterChipState.Loading
-                    } else {
-                        DatabaseFilterChipState.Loaded(openFoodFactsCount)
-                    }
-                },
-                selected = source == FoodSource.Type.OpenFoodFacts,
-                onClick = {
-                    if (useOpenFoodFacts) {
-                        viewModel.setSource(FoodSource.Type.OpenFoodFacts)
-                    } else {
-                        showOpenFoodFactsPrivacyDialog = true
-                    }
-                },
-                logo = {
-                    Image(
-                        painter = painterResource(Res.drawable.openfoodfacts_logo),
-                        contentDescription = null,
-                        modifier = Modifier.height(DatabaseFilterChipDefaults.logoSize)
-                    )
-                },
-                label = { Text(stringResource(Res.string.headline_open_food_facts)) }
-            )
-
-            val usdaIsLoading = usdaPages.delayedLoadingState()
-            val usdaError = usdaPages.loadState.error
-            DatabaseFilterChip(
-                state = remember(usdaCount, useUSDA, usdaIsLoading, usdaError) {
-                    if (usdaError != null) {
-                        DatabaseFilterChipState.Error
-                    } else if (!useUSDA) {
-                        DatabaseFilterChipState.ActionRequired
-                    } else if (usdaIsLoading) {
-                        DatabaseFilterChipState.Loading
-                    } else {
-                        DatabaseFilterChipState.Loaded(usdaCount)
-                    }
-                },
-                selected = source == FoodSource.Type.USDA,
-                onClick = {
-                    if (useUSDA) {
-                        viewModel.setSource(FoodSource.Type.USDA)
-                    } else {
-                        showUSDAPrivacyDialog = true
-                    }
-                },
-                logo = {
-                    Image(
-                        painter = painterResource(Res.drawable.usda_logo),
-                        contentDescription = null,
-                        modifier = Modifier.height(DatabaseFilterChipDefaults.logoSize)
-                    )
-                },
-                label = { Text(stringResource(Res.string.headline_food_data_central_usda)) }
-            )
-        }
-    }
-
-    Scaffold(modifier) { paddingValues ->
-
-        Box(Modifier.focusable().size(1.dp))
-
-        val layoutDirection = LocalLayoutDirection.current
-        val contentPadding = PaddingValues(
-            start = paddingValues.calculateStartPadding(layoutDirection),
-            end = paddingValues.calculateEndPadding(layoutDirection),
-            bottom = paddingValues.calculateBottomPadding()
-        )
-
-        var searchBarHeight by remember { mutableIntStateOf(0) }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .zIndex(10f)
-                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .onSizeChanged { searchBarHeight = it.height }
-                .padding(vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            SearchBar(
-                state = searchState,
-                inputField = inputField,
-                modifier = Modifier
-                    .padding(top = paddingValues.calculateTopPadding())
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
-                colors = SearchBarDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                ),
-                shadowElevation = 2.dp
-            )
-
-            val error = pages.loadState.error
-
-            when (val ex = pages.loadState.error) {
-                null -> Unit
-                is USDAException -> UsdaErrorCard(
-                    error = ex,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-
-                else -> ErrorCard(
-                    message = error?.message ?: stringResource(Res.string.error_unknown_error),
-                    onRetry = pages::retry,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-
-            filters()
-        }
-
-        SearchList(
-            pages = pages,
-            onFoodClick = onFoodClick,
-            contentPadding = contentPadding.add(
-                top = LocalDensity.current.run { searchBarHeight.toDp() },
-                bottom = 56.dp + 32.dp // FAB
-            ),
-            listState = listState,
-            excludes = excludedFood != null,
-            modifier = Modifier.fillMaxSize()
-        )
-    }
+    FoodSearchApp(
+        searchState = searchState,
+        pages = pages,
+        inputField = searchInputField,
+        filters = filters,
+        onFoodClick = onFoodClick,
+        excludes = excludedFood != null,
+        modifier = modifier
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SearchBarInputField(
-    textFieldState: TextFieldState,
+private fun FoodSearchBarInputField(
     searchBarState: SearchBarState,
+    textFieldState: TextFieldState,
     onSearch: (String?) -> Unit,
     onBarcodeScanner: () -> Unit,
     modifier: Modifier = Modifier
@@ -425,32 +246,529 @@ private fun SearchBarInputField(
             }
         },
         trailingIcon = {
-            if (textFieldState.text.isEmpty()) {
-                IconButton(
-                    onClick = onBarcodeScanner
-                ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_barcode_scanner),
-                        contentDescription = stringResource(Res.string.action_scan_barcode)
+            Row {
+                if (textFieldState.text.isEmpty()) {
+                    IconButton(
+                        onClick = onBarcodeScanner
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_barcode_scanner),
+                            contentDescription = stringResource(Res.string.action_scan_barcode)
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = {
+                            textFieldState.setTextAndPlaceCursorAtEnd("")
+                            if (searchBarState.targetValue == SearchBarValue.Collapsed) {
+                                onSearch(null)
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Clear,
+                            contentDescription = stringResource(Res.string.action_clear)
+                        )
+                    }
+                }
+//                IconButton(onFilters) {
+//                    BadgedBox(
+//                        badge = {
+//                            if (filter.filterCount > 0) {
+//                                Badge { Text(filter.filterCount.toString()) }
+//                            }
+//                        },
+//                        content = {
+//                            Icon(
+//                                imageVector = Icons.Outlined.FilterAlt,
+//                                contentDescription = stringResource(Res.string.action_filter_foods)
+//                            )
+//                        }
+//                    )
+//                }
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FoodSearchView(
+    searchState: SearchBarState,
+    availableSources: List<FoodFilter.Source>,
+    filter: FoodFilter,
+    recentSearches: List<String>,
+    onFill: (String) -> Unit,
+    onSearch: (String?) -> Unit,
+    onSource: (FoodFilter.Source) -> Unit,
+    onMoreDatabases: () -> Unit,
+    inputField: @Composable () -> Unit
+) {
+    ExpandedFullScreenSearchBar(
+        state = searchState,
+        inputField = inputField
+    ) {
+        FoodSearchView(
+            availableSources = availableSources,
+            source = filter.source,
+            recentSearches = recentSearches,
+            onSource = onSource,
+            onMoreDatabases = onMoreDatabases,
+            onFill = onFill,
+            onSearch = onSearch
+        )
+    }
+}
+
+@Composable
+private fun FoodSearchFilters(
+    availableSources: List<FoodFilter.Source>,
+    viewModel: FoodSearchViewModel,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier
+) {
+    val filter by viewModel.filter.collectAsStateWithLifecycle()
+
+    val openFoodFactsPages = viewModel.openFoodFactsPages.collectAsLazyPagingItems()
+    val openFoodFactsLoading = openFoodFactsPages.delayedLoadingState()
+    val openFoodFactsCount by viewModel.openFoodFactsCount.collectAsStateWithLifecycle()
+
+    val usdaPages = viewModel.usdaPages.collectAsLazyPagingItems()
+    val usdaLoading = usdaPages.delayedLoadingState()
+    val usdaCount by viewModel.usdaCount.collectAsStateWithLifecycle()
+
+    val swissCount by viewModel.swissCount.collectAsStateWithLifecycle()
+
+    LazyHorizontalStaggeredGrid(
+        rows = StaggeredGridCells.Fixed(2),
+        modifier = modifier,
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalItemSpacing = 8.dp
+    ) {
+        if (availableSources.contains(FoodFilter.Source.Recent)) {
+            item {
+                val count by viewModel.recentFoodCount.collectAsStateWithLifecycle()
+                FilterChip(
+                    selected = filter.source == FoodFilter.Source.Recent,
+                    onClick = {
+                        viewModel.setSource(FoodFilter.Source.Recent)
+                    },
+                    label = {
+                        Text(FoodFilter.Source.Recent.stringResource())
+                    },
+                    leadingIcon = {
+                        FoodFilter.Source.Recent.Icon(Modifier.size(FilterChipDefaults.IconSize))
+                    },
+                    trailingIcon = {
+                        CompositionLocalProvider(
+                            LocalTextStyle provides MaterialTheme.typography.bodySmall
+                        ) {
+                            Text(count.toString())
+                        }
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                )
+            }
+        }
+
+        if (availableSources.contains(FoodFilter.Source.YourFood)) {
+            item {
+                val count by viewModel.yourFoodCount.collectAsStateWithLifecycle()
+                FilterChip(
+                    selected = filter.source == FoodFilter.Source.YourFood,
+                    onClick = {
+                        viewModel.setSource(FoodFilter.Source.YourFood)
+                    },
+                    label = {
+                        Text(FoodFilter.Source.YourFood.stringResource())
+                    },
+                    leadingIcon = {
+                        FoodFilter.Source.YourFood.Icon(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    },
+                    trailingIcon = {
+                        CompositionLocalProvider(
+                            LocalTextStyle provides MaterialTheme.typography.bodySmall
+                        ) {
+                            Text(count.toString())
+                        }
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                )
+            }
+        }
+
+        if (availableSources.contains(FoodFilter.Source.OpenFoodFacts)) {
+            item {
+                val hasError = openFoodFactsPages.loadState.hasError
+                val selected = filter.source == FoodFilter.Source.OpenFoodFacts
+
+                val colors = if (hasError) {
+                    FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        labelColor = MaterialTheme.colorScheme.onErrorContainer,
+                        iconColor = MaterialTheme.colorScheme.onErrorContainer,
+                        selectedContainerColor = MaterialTheme.colorScheme.error,
+                        selectedLabelColor = MaterialTheme.colorScheme.onError,
+                        selectedTrailingIconColor = MaterialTheme.colorScheme.onError
+                    )
+                } else {
+                    FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
                 }
-            } else {
-                IconButton(
-                    onClick = {
-                        textFieldState.setTextAndPlaceCursorAtEnd("")
-                        if (searchBarState.targetValue == SearchBarValue.Collapsed) {
-                            onSearch(null)
-                        }
+
+                val border = FilterChipDefaults.filterChipBorder(
+                    enabled = true,
+                    selected = selected,
+                    borderColor = if (hasError) {
+                        MaterialTheme.colorScheme.errorContainer
+                    } else if (selected) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.outlineVariant
                     }
+                )
+
+                FilterChip(
+                    selected = selected,
+                    onClick = {
+                        viewModel.setSource(FoodFilter.Source.OpenFoodFacts)
+                    },
+                    label = {
+                        Text(FoodFilter.Source.OpenFoodFacts.stringResource())
+                    },
+                    leadingIcon = {
+                        FoodFilter.Source.OpenFoodFacts.Icon(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    },
+                    trailingIcon = {
+                        if (hasError) {
+                            Icon(
+                                imageVector = Icons.Outlined.Warning,
+                                contentDescription = null,
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        } else if (openFoodFactsLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(FilterChipDefaults.IconSize),
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text(
+                                text = openFoodFactsCount.toString(),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    },
+                    colors = colors,
+                    border = border
+                )
+            }
+        }
+
+        if (availableSources.contains(FoodFilter.Source.USDA)) {
+            item {
+                val hasError = usdaPages.loadState.hasError
+                val selected = filter.source == FoodFilter.Source.USDA
+
+                val colors = if (hasError) {
+                    FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        labelColor = MaterialTheme.colorScheme.onErrorContainer,
+                        iconColor = MaterialTheme.colorScheme.onErrorContainer,
+                        selectedContainerColor = MaterialTheme.colorScheme.error,
+                        selectedLabelColor = MaterialTheme.colorScheme.onError,
+                        selectedTrailingIconColor = MaterialTheme.colorScheme.onError
+                    )
+                } else {
+                    FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                }
+
+                val border = FilterChipDefaults.filterChipBorder(
+                    enabled = true,
+                    selected = selected,
+                    borderColor = if (hasError) {
+                        MaterialTheme.colorScheme.errorContainer
+                    } else if (selected) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.outlineVariant
+                    }
+                )
+
+                FilterChip(
+                    selected = selected,
+                    onClick = {
+                        viewModel.setSource(FoodFilter.Source.USDA)
+                    },
+                    label = {
+                        Text(FoodFilter.Source.USDA.stringResource())
+                    },
+                    leadingIcon = {
+                        FoodFilter.Source.USDA.Icon(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    },
+                    trailingIcon = {
+                        if (hasError) {
+                            Icon(
+                                imageVector = Icons.Outlined.Warning,
+                                contentDescription = null,
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        } else if (usdaLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(FilterChipDefaults.IconSize),
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text(
+                                text = usdaCount.toString(),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    },
+                    colors = colors,
+                    border = border
+                )
+            }
+        }
+
+        if (availableSources.contains(FoodFilter.Source.SwissFoodCompositionDatabase)) {
+            item {
+                FilterChip(
+                    selected = filter.source == FoodFilter.Source.SwissFoodCompositionDatabase,
+                    onClick = {
+                        viewModel.setSource(FoodFilter.Source.SwissFoodCompositionDatabase)
+                    },
+                    label = {
+                        Text(FoodFilter.Source.SwissFoodCompositionDatabase.stringResource())
+                    },
+                    leadingIcon = {
+                        FoodFilter.Source.SwissFoodCompositionDatabase.Icon(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    },
+                    trailingIcon = {
+                        CompositionLocalProvider(
+                            LocalTextStyle provides MaterialTheme.typography.bodySmall
+                        ) {
+                            Text(swissCount.toString())
+                        }
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FoodSearchApp(
+    searchState: SearchBarState,
+    pages: LazyPagingItems<FoodSearch>,
+    inputField: @Composable () -> Unit,
+    filters: @Composable (contentPadding: PaddingValues) -> Unit,
+    onFoodClick: (FoodSearch, Measurement) -> Unit,
+    excludes: Boolean,
+    modifier: Modifier = Modifier
+) = Scaffold(modifier) { paddingValues ->
+    Box(Modifier.focusable().size(1.dp))
+
+    val layoutDirection = LocalLayoutDirection.current
+    val contentPadding = PaddingValues(
+        start = paddingValues.calculateStartPadding(layoutDirection),
+        end = paddingValues.calculateEndPadding(layoutDirection),
+        bottom = paddingValues.calculateBottomPadding()
+    )
+
+    var searchBarHeight by remember { mutableIntStateOf(0) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .zIndex(10f)
+            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
+            .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+            .padding(top = paddingValues.calculateTopPadding())
+            .onSizeChanged { searchBarHeight = it.height }
+            .padding(vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        SearchBar(
+            state = searchState,
+            inputField = inputField,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+            colors = SearchBarDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+            ),
+            shadowElevation = 2.dp
+        )
+
+        filters(
+            PaddingValues(horizontal = 16.dp)
+        )
+
+        when (val ex = pages.loadState.error) {
+            null -> Unit
+            is USDAException -> UsdaErrorCard(
+                error = ex,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+
+            else -> ErrorCard(
+                message = ex.message ?: stringResource(Res.string.error_unknown_error),
+                onRetry = pages::retry,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
+    }
+
+    SearchList(
+        pages = pages,
+        onFoodClick = onFoodClick,
+        contentPadding = contentPadding.add(
+            top = LocalDensity.current.run { searchBarHeight.toDp() },
+            bottom = 56.dp + 32.dp // FAB
+        ),
+        excludes = excludes,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, FlowPreview::class)
+@Composable
+private fun SearchList(
+    pages: LazyPagingItems<FoodSearch>,
+    onFoodClick: (FoodSearch, Measurement) -> Unit,
+    contentPadding: PaddingValues,
+    excludes: Boolean,
+    modifier: Modifier = Modifier
+) = Box(modifier) {
+    if (pages.itemCount == 0) {
+        Text(
+            text = stringResource(Res.string.neutral_no_food_found),
+            modifier = Modifier
+                .safeContentPadding()
+                .align(Alignment.Center)
+        )
+    }
+
+    if (pages.delayedLoadingState()) {
+        ContainedLoadingIndicator(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = contentPadding.calculateTopPadding())
+                .zIndex(20f)
+        )
+    }
+
+    val shimmer = rememberShimmer(ShimmerBounds.View)
+    LazyColumn(
+        contentPadding = contentPadding
+    ) {
+        if (excludes) {
+            item {
+                Card(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Clear,
-                        contentDescription = stringResource(Res.string.action_clear)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = null
+                        )
+                        Text(
+                            text = stringResource(
+                                Res.string.description_recipe_missing_ingredients
+                            ),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+        }
+
+        items(
+            count = pages.itemCount,
+            key = pages.itemKey { it.id.toString() }
+        ) { i ->
+            val food = pages[i]
+
+            when (food) {
+                null -> FoodListItemSkeleton(shimmer)
+                is FoodSearch.Product -> {
+                    val measurement = food.defaultMeasurement
+                    FoodSearchListItem(
+                        food = food,
+                        measurement = measurement,
+                        onClick = { onFoodClick(food, measurement) }
+                    )
+                }
+
+                is FoodSearch.Recipe -> {
+                    val measurement = food.defaultMeasurement
+                    FoodSearchListItem(
+                        food = food,
+                        measurement = measurement,
+                        onClick = { onFoodClick(food, measurement) },
+                        shimmer = shimmer
                     )
                 }
             }
         }
-    )
+
+        if (pages.loadState.append is LoadState.Loading) {
+            items(3) {
+                FoodListItemSkeleton(shimmer)
+            }
+        }
+    }
+}
+
+@Composable
+@OptIn(FlowPreview::class)
+internal fun <T : Any> LazyPagingItems<T>.delayedLoadingState(timeout: Long = 100L): Boolean {
+    var isLoading by remember { mutableStateOf(false) }
+    LaunchedEffect(this) {
+        snapshotFlow {
+            loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading
+        }
+            .debounce(timeout)
+            .collectLatest { isLoading = it }
+    }
+
+    return isLoading
 }
 
 @Composable
@@ -517,128 +835,4 @@ private fun ErrorCard(message: String, onRetry: () -> Unit, modifier: Modifier =
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, FlowPreview::class)
-@Composable
-private fun SearchList(
-    pages: LazyPagingItems<FoodSearch>,
-    onFoodClick: (FoodSearch, Measurement) -> Unit,
-    contentPadding: PaddingValues,
-    listState: LazyListState,
-    excludes: Boolean,
-    modifier: Modifier = Modifier
-) = Box(modifier) {
-    if (pages.itemCount == 0) {
-        Text(
-            text = stringResource(Res.string.neutral_no_food_found),
-            modifier = Modifier
-                .safeContentPadding()
-                .align(Alignment.Center)
-        )
-    }
-
-    if (pages.delayedLoadingState()) {
-        ContainedLoadingIndicator(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = contentPadding.calculateTopPadding())
-                .zIndex(20f)
-        )
-    }
-
-    val shimmer = rememberShimmer(ShimmerBounds.View)
-    LazyColumn(
-        state = listState,
-        contentPadding = contentPadding
-    ) {
-        if (excludes) {
-            item {
-                Card(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .padding(bottom = 8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Info,
-                            contentDescription = null
-                        )
-                        Text(
-                            text = stringResource(
-                                Res.string.description_recipe_missing_ingredients
-                            ),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
-            }
-        }
-
-        if (pages.loadState.refresh is LoadState.Loading) {
-            items(10) {
-                FoodListItemSkeleton(shimmer)
-            }
-        }
-
-        items(
-            count = pages.itemCount,
-            key = pages.itemKey { it.id.toString() }
-        ) { i ->
-            val food = pages[i]
-
-            when (food) {
-                null -> FoodListItemSkeleton(shimmer)
-                is FoodSearch.Product -> {
-                    val measurement = food.defaultMeasurement
-                    FoodSearchListItem(
-                        food = food,
-                        measurement = measurement,
-                        onClick = { onFoodClick(food, measurement) }
-                    )
-                }
-
-                is FoodSearch.Recipe -> {
-                    val measurement = food.defaultMeasurement
-
-                    FoodSearchListItem(
-                        food = food,
-                        measurement = measurement,
-                        onClick = { onFoodClick(food, measurement) },
-                        shimmer = shimmer
-                    )
-                }
-            }
-        }
-
-        if (pages.loadState.append is LoadState.Loading) {
-            items(3) {
-                FoodListItemSkeleton(shimmer)
-            }
-        }
-    }
-}
-
-@Composable
-@OptIn(FlowPreview::class)
-private fun <T : Any> LazyPagingItems<T>.delayedLoadingState(): Boolean {
-    var isLoading by remember { mutableStateOf(false) }
-    LaunchedEffect(this) {
-        snapshotFlow {
-            loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading
-        }
-            .debounce(100L)
-            .collectLatest { isLoading = it }
-    }
-
-    return isLoading
 }

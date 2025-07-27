@@ -425,4 +425,9 @@
     <string name="description_sponsors_external_server">To view the latest sponsors, we need to fetch updated data from our external server</string>
 
     <string name="headline_anonymous">Anonymous</string>
+
+    <string name="action_filter_foods" description="Filter foods in the list">Filter foods</string>
+
+    <string name="headline_recent">Recent</string>
+
 </resources>

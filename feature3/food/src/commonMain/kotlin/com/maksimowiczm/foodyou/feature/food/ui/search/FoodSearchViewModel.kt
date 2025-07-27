@@ -38,19 +38,20 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapValues
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class FoodSearchViewModel(
     private val excludedRecipeId: FoodId.Recipe?,
-    foodDatabase: FoodDatabase,
-    dataStore: DataStore<Preferences>,
+    private val foodDatabase: FoodDatabase,
     private val foodSearchMapper: FoodSearchMapper,
+    dataStore: DataStore<Preferences>,
     private val remoteProductMapper: RemoteProductMapper,
     private val openFoodFactsMapper: OpenFoodFactsProductMapper,
     private val openFoodFactsRemoteDataSource: OpenFoodFactsRemoteDataSource,
@@ -59,19 +60,25 @@ internal class FoodSearchViewModel(
     private val createProductUseCase: CreateProductUseCase,
     private val productMapper: ProductMapper
 ) : ViewModel() {
+
+    private val openFoodFacts = dataStore.userPreference<UseOpenFoodFacts>()
+    private val usda = dataStore.userPreference<UseUSDA>()
+
+    private val usdaApiKey = dataStore.userPreference<UsdaApiKey>()
+
     private val foodSearchDao = foodDatabase.foodSearchDao
 
-    private val useOpenFoodFacts = dataStore.userPreference<UseOpenFoodFacts>()
-    private val useUSDA = dataStore.userPreference<UseUSDA>()
-    private val usdaApiKey = dataStore.userPreference<UsdaApiKey>()
+    private val _filter = MutableStateFlow(FoodFilter())
+    val filter = _filter.asStateFlow()
+
+    fun setSource(source: FoodFilter.Source) {
+        _filter.update {
+            it.copy(source = source)
+        }
+    }
 
     private val searchQuery = MutableStateFlow<String?>(null)
 
-    /**
-     * Triggers a search for food items based on the provided query.
-     *
-     * @param query The search query string. If null, it will reset the search.
-     */
     @OptIn(ExperimentalTime::class)
     fun search(query: String?) {
         searchQuery.value = query
@@ -95,13 +102,6 @@ internal class FoodSearchViewModel(
         }
     }
 
-    private val _source = MutableStateFlow(FoodSource.Type.User)
-    val source = _source.asStateFlow()
-
-    fun setSource(source: FoodSource.Type) {
-        _source.value = source
-    }
-
     val recentSearches = foodSearchDao
         .observeRecentSearches(10)
         .mapValues { it.query }
@@ -111,170 +111,152 @@ internal class FoodSearchViewModel(
             started = SharingStarted.WhileSubscribed(2_000)
         )
 
-    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
-    val openFoodFactsPages = useOpenFoodFacts.observe().filter { it }.flatMapLatest {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun foodCount(source: FoodFilter.Source): StateFlow<Int> =
         searchQuery.flatMapLatest { query ->
-            val isBarcode = query?.all { it.isDigit() } ?: false
-
-            val mediator = if (query != null) {
-                OpenFoodFactsRemoteMediator<FoodSearch>(
-                    remoteDataSource = openFoodFactsRemoteDataSource,
-                    foodDatabase = foodDatabase,
-                    query = query,
-                    country = null,
-                    isBarcode = isBarcode,
-                    offMapper = openFoodFactsMapper,
-                    remoteMapper = remoteProductMapper,
-                    createProductUseCase = createProductUseCase,
-                    productMapper = productMapper
-                )
-            } else {
-                null
-            }
-
-            pager(
+            foodSearchDao.observeFoodCount(
                 query = query,
-                source = FoodSource.Type.OpenFoodFacts,
-                mediator = mediator
-            )
-        }
-    }.cachedIn(viewModelScope)
-
-    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
-    val usdaPages = useUSDA.observe().filter { it }.flatMapLatest {
-        combine(
-            searchQuery,
-            usdaApiKey.observe()
-        ) { query, apiKey ->
-            val mediator = if (query != null) {
-                USDARemoteMediator<FoodSearch>(
-                    remoteDataSource = usdaRemoteDataSource,
-                    foodDatabase = foodDatabase,
-                    query = query,
-                    apiKey = apiKey,
-                    usdaMapper = usdaMapper,
-                    remoteMapper = remoteProductMapper,
-                    createProductUseCase = createProductUseCase,
-                    productMapper = productMapper
-                )
-            } else {
-                null
-            }
-
-            query to mediator
-        }.flatMapLatest { (query, mediator) ->
-            pager(
-                query = query,
-                source = FoodSource.Type.USDA,
-                mediator = mediator
-            )
-        }
-    }.cachedIn(viewModelScope)
-
-    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
-    val localPages = searchQuery.flatMapLatest { query ->
-        pager(
-            query = query,
-            source = FoodSource.Type.User
-        )
-    }.cachedIn(viewModelScope)
-
-    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
-    val swissPages
-        get() = searchQuery.flatMapLatest { query ->
-            pager(
-                query = query,
-                source = FoodSource.Type.SwissFoodCompositionDatabase
-            )
-        }.cachedIn(viewModelScope)
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val pages = source.flatMapLatest {
-        when (it) {
-            FoodSource.Type.User -> localPages
-            FoodSource.Type.OpenFoodFacts -> openFoodFactsPages
-            FoodSource.Type.USDA -> usdaPages
-            FoodSource.Type.SwissFoodCompositionDatabase -> swissPages
-        }.mapData(foodSearchMapper::toModel)
-    }.cachedIn(viewModelScope)
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val localFoodCount = searchQuery.flatMapLatest { query ->
-        foodSearchDao.observeFoodCount(
-            query = query,
-            source = FoodSource.Type.User
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        initialValue = 0,
-        started = SharingStarted.WhileSubscribed(2_000)
-    )
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val openFoodFactsFoodCount = searchQuery.flatMapLatest { query ->
-        foodSearchDao.observeFoodCount(
-            query = query,
-            source = FoodSource.Type.OpenFoodFacts
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        initialValue = 0,
-        started = SharingStarted.WhileSubscribed(2_000)
-    )
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val usdaFoodCount = searchQuery.flatMapLatest { query ->
-        foodSearchDao.observeFoodCount(
-            query = query,
-            source = FoodSource.Type.USDA
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        initialValue = 0,
-        started = SharingStarted.WhileSubscribed(2_000)
-    )
-
-    private fun FoodSearchDao.observeFoodCount(query: String?, source: FoodSource.Type): Flow<Int> {
-        val isBarcode = query?.all { it.isDigit() } ?: false
-
-        return if (isBarcode) {
-            observeFoodCountByBarcode(
-                barcode = query,
                 source = source
             )
-        } else {
-            observeFoodCountByQuery(
+        }.stateIn(
+            scope = viewModelScope,
+            initialValue = 0,
+            started = SharingStarted.WhileSubscribed(2_000)
+        )
+
+    // ViewModel must store the counts
+    val recentFoodCount = foodCount(FoodFilter.Source.Recent)
+    val yourFoodCount = foodCount(FoodFilter.Source.YourFood)
+    val openFoodFactsCount = foodCount(FoodFilter.Source.OpenFoodFacts)
+    val usdaCount = foodCount(FoodFilter.Source.USDA)
+    val swissCount =
+        foodCount(FoodFilter.Source.SwissFoodCompositionDatabase)
+
+    @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
+    val openFoodFactsPages = combine(
+        openFoodFacts.observe(),
+        searchQuery
+    ) { openFoodFactsEnabled, query ->
+        val isBarcode = query?.all { it.isDigit() } ?: false
+
+        val mediator = if (openFoodFactsEnabled && query != null) {
+            OpenFoodFactsRemoteMediator<FoodSearch>(
+                remoteDataSource = openFoodFactsRemoteDataSource,
+                foodDatabase = foodDatabase,
                 query = query,
-                source = source,
+                country = null,
+                isBarcode = isBarcode,
+                offMapper = openFoodFactsMapper,
+                remoteMapper = remoteProductMapper,
+                createProductUseCase = createProductUseCase,
+                productMapper = productMapper
+            )
+        } else {
+            null
+        }
+
+        pager(query, FoodFilter.Source.OpenFoodFacts, mediator)
+    }.flatMapLatest { it }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
+    val usdaPages = combine(
+        usda.observe(),
+        usdaApiKey.observe(),
+        searchQuery
+    ) { usdaEnabled, usdaApiKey, query ->
+        val mediator = if (usdaEnabled && query != null) {
+            USDARemoteMediator<FoodSearch>(
+                remoteDataSource = usdaRemoteDataSource,
+                foodDatabase = foodDatabase,
+                query = query,
+                apiKey = usdaApiKey,
+                usdaMapper = usdaMapper,
+                remoteMapper = remoteProductMapper,
+                createProductUseCase = createProductUseCase,
+                productMapper = productMapper
+            )
+        } else {
+            null
+        }
+
+        pager(query, FoodFilter.Source.USDA, mediator)
+    }.flatMapLatest { it }.cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
+    val pages = combine(
+        filter,
+        searchQuery
+    ) { filter, query -> filter to query }.flatMapLatest { (filter, query) ->
+        when (filter.source) {
+            FoodFilter.Source.Recent,
+            FoodFilter.Source.YourFood,
+            FoodFilter.Source.SwissFoodCompositionDatabase -> pager(
+                query = query,
+                source = filter.source
+            )
+
+            FoodFilter.Source.OpenFoodFacts -> openFoodFactsPages
+            FoodFilter.Source.USDA -> usdaPages
+        }
+    }.mapData(foodSearchMapper::toModel).cachedIn(viewModelScope)
+
+    private fun FoodSearchDao.observeFood(
+        query: String?,
+        source: FoodFilter.Source
+    ): PagingSource<Int, FoodSearch> {
+        val isBarcode = query?.all { it.isDigit() } ?: false
+
+        return if (source == FoodFilter.Source.Recent) {
+            observeRecentFood()
+        } else if (isBarcode) {
+            observeFoodByBarcode(
+                barcode = query,
+                source = source.asDatabaseSource()
+            )
+        } else {
+            observeFoodByQuery(
+                query = query,
+                source = source.asDatabaseSource(),
                 excludedRecipeId = excludedRecipeId?.id
             )
         }
     }
 
-    private fun FoodSearchDao.observeFood(
+    private fun FoodSearchDao.observeFoodCount(
         query: String?,
-        source: FoodSource.Type
-    ): PagingSource<Int, FoodSearch> {
+        source: FoodFilter.Source
+    ): Flow<Int> {
         val isBarcode = query?.all { it.isDigit() } ?: false
 
-        return if (isBarcode) {
-            observeFoodByBarcode(
+        return if (source == FoodFilter.Source.Recent) {
+            observeRecentFoodCount()
+        } else if (isBarcode) {
+            observeFoodCountByBarcode(
                 barcode = query,
-                source = source
+                source = source.asDatabaseSource()
             )
         } else {
-            observeFoodByQuery(
+            observeFoodCountByQuery(
                 query = query,
-                source = source,
+                source = source.asDatabaseSource(),
                 excludedRecipeId = excludedRecipeId?.id
             )
         }
+    }
+
+    private fun FoodFilter.Source.asDatabaseSource(): FoodSource.Type? = when (this) {
+        FoodFilter.Source.YourFood -> FoodSource.Type.User
+        FoodFilter.Source.OpenFoodFacts -> FoodSource.Type.OpenFoodFacts
+        FoodFilter.Source.USDA -> FoodSource.Type.USDA
+        FoodFilter.Source.Recent -> null
+        FoodFilter.Source.SwissFoodCompositionDatabase ->
+            FoodSource.Type.SwissFoodCompositionDatabase
     }
 
     @OptIn(ExperimentalPagingApi::class)
     private fun pager(
         query: String?,
-        source: FoodSource.Type,
+        source: FoodFilter.Source,
         mediator: RemoteMediator<Int, FoodSearch>? = null
     ): Flow<PagingData<FoodSearch>> = Pager(
         config = PagingConfig(

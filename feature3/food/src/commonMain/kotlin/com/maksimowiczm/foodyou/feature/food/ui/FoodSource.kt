@@ -26,13 +26,13 @@ fun FoodSource.Type.Icon(modifier: Modifier = Modifier) {
         FoodSource.Type.OpenFoodFacts -> Image(
             painter = painterResource(Res.drawable.openfoodfacts_logo),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).then(modifier)
+            modifier = modifier.size(24.dp)
         )
 
         FoodSource.Type.USDA -> Image(
             painter = painterResource(Res.drawable.usda_logo),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).then(modifier)
+            modifier = modifier.size(24.dp)
         )
 
         FoodSource.Type.SwissFoodCompositionDatabase -> Text("CH", modifier)

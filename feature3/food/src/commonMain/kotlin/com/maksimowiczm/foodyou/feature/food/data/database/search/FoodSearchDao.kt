@@ -11,6 +11,47 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FoodSearchDao {
 
+    // TODO
+    @Query(
+        """
+        WITH ProductsSearch AS (
+            SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT
+            FROM Product p
+            WHERE 1 = 0
+        ),
+        RecipesSearch AS (
+            SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT
+            FROM Recipe r
+            WHERE 1 = 0
+        )
+        SELECT *
+        FROM ProductsSearch
+        UNION ALL
+        SELECT *
+        FROM RecipesSearch
+        ORDER BY headline ASC
+        """
+    )
+    fun observeRecentFood(): PagingSource<Int, FoodSearch>
+
+    // TODO
+    @Query(
+        """
+        WITH ProductsSearch AS (
+            SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT
+            FROM Product p
+            WHERE 1 = 0
+        ),
+        RecipesSearch AS (
+            SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT
+            FROM Recipe r
+            WHERE 1 = 0
+        )
+        SELECT (SELECT COUNT(*) FROM ProductsSearch) + (SELECT COUNT(*) FROM RecipesSearch)
+        """
+    )
+    fun observeRecentFoodCount(): Flow<Int>
+
     @Query(
         """
         SELECT *
