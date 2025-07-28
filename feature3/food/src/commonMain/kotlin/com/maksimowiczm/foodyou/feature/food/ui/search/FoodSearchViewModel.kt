@@ -48,6 +48,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
 internal class FoodSearchViewModel(
     dataStore: DataStore<Preferences>,
     foodDatabase: FoodDatabase,
@@ -108,115 +109,116 @@ internal class FoodSearchViewModel(
     private val useUsda = dataStore.userPreference<UseUSDA>()
     private val usdaApiKey = dataStore.userPreference<UsdaApiKey>()
 
-    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
+    private val recentFoodPages = searchQuery.flatMapLatest { query ->
+        pager(query, FoodFilter.Source.Recent)
+    }.cachedIn(viewModelScope)
     private val recentFoodState = searchQuery.flatMapLatest { query ->
-        val pager = pager(query, FoodFilter.Source.Recent)
-
         foodSearchDao.observeFoodCount(query, FoodFilter.Source.Recent).map { count ->
             FoodSourceUiState(
                 remoteEnabled = RemoteStatus.LocalOnly,
-                pages = pager,
+                pages = recentFoodPages,
                 count = count,
                 alwaysShowFilter = true
             )
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
+    private val yourFoodPages = searchQuery.flatMapLatest { query ->
+        pager(query, FoodFilter.Source.YourFood)
+    }.cachedIn(viewModelScope)
     private val yourFoodState = searchQuery.flatMapLatest { query ->
-        val pager = pager(query, FoodFilter.Source.YourFood)
-
         foodSearchDao.observeFoodCount(query, FoodFilter.Source.YourFood).map { count ->
             FoodSourceUiState(
                 remoteEnabled = RemoteStatus.LocalOnly,
-                pages = pager,
+                pages = yourFoodPages,
                 count = count,
                 alwaysShowFilter = true
             )
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
-    private val openFoodFactsState = searchQuery.flatMapLatest { query ->
-        val pager = useOpenFoodFacts.observe().map { enabled ->
-            val mediator = if (enabled && query != null) {
-                val isBarcode = query.all { it.isDigit() }
+    private val openFoodFactsPages = combine(
+        searchQuery,
+        useOpenFoodFacts.observe()
+    ) { query, enabled ->
+        val mediator = if (enabled && query != null) {
+            val isBarcode = query.all { it.isDigit() }
 
-                OpenFoodFactsRemoteMediator<FoodSearch>(
-                    remoteDataSource = openFoodFactsRemoteDataSource,
-                    foodDatabase = foodDatabase,
-                    query = query,
-                    country = null,
-                    isBarcode = isBarcode,
-                    offMapper = openFoodFactsMapper,
-                    remoteMapper = remoteProductMapper,
-                    createProductUseCase = createProductUseCase,
-                    productMapper = productMapper
-                )
-            } else {
-                null
-            }
-
-            pager(query, FoodFilter.Source.OpenFoodFacts, mediator)
+            OpenFoodFactsRemoteMediator<FoodSearch>(
+                remoteDataSource = openFoodFactsRemoteDataSource,
+                foodDatabase = foodDatabase,
+                query = query,
+                country = null,
+                isBarcode = isBarcode,
+                offMapper = openFoodFactsMapper,
+                remoteMapper = remoteProductMapper,
+                createProductUseCase = createProductUseCase,
+                productMapper = productMapper
+            )
+        } else {
+            null
         }
 
+        pager(query, FoodFilter.Source.OpenFoodFacts, mediator)
+    }.flatMapLatest { it }.cachedIn(viewModelScope)
+
+    private val openFoodFactsState = searchQuery.flatMapLatest { query ->
         combine(
             foodSearchDao.observeFoodCount(query, FoodFilter.Source.OpenFoodFacts),
-            useOpenFoodFacts.observe(),
-            pager
-        ) { count, enabled, pager ->
+            useOpenFoodFacts.observe()
+        ) { count, enabled ->
             FoodSourceUiState(
                 remoteEnabled = enabled.toRemoteStatus(),
-                pages = pager,
+                pages = openFoodFactsPages,
                 count = count
             )
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
-    private val usdaState = searchQuery.flatMapLatest { query ->
-        val pager = combine(
-            useUsda.observe(),
-            usdaApiKey.observe()
-        ) { enabled, apiKey ->
-            val mediator = if (enabled && query != null) {
-                USDARemoteMediator<FoodSearch>(
-                    remoteDataSource = usdaRemoteDataSource,
-                    foodDatabase = foodDatabase,
-                    query = query,
-                    apiKey = apiKey,
-                    usdaMapper = usdaMapper,
-                    remoteMapper = remoteProductMapper,
-                    createProductUseCase = createProductUseCase,
-                    productMapper = productMapper
-                )
-            } else {
-                null
-            }
-
-            pager(query, FoodFilter.Source.USDA, mediator)
+    private val usdaPages = combine(
+        searchQuery,
+        useUsda.observe(),
+        usdaApiKey.observe()
+    ) { query, enabled, apiKey ->
+        val mediator = if (enabled && query != null) {
+            USDARemoteMediator<FoodSearch>(
+                remoteDataSource = usdaRemoteDataSource,
+                foodDatabase = foodDatabase,
+                query = query,
+                apiKey = apiKey,
+                usdaMapper = usdaMapper,
+                remoteMapper = remoteProductMapper,
+                createProductUseCase = createProductUseCase,
+                productMapper = productMapper
+            )
+        } else {
+            null
         }
 
+        pager(query, FoodFilter.Source.USDA, mediator)
+    }.flatMapLatest { it }.cachedIn(viewModelScope)
+    private val usdaState = searchQuery.flatMapLatest { query ->
         combine(
             foodSearchDao.observeFoodCount(query, FoodFilter.Source.USDA),
-            useUsda.observe(),
-            pager
-        ) { count, enabled, pager ->
+            useUsda.observe()
+        ) { count, enabled ->
             FoodSourceUiState(
                 remoteEnabled = enabled.toRemoteStatus(),
-                pages = pager,
+                pages = usdaPages,
                 count = count
             )
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
+    private val swissFoodCompositionDatabasePages = searchQuery.flatMapLatest { query ->
+        pager(query, FoodFilter.Source.SwissFoodCompositionDatabase)
+    }.cachedIn(viewModelScope)
     private val swissFoodCompositionDatabaseState = searchQuery.flatMapLatest { query ->
         foodSearchDao.observeFoodCount(query, FoodFilter.Source.SwissFoodCompositionDatabase)
             .map { count ->
                 FoodSourceUiState(
                     remoteEnabled = RemoteStatus.LocalOnly,
-                    pages = pager(query, FoodFilter.Source.SwissFoodCompositionDatabase),
+                    pages = swissFoodCompositionDatabasePages,
                     count = count
                 )
             }
@@ -231,8 +233,18 @@ internal class FoodSearchViewModel(
         yourFoodState,
         openFoodFactsState,
         usdaState,
-        swissFoodCompositionDatabaseState
-    ) { (recent, yourFood, openFoodFacts, usda, swissFoodCompositionDatabase) ->
+        swissFoodCompositionDatabaseState,
+        filter,
+        recentSearches
+    ) {
+            recent,
+            yourFood,
+            openFoodFacts,
+            usda,
+            swissFoodCompositionDatabase,
+            filter,
+            recentSearches
+        ->
         FoodSearchUiState(
             sources = mapOf(
                 FoodFilter.Source.Recent to recent,
@@ -241,20 +253,15 @@ internal class FoodSearchViewModel(
                 FoodFilter.Source.USDA to usda,
                 FoodFilter.Source.SwissFoodCompositionDatabase to swissFoodCompositionDatabase
             ),
-            filter = FoodFilter(),
-            recentSearches = emptyList()
+            filter = filter,
+            recentSearches = recentSearches
         )
-    }.combine(filter) { uiState, filter ->
-        uiState.copy(filter = filter)
-    }.combine(recentSearches) { uiState, recentSearches ->
-        uiState.copy(recentSearches = recentSearches)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(2_000),
         initialValue = null
     )
 
-    @OptIn(ExperimentalPagingApi::class)
     private fun pager(
         query: String?,
         source: FoodFilter.Source,
@@ -270,7 +277,7 @@ internal class FoodSearchViewModel(
                 source = source
             )
         }
-    ).flow.mapData(foodSearchMapper::toModel).cachedIn(viewModelScope)
+    ).flow.mapData(foodSearchMapper::toModel)
 
     private fun FoodSearchDao.observeFood(
         query: String?,
