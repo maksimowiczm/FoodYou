@@ -5,5 +5,14 @@ import java.util.Locale
 actual fun Float.formatClipZeros(format: String) = if (this % 1 == 0f) {
     toInt().toString()
 } else {
-    format.format(Locale.ENGLISH, this).trimEnd('0').trimEnd { !it.isDigit() }.ifEmpty { "0" }
+    // 1000.000 -> 1000
+    // 1000 -> 1000
+    val text = format.format(Locale.ENGLISH, this)
+
+    if (text.contains('.')) {
+        // Remove trailing zeros and dot if necessary
+        text.replace(Regex("\\.?0+$"), "")
+    } else {
+        text
+    }
 }
