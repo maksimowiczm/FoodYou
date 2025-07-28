@@ -16,14 +16,9 @@ fun Measurement.weight(recipe: Recipe): Float = when (this) {
     is Measurement.Serving -> recipe.servingWeight.let(::weight)
 }
 
-fun Measurement.weight(food: FoodSearch.Product) = when (this) {
+fun Measurement.weight(food: FoodSearch.Product): Float? = when (this) {
     is Measurement.Gram -> value
     is Measurement.Milliliter -> value
-    is Measurement.Package -> food.totalWeight?.let { totalWeight ->
-        weight(totalWeight) / 100f
-    }
-
-    is Measurement.Serving -> food.servingWeight?.let { servingWeight ->
-        weight(servingWeight) / 100f
-    }
+    is Measurement.Package -> food.totalWeight?.let(::weight)
+    is Measurement.Serving -> food.servingWeight?.let(::weight)
 }
