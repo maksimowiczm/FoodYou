@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.food.data.database
 
+import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEventDao
 import com.maksimowiczm.foodyou.feature.food.data.database.food.ProductDao
-import com.maksimowiczm.foodyou.feature.food.data.database.food.ProductEventDao
 import com.maksimowiczm.foodyou.feature.food.data.database.food.RecipeDao
 import com.maksimowiczm.foodyou.feature.food.data.database.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.feature.food.data.database.search.FoodSearchDao
@@ -13,5 +13,5 @@ interface FoodDatabase {
     val foodSearchDao: FoodSearchDao
     val openFoodFactsDao: OpenFoodFactsDao
     val usdaPagingKeyDao: USDAPagingKeyDao
-    val productEventDao: ProductEventDao
+    val foodEventDao: FoodEventDao
 }

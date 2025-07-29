@@ -53,9 +53,9 @@ import com.maksimowiczm.foodyou.core.ui.unorderedList
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.food.domain.Food
+import com.maksimowiczm.foodyou.feature.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.Product
-import com.maksimowiczm.foodyou.feature.food.domain.ProductEvent
 import com.maksimowiczm.foodyou.feature.food.domain.Recipe
 import com.maksimowiczm.foodyou.feature.food.domain.RecipeIngredient
 import com.maksimowiczm.foodyou.feature.food.domain.weight
@@ -85,7 +85,7 @@ internal fun FoodMeasurementScreen(
     onMeasure: (Measurement, mealId: Long, LocalDate) -> Unit,
     onUnpack: (Measurement, mealId: Long, LocalDate) -> Unit,
     food: Food,
-    productEvents: List<ProductEvent>?,
+    foodEvents: List<FoodEvent>?,
     today: LocalDate,
     selectedDate: LocalDate,
     meals: List<Meal>,
@@ -277,11 +277,11 @@ internal fun FoodMeasurementScreen(
                 }
             }
 
-            if (!productEvents.isNullOrEmpty()) {
+            if (!foodEvents.isNullOrEmpty()) {
                 item {
                     HorizontalDivider()
-                    ProductEvents(
-                        events = productEvents,
+                    FoodEvents(
+                        events = foodEvents,
                         modifier = Modifier.padding(
                             vertical = 16.dp,
                             horizontal = 8.dp
@@ -579,7 +579,7 @@ private fun FoodMeasurementForm(state: ProductMeasurementFormState, modifier: Mo
 }
 
 @Composable
-private fun ProductEvents(events: List<ProductEvent>, modifier: Modifier = Modifier) {
+private fun FoodEvents(events: List<FoodEvent>, modifier: Modifier = Modifier) {
     val dateFormatter = LocalDateFormatter.current
     val strings = events.map {
         it.stringResource() + ", " + dateFormatter.formatDateTime(it.date)
@@ -602,9 +602,9 @@ private fun ProductEvents(events: List<ProductEvent>, modifier: Modifier = Modif
 }
 
 @Composable
-private fun ProductEvent.stringResource(): String = when (this) {
-    is ProductEvent.Created -> stringResource(Res.string.headline_created)
-    is ProductEvent.Downloaded -> stringResource(Res.string.headline_downloaded)
-    is ProductEvent.Imported -> stringResource(Res.string.headline_imported)
-    is ProductEvent.Edited -> stringResource(Res.string.headline_edited)
+private fun FoodEvent.stringResource(): String = when (this) {
+    is FoodEvent.Created -> stringResource(Res.string.headline_created)
+    is FoodEvent.Downloaded -> stringResource(Res.string.headline_downloaded)
+    is FoodEvent.Imported -> stringResource(Res.string.headline_imported)
+    is FoodEvent.Edited -> stringResource(Res.string.headline_edited)
 }

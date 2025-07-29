@@ -6,11 +6,10 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.core.util.DateProvider
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
+import com.maksimowiczm.foodyou.feature.food.domain.FoodEventMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.Product
-import com.maksimowiczm.foodyou.feature.food.domain.ProductEvent
-import com.maksimowiczm.foodyou.feature.food.domain.ProductEventMapper
 import com.maksimowiczm.foodyou.feature.food.domain.Recipe
 import com.maksimowiczm.foodyou.feature.food.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.feature.food.domain.weight
@@ -30,7 +29,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapValues
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -44,7 +42,7 @@ internal class UpdateMeasurementViewModel(
     foodDatabase: FoodDatabase,
     foodDiaryDatabase: FoodDiaryDatabase,
     dateProvider: DateProvider,
-    productEventMapper: ProductEventMapper,
+    foodEventMapper: FoodEventMapper,
     private val measurementId: Long
 ) : ViewModel() {
 
@@ -52,7 +50,7 @@ internal class UpdateMeasurementViewModel(
     private val mealsDao = foodDiaryDatabase.mealDao
     private val productDao = foodDatabase.productDao
     private val recipeDao = foodDatabase.recipeDao
-    private val productEventDao = foodDatabase.productEventDao
+    private val foodEventDao = foodDatabase.foodEventDao
 
     private val measurementEntity =
         foodDiaryDatabase.measurementDao.observeMeasurementById(measurementId).filterNotNull()
@@ -124,20 +122,19 @@ internal class UpdateMeasurementViewModel(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val productEvents: StateFlow<List<ProductEvent>?> = food
+    val foodEvents = food
         .filterNotNull()
         .flatMapLatest { food ->
-            if (food is Product) {
-                productEventDao
-                    .observeEvents(food.id.id)
-                    .mapValues(productEventMapper::toModel)
-            } else {
-                flowOf(null)
-            }
-        }.stateIn(
+            foodEventDao.observeEvents(
+                productId = (food.id as? FoodId.Product)?.id,
+                recipeId = (food.id as? FoodId.Recipe)?.id
+            )
+        }
+        .mapValues(foodEventMapper::toModel)
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = null
+            initialValue = emptyList()
         )
 
     private val eventBus = Channel<MeasurementEvent>()

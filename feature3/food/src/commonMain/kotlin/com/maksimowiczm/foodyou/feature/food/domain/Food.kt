@@ -1,7 +1,9 @@
 package com.maksimowiczm.foodyou.feature.food.domain
 
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement
+import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface Food {
     val id: FoodId
     val headline: String

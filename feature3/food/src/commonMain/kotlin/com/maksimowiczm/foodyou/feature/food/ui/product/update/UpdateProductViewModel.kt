@@ -4,10 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.UpdateProductUseCase
 import com.maksimowiczm.foodyou.feature.food.ui.product.ProductFormState
-import com.maksimowiczm.foodyou.feature.food.ui.product.toProduct
+import com.maksimowiczm.foodyou.feature.food.ui.product.nutritionFacts
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -48,14 +49,23 @@ internal class UpdateProductViewModel(
             return
         }
 
-        val product = form.toProduct(multiplier, productId).getOrElse {
-            Logger.w(TAG) { "Failed to convert form state to Product entity: ${it.message}" }
-            return
-        }
-
         viewModelScope.launch {
             runCatching {
-                updateProductUseCase.update(product)
+                updateProductUseCase.update(
+                    id = productId,
+                    name = form.name.value,
+                    brand = form.brand.value,
+                    barcode = form.barcode.value,
+                    nutritionFacts = form.nutritionFacts(multiplier),
+                    packageWeight = form.packageWeight.value,
+                    servingWeight = form.servingWeight.value,
+                    note = form.note.value,
+                    source = FoodSource(
+                        type = form.sourceType,
+                        url = form.sourceUrl.value
+                    ),
+                    isLiquid = form.isLiquid
+                )
                 eventBus.send(UpdateProductEvent.Updated)
             }
         }

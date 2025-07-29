@@ -6,38 +6,72 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDateTime
 
 interface UpdateProductUseCase {
-    suspend fun update(product: Product)
+    suspend fun update(
+        id: FoodId.Product,
+        name: String,
+        brand: String?,
+        nutritionFacts: NutritionFacts,
+        barcode: String?,
+        packageWeight: Float?,
+        servingWeight: Float?,
+        note: String?,
+        source: FoodSource,
+        isLiquid: Boolean
+    )
 }
 
 internal class UpdateProductUseCaseImpl(
     foodDatabase: FoodDatabase,
     private val productMapper: ProductMapper,
-    private val productEventMapper: ProductEventMapper
+    private val foodEventMapper: FoodEventMapper
 ) : UpdateProductUseCase {
     private val productDao = foodDatabase.productDao
-    private val productEventDao = foodDatabase.productEventDao
+    private val foodEventDao = foodDatabase.foodEventDao
 
-    override suspend fun update(product: Product) {
-        val oldProduct = productDao
-            .observe(product.id.id)
-            .firstOrNull()
-            ?.let(productMapper::toModel)
+    override suspend fun update(
+        id: FoodId.Product,
+        name: String,
+        brand: String?,
+        nutritionFacts: NutritionFacts,
+        barcode: String?,
+        packageWeight: Float?,
+        servingWeight: Float?,
+        note: String?,
+        source: FoodSource,
+        isLiquid: Boolean
+    ) {
+        val oldProduct = productDao.observe(id.id).firstOrNull()
 
         if (oldProduct == null) {
-            error("Product with id ${product.id.id} does not exist.")
+            error("Product with id ${id.id} does not exist.")
         }
 
-        val entity = productMapper.toEntity(product)
-        productDao.update(entity)
-
-        val eventEntity = productEventMapper.toEntity(
-            model = ProductEvent.Edited(
-                date = LocalDateTime.now(),
-                oldProduct = oldProduct
-            ),
-            productId = product.id.id
+        val (nutrients, vitamins, minerals) = productMapper.toEntityNutrients(nutritionFacts)
+        val updatedProduct = oldProduct.copy(
+            name = name,
+            brand = brand,
+            barcode = barcode,
+            nutrients = nutrients,
+            vitamins = vitamins,
+            minerals = minerals,
+            packageWeight = packageWeight,
+            servingWeight = servingWeight,
+            note = note,
+            sourceType = source.type,
+            sourceUrl = source.url,
+            isLiquid = isLiquid
         )
 
-        productEventDao.insert(eventEntity)
+        productDao.update(updatedProduct)
+
+        val eventEntity = foodEventMapper.toEntity(
+            model = FoodEvent.Edited(
+                date = LocalDateTime.now(),
+                oldFood = productMapper.toModel(oldProduct)
+            ),
+            foodId = id
+        )
+
+        foodEventDao.insert(eventEntity)
     }
 }

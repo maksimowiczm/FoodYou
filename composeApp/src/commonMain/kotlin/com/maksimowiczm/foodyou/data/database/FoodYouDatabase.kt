@@ -7,8 +7,8 @@ import com.maksimowiczm.foodyou.feature.about.data.database.AboutDatabase
 import com.maksimowiczm.foodyou.feature.about.data.database.Sponsorship
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.SourceTypeConverter
+import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEvent
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
-import com.maksimowiczm.foodyou.feature.food.data.database.food.ProductEvent
 import com.maksimowiczm.foodyou.feature.food.data.database.food.ProductEventTypeConverter
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe
 import com.maksimowiczm.foodyou.feature.food.data.database.food.RecipeIngredient
@@ -33,7 +33,7 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
         OpenFoodFactsPagingKey::class,
         SearchEntry::class,
         USDAPagingKey::class,
-        ProductEvent::class
+        FoodEvent::class
     ],
     views = [
         RecipeAllIngredientsView::class

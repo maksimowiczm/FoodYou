@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
-import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.ProductEvent
+import com.maksimowiczm.foodyou.feature.food.domain.FoodEvent
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.ui.product.ProductFormState
-import com.maksimowiczm.foodyou.feature.food.ui.product.toProduct
+import com.maksimowiczm.foodyou.feature.food.ui.product.nutritionFacts
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -38,15 +38,21 @@ internal class CreateProductViewModel(private val createProductUseCase: CreatePr
             return
         }
 
-        val product = form.toProduct(multiplier, FoodId.Product(-1L)).getOrElse {
-            Logger.w(TAG) { "Failed to convert form state to Product entity: ${it.message}" }
-            return
-        }
-
         viewModelScope.launch {
             val id = createProductUseCase.create(
-                product = product,
-                event = ProductEvent.Created(LocalDateTime.now())
+                name = form.name.value,
+                brand = form.brand.value,
+                barcode = form.barcode.value,
+                nutritionFacts = form.nutritionFacts(multiplier),
+                packageWeight = form.packageWeight.value,
+                servingWeight = form.servingWeight.value,
+                note = form.note.value,
+                source = FoodSource(
+                    type = form.sourceType,
+                    url = form.sourceUrl.value
+                ),
+                isLiquid = form.isLiquid,
+                event = FoodEvent.Created(LocalDateTime.now())
             )
             eventBus.send(CreateProductEvent.Created(id))
         }

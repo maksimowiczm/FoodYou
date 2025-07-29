@@ -12,6 +12,9 @@ import com.maksimowiczm.foodyou.feature.measurement.ui.Saver
  */
 @Immutable
 internal data class MinimalIngredient(val foodId: FoodId, val measurement: Measurement) {
+
+    fun intoPair(): Pair<FoodId, Measurement> = foodId to measurement
+
     companion object {
         val ListSaver
             get() = Saver<List<MinimalIngredient>, List<Map<String, ArrayList<Any>?>>>(

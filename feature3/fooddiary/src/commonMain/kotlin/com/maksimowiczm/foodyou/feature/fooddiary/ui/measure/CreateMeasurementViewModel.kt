@@ -6,9 +6,9 @@ import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.core.util.DateProvider
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
+import com.maksimowiczm.foodyou.feature.food.domain.FoodEventMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.feature.food.domain.ProductEventMapper
 import com.maksimowiczm.foodyou.feature.food.domain.Recipe
 import com.maksimowiczm.foodyou.feature.food.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.feature.food.domain.weight
@@ -42,14 +42,14 @@ internal class CreateMeasurementViewModel(
     foodDatabase: FoodDatabase,
     foodDiaryDatabase: FoodDiaryDatabase,
     dateProvider: DateProvider,
-    productEventMapper: ProductEventMapper,
+    foodEventMapper: FoodEventMapper,
     private val foodId: FoodId
 ) : ViewModel() {
     private val productDao = foodDatabase.productDao
     private val recipeDao = foodDatabase.recipeDao
     private val mealsDao = foodDiaryDatabase.mealDao
     private val measurementDao = foodDiaryDatabase.measurementDao
-    private val productEventDao = foodDatabase.productEventDao
+    private val foodEventDao = foodDatabase.foodEventDao
 
     val food = observeFoodUseCase.observe(foodId).stateIn(
         scope = viewModelScope,
@@ -116,16 +116,17 @@ internal class CreateMeasurementViewModel(
             initialValue = null
         )
 
-    val productEvents = (foodId as? FoodId.Product)?.let { productId ->
-        productEventDao
-            .observeEvents(productId.id)
-            .mapValues(productEventMapper::toModel)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
-                initialValue = emptyList()
-            )
-    }
+    val foodEvents = foodEventDao
+        .observeEvents(
+            productId = (foodId as? FoodId.Product)?.id,
+            recipeId = (foodId as? FoodId.Recipe)?.id
+        )
+        .mapValues(foodEventMapper::toModel)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = emptyList()
+        )
 
     private val eventBus = Channel<MeasurementEvent>()
     val events = eventBus.receiveAsFlow()

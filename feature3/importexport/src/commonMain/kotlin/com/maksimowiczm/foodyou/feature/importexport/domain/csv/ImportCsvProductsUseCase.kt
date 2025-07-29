@@ -2,8 +2,8 @@ package com.maksimowiczm.foodyou.feature.importexport.domain.csv
 
 import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
+import com.maksimowiczm.foodyou.feature.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
-import com.maksimowiczm.foodyou.feature.food.domain.ProductEvent
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.importexport.domain.ProductField
 import com.maksimowiczm.foodyou.feature.importexport.domain.ProductFieldMapMapper
@@ -81,8 +81,19 @@ internal class ImportCsvProductsUseCaseImpl(
                 }.map {
                     val model = productMapper.toModel(it)
                     createProductUseCase.createUnique(
-                        product = model,
-                        event = ProductEvent.Imported(now)
+                        name = model.name,
+                        brand = model.brand,
+                        barcode = model.barcode,
+                        nutritionFacts = model.nutritionFacts,
+                        packageWeight = model.packageWeight,
+                        servingWeight = model.servingWeight,
+                        note = model.note,
+                        source = FoodSource(
+                            type = it.sourceType,
+                            url = it.sourceUrl
+                        ),
+                        isLiquid = model.isLiquid,
+                        event = FoodEvent.Imported(now)
                     )
                 }
 

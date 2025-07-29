@@ -1,7 +1,9 @@
 package com.maksimowiczm.foodyou.feature.food.domain
 
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Recipe(
     override val id: FoodId.Recipe,
     val name: String,

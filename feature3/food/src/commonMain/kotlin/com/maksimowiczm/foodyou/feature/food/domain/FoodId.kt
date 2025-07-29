@@ -11,26 +11,37 @@ import kotlinx.serialization.encoding.Encoder
 
 sealed interface FoodId {
 
-    @Serializable(with = FoodIdProductAsLongSerializer::class)
+    @Serializable(with = ProductIdSerializer::class)
     @JvmInline
     value class Product(val id: Long) : FoodId
 
+    @Serializable(with = RecipeIdSerializer::class)
     @JvmInline
     value class Recipe(val id: Long) : FoodId
 }
 
-object FoodIdProductAsLongSerializer : KSerializer<FoodId.Product> {
+abstract class FoodIdAsLongSerializer<T : FoodId> : KSerializer<T> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
-        serialName = "FoodId.Product",
+        serialName = "FoodId",
         kind = PrimitiveKind.LONG
     )
 
-    override fun serialize(encoder: Encoder, value: FoodId.Product) {
-        encoder.encodeLong(value.id)
+    abstract fun deserialize(long: Long): T
+
+    override fun serialize(encoder: Encoder, value: T) {
+        when (value) {
+            is FoodId.Product -> encoder.encodeLong(value.id)
+            is FoodId.Recipe -> encoder.encodeLong(value.id)
+        }
     }
 
-    override fun deserialize(decoder: Decoder): FoodId.Product {
-        val id = decoder.decodeLong()
-        return FoodId.Product(id)
-    }
+    override fun deserialize(decoder: Decoder): T = deserialize(decoder.decodeLong())
+}
+
+object ProductIdSerializer : FoodIdAsLongSerializer<FoodId.Product>() {
+    override fun deserialize(long: Long): FoodId.Product = FoodId.Product(long)
+}
+
+object RecipeIdSerializer : FoodIdAsLongSerializer<FoodId.Recipe>() {
+    override fun deserialize(long: Long): FoodId.Recipe = FoodId.Recipe(long)
 }

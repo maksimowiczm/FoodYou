@@ -10,7 +10,8 @@ import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
 import com.maksimowiczm.foodyou.feature.food.data.database.openfoodfacts.OpenFoodFactsPagingKey
 import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
-import com.maksimowiczm.foodyou.feature.food.domain.ProductEvent
+import com.maksimowiczm.foodyou.feature.food.domain.FoodEvent
+import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.OpenFoodFactsRemoteDataSource
@@ -64,8 +65,19 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
 
                     if (product != null) {
                         createProductUseCase.createUnique(
-                            product = productMapper.toModel(product),
-                            event = ProductEvent.Downloaded(LocalDateTime.now(), product.sourceUrl)
+                            name = product.name,
+                            brand = product.brand,
+                            barcode = product.barcode,
+                            nutritionFacts = productMapper.toModel(product).nutritionFacts,
+                            packageWeight = product.packageWeight,
+                            servingWeight = product.servingWeight,
+                            note = product.note,
+                            source = FoodSource(
+                                type = product.sourceType,
+                                url = product.sourceUrl
+                            ),
+                            isLiquid = product.isLiquid,
+                            event = FoodEvent.Downloaded(LocalDateTime.now(), product.sourceUrl)
                         )
                     }
                     return MediatorResult.Success(endOfPaginationReached = true)
@@ -119,11 +131,21 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
             }
 
             val now = LocalDateTime.now()
-            products.filterNotNull().forEach {
-                val product = productMapper.toModel(it)
+            products.filterNotNull().forEach { product ->
                 createProductUseCase.createUnique(
-                    product = product,
-                    event = ProductEvent.Downloaded(now, it.sourceUrl)
+                    name = product.name,
+                    brand = product.brand,
+                    barcode = product.barcode,
+                    nutritionFacts = productMapper.toModel(product).nutritionFacts,
+                    packageWeight = product.packageWeight,
+                    servingWeight = product.servingWeight,
+                    note = product.note,
+                    source = FoodSource(
+                        type = product.sourceType,
+                        url = product.sourceUrl
+                    ),
+                    isLiquid = product.isLiquid,
+                    event = FoodEvent.Downloaded(now, product.sourceUrl)
                 )
             }
 

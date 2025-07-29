@@ -2,15 +2,12 @@ package com.maksimowiczm.foodyou.feature.food.ui.recipe.update
 
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe
-import com.maksimowiczm.foodyou.feature.food.data.database.food.RecipeIngredient
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.feature.food.domain.UpdateRecipeUseCase
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.RecipeFormState
 import com.maksimowiczm.foodyou.feature.food.ui.recipe.RecipeViewModel
-import com.maksimowiczm.foodyou.feature.measurement.domain.rawValue
-import com.maksimowiczm.foodyou.feature.measurement.domain.type
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -18,12 +15,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class UpdateRecipeViewModel(
-    foodDatabase: FoodDatabase,
     private val foodId: FoodId.Recipe,
-    observeFoodUseCase: ObserveFoodUseCase
+    observeFoodUseCase: ObserveFoodUseCase,
+    private val updateRecipeUseCase: UpdateRecipeUseCase
 ) : RecipeViewModel(observeFoodUseCase) {
-
-    private val recipeDao = foodDatabase.recipeDao
 
     val recipe = observeFoodUseCase.observe(foodId).stateIn(
         scope = viewModelScope,
@@ -48,33 +43,14 @@ internal class UpdateRecipeViewModel(
             return
         }
 
-        val ingredients = form.ingredients.map { ingredient ->
-            RecipeIngredient(
-                ingredientRecipeId = (ingredient.foodId as? FoodId.Recipe)?.id,
-                ingredientProductId = (ingredient.foodId as? FoodId.Product)?.id,
-                measurement = ingredient.measurement.type,
-                quantity = ingredient.measurement.rawValue
-            )
-        }
-
-        // Check circular reference
-        if (ingredients.any { it.ingredientRecipeId == foodId.id }) {
-            Logger.w(TAG) { "Circular reference detected in ingredients, cannot update recipe." }
-            return
-        }
-
-        val recipe = Recipe(
-            id = foodId.id,
-            name = form.name.value,
-            servings = form.servings.value,
-            note = form.note.value,
-            isLiquid = form.isLiquid
-        )
-
         viewModelScope.launch {
-            recipeDao.updateRecipeWithIngredients(
-                recipe = recipe,
-                ingredients = ingredients
+            updateRecipeUseCase.update(
+                id = foodId,
+                name = form.name.value,
+                servings = form.servings.value,
+                note = form.note.value,
+                isLiquid = form.isLiquid,
+                ingredients = form.ingredients.map { it.intoPair() }
             )
 
             eventBus.send(UpdateRecipeEvent.Updated)

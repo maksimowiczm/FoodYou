@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "bd337823ff7d25aed39a2d717190d7d7",
+    "identityHash": "e7daea9ee1f6a10699167580e3551101",
     "entities": [
       {
         "tableName": "Sponsorship",
@@ -799,8 +799,8 @@
         }
       },
       {
-        "tableName": "ProductEvent",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` INTEGER NOT NULL, `epochSeconds` INTEGER NOT NULL, `extra` TEXT, `productId` INTEGER NOT NULL, FOREIGN KEY(`productId`) REFERENCES `Product`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "tableName": "FoodEvent",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` INTEGER NOT NULL, `epochSeconds` INTEGER NOT NULL, `extra` TEXT, `productId` INTEGER, `recipeId` INTEGER, FOREIGN KEY(`productId`) REFERENCES `Product`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`recipeId`) REFERENCES `Recipe`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -828,8 +828,12 @@
           {
             "fieldPath": "productId",
             "columnName": "productId",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "recipeId",
+            "columnName": "recipeId",
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -838,6 +842,26 @@
             "id"
           ]
         },
+        "indices": [
+          {
+            "name": "index_FoodEvent_productId",
+            "unique": false,
+            "columnNames": [
+              "productId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_FoodEvent_productId` ON `${TABLE_NAME}` (`productId`)"
+          },
+          {
+            "name": "index_FoodEvent_recipeId",
+            "unique": false,
+            "columnNames": [
+              "recipeId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_FoodEvent_recipeId` ON `${TABLE_NAME}` (`recipeId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "Product",
@@ -845,6 +869,17 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "productId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "Recipe",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "recipeId"
             ],
             "referencedColumns": [
               "id"
@@ -861,7 +896,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bd337823ff7d25aed39a2d717190d7d7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e7daea9ee1f6a10699167580e3551101')"
     ]
   }
 }

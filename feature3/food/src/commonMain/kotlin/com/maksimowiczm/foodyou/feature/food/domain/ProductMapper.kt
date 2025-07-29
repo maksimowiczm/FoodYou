@@ -9,7 +9,9 @@ import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue.Companion.toNu
 interface ProductMapper {
     fun toModel(entity: ProductEntity): Product
 
-    fun toEntity(model: Product): ProductEntity
+    fun toModel(nutrients: Nutrients, vitamins: Vitamins, minerals: Minerals): NutritionFacts
+
+    fun toEntityNutrients(nutritionFacts: NutritionFacts): Triple<Nutrients, Vitamins, Minerals>
 }
 
 internal class ProductMapperImpl : ProductMapper {
@@ -19,7 +21,7 @@ internal class ProductMapperImpl : ProductMapper {
         name = entity.name,
         brand = entity.brand,
         barcode = entity.barcode,
-        nutritionFacts = toNutritionFacts(
+        nutritionFacts = toModel(
             nutrients = entity.nutrients,
             vitamins = entity.vitamins,
             minerals = entity.minerals
@@ -34,27 +36,7 @@ internal class ProductMapperImpl : ProductMapper {
         isLiquid = entity.isLiquid
     )
 
-    override fun toEntity(model: Product): ProductEntity {
-        val (nutrients, vitamins, minerals) = toEntityNutrients(model.nutritionFacts)
-
-        return ProductEntity(
-            id = model.id.id,
-            name = model.name,
-            brand = model.brand,
-            barcode = model.barcode,
-            nutrients = nutrients,
-            vitamins = vitamins,
-            minerals = minerals,
-            packageWeight = model.packageWeight,
-            servingWeight = model.servingWeight,
-            note = model.note,
-            sourceType = model.source.type,
-            sourceUrl = model.source.url,
-            isLiquid = model.isLiquid
-        )
-    }
-
-    private fun toNutritionFacts(nutrients: Nutrients, vitamins: Vitamins, minerals: Minerals) =
+    override fun toModel(nutrients: Nutrients, vitamins: Vitamins, minerals: Minerals) =
         NutritionFacts(
             proteins = nutrients.proteins.toNutrientValue(),
             carbohydrates = nutrients.carbohydrates.toNutrientValue(),
@@ -101,7 +83,7 @@ internal class ProductMapperImpl : ProductMapper {
             chromiumMicro = minerals.chromiumMicro.toNutrientValue()
         )
 
-    private fun toEntityNutrients(
+    override fun toEntityNutrients(
         nutritionFacts: NutritionFacts
     ): Triple<Nutrients, Vitamins, Minerals> {
         val nutrients = Nutrients(
