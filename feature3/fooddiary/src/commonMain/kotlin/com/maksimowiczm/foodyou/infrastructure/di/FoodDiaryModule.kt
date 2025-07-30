@@ -4,6 +4,7 @@ import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMealsUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMealsUseCaseImpl
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMeasurementSuggestionsUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMeasurementSuggestionsUseCaseImpl
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchViewModel
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.card.MealsCardsViewModel
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateMeasurementViewModel
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateMeasurementViewModel
@@ -20,4 +21,5 @@ val foodDiaryModule = module {
     factoryOf(
         ::ObserveMeasurementSuggestionsUseCaseImpl
     ).bind<ObserveMeasurementSuggestionsUseCase>()
+    viewModelOf(::FoodSearchViewModel)
 }

@@ -94,4 +94,26 @@ interface MeasurementDao {
         """
     )
     fun observeFoodWithMeasurement(mealId: Long, epochDay: Long): Flow<List<FoodWithMeasurement>>
+
+    @Query(
+        """
+        SELECT m.*
+        FROM Measurement m
+        WHERE 
+            m.createdAt * 1000 > :createdAtMillis
+            AND m.isDeleted = 0
+        """
+    )
+    fun observeMeasurementsAfter(createdAtMillis: Long): Flow<List<Measurement>>
+
+    @Query(
+        """
+        SELECT m.*
+        FROM Measurement m
+        WHERE m.isDeleted = 0
+        ORDER BY m.createdAt DESC
+        LIMIT 1
+        """
+    )
+    suspend fun getLatestMeasurement(): Measurement?
 }

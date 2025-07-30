@@ -435,4 +435,6 @@
 
     <string name="action_done">Done</string>
 
+    <string name="neutral_measurement_added">Got it! We've added your measurement</string>
+
 </resources>

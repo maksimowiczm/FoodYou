@@ -26,6 +26,8 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -42,16 +44,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.BackHandler
 import com.maksimowiczm.foodyou.core.ui.Scrim
+import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.ui.FoodSearchApp
 import com.maksimowiczm.foodyou.feature.food.ui.FoodSearchAppDefaults
-import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import com.valentinilk.shimmer.shimmer
+import foodyou.app.generated.resources.*
+import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalDate
-import org.koin.compose.koinInject
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(
     ExperimentalMaterial3ExpressiveApi::class,
@@ -69,16 +75,17 @@ fun FoodSearchScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
-    val database: FoodDiaryDatabase = koinInject()
-    val meal = database.mealDao.observeMealById(mealId).collectAsStateWithLifecycle(null).value
-
+    val viewModel = koinViewModel<FoodSearchViewModel> {
+        parametersOf(mealId)
+    }
     val dateFormatter = LocalDateFormatter.current
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val meal = viewModel.meal.collectAsStateWithLifecycle().value
 
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
     BackHandler(fabExpanded) { fabExpanded = false }
 
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val topBar = @Composable {
         TopAppBar(
             title = {
@@ -122,10 +129,19 @@ fun FoodSearchScreen(
         )
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val feedbackText = stringResource(Res.string.neutral_measurement_added)
+    LaunchedCollectWithLifecycle(viewModel.measurementSizeEvents) { size ->
+        if (size > 0) {
+            delay(100)
+            snackbarHostState.showSnackbar(feedbackText)
+        }
+    }
+
     Box(modifier) {
         val fabInsets = WindowInsets.systemBars
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-            .add(WindowInsets.displayCutout)
+            .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
         FoodSearchAppDefaults.FloatingActionButton(
             fabExpanded = fabExpanded,
@@ -151,9 +167,17 @@ fun FoodSearchScreen(
         )
         Scaffold(
             topBar = topBar,
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(
                 WindowInsetsSides.Top
             ),
+            floatingActionButton = {
+                Box(
+                    modifier = Modifier
+                        .windowInsetsPadding(fabInsets)
+                        .height(56.dp)
+                )
+            },
             content = content
         )
     }
