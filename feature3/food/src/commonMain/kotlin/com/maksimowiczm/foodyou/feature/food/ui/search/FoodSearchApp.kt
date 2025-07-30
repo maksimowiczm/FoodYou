@@ -151,7 +151,10 @@ private fun FoodSearchApp(
 
     FullScreenCameraBarcodeScanner(
         visible = appState.showBarcodeScanner,
-        onBarcodeScan = onSearch,
+        onBarcodeScan = {
+            appState.showBarcodeScanner = false
+            onSearch(it)
+        },
         onClose = { appState.showBarcodeScanner = false }
     )
 
