@@ -6,11 +6,11 @@ import kotlinx.datetime.LocalDate
 
 object Changelog {
     val currentVersion: Version?
-        get() = versions.firstOrNull { it.isCurrentVersion } ?: next
+        get() = versions.firstOrNull { it.isCurrentVersion } ?: v_3_0_0_beta_1
 
     val versions: List<Version>
         get() = listOfNotNull(
-            next,
+            v_3_0_0_beta_1,
             v2_10_1,
             v2_10_0,
             v2_9_0,
@@ -30,12 +30,27 @@ object Changelog {
             v2_0_0
         )
 
-    val next = Version.next(
-        newFeatures = listOf(),
-        changes = listOf(),
-        bugFixes = listOf(),
-        translations = listOf(),
-        notes = null
+    val v_3_0_0_beta_1 = Version(
+        version = "3.0.0-beta.1",
+        date = LocalDate(2025, 7, 30),
+        newFeatures = listOf(
+            "Added in-app search integration for OpenFoodFacts.",
+            "Added in-app search integration for FoodData Central (USDA).",
+            "Introduced sponsors screen to thank everyone supporting the app financially.",
+            "Implemented on boarding flow to let you choose which databases to use.",
+            "Added food source for each item.",
+            "Redesigned food search screen with filtering options."
+        ),
+        changes = listOf(
+            "Refreshed food search screen UI.",
+            "Refreshed settings screen UI.",
+            "Refreshed measurement screen UI.",
+            "Refreshed product and recipe forms.",
+            "Simplified nutrition facts preferences: only reordering is allowed, hiding is no longer supported.",
+            "Changed default nutrition facts order to: proteins, fats, carbohydrates.",
+            "Updated Swiss Food Composition Database to version v7.0."
+        ),
+        isPreview = true
     )
 
     val v2_10_1 = Version(
