@@ -1,9 +1,9 @@
 default:
     @just --list
 
-# KTLINT_COMPOSE_JAR - path to the ktlint-compose jar file
+# $KTFMT_JAR - path to the ktfmt jar file
 format:
-    @ktlint -R $KTLINT_COMPOSE_JAR --editorconfig="./.editorconfig" --format
+    @find . -type f \( -name "*.kt" -o -name "*.kts" \) -not -path "*/build/*" | xargs java -jar $KTFMT_JAR --kotlinlang-style
 
 release:
     @./gradlew --no-daemon --no-build-cache clean
