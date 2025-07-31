@@ -19,4 +19,10 @@ sealed interface FoodEvent {
      * Represents an event when a food item is used by an user in any way.
      */
     class Used(override val date: LocalDateTime) : FoodEvent
+
+    /**
+     * Represents an event when a food item is imported from FoodYou2. This event is used to track
+     * the migration of data from the old app.
+     */
+    class ImportedFromFoodYou2(override val date: LocalDateTime) : FoodEvent
 }

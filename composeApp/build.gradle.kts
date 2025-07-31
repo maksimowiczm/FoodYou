@@ -81,6 +81,8 @@ kotlin {
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.androidx.room.testing)
+            implementation(libs.androidx.sqlite.bundled)
         }
 
         androidInstrumentedTest.dependencies {

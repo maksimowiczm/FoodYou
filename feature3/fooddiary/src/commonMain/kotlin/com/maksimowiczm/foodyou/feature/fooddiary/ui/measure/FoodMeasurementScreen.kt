@@ -610,4 +610,6 @@ private fun FoodEvent.stringResource(): String = when (this) {
     is FoodEvent.Imported -> stringResource(Res.string.headline_imported)
     is FoodEvent.Edited -> stringResource(Res.string.headline_edited)
     is FoodEvent.Used -> error("FoodEvent.Used should not be displayed in the history")
+    is FoodEvent.ImportedFromFoodYou2 ->
+        stringResource(Res.string.headline_imported_from_food_you_2)
 }

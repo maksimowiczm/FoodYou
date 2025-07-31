@@ -9,7 +9,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.binds
 import org.koin.dsl.module
 
-const val DATABASE_NAME = "FoodYouDatabase.db"
+const val DATABASE_NAME = "open_source_database.db"
 
 expect val databaseDefinition: Module.() -> KoinDefinition<FoodYouDatabase>
 

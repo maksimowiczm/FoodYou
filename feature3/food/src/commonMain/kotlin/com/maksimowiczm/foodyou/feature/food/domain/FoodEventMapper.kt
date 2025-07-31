@@ -43,6 +43,8 @@ internal class FoodEventMapperImpl : FoodEventMapper {
             }
 
             FoodEventType.Used -> FoodEvent.Used(date)
+
+            FoodEventType.ImportedFromFoodYou2 -> FoodEvent.ImportedFromFoodYou2(date)
         }
     }
 
@@ -55,6 +57,7 @@ internal class FoodEventMapperImpl : FoodEventMapper {
             is FoodEvent.Imported -> null
             is FoodEvent.Edited -> Json.encodeToString(oldFood)
             is FoodEvent.Used -> null
+            is FoodEvent.ImportedFromFoodYou2 -> null
         }
 
         val type = when (this) {
@@ -63,6 +66,7 @@ internal class FoodEventMapperImpl : FoodEventMapper {
             is FoodEvent.Imported -> FoodEventType.Imported
             is FoodEvent.Edited -> FoodEventType.Edited
             is FoodEvent.Used -> FoodEventType.Used
+            is FoodEvent.ImportedFromFoodYou2 -> FoodEventType.ImportedFromFoodYou2
         }
 
         FoodEventEntity(

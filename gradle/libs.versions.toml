@@ -34,6 +34,7 @@ reorderable = "2.5.1"
 room = "2.8.0-alpha01"
 runner = "1.6.2"
 sqliteAndroid = "3.49.0"
+sqliteBundled = "2.5.1"
 workRuntime = "2.10.2"
 zxingAndroidEmbedded = "4.3.0"
 
@@ -51,7 +52,9 @@ androidx-paging-common = { module = "androidx.paging:paging-common", version.ref
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqliteBundled" }
 androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "coreKtxVersion" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }

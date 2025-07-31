@@ -11,6 +11,7 @@ class FoodEventTypeConverter {
         FoodEventType.Imported -> FoodEventTypeSQLConstants.IMPORTED
         FoodEventType.Edited -> FoodEventTypeSQLConstants.EDITED
         FoodEventType.Used -> FoodEventTypeSQLConstants.USED
+        FoodEventType.ImportedFromFoodYou2 -> FoodEventTypeSQLConstants.IMPORTED_FROM_FOOD_YOU_2
     }
 
     @TypeConverter
@@ -20,6 +21,7 @@ class FoodEventTypeConverter {
         FoodEventTypeSQLConstants.IMPORTED -> FoodEventType.Imported
         FoodEventTypeSQLConstants.EDITED -> FoodEventType.Edited
         FoodEventTypeSQLConstants.USED -> FoodEventType.Used
+        FoodEventTypeSQLConstants.IMPORTED_FROM_FOOD_YOU_2 -> FoodEventType.ImportedFromFoodYou2
         else -> error("Unknown food event type: $type")
     }
 }
@@ -30,4 +32,5 @@ object FoodEventTypeSQLConstants {
     const val IMPORTED = 2
     const val EDITED = 3
     const val USED = 4
+    const val IMPORTED_FROM_FOOD_YOU_2 = 5
 }
