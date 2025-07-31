@@ -32,7 +32,7 @@ object Changelog {
 
     val v_3_0_0_beta_1 = Version(
         version = "3.0.0-beta.1",
-        date = LocalDate(2025, 7, 30),
+        date = LocalDate(2025, 7, 31),
         newFeatures = listOf(
             "Added in-app search integration for OpenFoodFacts.",
             "Added in-app search integration for FoodData Central (USDA).",
