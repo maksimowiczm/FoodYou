@@ -24,8 +24,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core-database"))
-
             implementation(libs.kotlinx.serialization.json)
 
             // Compose reorderable list
