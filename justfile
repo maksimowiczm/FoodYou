@@ -6,8 +6,8 @@ format:
     @ktlint -R $KTLINT_COMPOSE_JAR --editorconfig="./.editorconfig" --format
 
 release:
-    @./gradlew clean
-    @./gradlew --no-daemon assembleRelease
+    @./gradlew --no-daemon --no-build-cache clean
+    @./gradlew --no-daemon --no-build-cache assembleRelease
     @zipalign -f -p -v 4 \
       composeApp/build/outputs/apk/release/composeApp-release-unsigned.apk \
       composeApp/build/outputs/apk/release/aligned.apk
@@ -19,8 +19,8 @@ release:
       composeApp/build/outputs/apk/release/aligned.apk
 
 preview:
-    @./gradlew clean
-    @./gradlew --no-daemon assemblePreview
+    @./gradlew --no-daemon --no-build-cache clean
+    @./gradlew --no-daemon --no-build-cache assemblePreview
     @zipalign -f -p -v 4 \
       composeApp/build/outputs/apk/preview/composeApp-preview-unsigned.apk \
       composeApp/build/outputs/apk/preview/aligned.apk
