@@ -9,14 +9,15 @@ internal class USDAProductRequest(
     private val dataSource: USDARemoteDataSource,
     private val apiKey: String?,
     private val id: String,
-    private val mapper: USDAProductMapper
+    private val mapper: USDAProductMapper,
 ) : RemoteProductRequest {
-    override suspend fun execute(): Result<RemoteProduct?> = dataSource
-        .getProduct(id, apiKey)
-        .map { mapper.toRemoteProduct(it) }
-        .onFailure {
-            if (it is ProductNotFoundException) {
-                return Result.success(null)
+    override suspend fun execute(): Result<RemoteProduct?> =
+        dataSource
+            .getProduct(id, apiKey)
+            .map { mapper.toRemoteProduct(it) }
+            .onFailure {
+                if (it is ProductNotFoundException) {
+                    return Result.success(null)
+                }
             }
-        }
 }

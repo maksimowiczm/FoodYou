@@ -17,6 +17,5 @@ interface SponsorshipDao {
     @Query("SELECT * FROM Sponsorship ORDER BY sponsorshipEpochSeconds ASC LIMIT 1")
     suspend fun getOldestSponsorship(): Sponsorship?
 
-    @Upsert
-    suspend fun upsert(sponsorship: List<Sponsorship>)
+    @Upsert suspend fun upsert(sponsorship: List<Sponsorship>)
 }

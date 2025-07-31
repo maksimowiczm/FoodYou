@@ -5,6 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class OpenFoodFactsProductResponseV2(
-    @SerialName("product")
-    val product: OpenFoodFactsProductV2
+    @SerialName("product") val product: OpenFoodFactsProductV2
 )

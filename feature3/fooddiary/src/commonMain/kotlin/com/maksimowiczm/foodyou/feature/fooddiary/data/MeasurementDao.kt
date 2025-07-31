@@ -11,11 +11,9 @@ import kotlinx.coroutines.flow.first
 @Dao
 interface MeasurementDao {
 
-    @Insert
-    suspend fun insertMeasurement(measurement: Measurement)
+    @Insert suspend fun insertMeasurement(measurement: Measurement)
 
-    @Insert
-    suspend fun insertMeasurements(measurements: List<Measurement>)
+    @Insert suspend fun insertMeasurements(measurements: List<Measurement>)
 
     @Transaction
     suspend fun replaceMeasurement(measurementId: Long, measurements: List<Measurement>) {
@@ -29,8 +27,7 @@ interface MeasurementDao {
         insertMeasurements(measurements)
     }
 
-    @Update
-    suspend fun updateMeasurement(measurement: Measurement)
+    @Update suspend fun updateMeasurement(measurement: Measurement)
 
     @Transaction
     suspend fun deleteMeasurement(measurement: Measurement) {
@@ -77,7 +74,7 @@ interface MeasurementDao {
     fun observeMeasurementSuggestions(
         productId: Long?,
         recipeId: Long?,
-        limit: Int
+        limit: Int,
     ): Flow<List<MeasurementSuggestion>>
 
     @Transaction

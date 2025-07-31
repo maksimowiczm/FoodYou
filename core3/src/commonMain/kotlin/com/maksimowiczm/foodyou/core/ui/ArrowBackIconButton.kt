@@ -14,16 +14,12 @@ import org.jetbrains.compose.resources.stringResource
 fun ArrowBackIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier,
-        enabled = enabled
-    ) {
+    IconButton(onClick = onClick, modifier = modifier, enabled = enabled) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = stringResource(Res.string.action_go_back)
+            contentDescription = stringResource(Res.string.action_go_back),
         )
     }
 }

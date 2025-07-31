@@ -12,12 +12,8 @@ interface UsdaFoodPageResponse {
 
 @Serializable
 internal data class UsdaFoodPageResponseImpl(
-    @SerialName("totalHits")
-    override val totalHits: Int,
-    @SerialName("currentPage")
-    override val currentPage: Int,
-    @SerialName("totalPages")
-    override val totalPages: Int,
-    @SerialName("foods")
-    override val foods: List<SearchFood>
+    @SerialName("totalHits") override val totalHits: Int,
+    @SerialName("currentPage") override val currentPage: Int,
+    @SerialName("totalPages") override val totalPages: Int,
+    @SerialName("foods") override val foods: List<SearchFood>,
 ) : UsdaFoodPageResponse

@@ -9,49 +9,47 @@ import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 
 @Entity(
-    foreignKeys = [
-        ForeignKey(
-            entity = Meal::class,
-            parentColumns = ["id"],
-            childColumns = ["mealId"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = Product::class,
-            parentColumns = ["id"],
-            childColumns = ["productId"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = Recipe::class,
-            parentColumns = ["id"],
-            childColumns = ["recipeId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ],
-    indices = [
-        Index(value = ["mealId"]),
-        Index(value = ["epochDay"]),
-        Index(value = ["productId"]),
-        Index(value = ["recipeId"])
-    ]
+    foreignKeys =
+        [
+            ForeignKey(
+                entity = Meal::class,
+                parentColumns = ["id"],
+                childColumns = ["mealId"],
+                onDelete = ForeignKey.CASCADE,
+            ),
+            ForeignKey(
+                entity = Product::class,
+                parentColumns = ["id"],
+                childColumns = ["productId"],
+                onDelete = ForeignKey.CASCADE,
+            ),
+            ForeignKey(
+                entity = Recipe::class,
+                parentColumns = ["id"],
+                childColumns = ["recipeId"],
+                onDelete = ForeignKey.CASCADE,
+            ),
+        ],
+    indices =
+        [
+            Index(value = ["mealId"]),
+            Index(value = ["epochDay"]),
+            Index(value = ["productId"]),
+            Index(value = ["recipeId"]),
+        ],
 )
 data class Measurement(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val mealId: Long,
     val epochDay: Long,
 
     // Product or Recipe
     val productId: Long?,
     val recipeId: Long?,
-
     val measurement: MeasurementType,
     val quantity: Float,
 
-    /**
-     * Epoch seconds
-     */
+    /** Epoch seconds */
     val createdAt: Long,
-    val isDeleted: Boolean = false
+    val isDeleted: Boolean = false,
 )

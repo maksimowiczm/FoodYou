@@ -28,27 +28,22 @@ fun SettingsListItem(
     trailingContent: @Composable (() -> Unit)? = null,
     shape: Shape = RectangleShape,
     color: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
 ) {
     Surface(
         onClick = onClick,
         modifier = modifier,
         shape = shape,
         color = color,
-        contentColor = contentColor
+        contentColor = contentColor,
     ) {
         Row(
-            modifier = Modifier
-                .heightIn(
-                    min = 56.dp
-                )
-                .fillMaxWidth()
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 12.dp
-                ),
+            modifier =
+                Modifier.heightIn(min = 56.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             icon()
 

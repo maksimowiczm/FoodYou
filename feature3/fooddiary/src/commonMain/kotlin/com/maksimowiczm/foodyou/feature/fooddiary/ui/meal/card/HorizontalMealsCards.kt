@@ -34,7 +34,7 @@ internal fun HorizontalMealsCards(
     onLongClick: (mealId: Long) -> Unit,
     shimmer: Shimmer,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val orderPreference = userPreference<NutrientsOrderPreference>()
     val order = orderPreference.collectAsStateWithLifecycle(orderPreference.getBlocking()).value
@@ -43,32 +43,30 @@ internal fun HorizontalMealsCards(
     // extreme value. If it is less than actual meals count pager will scroll back to the
     // last item which is annoying for the user.
     // Let's assume that user won't use more than 20 meals
-    val pagerState = rememberPagerState(
-        pageCount = { meals?.size ?: 20 }
-    )
+    val pagerState = rememberPagerState(pageCount = { meals?.size ?: 20 })
 
     val transition = updateTransition(meals)
 
     HorizontalPager(
         state = pagerState,
-        modifier = modifier.animateContentSize(
-            animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
-        ),
+        modifier =
+            modifier.animateContentSize(
+                animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
+            ),
         verticalAlignment = Alignment.Top,
-        contentPadding = PaddingValues(
-            start = contentPadding.calculateStartPadding(LocalLayoutDirection.current),
-            end = 24.dp,
-            top = contentPadding.calculateTopPadding(),
-            bottom = contentPadding.calculateBottomPadding()
-        )
+        contentPadding =
+            PaddingValues(
+                start = contentPadding.calculateStartPadding(LocalLayoutDirection.current),
+                end = 24.dp,
+                top = contentPadding.calculateTopPadding(),
+                bottom = contentPadding.calculateBottomPadding(),
+            ),
     ) { page ->
         val meal = meals?.getOrNull(page)
 
         transition.Crossfade(
             contentKey = { it != null },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 2.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 2.dp),
         ) {
             if (it != null && meal != null) {
                 MealCard(
@@ -77,12 +75,10 @@ internal fun HorizontalMealsCards(
                     onAddFood = { onAdd(meal.id) },
                     onEditMeasurement = onEditMeasurement,
                     onDeleteEntry = onDeleteEntry,
-                    onLongClick = { onLongClick(meal.id) }
+                    onLongClick = { onLongClick(meal.id) },
                 )
             } else {
-                MealCardSkeleton(
-                    shimmer = shimmer
-                )
+                MealCardSkeleton(shimmer = shimmer)
             }
         }
     }

@@ -29,53 +29,51 @@ import kotlinx.coroutines.runBlocking
 internal class SponsorMessagesViewModel(
     private val database: AboutDatabase,
     private val sponsorshipApiClient: SponsorshipApiClient,
-    dataStore: DataStore<Preferences>
+    dataStore: DataStore<Preferences>,
 ) : ViewModel() {
 
     private val sponsorsAllowedPreference = dataStore.userPreference<SponsorsAllowed>()
 
     private val sponsorsOneTime = MutableStateFlow(false)
 
-    private val _sponsorsAllowed = combine(
-        sponsorsAllowedPreference.observe(),
-        sponsorsOneTime
-    ) { allowed, oneTime ->
-        allowed || oneTime
-    }
+    private val _sponsorsAllowed =
+        combine(sponsorsAllowedPreference.observe(), sponsorsOneTime) { allowed, oneTime ->
+            allowed || oneTime
+        }
 
-    val sponsorsAllowed = _sponsorsAllowed.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = runBlocking { _sponsorsAllowed.first() }
-    )
+    val sponsorsAllowed =
+        _sponsorsAllowed.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2_000),
+            initialValue = runBlocking { _sponsorsAllowed.first() },
+        )
 
     fun allowOnce() {
         sponsorsOneTime.value = true
     }
 
     fun allowAlways() {
-        viewModelScope.launch {
-            sponsorsAllowedPreference.set(true)
-        }
+        viewModelScope.launch { sponsorsAllowedPreference.set(true) }
     }
 
     @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
-    val sponsorshipPages: Flow<PagingData<Sponsorship>> = sponsorsAllowed.flatMapLatest { allowed ->
-        Pager(
-            config = PagingConfig(
-                pageSize = 20,
-                enablePlaceholders = true
-            ),
-            remoteMediator = if (allowed) {
-                SponsorshipsRemoteMediator(
-                    sponsorshipDao = database.sponsorshipDao,
-                    sponsorshipApiClient = sponsorshipApiClient
-                )
-            } else {
-                null
-            }
-        ) {
-            database.sponsorshipDao.pagedFromLatest()
-        }.flow.cachedIn(viewModelScope)
-    }
+    val sponsorshipPages: Flow<PagingData<Sponsorship>> =
+        sponsorsAllowed.flatMapLatest { allowed ->
+            Pager(
+                    config = PagingConfig(pageSize = 20, enablePlaceholders = true),
+                    remoteMediator =
+                        if (allowed) {
+                            SponsorshipsRemoteMediator(
+                                sponsorshipDao = database.sponsorshipDao,
+                                sponsorshipApiClient = sponsorshipApiClient,
+                            )
+                        } else {
+                            null
+                        },
+                ) {
+                    database.sponsorshipDao.pagedFromLatest()
+                }
+                .flow
+                .cachedIn(viewModelScope)
+        }
 }

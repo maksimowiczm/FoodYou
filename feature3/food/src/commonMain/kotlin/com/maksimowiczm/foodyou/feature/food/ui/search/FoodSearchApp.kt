@@ -105,11 +105,9 @@ import org.koin.core.parameter.parametersOf
 internal fun FoodSearchApp(
     onFoodClick: (FoodSearch, Measurement) -> Unit,
     excludedFood: FoodId.Recipe?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val viewModel: FoodSearchViewModel = koinViewModel {
-        parametersOf(excludedFood)
-    }
+    val viewModel: FoodSearchViewModel = koinViewModel { parametersOf(excludedFood) }
     val coroutineScope = rememberCoroutineScope()
 
     val uiState = viewModel.state.collectAsStateWithLifecycle().value
@@ -126,13 +124,11 @@ internal fun FoodSearchApp(
         onSearch = { query ->
             appState.searchTextFieldState.setTextAndPlaceCursorAtEnd(query ?: "")
             viewModel.search(query)
-            coroutineScope.launch {
-                appState.searchBarState.animateToCollapsed()
-            }
+            coroutineScope.launch { appState.searchBarState.animateToCollapsed() }
         },
         onSourceChange = viewModel::changeSource,
         onFoodClick = onFoodClick,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -144,7 +140,7 @@ private fun FoodSearchApp(
     onSearch: (String?) -> Unit,
     onSourceChange: (FoodFilter.Source) -> Unit,
     onFoodClick: (FoodSearch, Measurement) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val pages = uiState.currentSourceState.collectAsLazyPagingItems()
     val shimmer = rememberShimmer(ShimmerBounds.View)
@@ -155,27 +151,26 @@ private fun FoodSearchApp(
             appState.showBarcodeScanner = false
             onSearch(it)
         },
-        onClose = { appState.showBarcodeScanner = false }
+        onClose = { appState.showBarcodeScanner = false },
     )
 
-    val searchInputField = @Composable {
-        FoodSearchBarInputField(
-            searchBarState = appState.searchBarState,
-            textFieldState = appState.searchTextFieldState,
-            onSearch = onSearch,
-            onBarcodeScanner = { appState.showBarcodeScanner = true }
-        )
-    }
+    val searchInputField =
+        @Composable {
+            FoodSearchBarInputField(
+                searchBarState = appState.searchBarState,
+                textFieldState = appState.searchTextFieldState,
+                onSearch = onSearch,
+                onBarcodeScanner = { appState.showBarcodeScanner = true },
+            )
+        }
 
     FoodSearchView(
         appState = appState,
         uiState = uiState,
-        onFill = { search ->
-            appState.searchTextFieldState.setTextAndPlaceCursorAtEnd(search)
-        },
+        onFill = { search -> appState.searchTextFieldState.setTextAndPlaceCursorAtEnd(search) },
         onSearch = onSearch,
         onSource = onSourceChange,
-        inputField = searchInputField
+        inputField = searchInputField,
     )
 
     Scaffold(modifier) { paddingValues ->
@@ -185,89 +180,79 @@ private fun FoodSearchApp(
         var topContentHeight by remember { mutableIntStateOf(0) }
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .zIndex(10f)
-                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .padding(top = paddingValues.calculateTopPadding())
-                .onSizeChanged { topContentHeight = it.height }
-                .padding(vertical = 8.dp),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .zIndex(10f)
+                    .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
+                    .windowInsetsPadding(
+                        WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
+                    )
+                    .padding(top = paddingValues.calculateTopPadding())
+                    .onSizeChanged { topContentHeight = it.height }
+                    .padding(vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             SearchBar(
                 state = appState.searchBarState,
                 inputField = searchInputField,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
-                colors = SearchBarDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                ),
-                shadowElevation = 2.dp
+                modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
+                colors =
+                    SearchBarDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                    ),
+                shadowElevation = 2.dp,
             )
 
             FoodSearchFilters(
                 uiState = uiState,
                 onSource = onSourceChange,
-                modifier = Modifier
-                    .height(32.dp + 8.dp + 32.dp)
-                    .fillMaxWidth()
+                modifier = Modifier.height(32.dp + 8.dp + 32.dp).fillMaxWidth(),
             )
 
             when (val ex = pages.loadState.error) {
                 null -> Unit
 
-                is USDAException -> UsdaErrorCard(
-                    error = ex,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
+                is USDAException ->
+                    UsdaErrorCard(
+                        error = ex,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    )
 
-                else -> ErrorCard(
-                    message = ex.message ?: stringResource(Res.string.error_unknown_error),
-                    onRetry = pages::retry,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
+                else ->
+                    ErrorCard(
+                        message = ex.message ?: stringResource(Res.string.error_unknown_error),
+                        onRetry = pages::retry,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    )
             }
         }
 
-        val paddingValues = paddingValues.add(
-            top = LocalDensity.current.run { topContentHeight.toDp() },
-            bottom = 56.dp + 32.dp
-        )
+        val paddingValues =
+            paddingValues.add(
+                top = LocalDensity.current.run { topContentHeight.toDp() },
+                bottom = 56.dp + 32.dp,
+            )
 
         Box(Modifier.fillMaxSize().zIndex(20f)) {
             if (pages.itemCount == 0 && pages.loadState.append !is LoadState.Loading) {
                 Text(
                     text = stringResource(Res.string.neutral_no_food_found),
-                    modifier = Modifier
-                        .safeContentPadding()
-                        .align(Alignment.Center)
+                    modifier = Modifier.safeContentPadding().align(Alignment.Center),
                 )
             }
 
             if (pages.delayedLoadingState()) {
                 ContainedLoadingIndicator(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = paddingValues.calculateTopPadding())
+                    modifier =
+                        Modifier.align(Alignment.TopCenter)
+                            .padding(top = paddingValues.calculateTopPadding())
                 )
             }
         }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = paddingValues
-        ) {
-            items(
-                count = pages.itemCount,
-                key = pages.itemKey { it.id.toString() }
-            ) { i ->
+        LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = paddingValues) {
+            items(count = pages.itemCount, key = pages.itemKey { it.id.toString() }) { i ->
                 val food = pages[i]
 
                 when (food) {
@@ -277,7 +262,7 @@ private fun FoodSearchApp(
                         FoodSearchListItem(
                             food = food,
                             measurement = measurement,
-                            onClick = { onFoodClick(food, measurement) }
+                            onClick = { onFoodClick(food, measurement) },
                         )
                     }
 
@@ -287,16 +272,14 @@ private fun FoodSearchApp(
                             food = food,
                             measurement = measurement,
                             onClick = { onFoodClick(food, measurement) },
-                            shimmer = shimmer
+                            shimmer = shimmer,
                         )
                     }
                 }
             }
 
             if (pages.loadState.append is LoadState.Loading) {
-                items(10) {
-                    FoodListItemSkeleton(shimmer)
-                }
+                items(10) { FoodListItemSkeleton(shimmer) }
             }
         }
     }
@@ -309,7 +292,7 @@ private fun FoodSearchBarInputField(
     textFieldState: TextFieldState,
     onSearch: (String?) -> Unit,
     onBarcodeScanner: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -322,17 +305,10 @@ private fun FoodSearchBarInputField(
         leadingIcon = {
             if (searchBarState.targetValue == SearchBarValue.Expanded) {
                 ArrowBackIconButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            searchBarState.animateToCollapsed()
-                        }
-                    }
+                    onClick = { coroutineScope.launch { searchBarState.animateToCollapsed() } }
                 )
             } else {
-                Icon(
-                    imageVector = Icons.Outlined.Search,
-                    contentDescription = null
-                )
+                Icon(imageVector = Icons.Outlined.Search, contentDescription = null)
             }
         },
         trailingIcon = {
@@ -341,7 +317,7 @@ private fun FoodSearchBarInputField(
                     IconButton(onBarcodeScanner) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_barcode_scanner),
-                            contentDescription = stringResource(Res.string.action_scan_barcode)
+                            contentDescription = stringResource(Res.string.action_scan_barcode),
                         )
                     }
                 } else {
@@ -355,12 +331,12 @@ private fun FoodSearchBarInputField(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Clear,
-                            contentDescription = stringResource(Res.string.action_clear)
+                            contentDescription = stringResource(Res.string.action_clear),
                         )
                     }
                 }
             }
-        }
+        },
     )
 }
 
@@ -369,18 +345,16 @@ private fun FoodSearchFilters(
     uiState: FoodSearchUiState,
     onSource: (FoodFilter.Source) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
 ) {
-    val filters = uiState.sources.filterValues { state ->
-        state.shouldShowFilter
-    }
+    val filters = uiState.sources.filterValues { state -> state.shouldShowFilter }
 
     LazyHorizontalStaggeredGrid(
         rows = StaggeredGridCells.Fixed(2),
         modifier = modifier,
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalItemSpacing = 8.dp
+        horizontalItemSpacing = 8.dp,
     ) {
         items(filters.toList()) { (source, state) ->
             val pages = state.collectAsLazyPagingItems()
@@ -388,63 +362,62 @@ private fun FoodSearchFilters(
             val hasError = pages.loadState.hasError
             val selected = uiState.filter.source == source
 
-            val colors = if (hasError) {
-                FilterChipDefaults.filterChipColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    labelColor = MaterialTheme.colorScheme.onErrorContainer,
-                    iconColor = MaterialTheme.colorScheme.onErrorContainer,
-                    selectedContainerColor = MaterialTheme.colorScheme.error,
-                    selectedLabelColor = MaterialTheme.colorScheme.onError,
-                    selectedTrailingIconColor = MaterialTheme.colorScheme.onError
-                )
-            } else {
-                FilterChipDefaults.filterChipColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            }
-
-            val border = FilterChipDefaults.filterChipBorder(
-                enabled = true,
-                selected = selected,
-                borderColor = if (hasError || selected) {
-                    Color.Transparent
+            val colors =
+                if (hasError) {
+                    FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        labelColor = MaterialTheme.colorScheme.onErrorContainer,
+                        iconColor = MaterialTheme.colorScheme.onErrorContainer,
+                        selectedContainerColor = MaterialTheme.colorScheme.error,
+                        selectedLabelColor = MaterialTheme.colorScheme.onError,
+                        selectedTrailingIconColor = MaterialTheme.colorScheme.onError,
+                    )
                 } else {
-                    MaterialTheme.colorScheme.outlineVariant
+                    FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
                 }
-            )
+
+            val border =
+                FilterChipDefaults.filterChipBorder(
+                    enabled = true,
+                    selected = selected,
+                    borderColor =
+                        if (hasError || selected) {
+                            Color.Transparent
+                        } else {
+                            MaterialTheme.colorScheme.outlineVariant
+                        },
+                )
 
             FilterChip(
                 selected = selected,
                 onClick = { onSource(source) },
-                label = {
-                    Text(source.stringResource())
-                },
-                leadingIcon = {
-                    source.Icon(Modifier.size(FilterChipDefaults.IconSize))
-                },
+                label = { Text(source.stringResource()) },
+                leadingIcon = { source.Icon(Modifier.size(FilterChipDefaults.IconSize)) },
                 trailingIcon = {
                     if (hasError) {
                         Icon(
                             imageVector = Icons.Outlined.Warning,
                             contentDescription = null,
-                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            modifier = Modifier.size(FilterChipDefaults.IconSize),
                         )
                     } else {
                         if (state.remoteEnabled != RemoteStatus.LocalOnly && isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(FilterChipDefaults.IconSize),
-                                strokeWidth = 2.dp
+                                strokeWidth = 2.dp,
                             )
                         } else {
                             Text(
                                 text = state.count.toString(),
-                                style = MaterialTheme.typography.bodySmall
+                                style = MaterialTheme.typography.bodySmall,
                             )
                         }
                     }
                 },
                 colors = colors,
-                border = border
+                border = border,
             )
         }
     }
@@ -458,22 +431,17 @@ private fun FoodSearchView(
     onFill: (String) -> Unit,
     onSearch: (String?) -> Unit,
     onSource: (FoodFilter.Source) -> Unit,
-    inputField: @Composable () -> Unit
+    inputField: @Composable () -> Unit,
 ) {
-    val filters = uiState.sources.filterValues { state ->
-        state.shouldShowFilter
-    }
+    val filters = uiState.sources.filterValues { state -> state.shouldShowFilter }
 
-    ExpandedFullScreenSearchBar(
-        state = appState.searchBarState,
-        inputField = inputField
-    ) {
+    ExpandedFullScreenSearchBar(state = appState.searchBarState, inputField = inputField) {
         LazyColumn {
             items(uiState.recentSearches.take(3)) {
                 FoodSearchItem(
                     search = it,
                     onFill = { onFill(it) },
-                    modifier = Modifier.clickable { onSearch(it) }
+                    modifier = Modifier.clickable { onSearch(it) },
                 )
             }
 
@@ -484,17 +452,17 @@ private fun FoodSearchView(
 
                 Column(
                     modifier = Modifier.padding(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Text(
                         text = stringResource(Res.string.headline_filters),
                         modifier = Modifier.padding(horizontal = 16.dp),
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 8.dp)
+                        contentPadding = PaddingValues(horizontal = 8.dp),
                     ) {
                         items(filters.toList()) { (source, _) ->
                             DatabaseFilterIconButton(
@@ -504,9 +472,9 @@ private fun FoodSearchView(
                                 label = {
                                     Text(
                                         text = source.stringResource(),
-                                        textAlign = TextAlign.Center
+                                        textAlign = TextAlign.Center,
                                     )
-                                }
+                                },
                             )
                         }
                     }
@@ -519,7 +487,7 @@ private fun FoodSearchView(
                 FoodSearchItem(
                     search = it,
                     onFill = { onFill(it) },
-                    modifier = Modifier.clickable { onSearch(it) }
+                    modifier = Modifier.clickable { onSearch(it) },
                 )
             }
         }
@@ -531,23 +499,16 @@ private fun FoodSearchItem(search: String, onFill: () -> Unit, modifier: Modifie
     ListItem(
         modifier = modifier,
         headlineContent = { Text(search) },
-        leadingContent = {
-            Icon(
-                imageVector = Icons.Outlined.History,
-                contentDescription = null
-            )
-        },
+        leadingContent = { Icon(imageVector = Icons.Outlined.History, contentDescription = null) },
         trailingContent = {
             IconButton(onFill) {
                 Icon(
                     imageVector = Icons.Outlined.NorthWest,
-                    contentDescription = stringResource(Res.string.action_insert_suggested_search)
+                    contentDescription = stringResource(Res.string.action_insert_suggested_search),
                 )
             }
         },
-        colors = ListItemDefaults.colors(
-            containerColor = Color.Transparent
-        )
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
     )
 }
 
@@ -557,46 +518,50 @@ private fun DatabaseFilterIconButton(
     onClick: () -> Unit,
     logo: @Composable () -> Unit,
     label: @Composable () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
-    val containerColor by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.primaryContainer
-        } else {
-            MaterialTheme.colorScheme.surfaceVariant
-        }
-    )
-    val contentColor by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.onPrimaryContainer
-        } else {
-            MaterialTheme.colorScheme.onSurfaceVariant
-        }
-    )
+    val containerColor by
+        animateColorAsState(
+            targetValue =
+                if (selected) {
+                    MaterialTheme.colorScheme.primaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceVariant
+                }
+        )
+    val contentColor by
+        animateColorAsState(
+            targetValue =
+                if (selected) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                }
+        )
 
-    val labelColor by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.primary
-        } else {
-            MaterialTheme.colorScheme.onSurfaceVariant
-        }
-    )
+    val labelColor by
+        animateColorAsState(
+            targetValue =
+                if (selected) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                }
+        )
 
     Column(
-        modifier = modifier
-            .clickable(
-                onClick = onClick,
-                indication = null,
-                interactionSource = interactionSource
-            )
-            .widthIn(
-                min = 64.dp,
-                max = 96.dp
-            ),
+        modifier =
+            modifier
+                .clickable(
+                    onClick = onClick,
+                    indication = null,
+                    interactionSource = interactionSource,
+                )
+                .widthIn(min = 64.dp, max = 96.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Surface(
             onClick = onClick,
@@ -604,18 +569,13 @@ private fun DatabaseFilterIconButton(
             shape = CircleShape,
             color = containerColor,
             contentColor = contentColor,
-            interactionSource = interactionSource
+            interactionSource = interactionSource,
         ) {
-            Box(
-                modifier = Modifier.padding(12.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                logo()
-            }
+            Box(modifier = Modifier.padding(12.dp), contentAlignment = Alignment.Center) { logo() }
         }
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.labelMedium,
-            LocalContentColor provides labelColor
+            LocalContentColor provides labelColor,
         ) {
             label()
         }
@@ -631,46 +591,40 @@ private fun ErrorCard(message: String, onRetry: () -> Unit, modifier: Modifier =
         color = MaterialTheme.colorScheme.errorContainer,
         contentColor = MaterialTheme.colorScheme.onErrorContainer,
         shape = MaterialTheme.shapes.medium,
-        shadowElevation = 2.dp
+        shadowElevation = 2.dp,
     ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(top = 16.dp)
-        ) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp)) {
             Text(
                 text = stringResource(Res.string.neutral_an_error_occurred),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = stringResource(Res.string.neutral_remote_database_error),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
             Spacer(Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             ) {
                 TextButton(
-                    onClick = {
-                        showDetails = !showDetails
-                    },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    )
+                    onClick = { showDetails = !showDetails },
+                    colors =
+                        ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        ),
                 ) {
                     Text(stringResource(Res.string.action_show_details))
                 }
 
                 FilledTonalButton(
-                    onClick = {
-                        onRetry()
-                    },
-                    colors = ButtonDefaults.filledTonalButtonColors(
-                        contentColor = MaterialTheme.colorScheme.errorContainer,
-                        containerColor = MaterialTheme.colorScheme.onErrorContainer
-                    )
+                    onClick = { onRetry() },
+                    colors =
+                        ButtonDefaults.filledTonalButtonColors(
+                            contentColor = MaterialTheme.colorScheme.errorContainer,
+                            containerColor = MaterialTheme.colorScheme.onErrorContainer,
+                        ),
                 ) {
                     Text(stringResource(Res.string.action_retry))
                 }
@@ -681,7 +635,7 @@ private fun ErrorCard(message: String, onRetry: () -> Unit, modifier: Modifier =
                 Text(
                     text = message,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
                 )
             }
         }
@@ -694,8 +648,8 @@ private fun <T : Any> LazyPagingItems<T>.delayedLoadingState(timeout: Long = 100
     var isLoading by remember { mutableStateOf(false) }
     LaunchedEffect(this) {
         snapshotFlow {
-            loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading
-        }
+                loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading
+            }
             .debounce(timeout)
             .collectLatest { isLoading = it }
     }

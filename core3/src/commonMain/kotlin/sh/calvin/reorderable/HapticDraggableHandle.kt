@@ -14,20 +14,23 @@ fun Modifier.hapticDraggableHandle(
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
     onDragStarted: (startedPosition: Offset) -> Unit = {},
-    onDragStopped: () -> Unit = {}
-) = with(scope) {
-    val localHapticFeedback = LocalHapticFeedback.current
+    onDragStopped: () -> Unit = {},
+) =
+    with(scope) {
+        val localHapticFeedback = LocalHapticFeedback.current
 
-    draggableHandle(
-        enabled = enabled,
-        interactionSource = interactionSource,
-        onDragStarted = {
-            localHapticFeedback.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
-            onDragStarted(it)
-        },
-        onDragStopped = {
-            localHapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
-            onDragStopped()
-        }
-    )
-}
+        draggableHandle(
+            enabled = enabled,
+            interactionSource = interactionSource,
+            onDragStarted = {
+                localHapticFeedback.performHapticFeedback(
+                    HapticFeedbackType.GestureThresholdActivate
+                )
+                onDragStarted(it)
+            },
+            onDragStopped = {
+                localHapticFeedback.performHapticFeedback(HapticFeedbackType.GestureEnd)
+                onDragStopped()
+            },
+        )
+    }

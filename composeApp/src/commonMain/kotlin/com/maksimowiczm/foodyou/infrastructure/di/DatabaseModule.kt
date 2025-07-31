@@ -14,11 +14,6 @@ const val DATABASE_NAME = "open_source_database.db"
 expect val databaseDefinition: Module.() -> KoinDefinition<FoodYouDatabase>
 
 val databaseModule = module {
-    databaseDefinition().binds(
-        arrayOf(
-            AboutDatabase::class,
-            FoodDatabase::class,
-            FoodDiaryDatabase::class
-        )
-    )
+    databaseDefinition()
+        .binds(arrayOf(AboutDatabase::class, FoodDatabase::class, FoodDiaryDatabase::class))
 }

@@ -15,14 +15,11 @@ abstract class ProductDao {
     @Query("SELECT * FROM Product WHERE id = :productId")
     abstract fun observe(productId: Long): Flow<Product?>
 
-    @Insert
-    abstract suspend fun insert(product: Product): Long
+    @Insert abstract suspend fun insert(product: Product): Long
 
-    @Update
-    abstract suspend fun update(product: Product)
+    @Update abstract suspend fun update(product: Product)
 
-    @Delete
-    abstract suspend fun delete(product: Product)
+    @Delete abstract suspend fun delete(product: Product)
 
     @Query(
         """
@@ -40,23 +37,24 @@ abstract class ProductDao {
         name: String,
         brand: String?,
         barcode: String?,
-        source: FoodSource.Type
+        source: FoodSource.Type,
     ): Boolean
 
     /**
-     * Inserts a single product into the database if it does not already exist.
-     * This method checks for uniqueness based on the product's name, brand, barcode, and source type.
+     * Inserts a single product into the database if it does not already exist. This method checks
+     * for uniqueness based on the product's name, brand, barcode, and source type.
      *
      * @param product The product to be inserted.
      * @return The ID of the inserted product, or null if the product already exists.
      */
     @Transaction
     open suspend fun insertUniqueProduct(product: Product): Long? =
-        if (!existsProductByNameAndBrand(
+        if (
+            !existsProductByNameAndBrand(
                 name = product.name,
                 brand = product.brand,
                 barcode = product.barcode,
-                source = product.sourceType
+                source = product.sourceType,
             )
         ) {
             insert(product)

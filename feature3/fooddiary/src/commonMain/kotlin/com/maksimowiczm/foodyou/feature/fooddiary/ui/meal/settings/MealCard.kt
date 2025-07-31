@@ -63,7 +63,7 @@ internal fun MealCard(
     onSave: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
-    action: (@Composable () -> Unit)? = null
+    action: (@Composable () -> Unit)? = null,
 ) {
     val dateFormatter = LocalDateFormatter.current
 
@@ -77,53 +77,44 @@ internal fun MealCard(
             onConfirm = {
                 showDeleteDialog = false
                 onDelete()
-            }
+            },
         )
     }
 
     val nameInput: @Composable RowScope.() -> Unit = {
         BasicTextField(
             state = state.name.textFieldState,
-            modifier = Modifier
-                .defaultMinSize(minWidth = 150.dp)
-                .width(IntrinsicSize.Min)
-                .weight(1f, false),
-            textStyle = LocalTextStyle.current
-                .merge(MaterialTheme.typography.headlineMedium)
-                .merge(LocalContentColor.current),
+            modifier =
+                Modifier.defaultMinSize(minWidth = 150.dp)
+                    .width(IntrinsicSize.Min)
+                    .weight(1f, false),
+            textStyle =
+                LocalTextStyle.current
+                    .merge(MaterialTheme.typography.headlineMedium)
+                    .merge(LocalContentColor.current),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done
-            ),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             decorator = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    Column(
-                        modifier = Modifier.weight(1f, false)
-                    ) {
-                        Box(
-                            modifier = Modifier.padding(horizontal = 4.dp)
-                        ) {
-                            it()
-                        }
+                    Column(modifier = Modifier.weight(1f, false)) {
+                        Box(modifier = Modifier.padding(horizontal = 4.dp)) { it() }
 
                         HorizontalDivider(
-                            color = if (state.name.error != null) {
-                                MaterialTheme.colorScheme.error
-                            } else {
-                                MaterialTheme.colorScheme.outline
-                            }
+                            color =
+                                if (state.name.error != null) {
+                                    MaterialTheme.colorScheme.error
+                                } else {
+                                    MaterialTheme.colorScheme.outline
+                                }
                         )
                     }
 
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = null
-                    )
+                    Icon(imageVector = Icons.Filled.Edit, contentDescription = null)
                 }
-            }
+            },
         )
     }
     val iconButton: @Composable RowScope.() -> Unit = {
@@ -137,22 +128,20 @@ internal fun MealCard(
                             onSave()
                         }
                     },
-                    enabled = state.isValid
+                    enabled = state.isValid,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Save,
-                        contentDescription = stringResource(Res.string.action_save)
+                        contentDescription = stringResource(Res.string.action_save),
                     )
                 }
             }
 
             !state.isModified -> {
-                IconButton(
-                    onClick = { showDeleteDialog = true }
-                ) {
+                IconButton(onClick = { showDeleteDialog = true }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(Res.string.action_delete)
+                        contentDescription = stringResource(Res.string.action_delete),
                     )
                 }
             }
@@ -161,10 +150,11 @@ internal fun MealCard(
 
     var showFromTimePicker by rememberSaveable { mutableStateOf(false) }
     if (showFromTimePicker) {
-        val timePickerState = rememberTimePickerState(
-            initialHour = state.fromTime.hour,
-            initialMinute = state.fromTime.minute
-        )
+        val timePickerState =
+            rememberTimePickerState(
+                initialHour = state.fromTime.hour,
+                initialMinute = state.fromTime.minute,
+            )
 
         TimePickerDialog(
             onDismissRequest = { showFromTimePicker = false },
@@ -172,27 +162,19 @@ internal fun MealCard(
                 TextButton(
                     onClick = {
                         showFromTimePicker = false
-                        state.fromTime = LocalTime(
-                            hour = timePickerState.hour,
-                            minute = timePickerState.minute
-                        )
+                        state.fromTime =
+                            LocalTime(hour = timePickerState.hour, minute = timePickerState.minute)
                     }
                 ) {
-                    Text(
-                        text = stringResource(Res.string.action_confirm)
-                    )
+                    Text(text = stringResource(Res.string.action_confirm))
                 }
             },
             title = {},
             dismissButton = {
-                TextButton(
-                    onClick = { showFromTimePicker = false }
-                ) {
-                    Text(
-                        text = stringResource(Res.string.action_cancel)
-                    )
+                TextButton(onClick = { showFromTimePicker = false }) {
+                    Text(text = stringResource(Res.string.action_cancel))
                 }
-            }
+            },
         ) {
             TimePicker(timePickerState)
         }
@@ -200,10 +182,11 @@ internal fun MealCard(
 
     var showToTimePicker by rememberSaveable { mutableStateOf(false) }
     if (showToTimePicker) {
-        val timePickerState = rememberTimePickerState(
-            initialHour = state.toTime.hour,
-            initialMinute = state.toTime.minute
-        )
+        val timePickerState =
+            rememberTimePickerState(
+                initialHour = state.toTime.hour,
+                initialMinute = state.toTime.minute,
+            )
 
         TimePickerDialog(
             onDismissRequest = { showToTimePicker = false },
@@ -211,102 +194,103 @@ internal fun MealCard(
                 TextButton(
                     onClick = {
                         showToTimePicker = false
-                        state.toTime = LocalTime(
-                            hour = timePickerState.hour,
-                            minute = timePickerState.minute
-                        )
+                        state.toTime =
+                            LocalTime(hour = timePickerState.hour, minute = timePickerState.minute)
                     }
                 ) {
-                    Text(
-                        text = stringResource(Res.string.action_confirm)
-                    )
+                    Text(text = stringResource(Res.string.action_confirm))
                 }
             },
             title = {},
             dismissButton = {
-                TextButton(
-                    onClick = { showToTimePicker = false }
-                ) {
-                    Text(
-                        text = stringResource(Res.string.action_cancel)
-                    )
+                TextButton(onClick = { showToTimePicker = false }) {
+                    Text(text = stringResource(Res.string.action_cancel))
                 }
-            }
+            },
         ) {
             TimePicker(timePickerState)
         }
     }
 
-    val dateInput = @Composable {
-        val containerColor by animateColorAsState(
-            if (state.isModified) {
-                MaterialTheme.colorScheme.tertiaryContainer
-            } else {
-                MaterialTheme.colorScheme.surfaceContainerHighest
+    val dateInput =
+        @Composable {
+            val containerColor by
+                animateColorAsState(
+                    if (state.isModified) {
+                        MaterialTheme.colorScheme.tertiaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surfaceContainerHighest
+                    }
+                )
+
+            val contentColor by
+                animateColorAsState(
+                    if (state.isModified) {
+                        MaterialTheme.colorScheme.onTertiaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    }
+                )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Card(
+                    onClick = { showFromTimePicker = true },
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = containerColor,
+                            contentColor = contentColor,
+                        ),
+                ) {
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        text = dateFormatter.formatTime(state.fromTime),
+                        style = MaterialTheme.typography.headlineSmall,
+                    )
+                }
+                Text(
+                    text = stringResource(Res.string.en_dash),
+                    style = MaterialTheme.typography.headlineSmall,
+                )
+                Card(
+                    onClick = { showToTimePicker = true },
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = containerColor,
+                            contentColor = contentColor,
+                        ),
+                ) {
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        text = dateFormatter.formatTime(state.toTime),
+                        style = MaterialTheme.typography.headlineSmall,
+                    )
+                }
             }
+        }
+
+    val surfaceColor by
+        animateColorAsState(
+            targetValue =
+                if (state.isModified) {
+                    MaterialTheme.colorScheme.secondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceContainer
+                }
         )
 
-        val contentColor by animateColorAsState(
-            if (state.isModified) {
-                MaterialTheme.colorScheme.onTertiaryContainer
-            } else {
-                MaterialTheme.colorScheme.onSurface
-            }
+    val contentColor by
+        animateColorAsState(
+            targetValue =
+                if (state.isModified) {
+                    MaterialTheme.colorScheme.onSecondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
         )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Card(
-                onClick = { showFromTimePicker = true },
-                colors = CardDefaults.cardColors(
-                    containerColor = containerColor,
-                    contentColor = contentColor
-                )
-            ) {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = dateFormatter.formatTime(state.fromTime),
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
-            Text(
-                text = stringResource(Res.string.en_dash),
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Card(
-                onClick = { showToTimePicker = true },
-                colors = CardDefaults.cardColors(
-                    containerColor = containerColor,
-                    contentColor = contentColor
-                )
-            ) {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = dateFormatter.formatTime(state.toTime),
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
-        }
-    }
-
-    val surfaceColor by animateColorAsState(
-        targetValue = if (state.isModified) {
-            MaterialTheme.colorScheme.secondaryContainer
-        } else {
-            MaterialTheme.colorScheme.surfaceContainer
-        }
-    )
-
-    val contentColor by animateColorAsState(
-        targetValue = if (state.isModified) {
-            MaterialTheme.colorScheme.onSecondaryContainer
-        } else {
-            MaterialTheme.colorScheme.onSurface
-        }
-    )
 
     Surface(
         modifier = modifier,
@@ -314,30 +298,23 @@ internal fun MealCard(
         color = surfaceColor,
         contentColor = contentColor,
         tonalElevation = tonalElevation,
-        shadowElevation = shadowElevation
+        shadowElevation = shadowElevation,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = 8.dp,
-                    start = 16.dp,
-                    end = 8.dp,
-                    bottom = 16.dp
-                )
+            modifier =
+                Modifier.fillMaxWidth()
+                    .padding(top = 8.dp, start = 16.dp, end = 8.dp, bottom = 16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 nameInput()
                 iconButton()
             }
 
-            AnimatedVisibility(
-                visible = !state.isAllDay
-            ) {
+            AnimatedVisibility(visible = !state.isAllDay) {
                 Column {
                     Spacer(Modifier.height(8.dp))
 
@@ -348,21 +325,19 @@ internal fun MealCard(
             Spacer(Modifier.height(8.dp))
 
             Row(
-                modifier = Modifier.clickable(
-                    interactionSource = null,
-                    indication = null,
-                    onClick = { state.isAllDay = !state.isAllDay }
-                ),
-                verticalAlignment = Alignment.CenterVertically
+                modifier =
+                    Modifier.clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = { state.isAllDay = !state.isAllDay },
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Switch(
-                    checked = state.isAllDay,
-                    onCheckedChange = null
-                )
+                Switch(checked = state.isAllDay, onCheckedChange = null)
                 Spacer(Modifier.width(16.dp))
                 Text(
                     text = stringResource(Res.string.headline_all_day),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
         }
@@ -373,44 +348,23 @@ internal fun MealCard(
 private fun DeleteDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            TextButton(
-                onClick = onConfirm
-            ) {
-                Text(
-                    text = stringResource(Res.string.action_delete)
-                )
+            TextButton(onClick = onConfirm) {
+                Text(text = stringResource(Res.string.action_delete))
             }
         },
         modifier = modifier,
         dismissButton = {
-            TextButton(
-                onClick = onDismissRequest
-            ) {
-                Text(
-                    text = stringResource(Res.string.action_cancel)
-                )
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(Res.string.action_cancel))
             }
         },
-        icon = {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = null
-            )
-        },
-        title = {
-            Text(
-                text = stringResource(Res.string.neutral_permanently_delete_meal)
-            )
-        },
-        text = {
-            Text(
-                text = stringResource(Res.string.neutral_meal_will_be_deleted_permanently)
-            )
-        }
+        icon = { Icon(imageVector = Icons.Default.Delete, contentDescription = null) },
+        title = { Text(text = stringResource(Res.string.neutral_permanently_delete_meal)) },
+        text = { Text(text = stringResource(Res.string.neutral_meal_will_be_deleted_permanently)) },
     )
 }

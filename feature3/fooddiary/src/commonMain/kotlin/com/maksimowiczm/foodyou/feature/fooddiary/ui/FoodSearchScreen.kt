@@ -62,7 +62,7 @@ import org.koin.core.parameter.parametersOf
 @OptIn(
     ExperimentalMaterial3ExpressiveApi::class,
     ExperimentalMaterial3Api::class,
-    ExperimentalAnimationApi::class
+    ExperimentalAnimationApi::class,
 )
 @Composable
 fun FoodSearchScreen(
@@ -73,11 +73,9 @@ fun FoodSearchScreen(
     mealId: Long,
     date: LocalDate,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val viewModel = koinViewModel<FoodSearchViewModel> {
-        parametersOf(mealId)
-    }
+    val viewModel = koinViewModel<FoodSearchViewModel> { parametersOf(mealId) }
     val dateFormatter = LocalDateFormatter.current
 
     val meal = viewModel.meal.collectAsStateWithLifecycle().value
@@ -86,48 +84,44 @@ fun FoodSearchScreen(
     BackHandler(fabExpanded) { fabExpanded = false }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val topBar = @Composable {
-        TopAppBar(
-            title = {
-                updateTransition(meal).Crossfade(
-                    contentKey = { it?.toString() }
-                ) {
-                    if (meal == null) {
-                        Spacer(
-                            modifier = Modifier
-                                .height(LocalTextStyle.current.toDp() - 4.dp)
-                                .width(100.dp)
-                                .padding(bottom = 4.dp)
-                                .shimmer()
-                                .clip(MaterialTheme.shapes.medium)
-                                .background(
-                                    MaterialTheme.colorScheme.surfaceContainerHighest
-                                )
-                        )
-                    } else {
-                        Text(meal.name)
+    val topBar =
+        @Composable {
+            TopAppBar(
+                title = {
+                    updateTransition(meal).Crossfade(contentKey = { it?.toString() }) {
+                        if (meal == null) {
+                            Spacer(
+                                modifier =
+                                    Modifier.height(LocalTextStyle.current.toDp() - 4.dp)
+                                        .width(100.dp)
+                                        .padding(bottom = 4.dp)
+                                        .shimmer()
+                                        .clip(MaterialTheme.shapes.medium)
+                                        .background(
+                                            MaterialTheme.colorScheme.surfaceContainerHighest
+                                        )
+                            )
+                        } else {
+                            Text(meal.name)
+                        }
                     }
-                }
-            },
-            subtitle = {
-                Text(dateFormatter.formatDate(date))
-            },
-            titleHorizontalAlignment = Alignment.CenterHorizontally,
-            navigationIcon = { ArrowBackIconButton(onBack) },
-            scrollBehavior = scrollBehavior
-        )
-    }
-    val content: @Composable (PaddingValues) -> Unit = @Composable { paddingValues ->
-        FoodSearchApp(
-            onFoodClick = { food, measurement ->
-                onFoodClick(food.id, measurement)
-            },
-            modifier = Modifier
-                .padding(paddingValues)
-                .consumeWindowInsets(paddingValues)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-        )
-    }
+                },
+                subtitle = { Text(dateFormatter.formatDate(date)) },
+                titleHorizontalAlignment = Alignment.CenterHorizontally,
+                navigationIcon = { ArrowBackIconButton(onBack) },
+                scrollBehavior = scrollBehavior,
+            )
+        }
+    val content: @Composable (PaddingValues) -> Unit =
+        @Composable { paddingValues ->
+            FoodSearchApp(
+                onFoodClick = { food, measurement -> onFoodClick(food.id, measurement) },
+                modifier =
+                    Modifier.padding(paddingValues)
+                        .consumeWindowInsets(paddingValues)
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+            )
+        }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val feedbackText = stringResource(Res.string.neutral_measurement_added)
@@ -139,46 +133,39 @@ fun FoodSearchScreen(
     }
 
     Box(modifier) {
-        val fabInsets = WindowInsets.systemBars
-            .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-            .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+        val fabInsets =
+            WindowInsets.systemBars
+                .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                .add(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 
         FoodSearchAppDefaults.FloatingActionButton(
             fabExpanded = fabExpanded,
             onFabExpandedChange = { fabExpanded = it },
             onCreateRecipe = onCreateRecipe,
             onCreateProduct = onCreateProduct,
-            modifier = Modifier
-                .zIndex(100f)
-                .align(Alignment.BottomEnd)
-                .windowInsetsPadding(fabInsets)
-                .consumeWindowInsets(fabInsets)
-                .animateFloatingActionButton(
-                    visible = !animatedVisibilityScope.transition.isRunning,
-                    alignment = Alignment.BottomEnd
-                )
+            modifier =
+                Modifier.zIndex(100f)
+                    .align(Alignment.BottomEnd)
+                    .windowInsetsPadding(fabInsets)
+                    .consumeWindowInsets(fabInsets)
+                    .animateFloatingActionButton(
+                        visible = !animatedVisibilityScope.transition.isRunning,
+                        alignment = Alignment.BottomEnd,
+                    ),
         )
         Scrim(
             visible = fabExpanded,
             onDismiss = { fabExpanded = false },
-            modifier = Modifier
-                .fillMaxSize()
-                .zIndex(10f)
+            modifier = Modifier.fillMaxSize().zIndex(10f),
         )
         Scaffold(
             topBar = topBar,
             snackbarHost = { SnackbarHost(snackbarHostState) },
-            contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(
-                WindowInsetsSides.Top
-            ),
+            contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Top),
             floatingActionButton = {
-                Box(
-                    modifier = Modifier
-                        .windowInsetsPadding(fabInsets)
-                        .height(56.dp)
-                )
+                Box(modifier = Modifier.windowInsetsPadding(fabInsets).height(56.dp))
             },
-            content = content
+            content = content,
         )
     }
 }

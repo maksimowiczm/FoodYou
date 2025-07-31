@@ -8,14 +8,15 @@ import com.maksimowiczm.foodyou.feature.usda.USDAException
 internal class OpenFoodFactsProductRequest(
     private val dataSource: OpenFoodFactsRemoteDataSource,
     private val barcode: String,
-    private val mapper: OpenFoodFactsProductMapper
+    private val mapper: OpenFoodFactsProductMapper,
 ) : RemoteProductRequest {
-    override suspend fun execute(): Result<RemoteProduct?> = dataSource
-        .getProduct(barcode)
-        .map { mapper.toRemoteProduct(it) }
-        .onFailure {
-            if (it is USDAException.ProductNotFoundException) {
-                return Result.success(null)
+    override suspend fun execute(): Result<RemoteProduct?> =
+        dataSource
+            .getProduct(barcode)
+            .map { mapper.toRemoteProduct(it) }
+            .onFailure {
+                if (it is USDAException.ProductNotFoundException) {
+                    return Result.success(null)
+                }
             }
-        }
 }

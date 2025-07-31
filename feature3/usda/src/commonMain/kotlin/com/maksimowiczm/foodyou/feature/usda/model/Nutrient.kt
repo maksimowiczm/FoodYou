@@ -3,7 +3,6 @@ package com.maksimowiczm.foodyou.feature.usda.model
 enum class Nutrient(val number: String) {
     CALORIES("957"),
     CALORIES_ALTERNATIVE("208"),
-
     PROTEIN("203"),
     CARBOHYDRATE("205"),
     FAT("204"),
@@ -22,14 +21,12 @@ enum class Nutrient(val number: String) {
 
     CHOLESTEROL("601"),
     CAFFEINE("262"),
-
     VITAMIN_A("320"), // 318 ?
     VITAMIN_B1("404"),
     VITAMIN_B2("405"),
     VITAMIN_B3("406"),
     VITAMIN_B5("410"),
     VITAMIN_B6("415"),
-
     VITAMIN_B7("416"),
     VITAMIN_B9("417"),
     VITAMIN_B12("418"),
@@ -37,7 +34,6 @@ enum class Nutrient(val number: String) {
     VITAMIN_D("324"),
     VITAMIN_E("323"),
     VITAMIN_K("430"),
-
     MANGANESE("315"),
     MAGNESIUM("304"),
     POTASSIUM("306"),
@@ -47,7 +43,7 @@ enum class Nutrient(val number: String) {
     SODIUM("307"),
     IRON("303"),
     PHOSPHORUS("305"),
-    SELENIUM("317")
+    SELENIUM("317"),
     // IODINE(""),
     // CHROMIUM("")
 }

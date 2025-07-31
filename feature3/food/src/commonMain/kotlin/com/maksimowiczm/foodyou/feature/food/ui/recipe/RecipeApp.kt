@@ -55,46 +55,35 @@ internal fun RecipeApp(
     mainRecipeId: FoodId.Recipe?,
     recipe: Recipe?,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Form,
-        modifier = modifier
-    ) {
+    NavHost(navController = navController, startDestination = Form, modifier = modifier) {
         forwardBackwardComposable<Form> {
             val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = {
-                            Text(topBarTitle)
-                        },
-                        navigationIcon = {
-                            ArrowBackIconButton(onBack)
-                        },
+                        title = { Text(topBarTitle) },
+                        navigationIcon = { ArrowBackIconButton(onBack) },
                         actions = {
-                            FilledIconButton(
-                                onClick = { onSave(state) },
-                                enabled = state.isValid
-                            ) {
+                            FilledIconButton(onClick = { onSave(state) }, enabled = state.isValid) {
                                 Icon(
                                     imageVector = Icons.Outlined.Save,
-                                    contentDescription = stringResource(Res.string.action_save)
+                                    contentDescription = stringResource(Res.string.action_save),
                                 )
                             }
                         },
-                        scrollBehavior = scrollBehavior
+                        scrollBehavior = scrollBehavior,
                     )
                 }
             ) { paddingValues ->
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .imePadding()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    contentPadding = paddingValues
+                    modifier =
+                        Modifier.fillMaxSize()
+                            .imePadding()
+                            .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    contentPadding = paddingValues,
                 ) {
                     item {
                         RecipeForm(
@@ -110,9 +99,7 @@ internal fun RecipeApp(
                                     launchSingleTop = true
                                 }
                             },
-                            contentPadding = PaddingValues(
-                                horizontal = 16.dp
-                            )
+                            contentPadding = PaddingValues(horizontal = 16.dp),
                         )
                     }
 
@@ -121,21 +108,17 @@ internal fun RecipeApp(
                             HorizontalDivider(Modifier.padding(bottom = 8.dp))
                             Text(
                                 text = stringResource(Res.string.headline_summary),
-                                modifier = Modifier.padding(
-                                    horizontal = 16.dp,
-                                    vertical = 8.dp
-                                ),
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                                 color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.labelLarge
+                                style = MaterialTheme.typography.labelLarge,
                             )
 
-                            val facts = recipe.nutritionFacts * Measurement.Package(1f)
-                                .weight(recipe.totalWeight) / 100f
+                            val facts =
+                                recipe.nutritionFacts *
+                                    Measurement.Package(1f).weight(recipe.totalWeight) / 100f
                             NutrientList(
                                 facts = facts,
-                                modifier = Modifier.padding(
-                                    horizontal = 8.dp
-                                )
+                                modifier = Modifier.padding(horizontal = 8.dp),
                             )
                         }
                     }
@@ -148,22 +131,17 @@ internal fun RecipeApp(
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = {
-                            Text(stringResource(Res.string.headline_choose_ingredient))
-                        },
+                        title = { Text(stringResource(Res.string.headline_choose_ingredient)) },
                         navigationIcon = {
                             ArrowBackIconButton(
-                                onClick = {
-                                    navController.popBackStack<IngredientsSearch>(true)
-                                }
+                                onClick = { navController.popBackStack<IngredientsSearch>(true) }
                             )
                         },
-                        scrollBehavior = scrollBehavior
+                        scrollBehavior = scrollBehavior,
                     )
                 },
-                contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(
-                    WindowInsetsSides.Top
-                )
+                contentWindowInsets =
+                    ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Top),
             ) { paddingValues ->
                 FoodSearchApp(
                     onFoodClick = { food, measurement ->
@@ -172,11 +150,11 @@ internal fun RecipeApp(
                         }
                     },
                     excludedRecipe = mainRecipeId,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
-                        .padding(paddingValues)
-                        .consumeWindowInsets(paddingValues)
+                    modifier =
+                        Modifier.fillMaxSize()
+                            .nestedScroll(scrollBehavior.nestedScrollConnection)
+                            .padding(paddingValues)
+                            .consumeWindowInsets(paddingValues),
                 )
             }
         }
@@ -184,23 +162,16 @@ internal fun RecipeApp(
             val route = it.toRoute<IngredientMeasurement>()
 
             MeasureIngredientScreen(
-                onBack = {
-                    navController.popBackStack<IngredientMeasurement>(true)
-                },
+                onBack = { navController.popBackStack<IngredientMeasurement>(true) },
                 onSave = { measurement ->
                     state.addIngredient(
-                        MinimalIngredient(
-                            foodId = route.foodId,
-                            measurement = measurement
-                        )
+                        MinimalIngredient(foodId = route.foodId, measurement = measurement)
                     )
                     navController.popBackStack<IngredientMeasurement>(true)
                     navController.popBackStack<IngredientsSearch>(true, saveState = true)
                 },
                 measurement = route.measurement,
-                viewModel = koinViewModel {
-                    parametersOf(route.foodId)
-                }
+                viewModel = koinViewModel { parametersOf(route.foodId) },
             )
         }
         forwardBackwardComposable<EditIngredient> {
@@ -216,61 +187,52 @@ internal fun RecipeApp(
 
             if (ingredient != null) {
                 MeasureIngredientScreen(
-                    onBack = {
-                        navController.popBackStack<EditIngredient>(true)
-                    },
+                    onBack = { navController.popBackStack<EditIngredient>(true) },
                     onSave = { measurement ->
                         state.updateIngredient(
                             route.index,
-                            MinimalIngredient(
-                                foodId = ingredient.foodId,
-                                measurement = measurement
-                            )
+                            MinimalIngredient(foodId = ingredient.foodId, measurement = measurement),
                         )
                         navController.popBackStack<EditIngredient>(true)
                     },
                     measurement = ingredient.measurement,
-                    viewModel = koinViewModel {
-                        parametersOf(ingredient.foodId)
-                    }
+                    viewModel = koinViewModel { parametersOf(ingredient.foodId) },
                 )
             }
         }
     }
 }
 
-@Serializable
-private data object Form
+@Serializable private data object Form
 
-@Serializable
-private data object IngredientsSearch
+@Serializable private data object IngredientsSearch
 
-@Serializable
-private data class EditIngredient(val index: Int)
+@Serializable private data class EditIngredient(val index: Int)
 
 @Serializable
 private data class IngredientMeasurement(
     val productId: Long?,
     val recipeId: Long?,
     val measurementType: MeasurementType,
-    val quantity: Float
+    val quantity: Float,
 ) {
     constructor(
         foodId: FoodId,
-        measurement: Measurement
+        measurement: Measurement,
     ) : this(
         productId = (foodId as? FoodId.Product)?.id,
         recipeId = (foodId as? FoodId.Recipe)?.id,
         measurementType = measurement.type,
-        quantity = measurement.rawValue
+        quantity = measurement.rawValue,
     )
 
     val foodId: FoodId
-        get() = when {
-            productId != null -> FoodId.Product(productId)
-            recipeId != null -> FoodId.Recipe(recipeId)
-            else -> throw IllegalStateException("Food ID is not set")
-        }
+        get() =
+            when {
+                productId != null -> FoodId.Product(productId)
+                recipeId != null -> FoodId.Recipe(recipeId)
+                else -> throw IllegalStateException("Food ID is not set")
+            }
 
     val measurement: Measurement
         get() = Measurement.from(measurementType, quantity)

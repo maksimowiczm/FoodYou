@@ -15,19 +15,10 @@ val usdaModule = module {
     single(qualifier("USDA")) {
         HttpClient {
             install(HttpTimeout)
-            install(ContentNegotiation) {
-                json(
-                    Json {
-                        ignoreUnknownKeys = true
-                    }
-                )
-            }
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
     }
 
-    factory {
-        USDARemoteDataSourceImpl(
-            client = get(qualifier("USDA"))
-        )
-    }.bind<USDARemoteDataSource>()
+    factory { USDARemoteDataSourceImpl(client = get(qualifier("USDA"))) }
+        .bind<USDARemoteDataSource>()
 }

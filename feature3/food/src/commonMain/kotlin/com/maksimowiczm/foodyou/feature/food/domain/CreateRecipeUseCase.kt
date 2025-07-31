@@ -14,13 +14,13 @@ interface CreateRecipeUseCase {
         note: String?,
         isLiquid: Boolean,
         ingredients: List<Pair<FoodId, Measurement>>,
-        event: FoodEvent.FoodCreationEvent
+        event: FoodEvent.FoodCreationEvent,
     ): FoodId.Recipe
 }
 
 internal class CreateRecipeUseCaseImpl(
     foodDatabase: FoodDatabase,
-    private val foodEventMapper: FoodEventMapper
+    private val foodEventMapper: FoodEventMapper,
 ) : CreateRecipeUseCase {
 
     private val recipeDao = foodDatabase.recipeDao
@@ -32,30 +32,24 @@ internal class CreateRecipeUseCaseImpl(
         note: String?,
         isLiquid: Boolean,
         ingredients: List<Pair<FoodId, Measurement>>,
-        event: FoodEvent.FoodCreationEvent
+        event: FoodEvent.FoodCreationEvent,
     ): FoodId.Recipe {
-        val recipe = Recipe(
-            name = name,
-            servings = servings,
-            note = note,
-            isLiquid = isLiquid
-        )
+        val recipe = Recipe(name = name, servings = servings, note = note, isLiquid = isLiquid)
 
-        val ingredients = ingredients.map { (foodId, measurement) ->
-            RecipeIngredient(
-                ingredientRecipeId = (foodId as? FoodId.Recipe)?.id,
-                ingredientProductId = (foodId as? FoodId.Product)?.id,
-                measurement = measurement.type,
-                quantity = measurement.rawValue
-            )
-        }
+        val ingredients =
+            ingredients.map { (foodId, measurement) ->
+                RecipeIngredient(
+                    ingredientRecipeId = (foodId as? FoodId.Recipe)?.id,
+                    ingredientProductId = (foodId as? FoodId.Product)?.id,
+                    measurement = measurement.type,
+                    quantity = measurement.rawValue,
+                )
+            }
 
-        val id = recipeDao.insertRecipeWithIngredients(
-            recipe = recipe,
-            ingredients = ingredients
-        ).let {
-            FoodId.Recipe(it)
-        }
+        val id =
+            recipeDao.insertRecipeWithIngredients(recipe = recipe, ingredients = ingredients).let {
+                FoodId.Recipe(it)
+            }
 
         val eventEntity = foodEventMapper.toEntity(event, id)
         foodEventDao.insert(eventEntity)

@@ -22,6 +22,5 @@ interface FoodEventDao {
 
     fun observeRecipeEvents(recipeId: Long): Flow<List<FoodEvent>> = observeEvents(null, recipeId)
 
-    @Insert
-    suspend fun insert(event: FoodEvent)
+    @Insert suspend fun insert(event: FoodEvent)
 }

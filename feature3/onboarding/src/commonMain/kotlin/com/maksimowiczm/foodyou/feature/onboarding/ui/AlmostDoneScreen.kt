@@ -35,47 +35,44 @@ fun AlmostDoneScreen(modifier: Modifier = Modifier) {
                 title = {
                     Text(
                         text = stringResource(Res.string.headline_almost_done),
-                        style = MaterialTheme.typography.displaySmall
+                        style = MaterialTheme.typography.displaySmall,
                     )
                 }
             )
-        }
+        },
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             CircularWavyProgressIndicator(
-                modifier = Modifier
-                    .sizeIn(
-                        maxWidth = 100.dp,
-                        maxHeight = 100.dp
-                    )
-                    .fillMaxSize()
-                    .aspectRatio(1f),
-                trackStroke = Stroke(
-                    width = with(LocalDensity.current) { 12.dp.toPx() },
-                    cap = StrokeCap.Round
-                ),
-                stroke = Stroke(
-                    width = with(LocalDensity.current) { 8.dp.toPx() },
-                    cap = StrokeCap.Round
-                ),
-                gapSize = 16.dp
+                modifier =
+                    Modifier.sizeIn(maxWidth = 100.dp, maxHeight = 100.dp)
+                        .fillMaxSize()
+                        .aspectRatio(1f),
+                trackStroke =
+                    Stroke(
+                        width = with(LocalDensity.current) { 12.dp.toPx() },
+                        cap = StrokeCap.Round,
+                    ),
+                stroke =
+                    Stroke(
+                        width = with(LocalDensity.current) { 8.dp.toPx() },
+                        cap = StrokeCap.Round,
+                    ),
+                gapSize = 16.dp,
             )
             Spacer(Modifier.height(16.dp))
             Text(
                 text = stringResource(Res.string.headline_preparing_your_food_diary),
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
             Text(
                 text = stringResource(Res.string.headline_please_wait),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
     }

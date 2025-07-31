@@ -21,18 +21,18 @@ interface ObserveFoodUseCase {
 internal class ObserveFoodUseCaseImpl(
     foodDatabase: FoodDatabase,
     private val productMapper: ProductMapper,
-    private val observeRecipe: ObserveRecipeUseCase
+    private val observeRecipe: ObserveRecipeUseCase,
 ) : ObserveFoodUseCase {
     private val productDao = foodDatabase.productDao
 
-    override fun observe(foodId: FoodId): Flow<Food?> = when (foodId) {
-        is FoodId.Product -> observe(foodId)
-        is FoodId.Recipe -> observeRecipe(foodId)
-    }
+    override fun observe(foodId: FoodId): Flow<Food?> =
+        when (foodId) {
+            is FoodId.Product -> observe(foodId)
+            is FoodId.Recipe -> observeRecipe(foodId)
+        }
 
-    override fun observe(foodId: FoodId.Product) = productDao
-        .observe(foodId.id)
-        .mapIfNotNull(productMapper::toModel)
+    override fun observe(foodId: FoodId.Product) =
+        productDao.observe(foodId.id).mapIfNotNull(productMapper::toModel)
 
     override fun observe(foodId: FoodId.Recipe) = observeRecipe(foodId)
 }

@@ -26,26 +26,18 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun ChipsMealPicker(state: ChipsMealPickerState, modifier: Modifier = Modifier) {
     Row(modifier) {
-        Box(
-            modifier = Modifier.size(48.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Restaurant,
-                contentDescription = null
-            )
+        Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+            Icon(imageVector = Icons.Default.Restaurant, contentDescription = null)
         }
 
         Spacer(Modifier.width(8.dp))
 
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             state.meals.forEachIndexed { i, meal ->
                 InputChip(
                     selected = meal == state.selectedMeal,
                     onClick = { state.selectedMeal = meal },
-                    label = { Text(meal) }
+                    label = { Text(meal) },
                 )
             }
         }
@@ -55,37 +47,33 @@ internal fun ChipsMealPicker(state: ChipsMealPickerState, modifier: Modifier = M
 @Composable
 internal fun rememberChipsMealPickerState(
     meals: Set<String>,
-    selectedMeal: String = meals.first()
+    selectedMeal: String = meals.first(),
 ): ChipsMealPickerState {
     require(meals.isNotEmpty()) { "Meals list cannot be empty" }
 
     return rememberSaveable(
         meals,
         selectedMeal,
-        saver = Saver(
-            save = {
-                listOf(it.selectedMeal, it.meals)
-            },
-            restore = {
-                @Suppress("UNCHECKED_CAST")
-                ChipsMealPickerState(
-                    initialMeals = it[1] as Set<String>,
-                    selectedMeal = it[0] as String
-                )
-            }
-        )
+        saver =
+            Saver(
+                save = { listOf(it.selectedMeal, it.meals) },
+                restore = {
+                    @Suppress("UNCHECKED_CAST")
+                    ChipsMealPickerState(
+                        initialMeals = it[1] as Set<String>,
+                        selectedMeal = it[0] as String,
+                    )
+                },
+            ),
     ) {
-        ChipsMealPickerState(
-            initialMeals = meals,
-            selectedMeal = selectedMeal
-        )
+        ChipsMealPickerState(initialMeals = meals, selectedMeal = selectedMeal)
     }
 }
 
 @Stable
 internal class ChipsMealPickerState(
     initialMeals: Set<String>,
-    selectedMeal: String = initialMeals.first()
+    selectedMeal: String = initialMeals.first(),
 ) {
     init {
         require(initialMeals.isNotEmpty()) { "Meals list cannot be empty" }

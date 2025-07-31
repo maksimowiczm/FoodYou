@@ -16,7 +16,7 @@ fun <T, E> defaultValidator(): Validator<T, E> = Validator { null }
 
 fun <E> nonNegativeFloatValidator(
     onNegative: () -> E,
-    onNull: () -> E? = { null }
+    onNull: () -> E? = { null },
 ): (Float?) -> E? = {
     when {
         it == null -> onNull()
@@ -27,7 +27,7 @@ fun <E> nonNegativeFloatValidator(
 
 fun <E> positiveFloatValidator(
     onNotPositive: () -> E,
-    onNull: () -> E? = { null }
+    onNull: () -> E? = { null },
 ): (Float?) -> E? = {
     when {
         it == null -> onNull()

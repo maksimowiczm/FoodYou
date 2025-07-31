@@ -8,9 +8,10 @@ import com.maksimowiczm.foodyou.core.preferences.NullableDataStoreUserPreference
 internal class UsdaApiKey(dataStore: DataStore<Preferences>) :
     NullableDataStoreUserPreference<String, String>(
         dataStore = dataStore,
-        key = stringPreferencesKey("food:use_usda_api")
+        key = stringPreferencesKey("food:use_usda_api"),
     ) {
 
     override fun String?.toValue(): String? = this
+
     override fun String?.toStore(): String? = this
 }

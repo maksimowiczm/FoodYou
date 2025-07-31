@@ -11,14 +11,11 @@ import org.jetbrains.compose.resources.getString
 
 class AndroidClipboardManager(private val context: Context) : ClipboardManager {
     private val clipboard: android.content.ClipboardManager
-        get() = context.getSystemService(
-            Context.CLIPBOARD_SERVICE
-        ) as android.content.ClipboardManager
+        get() =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
 
     private val copyMessage: String
-        get() = runBlocking {
-            getString(Res.string.neutral_copied)
-        }
+        get() = runBlocking { getString(Res.string.neutral_copied) }
 
     override fun copy(label: String, text: String) {
         val clip = ClipData.newPlainText(label, text)
@@ -29,13 +26,15 @@ class AndroidClipboardManager(private val context: Context) : ClipboardManager {
         }
     }
 
-    override fun paste(): String? = runCatching {
-        val clip = clipboard.primaryClip
+    override fun paste(): String? =
+        runCatching {
+                val clip = clipboard.primaryClip
 
-        return if (clip != null && clip.itemCount > 0) {
-            clip.getItemAt(0).text.toString()
-        } else {
-            null
-        }
-    }.getOrNull()
+                return if (clip != null && clip.itemCount > 0) {
+                    clip.getItemAt(0).text.toString()
+                } else {
+                    null
+                }
+            }
+            .getOrNull()
 }

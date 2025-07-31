@@ -19,9 +19,7 @@ class AndroidDateFormatter(private val context: Context) : DateFormatter {
         get() = context.defaultLocale
 
     override val weekDayNamesShort: List<String>
-        get() = DayOfWeek.entries.map {
-            it.getDisplayName(TextStyle.SHORT, defaultLocale)
-        }
+        get() = DayOfWeek.entries.map { it.getDisplayName(TextStyle.SHORT, defaultLocale) }
 
     override fun formatMonthYear(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("LLLL yyyy", defaultLocale)
@@ -43,25 +41,22 @@ class AndroidDateFormatter(private val context: Context) : DateFormatter {
         return date.toJavaLocalDate().format(formatter)
     }
 
-    override fun formatTime(time: LocalTime): String = if (DateFormat.is24HourFormat(context)) {
-        DateTimeFormatter
-            .ofPattern("HH:mm", defaultLocale)
-            .format(time.toJavaLocalTime())
-    } else {
-        DateTimeFormatter
-            .ofPattern("hh:mm a", defaultLocale)
-            .format(time.toJavaLocalTime())
-    }
-
-    override fun formatDateTime(dateTime: LocalDateTime): String {
-        val pattern = if (DateFormat.is24HourFormat(context)) {
-            "d MMMM yyyy, HH:mm"
+    override fun formatTime(time: LocalTime): String =
+        if (DateFormat.is24HourFormat(context)) {
+            DateTimeFormatter.ofPattern("HH:mm", defaultLocale).format(time.toJavaLocalTime())
         } else {
-            "d MMMM yyyy, hh:mm a"
+            DateTimeFormatter.ofPattern("hh:mm a", defaultLocale).format(time.toJavaLocalTime())
         }
 
-        return DateTimeFormatter
-            .ofPattern(pattern, defaultLocale)
+    override fun formatDateTime(dateTime: LocalDateTime): String {
+        val pattern =
+            if (DateFormat.is24HourFormat(context)) {
+                "d MMMM yyyy, HH:mm"
+            } else {
+                "d MMMM yyyy, hh:mm a"
+            }
+
+        return DateTimeFormatter.ofPattern(pattern, defaultLocale)
             .format(dateTime.toJavaLocalDateTime())
     }
 }

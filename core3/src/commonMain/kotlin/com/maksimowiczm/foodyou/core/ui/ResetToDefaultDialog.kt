@@ -14,22 +14,16 @@ fun ResetToDefaultDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier,
-    text: @Composable () -> Unit
+    text: @Composable () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        confirmButton = {
-            TextButton(onConfirm) {
-                Text(stringResource(Res.string.action_reset))
-            }
-        },
+        confirmButton = { TextButton(onConfirm) { Text(stringResource(Res.string.action_reset)) } },
         modifier = modifier,
         dismissButton = {
-            TextButton(onDismissRequest) {
-                Text(stringResource(Res.string.action_cancel))
-            }
+            TextButton(onDismissRequest) { Text(stringResource(Res.string.action_cancel)) }
         },
         title = { Text(stringResource(Res.string.headline_reset_to_default)) },
-        text = text
+        text = text,
     )
 }

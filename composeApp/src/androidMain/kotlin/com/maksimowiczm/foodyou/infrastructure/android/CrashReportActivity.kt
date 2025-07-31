@@ -11,12 +11,6 @@ class CrashReportActivity : FoodYouAbstractActivity() {
 
         val errorMessage = intent.getStringExtra("report").toString()
 
-        setContent {
-            FoodYouTheme {
-                CrashReportScreen(
-                    message = errorMessage
-                )
-            }
-        }
+        setContent { FoodYouTheme { CrashReportScreen(message = errorMessage) } }
     }
 }

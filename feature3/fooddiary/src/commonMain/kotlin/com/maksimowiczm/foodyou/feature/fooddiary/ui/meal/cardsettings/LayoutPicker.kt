@@ -30,12 +30,9 @@ import org.jetbrains.compose.resources.stringResource
 internal fun LayoutPicker(
     layout: MealsCardsLayout,
     onLayoutChange: (MealsCardsLayout) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
+    Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceEvenly) {
         LayoutContainer(
             selected = layout == MealsCardsLayout.Horizontal,
             onClick = { onLayoutChange(MealsCardsLayout.Horizontal) },
@@ -43,9 +40,9 @@ internal fun LayoutPicker(
             label = {
                 Text(
                     text = stringResource(Res.string.headline_horizontal),
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
                 )
-            }
+            },
         )
 
         LayoutContainer(
@@ -55,9 +52,9 @@ internal fun LayoutPicker(
             label = {
                 Text(
                     text = stringResource(Res.string.headline_vertical),
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
                 )
-            }
+            },
         )
     }
 }
@@ -69,44 +66,47 @@ private fun LayoutContainer(
     onClick: () -> Unit,
     layout: @Composable () -> Unit,
     label: @Composable () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val containerColor by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.primaryContainer
-        } else {
-            MaterialTheme.colorScheme.surfaceContainer
-        },
-        animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()
-    )
-    val contentColor by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.onPrimaryContainer
-        } else {
-            MaterialTheme.colorScheme.onSurface
-        },
-        animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()
-    )
+    val containerColor by
+        animateColorAsState(
+            targetValue =
+                if (selected) {
+                    MaterialTheme.colorScheme.primaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceContainer
+                },
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
+        )
+    val contentColor by
+        animateColorAsState(
+            targetValue =
+                if (selected) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
+        )
 
-    val animatedCornerSize by animateDpAsState(
-        targetValue = if (selected) 28.dp else 12.dp,
-        animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()
-    )
+    val animatedCornerSize by
+        animateDpAsState(
+            targetValue = if (selected) 28.dp else 12.dp,
+            animationSpec = MaterialTheme.motionScheme.fastEffectsSpec(),
+        )
 
-    Box(
-        modifier = modifier
-    ) {
+    Box(modifier = modifier) {
         Column(
-            modifier = Modifier
-                .graphicsLayer {
-                    clip = true
-                    shape = RoundedCornerShape(animatedCornerSize)
-                }
-                .drawBehind { drawRect(containerColor) }
-                .clickable { onClick() }
-                .padding(16.dp),
+            modifier =
+                Modifier.graphicsLayer {
+                        clip = true
+                        shape = RoundedCornerShape(animatedCornerSize)
+                    }
+                    .drawBehind { drawRect(containerColor) }
+                    .clickable { onClick() }
+                    .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             CompositionLocalProvider(LocalContentColor provides contentColor) {
                 layout()

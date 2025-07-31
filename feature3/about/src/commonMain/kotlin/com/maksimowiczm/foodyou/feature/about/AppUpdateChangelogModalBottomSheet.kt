@@ -9,9 +9,7 @@ import com.maksimowiczm.foodyou.feature.about.preferences.LatestRememberedVersio
 import com.maksimowiczm.foodyou.feature.about.ui.ChangelogModalBottomSheet
 import kotlinx.coroutines.launch
 
-/**
- * Modal bottom sheet that will show the changelog of the app if the user has not seen it yet.
- */
+/** Modal bottom sheet that will show the changelog of the app if the user has not seen it yet. */
 @Composable
 fun AppUpdateChangelogModalBottomSheet(modifier: Modifier = Modifier) {
     val lastRememberedVersion = userPreference<LatestRememberedVersion>()
@@ -22,11 +20,9 @@ fun AppUpdateChangelogModalBottomSheet(modifier: Modifier = Modifier) {
     if (latestRememberedVersion != currentVersion) {
         ChangelogModalBottomSheet(
             onDismissRequest = {
-                coroutineScope.launch {
-                    lastRememberedVersion.set(currentVersion)
-                }
+                coroutineScope.launch { lastRememberedVersion.set(currentVersion) }
             },
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

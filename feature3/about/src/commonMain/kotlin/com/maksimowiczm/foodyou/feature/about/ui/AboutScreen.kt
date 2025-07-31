@@ -63,9 +63,7 @@ internal fun AboutScreen(onBack: () -> Unit, onSponsor: () -> Unit, modifier: Mo
     var showChangelog by rememberSaveable { mutableStateOf(false) }
 
     if (showChangelog) {
-        ChangelogModalBottomSheet(
-            onDismissRequest = { showChangelog = false }
-        )
+        ChangelogModalBottomSheet(onDismissRequest = { showChangelog = false })
     }
 
     AboutScreen(
@@ -77,7 +75,7 @@ internal fun AboutScreen(onBack: () -> Unit, onSponsor: () -> Unit, modifier: Mo
         onFeatureRequest = { uriHandler.openUri(linkFeatureRequest) },
         onBugReport = { uriHandler.openUri(linkBugReport) },
         onEmail = { uriHandler.openUri(BuildConfig.FEEDBACK_EMAIL_URI) },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -92,7 +90,7 @@ private fun AboutScreen(
     onFeatureRequest: () -> Unit,
     onBugReport: () -> Unit,
     onEmail: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
         // Padding according to the Material Design App bars guidelines
@@ -101,120 +99,80 @@ private fun AboutScreen(
         val padding = PaddingValues(top = 8.dp, start = 4.dp)
 
         Box(
-            modifier = Modifier
-                .windowInsetsPadding(insets)
-                .consumeWindowInsets(insets)
-                .padding(padding)
-                .zIndex(100f)
+            modifier =
+                Modifier.windowInsetsPadding(insets)
+                    .consumeWindowInsets(insets)
+                    .padding(padding)
+                    .zIndex(100f)
         ) {
             FilledIconButton(
                 onClick = onBack,
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                )
+                colors =
+                    IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(Res.string.action_go_back)
+                    contentDescription = stringResource(Res.string.action_go_back),
                 )
             }
         }
 
         Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .safeDrawingPadding()
-                .fillMaxSize()
+            modifier =
+                Modifier.verticalScroll(rememberScrollState()).safeDrawingPadding().fillMaxSize()
         ) {
             InteractiveLogo(Modifier.fillMaxWidth())
             Spacer(Modifier.height(16.dp))
-            LogoLabel(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
+            LogoLabel(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
             AboutButtons(
                 onSponsor = onSponsor,
                 onSourceCode = onSourceCode,
                 onChangelog = onChangelog,
                 onIdeas = onIdeas,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
             )
             SettingsListItem(
                 icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.VolunteerActivism,
-                        contentDescription = null
-                    )
+                    Icon(imageVector = Icons.Outlined.VolunteerActivism, contentDescription = null)
                 },
                 label = { Text(stringResource(Res.string.headline_sponsor)) },
                 onClick = onSponsor,
-                supportingContent = {
-                    Text(stringResource(Res.string.description_sponsor_short))
-                }
+                supportingContent = { Text(stringResource(Res.string.description_sponsor_short)) },
             )
             SettingsListItem(
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Code,
-                        contentDescription = null
-                    )
-                },
+                icon = { Icon(imageVector = Icons.Outlined.Code, contentDescription = null) },
                 label = { Text(stringResource(Res.string.headline_source_code)) },
                 onClick = onSourceCode,
-                supportingContent = {
-                    Text(stringResource(Res.string.description_source_code))
-                }
+                supportingContent = { Text(stringResource(Res.string.description_source_code)) },
             )
             SettingsListItem(
                 icon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 },
                 label = { Text(stringResource(Res.string.headline_changelog)) },
                 onClick = onChangelog,
-                supportingContent = { Text(stringResource(Res.string.description_changelog)) }
+                supportingContent = { Text(stringResource(Res.string.description_changelog)) },
             )
             SettingsListItem(
-                label = {
-                    Text(stringResource(Res.string.action_feature_request_on_github))
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Lightbulb,
-                        contentDescription = null
-                    )
-                },
-                onClick = onFeatureRequest
+                label = { Text(stringResource(Res.string.action_feature_request_on_github)) },
+                icon = { Icon(imageVector = Icons.Outlined.Lightbulb, contentDescription = null) },
+                onClick = onFeatureRequest,
             )
             SettingsListItem(
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.BugReport,
-                        contentDescription = null
-                    )
-                },
-                label = {
-                    Text(stringResource(Res.string.action_bug_report_on_github))
-                },
-                onClick = onBugReport
+                icon = { Icon(imageVector = Icons.Outlined.BugReport, contentDescription = null) },
+                label = { Text(stringResource(Res.string.action_bug_report_on_github)) },
+                onClick = onBugReport,
             )
             SettingsListItem(
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Email,
-                        contentDescription = null
-                    )
-                },
-                label = {
-                    Text(stringResource(Res.string.action_write_an_email))
-                },
-                onClick = onEmail
+                icon = { Icon(imageVector = Icons.Outlined.Email, contentDescription = null) },
+                label = { Text(stringResource(Res.string.action_write_an_email)) },
+                onClick = onEmail,
             )
         }
     }
@@ -222,50 +180,49 @@ private fun AboutScreen(
 
 @Composable
 private fun LogoLabel(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = stringResource(Res.string.app_name),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
         Text(
-            text = buildString {
-                append(stringResource(Res.string.headline_version))
-                append(" ")
-                append(Changelog.currentVersion?.version)
-            },
+            text =
+                buildString {
+                    append(stringResource(Res.string.headline_version))
+                    append(" ")
+                    append(Changelog.currentVersion?.version)
+                },
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
-            text = buildAnnotatedString {
-                val str = stringResource(Res.string.headline_launcher_icon_by_icons8)
-                val link = stringResource(Res.string.link_icons8)
+            text =
+                buildAnnotatedString {
+                    val str = stringResource(Res.string.headline_launcher_icon_by_icons8)
+                    val link = stringResource(Res.string.link_icons8)
 
-                str.split(" ").forEachIndexed { index, word ->
-                    if (word == "Icons8") {
-                        withLink(LinkAnnotation.Url(link)) {
-                            withStyle(
-                                MaterialTheme.typography.bodyMedium
-                                    .merge(MaterialTheme.colorScheme.primary)
-                                    .toSpanStyle()
-                            ) {
-                                append(word)
+                    str.split(" ").forEachIndexed { index, word ->
+                        if (word == "Icons8") {
+                            withLink(LinkAnnotation.Url(link)) {
+                                withStyle(
+                                    MaterialTheme.typography.bodyMedium
+                                        .merge(MaterialTheme.colorScheme.primary)
+                                        .toSpanStyle()
+                                ) {
+                                    append(word)
+                                }
                             }
+                        } else {
+                            append(word)
                         }
-                    } else {
-                        append(word)
-                    }
 
-                    if (index < str.split(" ").lastIndex) {
-                        append(" ")
+                        if (index < str.split(" ").lastIndex) {
+                            append(" ")
+                        }
                     }
-                }
-            },
+                },
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -276,54 +233,54 @@ private fun AboutButtons(
     onSourceCode: () -> Unit,
     onChangelog: () -> Unit,
     onIdeas: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
     ) {
         FilledTonalButton(
             onClick = onSponsor,
             shape = CircleShape,
-            modifier = Modifier.size(72.dp, 56.dp)
+            modifier = Modifier.size(72.dp, 56.dp),
         ) {
             Icon(
                 imageVector = Icons.Outlined.VolunteerActivism,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
             )
         }
         OutlinedButton(
             onClick = onSourceCode,
             shape = CircleShape,
-            modifier = Modifier.size(72.dp, 56.dp)
+            modifier = Modifier.size(72.dp, 56.dp),
         ) {
             Icon(
                 imageVector = Icons.Outlined.Code,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
             )
         }
         OutlinedButton(
             onClick = onChangelog,
             shape = CircleShape,
-            modifier = Modifier.size(72.dp, 56.dp)
+            modifier = Modifier.size(72.dp, 56.dp),
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.TrendingUp,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
             )
         }
         OutlinedButton(
             onClick = onIdeas,
             shape = CircleShape,
-            modifier = Modifier.size(72.dp, 56.dp)
+            modifier = Modifier.size(72.dp, 56.dp),
         ) {
             Icon(
                 imageVector = Icons.Outlined.Lightbulb,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
             )
         }
     }

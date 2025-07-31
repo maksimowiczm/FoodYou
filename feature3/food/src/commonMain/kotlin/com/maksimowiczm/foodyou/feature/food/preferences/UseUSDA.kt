@@ -8,9 +8,10 @@ import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 class UseUSDA(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<Boolean, Boolean>(
         dataStore = dataStore,
-        key = booleanPreferencesKey("food:use_usda")
+        key = booleanPreferencesKey("food:use_usda"),
     ) {
 
     override fun Boolean?.toValue() = this ?: false
+
     override fun Boolean.toStore() = this
 }

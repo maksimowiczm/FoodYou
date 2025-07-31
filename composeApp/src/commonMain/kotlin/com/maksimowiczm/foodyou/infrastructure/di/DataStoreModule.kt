@@ -16,13 +16,7 @@ private const val DATASTORE_FILE_NAME = "user_preferences.preferences_pb"
  */
 expect val dataStorePath: Scope.(fileName: String) -> Path
 
-val dataStoreModule = module {
-    single {
-        createDataStore { dataStorePath(DATASTORE_FILE_NAME) }
-    }
-}
+val dataStoreModule = module { single { createDataStore { dataStorePath(DATASTORE_FILE_NAME) } } }
 
 fun createDataStore(productFile: () -> Path): DataStore<Preferences> =
-    PreferenceDataStoreFactory.createWithPath(
-        produceFile = productFile
-    )
+    PreferenceDataStoreFactory.createWithPath(produceFile = productFile)

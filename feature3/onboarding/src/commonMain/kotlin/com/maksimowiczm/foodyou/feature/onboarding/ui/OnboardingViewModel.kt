@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 internal class OnboardingViewModel(
     dataStore: DataStore<Preferences>,
-    private val importSwissDatabaseUseCase: ImportSwissDatabaseUseCase
+    private val importSwissDatabaseUseCase: ImportSwissDatabaseUseCase,
 ) : ViewModel() {
     private val useOpenFoodFacts = dataStore.userPreference<UseOpenFoodFacts>()
     private val useUsda = dataStore.userPreference<UseUSDA>()

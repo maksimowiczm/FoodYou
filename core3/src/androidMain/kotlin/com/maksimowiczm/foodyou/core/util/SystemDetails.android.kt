@@ -9,8 +9,5 @@ actual class SystemDetails(private val context: Context) {
         get() = context.defaultLocale
 
     actual val defaultCountry: Country
-        get() = Country(
-            name = defaultLocale.displayCountry,
-            code = defaultLocale.country
-        )
+        get() = Country(name = defaultLocale.displayCountry, code = defaultLocale.country)
 }

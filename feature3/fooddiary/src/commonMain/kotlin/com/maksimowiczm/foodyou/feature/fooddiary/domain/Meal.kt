@@ -9,7 +9,7 @@ internal data class Meal(
     val from: LocalTime,
     val to: LocalTime,
     val rank: Int,
-    val food: List<FoodWithMeasurement>
+    val food: List<FoodWithMeasurement>,
 ) {
     val isAllDay: Boolean
         get() = from == to

@@ -70,48 +70,47 @@ data class CreateMeasurement(
     val mealId: Long,
     val epochDay: Long,
     val measurementType: MeasurementType?,
-    val quantity: Float?
+    val quantity: Float?,
 ) {
     constructor(
         foodId: FoodId,
         mealId: Long,
         date: LocalDate,
-        measurement: Measurement?
+        measurement: Measurement?,
     ) : this(
         productId = (foodId as? FoodId.Product)?.id,
         recipeId = (foodId as? FoodId.Recipe)?.id,
         mealId = mealId,
         epochDay = date.toEpochDays(),
         measurementType = measurement?.type,
-        quantity = measurement?.rawValue
+        quantity = measurement?.rawValue,
     )
 
     val foodId: FoodId
-        get() = when {
-            productId != null -> FoodId.Product(productId)
-            recipeId != null -> FoodId.Recipe(recipeId)
-            else -> throw IllegalStateException("Either productId or recipeId must be provided")
-        }
+        get() =
+            when {
+                productId != null -> FoodId.Product(productId)
+                recipeId != null -> FoodId.Recipe(recipeId)
+                else -> throw IllegalStateException("Either productId or recipeId must be provided")
+            }
 
     val measurement: Measurement?
-        get() = if (measurementType != null && quantity != null) {
-            Measurement.from(measurementType, quantity)
-        } else {
-            null
-        }
+        get() =
+            if (measurementType != null && quantity != null) {
+                Measurement.from(measurementType, quantity)
+            } else {
+                null
+            }
 
     val date: LocalDate
         get() = LocalDate.fromEpochDays(epochDay)
 }
 
-@Serializable
-data class UpdateProductMeasurement(val measurementId: Long)
+@Serializable data class UpdateProductMeasurement(val measurementId: Long)
 
-@Serializable
-data object MealSettings
+@Serializable data object MealSettings
 
-@Serializable
-data object MealsCardsSettings
+@Serializable data object MealsCardsSettings
 
 fun NavGraphBuilder.foodDiaryGraph(
     foodSearchOnBack: () -> Unit,
@@ -137,7 +136,7 @@ fun NavGraphBuilder.foodDiaryGraph(
     mealSettingsOnBack: () -> Unit,
     mealSettingsOnMealsCardsSettings: () -> Unit,
     mealsCardsSettingsOnBack: () -> Unit,
-    mealsCardsOnMealSettings: () -> Unit
+    mealsCardsOnMealSettings: () -> Unit,
 ) {
     forwardBackwardComposable<FoodSearch> { backStack ->
         val route = backStack.toRoute<FoodSearch>()
@@ -153,7 +152,7 @@ fun NavGraphBuilder.foodDiaryGraph(
             onCreateRecipe = { foodSearchOnCreateRecipe(mealId, date) },
             mealId = mealId,
             date = date,
-            animatedVisibilityScope = this
+            animatedVisibilityScope = this,
         )
     }
     forwardBackwardComposable<CreateProduct> { backStack ->
@@ -161,9 +160,7 @@ fun NavGraphBuilder.foodDiaryGraph(
 
         CreateProductScreen(
             onBack = createProductOnBack,
-            onCreate = {
-                createProductOnCreate(it, route.mealId, route.localDate)
-            }
+            onCreate = { createProductOnCreate(it, route.mealId, route.localDate) },
         )
     }
     forwardBackwardComposable<UpdateProduct> {
@@ -172,7 +169,7 @@ fun NavGraphBuilder.foodDiaryGraph(
         UpdateProductScreen(
             onBack = updateProductOnBack,
             onUpdate = updateProductOnUpdate,
-            productId = route.productId
+            productId = route.productId,
         )
     }
     forwardBackwardComposable<CreateMeasurement> {
@@ -187,7 +184,7 @@ fun NavGraphBuilder.foodDiaryGraph(
             mealId = route.mealId,
             date = route.date,
             measurement = route.measurement,
-            animatedVisibilityScope = this
+            animatedVisibilityScope = this,
         )
     }
     forwardBackwardComposable<UpdateProductMeasurement> {
@@ -199,7 +196,7 @@ fun NavGraphBuilder.foodDiaryGraph(
             onDelete = updateMeasurementOnDelete,
             onUpdateMeasurement = updateMeasurementOnUpdate,
             measurementId = route.measurementId,
-            animatedVisibilityScope = this
+            animatedVisibilityScope = this,
         )
     }
     forwardBackwardComposable<CreateRecipe> {
@@ -207,9 +204,7 @@ fun NavGraphBuilder.foodDiaryGraph(
 
         CreateRecipeScreen(
             onBack = createRecipeOnBack,
-            onCreate = { id ->
-                createRecipeOnCreate(id, route.mealId, route.localDate)
-            }
+            onCreate = { id -> createRecipeOnCreate(id, route.mealId, route.localDate) },
         )
     }
     forwardBackwardComposable<UpdateRecipe> {
@@ -218,19 +213,19 @@ fun NavGraphBuilder.foodDiaryGraph(
         UpdateRecipeScreen(
             id = route.foodId,
             onBack = updateRecipeOnBack,
-            onUpdate = updateRecipeOnUpdate
+            onUpdate = updateRecipeOnUpdate,
         )
     }
     forwardBackwardComposable<MealSettings> {
         MealSettingsScreen(
             onBack = mealSettingsOnBack,
-            onMealsCardsSettings = mealSettingsOnMealsCardsSettings
+            onMealsCardsSettings = mealSettingsOnMealsCardsSettings,
         )
     }
     forwardBackwardComposable<MealsCardsSettings> {
         MealsCardsSettings(
             onBack = mealsCardsSettingsOnBack,
-            onMealSettings = mealsCardsOnMealSettings
+            onMealSettings = mealsCardsOnMealSettings,
         )
     }
 }

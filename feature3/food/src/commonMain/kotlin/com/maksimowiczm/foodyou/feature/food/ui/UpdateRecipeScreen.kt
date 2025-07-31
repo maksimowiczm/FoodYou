@@ -29,11 +29,9 @@ fun UpdateRecipeScreen(
     id: FoodId.Recipe,
     onBack: () -> Unit,
     onUpdate: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val viewModel = koinViewModel<UpdateRecipeViewModel> {
-        parametersOf(id)
-    }
+    val viewModel = koinViewModel<UpdateRecipeViewModel> { parametersOf(id) }
     val latestOnUpdate by rememberUpdatedState(onUpdate)
     LaunchedCollectWithLifecycle(viewModel.events) {
         when (it) {
@@ -48,31 +46,28 @@ fun UpdateRecipeScreen(
         return
     }
 
-    val formState = rememberRecipeFormState(
-        initialName = recipe.name,
-        initialServings = recipe.servings,
-        initialNote = recipe.note,
-        initialIsLiquid = recipe.isLiquid,
-        initialIngredients = recipe.ingredients.map { it.toMinimalIngredient() }
-    )
-    val asRecipe = remember(formState.ingredients) {
-        viewModel.intoRecipe(formState)
-    }.collectAsStateWithLifecycle(null).value
+    val formState =
+        rememberRecipeFormState(
+            initialName = recipe.name,
+            initialServings = recipe.servings,
+            initialNote = recipe.note,
+            initialIsLiquid = recipe.isLiquid,
+            initialIngredients = recipe.ingredients.map { it.toMinimalIngredient() },
+        )
+    val asRecipe =
+        remember(formState.ingredients) { viewModel.intoRecipe(formState) }
+            .collectAsStateWithLifecycle(null)
+            .value
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
-    BackHandler(
-        enabled = formState.isModified,
-        onBack = { showDiscardDialog = true }
-    )
+    BackHandler(enabled = formState.isModified, onBack = { showDiscardDialog = true })
     if (showDiscardDialog) {
         DiscardDialog(
-            onDismissRequest = {
-                showDiscardDialog = false
-            },
+            onDismissRequest = { showDiscardDialog = false },
             onDiscard = {
                 showDiscardDialog = false
                 onBack()
-            }
+            },
         ) {
             Text(stringResource(Res.string.question_discard_changes))
         }
@@ -91,6 +86,6 @@ fun UpdateRecipeScreen(
         topBarTitle = stringResource(Res.string.headline_edit_recipe),
         mainRecipeId = id,
         recipe = asRecipe,
-        modifier = modifier
+        modifier = modifier,
     )
 }

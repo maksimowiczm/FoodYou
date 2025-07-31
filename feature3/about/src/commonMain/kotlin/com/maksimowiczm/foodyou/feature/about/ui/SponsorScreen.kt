@@ -62,7 +62,7 @@ internal fun SponsorScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
         onOpenUrl = { uriHandler.openUri(it) },
         onCopy = { clipboardManager.copy("address", it) },
         onContact = { uriHandler.openUri(BuildConfig.FEEDBACK_EMAIL_URI) },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -73,7 +73,7 @@ private fun SponsorScreen(
     onOpenUrl: (String) -> Unit,
     onCopy: (String) -> Unit,
     onContact: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -83,22 +83,20 @@ private fun SponsorScreen(
             LargeFlexibleTopAppBar(
                 title = { Text(stringResource(Res.string.headline_sponsor)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = paddingValues.add(vertical = 8.dp)
+            contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
             item {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     CompositionLocalProvider(
                         LocalTextStyle provides MaterialTheme.typography.bodyMedium
                     ) {
@@ -114,34 +112,20 @@ private fun SponsorScreen(
                     Text(
                         text = stringResource(Res.string.sponsor_bank_or_card).uppercase(),
                         modifier = Modifier.padding(start = 16.dp),
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelLarge,
                     )
 
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         SponsorMethod.fiat.forEach {
-                            it.SponsorCard(
-                                onClick = { onOpenUrl(it.url) }
-                            )
+                            it.SponsorCard(onClick = { onOpenUrl(it.url) })
                         }
                     }
                 }
             }
 
-            items(
-                items = SponsorMethod.crypto
-            ) {
-                it.SponsorCard(
-                    onClick = { onCopy(it.address) }
-                )
-            }
+            items(items = SponsorMethod.crypto) { it.SponsorCard(onClick = { onCopy(it.address) }) }
 
-            item {
-                ContactCard(
-                    onContact = onContact
-                )
-            }
+            item { ContactCard(onContact = onContact) }
         }
     }
 }
@@ -151,24 +135,21 @@ private fun LinkSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modifie
     SponsorCard(
         label = name,
         leadingIcon = { Icon(Modifier.width(24.dp)) },
-        trailingIcon = {
-            Icon(
-                imageVector = Icons.Outlined.Link,
-                contentDescription = null
-            )
-        },
+        trailingIcon = { Icon(imageVector = Icons.Outlined.Link, contentDescription = null) },
         onClick = onClick,
         modifier = modifier,
-        color = if (primary) {
-            MaterialTheme.colorScheme.primaryContainer
-        } else {
-            MaterialTheme.colorScheme.surfaceContainer
-        },
-        contentColor = if (primary) {
-            MaterialTheme.colorScheme.onPrimaryContainer
-        } else {
-            MaterialTheme.colorScheme.onSurface
-        }
+        color =
+            if (primary) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.surfaceContainer
+            },
+        contentColor =
+            if (primary) {
+                MaterialTheme.colorScheme.onPrimaryContainer
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            },
     )
 }
 
@@ -187,7 +168,7 @@ private fun CryptoSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modif
         Text(
             text = name.uppercase(),
             modifier = Modifier.padding(start = 16.dp),
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge,
         )
         SponsorCard(
             label = address,
@@ -197,29 +178,28 @@ private fun CryptoSponsorMethod.SponsorCard(onClick: () -> Unit, modifier: Modif
                     Icon(
                         imageVector = Icons.Outlined.Check,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 } else {
-                    Icon(
-                        imageVector = Icons.Outlined.ContentCopy,
-                        contentDescription = null
-                    )
+                    Icon(imageVector = Icons.Outlined.ContentCopy, contentDescription = null)
                 }
             },
             onClick = {
                 clicked = true
                 onClick()
             },
-            color = if (primary) {
-                MaterialTheme.colorScheme.primaryContainer
-            } else {
-                MaterialTheme.colorScheme.surfaceContainer
-            },
-            contentColor = if (primary) {
-                MaterialTheme.colorScheme.onPrimaryContainer
-            } else {
-                MaterialTheme.colorScheme.onSurface
-            }
+            color =
+                if (primary) {
+                    MaterialTheme.colorScheme.primaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceContainer
+                },
+            contentColor =
+                if (primary) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
         )
     }
 }
@@ -233,25 +213,25 @@ private fun SponsorCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.surfaceContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
 ) {
     Surface(
         onClick = onClick,
         modifier = modifier.fillMaxWidth().heightIn(min = 56.dp),
         shape = MaterialTheme.shapes.medium,
         color = color,
-        contentColor = contentColor
+        contentColor = contentColor,
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             leadingIcon()
             Text(
                 text = label,
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.bodyMediumEmphasized
+                style = MaterialTheme.typography.bodyMediumEmphasized,
             )
             trailingIcon()
         }
@@ -263,34 +243,30 @@ private fun ContactCard(onContact: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         onClick = onContact,
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            contentColor = MaterialTheme.colorScheme.onSurface
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            ),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Hail,
-                    contentDescription = null
-                )
+                Icon(imageVector = Icons.Outlined.Hail, contentDescription = null)
                 Text(
                     text = stringResource(Res.string.headline_contact),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
 
             Text(
                 text = stringResource(Res.string.description_sponsor_contact),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }

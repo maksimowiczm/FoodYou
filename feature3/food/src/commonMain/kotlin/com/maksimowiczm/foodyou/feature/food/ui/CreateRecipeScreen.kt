@@ -26,7 +26,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CreateRecipeScreen(
     onBack: () -> Unit,
     onCreate: (FoodId.Recipe) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val viewModel = koinViewModel<CreateRecipeViewModel>()
     val latestOnCreate by rememberUpdatedState(onCreate)
@@ -36,31 +36,28 @@ fun CreateRecipeScreen(
         }
     }
 
-    val formState = rememberRecipeFormState(
-        initialName = "",
-        initialServings = 1,
-        initialNote = null,
-        initialIsLiquid = false,
-        initialIngredients = emptyList()
-    )
-    val asRecipe = remember(formState.ingredients) {
-        viewModel.intoRecipe(formState)
-    }.collectAsStateWithLifecycle(null).value
+    val formState =
+        rememberRecipeFormState(
+            initialName = "",
+            initialServings = 1,
+            initialNote = null,
+            initialIsLiquid = false,
+            initialIngredients = emptyList(),
+        )
+    val asRecipe =
+        remember(formState.ingredients) { viewModel.intoRecipe(formState) }
+            .collectAsStateWithLifecycle(null)
+            .value
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
-    BackHandler(
-        enabled = formState.isModified,
-        onBack = { showDiscardDialog = true }
-    )
+    BackHandler(enabled = formState.isModified, onBack = { showDiscardDialog = true })
     if (showDiscardDialog) {
         DiscardDialog(
-            onDismissRequest = {
-                showDiscardDialog = false
-            },
+            onDismissRequest = { showDiscardDialog = false },
             onDiscard = {
                 showDiscardDialog = false
                 onBack()
-            }
+            },
         ) {
             Text(stringResource(Res.string.question_discard_recipe))
         }
@@ -79,6 +76,6 @@ fun CreateRecipeScreen(
         topBarTitle = stringResource(Res.string.headline_create_recipe),
         mainRecipeId = null,
         recipe = asRecipe,
-        modifier = modifier
+        modifier = modifier,
     )
 }

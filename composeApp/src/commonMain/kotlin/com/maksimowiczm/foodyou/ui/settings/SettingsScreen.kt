@@ -66,7 +66,7 @@ fun SettingsScreen(
     onSponsor: () -> Unit,
     onAbout: () -> Unit,
     onDatabase: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -78,26 +78,20 @@ fun SettingsScreen(
         modifier = modifier,
         topBar = {
             LargeFlexibleTopAppBar(
-                title = {
-                    Text(stringResource(Res.string.headline_settings))
-                },
-                navigationIcon = {
-                    ArrowBackIconButton(onBack)
-                },
-                scrollBehavior = scrollBehavior
+                title = { Text(stringResource(Res.string.headline_settings)) },
+                navigationIcon = { ArrowBackIconButton(onBack) },
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues.add(vertical = 8.dp)
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
             item {
                 SponsorSettingsListItem(
                     onClick = onSponsor,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
             }
 
@@ -105,10 +99,7 @@ fun SettingsScreen(
                 AnimatedWavyLine(
                     color = MaterialTheme.colorScheme.primary,
                     strokeWidth = 4.dp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 24.dp)
-                        .height(16.dp)
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp).height(16.dp),
                 )
             }
 
@@ -117,7 +108,7 @@ fun SettingsScreen(
                     onClick = onPersonalization,
                     shape = shape,
                     color = color,
-                    contentColor = contentColor
+                    contentColor = contentColor,
                 )
             }
 
@@ -126,7 +117,7 @@ fun SettingsScreen(
                     onClick = onMeals,
                     shape = shape,
                     color = color,
-                    contentColor = contentColor
+                    contentColor = contentColor,
                 )
             }
 
@@ -135,7 +126,7 @@ fun SettingsScreen(
                     onClick = onDatabase,
                     shape = shape,
                     containerColor = color,
-                    contentColor = contentColor
+                    contentColor = contentColor,
                 )
             }
 
@@ -144,7 +135,7 @@ fun SettingsScreen(
                     onClick = onLanguage,
                     shape = shape,
                     containerColor = color,
-                    contentColor = contentColor
+                    contentColor = contentColor,
                 )
             }
 
@@ -153,7 +144,7 @@ fun SettingsScreen(
                     onClick = onAbout,
                     shape = shape,
                     color = color,
-                    contentColor = contentColor
+                    contentColor = contentColor,
                 )
             }
         }
@@ -166,26 +157,19 @@ fun DatabaseSettingsListItem(
     shape: Shape,
     containerColor: Color,
     contentColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     SettingsListItem(
         icon = {
-            Icon(
-                painter = painterResource(Res.drawable.ic_database),
-                contentDescription = null
-            )
+            Icon(painter = painterResource(Res.drawable.ic_database), contentDescription = null)
         },
-        label = {
-            Text(stringResource(Res.string.headline_database))
-        },
-        supportingContent = {
-            Text(stringResource(Res.string.description_manage_database))
-        },
+        label = { Text(stringResource(Res.string.headline_database)) },
+        supportingContent = { Text(stringResource(Res.string.description_manage_database)) },
         onClick = onClick,
         modifier = modifier,
         shape = shape,
         color = containerColor,
-        contentColor = contentColor
+        contentColor = contentColor,
     )
 }
 
@@ -195,40 +179,40 @@ fun AnimatedWavyLine(
     strokeWidth: Dp,
     modifier: Modifier = Modifier,
     frequency: Float = 0.05f,
-    animationSpec: InfiniteRepeatableSpec<Float> = infiniteRepeatable(
-        animation = tween(5_000, easing = LinearEasing),
-        repeatMode = RepeatMode.Restart
-    )
+    animationSpec: InfiniteRepeatableSpec<Float> =
+        infiniteRepeatable(
+            animation = tween(5_000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+        ),
 ) {
     val infiniteTransition = rememberInfiniteTransition()
-    val phase by infiniteTransition.animateFloat(
-        initialValue = 2 * PI.toFloat(),
-        targetValue = 0f,
-        animationSpec = animationSpec
-    )
+    val phase by
+        infiniteTransition.animateFloat(
+            initialValue = 2 * PI.toFloat(),
+            targetValue = 0f,
+            animationSpec = animationSpec,
+        )
 
     Canvas(modifier) {
         val centerY = size.height / 2
         val amplitude = size.height / 4
 
-        val path = Path().apply {
-            for (x in 0..size.width.toInt()) {
-                val y = centerY + amplitude * sin(frequency * x + phase)
-                if (x == 0) {
-                    moveTo(x.toFloat(), y)
-                } else {
-                    lineTo(x.toFloat(), y)
+        val path =
+            Path().apply {
+                for (x in 0..size.width.toInt()) {
+                    val y = centerY + amplitude * sin(frequency * x + phase)
+                    if (x == 0) {
+                        moveTo(x.toFloat(), y)
+                    } else {
+                        lineTo(x.toFloat(), y)
+                    }
                 }
             }
-        }
 
         drawPath(
             path = path,
             color = color,
-            style = Stroke(
-                width = strokeWidth.toPx(),
-                cap = StrokeCap.Round
-            )
+            style = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round),
         )
     }
 }
@@ -240,31 +224,31 @@ private fun SponsorSettingsListItem(onClick: () -> Unit, modifier: Modifier = Mo
         onClick = onClick,
         modifier = modifier.height(96.dp),
         shapes = ButtonDefaults.shapes(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        contentPadding = PaddingValues(horizontal = 48.dp)
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ),
+        contentPadding = PaddingValues(horizontal = 48.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Icon(
                 imageVector = Icons.Outlined.VolunteerActivism,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
             )
             Column {
                 Text(
                     text = stringResource(Res.string.headline_sponsor),
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
                 )
                 Text(
                     text = stringResource(Res.string.description_sponsor_short_2),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
         }

@@ -38,7 +38,7 @@ internal fun CreateProductScreen(
     onBack: () -> Unit,
     onCreate: (ProductFormState) -> Unit,
     onDownload: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     val handleBack = {
@@ -48,18 +48,14 @@ internal fun CreateProductScreen(
             showDiscardDialog = true
         }
     }
-    BackHandler(
-        enabled = state.isModified
-    ) {
-        showDiscardDialog = true
-    }
+    BackHandler(enabled = state.isModified) { showDiscardDialog = true }
     if (showDiscardDialog) {
         DiscardDialog(
             onDismissRequest = { showDiscardDialog = false },
             onDiscard = {
                 showDiscardDialog = false
                 onBack()
-            }
+            },
         ) {
             Text(stringResource(Res.string.question_discard_product))
         }
@@ -74,26 +70,20 @@ internal fun CreateProductScreen(
                 title = { Text(stringResource(Res.string.headline_create_product)) },
                 navigationIcon = { ArrowBackIconButton(handleBack) },
                 actions = {
-                    FilledIconButton(
-                        onClick = { onCreate(state) },
-                        enabled = state.isValid
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Save,
-                            contentDescription = null
-                        )
+                    FilledIconButton(onClick = { onCreate(state) }, enabled = state.isValid) {
+                        Icon(imageVector = Icons.Outlined.Save, contentDescription = null)
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .imePadding()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
+            modifier =
+                Modifier.fillMaxSize()
+                    .imePadding()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues,
         ) {
             item {
                 AssistChip(
@@ -104,18 +94,13 @@ internal fun CreateProductScreen(
                         Icon(
                             imageVector = Icons.Default.Download,
                             contentDescription = null,
-                            modifier = Modifier.size(AssistChipDefaults.IconSize)
+                            modifier = Modifier.size(AssistChipDefaults.IconSize),
                         )
-                    }
+                    },
                 )
             }
 
-            item {
-                ProductForm(
-                    state = state,
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                )
-            }
+            item { ProductForm(state = state, contentPadding = PaddingValues(horizontal = 16.dp)) }
         }
     }
 }

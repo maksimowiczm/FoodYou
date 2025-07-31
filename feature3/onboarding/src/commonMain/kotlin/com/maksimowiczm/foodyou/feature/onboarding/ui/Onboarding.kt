@@ -23,57 +23,38 @@ fun Onboarding(onFinish: () -> Unit, modifier: Modifier = Modifier) {
         }
     }
 
-    NavHost(
-        navController = navController,
-        startDestination = BeforeYouStart,
-        modifier = modifier
-    ) {
+    NavHost(navController = navController, startDestination = BeforeYouStart, modifier = modifier) {
         forwardBackwardComposable<BeforeYouStart> {
             BeforeYouStartScreen(
-                onAgree = {
-                    navController.navigate(FoodDatabase) {
-                        launchSingleTop = true
-                    }
-                }
+                onAgree = { navController.navigate(FoodDatabase) { launchSingleTop = true } }
             )
         }
         forwardBackwardComposable<FoodDatabase> {
             FoodDatabaseScreen(
-                onBack = {
-                    navController.popBackStack<FoodDatabase>(true)
-                },
+                onBack = { navController.popBackStack<FoodDatabase>(true) },
                 onSkip = {
                     viewModel.finish(state)
                     navController.navigate(AlmostDone) {
                         launchSingleTop = true
-                        popUpTo(BeforeYouStart) {
-                            inclusive = true
-                        }
+                        popUpTo(BeforeYouStart) { inclusive = true }
                     }
                 },
                 onAgree = {
                     viewModel.finish(state)
                     navController.navigate(AlmostDone) {
                         launchSingleTop = true
-                        popUpTo(BeforeYouStart) {
-                            inclusive = true
-                        }
+                        popUpTo(BeforeYouStart) { inclusive = true }
                     }
                 },
-                state = state
+                state = state,
             )
         }
-        forwardBackwardComposable<AlmostDone> {
-            AlmostDoneScreen()
-        }
+        forwardBackwardComposable<AlmostDone> { AlmostDoneScreen() }
     }
 }
 
-@Serializable
-private data object BeforeYouStart
+@Serializable private data object BeforeYouStart
 
-@Serializable
-private data object FoodDatabase
+@Serializable private data object FoodDatabase
 
-@Serializable
-private data object AlmostDone
+@Serializable private data object AlmostDone

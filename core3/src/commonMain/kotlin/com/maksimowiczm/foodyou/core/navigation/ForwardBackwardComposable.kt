@@ -20,32 +20,42 @@ import kotlin.reflect.KType
 /**
  * A composable that animates forward and backward navigation with shared axis X transitions.
  *
- * @see <a href="https://m3.material.io/styles/motion/transitions/transition-patterns#df9c7d76-1454-47f3-ad1c-268a31f58bad">Forward and backward</a>
+ * @see <a
+ *   href="https://m3.material.io/styles/motion/transitions/transition-patterns#df9c7d76-1454-47f3-ad1c-268a31f58bad">Forward
+ *   and backward</a>
  */
 inline fun <reified T : Any> NavGraphBuilder.forwardBackwardComposable(
     typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    noinline enterTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-        EnterTransition?
-    )? = { ForwardBackwardComposableDefaults.enterTransition() },
-    noinline exitTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-        ExitTransition?
-    )? = { ForwardBackwardComposableDefaults.exitTransition() },
-    noinline popEnterTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-        EnterTransition?
-    )? = { ForwardBackwardComposableDefaults.popEnterTransition() },
-    noinline popExitTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-        ExitTransition?
-    )? = { ForwardBackwardComposableDefaults.popExitTransition() },
-    noinline sizeTransform: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-        SizeTransform?
-    )? = null,
-    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
+    noinline enterTransition:
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            EnterTransition?)? =
+        {
+            ForwardBackwardComposableDefaults.enterTransition()
+        },
+    noinline exitTransition:
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            ExitTransition?)? =
+        {
+            ForwardBackwardComposableDefaults.exitTransition()
+        },
+    noinline popEnterTransition:
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            EnterTransition?)? =
+        {
+            ForwardBackwardComposableDefaults.popEnterTransition()
+        },
+    noinline popExitTransition:
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            ExitTransition?)? =
+        {
+            ForwardBackwardComposableDefaults.popExitTransition()
+        },
+    noinline sizeTransform:
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            SizeTransform?)? =
+        null,
+    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable<T>(
         typeMap = typeMap,
@@ -55,7 +65,7 @@ inline fun <reified T : Any> NavGraphBuilder.forwardBackwardComposable(
         popEnterTransition = popEnterTransition,
         popExitTransition = popExitTransition,
         sizeTransform = sizeTransform,
-        content = content
+        content = content,
     )
 }
 
@@ -64,27 +74,35 @@ fun NavGraphBuilder.forwardBackwardComposable(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    enterTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-        EnterTransition?
-    )? = { ForwardBackwardComposableDefaults.enterTransition() },
-    exitTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-        ExitTransition?
-    )? = { ForwardBackwardComposableDefaults.exitTransition() },
-    popEnterTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-        EnterTransition?
-    )? = { ForwardBackwardComposableDefaults.popEnterTransition() },
-    popExitTransition: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-        ExitTransition?
-    )? = { ForwardBackwardComposableDefaults.popExitTransition() },
-    sizeTransform: (
-        AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
-        SizeTransform?
-    )? = null,
-    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
+    enterTransition:
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            EnterTransition?)? =
+        {
+            ForwardBackwardComposableDefaults.enterTransition()
+        },
+    exitTransition:
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            ExitTransition?)? =
+        {
+            ForwardBackwardComposableDefaults.exitTransition()
+        },
+    popEnterTransition:
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            EnterTransition?)? =
+        {
+            ForwardBackwardComposableDefaults.popEnterTransition()
+        },
+    popExitTransition:
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            ExitTransition?)? =
+        {
+            ForwardBackwardComposableDefaults.popExitTransition()
+        },
+    sizeTransform:
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            SizeTransform?)? =
+        null,
+    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable(
         route = route,
@@ -95,7 +113,7 @@ fun NavGraphBuilder.forwardBackwardComposable(
         popEnterTransition = popEnterTransition,
         popExitTransition = popExitTransition,
         sizeTransform = sizeTransform,
-        content = content
+        content = content,
     )
 }
 

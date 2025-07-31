@@ -14,7 +14,7 @@ fun CreateProductScreen(
     onBack: () -> Unit,
     onCreate: (FoodId.Product) -> Unit,
     modifier: Modifier = Modifier,
-    url: String? = null
+    url: String? = null,
 ) {
     val viewModel: CreateProductViewModel = koinViewModel()
 
@@ -29,6 +29,6 @@ fun CreateProductScreen(
         onBack = onBack,
         onCreate = viewModel::createProduct,
         modifier = modifier,
-        url = url
+        url = url,
     )
 }

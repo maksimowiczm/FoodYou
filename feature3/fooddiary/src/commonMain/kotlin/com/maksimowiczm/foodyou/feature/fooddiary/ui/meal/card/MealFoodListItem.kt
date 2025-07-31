@@ -25,21 +25,16 @@ internal fun MealFoodListItem(
     color: Color,
     contentColor: Color,
     shape: Shape,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val g = stringResource(Res.string.unit_gram_short)
 
-    val proteinsString = foodWithMeasurement.proteins?.let {
-        it.formatClipZeros("%.1f") + " $g"
-    }
+    val proteinsString = foodWithMeasurement.proteins?.let { it.formatClipZeros("%.1f") + " $g" }
 
-    val carbohydratesString = foodWithMeasurement.carbohydrates?.let {
-        it.formatClipZeros("%.1f") + " $g"
-    }
+    val carbohydratesString =
+        foodWithMeasurement.carbohydrates?.let { it.formatClipZeros("%.1f") + " $g" }
 
-    val fatsString = foodWithMeasurement.fats?.let {
-        it.formatClipZeros("%.1f") + " $g"
-    }
+    val fatsString = foodWithMeasurement.fats?.let { it.formatClipZeros("%.1f") + " $g" }
 
     val caloriesString = foodWithMeasurement.caloriesString
     val measurementString = foodWithMeasurement.measurementString
@@ -48,93 +43,78 @@ internal fun MealFoodListItem(
         FoodErrorListItem(
             headline = foodWithMeasurement.food.headline,
             errorMessage = stringResource(Res.string.error_measurement_error),
-            modifier = modifier
+            modifier = modifier,
         )
     } else if (
         proteinsString == null ||
-        carbohydratesString == null ||
-        fatsString == null ||
-        caloriesString == null
+            carbohydratesString == null ||
+            fatsString == null ||
+            caloriesString == null
     ) {
         FoodErrorListItem(
             headline = foodWithMeasurement.food.headline,
             errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
-            modifier = modifier
+            modifier = modifier,
         )
     } else {
         FoodListItem(
             name = { Text(foodWithMeasurement.food.headline) },
-            proteins = {
-                Text(
-                    text = proteinsString,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            },
+            proteins = { Text(text = proteinsString, style = MaterialTheme.typography.bodySmall) },
             carbohydrates = {
-                Text(
-                    text = carbohydratesString,
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Text(text = carbohydratesString, style = MaterialTheme.typography.bodySmall)
             },
-            fats = {
-                Text(
-                    text = fatsString,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            },
-            calories = {
-                Text(
-                    text = caloriesString,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            },
+            fats = { Text(text = fatsString, style = MaterialTheme.typography.bodySmall) },
+            calories = { Text(text = caloriesString, style = MaterialTheme.typography.bodySmall) },
             measurement = {
-                Text(
-                    text = measurementString,
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Text(text = measurementString, style = MaterialTheme.typography.bodySmall)
             },
             modifier = modifier,
             containerColor = color,
             contentColor = contentColor,
             shape = shape,
-            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
+            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
         )
     }
 }
 
 private val FoodWithMeasurement.measurementStringShort: String
-    @Composable get() = with(measurement) {
-        when (this) {
-            is Measurement.Package -> stringResource(
-                Res.string.x_times_y,
-                quantity.formatClipZeros(),
-                stringResource(Res.string.product_package)
-            )
+    @Composable
+    get() =
+        with(measurement) {
+            when (this) {
+                is Measurement.Package ->
+                    stringResource(
+                        Res.string.x_times_y,
+                        quantity.formatClipZeros(),
+                        stringResource(Res.string.product_package),
+                    )
 
-            is Measurement.Serving -> stringResource(
-                Res.string.x_times_y,
-                quantity.formatClipZeros(),
-                stringResource(Res.string.product_serving)
-            )
+                is Measurement.Serving ->
+                    stringResource(
+                        Res.string.x_times_y,
+                        quantity.formatClipZeros(),
+                        stringResource(Res.string.product_serving),
+                    )
 
-            is Measurement.Gram -> "${value.formatClipZeros()} " +
-                stringResource(Res.string.unit_gram_short)
+                is Measurement.Gram ->
+                    "${value.formatClipZeros()} " + stringResource(Res.string.unit_gram_short)
 
-            is Measurement.Milliliter -> "${value.formatClipZeros()} " +
-                stringResource(Res.string.unit_milliliter_short)
+                is Measurement.Milliliter ->
+                    "${value.formatClipZeros()} " + stringResource(Res.string.unit_milliliter_short)
+            }
         }
-    }
 
 private val FoodWithMeasurement.measurementString: String?
-    @Composable get() {
+    @Composable
+    get() {
         val short = measurementStringShort
         val weight = weight?.formatClipZeros() ?: return null
-        val suffix = if (food.isLiquid) {
-            stringResource(Res.string.unit_milliliter_short)
-        } else {
-            stringResource(Res.string.unit_gram_short)
-        }
+        val suffix =
+            if (food.isLiquid) {
+                stringResource(Res.string.unit_milliliter_short)
+            } else {
+                stringResource(Res.string.unit_gram_short)
+            }
 
         return when (measurement) {
             is Measurement.Gram,
@@ -146,7 +126,8 @@ private val FoodWithMeasurement.measurementString: String?
     }
 
 private val FoodWithMeasurement.caloriesString: String?
-    @Composable get() {
+    @Composable
+    get() {
         val value = energy?.roundToInt() ?: return null
         return "$value " + stringResource(Res.string.unit_kcal)
     }

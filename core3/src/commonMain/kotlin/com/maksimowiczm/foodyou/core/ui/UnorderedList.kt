@@ -19,9 +19,10 @@ fun unorderedList(items: List<String>, prefix: String = "\u2022\t\t") =
 fun unorderedList(vararg items: String, prefix: String = "\u2022\t\t"): AnnotatedString {
     val textStyle = LocalTextStyle.current
     val textMeasurer = rememberTextMeasurer()
-    val bulletStringWidth = remember(textStyle, textMeasurer) {
-        textMeasurer.measure(text = prefix, style = textStyle).size.width
-    }
+    val bulletStringWidth =
+        remember(textStyle, textMeasurer) {
+            textMeasurer.measure(text = prefix, style = textStyle).size.width
+        }
     val restLine = with(LocalDensity.current) { bulletStringWidth.toSp() }
     val paragraphStyle = ParagraphStyle(textIndent = TextIndent(restLine = restLine))
 

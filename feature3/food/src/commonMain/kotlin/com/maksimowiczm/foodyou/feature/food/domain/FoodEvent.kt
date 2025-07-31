@@ -15,9 +15,7 @@ sealed interface FoodEvent {
 
     class Edited(override val date: LocalDateTime, val oldFood: Food) : FoodEvent
 
-    /**
-     * Represents an event when a food item is used by an user in any way.
-     */
+    /** Represents an event when a food item is used by an user in any way. */
     class Used(override val date: LocalDateTime) : FoodEvent
 
     /**

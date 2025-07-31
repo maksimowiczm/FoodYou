@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 internal data class FoodSearchUiState(
     val sources: Map<FoodFilter.Source, FoodSourceUiState>,
     val filter: FoodFilter,
-    val recentSearches: List<String>
+    val recentSearches: List<String>,
 ) {
     val currentSourceState: FoodSourceUiState
         get() = sources[filter.source] ?: error("No state for source: ${filter.source}")
@@ -26,24 +26,17 @@ enum class RemoteStatus {
 }
 
 internal data class FoodSourceUiState(
-    /**
-     * Indicates whether the source is enabled for remote search
-     */
+    /** Indicates whether the source is enabled for remote search */
     val remoteEnabled: RemoteStatus,
-    /**
-     * Flow of paginated food search results
-     */
+    /** Flow of paginated food search results */
     val pages: Flow<PagingData<FoodSearch>>,
-    /**
-     * The number of total items available in the database
-     */
+    /** The number of total items available in the database */
     val count: Int,
     // You can hard override the visibility of the filter button
-    private val alwaysShowFilter: Boolean = false
+    private val alwaysShowFilter: Boolean = false,
 ) {
     val shouldShowFilter: Boolean
         @Composable get() = alwaysShowFilter || count > 0 || remoteEnabled == RemoteStatus.Enabled
 
-    @Composable
-    fun collectAsLazyPagingItems() = pages.collectAsLazyPagingItems()
+    @Composable fun collectAsLazyPagingItems() = pages.collectAsLazyPagingItems()
 }

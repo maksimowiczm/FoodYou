@@ -39,22 +39,25 @@ internal fun GoalsCardSettings(
     onBack: () -> Unit,
     onGoalsSettings: () -> Unit,
     modifier: Modifier = Modifier,
-    dataStore: DataStore<Preferences> = koinInject()
+    dataStore: DataStore<Preferences> = koinInject(),
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val showDetails = dataStore
-        .observe(GoalsPreferences.expandGoalsCard)
-        .collectAsStateWithLifecycle(dataStore.getBlocking(GoalsPreferences.expandGoalsCard)).value
+    val showDetails =
+        dataStore
+            .observe(GoalsPreferences.expandGoalsCard)
+            .collectAsStateWithLifecycle(dataStore.getBlocking(GoalsPreferences.expandGoalsCard))
+            .value
 
     GoalsCardSettings(
         onBack = onBack,
         showDetails = showDetails ?: true,
-        onShowDetailsChange = coroutineScope.lambda<Boolean> {
-            dataStore.set(GoalsPreferences.expandGoalsCard to it)
-        },
+        onShowDetailsChange =
+            coroutineScope.lambda<Boolean> {
+                dataStore.set(GoalsPreferences.expandGoalsCard to it)
+            },
         onGoalsSettings = onGoalsSettings,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -65,7 +68,7 @@ private fun GoalsCardSettings(
     onGoalsSettings: () -> Unit,
     showDetails: Boolean,
     onShowDetailsChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -75,15 +78,13 @@ private fun GoalsCardSettings(
             MediumFlexibleTopAppBar(
                 title = { Text(stringResource(Res.string.headline_daily_goals)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues,
         ) {
             stickyHeader {
                 GoalsCard(
@@ -95,42 +96,33 @@ private fun GoalsCardSettings(
                     dailyGoals = defaultGoals(),
                     onClick = {},
                     onLongClick = {},
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 )
             }
 
-            item {
-                HorizontalDivider()
-            }
+            item { HorizontalDivider() }
 
             item {
                 ListItem(
-                    headlineContent = {
-                        Text(stringResource(Res.string.action_show_details))
-                    },
+                    headlineContent = { Text(stringResource(Res.string.action_show_details)) },
                     modifier = Modifier.clickable { onShowDetailsChange(!showDetails) },
                     supportingContent = {
                         Text(stringResource(Res.string.description_show_macronutrients_goals))
                     },
                     trailingContent = {
-                        Switch(
-                            checked = showDetails,
-                            onCheckedChange = onShowDetailsChange
-                        )
-                    }
+                        Switch(checked = showDetails, onCheckedChange = onShowDetailsChange)
+                    },
                 )
             }
 
-            item {
-                HorizontalDivider()
-            }
+            item { HorizontalDivider() }
 
             item {
                 ListItem(
                     headlineContent = {
                         Text(stringResource(Res.string.headline_daily_goals_settings))
                     },
-                    modifier = Modifier.clickable { onGoalsSettings() }
+                    modifier = Modifier.clickable { onGoalsSettings() },
                 )
             }
         }

@@ -12,15 +12,9 @@ import androidx.compose.ui.graphics.Color
 fun FoodYouHomeCard(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.surfaceContainerLow,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    Surface(
-        modifier = modifier,
-        color = color,
-        shape = MaterialTheme.shapes.medium
-    ) {
-        content()
-    }
+    Surface(modifier = modifier, color = color, shape = MaterialTheme.shapes.medium) { content() }
 }
 
 @Composable
@@ -29,19 +23,10 @@ fun FoodYouHomeCard(
     modifier: Modifier = Modifier,
     color: Color = FoodYouHomeCardDefaults.color,
     onLongClick: (() -> Unit)? = null,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    Surface(
-        modifier = modifier,
-        color = color,
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Box(
-            modifier = Modifier.combinedClickable(
-                onLongClick = onLongClick,
-                onClick = onClick
-            )
-        ) {
+    Surface(modifier = modifier, color = color, shape = MaterialTheme.shapes.medium) {
+        Box(modifier = Modifier.combinedClickable(onLongClick = onLongClick, onClick = onClick)) {
             content()
         }
     }

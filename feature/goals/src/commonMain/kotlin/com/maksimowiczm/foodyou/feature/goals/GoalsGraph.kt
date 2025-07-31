@@ -11,41 +11,27 @@ import com.maksimowiczm.foodyou.feature.goals.ui.settings.GoalsSettingsScreen
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
-@Serializable
-data object GoalsSettings
+@Serializable data object GoalsSettings
 
-@Serializable
-data class GoalsScreen(val epochDay: Long)
+@Serializable data class GoalsScreen(val epochDay: Long)
 
-@Serializable
-data object GoalsCardSettings
+@Serializable data object GoalsCardSettings
 
 fun NavGraphBuilder.goalsGraph(
     onGoalsSettings: () -> Unit,
     onGoalsSettingsBack: () -> Unit,
     onGoalsCardSettingsBack: () -> Unit,
-    onEditFood: (FoodId) -> Unit
+    onEditFood: (FoodId) -> Unit,
 ) {
-    forwardBackwardComposable<GoalsSettings> {
-        GoalsSettingsScreen(
-            onBack = onGoalsSettingsBack
-        )
-    }
+    forwardBackwardComposable<GoalsSettings> { GoalsSettingsScreen(onBack = onGoalsSettingsBack) }
     crossfadeComposable<GoalsScreen> {
         val (epochDay) = it.toRoute<GoalsScreen>()
 
         val date = LocalDate.fromEpochDays(epochDay)
 
-        CaloriesScreen(
-            date = date,
-            animatedVisibilityScope = this,
-            onFoodClick = onEditFood
-        )
+        CaloriesScreen(date = date, animatedVisibilityScope = this, onFoodClick = onEditFood)
     }
     forwardBackwardComposable<GoalsCardSettings> {
-        GoalsCardSettings(
-            onBack = onGoalsCardSettingsBack,
-            onGoalsSettings = onGoalsSettings
-        )
+        GoalsCardSettings(onBack = onGoalsCardSettingsBack, onGoalsSettings = onGoalsSettings)
     }
 }

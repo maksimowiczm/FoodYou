@@ -31,6 +31,7 @@ import kotlinx.datetime.toLocalDateTime
 
 internal fun interface ObserveMealsUseCase {
     fun observe(date: LocalDate): Flow<List<Meal>>
+
     operator fun invoke(date: LocalDate): Flow<List<Meal>> = observe(date)
 }
 
@@ -39,7 +40,7 @@ internal class ObserveMealsUseCaseImpl(
     private val observeRecipeUseCase: ObserveRecipeUseCase,
     private val productMapper: ProductMapper,
     dataStore: DataStore<Preferences>,
-    private val dateProvider: DateProvider
+    private val dateProvider: DateProvider,
 ) : ObserveMealsUseCase {
     private val mealDao = foodDiaryDatabase.mealDao
     private val measurementDao = foodDiaryDatabase.measurementDao
@@ -54,90 +55,91 @@ internal class ObserveMealsUseCaseImpl(
                 return@flatMapLatest flowOf(emptyList())
             }
 
-            meals.map { meal ->
-                measurementDao.observeFoodWithMeasurement(
-                    mealId = meal.id,
-                    epochDay = date.toEpochDays()
-                ).flatMapLatest { food ->
-                    if (food.isEmpty()) {
-                        flowOf(
-                            Meal(
-                                id = meal.id,
-                                name = meal.name,
-                                from = meal.from,
-                                to = meal.to,
-                                rank = meal.rank,
-                                food = emptyList()
-                            )
-                        )
-                    } else {
-                        food.map { it.toFood() }.combine().map { food ->
-                            Meal(
-                                id = meal.id,
-                                name = meal.name,
-                                from = meal.from,
-                                to = meal.to,
-                                rank = meal.rank,
-                                food = food
-                            )
-                        }
-                    }
-                }
-            }.combine().flatMapLatest { meals ->
-                combine(
-                    ignoreAllDayMeals.observe(),
-                    useTimeBasedSorting.observe(),
-                    dateProvider.observeMinutes()
-                ) { ignoreAllDayMeals, timeBased, time ->
-                    meals.sortedBy { meal ->
-                        if (timeBased) {
-                            if (shouldShowMeal(meal, time, ignoreAllDayMeals)) {
-                                meal.rank
+            meals
+                .map { meal ->
+                    measurementDao
+                        .observeFoodWithMeasurement(mealId = meal.id, epochDay = date.toEpochDays())
+                        .flatMapLatest { food ->
+                            if (food.isEmpty()) {
+                                flowOf(
+                                    Meal(
+                                        id = meal.id,
+                                        name = meal.name,
+                                        from = meal.from,
+                                        to = meal.to,
+                                        rank = meal.rank,
+                                        food = emptyList(),
+                                    )
+                                )
                             } else {
-                                1_000_000 + meal.rank
+                                food
+                                    .map { it.toFood() }
+                                    .combine()
+                                    .map { food ->
+                                        Meal(
+                                            id = meal.id,
+                                            name = meal.name,
+                                            from = meal.from,
+                                            to = meal.to,
+                                            rank = meal.rank,
+                                            food = food,
+                                        )
+                                    }
                             }
-                        } else {
-                            meal.rank
+                        }
+                }
+                .combine()
+                .flatMapLatest { meals ->
+                    combine(
+                        ignoreAllDayMeals.observe(),
+                        useTimeBasedSorting.observe(),
+                        dateProvider.observeMinutes(),
+                    ) { ignoreAllDayMeals, timeBased, time ->
+                        meals.sortedBy { meal ->
+                            if (timeBased) {
+                                if (shouldShowMeal(meal, time, ignoreAllDayMeals)) {
+                                    meal.rank
+                                } else {
+                                    1_000_000 + meal.rank
+                                }
+                            } else {
+                                meal.rank
+                            }
                         }
                     }
                 }
-            }
         }
     }
 
     @OptIn(ExperimentalTime::class)
     private fun FoodWithMeasurementEntity.toFood(): Flow<FoodWithMeasurement> {
-        val date = Instant
-            .fromEpochSeconds(measurement.createdAt)
-            .toLocalDateTime(TimeZone.currentSystemDefault())
-            .date
+        val date =
+            Instant.fromEpochSeconds(measurement.createdAt)
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+                .date
 
         return when {
-            product != null -> flowOf(
-                FoodWithMeasurement(
-                    measurementId = measurement.id,
-                    measurement = Measurement.from(
-                        measurement.measurement,
-                        measurement.quantity
-                    ),
-                    measurementDate = date,
-                    mealId = measurement.mealId,
-                    food = productMapper.toModel(product)
-                )
-            )
-
-            recipe != null -> observeRecipeUseCase(FoodId.Recipe(recipe.id))
-                .filterNotNull()
-                .map { recipeModel ->
+            product != null ->
+                flowOf(
                     FoodWithMeasurement(
                         measurementId = measurement.id,
-                        measurement = Measurement.from(
-                            measurement.measurement,
-                            measurement.quantity
-                        ),
+                        measurement =
+                            Measurement.from(measurement.measurement, measurement.quantity),
                         measurementDate = date,
                         mealId = measurement.mealId,
-                        food = recipeModel
+                        food = productMapper.toModel(product),
+                    )
+                )
+
+            recipe != null ->
+                observeRecipeUseCase(FoodId.Recipe(recipe.id)).filterNotNull().map { recipeModel ->
+                    FoodWithMeasurement(
+                        measurementId = measurement.id,
+                        measurement =
+                            Measurement.from(measurement.measurement, measurement.quantity),
+                        measurementDate = date,
+                        mealId = measurement.mealId,
+                        food = recipeModel,
                     )
                 }
 

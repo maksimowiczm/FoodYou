@@ -17,15 +17,11 @@ internal fun LayoutVertical(modifier: Modifier = Modifier) {
             contentPadding = PaddingValues(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            userScrollEnabled = false
+            userScrollEnabled = false,
         ) {
-            item {
-                MockCard()
-            }
+            item { MockCard() }
 
-            item {
-                MockCard()
-            }
+            item { MockCard() }
         }
     }
 }

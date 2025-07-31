@@ -20,24 +20,19 @@ fun LanguageSettingsListItem(
     shape: Shape,
     containerColor: Color,
     contentColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val viewModel = koinViewModel<LanguageViewModel>()
     val language = remember(viewModel) { viewModel.languageName }
 
     SettingsListItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Outlined.Translate,
-                contentDescription = null
-            )
-        },
+        icon = { Icon(imageVector = Icons.Outlined.Translate, contentDescription = null) },
         label = { Text(stringResource(Res.string.headline_language)) },
         supportingContent = { Text(language) },
         onClick = onClick,
         modifier = modifier,
         shape = shape,
         color = containerColor,
-        contentColor = contentColor
+        contentColor = contentColor,
     )
 }

@@ -18,62 +18,60 @@ internal class OpenFoodFactsProductMapper {
 
         val packageWeight = product.packageWeight?.takeIf { it > 0 }
         val servingWeight = product.servingWeight?.takeIf { it > 0 }
-        val source = FoodSource(
-            type = FoodSource.Type.OpenFoodFacts,
-            url = product.url
-        )
+        val source = FoodSource(type = FoodSource.Type.OpenFoodFacts, url = product.url)
 
-        val nutritionFacts = product.nutritionFacts?.let {
-            RemoteNutritionFacts(
-                energy = it.energy?.toFloat(),
-                carbohydrates = it.carbohydrates?.toFloat(),
-                sugars = it.sugars?.toFloat(),
-                addedSugars = it.addedSugars?.toFloat(),
-                fats = it.fats?.toFloat(),
-                saturatedFats = it.saturatedFats?.toFloat(),
-                transFats = it.transFats?.toFloat(),
-                monounsaturatedFats = it.monounsaturatedFats?.toFloat(),
-                polyunsaturatedFats = it.polyunsaturatedFats?.toFloat(),
-                omega3 = it.omega3Fats?.toFloat(),
-                omega6 = it.omega6Fats?.toFloat(),
-                proteins = it.proteins?.toFloat(),
-                salt = it.salt?.toFloat(),
-                dietaryFiber = it.fiber?.toFloat(),
-                solubleFiber = it.solubleFiber?.toFloat(),
-                insolubleFiber = it.insolubleFiber?.toFloat(),
-                cholesterolMilli = it.cholesterol?.normalize(MILLIGRAMS),
-                caffeineMilli = it.caffeine?.normalize(MILLIGRAMS),
-                vitaminAMicro = it.vitaminA?.normalize(MICROGRAMS),
-                vitaminB1Milli = it.vitaminB1?.normalize(MILLIGRAMS),
-                vitaminB2Milli = it.vitaminB2?.normalize(MILLIGRAMS),
-                vitaminB3Milli = it.vitaminB3?.normalize(MILLIGRAMS),
-                vitaminB5Milli = it.vitaminB5?.normalize(MILLIGRAMS),
-                vitaminB6Milli = it.vitaminB6?.normalize(MILLIGRAMS),
-                vitaminB7Micro = it.vitaminB7?.normalize(MICROGRAMS),
-                vitaminB9Micro = it.vitaminB9?.normalize(MICROGRAMS),
-                vitaminB12Micro = it.vitaminB12?.normalize(MICROGRAMS),
-                vitaminCMilli = it.vitaminC?.normalize(MILLIGRAMS),
-                vitaminDMicro = it.vitaminD?.normalize(MICROGRAMS),
-                vitaminEMilli = it.vitaminE?.normalize(MILLIGRAMS),
-                vitaminKMicro = it.vitaminK?.normalize(MICROGRAMS),
-                manganeseMilli = it.manganese?.normalize(MILLIGRAMS),
-                magnesiumMilli = it.magnesium?.normalize(MILLIGRAMS),
-                potassiumMilli = it.potassium?.normalize(MILLIGRAMS),
-                calciumMilli = it.calcium?.normalize(MILLIGRAMS),
-                copperMilli = it.copper?.normalize(MILLIGRAMS),
-                zincMilli = it.zinc?.normalize(MILLIGRAMS),
-                sodiumMilli = it.sodium?.normalize(MILLIGRAMS),
-                ironMilli = it.iron?.normalize(MILLIGRAMS),
-                phosphorusMilli = it.phosphorus?.normalize(MILLIGRAMS),
-                seleniumMicro = it.selenium?.normalize(MICROGRAMS),
-                iodineMicro = it.iodine?.normalize(MICROGRAMS),
-                chromiumMicro = it.chromium?.normalize(MICROGRAMS)
-            )
-        }
+        val nutritionFacts =
+            product.nutritionFacts?.let {
+                RemoteNutritionFacts(
+                    energy = it.energy?.toFloat(),
+                    carbohydrates = it.carbohydrates?.toFloat(),
+                    sugars = it.sugars?.toFloat(),
+                    addedSugars = it.addedSugars?.toFloat(),
+                    fats = it.fats?.toFloat(),
+                    saturatedFats = it.saturatedFats?.toFloat(),
+                    transFats = it.transFats?.toFloat(),
+                    monounsaturatedFats = it.monounsaturatedFats?.toFloat(),
+                    polyunsaturatedFats = it.polyunsaturatedFats?.toFloat(),
+                    omega3 = it.omega3Fats?.toFloat(),
+                    omega6 = it.omega6Fats?.toFloat(),
+                    proteins = it.proteins?.toFloat(),
+                    salt = it.salt?.toFloat(),
+                    dietaryFiber = it.fiber?.toFloat(),
+                    solubleFiber = it.solubleFiber?.toFloat(),
+                    insolubleFiber = it.insolubleFiber?.toFloat(),
+                    cholesterolMilli = it.cholesterol?.normalize(MILLIGRAMS),
+                    caffeineMilli = it.caffeine?.normalize(MILLIGRAMS),
+                    vitaminAMicro = it.vitaminA?.normalize(MICROGRAMS),
+                    vitaminB1Milli = it.vitaminB1?.normalize(MILLIGRAMS),
+                    vitaminB2Milli = it.vitaminB2?.normalize(MILLIGRAMS),
+                    vitaminB3Milli = it.vitaminB3?.normalize(MILLIGRAMS),
+                    vitaminB5Milli = it.vitaminB5?.normalize(MILLIGRAMS),
+                    vitaminB6Milli = it.vitaminB6?.normalize(MILLIGRAMS),
+                    vitaminB7Micro = it.vitaminB7?.normalize(MICROGRAMS),
+                    vitaminB9Micro = it.vitaminB9?.normalize(MICROGRAMS),
+                    vitaminB12Micro = it.vitaminB12?.normalize(MICROGRAMS),
+                    vitaminCMilli = it.vitaminC?.normalize(MILLIGRAMS),
+                    vitaminDMicro = it.vitaminD?.normalize(MICROGRAMS),
+                    vitaminEMilli = it.vitaminE?.normalize(MILLIGRAMS),
+                    vitaminKMicro = it.vitaminK?.normalize(MICROGRAMS),
+                    manganeseMilli = it.manganese?.normalize(MILLIGRAMS),
+                    magnesiumMilli = it.magnesium?.normalize(MILLIGRAMS),
+                    potassiumMilli = it.potassium?.normalize(MILLIGRAMS),
+                    calciumMilli = it.calcium?.normalize(MILLIGRAMS),
+                    copperMilli = it.copper?.normalize(MILLIGRAMS),
+                    zincMilli = it.zinc?.normalize(MILLIGRAMS),
+                    sodiumMilli = it.sodium?.normalize(MILLIGRAMS),
+                    ironMilli = it.iron?.normalize(MILLIGRAMS),
+                    phosphorusMilli = it.phosphorus?.normalize(MILLIGRAMS),
+                    seleniumMicro = it.selenium?.normalize(MICROGRAMS),
+                    iodineMicro = it.iodine?.normalize(MICROGRAMS),
+                    chromiumMicro = it.chromium?.normalize(MICROGRAMS),
+                )
+            }
 
         val isLiquid =
-            product.packageQuantityUnit ?.equals("ml", ignoreCase = true) == true ||
-                product.servingQuantityUnit ?.equals("ml", ignoreCase = true) == true
+            product.packageQuantityUnit?.equals("ml", ignoreCase = true) == true ||
+                product.servingQuantityUnit?.equals("ml", ignoreCase = true) == true
 
         return RemoteProduct(
             name = name,
@@ -83,7 +81,7 @@ internal class OpenFoodFactsProductMapper {
             packageWeight = packageWeight,
             servingWeight = servingWeight,
             source = source,
-            isLiquid = isLiquid
+            isLiquid = isLiquid,
         )
     }
 }

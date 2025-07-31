@@ -16,7 +16,7 @@ actual val databaseDefinition: Module.() -> KoinDefinition<FoodYouDatabase> = {
             Room.databaseBuilder(
                 context = androidContext(),
                 klass = FoodYouDatabase::class.java,
-                name = DATABASE_NAME
+                name = DATABASE_NAME,
             )
 
         // https://developer.android.com/reference/android/database/sqlite/package-summary

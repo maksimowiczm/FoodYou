@@ -18,15 +18,11 @@ internal fun LayoutHorizontal(modifier: Modifier = Modifier) {
             contentPadding = PaddingValues(8.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
-            userScrollEnabled = false
+            userScrollEnabled = false,
         ) {
-            item {
-                MockCard()
-            }
+            item { MockCard() }
 
-            item {
-                MockCard(Modifier.scale(.9f))
-            }
+            item { MockCard(Modifier.scale(.9f)) }
         }
     }
 }

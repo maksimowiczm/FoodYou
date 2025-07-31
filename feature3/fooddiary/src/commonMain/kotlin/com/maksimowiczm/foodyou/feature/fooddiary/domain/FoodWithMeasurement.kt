@@ -9,19 +9,20 @@ data class FoodWithMeasurement(
     val measurement: Measurement,
     val measurementDate: LocalDate,
     val mealId: Long,
-    val food: Food
+    val food: Food,
 ) {
     /**
      * Weight in grams. If weight is null then measurement is invalid. (e.g. 1 x package while
      * product has no package weight)
      */
     val weight: Float?
-        get() = when (val measurement = measurement) {
-            is Measurement.Milliliter -> measurement.value
-            is Measurement.Gram -> measurement.value
-            is Measurement.Package -> food.totalWeight?.let { it * measurement.quantity }
-            is Measurement.Serving -> food.servingWeight?.let { it * measurement.quantity }
-        }
+        get() =
+            when (val measurement = measurement) {
+                is Measurement.Milliliter -> measurement.value
+                is Measurement.Gram -> measurement.value
+                is Measurement.Package -> food.totalWeight?.let { it * measurement.quantity }
+                is Measurement.Serving -> food.servingWeight?.let { it * measurement.quantity }
+            }
 
     val proteins: Float?
         get() {

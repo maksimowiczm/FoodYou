@@ -8,33 +8,28 @@ import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-@Entity(
-    indices = [
-        Index(value = ["sponsorshipEpochSeconds"], unique = false)
-    ]
-)
+@Entity(indices = [Index(value = ["sponsorshipEpochSeconds"], unique = false)])
 data class Sponsorship(
-    @PrimaryKey
-    val id: Long,
+    @PrimaryKey val id: Long,
     val sponsorName: String?,
     val message: String?,
     val amount: String,
     val currency: String,
     val inEuro: String,
     val sponsorshipEpochSeconds: Long,
-    val method: String
+    val method: String,
 ) {
     @OptIn(ExperimentalTime::class)
-    fun sponsorshipDate(timeZone: TimeZone = TimeZone.UTC) = Instant
-        .fromEpochSeconds(sponsorshipEpochSeconds)
-        .toLocalDateTime(timeZone)
+    fun sponsorshipDate(timeZone: TimeZone = TimeZone.UTC) =
+        Instant.fromEpochSeconds(sponsorshipEpochSeconds).toLocalDateTime(timeZone)
 
     val typedMethod: SponsorshipMethod?
-        get() = when (method) {
-            "Ko-fi" -> SponsorshipMethod.Kofi
-            "Liberapay" -> SponsorshipMethod.Liberapay
-            "Crypto" -> SponsorshipMethod.Crypto
-            "PayPal" -> SponsorshipMethod.PayPal
-            else -> null
-        }
+        get() =
+            when (method) {
+                "Ko-fi" -> SponsorshipMethod.Kofi
+                "Liberapay" -> SponsorshipMethod.Liberapay
+                "Crypto" -> SponsorshipMethod.Crypto
+                "PayPal" -> SponsorshipMethod.PayPal
+                else -> null
+            }
 }

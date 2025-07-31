@@ -17,11 +17,14 @@ internal class FoodSearchViewModel(database: FoodDiaryDatabase, mealId: Long) : 
 
     val measurementDao = database.measurementDao
 
-    val meal = database.mealDao.observeMealById(mealId).stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = null
-    )
+    val meal =
+        database.mealDao
+            .observeMealById(mealId)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
 
     private val measurementSizeChannel = Channel<Int>()
     val measurementSizeEvents = measurementSizeChannel.receiveAsFlow()
@@ -29,8 +32,9 @@ internal class FoodSearchViewModel(database: FoodDiaryDatabase, mealId: Long) : 
     init {
         viewModelScope.launch {
             val latestMeasurement = measurementDao.getLatestMeasurement()
-            val afterEpoch = latestMeasurement?.createdAt?.times(1000)
-                ?: Clock.System.now().toEpochMilliseconds()
+            val afterEpoch =
+                latestMeasurement?.createdAt?.times(1000)
+                    ?: Clock.System.now().toEpochMilliseconds()
 
             measurementDao.observeMeasurementsAfter(afterEpoch).collectLatest { measurements ->
                 measurementSizeChannel.send(measurements.size)

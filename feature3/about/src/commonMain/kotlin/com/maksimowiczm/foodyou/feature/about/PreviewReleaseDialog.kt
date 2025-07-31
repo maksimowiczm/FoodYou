@@ -25,21 +25,14 @@ fun PreviewReleaseDialog(modifier: Modifier = Modifier) {
         AlertDialog(
             onDismissRequest = {},
             confirmButton = {
-                TextButton(
-                    onClick = { showDialog = false }
-                ) {
+                TextButton(onClick = { showDialog = false }) {
                     Text(stringResource(Res.string.positive_ok))
                 }
             },
             modifier = modifier,
-            icon = {
-                Icon(
-                    imageVector = Icons.Outlined.Warning,
-                    contentDescription = null
-                )
-            },
+            icon = { Icon(imageVector = Icons.Outlined.Warning, contentDescription = null) },
             title = { Text(stringResource(Res.string.headline_preview_release)) },
-            text = { Text(stringResource(Res.string.description_preview_release)) }
+            text = { Text(stringResource(Res.string.description_preview_release)) },
         )
     }
 }

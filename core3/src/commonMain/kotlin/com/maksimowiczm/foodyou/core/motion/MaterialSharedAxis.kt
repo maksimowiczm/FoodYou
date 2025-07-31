@@ -40,42 +40,38 @@ internal val Int.ForOutgoing: Int
 internal val Int.ForIncoming: Int
     get() = this - this.ForOutgoing
 
-/**
- * [materialSharedAxisXIn] allows to switch a layout with shared X-axis enter transition.
- */
+/** [materialSharedAxisXIn] allows to switch a layout with shared X-axis enter transition. */
 fun materialSharedAxisXIn(
     initialOffsetX: (fullWidth: Int) -> Int,
-    durationMillis: Int = DefaultDurationMillis
-): EnterTransition = slideInHorizontally(
-    animationSpec = tween(
-        durationMillis = durationMillis,
-        easing = FastOutSlowInEasing
-    ),
-    initialOffsetX = initialOffsetX
-) + fadeIn(
-    animationSpec = tween(
-        durationMillis = durationMillis.ForIncoming,
-        delayMillis = durationMillis.ForOutgoing,
-        easing = LinearOutSlowInEasing
-    )
-)
+    durationMillis: Int = DefaultDurationMillis,
+): EnterTransition =
+    slideInHorizontally(
+        animationSpec = tween(durationMillis = durationMillis, easing = FastOutSlowInEasing),
+        initialOffsetX = initialOffsetX,
+    ) +
+        fadeIn(
+            animationSpec =
+                tween(
+                    durationMillis = durationMillis.ForIncoming,
+                    delayMillis = durationMillis.ForOutgoing,
+                    easing = LinearOutSlowInEasing,
+                )
+        )
 
-/**
- * [materialSharedAxisXOut] allows to switch a layout with shared X-axis exit transition.
- */
+/** [materialSharedAxisXOut] allows to switch a layout with shared X-axis exit transition. */
 fun materialSharedAxisXOut(
     targetOffsetX: (fullWidth: Int) -> Int,
-    durationMillis: Int = DefaultDurationMillis
-): ExitTransition = slideOutHorizontally(
-    animationSpec = tween(
-        durationMillis = durationMillis,
-        easing = FastOutSlowInEasing
-    ),
-    targetOffsetX = targetOffsetX
-) + fadeOut(
-    animationSpec = tween(
-        durationMillis = durationMillis.ForOutgoing,
-        delayMillis = 0,
-        easing = FastOutLinearInEasing
-    )
-)
+    durationMillis: Int = DefaultDurationMillis,
+): ExitTransition =
+    slideOutHorizontally(
+        animationSpec = tween(durationMillis = durationMillis, easing = FastOutSlowInEasing),
+        targetOffsetX = targetOffsetX,
+    ) +
+        fadeOut(
+            animationSpec =
+                tween(
+                    durationMillis = durationMillis.ForOutgoing,
+                    delayMillis = 0,
+                    easing = FastOutLinearInEasing,
+                )
+        )

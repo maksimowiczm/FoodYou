@@ -19,28 +19,17 @@ fun GoalsSettingsListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
 ) {
     SettingsListItem(
-        headlineContent = {
-            Text(
-                text = stringResource(Res.string.headline_daily_goals)
-            )
-        },
+        headlineContent = { Text(text = stringResource(Res.string.headline_daily_goals)) },
         onClick = onClick,
         modifier = modifier,
-        leadingContent = {
-            Icon(
-                imageVector = Icons.Outlined.Flag,
-                contentDescription = null
-            )
-        },
+        leadingContent = { Icon(imageVector = Icons.Outlined.Flag, contentDescription = null) },
         supportingContent = {
-            Text(
-                text = stringResource(Res.string.neutral_set_your_daily_goals)
-            )
+            Text(text = stringResource(Res.string.neutral_set_your_daily_goals))
         },
         containerColor = containerColor,
-        contentColor = contentColor
+        contentColor = contentColor,
     )
 }

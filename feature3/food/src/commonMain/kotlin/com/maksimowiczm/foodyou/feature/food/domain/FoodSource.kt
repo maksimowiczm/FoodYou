@@ -8,6 +8,6 @@ data class FoodSource(val type: Type, val url: String? = null) {
         User,
         OpenFoodFacts,
         USDA,
-        SwissFoodCompositionDatabase
+        SwissFoodCompositionDatabase,
     }
 }

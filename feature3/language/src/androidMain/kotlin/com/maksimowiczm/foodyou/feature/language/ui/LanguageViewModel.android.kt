@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 internal actual class LanguageViewModel(
     private val androidSystemDetails: SystemDetails,
     dataStore: DataStore<Preferences>,
-    private val showTranslationWarning: ShowTranslationWarning = dataStore.userPreference()
+    private val showTranslationWarning: ShowTranslationWarning = dataStore.userPreference(),
 ) : ViewModel() {
     private val locale: Locale
         get() = androidSystemDetails.defaultLocale
@@ -33,12 +33,10 @@ internal actual class LanguageViewModel(
      * Set the application locale based on the language tag.
      *
      * @param tag The language tag to set the application locale to. If null, the locale will be set
-     * to the default locale.
+     *   to the default locale.
      */
     fun onLanguageSelect(tag: String?) {
-        viewModelScope.launch {
-            showTranslationWarning.set(true)
-        }
+        viewModelScope.launch { showTranslationWarning.set(true) }
 
         if (tag == null) {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())

@@ -31,7 +31,7 @@ internal fun FoodSearchListItem(
     food: FoodSearch.Product,
     measurement: Measurement,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val factor = measurement.weight(food)?.div(100f)
 
@@ -40,7 +40,7 @@ internal fun FoodSearchListItem(
             headline = food.headline,
             errorMessage = stringResource(Res.string.error_measurement_error),
             modifier = modifier,
-            onClick = onClick
+            onClick = onClick,
         )
     }
 
@@ -55,16 +55,14 @@ internal fun FoodSearchListItem(
             headline = food.headline,
             modifier = modifier,
             onClick = onClick,
-            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields)
+            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
         )
     }
 
     val g = stringResource(Res.string.unit_gram_short)
 
     FoodListItem(
-        name = {
-            Text(text = food.headline)
-        },
+        name = { Text(text = food.headline) },
         proteins = {
             val text = proteins.formatClipZeros()
             Text("$text $g")
@@ -83,22 +81,24 @@ internal fun FoodSearchListItem(
             Text("$text $kcal")
         },
         measurement = {
-            val weight = when (measurement) {
-                is Measurement.Gram,
-                is Measurement.Milliliter -> null
+            val weight =
+                when (measurement) {
+                    is Measurement.Gram,
+                    is Measurement.Milliliter -> null
 
-                is Measurement.Package -> food.totalWeight?.let(measurement::weight)
-                is Measurement.Serving -> food.servingWeight?.let(measurement::weight)
-            }
+                    is Measurement.Package -> food.totalWeight?.let(measurement::weight)
+                    is Measurement.Serving -> food.servingWeight?.let(measurement::weight)
+                }
 
             val text = buildString {
                 append(measurement.stringResource())
                 if (weight != null) {
-                    val suffix = if (food.isLiquid) {
-                        stringResource(Res.string.unit_milliliter_short)
-                    } else {
-                        g
-                    }
+                    val suffix =
+                        if (food.isLiquid) {
+                            stringResource(Res.string.unit_milliliter_short)
+                        } else {
+                            g
+                        }
 
                     append(" (${weight.formatClipZeros()} $suffix)")
                 }
@@ -107,13 +107,11 @@ internal fun FoodSearchListItem(
             Text(text)
         },
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     )
 }
 
-/**
- * Recipe has to be lazy loaded, so we use [ObserveRecipeUseCase] to observe the recipe.
- */
+/** Recipe has to be lazy loaded, so we use [ObserveRecipeUseCase] to observe the recipe. */
 @Composable
 internal fun FoodSearchListItem(
     food: FoodSearch.Recipe,
@@ -121,7 +119,7 @@ internal fun FoodSearchListItem(
     onClick: () -> Unit,
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
-    observeRecipeUseCase: ObserveRecipeUseCase = koinInject()
+    observeRecipeUseCase: ObserveRecipeUseCase = koinInject(),
 ) {
     val recipe = observeRecipeUseCase(food.id).collectAsStateWithLifecycle(null).value
 
@@ -141,7 +139,7 @@ internal fun FoodSearchListItem(
             headline = food.headline,
             modifier = modifier,
             onClick = onClick,
-            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields)
+            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
         )
     }
 
@@ -151,12 +149,12 @@ internal fun FoodSearchListItem(
         name = {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = food.headline)
                 Icon(
                     painter = painterResource(Res.drawable.ic_skillet_filled),
-                    contentDescription = stringResource(Res.string.headline_recipe)
+                    contentDescription = stringResource(Res.string.headline_recipe),
                 )
             }
         },
@@ -178,22 +176,24 @@ internal fun FoodSearchListItem(
             Text("$text $kcal")
         },
         measurement = {
-            val weight = when (measurement) {
-                is Measurement.Gram,
-                is Measurement.Milliliter -> null
+            val weight =
+                when (measurement) {
+                    is Measurement.Gram,
+                    is Measurement.Milliliter -> null
 
-                is Measurement.Package -> recipe.totalWeight.let(measurement::weight)
-                is Measurement.Serving -> recipe.servingWeight.let(measurement::weight)
-            }
+                    is Measurement.Package -> recipe.totalWeight.let(measurement::weight)
+                    is Measurement.Serving -> recipe.servingWeight.let(measurement::weight)
+                }
 
             val text = buildString {
                 append(measurement.stringResource())
                 if (weight != null) {
-                    val suffix = if (food.isLiquid) {
-                        stringResource(Res.string.unit_milliliter_short)
-                    } else {
-                        g
-                    }
+                    val suffix =
+                        if (food.isLiquid) {
+                            stringResource(Res.string.unit_milliliter_short)
+                        } else {
+                            g
+                        }
 
                     append(" (${weight.formatClipZeros()} $suffix)")
                 }
@@ -202,6 +202,6 @@ internal fun FoodSearchListItem(
             Text(text)
         },
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     )
 }

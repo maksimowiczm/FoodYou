@@ -7,37 +7,24 @@ import com.maksimowiczm.foodyou.feature.about.ui.SponsorMessagesScreen
 import com.maksimowiczm.foodyou.feature.about.ui.SponsorScreen
 import kotlinx.serialization.Serializable
 
-@Serializable
-data object About
+@Serializable data object About
 
-@Serializable
-data object SponsorMessages
+@Serializable data object SponsorMessages
 
-@Serializable
-data object Sponsor
+@Serializable data object Sponsor
 
 fun NavGraphBuilder.aboutGraph(
     aboutOnBack: () -> Unit,
     aboutOnSponsor: () -> Unit,
     sponsorMessagesOnBack: () -> Unit,
     sponsorMessagesOnSponsor: () -> Unit,
-    sponsorOnBack: () -> Unit
+    sponsorOnBack: () -> Unit,
 ) {
     forwardBackwardComposable<About> {
-        AboutScreen(
-            onBack = aboutOnBack,
-            onSponsor = aboutOnSponsor
-        )
+        AboutScreen(onBack = aboutOnBack, onSponsor = aboutOnSponsor)
     }
     forwardBackwardComposable<SponsorMessages> {
-        SponsorMessagesScreen(
-            onBack = sponsorMessagesOnBack,
-            onSponsor = sponsorMessagesOnSponsor
-        )
+        SponsorMessagesScreen(onBack = sponsorMessagesOnBack, onSponsor = sponsorMessagesOnSponsor)
     }
-    forwardBackwardComposable<Sponsor> {
-        SponsorScreen(
-            onBack = sponsorOnBack
-        )
-    }
+    forwardBackwardComposable<Sponsor> { SponsorScreen(onBack = sponsorOnBack) }
 }

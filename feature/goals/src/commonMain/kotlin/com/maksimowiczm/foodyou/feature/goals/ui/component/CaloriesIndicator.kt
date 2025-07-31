@@ -41,22 +41,19 @@ internal fun CaloriesIndicator(
     proteins: Int,
     carbohydrates: Int,
     fats: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text = stringResource(Res.string.unit_calories),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
         )
 
         Text(
             text = rememberCaloriesString(calories, caloriesGoal),
             // MUST use style because otherwise the text won't have the correct height
             // (because of the AnnotatedString weird behavior?)
-            style = MaterialTheme.typography.headlineLarge
+            style = MaterialTheme.typography.headlineLarge,
         )
 
         CaloriesProgressIndicator(
@@ -65,70 +62,60 @@ internal fun CaloriesIndicator(
             carbohydrates = NutrientsHelper.carbohydratesToCalories(carbohydrates.toFloat()),
             fats = NutrientsHelper.fatsToCalories(fats.toFloat()),
             goal = caloriesGoal.toFloat(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
-        CaloriesLabel(
-            calories = calories,
-            goal = caloriesGoal
-        )
+        CaloriesLabel(calories = calories, goal = caloriesGoal)
     }
 }
 
 @Composable
 internal fun CaloriesIndicatorSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         // Calories
         Spacer(
-            modifier = Modifier
-                .shimmer(shimmer)
-                .width(100.dp)
-                .height(MaterialTheme.typography.titleLarge.toDp())
-                .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            modifier =
+                Modifier.shimmer(shimmer)
+                    .width(100.dp)
+                    .height(MaterialTheme.typography.titleLarge.toDp())
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
         )
 
         // Calories value
         Spacer(
-            modifier = Modifier
-                .shimmer(shimmer)
-                .size(160.dp, MaterialTheme.typography.headlineLarge.toDp())
-                .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            modifier =
+                Modifier.shimmer(shimmer)
+                    .size(160.dp, MaterialTheme.typography.headlineLarge.toDp())
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
         )
 
         // Calories progress
         Spacer(
-            modifier = Modifier
-                .shimmer(shimmer)
-                .height(16.dp)
-                .fillMaxWidth()
-                .clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            modifier =
+                Modifier.shimmer(shimmer)
+                    .height(16.dp)
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
         )
 
         // Calories label
         Spacer(
-            modifier = Modifier
-                .shimmer(shimmer)
-                .size(150.dp, MaterialTheme.typography.labelLarge.toDp())
-                .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            modifier =
+                Modifier.shimmer(shimmer)
+                    .size(150.dp, MaterialTheme.typography.labelLarge.toDp())
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
         )
     }
 }
 
 @Composable
 private fun rememberCaloriesString(calories: Int, goal: Int): AnnotatedString {
-    val valueStatus by remember(calories, goal) {
-        derivedStateOf { calories.asValueStatus(goal) }
-    }
-    val left by remember(calories, goal) {
-        derivedStateOf { abs(goal - calories) }
-    }
+    val valueStatus by remember(calories, goal) { derivedStateOf { calories.asValueStatus(goal) } }
+    val left by remember(calories, goal) { derivedStateOf { abs(goal - calories) } }
 
     val nutrientsPalette = LocalNutrientsPalette.current
     val typography = MaterialTheme.typography
@@ -138,22 +125,21 @@ private fun rememberCaloriesString(calories: Int, goal: Int): AnnotatedString {
     return remember(valueStatus, left, nutrientsPalette, typography, colorScheme, kcalSuffix) {
         buildAnnotatedString {
             withStyle(
-                typography.headlineLarge.copy(
-                    color = when (valueStatus) {
-                        ValueStatus.Exceeded -> colorScheme.error
-                        ValueStatus.Remaining,
-                        ValueStatus.Achieved -> colorScheme.onSurface
-                    }
-                ).toSpanStyle()
+                typography.headlineLarge
+                    .copy(
+                        color =
+                            when (valueStatus) {
+                                ValueStatus.Exceeded -> colorScheme.error
+                                ValueStatus.Remaining,
+                                ValueStatus.Achieved -> colorScheme.onSurface
+                            }
+                    )
+                    .toSpanStyle()
             ) {
                 append(calories.toString())
             }
 
-            withStyle(
-                typography.bodyLarge.copy(
-                    color = colorScheme.outline
-                ).toSpanStyle()
-            ) {
+            withStyle(typography.bodyLarge.copy(color = colorScheme.outline).toSpanStyle()) {
                 append(" / $goal $kcalSuffix")
             }
         }
@@ -162,42 +148,33 @@ private fun rememberCaloriesString(calories: Int, goal: Int): AnnotatedString {
 
 @Composable
 private fun CaloriesLabel(calories: Int, goal: Int) {
-    val valueStatus by remember(calories, goal) {
-        derivedStateOf { calories.asValueStatus(goal) }
-    }
+    val valueStatus by remember(calories, goal) { derivedStateOf { calories.asValueStatus(goal) } }
 
-    val left by remember(calories, goal) {
-        derivedStateOf { abs(goal - calories) }
-    }
+    val left by remember(calories, goal) { derivedStateOf { abs(goal - calories) } }
 
     when (valueStatus) {
-        ValueStatus.Exceeded -> Text(
-            text = pluralStringResource(
-                Res.plurals.negative_exceeded_by_calories,
-                left,
-                left
-            ),
-            color = MaterialTheme.colorScheme.error,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.labelLarge
-        )
+        ValueStatus.Exceeded ->
+            Text(
+                text = pluralStringResource(Res.plurals.negative_exceeded_by_calories, left, left),
+                color = MaterialTheme.colorScheme.error,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.labelLarge,
+            )
 
-        ValueStatus.Remaining -> Text(
-            text = pluralStringResource(
-                Res.plurals.neutral_remaining_calories,
-                left,
-                left
-            ),
-            color = MaterialTheme.colorScheme.outline,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.labelLarge
-        )
+        ValueStatus.Remaining ->
+            Text(
+                text = pluralStringResource(Res.plurals.neutral_remaining_calories, left, left),
+                color = MaterialTheme.colorScheme.outline,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.labelLarge,
+            )
 
-        ValueStatus.Achieved -> Text(
-            text = stringResource(Res.string.positive_goal_reached),
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.labelLarge
-        )
+        ValueStatus.Achieved ->
+            Text(
+                text = stringResource(Res.string.positive_goal_reached),
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.labelLarge,
+            )
     }
 }

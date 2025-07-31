@@ -56,32 +56,27 @@ internal fun UsdaErrorCard(error: USDAException, modifier: Modifier = Modifier.C
     val uriHandler = LocalUriHandler.current
     val obtainKeyUrl = stringResource(Res.string.link_usda_obtain_key)
 
-    val errorText = when (error) {
-        is USDAException.ProductNotFoundException -> stringResource(
-            Res.string.error_api_key_is_invalid
-        )
+    val errorText =
+        when (error) {
+            is USDAException.ProductNotFoundException ->
+                stringResource(Res.string.error_api_key_is_invalid)
 
-        is USDAException.ApiKeyIsMissingException -> stringResource(
-            Res.string.error_api_key_is_invalid
-        )
+            is USDAException.ApiKeyIsMissingException ->
+                stringResource(Res.string.error_api_key_is_invalid)
 
-        is USDAException.RateLimitException -> stringResource(Res.string.error_usda_rate_limit)
-        is USDAException.ApiKeyInvalidException -> stringResource(
-            Res.string.error_api_key_is_invalid
-        )
+            is USDAException.RateLimitException -> stringResource(Res.string.error_usda_rate_limit)
+            is USDAException.ApiKeyInvalidException ->
+                stringResource(Res.string.error_api_key_is_invalid)
 
-        is USDAException.ApiKeyDisabledException -> stringResource(
-            Res.string.error_api_key_is_invalid
-        )
+            is USDAException.ApiKeyDisabledException ->
+                stringResource(Res.string.error_api_key_is_invalid)
 
-        is USDAException.ApiKeyUnauthorizedException -> stringResource(
-            Res.string.error_api_key_is_invalid
-        )
+            is USDAException.ApiKeyUnauthorizedException ->
+                stringResource(Res.string.error_api_key_is_invalid)
 
-        is USDAException.ApiKeyUnverifiedException -> stringResource(
-            Res.string.error_usda_not_verified
-        )
-    }
+            is USDAException.ApiKeyUnverifiedException ->
+                stringResource(Res.string.error_usda_not_verified)
+        }
 
     var showUsdaApiKeyPrompt by rememberSaveable { mutableStateOf(false) }
 
@@ -101,7 +96,7 @@ internal fun UsdaErrorCard(error: USDAException, modifier: Modifier = Modifier.C
                 OutlinedTextField(
                     state = textFieldState,
                     modifier = Modifier.Companion.focusRequester(focusRequester),
-                    placeholder = { Text(stringResource(Res.string.headline_api_key)) }
+                    placeholder = { Text(stringResource(Res.string.headline_api_key)) },
                 )
             },
             confirmButton = {
@@ -114,61 +109,58 @@ internal fun UsdaErrorCard(error: USDAException, modifier: Modifier = Modifier.C
                 ) {
                     Text(stringResource(Res.string.action_save))
                 }
-            }
+            },
         )
     }
 
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            ),
     ) {
         Column(
             modifier = Modifier.Companion.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(
                 modifier = Modifier.Companion.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.Companion.CenterVertically
+                verticalAlignment = Alignment.Companion.CenterVertically,
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.ErrorOutline,
-                    contentDescription = null
-                )
+                Icon(imageVector = Icons.Outlined.ErrorOutline, contentDescription = null)
                 Text(
                     text = stringResource(Res.string.headline_food_data_central_usda),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
 
-            Text(
-                text = errorText,
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Text(text = errorText, style = MaterialTheme.typography.bodyMedium)
 
             Row(
                 modifier = Modifier.Companion.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Companion.End)
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Companion.End),
             ) {
                 Button(
                     onClick = { showUsdaApiKeyPrompt = true },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.onErrorContainer,
-                        contentColor = MaterialTheme.colorScheme.errorContainer
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onErrorContainer,
+                            contentColor = MaterialTheme.colorScheme.errorContainer,
+                        ),
                 ) {
                     Text(stringResource(Res.string.action_set_key))
                 }
 
                 Button(
                     onClick = { uriHandler.openUri(obtainKeyUrl) },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.onErrorContainer,
-                        contentColor = MaterialTheme.colorScheme.errorContainer
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onErrorContainer,
+                            contentColor = MaterialTheme.colorScheme.errorContainer,
+                        ),
                 ) {
                     Text(stringResource(Res.string.action_obtain_key))
                 }

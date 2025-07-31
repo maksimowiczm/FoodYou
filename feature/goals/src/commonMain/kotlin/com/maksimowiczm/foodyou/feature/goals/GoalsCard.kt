@@ -10,12 +10,12 @@ fun GoalsCard(
     homeState: HomeState,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     GoalsCard(
         homeState = homeState,
         onClick = onClick,
         onLongClick = onLongClick,
-        modifier = modifier
+        modifier = modifier,
     )
 }

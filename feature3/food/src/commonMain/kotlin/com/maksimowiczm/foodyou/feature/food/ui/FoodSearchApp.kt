@@ -26,13 +26,9 @@ import org.jetbrains.compose.resources.stringResource
 fun FoodSearchApp(
     onFoodClick: (FoodSearch, Measurement) -> Unit,
     modifier: Modifier = Modifier,
-    excludedRecipe: FoodId.Recipe? = null
+    excludedRecipe: FoodId.Recipe? = null,
 ) {
-    FoodSearchApp(
-        onFoodClick = onFoodClick,
-        excludedFood = excludedRecipe,
-        modifier = modifier
-    )
+    FoodSearchApp(onFoodClick = onFoodClick, excludedFood = excludedRecipe, modifier = modifier)
 }
 
 object FoodSearchAppDefaults {
@@ -44,7 +40,7 @@ object FoodSearchAppDefaults {
         onFabExpandedChange: (Boolean) -> Unit,
         onCreateRecipe: () -> Unit,
         onCreateProduct: () -> Unit,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         FloatingActionButtonMenu(
             expanded = fabExpanded,
@@ -52,30 +48,30 @@ object FoodSearchAppDefaults {
             button = {
                 ToggleFloatingActionButton(
                     checked = fabExpanded,
-                    onCheckedChange = onFabExpandedChange
+                    onCheckedChange = onFabExpandedChange,
                 ) {
-                    val rotation by remember {
-                        derivedStateOf { checkedProgress * 45f }
-                    }
+                    val rotation by remember { derivedStateOf { checkedProgress * 45f } }
 
-                    val tintColor = lerp(
-                        start = MaterialTheme.colorScheme.onSecondaryContainer,
-                        stop = MaterialTheme.colorScheme.onSecondary,
-                        fraction = checkedProgress
-                    )
+                    val tintColor =
+                        lerp(
+                            start = MaterialTheme.colorScheme.onSecondaryContainer,
+                            stop = MaterialTheme.colorScheme.onSecondary,
+                            fraction = checkedProgress,
+                        )
 
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = if (fabExpanded) {
-                            stringResource(Res.string.action_close)
-                        } else {
-                            stringResource(Res.string.action_create)
-                        },
+                        contentDescription =
+                            if (fabExpanded) {
+                                stringResource(Res.string.action_close)
+                            } else {
+                                stringResource(Res.string.action_create)
+                            },
                         tint = tintColor,
-                        modifier = Modifier.graphicsLayer { rotationZ = rotation }
+                        modifier = Modifier.graphicsLayer { rotationZ = rotation },
                     )
                 }
-            }
+            },
         ) {
             FloatingActionButtonMenuItem(
                 modifier = Modifier,
@@ -84,7 +80,7 @@ object FoodSearchAppDefaults {
                     onFabExpandedChange(false)
                 },
                 icon = { Icon(painterResource(Res.drawable.ic_skillet_filled), null) },
-                text = { Text(stringResource(Res.string.headline_recipe)) }
+                text = { Text(stringResource(Res.string.headline_recipe)) },
             )
             FloatingActionButtonMenuItem(
                 modifier = Modifier,
@@ -93,7 +89,7 @@ object FoodSearchAppDefaults {
                     onFabExpandedChange(false)
                 },
                 icon = { Icon(Icons.Filled.LunchDining, null) },
-                text = { Text(stringResource(Res.string.headline_product)) }
+                text = { Text(stringResource(Res.string.headline_product)) },
             )
         }
     }

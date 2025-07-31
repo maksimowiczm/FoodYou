@@ -5,21 +5,23 @@ import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 
 class SourceTypeConverter {
     @TypeConverter
-    fun fromSourceType(sourceType: FoodSource.Type): Int = when (sourceType) {
-        FoodSource.Type.User -> FoodSourceSQLConstants.USER
-        FoodSource.Type.OpenFoodFacts -> FoodSourceSQLConstants.OPEN_FOOD_FACTS
-        FoodSource.Type.USDA -> FoodSourceSQLConstants.USDA
-        FoodSource.Type.SwissFoodCompositionDatabase -> FoodSourceSQLConstants.SWISS
-    }
+    fun fromSourceType(sourceType: FoodSource.Type): Int =
+        when (sourceType) {
+            FoodSource.Type.User -> FoodSourceSQLConstants.USER
+            FoodSource.Type.OpenFoodFacts -> FoodSourceSQLConstants.OPEN_FOOD_FACTS
+            FoodSource.Type.USDA -> FoodSourceSQLConstants.USDA
+            FoodSource.Type.SwissFoodCompositionDatabase -> FoodSourceSQLConstants.SWISS
+        }
 
     @TypeConverter
-    fun toSourceType(sourceType: Int): FoodSource.Type = when (sourceType) {
-        FoodSourceSQLConstants.USER -> FoodSource.Type.User
-        FoodSourceSQLConstants.OPEN_FOOD_FACTS -> FoodSource.Type.OpenFoodFacts
-        FoodSourceSQLConstants.USDA -> FoodSource.Type.USDA
-        FoodSourceSQLConstants.SWISS -> FoodSource.Type.SwissFoodCompositionDatabase
-        else -> error("SourceType not found")
-    }
+    fun toSourceType(sourceType: Int): FoodSource.Type =
+        when (sourceType) {
+            FoodSourceSQLConstants.USER -> FoodSource.Type.User
+            FoodSourceSQLConstants.OPEN_FOOD_FACTS -> FoodSource.Type.OpenFoodFacts
+            FoodSourceSQLConstants.USDA -> FoodSource.Type.USDA
+            FoodSourceSQLConstants.SWISS -> FoodSource.Type.SwissFoodCompositionDatabase
+            else -> error("SourceType not found")
+        }
 }
 
 object FoodSourceSQLConstants {

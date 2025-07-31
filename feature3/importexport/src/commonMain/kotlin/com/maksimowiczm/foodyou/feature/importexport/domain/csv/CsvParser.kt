@@ -59,9 +59,10 @@ internal class CsvParser {
         return result
     }
 
-    private fun StringBuilder.toStringOrNull(wasQuoted: Boolean): String? = if (this.isEmpty()) {
-        if (wasQuoted) "" else null
-    } else {
-        this.toString()
-    }
+    private fun StringBuilder.toStringOrNull(wasQuoted: Boolean): String? =
+        if (this.isEmpty()) {
+            if (wasQuoted) "" else null
+        } else {
+            this.toString()
+        }
 }

@@ -57,7 +57,7 @@ import org.jetbrains.compose.resources.stringResource
 fun ExternalDatabasesScreen(
     onBack: () -> Unit,
     onSwissFoodCompositionDatabase: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val useOpenFoodFactsPref = userPreference<UseOpenFoodFacts>()
     val useUsdaPref = userPreference<UseUSDA>()
@@ -65,12 +65,10 @@ fun ExternalDatabasesScreen(
     val useOff by useOpenFoodFactsPref.collectAsStateWithLifecycleInitialBlock()
     val useUsda by useUsdaPref.collectAsStateWithLifecycleInitialBlock()
 
-    val state = remember(useOff, useUsda) {
-        ExternalDatabasesState(
-            useOpenFoodFacts = useOff,
-            useUsda = useUsda
-        )
-    }
+    val state =
+        remember(useOff, useUsda) {
+            ExternalDatabasesState(useOpenFoodFacts = useOff, useUsda = useUsda)
+        }
 
     ExternalDatabasesScreen(
         onBack = onBack,
@@ -78,7 +76,7 @@ fun ExternalDatabasesScreen(
         onOpenFoodFactsChange = { useOpenFoodFactsPref.setBlocking(it) },
         onUsdaChange = { useUsdaPref.setBlocking(it) },
         onSwissFoodCompositionDatabase = onSwissFoodCompositionDatabase,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -92,7 +90,7 @@ private fun ExternalDatabasesScreen(
     onOpenFoodFactsChange: (Boolean) -> Unit,
     onUsdaChange: (Boolean) -> Unit,
     onSwissFoodCompositionDatabase: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -100,31 +98,28 @@ private fun ExternalDatabasesScreen(
         modifier = modifier,
         topBar = {
             LargeFlexibleTopAppBar(
-                title = {
-                    Text(stringResource(Res.string.headline_food_database))
-                },
-                navigationIcon = {
-                    ArrowBackIconButton(onBack)
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                ),
-                scrollBehavior = scrollBehavior
+                title = { Text(stringResource(Res.string.headline_food_database)) },
+                navigationIcon = { ArrowBackIconButton(onBack) },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                    ),
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = paddingValues.add(vertical = 8.dp)
+            contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
             item {
                 Text(
                     text = stringResource(Res.string.description_food_database),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
 
@@ -132,7 +127,7 @@ private fun ExternalDatabasesScreen(
                 OpenFoodFactsCard(
                     selected = state.useOpenFoodFacts,
                     onSelectedChange = onOpenFoodFactsChange,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
@@ -140,14 +135,14 @@ private fun ExternalDatabasesScreen(
                 UsdaCard(
                     selected = state.useUsda,
                     onSelectedChange = onUsdaChange,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
             item {
                 SwissFoodCompositionDatabase(
                     onClick = onSwissFoodCompositionDatabase,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -160,15 +155,16 @@ private fun DatabaseCard(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(16.dp),
     onClick: (() -> Unit)? = null,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val inner = @Composable {
-        Column(Modifier.padding(contentPadding)) {
-            title()
-            Spacer(Modifier.height(8.dp))
-            content()
+    val inner =
+        @Composable {
+            Column(Modifier.padding(contentPadding)) {
+                title()
+                Spacer(Modifier.height(8.dp))
+                content()
+            }
         }
-    }
 
     if (onClick == null) {
         Surface(
@@ -176,7 +172,7 @@ private fun DatabaseCard(
             shape = MaterialTheme.shapes.medium,
             color = MaterialTheme.colorScheme.surfaceContainer,
             contentColor = MaterialTheme.colorScheme.onSurface,
-            content = inner
+            content = inner,
         )
     } else {
         Surface(
@@ -185,7 +181,7 @@ private fun DatabaseCard(
             shape = MaterialTheme.shapes.medium,
             color = MaterialTheme.colorScheme.surfaceContainer,
             contentColor = MaterialTheme.colorScheme.onSurface,
-            content = inner
+            content = inner,
         )
     }
 }
@@ -194,84 +190,66 @@ private fun DatabaseCard(
 private fun OpenFoodFactsCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val iterator =
         stringResource(Res.string.open_food_facts_terms_of_use_and_privacy_policy).iterator()
-    val tos = remember(iterator) {
-        buildAnnotatedString {
-            while (iterator.hasNext()) {
-                val char = iterator.nextChar()
+    val tos =
+        remember(iterator) {
+            buildAnnotatedString {
+                while (iterator.hasNext()) {
+                    val char = iterator.nextChar()
 
-                if (char != '{') {
-                    append(char)
-                    continue
-                }
+                    if (char != '{') {
+                        append(char)
+                        continue
+                    }
 
-                val label = iterator.readUntil(':')
-                val link = iterator.readUntil('}')
+                    val label = iterator.readUntil(':')
+                    val link = iterator.readUntil('}')
 
-                withLink(LinkAnnotation.Url(link)) {
-                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(label)
+                    withLink(LinkAnnotation.Url(link)) {
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(label) }
                     }
                 }
             }
         }
-    }
 
     DatabaseCard(
         title = {
             Row(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
                     Image(
                         painter = painterResource(Res.drawable.openfoodfacts_logo),
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
                 Text(
                     text = stringResource(Res.string.headline_open_food_facts),
                     style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Checkbox(
-                        checked = selected,
-                        onCheckedChange = null
-                    )
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Checkbox(checked = selected, onCheckedChange = null)
                 }
             }
         },
         modifier = modifier,
-        contentPadding = PaddingValues(
-            start = 16.dp,
-            top = 8.dp,
-            end = 8.dp,
-            bottom = 16.dp
-        ),
-        onClick = { onSelectedChange(!selected) }
+        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 16.dp),
+        onClick = { onSelectedChange(!selected) },
     ) {
         Column {
             Text(
                 text = stringResource(Res.string.description_open_food_facts),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(
-                text = tos,
-                style = MaterialTheme.typography.bodySmall
-            )
+            Text(text = tos, style = MaterialTheme.typography.bodySmall)
             Spacer(Modifier.height(8.dp))
             FeaturesContainer {
                 ShareURL()
@@ -286,85 +264,65 @@ private fun OpenFoodFactsCard(
 private fun UsdaCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val iterator = stringResource(Res.string.usda_privacy_policy).iterator()
-    val tos = remember(iterator) {
-        buildAnnotatedString {
-            while (iterator.hasNext()) {
-                val char = iterator.nextChar()
+    val tos =
+        remember(iterator) {
+            buildAnnotatedString {
+                while (iterator.hasNext()) {
+                    val char = iterator.nextChar()
 
-                if (char != '{') {
-                    append(char)
-                    continue
-                }
+                    if (char != '{') {
+                        append(char)
+                        continue
+                    }
 
-                val label = iterator.readUntil(':')
-                val link = iterator.readUntil('}')
+                    val label = iterator.readUntil(':')
+                    val link = iterator.readUntil('}')
 
-                withLink(LinkAnnotation.Url(link)) {
-                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(label)
+                    withLink(LinkAnnotation.Url(link)) {
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(label) }
                     }
                 }
             }
         }
-    }
 
     DatabaseCard(
         title = {
             Row(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
                     Image(
                         painter = painterResource(Res.drawable.usda_logo),
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
                 Text(
                     text = stringResource(Res.string.headline_food_data_central_usda),
                     style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Checkbox(
-                        checked = selected,
-                        onCheckedChange = null
-                    )
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Checkbox(checked = selected, onCheckedChange = null)
                 }
             }
         },
         modifier = modifier,
-        contentPadding = PaddingValues(
-            start = 16.dp,
-            top = 8.dp,
-            end = 8.dp,
-            bottom = 16.dp
-        ),
-        onClick = {
-            onSelectedChange(!selected)
-        }
+        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 16.dp),
+        onClick = { onSelectedChange(!selected) },
     ) {
         Column {
             Text(
                 text = stringResource(Res.string.description_food_data_central_usda),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(
-                text = tos,
-                style = MaterialTheme.typography.bodySmall
-            )
+            Text(text = tos, style = MaterialTheme.typography.bodySmall)
             Spacer(Modifier.height(8.dp))
             FeaturesContainer {
                 ShareURL()
@@ -382,41 +340,31 @@ private fun SwissFoodCompositionDatabase(onClick: () -> Unit, modifier: Modifier
             Row(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = stringResource(Res.string.headline_swiss_food_composition_database),
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.titleSmall,
                 )
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
         },
         modifier = modifier,
-        contentPadding = PaddingValues(
-            start = 16.dp,
-            top = 8.dp,
-            end = 8.dp,
-            bottom = 16.dp
-        ),
-        onClick = onClick
+        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 16.dp),
+        onClick = onClick,
     ) {
         Text(
             text = stringResource(Res.string.description_swiss_food_composition_database_short),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Spacer(Modifier.height(8.dp))
-        FeaturesContainer {
-            ManualImport()
-        }
+        FeaturesContainer { ManualImport() }
     }
 }
 
@@ -431,15 +379,12 @@ private fun CharIterator.readUntil(delimiter: Char): String = buildString {
 @Composable
 private fun FeaturesContainer(
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text = stringResource(Res.string.headline_features),
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge,
         )
 
         CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodySmall) {
@@ -450,14 +395,8 @@ private fun FeaturesContainer(
 
 @Composable
 private fun ShareURL(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Share,
-            contentDescription = null
-        )
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        Icon(imageVector = Icons.Outlined.Share, contentDescription = null)
         Spacer(Modifier.width(16.dp))
         Text(stringResource(Res.string.feature_share_url_with_food_you))
     }
@@ -465,14 +404,8 @@ private fun ShareURL(modifier: Modifier = Modifier) {
 
 @Composable
 private fun InAppDownload(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Download,
-            contentDescription = null
-        )
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        Icon(imageVector = Icons.Outlined.Download, contentDescription = null)
         Spacer(Modifier.width(16.dp))
         Text(stringResource(Res.string.feature_in_app_download))
     }
@@ -480,14 +413,8 @@ private fun InAppDownload(modifier: Modifier = Modifier) {
 
 @Composable
 private fun InAppSearch(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(Res.drawable.ic_database_search),
-            contentDescription = null
-        )
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        Icon(painter = painterResource(Res.drawable.ic_database_search), contentDescription = null)
         Spacer(Modifier.width(16.dp))
         Text(stringResource(Res.string.feature_in_app_search))
     }
@@ -495,14 +422,8 @@ private fun InAppSearch(modifier: Modifier = Modifier) {
 
 @Composable
 private fun ManualImport(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.FileOpen,
-            contentDescription = null
-        )
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        Icon(imageVector = Icons.Outlined.FileOpen, contentDescription = null)
         Spacer(Modifier.width(16.dp))
         Text(stringResource(Res.string.feature_manual_database_import))
     }

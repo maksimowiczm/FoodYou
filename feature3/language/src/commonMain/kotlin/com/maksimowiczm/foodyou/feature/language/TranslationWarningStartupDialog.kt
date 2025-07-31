@@ -16,23 +16,19 @@ import org.koin.compose.koinInject
 @Composable
 fun TranslationWarningStartupDialog(
     modifier: Modifier = Modifier,
-    systemDetails: SystemDetails = koinInject()
+    systemDetails: SystemDetails = koinInject(),
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     val showTranslationWarningPreference: ShowTranslationWarning = userPreference()
-    val showTranslationWarning by showTranslationWarningPreference
-        .collectAsStateWithLifecycle(false)
+    val showTranslationWarning by
+        showTranslationWarningPreference.collectAsStateWithLifecycle(false)
 
     if (showTranslationWarning && !systemDetails.isUS) {
         LanguageWarningDialog(
             onDismissRequest = {},
-            onConfirm = {
-                coroutineScope.launch {
-                    showTranslationWarningPreference.set(false)
-                }
-            },
-            modifier = modifier
+            onConfirm = { coroutineScope.launch { showTranslationWarningPreference.set(false) } },
+            modifier = modifier,
         )
     }
 }

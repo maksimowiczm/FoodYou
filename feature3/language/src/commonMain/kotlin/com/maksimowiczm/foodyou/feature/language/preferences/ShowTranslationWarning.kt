@@ -8,8 +8,9 @@ import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 internal class ShowTranslationWarning(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<Boolean, Boolean>(
         dataStore = dataStore,
-        key = booleanPreferencesKey("show_translation_warning")
+        key = booleanPreferencesKey("show_translation_warning"),
     ) {
     override fun Boolean?.toValue(): Boolean = this ?: true
+
     override fun Boolean.toStore(): Boolean? = this
 }

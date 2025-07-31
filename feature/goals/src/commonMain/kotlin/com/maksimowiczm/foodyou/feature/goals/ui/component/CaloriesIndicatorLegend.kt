@@ -33,9 +33,7 @@ import com.valentinilk.shimmer.shimmer
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
-/**
- * Legend for the calories indicator. Suffix "g" is added to the values.
- */
+/** Legend for the calories indicator. Suffix "g" is added to the values. */
 @Composable
 internal fun CaloriesIndicatorLegend(
     proteins: Int,
@@ -44,43 +42,37 @@ internal fun CaloriesIndicatorLegend(
     carbohydratesGoal: Int,
     fats: Int,
     fatsGoal: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
         NutrientIndicator(
             title = stringResource(Res.string.nutriment_proteins),
             value = proteins,
             goal = proteinsGoal,
-            progressColor = nutrientsPalette.proteinsOnSurfaceContainer
+            progressColor = nutrientsPalette.proteinsOnSurfaceContainer,
         )
 
         NutrientIndicator(
             title = stringResource(Res.string.nutriment_carbohydrates),
             value = carbohydrates,
             goal = carbohydratesGoal,
-            progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer
+            progressColor = nutrientsPalette.carbohydratesOnSurfaceContainer,
         )
 
         NutrientIndicator(
             title = stringResource(Res.string.nutriment_fats),
             value = fats,
             goal = fatsGoal,
-            progressColor = nutrientsPalette.fatsOnSurfaceContainer
+            progressColor = nutrientsPalette.fatsOnSurfaceContainer,
         )
     }
 }
 
 @Composable
 internal fun NutrientIndicatorLegendSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
         NutrientIndicatorSkeleton(shimmer)
         NutrientIndicatorSkeleton(shimmer)
         NutrientIndicatorSkeleton(shimmer)
@@ -93,70 +85,53 @@ private fun NutrientIndicator(
     value: Int,
     goal: Int,
     progressColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
     val gramShort = stringResource(Res.string.unit_gram_short)
 
-    val valueGoalString = remember(typography, colorScheme, gramShort, title, value, goal) {
-        val valueStatus = value.asValueStatus(goal)
+    val valueGoalString =
+        remember(typography, colorScheme, gramShort, title, value, goal) {
+            val valueStatus = value.asValueStatus(goal)
 
-        buildAnnotatedString {
-            withStyle(
-                typography.headlineSmall.merge(
-                    color = when (valueStatus) {
-                        ValueStatus.Exceeded -> colorScheme.error
-                        ValueStatus.Remaining,
-                        ValueStatus.Achieved -> progressColor
-                    }
-                ).toSpanStyle()
-            ) {
-                append(value.toString())
-            }
-            withStyle(
-                typography.bodyMedium.merge(
-                    color = colorScheme.outline
-                ).toSpanStyle()
-            ) {
-                append(" / $goal $gramShort")
+            buildAnnotatedString {
+                withStyle(
+                    typography.headlineSmall
+                        .merge(
+                            color =
+                                when (valueStatus) {
+                                    ValueStatus.Exceeded -> colorScheme.error
+                                    ValueStatus.Remaining,
+                                    ValueStatus.Achieved -> progressColor
+                                }
+                        )
+                        .toSpanStyle()
+                ) {
+                    append(value.toString())
+                }
+                withStyle(typography.bodyMedium.merge(color = colorScheme.outline).toSpanStyle()) {
+                    append(" / $goal $gramShort")
+                }
             }
         }
-    }
 
     val animatedValue by animateIntAsState(value)
     val animatedGoal by animateIntAsState(goal)
 
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Canvas(
-                modifier = Modifier
-                    .size(16.dp)
-                    .clip(MaterialTheme.shapes.extraSmall)
-            ) {
-                drawRect(
-                    color = progressColor
-                )
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Canvas(modifier = Modifier.size(16.dp).clip(MaterialTheme.shapes.extraSmall)) {
+                drawRect(color = progressColor)
             }
 
             Spacer(Modifier.width(8.dp))
 
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium
-            )
+            Text(text = title, style = MaterialTheme.typography.titleMedium)
 
             Spacer(Modifier.weight(1f))
 
-            Text(
-                text = valueGoalString,
-                style = MaterialTheme.typography.headlineSmall
-            )
+            Text(text = valueGoalString, style = MaterialTheme.typography.headlineSmall)
         }
 
         if (animatedValue > animatedGoal) {
@@ -171,15 +146,13 @@ private fun NutrientIndicator(
                         (animatedValue - animatedGoal) / animatedGoal.toFloat()
                     }
                 },
-                drawStopIndicator = {}
+                drawStopIndicator = {},
             )
         } else {
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
                 color = progressColor,
-                progress = {
-                    if (animatedGoal == 0) 1f else animatedValue / animatedGoal.toFloat()
-                }
+                progress = { if (animatedGoal == 0) 1f else animatedValue / animatedGoal.toFloat() },
             )
         }
     }
@@ -187,34 +160,27 @@ private fun NutrientIndicator(
 
 @Composable
 private fun NutrientIndicatorSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 // Color indicator
                 Spacer(
-                    modifier = Modifier
-                        .shimmer(shimmer)
-                        .size(16.dp)
-                        .clip(MaterialTheme.shapes.extraSmall)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                    modifier =
+                        Modifier.shimmer(shimmer)
+                            .size(16.dp)
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
 
                 Spacer(Modifier.width(8.dp))
 
                 // Title
                 Spacer(
-                    modifier = Modifier
-                        .shimmer(shimmer)
-                        .size(100.dp, MaterialTheme.typography.titleMedium.toDp())
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                    modifier =
+                        Modifier.shimmer(shimmer)
+                            .size(100.dp, MaterialTheme.typography.titleMedium.toDp())
+                            .clip(MaterialTheme.shapes.medium)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
             }
 
@@ -222,22 +188,22 @@ private fun NutrientIndicatorSkeleton(shimmer: Shimmer, modifier: Modifier = Mod
 
             // Value / Goal
             Spacer(
-                modifier = Modifier
-                    .shimmer(shimmer)
-                    .size(100.dp, MaterialTheme.typography.headlineSmall.toDp())
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                modifier =
+                    Modifier.shimmer(shimmer)
+                        .size(100.dp, MaterialTheme.typography.headlineSmall.toDp())
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             )
         }
 
         // Progress
         Spacer(
-            modifier = Modifier
-                .shimmer(shimmer)
-                .height(4.dp)
-                .fillMaxWidth()
-                .clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            modifier =
+                Modifier.shimmer(shimmer)
+                    .height(4.dp)
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
         )
     }
 }

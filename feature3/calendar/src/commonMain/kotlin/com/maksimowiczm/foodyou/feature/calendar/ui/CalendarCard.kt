@@ -66,11 +66,12 @@ internal fun CalendarCard(homeState: HomeState, modifier: Modifier = Modifier) {
 
     val dateFormatter = LocalDateFormatter.current
 
-    val calendarState = rememberCalendarState(
-        namesOfDayOfWeek = remember(dateFormatter) { dateFormatter.weekDayNamesShort },
-        referenceDate = today,
-        selectedDate = homeState.selectedDate
-    )
+    val calendarState =
+        rememberCalendarState(
+            namesOfDayOfWeek = remember(dateFormatter) { dateFormatter.weekDayNamesShort },
+            referenceDate = today,
+            selectedDate = homeState.selectedDate,
+        )
 
     LaunchedEffect(calendarState.selectedDate) {
         val date = calendarState.selectedDate
@@ -80,17 +81,14 @@ internal fun CalendarCard(homeState: HomeState, modifier: Modifier = Modifier) {
         }
     }
 
-    CalendarCard(
-        calendarState = calendarState,
-        modifier = modifier
-    )
+    CalendarCard(calendarState = calendarState, modifier = modifier)
 }
 
 @Composable
 private fun CalendarCard(
     calendarState: CalendarState,
     modifier: Modifier = Modifier,
-    colors: CalendarCardColors = CalendarCardDefaults.colors()
+    colors: CalendarCardColors = CalendarCardDefaults.colors(),
 ) {
     val dateFormatter = LocalDateFormatter.current
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
@@ -98,44 +96,32 @@ private fun CalendarCard(
     if (showDatePicker) {
         CalendarCardDatePickerDialog(
             calendarState = calendarState,
-            onDismissRequest = { showDatePicker = false }
+            onDismissRequest = { showDatePicker = false },
         )
     }
 
-    FoodYouHomeCard(
-        onClick = { showDatePicker = true },
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(
-                top = 16.dp,
-                bottom = 8.dp
-            )
-        ) {
+    FoodYouHomeCard(onClick = { showDatePicker = true }, modifier = modifier) {
+        Column(modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 8.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = dateFormatter.formatMonthYear(
-                        calendarState.firstVisibleDate ?: calendarState.selectedDate
-                    )
+                    text =
+                        dateFormatter.formatMonthYear(
+                            calendarState.firstVisibleDate ?: calendarState.selectedDate
+                        )
                 )
 
                 Icon(
                     imageVector = Icons.Default.CalendarMonth,
-                    contentDescription = stringResource(Res.string.action_show_calendar)
+                    contentDescription = stringResource(Res.string.action_show_calendar),
                 )
             }
             Spacer(Modifier.height(8.dp))
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                CalendarCardDatePicker(
-                    calendarState = calendarState,
-                    colors = colors
-                )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                CalendarCardDatePicker(calendarState = calendarState, colors = colors)
             }
         }
     }
@@ -145,7 +131,7 @@ private fun CalendarCard(
 @Composable
 private fun CalendarCardDatePickerDialog(
     calendarState: CalendarState,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
     val state = calendarState.rememberDatePickerState()
 
@@ -156,50 +142,41 @@ private fun CalendarCardDatePickerDialog(
                 onClick = {
                     state.selectedDateMillis?.let {
                         calendarState.onDateSelect(
-                            date = Instant
-                                .fromEpochMilliseconds(it)
-                                .toLocalDateTime(TimeZone.currentSystemDefault())
-                                .date,
-                            scroll = true
+                            date =
+                                Instant.fromEpochMilliseconds(it)
+                                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                                    .date,
+                            scroll = true,
                         )
                     }
                     onDismissRequest()
                 }
             ) {
-                Text(
-                    text = stringResource(Res.string.positive_ok)
-                )
+                Text(text = stringResource(Res.string.positive_ok))
             }
         },
         dismissButton = {
-            TextButton(
-                onClick = onDismissRequest
-            ) {
-                Text(
-                    text = stringResource(Res.string.action_cancel)
-                )
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(Res.string.action_cancel))
             }
-        }
+        },
     ) {
         DatePicker(
             state = state,
             title = {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 24.dp, end = 12.dp, top = 16.dp),
+                    modifier =
+                        Modifier.fillMaxWidth().padding(start = 24.dp, end = 12.dp, top = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    DatePickerDefaults.DatePickerTitle(
-                        displayMode = state.displayMode
-                    )
+                    DatePickerDefaults.DatePickerTitle(displayMode = state.displayMode)
 
                     TextButton(
                         onClick = {
                             calendarState.onDateSelect(
                                 date = calendarState.referenceDate,
-                                scroll = true
+                                scroll = true,
                             )
                             onDismissRequest()
                         }
@@ -209,7 +186,7 @@ private fun CalendarCardDatePickerDialog(
                 }
             },
             // It won't fit on small screens, so we need to scroll
-            modifier = Modifier.verticalScroll(rememberScrollState())
+            modifier = Modifier.verticalScroll(rememberScrollState()),
         )
     }
 }
@@ -218,26 +195,25 @@ private fun CalendarCardDatePickerDialog(
 private fun CalendarCardDatePicker(
     calendarState: CalendarState,
     colors: CalendarCardColors,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
     // Tick when user scrolls
     LaunchedEffect(calendarState) {
         combine(
-            snapshotFlow { calendarState.lazyListState.isScrollInProgress },
-            snapshotFlow { calendarState.lazyListState.firstVisibleItemIndex }
-        ) { isScrollInProgress, _ ->
-            isScrollInProgress
-        }.filter { it }.collectLatest {
-            hapticFeedback.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
-        }
+                snapshotFlow { calendarState.lazyListState.isScrollInProgress },
+                snapshotFlow { calendarState.lazyListState.firstVisibleItemIndex },
+            ) { isScrollInProgress, _ ->
+                isScrollInProgress
+            }
+            .filter { it }
+            .collectLatest {
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
+            }
     }
 
-    LazyRow(
-        modifier = modifier,
-        state = calendarState.lazyListState
-    ) {
+    LazyRow(modifier = modifier, state = calendarState.lazyListState) {
         items(calendarState.lazyListCount) {
             val date = calendarState.zeroDate.plus(it.toLong(), DateTimeUnit.DAY)
             DatePickerRowItem(
@@ -245,12 +221,9 @@ private fun CalendarCardDatePicker(
                 date = date,
                 colors = colors,
                 onClick = {
-                    calendarState.onDateSelect(
-                        date = date,
-                        scroll = false
-                    )
+                    calendarState.onDateSelect(date = date, scroll = false)
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                }
+                },
             )
         }
     }
@@ -262,57 +235,62 @@ private fun DatePickerRowItem(
     date: LocalDate,
     colors: CalendarCardColors,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val namesOfDayOfWeek = calendarState.namesOfDayOfWeek
     val referenceDate = calendarState.referenceDate
     val selectedDate = calendarState.selectedDate
     val dayOfWeek = (date.dayOfWeek.isoDayNumber - 1) % 7
 
-    val backgroundColor by animateColorAsState(
-        targetValue = when (date) {
-            selectedDate -> colors.selectedDateContainerColor
-            referenceDate -> colors.referenceDateContainerColor
-            else -> colors.containerColor
-        },
-        animationSpec = tween(500),
-        label = "Date background color"
-    )
-    val color by animateColorAsState(
-        targetValue = when (date) {
-            selectedDate -> colors.selectedDateContentColor
-            referenceDate -> colors.referenceDateContentColor
-            else -> colors.contentColor
-        },
-        animationSpec = tween(500),
-        label = "Date text color"
-    )
+    val backgroundColor by
+        animateColorAsState(
+            targetValue =
+                when (date) {
+                    selectedDate -> colors.selectedDateContainerColor
+                    referenceDate -> colors.referenceDateContainerColor
+                    else -> colors.containerColor
+                },
+            animationSpec = tween(500),
+            label = "Date background color",
+        )
+    val color by
+        animateColorAsState(
+            targetValue =
+                when (date) {
+                    selectedDate -> colors.selectedDateContentColor
+                    referenceDate -> colors.referenceDateContentColor
+                    else -> colors.contentColor
+                },
+            animationSpec = tween(500),
+            label = "Date text color",
+        )
 
     Box(
-        modifier = modifier
-            .height(IntrinsicSize.Min)
-            .padding(4.dp)
-            .clip(MaterialTheme.shapes.medium)
-            .clickable { onClick() }
-            .drawBehind { drawRect(backgroundColor) }
-            .padding(4.dp),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .height(IntrinsicSize.Min)
+                .padding(4.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .clickable { onClick() }
+                .drawBehind { drawRect(backgroundColor) }
+                .padding(4.dp),
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             modifier = Modifier.aspectRatio(1f),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = namesOfDayOfWeek[dayOfWeek],
                 style = MaterialTheme.typography.bodyMedium,
                 color = color,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             Text(
                 text = date.day.toString(),
                 style = MaterialTheme.typography.bodyMedium,
                 color = color,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -325,7 +303,7 @@ private data class CalendarCardColors(
     val selectedDateContainerColor: Color,
     val selectedDateContentColor: Color,
     val referenceDateContainerColor: Color,
-    val referenceDateContentColor: Color
+    val referenceDateContentColor: Color,
 )
 
 private object CalendarCardDefaults {
@@ -336,13 +314,14 @@ private object CalendarCardDefaults {
         selectedDateContainerColor: Color = MaterialTheme.colorScheme.primary,
         selectedDateContentColor: Color = MaterialTheme.colorScheme.onPrimary,
         referenceDateContainerColor: Color = MaterialTheme.colorScheme.secondary,
-        referenceDateContentColor: Color = MaterialTheme.colorScheme.onSecondary
-    ) = CalendarCardColors(
-        containerColor = containerColor,
-        contentColor = contentColor,
-        selectedDateContainerColor = selectedDateContainerColor,
-        selectedDateContentColor = selectedDateContentColor,
-        referenceDateContainerColor = referenceDateContainerColor,
-        referenceDateContentColor = referenceDateContentColor
-    )
+        referenceDateContentColor: Color = MaterialTheme.colorScheme.onSecondary,
+    ) =
+        CalendarCardColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            selectedDateContainerColor = selectedDateContainerColor,
+            selectedDateContentColor = selectedDateContentColor,
+            referenceDateContainerColor = referenceDateContainerColor,
+            referenceDateContentColor = referenceDateContentColor,
+        )
 }

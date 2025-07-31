@@ -15,7 +15,7 @@ internal interface SponsorshipApiClient {
     suspend fun getSponsorships(
         before: Instant? = null,
         after: Instant? = null,
-        size: Int = 20
+        size: Int = 20,
     ): PagedSponsorshipsResponse
 }
 
@@ -24,29 +24,30 @@ internal class SponsorshipApiClientImpl(private val client: HttpClient) : Sponso
     override suspend fun getSponsorships(
         before: Instant?,
         after: Instant?,
-        size: Int
+        size: Int,
     ): PagedSponsorshipsResponse {
         val url = "${BuildConfig.SPONSOR_API_URL}/sponsorships"
 
-        val response = client.get(url) {
-            timeout {
-                requestTimeoutMillis = TIMEOUT
-                connectTimeoutMillis = TIMEOUT
-                socketTimeoutMillis = TIMEOUT
+        val response =
+            client.get(url) {
+                timeout {
+                    requestTimeoutMillis = TIMEOUT
+                    connectTimeoutMillis = TIMEOUT
+                    socketTimeoutMillis = TIMEOUT
+                }
+
+                userAgent(BuildConfig.SPONSOR_API_USER_AGENT)
+
+                if (before != null) {
+                    parameter("before", before)
+                }
+
+                if (after != null) {
+                    parameter("after", after)
+                }
+
+                parameter("size", size)
             }
-
-            userAgent(BuildConfig.SPONSOR_API_USER_AGENT)
-
-            if (before != null) {
-                parameter("before", before)
-            }
-
-            if (after != null) {
-                parameter("after", after)
-            }
-
-            parameter("size", size)
-        }
 
         val pagedResponse = response.body<PagedSponsorshipsResponse>()
 

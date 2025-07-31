@@ -64,7 +64,7 @@ internal fun GoalsCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: GoalsCardViewModel = koinViewModel()
+    viewModel: GoalsCardViewModel = koinViewModel(),
 ) {
     val diaryDay =
         viewModel.observeDiaryDay(homeState.selectedDate).collectAsStateWithLifecycle(null).value
@@ -77,7 +77,7 @@ internal fun GoalsCard(
             expand = expand,
             onClick = onClick,
             onLongClick = onLongClick,
-            modifier = modifier
+            modifier = modifier,
         )
     } else {
         GoalsCard(
@@ -89,7 +89,7 @@ internal fun GoalsCard(
             dailyGoals = diaryDay.dailyGoals,
             onClick = onClick,
             onLongClick = onLongClick,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -105,44 +105,44 @@ internal fun GoalsCard(
     dailyGoals: DailyGoals,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val proteinsPercentage = animateFloatAsState(
-        targetValue = totalProteins / dailyGoals.proteinsAsGrams,
-        animationSpec = MaterialTheme.motionScheme.slowEffectsSpec()
-    ).value
+    val proteinsPercentage =
+        animateFloatAsState(
+                targetValue = totalProteins / dailyGoals.proteinsAsGrams,
+                animationSpec = MaterialTheme.motionScheme.slowEffectsSpec(),
+            )
+            .value
 
-    val carbsPercentage = animateFloatAsState(
-        targetValue = totalCarbohydrates / dailyGoals.carbohydratesAsGrams,
-        animationSpec = MaterialTheme.motionScheme.slowEffectsSpec()
-    ).value
+    val carbsPercentage =
+        animateFloatAsState(
+                targetValue = totalCarbohydrates / dailyGoals.carbohydratesAsGrams,
+                animationSpec = MaterialTheme.motionScheme.slowEffectsSpec(),
+            )
+            .value
 
-    val fatsPercentage = animateFloatAsState(
-        targetValue = totalFats / dailyGoals.fatsAsGrams,
-        animationSpec = MaterialTheme.motionScheme.slowEffectsSpec()
-    ).value
+    val fatsPercentage =
+        animateFloatAsState(
+                targetValue = totalFats / dailyGoals.fatsAsGrams,
+                animationSpec = MaterialTheme.motionScheme.slowEffectsSpec(),
+            )
+            .value
 
-    FoodYouHomeCard(
-        modifier = modifier,
-        onClick = onClick,
-        onLongClick = onLongClick
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+    FoodYouHomeCard(modifier = modifier, onClick = onClick, onLongClick = onLongClick) {
+        Column(modifier = Modifier.padding(16.dp)) {
             GoalsCardContent(
                 calories = totalCalories,
                 caloriesGoal = dailyGoals.calories,
                 proteinsPercentage = proteinsPercentage,
                 carbsPercentage = carbsPercentage,
                 fatsPercentage = fatsPercentage,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             AnimatedVisibility(
                 visible = expand,
                 enter = expandVertically(),
-                exit = shrinkVertically()
+                exit = shrinkVertically(),
             ) {
                 Column {
                     Spacer(Modifier.height(16.dp))
@@ -154,7 +154,7 @@ internal fun GoalsCard(
                         carbohydratesGoalGrams = dailyGoals.carbohydratesAsGrams.roundToInt(),
                         fatsGrams = totalFats,
                         fatsGoalGrams = dailyGoals.fatsAsGrams.roundToInt(),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }
@@ -171,7 +171,7 @@ private fun GoalsCardContent(
     carbsPercentage: Float,
     fatsPercentage: Float,
     modifier: Modifier = Modifier,
-    preference: NutritionFactsListPreference = userPreference()
+    preference: NutritionFactsListPreference = userPreference(),
 ) {
     val preferences by preference.collectAsStateWithLifecycle(preference.getBlocking())
 
@@ -182,101 +182,100 @@ private fun GoalsCardContent(
     val kcal = stringResource(Res.string.unit_kcal)
     val outlineColor = MaterialTheme.colorScheme.outline
 
-    val caloriesString = remember(calories, caloriesGoal, kcal, typography, colorScheme) {
-        buildAnnotatedString {
-            withStyle(
-                typography.headlineLargeEmphasized.merge(
-                    color = when {
-                        calories < caloriesGoal -> colorScheme.onSurface
-                        calories == caloriesGoal -> colorScheme.onSurface
-                        else -> colorScheme.error
-                    }
-                ).toSpanStyle()
-            ) {
-                append(calories.toString())
-                append(" ")
-            }
-            withStyle(typography.bodyMedium.merge(outlineColor).toSpanStyle()) {
-                append("/ $caloriesGoal $kcal")
+    val caloriesString =
+        remember(calories, caloriesGoal, kcal, typography, colorScheme) {
+            buildAnnotatedString {
+                withStyle(
+                    typography.headlineLargeEmphasized
+                        .merge(
+                            color =
+                                when {
+                                    calories < caloriesGoal -> colorScheme.onSurface
+                                    calories == caloriesGoal -> colorScheme.onSurface
+                                    else -> colorScheme.error
+                                }
+                        )
+                        .toSpanStyle()
+                ) {
+                    append(calories.toString())
+                    append(" ")
+                }
+                withStyle(typography.bodyMedium.merge(outlineColor).toSpanStyle()) {
+                    append("/ $caloriesGoal $kcal")
+                }
             }
         }
-    }
 
-    val left = remember(calories, caloriesGoal) {
-        caloriesGoal - calories
-    }
+    val left = remember(calories, caloriesGoal) { caloriesGoal - calories }
 
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = caloriesString,
-                style = typography.headlineLargeEmphasized
-            )
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(text = caloriesString, style = typography.headlineLargeEmphasized)
 
             when {
-                left > 0 -> Text(
-                    text = pluralStringResource(
-                        Res.plurals.neutral_remaining_calories,
-                        left,
-                        left
-                    ),
-                    color = MaterialTheme.colorScheme.outline,
-                    style = MaterialTheme.typography.bodyMediumEmphasized
-                )
+                left > 0 ->
+                    Text(
+                        text =
+                            pluralStringResource(
+                                Res.plurals.neutral_remaining_calories,
+                                left,
+                                left,
+                            ),
+                        color = MaterialTheme.colorScheme.outline,
+                        style = MaterialTheme.typography.bodyMediumEmphasized,
+                    )
 
-                left == 0 -> Text(
-                    text = stringResource(Res.string.positive_goal_reached),
-                    color = MaterialTheme.colorScheme.outline,
-                    style = MaterialTheme.typography.bodyMediumEmphasized
-                )
+                left == 0 ->
+                    Text(
+                        text = stringResource(Res.string.positive_goal_reached),
+                        color = MaterialTheme.colorScheme.outline,
+                        style = MaterialTheme.typography.bodyMediumEmphasized,
+                    )
 
-                else -> Text(
-                    text = pluralStringResource(
-                        Res.plurals.negative_exceeded_by_calories,
-                        -left,
-                        -left
-                    ),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMediumEmphasized
-                )
+                else ->
+                    Text(
+                        text =
+                            pluralStringResource(
+                                Res.plurals.negative_exceeded_by_calories,
+                                -left,
+                                -left,
+                            ),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMediumEmphasized,
+                    )
             }
         }
 
-        Row(
-            modifier = Modifier.height(64.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        Row(modifier = Modifier.height(64.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             preferences.orderedEnabled.forEach { field ->
                 when (field) {
-                    NutritionFactsField.Proteins -> MacroBar(
-                        progress = proteinsPercentage,
-                        containerColor = nutrientsPalette.proteinsOnSurfaceContainer.copy(
-                            alpha = .25f
-                        ),
-                        barColor = nutrientsPalette.proteinsOnSurfaceContainer
-                    )
+                    NutritionFactsField.Proteins ->
+                        MacroBar(
+                            progress = proteinsPercentage,
+                            containerColor =
+                                nutrientsPalette.proteinsOnSurfaceContainer.copy(alpha = .25f),
+                            barColor = nutrientsPalette.proteinsOnSurfaceContainer,
+                        )
 
-                    NutritionFactsField.Carbohydrates -> MacroBar(
-                        progress = carbsPercentage,
-                        containerColor = nutrientsPalette.carbohydratesOnSurfaceContainer.copy(
-                            alpha = .25f
-                        ),
-                        barColor = nutrientsPalette.carbohydratesOnSurfaceContainer
-                    )
+                    NutritionFactsField.Carbohydrates ->
+                        MacroBar(
+                            progress = carbsPercentage,
+                            containerColor =
+                                nutrientsPalette.carbohydratesOnSurfaceContainer.copy(alpha = .25f),
+                            barColor = nutrientsPalette.carbohydratesOnSurfaceContainer,
+                        )
 
-                    NutritionFactsField.Fats -> MacroBar(
-                        progress = fatsPercentage,
-                        containerColor = nutrientsPalette.fatsOnSurfaceContainer.copy(
-                            alpha = .25f
-                        ),
-                        barColor = nutrientsPalette.fatsOnSurfaceContainer
-                    )
+                    NutritionFactsField.Fats ->
+                        MacroBar(
+                            progress = fatsPercentage,
+                            containerColor =
+                                nutrientsPalette.fatsOnSurfaceContainer.copy(alpha = .25f),
+                            barColor = nutrientsPalette.fatsOnSurfaceContainer,
+                        )
 
                     else -> Unit
                 }
@@ -291,63 +290,48 @@ private fun MacroBar(
     containerColor: Color,
     barColor: Color,
     modifier: Modifier = Modifier,
-    overflowColor: Color = MaterialTheme.colorScheme.error
+    overflowColor: Color = MaterialTheme.colorScheme.error,
 ) {
     val containerFraction = (1 - progress).coerceIn(0f, 1f)
     val overflowFraction = (progress - 1).coerceIn(0f, 1f)
 
     Canvas(
-        modifier = modifier
-            .clip(
-                RoundedCornerShape(
-                    topStart = 8.dp,
-                    topEnd = 8.dp,
-                    bottomStart = 4.dp,
-                    bottomEnd = 4.dp
+        modifier =
+            modifier
+                .clip(
+                    RoundedCornerShape(
+                        topStart = 8.dp,
+                        topEnd = 8.dp,
+                        bottomStart = 4.dp,
+                        bottomEnd = 4.dp,
+                    )
                 )
-            )
-            .fillMaxHeight()
-            .width(24.dp)
+                .fillMaxHeight()
+                .width(24.dp)
     ) {
         if (overflowFraction > 0f) {
             val barHeight = 1 - overflowFraction
 
             drawRect(
                 color = barColor,
-                size = Size(
-                    width = size.width,
-                    height = size.height * barHeight - 1.dp.toPx()
-                )
+                size = Size(width = size.width, height = size.height * barHeight - 1.dp.toPx()),
             )
             drawRect(
                 color = overflowColor,
-                topLeft = Offset(
-                    x = 0f,
-                    y = size.height * barHeight + 1.dp.toPx()
-                ),
-                size = Size(
-                    width = size.width,
-                    height = size.height * overflowFraction - 1.dp.toPx()
-                )
+                topLeft = Offset(x = 0f, y = size.height * barHeight + 1.dp.toPx()),
+                size =
+                    Size(width = size.width, height = size.height * overflowFraction - 1.dp.toPx()),
             )
         } else {
             drawRect(
                 color = containerColor,
-                size = Size(
-                    width = size.width,
-                    height = size.height * containerFraction - 1.dp.toPx()
-                )
+                size =
+                    Size(width = size.width, height = size.height * containerFraction - 1.dp.toPx()),
             )
             drawRect(
                 color = barColor,
-                topLeft = Offset(
-                    x = 0f,
-                    y = size.height * containerFraction + 1.dp.toPx()
-                ),
-                size = Size(
-                    width = size.width,
-                    height = size.height * progress - 1.dp.toPx()
-                )
+                topLeft = Offset(x = 0f, y = size.height * containerFraction + 1.dp.toPx()),
+                size = Size(width = size.width, height = size.height * progress - 1.dp.toPx()),
             )
         }
     }
@@ -362,7 +346,7 @@ private fun ExpandedCardContent(
     fatsGrams: Int,
     fatsGoalGrams: Int,
     modifier: Modifier = Modifier,
-    preference: NutritionFactsListPreference = userPreference()
+    preference: NutritionFactsListPreference = userPreference(),
 ) {
     val preferences by preference.collectAsStateWithLifecycle(preference.getBlocking())
 
@@ -372,11 +356,12 @@ private fun ExpandedCardContent(
     val gramShort = stringResource(Res.string.unit_gram_short)
 
     val proteinsString = buildAnnotatedString {
-        val color = if (proteinsGrams > proteinsGoalGrams) {
-            colorScheme.error
-        } else {
-            nutrientsPalette.proteinsOnSurfaceContainer
-        }
+        val color =
+            if (proteinsGrams > proteinsGoalGrams) {
+                colorScheme.error
+            } else {
+                nutrientsPalette.proteinsOnSurfaceContainer
+            }
 
         withStyle(typography.headlineSmall.merge(color).toSpanStyle()) {
             append(" $proteinsGrams ")
@@ -387,11 +372,12 @@ private fun ExpandedCardContent(
     }
 
     val carbohydratesString = buildAnnotatedString {
-        val color = if (carbohydratesGrams > carbohydratesGoalGrams) {
-            colorScheme.error
-        } else {
-            nutrientsPalette.carbohydratesOnSurfaceContainer
-        }
+        val color =
+            if (carbohydratesGrams > carbohydratesGoalGrams) {
+                colorScheme.error
+            } else {
+                nutrientsPalette.carbohydratesOnSurfaceContainer
+            }
 
         withStyle(typography.headlineSmall.merge(color).toSpanStyle()) {
             append(" $carbohydratesGrams ")
@@ -402,28 +388,25 @@ private fun ExpandedCardContent(
     }
 
     val fatsString = buildAnnotatedString {
-        val color = if (fatsGrams > fatsGoalGrams) {
-            colorScheme.error
-        } else {
-            nutrientsPalette.fatsOnSurfaceContainer
-        }
+        val color =
+            if (fatsGrams > fatsGoalGrams) {
+                colorScheme.error
+            } else {
+                nutrientsPalette.fatsOnSurfaceContainer
+            }
 
-        withStyle(typography.headlineSmall.merge(color).toSpanStyle()) {
-            append(" $fatsGrams ")
-        }
+        withStyle(typography.headlineSmall.merge(color).toSpanStyle()) { append(" $fatsGrams ") }
         withStyle(typography.bodyMedium.merge(colorScheme.outline).toSpanStyle()) {
             append("/ $fatsGoalGrams $gramShort")
         }
     }
 
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         preferences.orderedEnabled.forEach { field ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 when (field) {
                     NutritionFactsField.Proteins -> {
@@ -432,13 +415,10 @@ private fun ExpandedCardContent(
                         Text(
                             text = stringResource(Res.string.nutriment_proteins),
                             modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typography.labelLarge
+                            style = MaterialTheme.typography.labelLarge,
                         )
 
-                        Text(
-                            text = proteinsString,
-                            style = MaterialTheme.typography.headlineSmall
-                        )
+                        Text(text = proteinsString, style = MaterialTheme.typography.headlineSmall)
                     }
 
                     NutritionFactsField.Carbohydrates -> {
@@ -447,12 +427,12 @@ private fun ExpandedCardContent(
                         Text(
                             text = stringResource(Res.string.nutriment_carbohydrates),
                             modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typography.labelLarge
+                            style = MaterialTheme.typography.labelLarge,
                         )
 
                         Text(
                             text = carbohydratesString,
-                            style = MaterialTheme.typography.headlineSmall
+                            style = MaterialTheme.typography.headlineSmall,
                         )
                     }
 
@@ -462,13 +442,10 @@ private fun ExpandedCardContent(
                         Text(
                             text = stringResource(Res.string.nutriment_fats),
                             modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typography.labelLarge
+                            style = MaterialTheme.typography.labelLarge,
                         )
 
-                        Text(
-                            text = fatsString,
-                            style = MaterialTheme.typography.headlineSmall
-                        )
+                        Text(text = fatsString, style = MaterialTheme.typography.headlineSmall)
                     }
 
                     else -> Unit
@@ -480,11 +457,7 @@ private fun ExpandedCardContent(
 
 @Composable
 private fun RoundedSquare(color: Color, modifier: Modifier = Modifier) {
-    Canvas(
-        modifier = modifier
-            .size(16.dp)
-            .clip(MaterialTheme.shapes.extraSmall)
-    ) {
+    Canvas(modifier = modifier.size(16.dp).clip(MaterialTheme.shapes.extraSmall)) {
         drawRect(color = color, size = size)
     }
 }
@@ -496,25 +469,18 @@ private fun GoalsCardSkeleton(
     expand: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    FoodYouHomeCard(
-        modifier = modifier,
-        onClick = onClick,
-        onLongClick = onLongClick
-    ) {
+    FoodYouHomeCard(modifier = modifier, onClick = onClick, onLongClick = onLongClick) {
         Column(Modifier.padding(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Spacer(
-                        Modifier
-                            .shimmer(shimmer)
+                        Modifier.shimmer(shimmer)
                             .width(60.dp)
                             .height(MaterialTheme.typography.headlineLargeEmphasized.toDp())
                             .clip(MaterialTheme.shapes.medium)
@@ -522,8 +488,7 @@ private fun GoalsCardSkeleton(
                     )
 
                     Spacer(
-                        Modifier
-                            .shimmer(shimmer)
+                        Modifier.shimmer(shimmer)
                             .size(120.dp, MaterialTheme.typography.bodyMediumEmphasized.toDp())
                             .clip(MaterialTheme.shapes.medium)
                             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
@@ -532,27 +497,27 @@ private fun GoalsCardSkeleton(
 
                 Row(
                     modifier = Modifier.height(64.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     MacroBar(
                         progress = 1f,
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                         barColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                        modifier = Modifier.shimmer(shimmer)
+                        modifier = Modifier.shimmer(shimmer),
                     )
 
                     MacroBar(
                         progress = 1f,
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                         barColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                        modifier = Modifier.shimmer(shimmer)
+                        modifier = Modifier.shimmer(shimmer),
                     )
 
                     MacroBar(
                         progress = 1f,
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                         barColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                        modifier = Modifier.shimmer(shimmer)
+                        modifier = Modifier.shimmer(shimmer),
                     )
                 }
             }
@@ -560,7 +525,7 @@ private fun GoalsCardSkeleton(
             AnimatedVisibility(
                 visible = expand,
                 enter = expandVertically(),
-                exit = shrinkVertically()
+                exit = shrinkVertically(),
             ) {
                 Column {
                     Spacer(Modifier.height(16.dp))
@@ -568,16 +533,15 @@ private fun GoalsCardSkeleton(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         RoundedSquare(
                             color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                            modifier = Modifier.shimmer(shimmer)
+                            modifier = Modifier.shimmer(shimmer),
                         )
 
                         Spacer(
-                            Modifier
-                                .shimmer(shimmer)
+                            Modifier.shimmer(shimmer)
                                 .width(100.dp)
                                 .height(MaterialTheme.typography.labelLarge.toDp())
                                 .clip(MaterialTheme.shapes.medium)
@@ -587,8 +551,7 @@ private fun GoalsCardSkeleton(
                         Spacer(Modifier.weight(1f))
 
                         Spacer(
-                            Modifier
-                                .shimmer(shimmer)
+                            Modifier.shimmer(shimmer)
                                 .size(80.dp, MaterialTheme.typography.headlineSmall.toDp() - 4.dp)
                                 .padding(vertical = 2.dp)
                                 .clip(MaterialTheme.shapes.medium)
@@ -599,16 +562,15 @@ private fun GoalsCardSkeleton(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         RoundedSquare(
                             color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                            modifier = Modifier.shimmer(shimmer)
+                            modifier = Modifier.shimmer(shimmer),
                         )
 
                         Spacer(
-                            Modifier
-                                .shimmer(shimmer)
+                            Modifier.shimmer(shimmer)
                                 .width(100.dp)
                                 .height(MaterialTheme.typography.labelLarge.toDp())
                                 .clip(MaterialTheme.shapes.medium)
@@ -618,8 +580,7 @@ private fun GoalsCardSkeleton(
                         Spacer(Modifier.weight(1f))
 
                         Spacer(
-                            Modifier
-                                .shimmer(shimmer)
+                            Modifier.shimmer(shimmer)
                                 .size(80.dp, MaterialTheme.typography.headlineSmall.toDp() - 4.dp)
                                 .padding(vertical = 2.dp)
                                 .clip(MaterialTheme.shapes.medium)
@@ -630,16 +591,15 @@ private fun GoalsCardSkeleton(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         RoundedSquare(
                             color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                            modifier = Modifier.shimmer(shimmer)
+                            modifier = Modifier.shimmer(shimmer),
                         )
 
                         Spacer(
-                            Modifier
-                                .shimmer(shimmer)
+                            Modifier.shimmer(shimmer)
                                 .width(100.dp)
                                 .height(MaterialTheme.typography.labelLarge.toDp())
                                 .clip(MaterialTheme.shapes.medium)
@@ -649,8 +609,7 @@ private fun GoalsCardSkeleton(
                         Spacer(Modifier.weight(1f))
 
                         Spacer(
-                            Modifier
-                                .shimmer(shimmer)
+                            Modifier.shimmer(shimmer)
                                 .size(80.dp, MaterialTheme.typography.headlineSmall.toDp() - 4.dp)
                                 .padding(vertical = 2.dp)
                                 .clip(MaterialTheme.shapes.medium)

@@ -13,7 +13,7 @@ data class Product(
     override val servingWeight: Float?,
     override val note: String?,
     val source: FoodSource,
-    override val isLiquid: Boolean
+    override val isLiquid: Boolean,
 ) : Food {
     override val headline: String = if (brand.isNullOrBlank()) name else "$name ($brand)"
     override val totalWeight: Float? = packageWeight

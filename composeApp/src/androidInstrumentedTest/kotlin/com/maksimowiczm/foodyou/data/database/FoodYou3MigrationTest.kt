@@ -13,12 +13,13 @@ class FoodYou3MigrationTest : AbstractFoodYou3MigrationTest() {
     private val driver: SQLiteDriver = BundledSQLiteDriver()
 
     @get:Rule
-    val helper: MigrationTestHelper = MigrationTestHelper(
-        instrumentation = instrumentation,
-        file = file,
-        driver = driver,
-        databaseClass = FoodYouDatabase::class
-    )
+    val helper: MigrationTestHelper =
+        MigrationTestHelper(
+            instrumentation = instrumentation,
+            file = file,
+            driver = driver,
+            databaseClass = FoodYouDatabase::class,
+        )
 
     override fun getTestHelper() = helper
 

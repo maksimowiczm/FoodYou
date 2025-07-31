@@ -8,8 +8,9 @@ import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 class ShowOnboardingPreference(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<Boolean, Boolean>(
         dataStore = dataStore,
-        key = booleanPreferencesKey("onboarding:show_onboarding")
+        key = booleanPreferencesKey("onboarding:show_onboarding"),
     ) {
     override fun Boolean?.toValue(): Boolean = this ?: true
+
     override fun Boolean.toStore(): Boolean? = this
 }

@@ -17,18 +17,18 @@ import kotlinx.datetime.LocalDate
 
 internal class GoalsCardViewModel(
     private val repository: GoalsRepository,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
 ) : ViewModel() {
     fun observeDiaryDay(date: LocalDate) = repository.observeDiaryDay(date)
 
-    val expand: StateFlow<Boolean> = dataStore
-        .observe(GoalsPreferences.expandGoalsCard)
-        .map { it ?: true }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = runBlocking {
-                dataStore.getBlocking(GoalsPreferences.expandGoalsCard) ?: true
-            }
-        )
+    val expand: StateFlow<Boolean> =
+        dataStore
+            .observe(GoalsPreferences.expandGoalsCard)
+            .map { it ?: true }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue =
+                    runBlocking { dataStore.getBlocking(GoalsPreferences.expandGoalsCard) ?: true },
+            )
 }

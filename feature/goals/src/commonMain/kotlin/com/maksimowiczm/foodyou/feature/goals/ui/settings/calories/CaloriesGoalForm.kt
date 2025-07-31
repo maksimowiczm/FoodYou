@@ -22,10 +22,8 @@ private fun FormFieldWithTextFieldValue<Int, GoalsFormInputError>.TextField(
     suffix: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     label: (@Composable () -> Unit)? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions(
-        keyboardType = KeyboardType.Number,
-        imeAction = ImeAction.Next
-    )
+    keyboardOptions: KeyboardOptions =
+        KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
 ) {
     OutlinedTextField(
         value = textFieldValue,
@@ -33,15 +31,11 @@ private fun FormFieldWithTextFieldValue<Int, GoalsFormInputError>.TextField(
         modifier = modifier,
         label = label,
         isError = error != null,
-        supportingText = {
-            error?.let {
-                Text(error.stringResource())
-            }
-        },
+        supportingText = { error?.let { Text(error.stringResource()) } },
         suffix = suffix,
         keyboardOptions = keyboardOptions,
         maxLines = 1,
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
     )
 }
 
@@ -50,10 +44,8 @@ private fun FormFieldWithTextFieldValue<Float, GoalsFormInputError>.FloatTextFie
     suffix: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     label: (@Composable () -> Unit)? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions(
-        keyboardType = KeyboardType.Number,
-        imeAction = ImeAction.Next
-    )
+    keyboardOptions: KeyboardOptions =
+        KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
 ) {
     OutlinedTextField(
         value = textFieldValue,
@@ -61,15 +53,11 @@ private fun FormFieldWithTextFieldValue<Float, GoalsFormInputError>.FloatTextFie
         modifier = modifier,
         label = label,
         isError = error != null,
-        supportingText = {
-            error?.let {
-                Text(error.stringResource())
-            }
-        },
+        supportingText = { error?.let { Text(error.stringResource()) } },
         suffix = suffix,
         keyboardOptions = keyboardOptions,
         maxLines = 1,
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
     )
 }
 
@@ -77,31 +65,26 @@ private fun FormFieldWithTextFieldValue<Float, GoalsFormInputError>.FloatTextFie
 internal fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
 
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         state.calories.TextField(
             label = { Text(stringResource(Res.string.unit_calories)) },
-            suffix = { Text(stringResource(Res.string.unit_kcal)) }
+            suffix = { Text(stringResource(Res.string.unit_kcal)) },
         )
 
         Column {
             Text(
                 text = stringResource(Res.string.nutriment_proteins),
                 color = nutrientsPalette.proteinsOnSurfaceContainer,
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.labelLarge,
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 state.proteinsGrams.TextField(
                     modifier = Modifier.weight(1f),
-                    suffix = { Text(stringResource(Res.string.unit_gram_short)) }
+                    suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 )
                 state.proteinsPercentage.FloatTextField(
                     modifier = Modifier.weight(1f),
-                    suffix = { Text("%") }
+                    suffix = { Text("%") },
                 )
             }
         }
@@ -110,18 +93,16 @@ internal fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier =
             Text(
                 text = stringResource(Res.string.nutriment_carbohydrates),
                 color = nutrientsPalette.carbohydratesOnSurfaceContainer,
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.labelLarge,
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 state.carbohydratesGrams.TextField(
                     modifier = Modifier.weight(1f),
-                    suffix = { Text(stringResource(Res.string.unit_gram_short)) }
+                    suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 )
                 state.carbohydratesPercentage.FloatTextField(
                     modifier = Modifier.weight(1f),
-                    suffix = { Text("%") }
+                    suffix = { Text("%") },
                 )
             }
         }
@@ -130,22 +111,21 @@ internal fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier =
             Text(
                 text = stringResource(Res.string.nutriment_fats),
                 color = nutrientsPalette.fatsOnSurfaceContainer,
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.labelLarge,
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 state.fatsGrams.TextField(
                     modifier = Modifier.weight(1f),
-                    suffix = { Text(stringResource(Res.string.unit_gram_short)) }
+                    suffix = { Text(stringResource(Res.string.unit_gram_short)) },
                 )
                 state.fatsPercentage.FloatTextField(
                     modifier = Modifier.weight(1f),
                     suffix = { Text("%") },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
-                    )
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done,
+                        ),
                 )
             }
         }
@@ -154,7 +134,7 @@ internal fun CaloriesGoalForm(state: CaloriesGoalFormState, modifier: Modifier =
             Text(
                 text = it.stringResource(),
                 color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }

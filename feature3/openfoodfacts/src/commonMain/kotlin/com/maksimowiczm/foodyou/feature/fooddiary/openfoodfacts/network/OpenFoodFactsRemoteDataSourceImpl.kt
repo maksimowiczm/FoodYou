@@ -19,23 +19,24 @@ internal class OpenFoodFactsRemoteDataSourceImpl(private val client: HttpClient)
 
     override suspend fun getProduct(
         barcode: String,
-        countries: String?
+        countries: String?,
     ): Result<OpenFoodFactsProductV2> = runCatching {
         val countries = countries?.lowercase()
         val url = "${BuildConfig.OPEN_FOOD_FACTS_URL}/api/v2/product/$barcode"
 
-        val response = client.get(url) {
-            userAgent(BuildConfig.USER_AGENT)
+        val response =
+            client.get(url) {
+                userAgent(BuildConfig.USER_AGENT)
 
-            timeout {
-                requestTimeoutMillis = TIMEOUT
-                connectTimeoutMillis = TIMEOUT
-                socketTimeoutMillis = TIMEOUT
+                timeout {
+                    requestTimeoutMillis = TIMEOUT
+                    connectTimeoutMillis = TIMEOUT
+                    socketTimeoutMillis = TIMEOUT
+                }
+
+                countries?.let { parameter("countries", countries) }
+                parameter("fields", FIELDS)
             }
-
-            countries?.let { parameter("countries", countries) }
-            parameter("fields", FIELDS)
-        }
 
         if (response.status == HttpStatusCode.NotFound) {
             Logger.d(TAG) { "Product not found for code: $barcode" }
@@ -51,16 +52,18 @@ internal class OpenFoodFactsRemoteDataSourceImpl(private val client: HttpClient)
         query: String,
         countries: String?,
         page: Int?,
-        pageSize: Int
+        pageSize: Int,
     ): OpenFoodPageResponse =
-        client.get("${BuildConfig.OPEN_FOOD_FACTS_URL}/cgi/search.pl?search_simple=1&json=1") {
-            parameter("search_terms", query)
-            parameter("countries", countries)
-            parameter("page", page)
-            parameter("page_size", pageSize)
-            parameter("sort_by", "product_name")
-            parameter("fields", FIELDS)
-        }.body<OpenFoodFactsPageResponseV1>()
+        client
+            .get("${BuildConfig.OPEN_FOOD_FACTS_URL}/cgi/search.pl?search_simple=1&json=1") {
+                parameter("search_terms", query)
+                parameter("countries", countries)
+                parameter("page", page)
+                parameter("page_size", pageSize)
+                parameter("sort_by", "product_name")
+                parameter("fields", FIELDS)
+            }
+            .body<OpenFoodFactsPageResponseV1>()
 
     private companion object {
         private const val TAG = "OpenFoodFactsRemoteDataSource"
@@ -68,13 +71,14 @@ internal class OpenFoodFactsRemoteDataSourceImpl(private val client: HttpClient)
     }
 }
 
-private const val FIELDS = "" +
-    "product_name" +
-    ",code" +
-    ",nutriments" +
-    ",brands" +
-    ",serving_quantity" +
-    ",serving_quantity_unit" +
-    ",product_quantity" +
-    ",product_quantity_unit" +
-    ",url"
+private const val FIELDS =
+    "" +
+        "product_name" +
+        ",code" +
+        ",nutriments" +
+        ",brands" +
+        ",serving_quantity" +
+        ",serving_quantity_unit" +
+        ",product_quantity" +
+        ",product_quantity_unit" +
+        ",url"

@@ -8,8 +8,9 @@ import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 internal class UseTimeBasedSorting(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<Boolean, Boolean>(
         dataStore = dataStore,
-        key = booleanPreferencesKey("fooddiary:use_time_based_sorting")
+        key = booleanPreferencesKey("fooddiary:use_time_based_sorting"),
     ) {
     override fun Boolean?.toValue(): Boolean = this ?: false
+
     override fun Boolean.toStore(): Boolean? = this
 }

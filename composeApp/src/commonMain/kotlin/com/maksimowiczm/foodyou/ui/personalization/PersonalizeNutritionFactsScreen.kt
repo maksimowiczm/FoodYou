@@ -60,29 +60,23 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun PersonalizeNutritionFactsScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    preference: NutrientsOrderPreference = userPreference()
+    preference: NutrientsOrderPreference = userPreference(),
 ) {
     val order = preference.collectAsStateWithLifecycle(preference.getBlocking()).value
 
     PersonalizeNutritionFactsScreen(
         order = order,
-        onUpdateOrder = {
-            preference.setBlocking(it)
-        },
-        onReset = {
-            runBlocking {
-                preference.reset()
-            }
-        },
+        onUpdateOrder = { preference.setBlocking(it) },
+        onReset = { runBlocking { preference.reset() } },
         onBack = onBack,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalMaterial3ExpressiveApi::class,
-    FlowPreview::class
+    FlowPreview::class,
 )
 @Composable
 private fun PersonalizeNutritionFactsScreen(
@@ -90,7 +84,7 @@ private fun PersonalizeNutritionFactsScreen(
     onUpdateOrder: (List<NutrientsOrder>) -> Unit,
     onReset: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var showResetDialog by rememberSaveable { mutableStateOf(false) }
@@ -101,7 +95,7 @@ private fun PersonalizeNutritionFactsScreen(
             onConfirm = {
                 onReset()
                 showResetDialog = false
-            }
+            },
         ) {
             Text(stringResource(Res.string.description_reset_nutrition_facts))
         }
@@ -110,23 +104,23 @@ private fun PersonalizeNutritionFactsScreen(
     val lazyListState = rememberLazyListState()
     var localOrder by rememberSaveable(order) { mutableStateOf(order) }
 
-    val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        localOrder = localOrder.toMutableList().apply {
-            val fromIndex = from.index
-            val toIndex = to.index
+    val reorderableLazyListState =
+        rememberReorderableLazyListState(lazyListState) { from, to ->
+            localOrder =
+                localOrder.toMutableList().apply {
+                    val fromIndex = from.index
+                    val toIndex = to.index
 
-            if (fromIndex != toIndex) {
-                add(toIndex, removeAt(fromIndex))
-            }
+                    if (fromIndex != toIndex) {
+                        add(toIndex, removeAt(fromIndex))
+                    }
+                }
         }
-    }
 
     val moveUp: (NutrientsOrder) -> Boolean = {
         val index = localOrder.indexOf(it)
         if (index > 0) {
-            localOrder = localOrder.toMutableList().apply {
-                add(index, removeAt(index))
-            }
+            localOrder = localOrder.toMutableList().apply { add(index, removeAt(index)) }
             true
         } else {
             false
@@ -136,9 +130,7 @@ private fun PersonalizeNutritionFactsScreen(
     val moveDown: (NutrientsOrder) -> Boolean = {
         val index = localOrder.indexOf(it)
         if (index < localOrder.size - 1) {
-            localOrder = localOrder.toMutableList().apply {
-                add(index, removeAt(index))
-            }
+            localOrder = localOrder.toMutableList().apply { add(index, removeAt(index)) }
             true
         } else {
             false
@@ -160,61 +152,48 @@ private fun PersonalizeNutritionFactsScreen(
         modifier = modifier,
         topBar = {
             LargeFlexibleTopAppBar(
-                title = {
-                    Text(stringResource(Res.string.headline_nutrition_facts))
-                },
+                title = { Text(stringResource(Res.string.headline_nutrition_facts)) },
                 subtitle = {
                     Text(stringResource(Res.string.description_personalize_nutrition_facts_short))
                 },
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 actions = {
-                    IconButton(
-                        onClick = { showResetDialog = true }
-                    ) {
+                    IconButton(onClick = { showResetDialog = true }) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_reset_settings),
-                            contentDescription = stringResource(Res.string.action_reset_ordering)
+                            contentDescription = stringResource(Res.string.action_reset_ordering),
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
             state = lazyListState,
             contentPadding = paddingValues.add(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            items(
-                items = localOrder,
-                key = { it.name }
-            ) {
-                ReorderableItem(
-                    state = reorderableLazyListState,
-                    key = it.name
-                ) { isDragging ->
+            items(items = localOrder, key = { it.name }) {
+                ReorderableItem(state = reorderableLazyListState, key = it.name) { isDragging ->
                     ListItem(
                         item = it,
                         isDragging = isDragging,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .semantics {
-                                customActions = listOf(
-                                    CustomAccessibilityAction(
-                                        label = moveUpString,
-                                        action = { moveUp(it) }
-                                    ),
-                                    CustomAccessibilityAction(
-                                        label = moveDownString,
-                                        action = { moveDown(it) }
+                        modifier =
+                            Modifier.fillMaxWidth().padding(horizontal = 16.dp).semantics {
+                                customActions =
+                                    listOf(
+                                        CustomAccessibilityAction(
+                                            label = moveUpString,
+                                            action = { moveUp(it) },
+                                        ),
+                                        CustomAccessibilityAction(
+                                            label = moveDownString,
+                                            action = { moveDown(it) },
+                                        ),
                                     )
-                                )
-                            }
+                            },
                     )
                 }
             }
@@ -226,7 +205,7 @@ private fun PersonalizeNutritionFactsScreen(
 private fun ReorderableCollectionItemScope.ListItem(
     item: NutrientsOrder,
     isDragging: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val elevation by animateDpAsState(if (isDragging) 16.dp else 0.dp)
 
@@ -236,15 +215,10 @@ private fun ReorderableCollectionItemScope.ListItem(
         color = MaterialTheme.colorScheme.surfaceContainer,
         contentColor = MaterialTheme.colorScheme.onSurface,
         shadowElevation = elevation,
-        tonalElevation = elevation
+        tonalElevation = elevation,
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = item.stringResource(),
-                style = MaterialTheme.typography.bodyMedium
-            )
+        Row(modifier = Modifier.padding(16.dp)) {
+            Text(text = item.stringResource(), style = MaterialTheme.typography.bodyMedium)
             Spacer(Modifier.weight(1f))
             DragHandle(Modifier.hapticDraggableHandle())
         }
@@ -257,11 +231,7 @@ private fun DragHandle(modifier: Modifier = Modifier) {
         Icon(
             imageVector = Icons.Default.DragHandle,
             contentDescription = null,
-            modifier = Modifier.clickable(
-                onClick = {},
-                indication = null,
-                interactionSource = null
-            )
+            modifier = Modifier.clickable(onClick = {}, indication = null, interactionSource = null),
         )
     }
 }

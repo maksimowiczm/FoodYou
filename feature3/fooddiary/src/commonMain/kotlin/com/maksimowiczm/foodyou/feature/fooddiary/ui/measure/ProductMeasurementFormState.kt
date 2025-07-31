@@ -17,28 +17,31 @@ internal fun rememberProductMeasurementFormState(
     selectedMeal: Meal,
     suggestions: Set<Measurement>,
     possibleTypes: Set<MeasurementType>,
-    selectedMeasurement: Measurement
+    selectedMeasurement: Measurement,
 ): ProductMeasurementFormState {
-    val dateState = rememberChipsDatePickerState(
-        today = today,
-        initialDates = possibleDates,
-        selectedDate = selectedDate
-    )
-    val mealsState = rememberChipsMealPickerState(
-        meals = meals.map { it.name }.toSet(),
-        selectedMeal = selectedMeal.name
-    )
-    val measurementState = rememberMeasurementPickerState(
-        suggestions = suggestions,
-        possibleTypes = possibleTypes,
-        selectedMeasurement = selectedMeasurement
-    )
+    val dateState =
+        rememberChipsDatePickerState(
+            today = today,
+            initialDates = possibleDates,
+            selectedDate = selectedDate,
+        )
+    val mealsState =
+        rememberChipsMealPickerState(
+            meals = meals.map { it.name }.toSet(),
+            selectedMeal = selectedMeal.name,
+        )
+    val measurementState =
+        rememberMeasurementPickerState(
+            suggestions = suggestions,
+            possibleTypes = possibleTypes,
+            selectedMeasurement = selectedMeasurement,
+        )
 
     return remember(dateState, mealsState, measurementState) {
         ProductMeasurementFormState(
             dateState = dateState,
             mealsState = mealsState,
-            measurementState = measurementState
+            measurementState = measurementState,
         )
     }
 }
@@ -47,9 +50,7 @@ internal fun rememberProductMeasurementFormState(
 internal class ProductMeasurementFormState(
     val dateState: ChipsDatePickerState,
     val mealsState: ChipsMealPickerState,
-    val measurementState: MeasurementPickerState
+    val measurementState: MeasurementPickerState,
 ) {
-    val isValid by derivedStateOf {
-        measurementState.inputField.error == null
-    }
+    val isValid by derivedStateOf { measurementState.inputField.error == null }
 }

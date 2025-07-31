@@ -23,14 +23,8 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
         enableEdgeToEdge()
         with<AppCompatActivity, Unit>(this) {
             setContent {
-                ClipboardManagerProvider(
-                    clipboardManager = AndroidClipboardManager(this)
-                ) {
-                    DateFormatterProvider(
-                        dateFormatter = AndroidDateFormatter(this)
-                    ) {
-                        content()
-                    }
+                ClipboardManagerProvider(clipboardManager = AndroidClipboardManager(this)) {
+                    DateFormatterProvider(dateFormatter = AndroidDateFormatter(this)) { content() }
                 }
             }
         }
@@ -39,21 +33,16 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            observeShowContentSecurity()
-        }
+        lifecycleScope.launch { observeShowContentSecurity() }
     }
 
     private suspend fun observeShowContentSecurity() {
-        HideContent(get())
-            .observe()
-            .filterNotNull()
-            .collectLatest {
-                if (it) {
-                    window.setFlags(FLAG_SECURE, FLAG_SECURE)
-                } else {
-                    window.clearFlags(FLAG_SECURE)
-                }
+        HideContent(get()).observe().filterNotNull().collectLatest {
+            if (it) {
+                window.setFlags(FLAG_SECURE, FLAG_SECURE)
+            } else {
+                window.clearFlags(FLAG_SECURE)
             }
+        }
     }
 }

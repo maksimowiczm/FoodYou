@@ -16,6 +16,5 @@ interface OpenFoodFactsDao {
     )
     suspend fun getPagingKey(query: String, country: String): OpenFoodFactsPagingKey?
 
-    @Upsert
-    suspend fun upsertPagingKey(pagingKey: OpenFoodFactsPagingKey)
+    @Upsert suspend fun upsertPagingKey(pagingKey: OpenFoodFactsPagingKey)
 }

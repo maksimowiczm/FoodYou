@@ -13,7 +13,7 @@ fun MealsCards(
     onEditMeasurement: (Long) -> Unit,
     onLongClick: (mealId: Long) -> Unit,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     MealsCards(
         homeState = homeState,
@@ -21,6 +21,6 @@ fun MealsCards(
         onEditMeasurement = onEditMeasurement,
         onLongClick = onLongClick,
         contentPadding = contentPadding,
-        modifier = modifier
+        modifier = modifier,
     )
 }

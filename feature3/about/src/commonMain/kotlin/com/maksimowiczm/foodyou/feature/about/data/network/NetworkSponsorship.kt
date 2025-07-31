@@ -11,5 +11,5 @@ internal data class NetworkSponsorship(
     val currency: String,
     val inEuro: String,
     val sponsorshipDate: String,
-    val method: String
+    val method: String,
 )

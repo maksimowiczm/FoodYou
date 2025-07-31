@@ -19,10 +19,12 @@ class InitializeMealsCallback : RoomDatabase.Callback() {
 
         try {
             meals.forEach { meal ->
-                val query = """
+                val query =
+                    """
                     INSERT INTO Meal (name, fromHour, fromMinute, toHour, toMinute, rank) 
                     VALUES ($1, $2, $3, $4, $5, $6)
-                """.trimIndent()
+                """
+                        .trimIndent()
 
                 val statement = connection.prepare(query)
 
@@ -48,34 +50,35 @@ class InitializeMealsCallback : RoomDatabase.Callback() {
     fun getMeals(): List<Meal> = runBlocking {
         val tag = Locale.current.toLanguageTag()
 
-        val content = try {
-            Res.readBytes("files/meals-$tag.json")
-        } catch (e: Exception) {
-            Logger.w(TAG, e) {
-                "Failed to read meals file for locale $tag, falling back to default"
+        val content =
+            try {
+                Res.readBytes("files/meals-$tag.json")
+            } catch (e: Exception) {
+                Logger.w(TAG, e) {
+                    "Failed to read meals file for locale $tag, falling back to default"
+                }
+
+                Res.readBytes("files/meals.json")
             }
 
-            Res.readBytes("files/meals.json")
-        }
-
-        val meals = Json
-            .decodeFromString<List<MealJson>>(content.decodeToString())
-            .mapIndexed { index, mealJson ->
+        val meals =
+            Json.decodeFromString<List<MealJson>>(content.decodeToString()).mapIndexed {
+                index,
+                mealJson ->
                 Meal(
                     name = mealJson.name,
                     fromHour = mealJson.from.substringBefore(':').toInt(),
                     fromMinute = mealJson.from.substringAfter(':').toInt(),
                     toHour = mealJson.to.substringBefore(':').toInt(),
                     toMinute = mealJson.to.substringAfter(':').toInt(),
-                    rank = index
+                    rank = index,
                 )
             }
 
         return@runBlocking meals
     }
 
-    @Serializable
-    private data class MealJson(val name: String, val from: String, val to: String)
+    @Serializable private data class MealJson(val name: String, val from: String, val to: String)
 
     companion object {
         const val TAG = "InitializeMealsCallback"

@@ -39,32 +39,36 @@ internal data class FoodFilter(val source: Source = DefaultFilter) {
         SwissFoodCompositionDatabase;
 
         @Composable
-        fun Icon(modifier: Modifier = Modifier) = when (this) {
-            Recent -> Icon(
-                imageVector = Icons.Filled.History,
-                contentDescription = null,
-                modifier = modifier
-            )
+        fun Icon(modifier: Modifier = Modifier) =
+            when (this) {
+                Recent ->
+                    Icon(
+                        imageVector = Icons.Filled.History,
+                        contentDescription = null,
+                        modifier = modifier,
+                    )
 
-            YourFood -> Icon(
-                imageVector = Icons.Filled.Person,
-                contentDescription = null,
-                modifier = modifier
-            )
+                YourFood ->
+                    Icon(
+                        imageVector = Icons.Filled.Person,
+                        contentDescription = null,
+                        modifier = modifier,
+                    )
 
-            OpenFoodFacts -> FoodSource.Type.OpenFoodFacts.Icon(modifier)
-            USDA -> FoodSource.Type.USDA.Icon(modifier)
-            SwissFoodCompositionDatabase -> FoodSource.Type.SwissFoodCompositionDatabase.Icon()
-        }
+                OpenFoodFacts -> FoodSource.Type.OpenFoodFacts.Icon(modifier)
+                USDA -> FoodSource.Type.USDA.Icon(modifier)
+                SwissFoodCompositionDatabase -> FoodSource.Type.SwissFoodCompositionDatabase.Icon()
+            }
 
         @Composable
-        fun stringResource(): String = when (this) {
-            Recent -> stringResource(Res.string.headline_recent)
-            YourFood -> stringResource(Res.string.headline_your_food)
-            OpenFoodFacts -> FoodSource.Type.OpenFoodFacts.stringResource()
-            USDA -> FoodSource.Type.USDA.stringResource()
-            SwissFoodCompositionDatabase ->
-                stringResource(Res.string.headline_swiss_food_composition_database)
-        }
+        fun stringResource(): String =
+            when (this) {
+                Recent -> stringResource(Res.string.headline_recent)
+                YourFood -> stringResource(Res.string.headline_your_food)
+                OpenFoodFacts -> FoodSource.Type.OpenFoodFacts.stringResource()
+                USDA -> FoodSource.Type.USDA.stringResource()
+                SwissFoodCompositionDatabase ->
+                    stringResource(Res.string.headline_swiss_food_composition_database)
+            }
     }
 }

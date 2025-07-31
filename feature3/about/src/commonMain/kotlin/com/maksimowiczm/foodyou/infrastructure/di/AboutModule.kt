@@ -16,17 +16,13 @@ val aboutModule = module {
     viewModelOf(::SponsorMessagesViewModel)
 
     factory {
-        SponsorshipApiClientImpl(
-            client = HttpClient {
-                install(HttpTimeout)
-                install(ContentNegotiation) {
-                    json(
-                        Json {
-                            ignoreUnknownKeys = true
-                        }
-                    )
-                }
-            }
-        )
-    }.bind<SponsorshipApiClient>()
+            SponsorshipApiClientImpl(
+                client =
+                    HttpClient {
+                        install(HttpTimeout)
+                        install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+                    }
+            )
+        }
+        .bind<SponsorshipApiClient>()
 }

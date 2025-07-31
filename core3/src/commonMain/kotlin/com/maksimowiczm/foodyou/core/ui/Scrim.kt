@@ -18,20 +18,18 @@ import androidx.compose.ui.input.pointer.pointerInput
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun Scrim(visible: Boolean, onDismiss: () -> Unit, modifier: Modifier = Modifier) {
-    val scrimAlpha by animateFloatAsState(
-        targetValue = if (visible) .5f else 0f,
-        animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()
-    )
+    val scrimAlpha by
+        animateFloatAsState(
+            targetValue = if (visible) .5f else 0f,
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec(),
+        )
 
-    val showScrim by remember {
-        derivedStateOf { scrimAlpha != 0f }
-    }
+    val showScrim by remember { derivedStateOf { scrimAlpha != 0f } }
 
     if (showScrim) {
         Box(modifier) {
             Spacer(
-                Modifier
-                    .graphicsLayer { alpha = scrimAlpha }
+                Modifier.graphicsLayer { alpha = scrimAlpha }
                     .background(MaterialTheme.colorScheme.scrim)
                     .matchParentSize()
                     .pointerInput(onDismiss) { detectTapGestures { onDismiss() } }

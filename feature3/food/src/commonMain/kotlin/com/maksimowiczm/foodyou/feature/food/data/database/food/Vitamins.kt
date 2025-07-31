@@ -13,5 +13,5 @@ data class Vitamins(
     val vitaminCMilli: Float?,
     val vitaminDMicro: Float?,
     val vitaminEMilli: Float?,
-    val vitaminKMicro: Float?
+    val vitaminKMicro: Float?,
 )

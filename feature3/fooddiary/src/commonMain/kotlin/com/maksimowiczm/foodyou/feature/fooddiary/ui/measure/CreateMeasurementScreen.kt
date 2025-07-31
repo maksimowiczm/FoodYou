@@ -23,11 +23,9 @@ internal fun CreateMeasurementScreen(
     date: LocalDate,
     measurement: Measurement?,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val viewModel = koinViewModel<CreateMeasurementViewModel>(
-        parameters = { parametersOf(foodId) }
-    )
+    val viewModel = koinViewModel<CreateMeasurementViewModel>(parameters = { parametersOf(foodId) })
 
     val food = viewModel.food.collectAsStateWithLifecycle().value
     val foodEvents = viewModel.foodEvents?.collectAsStateWithLifecycle()?.value
@@ -46,10 +44,8 @@ internal fun CreateMeasurementScreen(
         }
     }
 
-    if (food == null ||
-        suggestions == null ||
-        selectedMeasurement == null ||
-        possibleTypes == null
+    if (
+        food == null || suggestions == null || selectedMeasurement == null || possibleTypes == null
     ) {
         // TODO loading state
     } else {
@@ -69,7 +65,7 @@ internal fun CreateMeasurementScreen(
             possibleTypes = possibleTypes,
             animatedVisibilityScope = animatedVisibilityScope,
             modifier = modifier,
-            selectedMeasurement = measurement ?: selectedMeasurement
+            selectedMeasurement = measurement ?: selectedMeasurement,
         )
     }
 }

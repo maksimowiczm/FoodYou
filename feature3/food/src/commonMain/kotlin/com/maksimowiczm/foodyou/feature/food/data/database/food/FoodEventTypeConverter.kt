@@ -5,25 +5,27 @@ import androidx.room.TypeConverter
 @Suppress("unused")
 class FoodEventTypeConverter {
     @TypeConverter
-    fun fromFoodEventType(type: FoodEventType): Int = when (type) {
-        FoodEventType.Created -> FoodEventTypeSQLConstants.CREATED
-        FoodEventType.Downloaded -> FoodEventTypeSQLConstants.DOWNLOADED
-        FoodEventType.Imported -> FoodEventTypeSQLConstants.IMPORTED
-        FoodEventType.Edited -> FoodEventTypeSQLConstants.EDITED
-        FoodEventType.Used -> FoodEventTypeSQLConstants.USED
-        FoodEventType.ImportedFromFoodYou2 -> FoodEventTypeSQLConstants.IMPORTED_FROM_FOOD_YOU_2
-    }
+    fun fromFoodEventType(type: FoodEventType): Int =
+        when (type) {
+            FoodEventType.Created -> FoodEventTypeSQLConstants.CREATED
+            FoodEventType.Downloaded -> FoodEventTypeSQLConstants.DOWNLOADED
+            FoodEventType.Imported -> FoodEventTypeSQLConstants.IMPORTED
+            FoodEventType.Edited -> FoodEventTypeSQLConstants.EDITED
+            FoodEventType.Used -> FoodEventTypeSQLConstants.USED
+            FoodEventType.ImportedFromFoodYou2 -> FoodEventTypeSQLConstants.IMPORTED_FROM_FOOD_YOU_2
+        }
 
     @TypeConverter
-    fun toFoodEventType(type: Int): FoodEventType = when (type) {
-        FoodEventTypeSQLConstants.CREATED -> FoodEventType.Created
-        FoodEventTypeSQLConstants.DOWNLOADED -> FoodEventType.Downloaded
-        FoodEventTypeSQLConstants.IMPORTED -> FoodEventType.Imported
-        FoodEventTypeSQLConstants.EDITED -> FoodEventType.Edited
-        FoodEventTypeSQLConstants.USED -> FoodEventType.Used
-        FoodEventTypeSQLConstants.IMPORTED_FROM_FOOD_YOU_2 -> FoodEventType.ImportedFromFoodYou2
-        else -> error("Unknown food event type: $type")
-    }
+    fun toFoodEventType(type: Int): FoodEventType =
+        when (type) {
+            FoodEventTypeSQLConstants.CREATED -> FoodEventType.Created
+            FoodEventTypeSQLConstants.DOWNLOADED -> FoodEventType.Downloaded
+            FoodEventTypeSQLConstants.IMPORTED -> FoodEventType.Imported
+            FoodEventTypeSQLConstants.EDITED -> FoodEventType.Edited
+            FoodEventTypeSQLConstants.USED -> FoodEventType.Used
+            FoodEventTypeSQLConstants.IMPORTED_FROM_FOOD_YOU_2 -> FoodEventType.ImportedFromFoodYou2
+            else -> error("Unknown food event type: $type")
+        }
 }
 
 object FoodEventTypeSQLConstants {

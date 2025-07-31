@@ -19,7 +19,7 @@ internal fun MealsCards(
     onEditMeasurement: (Long) -> Unit,
     onLongClick: (mealId: Long) -> Unit,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val viewModel: MealsCardsViewModel = koinViewModel()
     val layoutPreference: MealsCardsLayoutPreference = userPreference()
@@ -28,31 +28,31 @@ internal fun MealsCards(
 
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
 
-    LaunchedEffect(homeState.selectedDate, viewModel) {
-        viewModel.setDate(homeState.selectedDate)
-    }
+    LaunchedEffect(homeState.selectedDate, viewModel) { viewModel.setDate(homeState.selectedDate) }
 
     when (layout) {
-        MealsCardsLayout.Horizontal -> HorizontalMealsCards(
-            meals = meals,
-            onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
-            onEditMeasurement = onEditMeasurement,
-            onDeleteEntry = viewModel::onDeleteMeasurement,
-            onLongClick = onLongClick,
-            shimmer = homeState.shimmer,
-            contentPadding = contentPadding,
-            modifier = modifier
-        )
+        MealsCardsLayout.Horizontal ->
+            HorizontalMealsCards(
+                meals = meals,
+                onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
+                onEditMeasurement = onEditMeasurement,
+                onDeleteEntry = viewModel::onDeleteMeasurement,
+                onLongClick = onLongClick,
+                shimmer = homeState.shimmer,
+                contentPadding = contentPadding,
+                modifier = modifier,
+            )
 
-        MealsCardsLayout.Vertical -> VerticalMealsCards(
-            meals = meals,
-            onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
-            onEditMeasurement = onEditMeasurement,
-            onDeleteEntry = viewModel::onDeleteMeasurement,
-            onLongClick = onLongClick,
-            shimmer = homeState.shimmer,
-            contentPadding = contentPadding,
-            modifier = modifier
-        )
+        MealsCardsLayout.Vertical ->
+            VerticalMealsCards(
+                meals = meals,
+                onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
+                onEditMeasurement = onEditMeasurement,
+                onDeleteEntry = viewModel::onDeleteMeasurement,
+                onLongClick = onLongClick,
+                shimmer = homeState.shimmer,
+                contentPadding = contentPadding,
+                modifier = modifier,
+            )
     }
 }

@@ -4,5 +4,5 @@ enum class SponsorshipMethod {
     Kofi,
     Liberapay,
     Crypto,
-    PayPal
+    PayPal,
 }

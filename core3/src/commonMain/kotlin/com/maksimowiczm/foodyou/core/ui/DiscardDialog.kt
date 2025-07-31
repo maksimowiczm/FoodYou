@@ -13,21 +13,17 @@ fun DiscardDialog(
     onDismissRequest: () -> Unit,
     onDiscard: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         confirmButton = {
-            TextButton(onDiscard) {
-                Text(stringResource(Res.string.action_discard))
-            }
+            TextButton(onDiscard) { Text(stringResource(Res.string.action_discard)) }
         },
         dismissButton = {
-            TextButton(onDismissRequest) {
-                Text(stringResource(Res.string.action_cancel))
-            }
+            TextButton(onDismissRequest) { Text(stringResource(Res.string.action_cancel)) }
         },
-        text = content
+        text = content,
     )
 }

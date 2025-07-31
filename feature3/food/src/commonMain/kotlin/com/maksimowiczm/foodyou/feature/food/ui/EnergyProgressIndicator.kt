@@ -19,9 +19,7 @@ import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
 import kotlin.math.max
 
-/**
- * Indicator with goal.
- */
+/** Indicator with goal. */
 @Composable
 fun EnergyProgressIndicator(
     calories: Float,
@@ -30,11 +28,9 @@ fun EnergyProgressIndicator(
     fats: Float,
     goal: Float,
     modifier: Modifier = Modifier,
-    preference: NutrientsOrderPreference = userPreference()
+    preference: NutrientsOrderPreference = userPreference(),
 ) {
-    val order = preference
-        .collectAsStateWithLifecycle(preference.getBlocking())
-        .value
+    val order = preference.collectAsStateWithLifecycle(preference.getBlocking()).value
 
     val nutrientsPalette = LocalNutrientsPalette.current
 
@@ -46,35 +42,38 @@ fun EnergyProgressIndicator(
     val animatedMax by animateFloatAsState(max.toFloat())
 
     MultiColorProgressIndicator(
-        items = order.mapNotNull {
-            when (it) {
-                NutrientsOrder.Proteins -> MultiColorProgressIndicatorItem(
-                    progress = animatedProteins / animatedMax,
-                    color = nutrientsPalette.proteinsOnSurfaceContainer
-                )
+        items =
+            order.mapNotNull {
+                when (it) {
+                    NutrientsOrder.Proteins ->
+                        MultiColorProgressIndicatorItem(
+                            progress = animatedProteins / animatedMax,
+                            color = nutrientsPalette.proteinsOnSurfaceContainer,
+                        )
 
-                NutrientsOrder.Carbohydrates -> MultiColorProgressIndicatorItem(
-                    progress = animatedCarbohydrates / animatedMax,
-                    color = nutrientsPalette.carbohydratesOnSurfaceContainer
-                )
+                    NutrientsOrder.Carbohydrates ->
+                        MultiColorProgressIndicatorItem(
+                            progress = animatedCarbohydrates / animatedMax,
+                            color = nutrientsPalette.carbohydratesOnSurfaceContainer,
+                        )
 
-                NutrientsOrder.Fats -> MultiColorProgressIndicatorItem(
-                    progress = animatedFats / animatedMax,
-                    color = nutrientsPalette.fatsOnSurfaceContainer
-                )
+                    NutrientsOrder.Fats ->
+                        MultiColorProgressIndicatorItem(
+                            progress = animatedFats / animatedMax,
+                            color = nutrientsPalette.fatsOnSurfaceContainer,
+                        )
 
-                else -> null
-            }
-        },
-        modifier = modifier
-            .defaultMinSize(minWidth = 0.dp, minHeight = 16.dp)
-            .clip(MaterialTheme.shapes.small)
+                    else -> null
+                }
+            },
+        modifier =
+            modifier
+                .defaultMinSize(minWidth = 0.dp, minHeight = 16.dp)
+                .clip(MaterialTheme.shapes.small),
     )
 }
 
-/**
- * Indicator without goal.
- */
+/** Indicator without goal. */
 // Somehow padding reduces the height of the indicator. Not sure why.
 @Composable
 fun EnergyProgressIndicator(
@@ -82,42 +81,45 @@ fun EnergyProgressIndicator(
     carbohydrates: Float,
     fats: Float,
     modifier: Modifier = Modifier,
-    preference: NutrientsOrderPreference = userPreference()
+    preference: NutrientsOrderPreference = userPreference(),
 ) {
-    val order = preference
-        .collectAsStateWithLifecycle(preference.getBlocking())
-        .value
+    val order = preference.collectAsStateWithLifecycle(preference.getBlocking()).value
 
     val nutrientsPalette = LocalNutrientsPalette.current
 
     val sum = proteins + carbohydrates + fats
-    val items = remember(order, sum, proteins, carbohydrates, fats) {
-        order.mapNotNull {
-            when (it) {
-                NutrientsOrder.Proteins -> MultiColorProgressIndicatorItem(
-                    progress = proteins / sum,
-                    color = nutrientsPalette.proteinsOnSurfaceContainer
-                )
+    val items =
+        remember(order, sum, proteins, carbohydrates, fats) {
+            order.mapNotNull {
+                when (it) {
+                    NutrientsOrder.Proteins ->
+                        MultiColorProgressIndicatorItem(
+                            progress = proteins / sum,
+                            color = nutrientsPalette.proteinsOnSurfaceContainer,
+                        )
 
-                NutrientsOrder.Carbohydrates -> MultiColorProgressIndicatorItem(
-                    progress = carbohydrates / sum,
-                    color = nutrientsPalette.carbohydratesOnSurfaceContainer
-                )
+                    NutrientsOrder.Carbohydrates ->
+                        MultiColorProgressIndicatorItem(
+                            progress = carbohydrates / sum,
+                            color = nutrientsPalette.carbohydratesOnSurfaceContainer,
+                        )
 
-                NutrientsOrder.Fats -> MultiColorProgressIndicatorItem(
-                    progress = fats / sum,
-                    color = nutrientsPalette.fatsOnSurfaceContainer
-                )
+                    NutrientsOrder.Fats ->
+                        MultiColorProgressIndicatorItem(
+                            progress = fats / sum,
+                            color = nutrientsPalette.fatsOnSurfaceContainer,
+                        )
 
-                else -> null
+                    else -> null
+                }
             }
         }
-    }
 
     MultiColorProgressIndicator(
         items = items,
-        modifier = modifier
-            .defaultMinSize(minWidth = 0.dp, minHeight = 16.dp)
-            .clip(MaterialTheme.shapes.small)
+        modifier =
+            modifier
+                .defaultMinSize(minWidth = 0.dp, minHeight = 16.dp)
+                .clip(MaterialTheme.shapes.small),
     )
 }

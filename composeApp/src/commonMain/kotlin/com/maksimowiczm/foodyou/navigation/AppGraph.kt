@@ -11,26 +11,19 @@ import com.maksimowiczm.foodyou.ui.settings.DatabaseScreen
 import com.maksimowiczm.foodyou.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
-@Serializable
-data object Home
+@Serializable data object Home
 
-@Serializable
-data object Settings
+@Serializable data object Settings
 
-@Serializable
-data object Personalization
+@Serializable data object Personalization
 
-@Serializable
-data object HomePersonalization
+@Serializable data object HomePersonalization
 
-@Serializable
-data object NutritionFactsPersonalization
+@Serializable data object NutritionFactsPersonalization
 
-@Serializable
-data object ExternalDatabases
+@Serializable data object ExternalDatabases
 
-@Serializable
-data object Database
+@Serializable data object Database
 
 fun NavGraphBuilder.appGraph(
     homeOnAbout: () -> Unit,
@@ -54,7 +47,7 @@ fun NavGraphBuilder.appGraph(
     externalDatabasesOnBack: () -> Unit,
     externalDatabasesOnSwissFoodCompositionDatabase: () -> Unit,
     databaseOnBack: () -> Unit,
-    databaseOnExternalDatabases: () -> Unit
+    databaseOnExternalDatabases: () -> Unit,
 ) {
     forwardBackwardComposable<Home> {
         HomeScreen(
@@ -62,7 +55,7 @@ fun NavGraphBuilder.appGraph(
             onAbout = homeOnAbout,
             mealCardOnAdd = homeMealCardOnAdd,
             mealCardOnEditMeasurement = homeMealCardOnEditMeasurement,
-            mealCardOnLongClick = { homeMealCardOnLongClick() }
+            mealCardOnLongClick = { homeMealCardOnLongClick() },
         )
     }
     forwardBackwardComposable<Settings> {
@@ -73,37 +66,32 @@ fun NavGraphBuilder.appGraph(
             onLanguage = settingsOnLanguage,
             onSponsor = settingsOnSponsor,
             onAbout = settingsOnAbout,
-            onDatabase = settingsOnDatabase
+            onDatabase = settingsOnDatabase,
         )
     }
     forwardBackwardComposable<Personalization> {
         PersonalizationScreen(
             onBack = personalizationOnBack,
             onHomePersonalization = personalizationOnHomePersonalization,
-            onNutritionFactsPersonalization = personalizationOnNutritionFactsPersonalization
+            onNutritionFactsPersonalization = personalizationOnNutritionFactsPersonalization,
         )
     }
     forwardBackwardComposable<HomePersonalization> {
         HomePersonalizationScreen(
             onBack = homePersonalizationOnBack,
-            onMealsSettings = homePersonalizationOnMealsSettings
+            onMealsSettings = homePersonalizationOnMealsSettings,
         )
     }
     forwardBackwardComposable<NutritionFactsPersonalization> {
-        PersonalizeNutritionFactsScreen(
-            onBack = nutritionFactsPersonalizationOnBack
-        )
+        PersonalizeNutritionFactsScreen(onBack = nutritionFactsPersonalizationOnBack)
     }
     forwardBackwardComposable<ExternalDatabases> {
         ExternalDatabasesScreen(
             onBack = externalDatabasesOnBack,
-            onSwissFoodCompositionDatabase = externalDatabasesOnSwissFoodCompositionDatabase
+            onSwissFoodCompositionDatabase = externalDatabasesOnSwissFoodCompositionDatabase,
         )
     }
     forwardBackwardComposable<Database> {
-        DatabaseScreen(
-            onBack = databaseOnBack,
-            onExternalDatabases = databaseOnExternalDatabases
-        )
+        DatabaseScreen(onBack = databaseOnBack, onExternalDatabases = databaseOnExternalDatabases)
     }
 }

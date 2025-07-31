@@ -18,19 +18,13 @@ import kotlinx.datetime.todayIn
 
 interface DateProvider {
 
-    /**
-     * Returns a [Flow] that emits the current date and time and updates it every second.
-     */
+    /** Returns a [Flow] that emits the current date and time and updates it every second. */
     fun observeDateTime(): Flow<LocalDateTime>
 
-    /**
-     * Returns a [Flow] that emits the current date and updates it at midnight.
-     */
+    /** Returns a [Flow] that emits the current date and updates it at midnight. */
     fun observeDate(): Flow<LocalDate>
 
-    /**
-     * Returns a [Flow] that emits the current time and updates it every minute.
-     */
+    /** Returns a [Flow] that emits the current time and updates it every minute. */
     fun observeMinutes(): Flow<LocalTime>
 }
 
@@ -53,10 +47,10 @@ internal class DateProviderImpl : DateProvider {
 
         while (true) {
             val now = Clock.System.now()
-            val midnight = Clock.System
-                .todayIn(TimeZone.currentSystemDefault())
-                .plus(1, DateTimeUnit.DAY)
-                .atStartOfDayIn(TimeZone.currentSystemDefault())
+            val midnight =
+                Clock.System.todayIn(TimeZone.currentSystemDefault())
+                    .plus(1, DateTimeUnit.DAY)
+                    .atStartOfDayIn(TimeZone.currentSystemDefault())
             val delayMillis = (midnight - now).inWholeMilliseconds
 
             Logger.d(TAG) { "Current date: $currentDate" }

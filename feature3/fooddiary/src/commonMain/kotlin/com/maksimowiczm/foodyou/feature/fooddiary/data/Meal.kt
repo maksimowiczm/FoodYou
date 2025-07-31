@@ -6,14 +6,13 @@ import kotlinx.datetime.LocalTime
 
 @Entity
 data class Meal(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
     val fromHour: Int,
     val fromMinute: Int,
     val toHour: Int,
     val toMinute: Int,
-    val rank: Int = 0
+    val rank: Int = 0,
 )
 
 fun Meal.copy(
@@ -21,16 +20,17 @@ fun Meal.copy(
     name: String = this.name,
     from: LocalTime = LocalTime(fromHour, fromMinute),
     to: LocalTime = LocalTime(toHour, toMinute),
-    rank: Int = this.rank
-) = Meal(
-    id = id,
-    name = name,
-    fromHour = from.hour,
-    fromMinute = from.minute,
-    toHour = to.hour,
-    toMinute = to.minute,
-    rank = rank
-)
+    rank: Int = this.rank,
+) =
+    Meal(
+        id = id,
+        name = name,
+        fromHour = from.hour,
+        fromMinute = from.minute,
+        toHour = to.hour,
+        toMinute = to.minute,
+        rank = rank,
+    )
 
 val Meal.from: LocalTime
     get() = LocalTime(fromHour, fromMinute)

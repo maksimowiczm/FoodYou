@@ -16,14 +16,14 @@ interface UpdateProductUseCase {
         servingWeight: Float?,
         note: String?,
         source: FoodSource,
-        isLiquid: Boolean
+        isLiquid: Boolean,
     )
 }
 
 internal class UpdateProductUseCaseImpl(
     foodDatabase: FoodDatabase,
     private val productMapper: ProductMapper,
-    private val foodEventMapper: FoodEventMapper
+    private val foodEventMapper: FoodEventMapper,
 ) : UpdateProductUseCase {
     private val productDao = foodDatabase.productDao
     private val foodEventDao = foodDatabase.foodEventDao
@@ -38,7 +38,7 @@ internal class UpdateProductUseCaseImpl(
         servingWeight: Float?,
         note: String?,
         source: FoodSource,
-        isLiquid: Boolean
+        isLiquid: Boolean,
     ) {
         val oldProduct = productDao.observe(id.id).firstOrNull()
 
@@ -47,30 +47,33 @@ internal class UpdateProductUseCaseImpl(
         }
 
         val (nutrients, vitamins, minerals) = productMapper.toEntityNutrients(nutritionFacts)
-        val updatedProduct = oldProduct.copy(
-            name = name,
-            brand = brand,
-            barcode = barcode,
-            nutrients = nutrients,
-            vitamins = vitamins,
-            minerals = minerals,
-            packageWeight = packageWeight,
-            servingWeight = servingWeight,
-            note = note,
-            sourceType = source.type,
-            sourceUrl = source.url,
-            isLiquid = isLiquid
-        )
+        val updatedProduct =
+            oldProduct.copy(
+                name = name,
+                brand = brand,
+                barcode = barcode,
+                nutrients = nutrients,
+                vitamins = vitamins,
+                minerals = minerals,
+                packageWeight = packageWeight,
+                servingWeight = servingWeight,
+                note = note,
+                sourceType = source.type,
+                sourceUrl = source.url,
+                isLiquid = isLiquid,
+            )
 
         productDao.update(updatedProduct)
 
-        val eventEntity = foodEventMapper.toEntity(
-            model = FoodEvent.Edited(
-                date = LocalDateTime.now(),
-                oldFood = productMapper.toModel(oldProduct)
-            ),
-            foodId = id
-        )
+        val eventEntity =
+            foodEventMapper.toEntity(
+                model =
+                    FoodEvent.Edited(
+                        date = LocalDateTime.now(),
+                        oldFood = productMapper.toModel(oldProduct),
+                    ),
+                foodId = id,
+            )
 
         foodEventDao.insert(eventEntity)
     }

@@ -94,20 +94,21 @@ internal fun FoodMeasurementScreen(
     possibleTypes: Set<MeasurementType>,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
-    selectedMeasurement: Measurement = suggestions.first()
+    selectedMeasurement: Measurement = suggestions.first(),
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val state = rememberProductMeasurementFormState(
-        today = today,
-        possibleDates = setOf(selectedDate, today.minus(1.days), today),
-        selectedDate = selectedDate,
-        meals = meals.toSet(),
-        selectedMeal = selectedMeal,
-        suggestions = suggestions.toSet(),
-        possibleTypes = possibleTypes.toSet(),
-        selectedMeasurement = selectedMeasurement
-    )
+    val state =
+        rememberProductMeasurementFormState(
+            today = today,
+            possibleDates = setOf(selectedDate, today.minus(1.days), today),
+            selectedDate = selectedDate,
+            meals = meals.toSet(),
+            selectedMeal = selectedMeal,
+            suggestions = suggestions.toSet(),
+            possibleTypes = possibleTypes.toSet(),
+            selectedMeasurement = selectedMeasurement,
+        )
 
     Scaffold(
         modifier = modifier,
@@ -115,23 +116,19 @@ internal fun FoodMeasurementScreen(
             MediumTopAppBar(
                 title = { Text(food.headline) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
-                actions = {
-                    Menu(
-                        onEdit = onEdit,
-                        onDelete = onDelete
-                    )
-                },
-                scrollBehavior = scrollBehavior
+                actions = { Menu(onEdit = onEdit, onDelete = onDelete) },
+                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {
             Column(
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = !animatedVisibilityScope.transition.isRunning && state.isValid,
-                    alignment = Alignment.BottomEnd
-                ),
+                modifier =
+                    Modifier.animateFloatingActionButton(
+                        visible = !animatedVisibilityScope.transition.isRunning && state.isValid,
+                        alignment = Alignment.BottomEnd,
+                    ),
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 if (food is Recipe) {
                     ExtendedFloatingActionButton(
@@ -140,21 +137,19 @@ internal fun FoodMeasurementScreen(
                                 onUnpack(
                                     state.measurementState.measurement,
                                     meals.first { it.name == state.mealsState.selectedMeal }.id,
-                                    state.dateState.selectedDate
+                                    state.dateState.selectedDate,
                                 )
                             }
                         },
                         icon = {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.CallSplit,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         },
-                        text = {
-                            Text(stringResource(Res.string.action_unpack))
-                        },
+                        text = { Text(stringResource(Res.string.action_unpack)) },
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     )
                 }
 
@@ -164,70 +159,58 @@ internal fun FoodMeasurementScreen(
                             onMeasure(
                                 state.measurementState.measurement,
                                 meals.first { it.name == state.mealsState.selectedMeal }.id,
-                                state.dateState.selectedDate
+                                state.dateState.selectedDate,
                             )
                         }
                     },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Edit,
-                            contentDescription = stringResource(Res.string.action_save)
+                            contentDescription = stringResource(Res.string.action_save),
                         )
                     },
-                    text = {
-                        Text(stringResource(Res.string.action_save))
-                    }
+                    text = { Text(stringResource(Res.string.action_save)) },
                 )
             }
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .imePadding()
-                .padding(horizontal = 8.dp)
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
-                .add(vertical = 8.dp)
-                .let {
+            modifier =
+                Modifier.fillMaxSize()
+                    .imePadding()
+                    .padding(horizontal = 8.dp)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding =
+                paddingValues.add(vertical = 8.dp).let {
                     if (food is Recipe) {
                         it.add(bottom = 8.dp + 56.dp + 8.dp + 80.dp + 24.dp) // Double FAB
                     } else {
                         it.add(bottom = 80.dp + 24.dp) // FAB
                     }
-                }
+                },
         ) {
-            item {
-                HorizontalDivider()
-            }
+            item { HorizontalDivider() }
 
-            item {
-                FoodMeasurementForm(
-                    state = state,
-                    modifier = Modifier.padding()
-                )
-            }
+            item { FoodMeasurementForm(state = state, modifier = Modifier.padding()) }
 
             if (food is Recipe) {
                 item {
                     HorizontalDivider()
                     Ingredients(
-                        ingredients = remember(food, state.measurementState.measurement) {
-                            food.measuredIngredients(
-                                state.measurementState.measurement.weight(food)
-                            )
-                        },
-                        modifier = Modifier.padding(8.dp)
+                        ingredients =
+                            remember(food, state.measurementState.measurement) {
+                                food.measuredIngredients(
+                                    state.measurementState.measurement.weight(food)
+                                )
+                            },
+                        modifier = Modifier.padding(8.dp),
                     )
                 }
             }
 
             item {
                 HorizontalDivider()
-                NutrientList(
-                    food = food,
-                    measurement = state.measurementState.measurement
-                )
+                NutrientList(food = food, measurement = state.measurementState.measurement)
             }
 
             when (val note = food.note) {
@@ -237,10 +220,7 @@ internal fun FoodMeasurementScreen(
                         HorizontalDivider()
                         Note(
                             note = note,
-                            modifier = Modifier.padding(
-                                vertical = 16.dp,
-                                horizontal = 8.dp
-                            )
+                            modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp),
                         )
                     }
                 }
@@ -255,24 +235,18 @@ internal fun FoodMeasurementScreen(
 
                     Source(
                         source = food.source,
-                        modifier = Modifier
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = {
-                                    val url = food.source.url
-                                    if (url != null) {
-                                        clipboardManger.copy(
-                                            label = sourceStr,
-                                            text = url
-                                        )
-                                    }
-                                }
-                            )
-                            .padding(
-                                vertical = 16.dp,
-                                horizontal = 8.dp
-                            )
+                        modifier =
+                            Modifier.clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = {
+                                        val url = food.source.url
+                                        if (url != null) {
+                                            clipboardManger.copy(label = sourceStr, text = url)
+                                        }
+                                    },
+                                )
+                                .padding(vertical = 16.dp, horizontal = 8.dp),
                     )
                 }
             }
@@ -282,10 +256,7 @@ internal fun FoodMeasurementScreen(
                     HorizontalDivider()
                     FoodEvents(
                         events = foodEvents,
-                        modifier = Modifier.padding(
-                            vertical = 16.dp,
-                            horizontal = 8.dp
-                        )
+                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp),
                     )
                 }
             }
@@ -299,38 +270,30 @@ private fun Menu(onEdit: () -> Unit, onDelete: () -> Unit, modifier: Modifier = 
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showDeleteDialog) {
-        DeleteDialog(
-            onDismissRequest = { showDeleteDialog = false },
-            onDelete = onDelete
-        )
+        DeleteDialog(onDismissRequest = { showDeleteDialog = false }, onDelete = onDelete)
     }
 
     Box(modifier) {
-        IconButton(
-            onClick = { expanded = true }
-        ) {
+        IconButton(onClick = { expanded = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(Res.string.action_show_more)
+                contentDescription = stringResource(Res.string.action_show_more),
             )
         }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.action_edit)) },
                 onClick = {
                     expanded = false
                     onEdit()
-                }
+                },
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.action_delete)) },
                 onClick = {
                     expanded = false
                     showDeleteDialog = true
-                }
+                },
             )
         }
     }
@@ -340,37 +303,22 @@ private fun Menu(onEdit: () -> Unit, onDelete: () -> Unit, modifier: Modifier = 
 private fun DeleteDialog(
     onDismissRequest: () -> Unit,
     onDelete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            TextButton(
-                onClick = onDelete
-            ) {
-                Text(stringResource(Res.string.action_delete))
-            }
+            TextButton(onClick = onDelete) { Text(stringResource(Res.string.action_delete)) }
         },
         modifier = modifier,
         dismissButton = {
-            TextButton(
-                onClick = onDismissRequest
-            ) {
+            TextButton(onClick = onDismissRequest) {
                 Text(stringResource(Res.string.action_cancel))
             }
         },
-        icon = {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = null
-            )
-        },
-        title = {
-            Text(stringResource(Res.string.headline_delete_product))
-        },
-        text = {
-            Text(stringResource(Res.string.description_delete_product))
-        }
+        icon = { Icon(imageVector = Icons.Default.Delete, contentDescription = null) },
+        title = { Text(stringResource(Res.string.headline_delete_product)) },
+        text = { Text(stringResource(Res.string.description_delete_product)) },
     )
 }
 
@@ -380,13 +328,10 @@ private fun Note(note: String, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(Res.string.headline_note),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Spacer(Modifier.height(8.dp))
-        Text(
-            text = note,
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Text(text = note, style = MaterialTheme.typography.bodyMedium)
     }
 }
 
@@ -398,27 +343,27 @@ private fun Source(source: FoodSource, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(Res.string.headline_source),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Spacer(Modifier.height(8.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             source.type.Icon()
 
             Column {
                 Text(
                     text = source.type.stringResource(),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
                 if (url != null) {
                     Text(
                         text = url,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -431,19 +376,15 @@ private fun Ingredients(ingredients: List<RecipeIngredient>, modifier: Modifier 
     val g = stringResource(Res.string.unit_gram_short)
     val kcal = stringResource(Res.string.unit_kcal)
 
-    val contentPadding = PaddingValues(
-        horizontal = 0.dp,
-        vertical = 8.dp
-    )
+    val contentPadding = PaddingValues(horizontal = 0.dp, vertical = 8.dp)
 
     Column(modifier) {
         Text(
             text = stringResource(Res.string.headline_ingredients),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         ingredients.forEach { ingredient ->
-
             val facts = ingredient.nutritionFacts
             val proteins = facts?.proteins?.value
             val carbs = facts?.carbohydrates?.value
@@ -454,7 +395,7 @@ private fun Ingredients(ingredients: List<RecipeIngredient>, modifier: Modifier 
                 FoodErrorListItem(
                     headline = ingredient.food.headline,
                     errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
-                    contentPadding = contentPadding
+                    contentPadding = contentPadding,
                 )
             } else {
                 FoodListItem(
@@ -476,7 +417,7 @@ private fun Ingredients(ingredients: List<RecipeIngredient>, modifier: Modifier 
                         Text(text)
                     },
                     measurement = { Text(ingredient.measurement.stringResource()) },
-                    contentPadding = contentPadding
+                    contentPadding = contentPadding,
                 )
             }
         }
@@ -485,28 +426,22 @@ private fun Ingredients(ingredients: List<RecipeIngredient>, modifier: Modifier 
 
 @Composable
 private fun NutrientList(food: Food, measurement: Measurement, modifier: Modifier = Modifier) {
-    val facts = remember(food, measurement) {
-        val weight = measurement.weight(food)
-            ?: error("Invalid measurement: $measurement for food: ${food.headline}")
-        food.nutritionFacts * (weight / 100)
-    }
+    val facts =
+        remember(food, measurement) {
+            val weight =
+                measurement.weight(food)
+                    ?: error("Invalid measurement: $measurement for food: ${food.headline}")
+            food.nutritionFacts * (weight / 100)
+        }
 
     Column(modifier) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier.size(48.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.ViewList,
-                    contentDescription = null
-                )
+            Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                Icon(imageVector = Icons.AutoMirrored.Outlined.ViewList, contentDescription = null)
             }
 
             val proteins = facts.proteins.value
@@ -518,13 +453,14 @@ private fun NutrientList(food: Food, measurement: Measurement, modifier: Modifie
                     proteins = proteins,
                     carbohydrates = carbohydrates,
                     fats = fats,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
 
-        val weight = measurement.weight(food)
-            ?: error("Invalid measurement: $measurement for food: ${food.headline}")
+        val weight =
+            measurement.weight(food)
+                ?: error("Invalid measurement: $measurement for food: ${food.headline}")
 
         val text = buildString {
             append(measurement.stringResource())
@@ -535,11 +471,12 @@ private fun NutrientList(food: Food, measurement: Measurement, modifier: Modifie
 
                 is Measurement.Package,
                 is Measurement.Serving -> {
-                    val suffix = if (food.isLiquid) {
-                        stringResource(Res.string.unit_milliliter_short)
-                    } else {
-                        stringResource(Res.string.unit_gram_short)
-                    }
+                    val suffix =
+                        if (food.isLiquid) {
+                            stringResource(Res.string.unit_milliliter_short)
+                        } else {
+                            stringResource(Res.string.unit_gram_short)
+                        }
 
                     append(" (${weight.formatClipZeros()} $suffix)")
                 }
@@ -548,10 +485,8 @@ private fun NutrientList(food: Food, measurement: Measurement, modifier: Modifie
 
         Text(
             text = text,
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .padding(bottom = 8.dp),
-            style = MaterialTheme.typography.labelLarge
+            modifier = Modifier.padding(horizontal = 8.dp).padding(bottom = 8.dp),
+            style = MaterialTheme.typography.labelLarge,
         )
 
         NutrientList(facts)
@@ -561,19 +496,13 @@ private fun NutrientList(food: Food, measurement: Measurement, modifier: Modifie
 @Composable
 private fun FoodMeasurementForm(state: ProductMeasurementFormState, modifier: Modifier = Modifier) {
     Column(modifier) {
-        ChipsDatePicker(
-            state = state.dateState,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
+        ChipsDatePicker(state = state.dateState, modifier = Modifier.padding(vertical = 8.dp))
         HorizontalDivider()
-        ChipsMealPicker(
-            state = state.mealsState,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
+        ChipsMealPicker(state = state.mealsState, modifier = Modifier.padding(vertical = 8.dp))
         HorizontalDivider()
         MeasurementPicker(
             state = state.measurementState,
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.padding(vertical = 8.dp),
         )
     }
 }
@@ -581,35 +510,35 @@ private fun FoodMeasurementForm(state: ProductMeasurementFormState, modifier: Mo
 @Composable
 private fun FoodEvents(events: List<FoodEvent>, modifier: Modifier = Modifier) {
     val dateFormatter = LocalDateFormatter.current
-    val strings = events
-        .filterNot { it is FoodEvent.Used }
-        .map {
-            it.stringResource() + ", " + dateFormatter.formatDateTime(it.date)
-        }
+    val strings =
+        events
+            .filterNot { it is FoodEvent.Used }
+            .map { it.stringResource() + ", " + dateFormatter.formatDateTime(it.date) }
     val list = unorderedList(strings)
 
     Column(modifier) {
         Text(
             text = stringResource(Res.string.headline_history),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = list,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
 
 @Composable
-private fun FoodEvent.stringResource(): String = when (this) {
-    is FoodEvent.Created -> stringResource(Res.string.headline_created)
-    is FoodEvent.Downloaded -> stringResource(Res.string.headline_downloaded)
-    is FoodEvent.Imported -> stringResource(Res.string.headline_imported)
-    is FoodEvent.Edited -> stringResource(Res.string.headline_edited)
-    is FoodEvent.Used -> error("FoodEvent.Used should not be displayed in the history")
-    is FoodEvent.ImportedFromFoodYou2 ->
-        stringResource(Res.string.headline_imported_from_food_you_2)
-}
+private fun FoodEvent.stringResource(): String =
+    when (this) {
+        is FoodEvent.Created -> stringResource(Res.string.headline_created)
+        is FoodEvent.Downloaded -> stringResource(Res.string.headline_downloaded)
+        is FoodEvent.Imported -> stringResource(Res.string.headline_imported)
+        is FoodEvent.Edited -> stringResource(Res.string.headline_edited)
+        is FoodEvent.Used -> error("FoodEvent.Used should not be displayed in the history")
+        is FoodEvent.ImportedFromFoodYou2 ->
+            stringResource(Res.string.headline_imported_from_food_you_2)
+    }

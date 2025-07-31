@@ -18,25 +18,16 @@ fun MealSettingsListItem(
     shape: Shape,
     color: Color,
     contentColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     SettingsListItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Outlined.Restaurant,
-                contentDescription = null
-            )
-        },
-        label = {
-            Text(stringResource(Res.string.headline_meals))
-        },
-        supportingContent = {
-            Text(stringResource(Res.string.neutral_set_your_meal_schedule))
-        },
+        icon = { Icon(imageVector = Icons.Outlined.Restaurant, contentDescription = null) },
+        label = { Text(stringResource(Res.string.headline_meals)) },
+        supportingContent = { Text(stringResource(Res.string.neutral_set_your_meal_schedule)) },
         onClick = onClick,
         modifier = modifier,
         shape = shape,
         color = color,
-        contentColor = contentColor
+        contentColor = contentColor,
     )
 }

@@ -21,5 +21,5 @@ data class Nutrients(
     // Other
     val salt: Float?,
     val cholesterolMilli: Float?,
-    val caffeineMilli: Float?
+    val caffeineMilli: Float?,
 )

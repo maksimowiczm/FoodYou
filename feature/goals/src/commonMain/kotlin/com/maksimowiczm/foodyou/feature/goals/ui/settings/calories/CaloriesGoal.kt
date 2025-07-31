@@ -21,48 +21,37 @@ import org.jetbrains.compose.resources.stringResource
 internal fun CaloriesGoal(
     goals: DailyGoals,
     onSave: (DailyGoals) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val state = rememberCaloriesFoalFormState(goals)
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(Res.string.headline_calories_goal),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge,
         )
 
         Text(
             text = stringResource(Res.string.description_calories_goal),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             textAlign = TextAlign.Justify,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
 
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center,
         ) {
-            CaloriesGoalForm(
-                state = state
-            )
+            CaloriesGoalForm(state = state)
         }
 
-        Button(
-            onClick = { onSave(state.intoDailyGoals()) },
-            enabled = state.isValid
-        ) {
+        Button(onClick = { onSave(state.intoDailyGoals()) }, enabled = state.isValid) {
             Text(stringResource(Res.string.action_save))
         }
     }

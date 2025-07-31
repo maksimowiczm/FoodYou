@@ -24,33 +24,40 @@ internal class ObserveMeasurementSuggestionsUseCaseImpl(foodDiaryDatabase: FoodD
     private val measurementDao = foodDiaryDatabase.measurementDao
 
     override fun observe(food: Food, limit: Int): Flow<List<Measurement>> =
-        measurementDao.observeMeasurementSuggestions(
-            productId = (food.id as? FoodId.Product)?.id,
-            recipeId = (food.id as? FoodId.Recipe)?.id,
-            limit = limit
-        ).map { list ->
-            val measurements = list.map { it.toMeasurement() }.filter {
-                when (it) {
-                    is Measurement.Gram, is Measurement.Milliliter -> true
-                    is Measurement.Package -> food.totalWeight != null
-                    is Measurement.Serving -> food.servingWeight != null
+        measurementDao
+            .observeMeasurementSuggestions(
+                productId = (food.id as? FoodId.Product)?.id,
+                recipeId = (food.id as? FoodId.Recipe)?.id,
+                limit = limit,
+            )
+            .map { list ->
+                val measurements =
+                    list
+                        .map { it.toMeasurement() }
+                        .filter {
+                            when (it) {
+                                is Measurement.Gram,
+                                is Measurement.Milliliter -> true
+                                is Measurement.Package -> food.totalWeight != null
+                                is Measurement.Serving -> food.servingWeight != null
+                            }
+                        }
+                        .toMutableList()
+
+                // Fill missing measurements
+                if (food.isLiquid) {
+                    measurements.add(Measurement.Milliliter(100f))
+                } else {
+                    measurements.add(Measurement.Gram(100f))
                 }
-            }.toMutableList()
 
-            // Fill missing measurements
-            if (food.isLiquid) {
-                measurements.add(Measurement.Milliliter(100f))
-            } else {
-                measurements.add(Measurement.Gram(100f))
-            }
+                if (food.totalWeight != null) {
+                    measurements.add(Measurement.Package(1f))
+                }
+                if (food.servingWeight != null) {
+                    measurements.add(Measurement.Serving(1f))
+                }
 
-            if (food.totalWeight != null) {
-                measurements.add(Measurement.Package(1f))
+                measurements.distinct()
             }
-            if (food.servingWeight != null) {
-                measurements.add(Measurement.Serving(1f))
-            }
-
-            measurements.distinct()
-        }
 }

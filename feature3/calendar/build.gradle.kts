@@ -6,20 +6,15 @@ plugins {
 }
 
 kotlin {
-
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.feature.calendar"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
-        withHostTestBuilder {
-        }
+        withHostTestBuilder {}
 
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
+        withDeviceTestBuilder { sourceSetTreeName = "test" }
+            .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
     }
 
     // For iOS targets, this is also where you should
@@ -31,23 +26,11 @@ kotlin {
     // https://developer.android.com/kotlin/multiplatform/migrate
     val xcfName = "feature3:calendarKit"
 
-    iosX64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
+    iosX64 { binaries.framework { baseName = xcfName } }
 
-    iosArm64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
+    iosArm64 { binaries.framework { baseName = xcfName } }
 
-    iosSimulatorArm64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
+    iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets {
         commonMain.dependencies {
@@ -56,12 +39,9 @@ kotlin {
             implementation(libs.androidx.room.runtime)
         }
 
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
+        commonTest.dependencies { implementation(libs.kotlin.test) }
 
-        androidMain.dependencies {
-        }
+        androidMain.dependencies {}
 
         getByName("androidDeviceTest").dependencies {
             implementation(libs.androidx.runner)
@@ -69,7 +49,6 @@ kotlin {
             implementation(libs.androidx.junit)
         }
 
-        iosMain.dependencies {
-        }
+        iosMain.dependencies {}
     }
 }

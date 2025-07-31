@@ -20,9 +20,8 @@ val foodDiaryModule = module {
     factoryOf(::ObserveMealsUseCaseImpl).bind<ObserveMealsUseCase>()
     viewModelOf(::UpdateMeasurementViewModel)
     viewModelOf(::MealsCardsViewModel)
-    factoryOf(
-        ::ObserveMeasurementSuggestionsUseCaseImpl
-    ).bind<ObserveMeasurementSuggestionsUseCase>()
+    factoryOf(::ObserveMeasurementSuggestionsUseCaseImpl)
+        .bind<ObserveMeasurementSuggestionsUseCase>()
     viewModelOf(::FoodSearchViewModel)
     factoryOf(::CreateMeasurementUseCaseImpl).bind<CreateMeasurementUseCase>()
 }

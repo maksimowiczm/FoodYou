@@ -51,7 +51,8 @@ internal fun ChipsDatePicker(state: ChipsDatePickerState, modifier: Modifier = M
                     onClick = {
                         datePickerState.selectedDateMillis
                             ?.let(Instant::fromEpochMilliseconds)
-                            ?.toLocalDateTime(TimeZone.currentSystemDefault())?.date
+                            ?.toLocalDateTime(TimeZone.currentSystemDefault())
+                            ?.date
                             ?.let(state::addAndSelect)
 
                         showDatePicker = false
@@ -61,47 +62,35 @@ internal fun ChipsDatePicker(state: ChipsDatePickerState, modifier: Modifier = M
                 }
             },
             dismissButton = {
-                TextButton(
-                    onClick = { showDatePicker = false }
-                ) {
+                TextButton(onClick = { showDatePicker = false }) {
                     Text(stringResource(Res.string.action_cancel))
                 }
-            }
+            },
         ) {
-            DatePicker(
-                state = datePickerState
-            )
+            DatePicker(state = datePickerState)
         }
     }
 
     Row(modifier) {
-        Box(
-            modifier = Modifier.size(48.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.CalendarMonth,
-                contentDescription = null
-            )
+        Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+            Icon(imageVector = Icons.Default.CalendarMonth, contentDescription = null)
         }
 
         Spacer(Modifier.width(8.dp))
 
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             state.dates.forEach { date ->
                 InputChip(
                     selected = state.selectedDate == date,
                     onClick = { state.selectDate(date) },
-                    label = { Text(date.stringResource(state.today)) }
+                    label = { Text(date.stringResource(state.today)) },
                 )
             }
 
             InputChip(
                 selected = false,
                 onClick = { showDatePicker = true },
-                label = { Text(stringResource(Res.string.action_choose_other_date)) }
+                label = { Text(stringResource(Res.string.action_choose_other_date)) },
             )
         }
     }
@@ -124,25 +113,21 @@ private fun LocalDate.stringResource(today: LocalDate): String {
 internal fun rememberChipsDatePickerState(
     today: LocalDate = LocalDate.now(),
     initialDates: Set<LocalDate> = setOf(LocalDate.now(), LocalDate.now().minus(1.days)),
-    selectedDate: LocalDate = initialDates.first()
-): ChipsDatePickerState = rememberSaveable(
-    today,
-    initialDates,
-    selectedDate,
-    saver = ChipsDatePickerState.saver
-) {
-    ChipsDatePickerState(
-        today = today,
-        initialDates = initialDates,
-        initialSelectedDate = selectedDate
-    )
-}
+    selectedDate: LocalDate = initialDates.first(),
+): ChipsDatePickerState =
+    rememberSaveable(today, initialDates, selectedDate, saver = ChipsDatePickerState.saver) {
+        ChipsDatePickerState(
+            today = today,
+            initialDates = initialDates,
+            initialSelectedDate = selectedDate,
+        )
+    }
 
 @Stable
 internal class ChipsDatePickerState(
     val today: LocalDate,
     initialDates: Set<LocalDate>,
-    initialSelectedDate: LocalDate?
+    initialSelectedDate: LocalDate?,
 ) {
     private var datesSet by mutableStateOf(initialDates.ifEmpty { setOf(LocalDate.now()) })
 
@@ -164,27 +149,28 @@ internal class ChipsDatePickerState(
     }
 
     companion object {
-        val saver: Saver<ChipsDatePickerState, List<Long>> = Saver(
-            save = {
-                val mutableList = mutableListOf<Long>()
+        val saver: Saver<ChipsDatePickerState, List<Long>> =
+            Saver(
+                save = {
+                    val mutableList = mutableListOf<Long>()
 
-                mutableList.add(it.today.toEpochDays())
-                mutableList.add(it.selectedDate.toEpochDays())
-                mutableList.addAll(it.datesSet.map(LocalDate::toEpochDays))
+                    mutableList.add(it.today.toEpochDays())
+                    mutableList.add(it.selectedDate.toEpochDays())
+                    mutableList.addAll(it.datesSet.map(LocalDate::toEpochDays))
 
-                mutableList
-            },
-            restore = {
-                val selectedDate = it.firstOrNull()?.let(LocalDate::fromEpochDays)
-                val today = it.getOrNull(1)?.let(LocalDate::fromEpochDays) ?: LocalDate.now()
-                val dates = it.drop(2).map(LocalDate::fromEpochDays)
+                    mutableList
+                },
+                restore = {
+                    val selectedDate = it.firstOrNull()?.let(LocalDate::fromEpochDays)
+                    val today = it.getOrNull(1)?.let(LocalDate::fromEpochDays) ?: LocalDate.now()
+                    val dates = it.drop(2).map(LocalDate::fromEpochDays)
 
-                ChipsDatePickerState(
-                    today = today,
-                    initialDates = dates.toSet(),
-                    initialSelectedDate = selectedDate
-                )
-            }
-        )
+                    ChipsDatePickerState(
+                        today = today,
+                        initialDates = dates.toSet(),
+                        initialSelectedDate = selectedDate,
+                    )
+                },
+            )
     }
 }

@@ -43,5 +43,5 @@ enum class NutritionFactsField {
     Phosphorus,
     Selenium,
     Iodine,
-    Chromium
+    Chromium,
 }

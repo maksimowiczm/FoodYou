@@ -31,52 +31,47 @@ internal fun DownloadErrorCard(error: DownloadError, modifier: Modifier = Modifi
 @Composable
 private fun DownloadGenericErrorCard(
     error: DownloadError.GenericError,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val errorText = when (error) {
-        DownloadError.GenericError.URLNotFound ->
-            stringResource(Res.string.error_url_not_found)
+    val errorText =
+        when (error) {
+            DownloadError.GenericError.URLNotFound -> stringResource(Res.string.error_url_not_found)
 
-        DownloadError.GenericError.URLNotSupported ->
-            stringResource(Res.string.error_url_is_not_supported)
+            DownloadError.GenericError.URLNotSupported ->
+                stringResource(Res.string.error_url_is_not_supported)
 
-        DownloadError.GenericError.ProductNotFound ->
-            stringResource(Res.string.error_product_not_found)
+            DownloadError.GenericError.ProductNotFound ->
+                stringResource(Res.string.error_product_not_found)
 
-        is DownloadError.GenericError.Custom if (error.message != null) -> error.message
-        is DownloadError.GenericError.Custom -> stringResource(Res.string.error_unknown_error)
-    }
+            is DownloadError.GenericError.Custom if (error.message != null) -> error.message
+            is DownloadError.GenericError.Custom -> stringResource(Res.string.error_unknown_error)
+        }
 
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            ),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.ErrorOutline,
-                    contentDescription = null
-                )
+                Icon(imageVector = Icons.Outlined.ErrorOutline, contentDescription = null)
                 Text(
                     text = stringResource(Res.string.error_failed_to_download_product),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
 
-            Text(
-                text = errorText,
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Text(text = errorText, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

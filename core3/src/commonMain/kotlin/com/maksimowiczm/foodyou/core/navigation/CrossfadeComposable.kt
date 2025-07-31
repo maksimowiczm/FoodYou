@@ -22,20 +22,30 @@ inline fun <reified T : Any> NavGraphBuilder.crossfadeComposable(
     typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap(),
     deepLinks: List<NavDeepLink> = emptyList(),
     noinline enterTransition:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = {
-        CrossFadeComposableDefaults.enterTransition()
-    },
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            EnterTransition?)? =
+        {
+            CrossFadeComposableDefaults.enterTransition()
+        },
     noinline exitTransition:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = {
-        CrossFadeComposableDefaults.exitTransition()
-    },
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            ExitTransition?)? =
+        {
+            CrossFadeComposableDefaults.exitTransition()
+        },
     noinline popEnterTransition:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = enterTransition,
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            EnterTransition?)? =
+        enterTransition,
     noinline popExitTransition:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = exitTransition,
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            ExitTransition?)? =
+        exitTransition,
     noinline sizeTransform:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)? = null,
-    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            SizeTransform?)? =
+        null,
+    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable<T>(
         typeMap = typeMap,
@@ -45,7 +55,7 @@ inline fun <reified T : Any> NavGraphBuilder.crossfadeComposable(
         popEnterTransition = popEnterTransition,
         popExitTransition = popExitTransition,
         sizeTransform = sizeTransform,
-        content = content
+        content = content,
     )
 }
 
@@ -55,20 +65,30 @@ fun NavGraphBuilder.crossfadeComposable(
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
     enterTransition:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = {
-        CrossFadeComposableDefaults.enterTransition()
-    },
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            EnterTransition?)? =
+        {
+            CrossFadeComposableDefaults.enterTransition()
+        },
     exitTransition:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = {
-        CrossFadeComposableDefaults.exitTransition()
-    },
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            ExitTransition?)? =
+        {
+            CrossFadeComposableDefaults.exitTransition()
+        },
     popEnterTransition:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = enterTransition,
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            EnterTransition?)? =
+        enterTransition,
     popExitTransition:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = exitTransition,
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            ExitTransition?)? =
+        exitTransition,
     sizeTransform:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)? = null,
-    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
+        (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards
+            SizeTransform?)? =
+        null,
+    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable(
         route = route,
@@ -79,7 +99,7 @@ fun NavGraphBuilder.crossfadeComposable(
         popEnterTransition = popEnterTransition,
         popExitTransition = popExitTransition,
         sizeTransform = sizeTransform,
-        content = content
+        content = content,
     )
 }
 

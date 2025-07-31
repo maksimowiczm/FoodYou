@@ -5,8 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class USDAPagingKey(
-    @PrimaryKey
-    val queryString: String,
+    @PrimaryKey val queryString: String,
     val fetchedCount: Int,
-    val totalCount: Int
+    val totalCount: Int,
 )

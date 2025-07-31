@@ -26,28 +26,29 @@ fun <T, E> rememberFormFieldWithTextFieldValue(
     initialError: E? = null,
     initialDirty: Boolean = false,
     formatter: (T) -> String = { emptyNullFormatter(it) },
-    initialTextFieldValue: TextFieldValue = TextFieldValue(
-        text = formatter(initialValue),
-        selection = TextRange(formatter(initialValue).length)
-    ),
-    validator: (() -> Validator<T, E>)? = null
+    initialTextFieldValue: TextFieldValue =
+        TextFieldValue(
+            text = formatter(initialValue),
+            selection = TextRange(formatter(initialValue).length),
+        ),
+    validator: (() -> Validator<T, E>)? = null,
 ): FormFieldWithTextFieldValue<T, E> {
     val interactionSource = remember { MutableInteractionSource() }
     val coroutineScope = rememberCoroutineScope()
 
-    val formField = rememberFormField(
-        initialValue = initialValue,
-        initialError = initialError,
-        initialDirty = initialDirty,
-        parser = parser,
-        validator = validator
-    )
+    val formField =
+        rememberFormField(
+            initialValue = initialValue,
+            initialError = initialError,
+            initialDirty = initialDirty,
+            parser = parser,
+            validator = validator,
+        )
 
-    val textFieldValue = rememberSaveable(
-        stateSaver = TextFieldValue.Saver
-    ) {
-        mutableStateOf(initialTextFieldValue)
-    }
+    val textFieldValue =
+        rememberSaveable(stateSaver = TextFieldValue.Saver) {
+            mutableStateOf(initialTextFieldValue)
+        }
 
     return remember {
         FormFieldWithTextFieldValue(
@@ -55,7 +56,7 @@ fun <T, E> rememberFormFieldWithTextFieldValue(
             formField = formField,
             interactionSource = interactionSource,
             coroutineScope = coroutineScope,
-            formatter = formatter
+            formatter = formatter,
         )
     }
 }
@@ -79,7 +80,7 @@ class FormFieldWithTextFieldValue<T, E>(
     private val formField: FormField<T, E>,
     val interactionSource: MutableInteractionSource,
     coroutineScope: CoroutineScope,
-    private val formatter: (T) -> String
+    private val formatter: (T) -> String,
 ) : FormField<T, E> by formField {
     init {
         coroutineScope.launch {
@@ -88,9 +89,10 @@ class FormFieldWithTextFieldValue<T, E>(
             interactionSource.interactions.collect { interaction ->
                 when (interaction) {
                     is FocusInteraction.Focus -> wasFocused = true
-                    is FocusInteraction.Unfocus -> if (wasFocused) {
-                        formField.onValueChange(textFieldValue.text)
-                    }
+                    is FocusInteraction.Unfocus ->
+                        if (wasFocused) {
+                            formField.onValueChange(textFieldValue.text)
+                        }
                 }
             }
         }
@@ -115,9 +117,6 @@ class FormFieldWithTextFieldValue<T, E>(
         formField.onRawValueChange(newValue, touch)
 
         val text = formatter(newValue)
-        textFieldValue = TextFieldValue(
-            text = text,
-            selection = TextRange(text.length)
-        )
+        textFieldValue = TextFieldValue(text = text, selection = TextRange(text.length))
     }
 }

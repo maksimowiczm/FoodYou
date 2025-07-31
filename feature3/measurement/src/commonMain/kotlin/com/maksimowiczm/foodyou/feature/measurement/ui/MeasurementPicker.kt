@@ -55,26 +55,21 @@ fun MeasurementPicker(state: MeasurementPickerState, modifier: Modifier = Modifi
     LaunchedEffect(state.inputField.value, state.type) {
         val value = state.inputField.value ?: return@LaunchedEffect
 
-        val measurement = when (state.type) {
-            MeasurementType.Gram -> Measurement.Gram(value)
-            MeasurementType.Milliliter -> Measurement.Milliliter(value)
-            MeasurementType.Package -> Measurement.Package(value)
-            MeasurementType.Serving -> Measurement.Serving(value)
-        }
+        val measurement =
+            when (state.type) {
+                MeasurementType.Gram -> Measurement.Gram(value)
+                MeasurementType.Milliliter -> Measurement.Milliliter(value)
+                MeasurementType.Package -> Measurement.Package(value)
+                MeasurementType.Serving -> Measurement.Serving(value)
+            }
 
         latestState.measurement = measurement
     }
 
     Column(modifier) {
         Row {
-            Box(
-                modifier = Modifier.size(48.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_weight),
-                    contentDescription = null
-                )
+            Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                Icon(painter = painterResource(Res.drawable.ic_weight), contentDescription = null)
             }
 
             Spacer(Modifier.width(8.dp))
@@ -84,7 +79,7 @@ fun MeasurementPicker(state: MeasurementPickerState, modifier: Modifier = Modifi
                 type = state.type,
                 types = state.possibleTypes,
                 onSelect = { state.type = it },
-                modifier = Modifier.weight(1f).padding(end = 8.dp)
+                modifier = Modifier.weight(1f).padding(end = 8.dp),
             )
         }
 
@@ -92,7 +87,7 @@ fun MeasurementPicker(state: MeasurementPickerState, modifier: Modifier = Modifi
 
         FlowRow(
             modifier = Modifier.padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             state.suggestions.forEach { measurement ->
                 SuggestionChip(
@@ -102,9 +97,7 @@ fun MeasurementPicker(state: MeasurementPickerState, modifier: Modifier = Modifi
                         )
                         state.type = measurement.type
                     },
-                    label = {
-                        Text(measurement.stringResource())
-                    }
+                    label = { Text(measurement.stringResource()) },
                 )
             }
         }
@@ -117,105 +110,83 @@ private fun Input(
     type: MeasurementType,
     types: Set<MeasurementType>,
     onSelect: (MeasurementType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-    val inputColor by animateColorAsState(
-        targetValue = if (formField.error == null) {
-            MaterialTheme.colorScheme.primaryContainer
-        } else {
-            MaterialTheme.colorScheme.errorContainer
-        }
-    )
-    val contentColor by animateColorAsState(
-        targetValue = if (formField.error == null) {
-            MaterialTheme.colorScheme.onPrimaryContainer
-        } else {
-            MaterialTheme.colorScheme.onErrorContainer
-        }
-    )
+    val inputColor by
+        animateColorAsState(
+            targetValue =
+                if (formField.error == null) {
+                    MaterialTheme.colorScheme.primaryContainer
+                } else {
+                    MaterialTheme.colorScheme.errorContainer
+                }
+        )
+    val contentColor by
+        animateColorAsState(
+            targetValue =
+                if (formField.error == null) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onErrorContainer
+                }
+        )
 
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
+    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
         Surface(
-            modifier = Modifier
-                .height(48.dp)
-                .width(120.dp),
+            modifier = Modifier.height(48.dp).width(120.dp),
             color = inputColor,
             contentColor = contentColor,
-            shape = RoundedCornerShape(
-                topStart = 16.dp,
-                bottomStart = 16.dp,
-                topEnd = 4.dp,
-                bottomEnd = 4.dp
-            )
+            shape =
+                RoundedCornerShape(
+                    topStart = 16.dp,
+                    bottomStart = 16.dp,
+                    topEnd = 4.dp,
+                    bottomEnd = 4.dp,
+                ),
         ) {
             BasicTextField(
                 state = formField.textFieldState,
-                modifier = Modifier
-                    .height(48.dp)
-                    .padding(horizontal = 16.dp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Decimal
-                ),
+                modifier = Modifier.height(48.dp).padding(horizontal = 16.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 textStyle = LocalTextStyle.current.merge(LocalContentColor.current),
                 lineLimits = TextFieldLineLimits.SingleLine,
                 cursorBrush = SolidColor(LocalContentColor.current),
-                decorator = {
-                    Box(
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        it()
-                    }
-                }
+                decorator = { Box(contentAlignment = Alignment.CenterStart) { it() } },
             )
         }
 
         Surface(
             onClick = { expanded = true },
-            modifier = Modifier
-                .heightIn(min = 48.dp)
-                .weight(1f),
+            modifier = Modifier.heightIn(min = 48.dp).weight(1f),
             color = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            shape = RoundedCornerShape(
-                topStart = 4.dp,
-                bottomStart = 4.dp,
-                topEnd = 16.dp,
-                bottomEnd = 16.dp
-            )
+            shape =
+                RoundedCornerShape(
+                    topStart = 4.dp,
+                    bottomStart = 4.dp,
+                    topEnd = 16.dp,
+                    bottomEnd = 16.dp,
+                ),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = type.stringResource(),
                     modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.KeyboardArrowDown,
-                        contentDescription = null
-                    )
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Icon(imageVector = Icons.Outlined.KeyboardArrowDown, contentDescription = null)
 
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
+                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                         types.forEach {
                             DropdownMenuItem(
                                 text = { Text(it.stringResource()) },
                                 onClick = {
                                     onSelect(it)
                                     expanded = false
-                                }
+                                },
                             )
                         }
                     }
@@ -229,29 +200,25 @@ private fun Input(
 fun rememberMeasurementPickerState(
     suggestions: Set<Measurement>,
     possibleTypes: Set<MeasurementType>,
-    selectedMeasurement: Measurement
+    selectedMeasurement: Measurement,
 ): MeasurementPickerState {
-    val inputField = rememberFormField(
-        initialValue = selectedMeasurement.rawValue,
-        parser = nullableFloatParser(
-            onNotANumber = { "Invalid number format" }
-        ),
-        validator = positiveFloatValidator(
-            onNotPositive = { "Value must be positive" },
-            onNull = { "Value cannot be empty" }
-        ),
-        textFieldState = rememberTextFieldState(selectedMeasurement.rawValue.formatClipZeros()),
-        validateFirst = true
-    )
-    val typeState = rememberSaveable {
-        mutableStateOf(selectedMeasurement.type)
-    }
-    val measurementState = rememberSaveable(
-        selectedMeasurement,
-        stateSaver = Measurement.Saver
-    ) {
-        mutableStateOf(selectedMeasurement)
-    }
+    val inputField =
+        rememberFormField(
+            initialValue = selectedMeasurement.rawValue,
+            parser = nullableFloatParser(onNotANumber = { "Invalid number format" }),
+            validator =
+                positiveFloatValidator(
+                    onNotPositive = { "Value must be positive" },
+                    onNull = { "Value cannot be empty" },
+                ),
+            textFieldState = rememberTextFieldState(selectedMeasurement.rawValue.formatClipZeros()),
+            validateFirst = true,
+        )
+    val typeState = rememberSaveable { mutableStateOf(selectedMeasurement.type) }
+    val measurementState =
+        rememberSaveable(selectedMeasurement, stateSaver = Measurement.Saver) {
+            mutableStateOf(selectedMeasurement)
+        }
 
     return remember(suggestions, possibleTypes, inputField, typeState, measurementState) {
         MeasurementPickerState(
@@ -259,7 +226,7 @@ fun rememberMeasurementPickerState(
             possibleTypes = possibleTypes,
             inputField = inputField,
             measurementState = measurementState,
-            typeState = typeState
+            typeState = typeState,
         )
     }
 }
@@ -269,7 +236,7 @@ class MeasurementPickerState(
     val possibleTypes: Set<MeasurementType>,
     val inputField: FormField<Float?, String>,
     measurementState: MutableState<Measurement>,
-    typeState: MutableState<MeasurementType>
+    typeState: MutableState<MeasurementType>,
 ) {
     var measurement by measurementState
     var type by typeState

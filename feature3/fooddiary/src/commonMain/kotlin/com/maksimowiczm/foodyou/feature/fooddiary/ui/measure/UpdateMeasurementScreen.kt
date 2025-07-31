@@ -19,11 +19,10 @@ internal fun UpdateMeasurementScreen(
     onUpdateMeasurement: () -> Unit,
     measurementId: Long,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier.Companion,
 ) {
-    val viewModel = koinViewModel<UpdateMeasurementViewModel>(
-        parameters = { parametersOf(measurementId) }
-    )
+    val viewModel =
+        koinViewModel<UpdateMeasurementViewModel>(parameters = { parametersOf(measurementId) })
 
     val food = viewModel.food.collectAsStateWithLifecycle().value
     val productEvents = viewModel.foodEvents.collectAsStateWithLifecycle().value
@@ -44,10 +43,8 @@ internal fun UpdateMeasurementScreen(
         }
     }
 
-    if (food == null ||
-        suggestions == null ||
-        selectedMeasurement == null ||
-        possibleTypes == null
+    if (
+        food == null || suggestions == null || selectedMeasurement == null || possibleTypes == null
     ) {
         // TODO loading state
     } else {
@@ -67,7 +64,7 @@ internal fun UpdateMeasurementScreen(
             possibleTypes = possibleTypes,
             animatedVisibilityScope = animatedVisibilityScope,
             modifier = modifier,
-            selectedMeasurement = selectedMeasurement
+            selectedMeasurement = selectedMeasurement,
         )
     }
 }

@@ -71,7 +71,7 @@ fun HomePersonalizationScreen(
     onBack: () -> Unit,
     onMealsSettings: () -> Unit,
     modifier: Modifier = Modifier,
-    homeOrder: HomeCardsOrder = userPreference()
+    homeOrder: HomeCardsOrder = userPreference(),
 ) {
     val order by homeOrder.collectAsStateWithLifecycle(homeOrder.getBlocking())
 
@@ -80,14 +80,14 @@ fun HomePersonalizationScreen(
         onBack = onBack,
         onMealsSettings = onMealsSettings,
         onReorder = { homeOrder.setBlocking(it) },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @OptIn(
     ExperimentalMaterial3Api::class,
     FlowPreview::class,
-    ExperimentalMaterial3ExpressiveApi::class
+    ExperimentalMaterial3ExpressiveApi::class,
 )
 @Composable
 private fun HomePersonalizationScreen(
@@ -95,28 +95,28 @@ private fun HomePersonalizationScreen(
     onBack: () -> Unit,
     onMealsSettings: () -> Unit,
     onReorder: (List<HomeCard>) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
     var localOrder by rememberSaveable(order) { mutableStateOf(order) }
 
-    val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        localOrder = localOrder.toMutableList().apply {
-            val fromIndex = from.index
-            val toIndex = to.index
+    val reorderableLazyListState =
+        rememberReorderableLazyListState(lazyListState) { from, to ->
+            localOrder =
+                localOrder.toMutableList().apply {
+                    val fromIndex = from.index
+                    val toIndex = to.index
 
-            if (fromIndex != toIndex) {
-                add(toIndex, removeAt(fromIndex))
-            }
+                    if (fromIndex != toIndex) {
+                        add(toIndex, removeAt(fromIndex))
+                    }
+                }
         }
-    }
 
     val moveUp: (HomeCard) -> Boolean = {
         val index = localOrder.indexOf(it)
         if (index > 0) {
-            localOrder = localOrder.toMutableList().apply {
-                add(index - 1, removeAt(index))
-            }
+            localOrder = localOrder.toMutableList().apply { add(index - 1, removeAt(index)) }
             true
         } else {
             false
@@ -126,9 +126,7 @@ private fun HomePersonalizationScreen(
     val moveDown: (HomeCard) -> Boolean = {
         val index = localOrder.indexOf(it)
         if (index < localOrder.size - 1) {
-            localOrder = localOrder.toMutableList().apply {
-                add(index + 1, removeAt(index))
-            }
+            localOrder = localOrder.toMutableList().apply { add(index + 1, removeAt(index)) }
             true
         } else {
             false
@@ -152,35 +150,29 @@ private fun HomePersonalizationScreen(
                 title = { Text(stringResource(Res.string.headline_home_settings)) },
                 subtitle = { Text(stringResource(Res.string.description_home_settings)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier =
+                Modifier.padding(8.dp)
+                    .fillMaxSize()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = paddingValues
+            contentPadding = paddingValues,
         ) {
-            items(
-                items = localOrder,
-                key = { it.name }
-            ) { card ->
+            items(items = localOrder, key = { it.name }) { card ->
                 MyCard(
                     card = card,
                     draggableState = reorderableLazyListState,
                     moveUp = { moveUp(card) },
-                    moveDown = { moveDown(card) }
+                    moveDown = { moveDown(card) },
                 ) {
                     when (card) {
                         HomeCard.Calendar -> CalendarCardContent(it)
-                        HomeCard.Meals -> MealsCardContent(
-                            rs = it,
-                            onMore = onMealsSettings
-                        )
+                        HomeCard.Meals -> MealsCardContent(rs = it, onMore = onMealsSettings)
                     }
                 }
             }
@@ -195,48 +187,37 @@ private fun LazyItemScope.MyCard(
     moveUp: () -> Boolean,
     moveDown: () -> Boolean,
     modifier: Modifier = Modifier,
-    content: @Composable ReorderableCollectionItemScope.(RowScope) -> Unit
+    content: @Composable ReorderableCollectionItemScope.(RowScope) -> Unit,
 ) {
     val moveUpString = stringResource(Res.string.action_move_up)
     val moveDownString = stringResource(Res.string.action_move_down)
 
-    ReorderableItem(
-        state = draggableState,
-        key = card.name,
-        modifier = modifier
-    ) { isDragging ->
-
+    ReorderableItem(state = draggableState, key = card.name, modifier = modifier) { isDragging ->
         val elevation by animateDpAsState(if (isDragging) 16.dp else 0.dp)
-        val containerColor by animateColorAsState(
-            if (isDragging) {
-                MaterialTheme.colorScheme.surfaceContainerHighest
-            } else {
-                MaterialTheme.colorScheme.surfaceContainer
-            }
-        )
+        val containerColor by
+            animateColorAsState(
+                if (isDragging) {
+                    MaterialTheme.colorScheme.surfaceContainerHighest
+                } else {
+                    MaterialTheme.colorScheme.surfaceContainer
+                }
+            )
 
         Surface(
-            modifier = Modifier.semantics {
-                customActions = listOf(
-                    CustomAccessibilityAction(
-                        label = moveUpString,
-                        action = moveUp
-                    ),
-                    CustomAccessibilityAction(
-                        label = moveDownString,
-                        action = moveDown
-                    )
-                )
-            },
+            modifier =
+                Modifier.semantics {
+                    customActions =
+                        listOf(
+                            CustomAccessibilityAction(label = moveUpString, action = moveUp),
+                            CustomAccessibilityAction(label = moveDownString, action = moveDown),
+                        )
+                },
             color = containerColor,
             shadowElevation = elevation,
             tonalElevation = elevation,
-            shape = CardDefaults.shape
+            shape = CardDefaults.shape,
         ) {
-            Row(
-                modifier = Modifier.padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 content(this)
             }
         }
@@ -244,63 +225,41 @@ private fun LazyItemScope.MyCard(
 }
 
 @Composable
-private fun ReorderableCollectionItemScope.CalendarCardContent(rs: RowScope) = with(rs) {
-    Box(
-        modifier = Modifier.size(48.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.CalendarMonth,
-            contentDescription = null
-        )
+private fun ReorderableCollectionItemScope.CalendarCardContent(rs: RowScope) =
+    with(rs) {
+        Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+            Icon(imageVector = Icons.Outlined.CalendarMonth, contentDescription = null)
+        }
+        Spacer(Modifier.width(16.dp))
+        Text(stringResource(Res.string.headline_calendar))
+        Spacer(Modifier.weight(1f))
+        DragHandle(modifier = Modifier.hapticDraggableHandle())
     }
-    Spacer(Modifier.width(16.dp))
-    Text(stringResource(Res.string.headline_calendar))
-    Spacer(Modifier.weight(1f))
-    DragHandle(
-        modifier = Modifier.hapticDraggableHandle()
-    )
-}
 
 @Composable
 private fun ReorderableCollectionItemScope.MealsCardContent(rs: RowScope, onMore: () -> Unit) =
     with(rs) {
-        Box(
-            modifier = Modifier.size(48.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Restaurant,
-                contentDescription = null
-            )
+        Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+            Icon(imageVector = Icons.Outlined.Restaurant, contentDescription = null)
         }
         Spacer(Modifier.width(16.dp))
         Text(stringResource(Res.string.headline_meals))
         Spacer(Modifier.weight(1f))
-        IconButton(
-            onClick = onMore
-        ) {
+        IconButton(onClick = onMore) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(Res.string.action_show_more)
+                contentDescription = stringResource(Res.string.action_show_more),
             )
         }
-        DragHandle(
-            modifier = Modifier.hapticDraggableHandle()
-        )
+        DragHandle(modifier = Modifier.hapticDraggableHandle())
     }
 
 @Composable
 private fun DragHandle(modifier: Modifier = Modifier) {
-    IconButton(
-        onClick = {},
-        modifier = Modifier
-            .clearAndSetSemantics {}
-            .then(modifier)
-    ) {
+    IconButton(onClick = {}, modifier = Modifier.clearAndSetSemantics {}.then(modifier)) {
         Icon(
             imageVector = Icons.Default.DragHandle,
-            contentDescription = stringResource(Res.string.action_reorder)
+            contentDescription = stringResource(Res.string.action_reorder),
         )
     }
 }

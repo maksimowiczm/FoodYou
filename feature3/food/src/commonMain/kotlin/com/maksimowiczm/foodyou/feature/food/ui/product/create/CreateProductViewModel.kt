@@ -26,12 +26,13 @@ internal class CreateProductViewModel(private val createProductUseCase: CreatePr
             return
         }
 
-        val multiplier = when (form.measurement) {
-            is Measurement.Gram -> 1f
-            is Measurement.Milliliter -> 1f
-            is Measurement.Package -> form.packageWeight.value?.let { 1 / it * 100 }
-            is Measurement.Serving -> form.servingWeight.value?.let { 1 / it * 100 }
-        }
+        val multiplier =
+            when (form.measurement) {
+                is Measurement.Gram -> 1f
+                is Measurement.Milliliter -> 1f
+                is Measurement.Package -> form.packageWeight.value?.let { 1 / it * 100 }
+                is Measurement.Serving -> form.servingWeight.value?.let { 1 / it * 100 }
+            }
 
         if (multiplier == null) {
             Logger.w(TAG) { "Multiplier is null, cannot create product." }
@@ -39,21 +40,19 @@ internal class CreateProductViewModel(private val createProductUseCase: CreatePr
         }
 
         viewModelScope.launch {
-            val id = createProductUseCase.create(
-                name = form.name.value,
-                brand = form.brand.value,
-                barcode = form.barcode.value,
-                nutritionFacts = form.nutritionFacts(multiplier),
-                packageWeight = form.packageWeight.value,
-                servingWeight = form.servingWeight.value,
-                note = form.note.value,
-                source = FoodSource(
-                    type = form.sourceType,
-                    url = form.sourceUrl.value
-                ),
-                isLiquid = form.isLiquid,
-                event = FoodEvent.Created(LocalDateTime.now())
-            )
+            val id =
+                createProductUseCase.create(
+                    name = form.name.value,
+                    brand = form.brand.value,
+                    barcode = form.barcode.value,
+                    nutritionFacts = form.nutritionFacts(multiplier),
+                    packageWeight = form.packageWeight.value,
+                    servingWeight = form.servingWeight.value,
+                    note = form.note.value,
+                    source = FoodSource(type = form.sourceType, url = form.sourceUrl.value),
+                    isLiquid = form.isLiquid,
+                    event = FoodEvent.Created(LocalDateTime.now()),
+                )
             eventBus.send(CreateProductEvent.Created(id))
         }
     }

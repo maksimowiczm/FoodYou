@@ -87,8 +87,7 @@ interface FoodSearchDao {
     )
     fun observeRecentSearches(limit: Int): Flow<List<SearchEntry>>
 
-    @Upsert
-    suspend fun upsertSearchEntry(entry: SearchEntry)
+    @Upsert suspend fun upsertSearchEntry(entry: SearchEntry)
 
     @Query(
         """
@@ -128,7 +127,7 @@ interface FoodSearchDao {
     fun observeFoodByQuery(
         query: String?,
         source: FoodSource.Type?,
-        excludedRecipeId: Long?
+        excludedRecipeId: Long?,
     ): PagingSource<Int, FoodSearch>
 
     @Query(
@@ -164,7 +163,7 @@ interface FoodSearchDao {
     fun observeFoodCountByQuery(
         query: String?,
         source: FoodSource.Type?,
-        excludedRecipeId: Long?
+        excludedRecipeId: Long?,
     ): Flow<Int>
 
     @Query(
@@ -179,7 +178,7 @@ interface FoodSearchDao {
     )
     fun observeFoodByBarcode(
         barcode: String,
-        source: FoodSource.Type?
+        source: FoodSource.Type?,
     ): PagingSource<Int, FoodSearch>
 
     @Query(
@@ -195,7 +194,8 @@ interface FoodSearchDao {
 }
 
 // Don't do it twice
-private const val PRODUCT_FOOD_SEARCH_SQL_SELECT = """
+private const val PRODUCT_FOOD_SEARCH_SQL_SELECT =
+    """
 p.id AS productId, 
 NULL AS recipeId,
 CASE 
@@ -250,7 +250,8 @@ p.packageWeight as totalWeight,
 p.servingWeight as servingWeight
 """
 
-private const val RECIPE_FOOD_SEARCH_SQL_SELECT = """
+private const val RECIPE_FOOD_SEARCH_SQL_SELECT =
+    """
 NULL AS productId,
 r.id AS recipeId,
 r.name AS headline,
@@ -302,7 +303,8 @@ NULL AS totalWeight,
 NULL AS servingWeight
 """
 
-private const val FOOD_SEARCH_SQL_SELECT = """
+private const val FOOD_SEARCH_SQL_SELECT =
+    """
 productId,
 recipeId,
 headline,

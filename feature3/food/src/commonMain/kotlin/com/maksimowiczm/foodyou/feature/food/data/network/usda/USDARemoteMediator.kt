@@ -27,7 +27,7 @@ internal class USDARemoteMediator<T : Any>(
     private val usdaMapper: USDAProductMapper,
     private val remoteMapper: RemoteProductMapper,
     private val createProductUseCase: CreateProductUseCase,
-    private val productMapper: ProductMapper
+    private val productMapper: ProductMapper,
 ) : RemoteMediator<Int, T>() {
 
     private val usdaDao = foodDatabase.usdaPagingKeyDao
@@ -36,24 +36,27 @@ internal class USDARemoteMediator<T : Any>(
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, T>): MediatorResult {
         return try {
-            val page = when (loadType) {
-                LoadType.REFRESH -> return MediatorResult.Success(endOfPaginationReached = false)
-                LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
-                LoadType.APPEND -> {
-                    val pagingKey = usdaDao.getPagingKey(query)
-                    if (pagingKey != null && pagingKey.totalCount <= pagingKey.fetchedCount) {
-                        return MediatorResult.Success(endOfPaginationReached = true)
+            val page =
+                when (loadType) {
+                    LoadType.REFRESH ->
+                        return MediatorResult.Success(endOfPaginationReached = false)
+                    LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
+                    LoadType.APPEND -> {
+                        val pagingKey = usdaDao.getPagingKey(query)
+                        if (pagingKey != null && pagingKey.totalCount <= pagingKey.fetchedCount) {
+                            return MediatorResult.Success(endOfPaginationReached = true)
+                        }
+                        (pagingKey?.fetchedCount?.div(PAGE_SIZE) ?: 0) + 1
                     }
-                    (pagingKey?.fetchedCount?.div(PAGE_SIZE) ?: 0) + 1
                 }
-            }
 
-            val response = remoteDataSource.queryProducts(
-                query = query,
-                page = page,
-                pageSize = PAGE_SIZE,
-                apiKey = apiKey
-            )
+            val response =
+                remoteDataSource.queryProducts(
+                    query = query,
+                    page = page,
+                    pageSize = PAGE_SIZE,
+                    apiKey = apiKey,
+                )
 
             val fetchedCount = ((response.currentPage - 1) * PAGE_SIZE) + response.foods.size
 
@@ -61,19 +64,20 @@ internal class USDARemoteMediator<T : Any>(
                 USDAPagingKey(
                     queryString = query,
                     fetchedCount = fetchedCount,
-                    totalCount = response.totalHits
+                    totalCount = response.totalHits,
                 )
             )
 
-            val products = response.foods.map { remoteProduct ->
-                remoteProduct.toEntity().also {
-                    if (it == null) {
-                        Logger.w(TAG) {
-                            "Failed to convert product: (name=${remoteProduct.description}, code=${remoteProduct.barcode})"
+            val products =
+                response.foods.map { remoteProduct ->
+                    remoteProduct.toEntity().also {
+                        if (it == null) {
+                            Logger.w(TAG) {
+                                "Failed to convert product: (name=${remoteProduct.description}, code=${remoteProduct.barcode})"
+                            }
                         }
                     }
                 }
-            }
 
             val now = LocalDateTime.now()
             products.filterNotNull().forEach { product ->
@@ -85,12 +89,9 @@ internal class USDARemoteMediator<T : Any>(
                     packageWeight = product.packageWeight,
                     servingWeight = product.servingWeight,
                     note = product.note,
-                    source = FoodSource(
-                        type = product.sourceType,
-                        url = product.sourceUrl
-                    ),
+                    source = FoodSource(type = product.sourceType, url = product.sourceUrl),
                     isLiquid = product.isLiquid,
-                    event = FoodEvent.Downloaded(now, product.sourceUrl)
+                    event = FoodEvent.Downloaded(now, product.sourceUrl),
                 )
             }
 
@@ -109,11 +110,13 @@ internal class USDARemoteMediator<T : Any>(
         }
     }
 
-    private fun Food.toEntity(): Product? = runCatching {
-        val remoteProduct = usdaMapper.toRemoteProduct(this)
-        val entity = remoteMapper.toEntity(remoteProduct)
-        return entity
-    }.getOrNull()
+    private fun Food.toEntity(): Product? =
+        runCatching {
+                val remoteProduct = usdaMapper.toRemoteProduct(this)
+                val entity = remoteMapper.toEntity(remoteProduct)
+                return entity
+            }
+            .getOrNull()
 
     private companion object {
         private const val TAG = "USDARemoteMediator"

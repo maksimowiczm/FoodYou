@@ -30,11 +30,12 @@ internal enum class RecipeFormFieldError {
     NotPositive;
 
     @Composable
-    fun stringResource(): String = when (this) {
-        Required -> stringResource(Res.string.neutral_required)
-        NotAInteger -> stringResource(Res.string.error_value_must_be_integer)
-        NotPositive -> stringResource(Res.string.error_value_must_be_positive)
-    }
+    fun stringResource(): String =
+        when (this) {
+            Required -> stringResource(Res.string.neutral_required)
+            NotAInteger -> stringResource(Res.string.error_value_must_be_integer)
+            NotPositive -> stringResource(Res.string.error_value_must_be_positive)
+        }
 }
 
 @Composable
@@ -43,74 +44,67 @@ internal fun rememberRecipeFormState(
     initialServings: Int,
     initialNote: String?,
     initialIsLiquid: Boolean,
-    initialIngredients: List<MinimalIngredient>
+    initialIngredients: List<MinimalIngredient>,
 ): RecipeFormState {
-    val name = rememberFormField(
-        initialValue = initialName,
-        parser = stringParser(),
-        validator = nonBlankStringValidator(
-            onEmpty = { RecipeFormFieldError.Required }
-        ),
-        textFieldState = rememberTextFieldState(initialName)
-    )
+    val name =
+        rememberFormField(
+            initialValue = initialName,
+            parser = stringParser(),
+            validator = nonBlankStringValidator(onEmpty = { RecipeFormFieldError.Required }),
+            textFieldState = rememberTextFieldState(initialName),
+        )
 
-    val servings = rememberFormField(
-        initialValue = initialServings,
-        parser = intParser(
-            onNotANumber = { RecipeFormFieldError.NotAInteger },
-            onBlank = { RecipeFormFieldError.Required }
-        ),
-        validator = positiveIntValidator(
-            onNotPositive = { RecipeFormFieldError.NotPositive }
-        ),
-        textFieldState = rememberTextFieldState(initialServings.toString())
-    )
+    val servings =
+        rememberFormField(
+            initialValue = initialServings,
+            parser =
+                intParser(
+                    onNotANumber = { RecipeFormFieldError.NotAInteger },
+                    onBlank = { RecipeFormFieldError.Required },
+                ),
+            validator = positiveIntValidator(onNotPositive = { RecipeFormFieldError.NotPositive }),
+            textFieldState = rememberTextFieldState(initialServings.toString()),
+        )
 
-    val note = rememberFormField<String?, RecipeFormFieldError>(
-        initialValue = initialNote,
-        parser = nullableStringParser(),
-        textFieldState = rememberTextFieldState(initialNote ?: "")
-    )
+    val note =
+        rememberFormField<String?, RecipeFormFieldError>(
+            initialValue = initialNote,
+            parser = nullableStringParser(),
+            textFieldState = rememberTextFieldState(initialNote ?: ""),
+        )
 
-    val ingredientsState = rememberSaveable(
-        stateSaver = MinimalIngredient.ListSaver
-    ) {
-        mutableStateOf(initialIngredients)
-    }
+    val ingredientsState =
+        rememberSaveable(stateSaver = MinimalIngredient.ListSaver) {
+            mutableStateOf(initialIngredients)
+        }
 
     val isLiquidState = rememberSaveable { mutableStateOf(initialIsLiquid) }
 
-    val isModified = remember(
-        initialName,
-        initialServings,
-        initialNote,
-        initialIsLiquid,
-        ingredientsState.value
-    ) {
-        derivedStateOf {
-            initialName != name.value ||
-                initialServings != servings.value ||
-                initialIngredients != ingredientsState.value ||
-                initialNote != note.value ||
-                initialIsLiquid != isLiquidState.value
+    val isModified =
+        remember(
+            initialName,
+            initialServings,
+            initialNote,
+            initialIsLiquid,
+            ingredientsState.value,
+        ) {
+            derivedStateOf {
+                initialName != name.value ||
+                    initialServings != servings.value ||
+                    initialIngredients != ingredientsState.value ||
+                    initialNote != note.value ||
+                    initialIsLiquid != isLiquidState.value
+            }
         }
-    }
 
-    return remember(
-        name,
-        servings,
-        note,
-        isLiquidState,
-        ingredientsState,
-        isModified
-    ) {
+    return remember(name, servings, note, isLiquidState, ingredientsState, isModified) {
         RecipeFormState(
             name = name,
             servings = servings,
             note = note,
             isLiquidState = isLiquidState,
             ingredientsState = ingredientsState,
-            isModifiedState = isModified
+            isModifiedState = isModified,
         )
     }
 }
@@ -122,7 +116,7 @@ internal class RecipeFormState(
     val note: FormField<String?, RecipeFormFieldError>,
     isLiquidState: MutableState<Boolean>,
     ingredientsState: MutableState<List<MinimalIngredient>>,
-    isModifiedState: State<Boolean>
+    isModifiedState: State<Boolean>,
 ) {
     val isValid by derivedStateOf {
         name.error == null && servings.error == null && ingredients.isNotEmpty()
@@ -143,9 +137,7 @@ internal class RecipeFormState(
 
     fun updateIngredient(index: Int, newIngredient: MinimalIngredient) {
         if (index in ingredients.indices) {
-            ingredients = ingredients.toMutableList().apply {
-                this[index] = newIngredient
-            }
+            ingredients = ingredients.toMutableList().apply { this[index] = newIngredient }
         }
     }
 

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.flow
 
 interface ImportSwissDatabaseUseCase {
     suspend fun import(languages: Set<Language>)
+
     suspend fun importWithFeedback(languages: Set<Language>): Flow<Int>
 }
 
@@ -21,10 +22,11 @@ internal class ImportSwissDatabaseUseCaseImpl(
                 importCsvProductsUseCase.import(
                     fieldOrder = fieldOrder,
                     csvLines = content.asFlow(),
-                    source = FoodSource(
-                        type = FoodSource.Type.SwissFoodCompositionDatabase,
-                        url = sourceUrl
-                    )
+                    source =
+                        FoodSource(
+                            type = FoodSource.Type.SwissFoodCompositionDatabase,
+                            url = sourceUrl,
+                        ),
                 )
             }
         }
@@ -34,19 +36,22 @@ internal class ImportSwissDatabaseUseCaseImpl(
         var totalImported = 0
 
         for (language in languages) {
-            language.import { fieldOrder, content ->
-                importCsvProductsUseCase.importWithFeedback(
-                    fieldOrder = fieldOrder,
-                    csvLines = content.asFlow(),
-                    source = FoodSource(
-                        type = FoodSource.Type.SwissFoodCompositionDatabase,
-                        url = sourceUrl
+            language
+                .import { fieldOrder, content ->
+                    importCsvProductsUseCase.importWithFeedback(
+                        fieldOrder = fieldOrder,
+                        csvLines = content.asFlow(),
+                        source =
+                            FoodSource(
+                                type = FoodSource.Type.SwissFoodCompositionDatabase,
+                                url = sourceUrl,
+                            ),
                     )
-                )
-            }.collect {
-                totalImported += it
-                emit(totalImported)
-            }
+                }
+                .collect {
+                    totalImported += it
+                    emit(totalImported)
+                }
         }
     }
 
@@ -61,18 +66,18 @@ internal class ImportSwissDatabaseUseCaseImpl(
         val header = lines.first()
         val content = lines.drop(1)
 
-        val fieldOrder = header.split(",")
-            .map { it.trim() }
-            .map { fieldName ->
-                val field = ProductField.entries.firstOrNull {
-                    it.name.equals(
-                        fieldName,
-                        ignoreCase = true
-                    )
-                }
+        val fieldOrder =
+            header
+                .split(",")
+                .map { it.trim() }
+                .map { fieldName ->
+                    val field =
+                        ProductField.entries.firstOrNull {
+                            it.name.equals(fieldName, ignoreCase = true)
+                        }
 
-                field ?: error("Unknown field: $fieldName")
-            }
+                    field ?: error("Unknown field: $fieldName")
+                }
 
         return callback(fieldOrder, content)
     }

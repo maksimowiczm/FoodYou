@@ -40,7 +40,7 @@ fun HomeScreen(
     mealCardOnAdd: (epochDay: Long, mealId: Long) -> Unit,
     mealCardOnEditMeasurement: (measurementId: Long) -> Unit,
     mealCardOnLongClick: (mealId: Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val homeState = rememberHomeState()
@@ -54,50 +54,47 @@ fun HomeScreen(
                 title = {
                     Text(
                         text = stringResource(Res.string.app_name),
-                        modifier = Modifier.clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = onAbout
-                        )
+                        modifier =
+                            Modifier.clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = onAbout,
+                            ),
                     )
                 },
                 actions = {
-                    IconButton(
-                        onClick = onSettings
-                    ) {
+                    IconButton(onClick = onSettings) {
                         Icon(
                             imageVector = Icons.Filled.Settings,
-                            contentDescription = stringResource(Res.string.action_go_to_settings)
+                            contentDescription = stringResource(Res.string.action_go_to_settings),
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues,
         ) {
             item {
                 order.forEach {
                     when (it) {
-                        HomeCard.Calendar -> CalendarCard(
-                            homeState = homeState,
-                            modifier = Modifier.padding(
-                                horizontal = 8.dp
+                        HomeCard.Calendar ->
+                            CalendarCard(
+                                homeState = homeState,
+                                modifier = Modifier.padding(horizontal = 8.dp),
                             )
-                        )
 
-                        HomeCard.Meals -> MealsCards(
-                            homeState = homeState,
-                            onAdd = mealCardOnAdd,
-                            onEditMeasurement = mealCardOnEditMeasurement,
-                            onLongClick = mealCardOnLongClick,
-                            contentPadding = PaddingValues(8.dp)
-                        )
+                        HomeCard.Meals ->
+                            MealsCards(
+                                homeState = homeState,
+                                onAdd = mealCardOnAdd,
+                                onEditMeasurement = mealCardOnEditMeasurement,
+                                onLongClick = mealCardOnLongClick,
+                                contentPadding = PaddingValues(8.dp),
+                            )
                     }
                 }
             }

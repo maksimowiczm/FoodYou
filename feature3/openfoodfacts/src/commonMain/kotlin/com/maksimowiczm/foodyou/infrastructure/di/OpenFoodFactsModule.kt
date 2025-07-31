@@ -15,21 +15,10 @@ val openFoodFactsModule = module {
     single(qualifier("OpenFoodFactsClient")) {
         HttpClient {
             install(HttpTimeout)
-            install(ContentNegotiation) {
-                json(
-                    Json {
-                        ignoreUnknownKeys = true
-                    }
-                )
-            }
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         }
     }
 
-    factory {
-        OpenFoodFactsRemoteDataSourceImpl(
-            client = get(
-                qualifier("OpenFoodFactsClient")
-            )
-        )
-    }.bind<OpenFoodFactsRemoteDataSource>()
+    factory { OpenFoodFactsRemoteDataSourceImpl(client = get(qualifier("OpenFoodFactsClient"))) }
+        .bind<OpenFoodFactsRemoteDataSource>()
 }

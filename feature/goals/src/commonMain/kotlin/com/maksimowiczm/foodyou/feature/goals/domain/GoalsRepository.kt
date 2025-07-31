@@ -20,51 +20,45 @@ import kotlinx.datetime.LocalDate
 internal class GoalsRepository(
     private val dataStore: DataStore<Preferences>,
     private val mealRepository: MealRepository,
-    private val measurementRepository: MeasurementRepository
+    private val measurementRepository: MeasurementRepository,
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun observeDiaryDay(date: LocalDate): Flow<DiaryDay> {
-        val foods = mealRepository.observeMeals().flatMapLatest { meals ->
-            meals.map { meal ->
-                measurementRepository.observeMeasurements(
-                    mealId = meal.id,
-                    date = date
-                ).map { measurements ->
-                    meal to measurements
-                }
-            }.combine { it.toList() }.map { it.toMap() }
-        }
+        val foods =
+            mealRepository.observeMeals().flatMapLatest { meals ->
+                meals
+                    .map { meal ->
+                        measurementRepository
+                            .observeMeasurements(mealId = meal.id, date = date)
+                            .map { measurements -> meal to measurements }
+                    }
+                    .combine { it.toList() }
+                    .map { it.toMap() }
+            }
 
-        return combine(
-            observeDailyGoals(),
-            foods
-        ) { dailyGoals, foods ->
-            DiaryDay(
-                date = date,
-                foods = foods,
-                dailyGoals = dailyGoals
-            )
+        return combine(observeDailyGoals(), foods) { dailyGoals, foods ->
+            DiaryDay(date = date, foods = foods, dailyGoals = dailyGoals)
         }
     }
 
     fun observeDailyGoals(): Flow<DailyGoals> {
-        val nutrientGoal = combine(
-            dataStore.observe(GoalsPreferences.proteinsGoal),
-            dataStore.observe(GoalsPreferences.carbohydratesGoal),
-            dataStore.observe(GoalsPreferences.fatsGoal)
-        ) { arr ->
-            if (arr.any { it == null }) {
-                return@combine null
+        val nutrientGoal =
+            combine(
+                dataStore.observe(GoalsPreferences.proteinsGoal),
+                dataStore.observe(GoalsPreferences.carbohydratesGoal),
+                dataStore.observe(GoalsPreferences.fatsGoal),
+            ) { arr ->
+                if (arr.any { it == null }) {
+                    return@combine null
+                }
+
+                arr.map { it!! }
             }
 
-            arr.map { it!! }
-        }
-
-        return combine(
-            dataStore.observe(GoalsPreferences.caloriesGoal),
-            nutrientGoal
-        ) { calories, nutrients ->
+        return combine(dataStore.observe(GoalsPreferences.caloriesGoal), nutrientGoal) {
+            calories,
+            nutrients ->
             if (nutrients == null || calories == null) {
                 return@combine defaultGoals()
             }
@@ -75,7 +69,7 @@ internal class GoalsRepository(
                 calories = calories,
                 proteins = proteins,
                 carbohydrates = carbohydrates,
-                fats = fats
+                fats = fats,
             )
         }
     }
@@ -85,7 +79,7 @@ internal class GoalsRepository(
             GoalsPreferences.caloriesGoal to goals.calories,
             GoalsPreferences.proteinsGoal to goals.proteins,
             GoalsPreferences.carbohydratesGoal to goals.carbohydrates,
-            GoalsPreferences.fatsGoal to goals.fats
+            GoalsPreferences.fatsGoal to goals.fats,
         )
     }
 }

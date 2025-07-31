@@ -8,9 +8,10 @@ import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 internal class SponsorsAllowed(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<Boolean, Boolean>(
         dataStore = dataStore,
-        key = booleanPreferencesKey("about:sponsors_allowed")
+        key = booleanPreferencesKey("about:sponsors_allowed"),
     ) {
 
     override fun Boolean?.toValue(): Boolean = this ?: false
+
     override fun Boolean.toStore(): Boolean? = this
 }

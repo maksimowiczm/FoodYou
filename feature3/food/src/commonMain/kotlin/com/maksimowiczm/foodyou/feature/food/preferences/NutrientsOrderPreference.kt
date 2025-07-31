@@ -28,21 +28,14 @@ enum class NutrientsOrder {
 class NutrientsOrderPreference(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<String, List<NutrientsOrder>>(
         dataStore = dataStore,
-        key = stringPreferencesKey("food:nutrients_order")
+        key = stringPreferencesKey("food:nutrients_order"),
     ) {
-    override fun String?.toValue(): List<NutrientsOrder> = runCatching {
-        this
-            ?.split(",")
-            ?.map {
-                NutrientsOrder.entries[it.toInt()]
-            }
-    }.getOrNull() ?: NutrientsOrder.defaultOrder
+    override fun String?.toValue(): List<NutrientsOrder> =
+        runCatching { this?.split(",")?.map { NutrientsOrder.entries[it.toInt()] } }.getOrNull()
+            ?: NutrientsOrder.defaultOrder
 
-    override fun List<NutrientsOrder>.toStore(): String? = runCatching {
-        joinToString(",") { it.ordinal.toString() }
-    }.getOrElse {
-        null
-    }
+    override fun List<NutrientsOrder>.toStore(): String? =
+        runCatching { joinToString(",") { it.ordinal.toString() } }.getOrElse { null }
 
     suspend fun reset() = set(NutrientsOrder.defaultOrder)
 }

@@ -21,24 +21,18 @@ private object FloatSerializer : JsonTransformingSerializer<Float>(serializer())
 
 @Serializable
 internal data class OpenFoodFactsProductV2(
-    @SerialName("product_name")
-    override val name: String? = null,
-    @SerialName("brands")
-    override val brand: String? = null,
-    @SerialName("code")
-    override val barcode: String? = null,
+    @SerialName("product_name") override val name: String? = null,
+    @SerialName("brands") override val brand: String? = null,
+    @SerialName("code") override val barcode: String? = null,
     @Serializable(with = FloatSerializer::class)
     @SerialName("product_quantity")
     override val packageWeight: Float? = null,
-    @SerialName("product_quantity_unit")
-    override val packageQuantityUnit: String? = null,
+    @SerialName("product_quantity_unit") override val packageQuantityUnit: String? = null,
     @Serializable(with = FloatSerializer::class)
     @SerialName("serving_quantity")
     override val servingWeight: Float? = null,
-    @SerialName("serving_quantity_unit")
-    override val servingQuantityUnit: String? = null,
-    @SerialName("nutriments")
-    override val nutritionFacts: OpenFoodFactsNutrients? = null
+    @SerialName("serving_quantity_unit") override val servingQuantityUnit: String? = null,
+    @SerialName("nutriments") override val nutritionFacts: OpenFoodFactsNutrients? = null,
 ) : OpenFoodFactsProduct {
     override val url: String? = barcode?.let { "https://world.openfoodfacts.org/product/$it" }
 }

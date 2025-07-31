@@ -22,25 +22,16 @@ buildConfig {
 }
 
 kotlin {
-
-    sourceSets.all {
-        languageSettings.enableLanguageFeature("ContextParameters")
-    }
+    sourceSets.all { languageSettings.enableLanguageFeature("ContextParameters") }
 
     androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
+        compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
 
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
+    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
@@ -48,7 +39,6 @@ kotlin {
     }
 
     sourceSets {
-
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
@@ -94,9 +84,7 @@ kotlin {
     }
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
+room { schemaDirectory("$projectDir/schemas") }
 
 android {
     namespace = "com.maksimowiczm.foodyou"
@@ -114,17 +102,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+    packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
         create("devRelease") {
@@ -158,12 +142,11 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     listOf(
-        "kspCommonMainMetadata",
-        "kspAndroid",
-        "kspIosX64",
-        "kspIosArm64",
-        "kspIosSimulatorArm64"
-    ).forEach {
-        add(it, libs.androidx.room.compiler)
-    }
+            "kspCommonMainMetadata",
+            "kspAndroid",
+            "kspIosX64",
+            "kspIosArm64",
+            "kspIosSimulatorArm64",
+        )
+        .forEach { add(it, libs.androidx.room.compiler) }
 }

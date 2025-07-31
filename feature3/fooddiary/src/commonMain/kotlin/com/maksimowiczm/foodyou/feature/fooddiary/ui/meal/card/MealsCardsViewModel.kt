@@ -17,26 +17,25 @@ import kotlinx.datetime.LocalDate
 
 internal class MealsCardsViewModel(
     foodDiaryDatabase: FoodDiaryDatabase,
-    private val observeMealsUseCase: ObserveMealsUseCase
+    private val observeMealsUseCase: ObserveMealsUseCase,
 ) : ViewModel() {
     private val measurementDao = foodDiaryDatabase.measurementDao
 
     private val dateState = MutableStateFlow<LocalDate?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val meals = dateState
-        .filterNotNull()
-        .flatMapLatest { observeMealsUseCase(it) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(60_000),
-            initialValue = null
-        )
+    val meals =
+        dateState
+            .filterNotNull()
+            .flatMapLatest { observeMealsUseCase(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(60_000),
+                initialValue = null,
+            )
 
     fun setDate(date: LocalDate) {
-        viewModelScope.launch {
-            dateState.value = date
-        }
+        viewModelScope.launch { dateState.value = date }
     }
 
     fun onDeleteMeasurement(measurementId: Long) {

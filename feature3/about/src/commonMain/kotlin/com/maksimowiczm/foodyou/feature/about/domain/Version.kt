@@ -20,7 +20,7 @@ data class Version(
     val bugFixes: List<String> = emptyList(),
     val translations: List<String> = emptyList(),
     val notes: String? = null,
-    val isPreview: Boolean = false
+    val isPreview: Boolean = false,
 ) {
     val isCurrentVersion: Boolean
         get() = BuildConfig.VERSION_NAME == version
@@ -60,16 +60,17 @@ data class Version(
             changes: List<String>,
             bugFixes: List<String>,
             translations: List<String>,
-            notes: String?
-        ) = Version(
-            version = "next",
-            date = LocalDate.Companion.now(),
-            newFeatures = newFeatures,
-            changes = changes,
-            bugFixes = bugFixes,
-            translations = translations,
-            notes = notes,
-            isPreview = true
-        )
+            notes: String?,
+        ) =
+            Version(
+                version = "next",
+                date = LocalDate.Companion.now(),
+                newFeatures = newFeatures,
+                changes = changes,
+                bugFixes = bugFixes,
+                translations = translations,
+                notes = notes,
+                isPreview = true,
+            )
     }
 }

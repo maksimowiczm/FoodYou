@@ -17,27 +17,18 @@ import kotlinx.datetime.LocalDate
 @OptIn(ExperimentalTime::class)
 @Composable
 fun rememberHomeState(initialSelectedDate: LocalDate = LocalDate.now()): HomeState {
-    val shimmer = rememberShimmer(
-        shimmerBounds = ShimmerBounds.Window
-    )
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.Window)
 
     return rememberSaveable(
-        saver = Saver(
-            save = {
-                it.selectedDate.toEpochDays()
-            },
-            restore = {
-                HomeState(
-                    initialSelectedDate = LocalDate.fromEpochDays(it),
-                    shimmer = shimmer
-                )
-            }
-        )
+        saver =
+            Saver(
+                save = { it.selectedDate.toEpochDays() },
+                restore = {
+                    HomeState(initialSelectedDate = LocalDate.fromEpochDays(it), shimmer = shimmer)
+                },
+            )
     ) {
-        HomeState(
-            initialSelectedDate = initialSelectedDate,
-            shimmer = shimmer
-        )
+        HomeState(initialSelectedDate = initialSelectedDate, shimmer = shimmer)
     }
 }
 

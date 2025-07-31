@@ -5,10 +5,5 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 actual val languageModule = module {
-    viewModel {
-        LanguageViewModel(
-            androidSystemDetails = get(),
-            dataStore = get()
-        )
-    }
+    viewModel { LanguageViewModel(androidSystemDetails = get(), dataStore = get()) }
 }

@@ -12,14 +12,12 @@ fun UpdateProductScreen(
     onBack: () -> Unit,
     onUpdate: () -> Unit,
     productId: FoodId.Product,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     UpdateProductScreen(
         onBack = onBack,
         onUpdate = onUpdate,
-        viewModel = koinViewModel(
-            parameters = { parametersOf(productId) }
-        ),
-        modifier = modifier
+        viewModel = koinViewModel(parameters = { parametersOf(productId) }),
+        modifier = modifier,
     )
 }

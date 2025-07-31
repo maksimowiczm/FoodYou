@@ -13,25 +13,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-@Immutable
-data class MultiColorProgressIndicatorItem(val progress: Float, val color: Color)
+@Immutable data class MultiColorProgressIndicatorItem(val progress: Float, val color: Color)
 
 @Composable
 fun MultiColorProgressIndicator(
     items: List<MultiColorProgressIndicatorItem>,
     modifier: Modifier = Modifier,
     trackColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-    gapSize: Dp = 2.dp
+    gapSize: Dp = 2.dp,
 ) {
-    val gaps = items.map {
-        animateDpAsState(targetValue = if (it.progress > 0.01) gapSize else 0.dp).value
-    }
+    val gaps =
+        items.map {
+            animateDpAsState(targetValue = if (it.progress > 0.01) gapSize else 0.dp).value
+        }
 
     Canvas(
-        modifier = modifier.size(
-            width = MultiColorProgressIndicatorDefaults.width,
-            height = MultiColorProgressIndicatorDefaults.height
-        )
+        modifier =
+            modifier.size(
+                width = MultiColorProgressIndicatorDefaults.width,
+                height = MultiColorProgressIndicatorDefaults.height,
+            )
     ) {
         var start = 0f
 
@@ -39,7 +40,7 @@ fun MultiColorProgressIndicator(
             drawRect(
                 color = item.color,
                 topLeft = Offset(x = start, y = 0f),
-                size = Size(width = size.width * item.progress, height = size.height)
+                size = Size(width = size.width * item.progress, height = size.height),
             )
 
             start += size.width * item.progress
@@ -52,7 +53,7 @@ fun MultiColorProgressIndicator(
         drawRect(
             color = trackColor,
             topLeft = Offset(x = start, y = 0f),
-            size = Size(width = size.width - start, height = size.height)
+            size = Size(width = size.width - start, height = size.height),
         )
     }
 }

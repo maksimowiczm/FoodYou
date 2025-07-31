@@ -17,17 +17,19 @@ internal enum class MealsCardsLayout {
 internal class MealsCardsLayoutPreference(dataStore: DataStore<Preferences>) :
     DataStoreUserPreference<Int, MealsCardsLayout>(
         dataStore = dataStore,
-        key = intPreferencesKey("fooddiary:meals_cards_layout")
+        key = intPreferencesKey("fooddiary:meals_cards_layout"),
     ) {
-    override fun Int?.toValue() = when (this) {
-        null -> MealsCardsLayout.Default
-        0 -> MealsCardsLayout.Horizontal
-        1 -> MealsCardsLayout.Vertical
-        else -> error("Unknown layout value: $this")
-    }
+    override fun Int?.toValue() =
+        when (this) {
+            null -> MealsCardsLayout.Default
+            0 -> MealsCardsLayout.Horizontal
+            1 -> MealsCardsLayout.Vertical
+            else -> error("Unknown layout value: $this")
+        }
 
-    override fun MealsCardsLayout.toStore() = when (this) {
-        MealsCardsLayout.Horizontal -> 0
-        MealsCardsLayout.Vertical -> 1
-    }
+    override fun MealsCardsLayout.toStore() =
+        when (this) {
+            MealsCardsLayout.Horizontal -> 0
+            MealsCardsLayout.Vertical -> 1
+        }
 }

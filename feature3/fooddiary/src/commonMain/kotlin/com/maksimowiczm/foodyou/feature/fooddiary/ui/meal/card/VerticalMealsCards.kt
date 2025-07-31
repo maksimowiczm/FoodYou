@@ -23,19 +23,17 @@ internal fun VerticalMealsCards(
     onLongClick: (mealId: Long) -> Unit,
     shimmer: Shimmer,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val orderPreference = userPreference<NutrientsOrderPreference>()
     val order = orderPreference.collectAsStateWithLifecycle(orderPreference.getBlocking()).value
 
     Column(
         modifier = modifier.padding(contentPadding),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         if (meals == null) {
-            repeat(4) {
-                MealCardSkeleton(shimmer)
-            }
+            repeat(4) { MealCardSkeleton(shimmer) }
         } else {
             meals.forEach { meal ->
                 MealCard(
@@ -44,7 +42,7 @@ internal fun VerticalMealsCards(
                     onAddFood = { onAdd(meal.id) },
                     onEditMeasurement = onEditMeasurement,
                     onDeleteEntry = onDeleteEntry,
-                    onLongClick = { onLongClick(meal.id) }
+                    onLongClick = { onLongClick(meal.id) },
                 )
             }
         }

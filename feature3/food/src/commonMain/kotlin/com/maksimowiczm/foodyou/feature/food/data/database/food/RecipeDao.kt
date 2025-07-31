@@ -25,8 +25,7 @@ abstract class RecipeDao {
     )
     abstract fun observeWithIngredients(recipeId: Long): Flow<RecipeWithIngredients?>
 
-    @Insert
-    protected abstract suspend fun insertRecipe(recipe: Recipe): Long
+    @Insert protected abstract suspend fun insertRecipe(recipe: Recipe): Long
 
     @Insert
     protected abstract suspend fun insertRecipeIngredient(ingredient: RecipeIngredient): Long
@@ -34,7 +33,7 @@ abstract class RecipeDao {
     @Transaction
     open suspend fun insertRecipeWithIngredients(
         recipe: Recipe,
-        ingredients: List<RecipeIngredient>
+        ingredients: List<RecipeIngredient>,
     ): Long {
         val recipeId = insertRecipe(recipe)
 
@@ -46,8 +45,7 @@ abstract class RecipeDao {
         return recipeId
     }
 
-    @Update
-    protected abstract suspend fun updateRecipeEntity(recipeEntity: Recipe)
+    @Update protected abstract suspend fun updateRecipeEntity(recipeEntity: Recipe)
 
     @Query("DELETE FROM RecipeIngredient WHERE recipeId = :recipeId")
     protected abstract suspend fun deleteRecipeIngredientsByRecipeId(recipeId: Long)
@@ -56,7 +54,7 @@ abstract class RecipeDao {
     @Transaction
     open suspend fun updateRecipeWithIngredients(
         recipe: Recipe,
-        ingredients: List<RecipeIngredient>
+        ingredients: List<RecipeIngredient>,
     ) {
         updateRecipeEntity(recipe)
         deleteRecipeIngredientsByRecipeId(recipe.id)
@@ -67,6 +65,5 @@ abstract class RecipeDao {
         }
     }
 
-    @Delete
-    abstract suspend fun delete(recipe: Recipe)
+    @Delete abstract suspend fun delete(recipe: Recipe)
 }

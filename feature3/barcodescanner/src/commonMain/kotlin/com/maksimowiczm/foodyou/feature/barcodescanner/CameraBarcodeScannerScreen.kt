@@ -7,5 +7,5 @@ import androidx.compose.ui.Modifier
 expect fun CameraBarcodeScannerScreen(
     onBarcodeScan: (String) -> Unit,
     onClose: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 )

@@ -14,15 +14,12 @@ buildConfig {
     buildConfigField(
         "String",
         "USER_AGENT",
-        "\"FoodYou/$versionName (https://github.com/maksimowiczm/FoodYou)\""
+        "\"FoodYou/$versionName (https://github.com/maksimowiczm/FoodYou)\"",
     )
 
-    buildConfigField(
-        "String",
-        "USDA_URL",
-        "\"https://api.nal.usda.gov\""
-    )
+    buildConfigField("String", "USDA_URL", "\"https://api.nal.usda.gov\"")
 }
+
 kotlin {
 
     // Target declarations - add or remove as needed below. These define
@@ -33,14 +30,10 @@ kotlin {
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
-        withHostTestBuilder {
-        }
+        withHostTestBuilder {}
 
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
+        withDeviceTestBuilder { sourceSetTreeName = "test" }
+            .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
     }
 
     // For iOS targets, this is also where you should
@@ -52,23 +45,11 @@ kotlin {
     // https://developer.android.com/kotlin/multiplatform/migrate
     val xcfName = "feature3:usdaKit"
 
-    iosX64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
+    iosX64 { binaries.framework { baseName = xcfName } }
 
-    iosArm64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
+    iosArm64 { binaries.framework { baseName = xcfName } }
 
-    iosSimulatorArm64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
+    iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets {
         commonMain.dependencies {
@@ -82,9 +63,7 @@ kotlin {
             implementation(libs.ktor.client.serialization.kotlinx.json)
         }
 
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
+        commonTest.dependencies { implementation(libs.kotlin.test) }
 
         androidMain.dependencies {
 

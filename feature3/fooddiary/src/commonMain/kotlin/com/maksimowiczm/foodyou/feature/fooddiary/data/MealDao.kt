@@ -15,30 +15,24 @@ abstract class MealDao {
     @Query("SELECT * FROM meal WHERE id = :mealId")
     abstract fun observeMealById(mealId: Long): Flow<Meal?>
 
-    @Query("SELECT * FROM meal ORDER BY rank ASC")
-    abstract fun observeMeals(): Flow<List<Meal>>
+    @Query("SELECT * FROM meal ORDER BY rank ASC") abstract fun observeMeals(): Flow<List<Meal>>
 
-    @Delete
-    abstract suspend fun deleteMeal(meal: Meal)
+    @Delete abstract suspend fun deleteMeal(meal: Meal)
 
-    @Update
-    abstract suspend fun updateMeal(meal: Meal)
+    @Update abstract suspend fun updateMeal(meal: Meal)
 
     @Transaction
     open suspend fun updateMealsRanks(map: Map<Long, Int>) {
         val meals = observeMeals().first()
 
         meals.map {
-            val updated = it.copy(
-                rank = map[it.id] ?: it.rank
-            )
+            val updated = it.copy(rank = map[it.id] ?: it.rank)
 
             updateMeal(updated)
         }
     }
 
-    @Insert
-    protected abstract fun insertMeal(meal: Meal)
+    @Insert protected abstract fun insertMeal(meal: Meal)
 
     @Query(
         """

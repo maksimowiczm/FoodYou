@@ -18,39 +18,46 @@ import kotlinx.coroutines.flow.stateIn
 internal class MeasureIngredientViewModel(
     foodId: FoodId,
     foodDatabase: FoodDatabase,
-    observeFoodUseCase: ObserveFoodUseCase
+    observeFoodUseCase: ObserveFoodUseCase,
 ) : ViewModel() {
     val productDao = foodDatabase.productDao
 
-    val food: StateFlow<Food?> = observeFoodUseCase.observe(foodId).stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = null
-    )
+    val food: StateFlow<Food?> =
+        observeFoodUseCase
+            .observe(foodId)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
 
-    val possibleMeasurements: StateFlow<Set<MeasurementType>?> = food
-        .filterNotNull()
-        .map { food -> food.possibleMeasurementTypes.toSet() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = null
-        )
+    val possibleMeasurements: StateFlow<Set<MeasurementType>?> =
+        food
+            .filterNotNull()
+            .map { food -> food.possibleMeasurementTypes.toSet() }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
 
-    val suggestions: StateFlow<Set<Measurement>?> = possibleMeasurements
-        .filterNotNull()
-        .map { set ->
-            set.map { type ->
-                when (type) {
-                    MeasurementType.Gram -> Measurement.Gram(100f)
-                    MeasurementType.Package -> Measurement.Package(1f)
-                    MeasurementType.Serving -> Measurement.Serving(1f)
-                    MeasurementType.Milliliter -> Measurement.Milliliter(100f)
-                }
-            }.toSet()
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = null
-        )
+    val suggestions: StateFlow<Set<Measurement>?> =
+        possibleMeasurements
+            .filterNotNull()
+            .map { set ->
+                set.map { type ->
+                        when (type) {
+                            MeasurementType.Gram -> Measurement.Gram(100f)
+                            MeasurementType.Package -> Measurement.Package(1f)
+                            MeasurementType.Serving -> Measurement.Serving(1f)
+                            MeasurementType.Milliliter -> Measurement.Milliliter(100f)
+                        }
+                    }
+                    .toSet()
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
 }

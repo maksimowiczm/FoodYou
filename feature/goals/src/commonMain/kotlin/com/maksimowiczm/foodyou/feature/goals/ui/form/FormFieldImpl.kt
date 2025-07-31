@@ -16,40 +16,32 @@ fun <T, E> rememberFormField(
     parser: Parser<T, E>,
     initialError: E? = null,
     initialDirty: Boolean = false,
-    validator: (() -> Validator<T, E>)? = null
-): FormFieldImpl<T, E> = rememberSaveable(
-    saver = Saver(
-        save = { field ->
-            arrayListOf(
-                field.value,
-                field.error,
-                field.dirty
+    validator: (() -> Validator<T, E>)? = null,
+): FormFieldImpl<T, E> =
+    rememberSaveable(
+        saver =
+            Saver(
+                save = { field -> arrayListOf(field.value, field.error, field.dirty) },
+                restore = {
+                    @Suppress("UNCHECKED_CAST")
+                    FormFieldImpl(
+                        initialFormFieldValue =
+                            FormFieldImpl.FormFieldValue(value = it[0] as T, error = it[1] as E),
+                        initialDirty = it[2] as Boolean,
+                        parser = parser,
+                        validator = validator,
+                    )
+                },
             )
-        },
-        restore = {
-            @Suppress("UNCHECKED_CAST")
-            FormFieldImpl(
-                initialFormFieldValue = FormFieldImpl.FormFieldValue(
-                    value = it[0] as T,
-                    error = it[1] as E
-                ),
-                initialDirty = it[2] as Boolean,
-                parser = parser,
-                validator = validator
-            )
-        }
-    )
-) {
-    FormFieldImpl(
-        initialFormFieldValue = FormFieldImpl.FormFieldValue(
-            value = initialValue,
-            error = initialError
-        ),
-        initialDirty = initialDirty,
-        parser = parser,
-        validator = validator
-    )
-}
+    ) {
+        FormFieldImpl(
+            initialFormFieldValue =
+                FormFieldImpl.FormFieldValue(value = initialValue, error = initialError),
+            initialDirty = initialDirty,
+            parser = parser,
+            validator = validator,
+        )
+    }
 
 @Deprecated("dont do that")
 @Stable
@@ -57,7 +49,7 @@ class FormFieldImpl<T, E>(
     initialFormFieldValue: FormFieldValue<T, E>,
     initialDirty: Boolean,
     private val parser: Parser<T, E>,
-    private val validator: (() -> Validator<T, E>)? = null
+    private val validator: (() -> Validator<T, E>)? = null,
 ) : FormField<T, E> {
     data class FormFieldValue<T, E>(val value: T, val error: E?)
 
@@ -97,67 +89,47 @@ class FormFieldImpl<T, E>(
             touch()
         }
 
-        fieldValue = when (val validated = validate(newValue)) {
-            is ValidationResult.Failure<*> -> {
-                @Suppress("UNCHECKED_CAST")
-                FormFieldValue(
-                    value = newValue,
-                    error = validated.error as E
-                )
-            }
+        fieldValue =
+            when (val validated = validate(newValue)) {
+                is ValidationResult.Failure<*> -> {
+                    @Suppress("UNCHECKED_CAST")
+                    FormFieldValue(value = newValue, error = validated.error as E)
+                }
 
-            is ValidationResult.Success -> {
-                FormFieldValue(
-                    value = newValue,
-                    error = null
-                )
+                is ValidationResult.Success -> {
+                    FormFieldValue(value = newValue, error = null)
+                }
             }
-        }
     }
 
     private fun parseAndValidate(value: String): FormFieldValue<T, E> {
-        val parsedValue = when (val result = parse(value)) {
-            is ParserResult.Failure -> {
-                return FormFieldValue(
-                    value = fieldValue.value,
-                    error = result.error
-                )
-            }
+        val parsedValue =
+            when (val result = parse(value)) {
+                is ParserResult.Failure -> {
+                    return FormFieldValue(value = fieldValue.value, error = result.error)
+                }
 
-            is ParserResult.Success -> result.value
-        }
+                is ParserResult.Success -> result.value
+            }
 
         @Suppress("UNCHECKED_CAST")
-        val validValue = when (val result = validate(parsedValue)) {
-            is ValidationResult.Failure<*> -> {
-                return FormFieldValue(
-                    value = fieldValue.value,
-                    error = result.error as E
-                )
+        val validValue =
+            when (val result = validate(parsedValue)) {
+                is ValidationResult.Failure<*> -> {
+                    return FormFieldValue(value = fieldValue.value, error = result.error as E)
+                }
+
+                is ValidationResult.Success -> parsedValue
             }
 
-            is ValidationResult.Success -> parsedValue
-        }
-
-        return FormFieldValue(
-            value = validValue,
-            error = null
-        )
+        return FormFieldValue(value = validValue, error = null)
     }
 
-    private fun parse(value: String) = with(ParserScope) {
-        with(parser) {
-            parse(value)
-        }
-    }
+    private fun parse(value: String) = with(ParserScope) { with(parser) { parse(value) } }
 
     private fun validate(value: T): ValidationResult {
         val validator = validator ?: return ValidationResult.Success
 
-        return with(ValidatorScope) {
-            with(validator()) {
-                validate(value)
-            }
-        }
+        return with(ValidatorScope) { with(validator()) { validate(value) } }
     }
 }

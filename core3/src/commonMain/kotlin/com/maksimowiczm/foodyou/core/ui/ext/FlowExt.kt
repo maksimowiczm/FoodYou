@@ -12,13 +12,11 @@ fun <T> LaunchedCollectWithLifecycle(
     flow: Flow<T>,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
-    action: suspend (T) -> Unit
+    action: suspend (T) -> Unit,
 ) {
     val latestAction by rememberUpdatedState(action)
 
     LaunchedEffect(lifecycleOwner, flow) {
-        lifecycleOwner.repeatOnLifecycle(minActiveState) {
-            flow.collect(latestAction)
-        }
+        lifecycleOwner.repeatOnLifecycle(minActiveState) { flow.collect(latestAction) }
     }
 }

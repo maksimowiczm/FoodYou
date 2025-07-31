@@ -1,10 +1,9 @@
 package com.maksimowiczm.foodyou.feature.goals.ui.form
 
-/**
- * Aliases for the [ParserResult] types.
- */
+/** Aliases for the [ParserResult] types. */
 object ParserScope {
     fun <T, E> success(value: T) = ParserResult.Success<T, E>(value)
+
     fun <T, E> failure(error: E) = ParserResult.Failure<T, E>(error)
 }
 
@@ -14,6 +13,7 @@ fun interface Parser<T, E> {
 
 sealed interface ParserResult<T, E> {
     data class Success<T, E>(val value: T) : ParserResult<T, E>
+
     data class Failure<T, E>(val error: E) : ParserResult<T, E>
 }
 

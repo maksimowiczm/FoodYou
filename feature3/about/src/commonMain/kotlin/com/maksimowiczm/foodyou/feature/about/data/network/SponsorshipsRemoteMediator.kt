@@ -14,7 +14,7 @@ import kotlinx.coroutines.CancellationException
 @OptIn(ExperimentalPagingApi::class)
 internal class SponsorshipsRemoteMediator(
     private val sponsorshipDao: SponsorshipDao,
-    private val sponsorshipApiClient: SponsorshipApiClient
+    private val sponsorshipApiClient: SponsorshipApiClient,
 ) : RemoteMediator<Int, Sponsorship>() {
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
@@ -22,7 +22,7 @@ internal class SponsorshipsRemoteMediator(
     @OptIn(ExperimentalTime::class)
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, Sponsorship>
+        state: PagingState<Int, Sponsorship>,
     ): MediatorResult {
         return try {
             when (loadType) {
@@ -33,16 +33,18 @@ internal class SponsorshipsRemoteMediator(
                     val sponsorship = sponsorshipDao.getLatestSponsorship()
 
                     // If there are no sponsorships, fetch the latest ones from the API
-                    val after = if (sponsorship == null) {
-                        null
-                    } else {
-                        Instant.fromEpochSeconds(sponsorship.sponsorshipEpochSeconds)
-                    }
+                    val after =
+                        if (sponsorship == null) {
+                            null
+                        } else {
+                            Instant.fromEpochSeconds(sponsorship.sponsorshipEpochSeconds)
+                        }
 
-                    val response = sponsorshipApiClient.getSponsorships(
-                        after = after,
-                        size = state.config.pageSize
-                    )
+                    val response =
+                        sponsorshipApiClient.getSponsorships(
+                            after = after,
+                            size = state.config.pageSize,
+                        )
 
                     if (response.isEmpty()) {
                         return MediatorResult.Success(endOfPaginationReached = true)
@@ -69,16 +71,15 @@ internal class SponsorshipsRemoteMediator(
 
                     val after = Instant.fromEpochSeconds(first.sponsorshipEpochSeconds)
 
-                    val response = sponsorshipApiClient.getSponsorships(
-                        after = after,
-                        size = state.config.pageSize
-                    )
+                    val response =
+                        sponsorshipApiClient.getSponsorships(
+                            after = after,
+                            size = state.config.pageSize,
+                        )
                     val entities = response.sponsorships.map { it.toSponsorship() }
                     sponsorshipDao.upsert(entities)
 
-                    MediatorResult.Success(
-                        endOfPaginationReached = !response.hasMoreAfter
-                    )
+                    MediatorResult.Success(endOfPaginationReached = !response.hasMoreAfter)
                 }
 
                 LoadType.APPEND -> {
@@ -86,22 +87,22 @@ internal class SponsorshipsRemoteMediator(
 
                     Logger.d(TAG) { "Append, $last" }
 
-                    val before = if (last == null) {
-                        null
-                    } else {
-                        Instant.fromEpochSeconds(last.sponsorshipEpochSeconds)
-                    }
+                    val before =
+                        if (last == null) {
+                            null
+                        } else {
+                            Instant.fromEpochSeconds(last.sponsorshipEpochSeconds)
+                        }
 
-                    val response = sponsorshipApiClient.getSponsorships(
-                        before = before,
-                        size = state.config.pageSize
-                    )
+                    val response =
+                        sponsorshipApiClient.getSponsorships(
+                            before = before,
+                            size = state.config.pageSize,
+                        )
                     val entities = response.sponsorships.map { it.toSponsorship() }
                     sponsorshipDao.upsert(entities)
 
-                    MediatorResult.Success(
-                        endOfPaginationReached = !response.hasMoreBefore
-                    )
+                    MediatorResult.Success(endOfPaginationReached = !response.hasMoreBefore)
                 }
             }
         } catch (e: CancellationException) {
@@ -118,13 +119,14 @@ internal class SponsorshipsRemoteMediator(
 }
 
 @OptIn(ExperimentalTime::class)
-private fun NetworkSponsorship.toSponsorship(): Sponsorship = Sponsorship(
-    id = id,
-    sponsorName = sponsor,
-    message = message,
-    amount = amount,
-    currency = currency,
-    inEuro = inEuro,
-    sponsorshipEpochSeconds = Instant.parse(sponsorshipDate).epochSeconds,
-    method = method
-)
+private fun NetworkSponsorship.toSponsorship(): Sponsorship =
+    Sponsorship(
+        id = id,
+        sponsorName = sponsor,
+        message = message,
+        amount = amount,
+        currency = currency,
+        inEuro = inEuro,
+        sponsorshipEpochSeconds = Instant.parse(sponsorshipDate).epochSeconds,
+        method = method,
+    )

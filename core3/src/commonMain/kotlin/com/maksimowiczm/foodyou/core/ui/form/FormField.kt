@@ -16,7 +16,7 @@ import androidx.compose.runtime.setValue
 class FormField<T, E>(
     val textFieldState: TextFieldState,
     valueState: MutableState<T>,
-    errorState: MutableState<E?>
+    errorState: MutableState<E?>,
 ) {
     val value by valueState
 
@@ -26,10 +26,12 @@ class FormField<T, E>(
 /**
  * @param initialValue The initial value of the form field.
  * @param parser A function that parses the text input into a value of type [T].
- * @param validator A function that validates the parsed value and returns an error of type [E] if invalid, or null if valid.
+ * @param validator A function that validates the parsed value and returns an error of type [E] if
+ *   invalid, or null if valid.
  * @param initialError An optional initial error value, which can be null if there is no error.
  * @param textFieldState The state of the text field, which holds the current text input.
- * @param validateFirst If true, the validator will be called immediately after parsing the text input. If false, the value will be set first and then validated.
+ * @param validateFirst If true, the validator will be called immediately after parsing the text
+ *   input. If false, the value will be set first and then validated.
  */
 @Composable
 fun <T, E> rememberFormField(
@@ -38,7 +40,7 @@ fun <T, E> rememberFormField(
     validator: Validator<T, E> = defaultValidator(),
     initialError: E? = null,
     textFieldState: TextFieldState = rememberTextFieldState(),
-    validateFirst: Boolean = false
+    validateFirst: Boolean = false,
 ): FormField<T, E> {
     val valueState = rememberSaveable { mutableStateOf(initialValue) }
     val errorState = rememberSaveable { mutableStateOf(initialError) }
@@ -70,10 +72,6 @@ fun <T, E> rememberFormField(
     }
 
     return remember(textFieldState, value, error) {
-        FormField(
-            textFieldState = textFieldState,
-            valueState = valueState,
-            errorState = errorState
-        )
+        FormField(textFieldState = textFieldState, valueState = valueState, errorState = errorState)
     }
 }

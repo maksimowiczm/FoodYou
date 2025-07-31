@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 internal class DownloadProductViewModel(
     text: String?,
-    private val requestFactory: RemoteProductRequestFactory
+    private val requestFactory: RemoteProductRequestFactory,
 ) : ViewModel() {
     private val _isMutating = MutableStateFlow(false)
     val isMutating = _isMutating.asStateFlow()
@@ -27,7 +27,7 @@ internal class DownloadProductViewModel(
     private val linkRegex by lazy {
         Regex(
             """(?:https://)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)""",
-            RegexOption.IGNORE_CASE
+            RegexOption.IGNORE_CASE,
         )
     }
 
@@ -54,13 +54,14 @@ internal class DownloadProductViewModel(
             return@withMutateGuard
         }
 
-        val product = request.execute().getOrElse {
-            when (it) {
-                else -> _error.emit(customError(it.message))
-            }
+        val product =
+            request.execute().getOrElse {
+                when (it) {
+                    else -> _error.emit(customError(it.message))
+                }
 
-            return@withMutateGuard
-        }
+                return@withMutateGuard
+            }
 
         if (product == null) {
             _error.emit(productNotFoundError())
@@ -68,12 +69,7 @@ internal class DownloadProductViewModel(
         }
 
         _productEvent.emit(
-            product.copy(
-                source = product.source.copy(
-                    type = FoodSource.Type.User,
-                    url = link
-                )
-            )
+            product.copy(source = product.source.copy(type = FoodSource.Type.User, url = link))
         )
     }
 
@@ -89,7 +85,11 @@ internal class DownloadProductViewModel(
 }
 
 private fun productNotFoundError() = DownloadError.GenericError.ProductNotFound
+
 private fun urlNotFoundError() = DownloadError.GenericError.URLNotFound
+
 private fun urlNotSupportedError() = DownloadError.GenericError.URLNotSupported
+
 private fun customError(message: String?) = DownloadError.GenericError.Custom(message)
+
 private fun usdaError(error: USDAException) = DownloadError.Usda(error)

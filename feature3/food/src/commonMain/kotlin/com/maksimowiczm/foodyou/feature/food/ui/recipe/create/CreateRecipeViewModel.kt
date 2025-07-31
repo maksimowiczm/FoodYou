@@ -15,7 +15,7 @@ import kotlinx.datetime.LocalDateTime
 
 internal class CreateRecipeViewModel(
     observeFoodUseCase: ObserveFoodUseCase,
-    private val createRecipeUseCase: CreateRecipeUseCase
+    private val createRecipeUseCase: CreateRecipeUseCase,
 ) : RecipeViewModel(observeFoodUseCase) {
 
     private val eventBus = Channel<CreateRecipeEvent>()
@@ -27,14 +27,15 @@ internal class CreateRecipeViewModel(
         }
 
         viewModelScope.launch {
-            val id = createRecipeUseCase.create(
-                name = form.name.value,
-                servings = form.servings.value,
-                note = form.note.value,
-                isLiquid = form.isLiquid,
-                ingredients = form.ingredients.map { it.intoPair() },
-                event = FoodEvent.Created(LocalDateTime.now())
-            )
+            val id =
+                createRecipeUseCase.create(
+                    name = form.name.value,
+                    servings = form.servings.value,
+                    note = form.note.value,
+                    isLiquid = form.isLiquid,
+                    ingredients = form.ingredients.map { it.intoPair() },
+                    event = FoodEvent.Created(LocalDateTime.now()),
+                )
 
             eventBus.send(CreateRecipeEvent.Created(id))
         }

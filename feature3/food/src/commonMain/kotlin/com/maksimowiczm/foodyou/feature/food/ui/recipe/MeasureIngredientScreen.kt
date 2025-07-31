@@ -48,7 +48,7 @@ internal fun MeasureIngredientScreen(
     measurement: Measurement,
     viewModel: MeasureIngredientViewModel,
     onSave: (Measurement) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val possibleMeasurements = viewModel.possibleMeasurements.collectAsStateWithLifecycle().value
     val suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value
@@ -59,11 +59,12 @@ internal fun MeasureIngredientScreen(
         return
     }
 
-    val measurementPickerState = rememberMeasurementPickerState(
-        suggestions = suggestions,
-        possibleTypes = possibleMeasurements,
-        selectedMeasurement = measurement
-    )
+    val measurementPickerState =
+        rememberMeasurementPickerState(
+            suggestions = suggestions,
+            possibleTypes = possibleMeasurements,
+            selectedMeasurement = measurement,
+        )
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -73,75 +74,57 @@ internal fun MeasureIngredientScreen(
             MediumTopAppBar(
                 title = { Text(food.headline) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {
             LargeExtendedFloatingActionButton(
-                onClick = {
-                    onSave(measurementPickerState.measurement)
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = null
-                    )
-                },
-                text = {
-                    Text(stringResource(Res.string.action_save))
-                }
+                onClick = { onSave(measurementPickerState.measurement) },
+                icon = { Icon(imageVector = Icons.Filled.Edit, contentDescription = null) },
+                text = { Text(stringResource(Res.string.action_save)) },
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .imePadding()
-                .padding(horizontal = 8.dp)
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
-                .add(vertical = 8.dp)
-                .add(bottom = 80.dp + 24.dp)
+            modifier =
+                Modifier.fillMaxSize()
+                    .imePadding()
+                    .padding(horizontal = 8.dp)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues.add(vertical = 8.dp).add(bottom = 80.dp + 24.dp),
         ) {
-            item {
-                HorizontalDivider()
-            }
+            item { HorizontalDivider() }
 
             item {
                 MeasurementPicker(
                     state = measurementPickerState,
-                    modifier = Modifier.padding(
-                        vertical = 8.dp
-                    )
+                    modifier = Modifier.padding(vertical = 8.dp),
                 )
             }
 
-            item {
-                HorizontalDivider()
-            }
+            item { HorizontalDivider() }
 
             item {
                 val measurement = measurementPickerState.measurement
-                val facts = remember(food, measurement) {
-                    val weight = measurement.weight(food)
-                        ?: error("Invalid measurement: $measurement for food: ${food.headline}")
-                    food.nutritionFacts * (weight / 100)
-                }
+                val facts =
+                    remember(food, measurement) {
+                        val weight =
+                            measurement.weight(food)
+                                ?: error(
+                                    "Invalid measurement: $measurement for food: ${food.headline}"
+                                )
+                        food.nutritionFacts * (weight / 100)
+                    }
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Box(
-                        modifier = Modifier.size(48.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
+                    Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.ViewList,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
 
@@ -154,13 +137,14 @@ internal fun MeasureIngredientScreen(
                             proteins = proteins,
                             carbohydrates = carbohydrates,
                             fats = fats,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
                         )
                     }
                 }
 
-                val weight = measurement.weight(food)
-                    ?: error("Invalid measurement: $measurement for food: ${food.headline}")
+                val weight =
+                    measurement.weight(food)
+                        ?: error("Invalid measurement: $measurement for food: ${food.headline}")
 
                 val text = buildString {
                     append(measurement.stringResource())
@@ -171,11 +155,12 @@ internal fun MeasureIngredientScreen(
 
                         is Measurement.Package,
                         is Measurement.Serving -> {
-                            val suffix = if (food.isLiquid) {
-                                stringResource(Res.string.unit_milliliter_short)
-                            } else {
-                                stringResource(Res.string.unit_gram_short)
-                            }
+                            val suffix =
+                                if (food.isLiquid) {
+                                    stringResource(Res.string.unit_milliliter_short)
+                                } else {
+                                    stringResource(Res.string.unit_gram_short)
+                                }
 
                             append(" (${weight.formatClipZeros()} $suffix)")
                         }
@@ -184,10 +169,8 @@ internal fun MeasureIngredientScreen(
 
                 Text(
                     text = text,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .padding(bottom = 8.dp),
-                    style = MaterialTheme.typography.labelLarge
+                    modifier = Modifier.padding(horizontal = 8.dp).padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.labelLarge,
                 )
 
                 NutrientList(facts)

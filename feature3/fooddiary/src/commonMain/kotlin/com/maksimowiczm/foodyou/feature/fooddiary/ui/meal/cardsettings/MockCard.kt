@@ -22,12 +22,11 @@ internal fun MockCard(modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier.size(width = 80.dp, height = 50.dp),
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surfaceContainerHighest
+        color = MaterialTheme.colorScheme.surfaceContainerHighest,
     ) {
         Column(Modifier.padding(8.dp)) {
             Spacer(
-                Modifier
-                    .clip(MaterialTheme.shapes.medium)
+                Modifier.clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.outline)
                     .width(32.dp)
                     .height(8.dp)
@@ -36,8 +35,7 @@ internal fun MockCard(modifier: Modifier = Modifier) {
             Spacer(Modifier.height(2.dp))
 
             Spacer(
-                Modifier
-                    .clip(MaterialTheme.shapes.medium)
+                Modifier.clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.outlineVariant)
                     .width(24.dp)
                     .height(4.dp)
@@ -47,8 +45,7 @@ internal fun MockCard(modifier: Modifier = Modifier) {
 
             Row(Modifier.fillMaxWidth()) {
                 Spacer(
-                    Modifier
-                        .clip(MaterialTheme.shapes.medium)
+                    Modifier.clip(MaterialTheme.shapes.medium)
                         .background(MaterialTheme.colorScheme.outlineVariant)
                         .width(40.dp)
                         .height(8.dp)
@@ -57,8 +54,7 @@ internal fun MockCard(modifier: Modifier = Modifier) {
                 Spacer(Modifier.weight(1f))
 
                 Spacer(
-                    Modifier
-                        .clip(CircleShape)
+                    Modifier.clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primary)
                         .size(8.dp)
                 )

@@ -34,7 +34,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun GoalsSettingsScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: GoalsSettingsViewModel = koinViewModel()
+    viewModel: GoalsSettingsViewModel = koinViewModel(),
 ) {
     val goals by viewModel.goals.collectAsStateWithLifecycle()
 
@@ -54,35 +54,24 @@ internal fun GoalsSettingsScreen(
         modifier = modifier.imePadding(),
         topBar = {
             TopAppBar(
-                title = {
-                    Text(stringResource(Res.string.headline_daily_goals))
-                },
+                title = { Text(stringResource(Res.string.headline_daily_goals)) },
                 navigationIcon = {
-                    IconButton(
-                        onClick = onBack
-                    ) {
+                    IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(Res.string.action_go_back)
+                            contentDescription = stringResource(Res.string.action_go_back),
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { paddingValues ->
-        LazyColumn(
-            contentPadding = paddingValues
-        ) {
+        LazyColumn(contentPadding = paddingValues) {
             item {
                 CaloriesGoal(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            horizontal = 16.dp,
-                            vertical = 8.dp
-                        ),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
                     goals = goals,
-                    onSave = remember(viewModel) { viewModel::onSave }
+                    onSave = remember(viewModel) { viewModel::onSave },
                 )
             }
         }

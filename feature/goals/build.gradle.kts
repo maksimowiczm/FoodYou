@@ -9,17 +9,13 @@ plugins {
 }
 
 kotlin {
-
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.feature.goals"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
+        withDeviceTestBuilder { sourceSetTreeName = "test" }
+            .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
     }
 
     sourceSets {
@@ -33,8 +29,7 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
 
-            @OptIn(ExperimentalComposeLibrary::class)
-            implementation(compose.uiTest)
+            @OptIn(ExperimentalComposeLibrary::class) implementation(compose.uiTest)
         }
 
         getByName("androidDeviceTest").dependencies {

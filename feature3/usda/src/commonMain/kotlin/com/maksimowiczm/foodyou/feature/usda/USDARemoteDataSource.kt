@@ -10,6 +10,6 @@ interface USDARemoteDataSource {
         query: String,
         page: Int? = null,
         pageSize: Int = 50,
-        apiKey: String?
+        apiKey: String?,
     ): UsdaFoodPageResponse
 }

@@ -21,18 +21,16 @@ interface ClipboardManager {
     fun paste(): String?
 }
 
-private val defaultClipboardManager: ClipboardManager = object : ClipboardManager {
-    override fun copy(label: String, text: String) = Unit
-    override fun paste() = null
-}
+private val defaultClipboardManager: ClipboardManager =
+    object : ClipboardManager {
+        override fun copy(label: String, text: String) = Unit
+
+        override fun paste() = null
+    }
 
 val LocalClipboardManager = staticCompositionLocalOf { defaultClipboardManager }
 
 @Composable
 fun ClipboardManagerProvider(clipboardManager: ClipboardManager, content: @Composable () -> Unit) {
-    CompositionLocalProvider(
-        LocalClipboardManager provides clipboardManager
-    ) {
-        content()
-    }
+    CompositionLocalProvider(LocalClipboardManager provides clipboardManager) { content() }
 }

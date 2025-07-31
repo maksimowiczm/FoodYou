@@ -44,7 +44,7 @@ class ShareProductActivity : FoodYouAbstractActivity() {
             ShareProductApp(
                 text = sharedText.value,
                 onBack = { finish() },
-                onCreate = { onCreated() }
+                onCreate = { onCreated() },
             )
         }
     }
@@ -69,11 +69,7 @@ private fun ShareProductApp(text: String?, onBack: () -> Unit, onCreate: () -> U
             if (text == null) {
                 Spacer(Modifier.fillMaxSize())
             } else {
-                CreateProductScreen(
-                    url = text,
-                    onBack = onBack,
-                    onCreate = { onCreate() }
-                )
+                CreateProductScreen(url = text, onBack = onBack, onCreate = { onCreate() })
             }
         }
     }

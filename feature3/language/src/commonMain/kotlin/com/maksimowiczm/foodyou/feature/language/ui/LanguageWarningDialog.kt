@@ -16,26 +16,15 @@ import org.jetbrains.compose.resources.stringResource
 internal fun LanguageWarningDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         confirmButton = {
-            TextButton(
-                onClick = onConfirm
-            ) {
-                Text(stringResource(Res.string.positive_ok))
-            }
+            TextButton(onClick = onConfirm) { Text(stringResource(Res.string.positive_ok)) }
         },
-        icon = {
-            Icon(
-                imageVector = Icons.Default.Translate,
-                contentDescription = null
-            )
-        },
-        text = {
-            Text(stringResource(Res.string.description_translation_warning))
-        }
+        icon = { Icon(imageVector = Icons.Default.Translate, contentDescription = null) },
+        text = { Text(stringResource(Res.string.description_translation_warning)) },
     )
 }

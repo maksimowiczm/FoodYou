@@ -46,7 +46,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ZxingCameraBarcodeScannerScreen(
     onBarcodeScan: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var barcodeView by remember { mutableStateOf<CompoundBarcodeView?>(null) }
     var torchOn by rememberSaveable { mutableStateOf(false) }
@@ -55,49 +55,41 @@ fun ZxingCameraBarcodeScannerScreen(
     DisposableEffect(barcodeView) {
         barcodeView?.resume()
 
-        val callback = BarcodeCallback { result ->
-            result?.let { latestOnBarcodeScanned(it.text) }
-        }
+        val callback = BarcodeCallback { result -> result?.let { latestOnBarcodeScanned(it.text) } }
 
         barcodeView?.decodeSingle(callback)
 
-        val torchListener = object : DecoratedBarcodeView.TorchListener {
-            override fun onTorchOn() {
-                torchOn = true
-            }
+        val torchListener =
+            object : DecoratedBarcodeView.TorchListener {
+                override fun onTorchOn() {
+                    torchOn = true
+                }
 
-            override fun onTorchOff() {
-                torchOn = false
+                override fun onTorchOff() {
+                    torchOn = false
+                }
             }
-        }
 
         barcodeView?.setTorchListener(torchListener)
 
         barcodeView?.setStatusText("")
 
-        onDispose {
-            barcodeView?.pause()
-        }
+        onDispose { barcodeView?.pause() }
     }
 
     Box(modifier) {
         AndroidView(
-            factory = { context ->
-                View.inflate(context, R.layout.camera_barcode_layout, null)
-            },
+            factory = { context -> View.inflate(context, R.layout.camera_barcode_layout, null) },
             update = { view ->
                 val binding = CameraBarcodeLayoutBinding.bind(view)
                 barcodeView = binding.barcodeView
-            }
+            },
         )
 
         Column(
-            modifier = Modifier
-                .safeGesturesPadding()
-                .align(Alignment.BottomCenter)
-                .zIndex(1f),
+            modifier = Modifier.safeGesturesPadding().align(Alignment.BottomCenter).zIndex(1f),
             horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             FlashlightButton(
                 enabled = torchOn,
@@ -107,21 +99,19 @@ fun ZxingCameraBarcodeScannerScreen(
                     } else {
                         barcodeView?.setTorchOn()
                     }
-                }
+                },
             )
             Surface(
                 color = MaterialTheme.colorScheme.scrim,
-                modifier = Modifier
-                    .navigationBarsPadding()
-                    .alpha(.5f),
-                shape = MaterialTheme.shapes.medium
+                modifier = Modifier.navigationBarsPadding().alpha(.5f),
+                shape = MaterialTheme.shapes.medium,
             ) {
                 Text(
                     text = androidStringResource(zxingR.string.zxing_msg_default_status),
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -130,40 +120,45 @@ fun ZxingCameraBarcodeScannerScreen(
 
 @Composable
 private fun FlashlightButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    val background by animateColorAsState(
-        if (enabled) {
-            MaterialTheme.colorScheme.primary
-        } else {
-            MaterialTheme.colorScheme.surface
-        }
-    )
-    val content by animateColorAsState(
-        if (enabled) {
-            MaterialTheme.colorScheme.onPrimary
-        } else {
-            MaterialTheme.colorScheme.onSurface
-        }
-    )
+    val background by
+        animateColorAsState(
+            if (enabled) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.surface
+            }
+        )
+    val content by
+        animateColorAsState(
+            if (enabled) {
+                MaterialTheme.colorScheme.onPrimary
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
+        )
 
     FilledIconButton(
         modifier = modifier,
         onClick = onClick,
-        colors = IconButtonDefaults.filledIconButtonColors(
-            containerColor = background,
-            contentColor = content
-        )
+        colors =
+            IconButtonDefaults.filledIconButtonColors(
+                containerColor = background,
+                contentColor = content,
+            ),
     ) {
         Icon(
-            imageVector = if (enabled) {
-                Icons.Default.FlashOn
-            } else {
-                Icons.Default.FlashOff
-            },
-            contentDescription = if (enabled) {
-                stringResource(Res.string.action_disable_camera_flash)
-            } else {
-                stringResource(Res.string.action_enable_camera_flash)
-            }
+            imageVector =
+                if (enabled) {
+                    Icons.Default.FlashOn
+                } else {
+                    Icons.Default.FlashOff
+                },
+            contentDescription =
+                if (enabled) {
+                    stringResource(Res.string.action_disable_camera_flash)
+                } else {
+                    stringResource(Res.string.action_enable_camera_flash)
+                },
         )
     }
 }

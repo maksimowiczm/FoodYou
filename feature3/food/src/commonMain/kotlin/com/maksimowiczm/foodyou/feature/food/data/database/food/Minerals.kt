@@ -12,5 +12,5 @@ data class Minerals(
     val phosphorusMilli: Float?,
     val seleniumMicro: Float?,
     val iodineMicro: Float?,
-    val chromiumMicro: Float?
+    val chromiumMicro: Float?,
 )

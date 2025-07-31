@@ -12,18 +12,19 @@ sealed interface Food {
     val servingWeight: Float?
     val note: String?
 
-    /**
-     * Indicates whether the food is liquid or solid.
-     */
+    /** Indicates whether the food is liquid or solid. */
     val isLiquid: Boolean
 }
 
 val Food.possibleMeasurementTypes: Set<Measurement>
-    get() = Measurement.entries.filter { type ->
-        when (type) {
-            Measurement.Gram -> !isLiquid
-            Measurement.Milliliter -> isLiquid
-            Measurement.Package -> totalWeight != null
-            Measurement.Serving -> servingWeight != null
-        }
-    }.toSet()
+    get() =
+        Measurement.entries
+            .filter { type ->
+                when (type) {
+                    Measurement.Gram -> !isLiquid
+                    Measurement.Milliliter -> isLiquid
+                    Measurement.Package -> totalWeight != null
+                    Measurement.Serving -> servingWeight != null
+                }
+            }
+            .toSet()

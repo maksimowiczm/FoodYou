@@ -15,20 +15,21 @@ sealed interface FoodSearch {
         override val isLiquid: Boolean,
         val nutritionFacts: NutritionFacts,
         val totalWeight: Float?,
-        val servingWeight: Float?
+        val servingWeight: Float?,
     ) : FoodSearch {
 
-        override val defaultMeasurement: Measurement = when {
-            servingWeight != null -> Measurement.Serving(1f)
-            totalWeight != null -> Measurement.Package(1f)
-            else -> Measurement.Gram(100f)
-        }
+        override val defaultMeasurement: Measurement =
+            when {
+                servingWeight != null -> Measurement.Serving(1f)
+                totalWeight != null -> Measurement.Package(1f)
+                else -> Measurement.Gram(100f)
+            }
     }
 
     data class Recipe(
         override val id: FoodId.Recipe,
         override val headline: String,
-        override val isLiquid: Boolean
+        override val isLiquid: Boolean,
     ) : FoodSearch {
 
         override val defaultMeasurement: Measurement = Measurement.Serving(1f)

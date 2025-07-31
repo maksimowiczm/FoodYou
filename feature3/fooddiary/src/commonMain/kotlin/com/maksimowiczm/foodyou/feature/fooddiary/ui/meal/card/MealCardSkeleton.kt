@@ -27,8 +27,7 @@ internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
     FoodYouHomeCard(modifier) {
         Column(Modifier.padding(16.dp)) {
             Box(
-                Modifier
-                    .shimmer(shimmer)
+                Modifier.shimmer(shimmer)
                     .size(140.dp, MaterialTheme.typography.headlineMedium.toDp() - 4.dp)
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
@@ -37,8 +36,7 @@ internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
             Spacer(Modifier.height(4.dp))
 
             Box(
-                Modifier
-                    .shimmer(shimmer)
+                Modifier.shimmer(shimmer)
                     .size(60.dp, MaterialTheme.typography.labelLarge.toDp())
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
@@ -48,11 +46,10 @@ internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
-                    Modifier
-                        .shimmer(shimmer)
+                    Modifier.shimmer(shimmer)
                         .size(120.dp, MaterialTheme.typography.labelMedium.toDp() * 2)
                         .clip(MaterialTheme.shapes.medium)
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest)
@@ -63,11 +60,13 @@ internal fun MealCardSkeleton(shimmer: Shimmer, modifier: Modifier = Modifier) {
                 FilledIconButton(
                     onClick = {},
                     modifier = Modifier.shimmer(shimmer),
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                    ),
+                    colors =
+                        IconButtonDefaults.filledIconButtonColors(
+                            disabledContainerColor =
+                                MaterialTheme.colorScheme.surfaceContainerHighest
+                        ),
                     enabled = false,
-                    content = {}
+                    content = {},
                 )
             }
         }

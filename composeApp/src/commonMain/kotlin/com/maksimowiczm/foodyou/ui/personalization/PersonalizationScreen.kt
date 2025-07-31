@@ -35,7 +35,7 @@ fun PersonalizationScreen(
     onBack: () -> Unit,
     onHomePersonalization: () -> Unit,
     onNutritionFactsPersonalization: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -46,25 +46,17 @@ fun PersonalizationScreen(
                 title = { Text(stringResource(Res.string.headline_personalization)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 subtitle = { Text(stringResource(Res.string.description_personalization)) },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues,
         ) {
-            item {
-                HomeSettingsListItem(onHomePersonalization)
-            }
-            item {
-                PersonalizeNutritionFactsSettingsListItem(onNutritionFactsPersonalization)
-            }
-            item {
-                SecureScreenSettingsListItem(Modifier.fillMaxWidth())
-            }
+            item { HomeSettingsListItem(onHomePersonalization) }
+            item { PersonalizeNutritionFactsSettingsListItem(onNutritionFactsPersonalization) }
+            item { SecureScreenSettingsListItem(Modifier.fillMaxWidth()) }
         }
     }
 }
@@ -76,21 +68,16 @@ private fun HomeSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modif
         onClick = onClick,
         modifier = modifier,
         supportingContent = { Text(stringResource(Res.string.description_home_settings)) },
-        icon = {
-            Icon(
-                imageVector = Icons.Outlined.Home,
-                contentDescription = null
-            )
-        },
+        icon = { Icon(imageVector = Icons.Outlined.Home, contentDescription = null) },
         color = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        contentColor = MaterialTheme.colorScheme.onSurface,
     )
 }
 
 @Composable
 private fun PersonalizeNutritionFactsSettingsListItem(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     SettingsListItem(
         label = { Text(stringResource(Res.string.headline_nutrition_facts)) },
@@ -99,14 +86,9 @@ private fun PersonalizeNutritionFactsSettingsListItem(
         supportingContent = {
             Text(stringResource(Res.string.description_personalize_nutrition_facts_short))
         },
-        icon = {
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.List,
-                contentDescription = null
-            )
-        },
+        icon = { Icon(imageVector = Icons.AutoMirrored.Outlined.List, contentDescription = null) },
         color = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        contentColor = MaterialTheme.colorScheme.onSurface,
     )
 }
 
@@ -116,27 +98,13 @@ private fun SecureScreenSettingsListItem(modifier: Modifier = Modifier) {
     val checked by hideContent.collectAsStateWithLifecycle(hideContent.getBlocking())
 
     SettingsListItem(
-        label = {
-            Text(stringResource(Res.string.headline_secure_screen))
-        },
+        label = { Text(stringResource(Res.string.headline_secure_screen)) },
         onClick = { hideContent.setBlocking(!checked) },
         modifier = modifier,
-        supportingContent = {
-            Text(stringResource(Res.string.action_prevent_screen_capture))
-        },
-        icon = {
-            Icon(
-                imageVector = Icons.Outlined.Lock,
-                contentDescription = null
-            )
-        },
-        trailingContent = {
-            Switch(
-                checked = checked,
-                onCheckedChange = null
-            )
-        },
+        supportingContent = { Text(stringResource(Res.string.action_prevent_screen_capture)) },
+        icon = { Icon(imageVector = Icons.Outlined.Lock, contentDescription = null) },
+        trailingContent = { Switch(checked = checked, onCheckedChange = null) },
         color = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        contentColor = MaterialTheme.colorScheme.onSurface,
     )
 }

@@ -53,45 +53,46 @@ fun InteractiveLogo(
     modifier: Modifier = Modifier,
     iconColor: Color = MaterialTheme.colorScheme.onTertiaryContainer,
     backgroundColor: Color = MaterialTheme.colorScheme.tertiaryContainer,
-    animationSpec: InfiniteRepeatableSpec<Float> = InfiniteRepeatableSpec(
-        animation = tween(
-            easing = LinearEasing,
-            durationMillis = 2 * 60 * 1000
+    animationSpec: InfiniteRepeatableSpec<Float> =
+        InfiniteRepeatableSpec(
+            animation = tween(easing = LinearEasing, durationMillis = 2 * 60 * 1000),
+            repeatMode = RepeatMode.Restart,
         ),
-        repeatMode = RepeatMode.Restart
-    )
 ) {
     val infiniteTransition = rememberInfiniteTransition()
     val coroutineScope = rememberCoroutineScope()
 
-    val rotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = animationSpec
-    )
+    val rotation by
+        infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = animationSpec,
+        )
 
     val morphs = remember {
-        val shapes = listOf(
-            MaterialShapes.Diamond,
-            MaterialShapes.Gem,
-            MaterialShapes.Oval,
-            MaterialShapes.Pill,
-            MaterialShapes.VerySunny,
-            MaterialShapes.Sunny,
-            MaterialShapes.Pentagon,
-            MaterialShapes.Burst,
-            MaterialShapes.Boom,
-            MaterialShapes.Flower,
-            MaterialShapes.PixelCircle,
-            MaterialShapes.Cookie4Sided,
-            MaterialShapes.Cookie6Sided,
-            MaterialShapes.Cookie7Sided,
-            MaterialShapes.Cookie9Sided,
-            MaterialShapes.Cookie12Sided,
-            MaterialShapes.Ghostish,
-            MaterialShapes.Clover4Leaf,
-            MaterialShapes.Clover8Leaf
-        ).shuffled()
+        val shapes =
+            listOf(
+                    MaterialShapes.Diamond,
+                    MaterialShapes.Gem,
+                    MaterialShapes.Oval,
+                    MaterialShapes.Pill,
+                    MaterialShapes.VerySunny,
+                    MaterialShapes.Sunny,
+                    MaterialShapes.Pentagon,
+                    MaterialShapes.Burst,
+                    MaterialShapes.Boom,
+                    MaterialShapes.Flower,
+                    MaterialShapes.PixelCircle,
+                    MaterialShapes.Cookie4Sided,
+                    MaterialShapes.Cookie6Sided,
+                    MaterialShapes.Cookie7Sided,
+                    MaterialShapes.Cookie9Sided,
+                    MaterialShapes.Cookie12Sided,
+                    MaterialShapes.Ghostish,
+                    MaterialShapes.Clover4Leaf,
+                    MaterialShapes.Clover8Leaf,
+                )
+                .shuffled()
 
         val pairs = mutableListOf<Pair<RoundedPolygon, RoundedPolygon>>()
         for (i in 1 until shapes.size) {
@@ -99,9 +100,7 @@ fun InteractiveLogo(
         }
         pairs.add(Pair(shapes.last(), shapes.first()))
 
-        pairs.map { (start, end) ->
-            Morph(start, end)
-        }
+        pairs.map { (start, end) -> Morph(start, end) }
     }
     val progress = rememberWrapAroundCounter(morphs.size.toFloat())
     val morph by remember {
@@ -119,49 +118,42 @@ fun InteractiveLogo(
     val motionScheme = MaterialTheme.motionScheme
     val interactionSource = remember { MutableInteractionSource() }
 
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Box(
-            modifier = Modifier.size(350.dp).clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = {
-                    coroutineScope.launch {
-                        progress.increment(motionScheme.fastSpatialSpec())
-                    }
-                }
-            ),
-            contentAlignment = Alignment.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer {
-                        rotationZ = rotation
-                        clip = true
-                        shape = MorphShape(
-                            morph = morph,
-                            percentage = progress.value % 1f
-                        )
-                    }
-                    .background(backgroundColor)
+            modifier =
+                Modifier.size(350.dp)
                     .clickable(
                         interactionSource = interactionSource,
-                        indication = ripple()
-                    ) {
-                        coroutineScope.launch {
-                            progress.increment(motionScheme.slowSpatialSpec())
+                        indication = null,
+                        onClick = {
+                            coroutineScope.launch {
+                                progress.increment(motionScheme.fastSpatialSpec())
+                            }
+                        },
+                    ),
+            contentAlignment = Alignment.Center,
+        ) {
+            Box(
+                modifier =
+                    Modifier.fillMaxSize()
+                        .graphicsLayer {
+                            rotationZ = rotation
+                            clip = true
+                            shape = MorphShape(morph = morph, percentage = progress.value % 1f)
                         }
-                    },
-                content = {}
+                        .background(backgroundColor)
+                        .clickable(interactionSource = interactionSource, indication = ripple()) {
+                            coroutineScope.launch {
+                                progress.increment(motionScheme.slowSpatialSpec())
+                            }
+                        },
+                content = {},
             )
             Icon(
                 painter = painterResource(Res.drawable.ic_sushi),
                 contentDescription = null,
                 modifier = Modifier.size(150.dp),
-                tint = iconColor
+                tint = iconColor,
             )
         }
     }
@@ -170,14 +162,14 @@ fun InteractiveLogo(
 @Stable
 private class WrapAroundCounter(
     private val maxValue: Float,
-    private val animatable: Animatable<Float, AnimationVector1D>
+    private val animatable: Animatable<Float, AnimationVector1D>,
 ) {
     val value: Float by derivedStateOf { animatable.value % maxValue }
 
     suspend fun increment(animationSpec: AnimationSpec<Float> = spring()) {
         animatable.animateTo(
             targetValue = (animatable.value + 1f).roundToInt().toFloat(),
-            animationSpec = animationSpec
+            animationSpec = animationSpec,
         )
     }
 }
@@ -185,16 +177,14 @@ private class WrapAroundCounter(
 @Composable
 private fun rememberWrapAroundCounter(
     maxValue: Float,
-    initialValue: Float = 0f
+    initialValue: Float = 0f,
 ): WrapAroundCounter {
     val animatable = remember(initialValue) { Animatable(initialValue) }
 
-    val counter = remember(animatable, maxValue) {
-        WrapAroundCounter(
-            maxValue = maxValue,
-            animatable = animatable
-        )
-    }
+    val counter =
+        remember(animatable, maxValue) {
+            WrapAroundCounter(maxValue = maxValue, animatable = animatable)
+        }
 
     return counter
 }
@@ -207,7 +197,7 @@ private class MorphShape(private val morph: Morph, private val percentage: Float
     override fun createOutline(
         size: Size,
         layoutDirection: LayoutDirection,
-        density: Density
+        density: Density,
     ): Outline {
         matrix.scale(size.width, size.height)
 

@@ -59,7 +59,7 @@ val foodModule = module {
             get(),
             get(),
             get(),
-            excludedRecipeId = excludedRecipeId
+            excludedRecipeId = excludedRecipeId,
         )
     }
 
@@ -71,12 +71,7 @@ val foodModule = module {
     factoryOf(::USDAFacade)
     factoryOf(::USDAProductMapper)
 
-    viewModel { (url: String?) ->
-        DownloadProductViewModel(
-            text = url,
-            requestFactory = get()
-        )
-    }
+    viewModel { (url: String?) -> DownloadProductViewModel(text = url, requestFactory = get()) }
 
     viewModelOf(::CreateRecipeViewModel)
     viewModelOf(::MeasureIngredientViewModel)

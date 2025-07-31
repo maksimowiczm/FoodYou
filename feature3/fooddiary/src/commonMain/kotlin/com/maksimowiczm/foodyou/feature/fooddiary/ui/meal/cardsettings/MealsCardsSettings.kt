@@ -44,40 +44,32 @@ internal fun MealsCardsSettings(
     modifier: Modifier = Modifier,
     layoutPreference: MealsCardsLayoutPreference = userPreference(),
     useTimeBasedSortingPreference: UseTimeBasedSorting = userPreference(),
-    ignoreAllDayMealsPreference: IgnoreAllDayMeals = userPreference()
+    ignoreAllDayMealsPreference: IgnoreAllDayMeals = userPreference(),
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val useTimeBasedSorting = useTimeBasedSortingPreference
-        .collectAsStateWithLifecycle(useTimeBasedSortingPreference.getBlocking()).value
+    val useTimeBasedSorting =
+        useTimeBasedSortingPreference
+            .collectAsStateWithLifecycle(useTimeBasedSortingPreference.getBlocking())
+            .value
 
-    val ignoreAllDayMeals = ignoreAllDayMealsPreference
-        .collectAsStateWithLifecycle(ignoreAllDayMealsPreference.getBlocking()).value
+    val ignoreAllDayMeals =
+        ignoreAllDayMealsPreference
+            .collectAsStateWithLifecycle(ignoreAllDayMealsPreference.getBlocking())
+            .value
 
     val layout = layoutPreference.collectAsStateWithLifecycle(layoutPreference.getBlocking()).value
 
     MealCardSettings(
         layout = layout,
-        onLayoutChange = {
-            coroutineScope.launch {
-                layoutPreference.set(it)
-            }
-        },
+        onLayoutChange = { coroutineScope.launch { layoutPreference.set(it) } },
         useTimeBasedSorting = useTimeBasedSorting,
-        toggleTimeBased = {
-            coroutineScope.launch {
-                useTimeBasedSortingPreference.set(it)
-            }
-        },
+        toggleTimeBased = { coroutineScope.launch { useTimeBasedSortingPreference.set(it) } },
         ignoreAllDayMeals = ignoreAllDayMeals,
-        toggleIgnoreAllDayMeals = {
-            coroutineScope.launch {
-                ignoreAllDayMealsPreference.set(it)
-            }
-        },
+        toggleIgnoreAllDayMeals = { coroutineScope.launch { ignoreAllDayMealsPreference.set(it) } },
         onMealsSettings = onMealSettings,
         onBack = onBack,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -92,7 +84,7 @@ internal fun MealCardSettings(
     toggleIgnoreAllDayMeals: (Boolean) -> Unit,
     onMealsSettings: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
@@ -103,16 +95,14 @@ internal fun MealCardSettings(
             MediumFlexibleTopAppBar(
                 title = { Text(stringResource(Res.string.headline_meals)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
         },
-        modifier = modifier
+        modifier = modifier,
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues.add(vertical = 8.dp)
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
             item {
                 LayoutPicker(
@@ -123,7 +113,7 @@ internal fun MealCardSettings(
                             onLayoutChange(it)
                         }
                     },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 )
             }
 
@@ -137,19 +127,15 @@ internal fun MealCardSettings(
                 toggleIgnoreAllDayMeals = {
                     hapticFeedback.performToggle(it)
                     toggleIgnoreAllDayMeals(it)
-                }
+                },
             )
 
-            item {
-                HorizontalDivider()
-            }
+            item { HorizontalDivider() }
 
             item {
                 ListItem(
-                    headlineContent = {
-                        Text(stringResource(Res.string.headline_meals_settings))
-                    },
-                    modifier = Modifier.clickable { onMealsSettings() }
+                    headlineContent = { Text(stringResource(Res.string.headline_meals_settings)) },
+                    modifier = Modifier.clickable { onMealsSettings() },
                 )
             }
         }
@@ -160,51 +146,44 @@ private fun LazyListScope.advancedLayoutSettings(
     useTimeBasedSorting: Boolean,
     toggleTimeBased: (Boolean) -> Unit,
     ignoreAllDayMeals: Boolean,
-    toggleIgnoreAllDayMeals: (Boolean) -> Unit
+    toggleIgnoreAllDayMeals: (Boolean) -> Unit,
 ) {
     item {
         Text(
             text = stringResource(Res.string.headline_time_based_ordering),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         )
     }
 
     item {
         ListItem(
-            headlineContent = {
-                Text(stringResource(Res.string.action_use_time_based_ordering))
-            },
+            headlineContent = { Text(stringResource(Res.string.action_use_time_based_ordering)) },
             modifier = Modifier.clickable { toggleTimeBased(!useTimeBasedSorting) },
             supportingContent = {
                 Text(stringResource(Res.string.description_time_based_meals_sorting))
             },
             trailingContent = {
-                Switch(
-                    checked = useTimeBasedSorting,
-                    onCheckedChange = toggleTimeBased
-                )
-            }
+                Switch(checked = useTimeBasedSorting, onCheckedChange = toggleTimeBased)
+            },
         )
     }
 
     item {
-        val contentColor = if (useTimeBasedSorting) {
-            MaterialTheme.colorScheme.onSurface
-        } else {
-            MaterialTheme.colorScheme.outline
-        }
+        val contentColor =
+            if (useTimeBasedSorting) {
+                MaterialTheme.colorScheme.onSurface
+            } else {
+                MaterialTheme.colorScheme.outline
+            }
 
         ListItem(
-            headlineContent = {
-                Text(stringResource(Res.string.action_ignore_all_day_meals))
-            },
-            modifier = Modifier.clickable(
-                enabled = useTimeBasedSorting
-            ) {
-                toggleIgnoreAllDayMeals(!ignoreAllDayMeals)
-            },
+            headlineContent = { Text(stringResource(Res.string.action_ignore_all_day_meals)) },
+            modifier =
+                Modifier.clickable(enabled = useTimeBasedSorting) {
+                    toggleIgnoreAllDayMeals(!ignoreAllDayMeals)
+                },
             supportingContent = {
                 Text(stringResource(Res.string.description_action_ignore_all_day_meals))
             },
@@ -212,13 +191,14 @@ private fun LazyListScope.advancedLayoutSettings(
                 Switch(
                     checked = ignoreAllDayMeals,
                     onCheckedChange = toggleIgnoreAllDayMeals,
-                    enabled = useTimeBasedSorting
+                    enabled = useTimeBasedSorting,
                 )
             },
-            colors = ListItemDefaults.colors(
-                headlineColor = contentColor,
-                supportingColor = contentColor
-            )
+            colors =
+                ListItemDefaults.colors(
+                    headlineColor = contentColor,
+                    supportingColor = contentColor,
+                ),
         )
     }
 }

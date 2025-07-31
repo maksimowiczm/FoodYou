@@ -51,7 +51,7 @@ internal fun CaloriesScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     onFoodClick: (FoodId) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CaloriesScreenViewModel = koinViewModel()
+    viewModel: CaloriesScreenViewModel = koinViewModel(),
 ) {
     val diaryDay by viewModel.observeDiaryDay(date).collectAsStateWithLifecycle(null)
 
@@ -60,12 +60,10 @@ internal fun CaloriesScreen(
             diaryDay = diaryDay!!,
             animatedVisibilityScope = animatedVisibilityScope,
             onFoodClick = onFoodClick,
-            modifier = modifier
+            modifier = modifier,
         )
     } else {
-        Surface(modifier) {
-            Spacer(Modifier.fillMaxSize())
-        }
+        Surface(modifier) { Spacer(Modifier.fillMaxSize()) }
     }
 }
 
@@ -75,107 +73,95 @@ private fun CaloriesScreen(
     diaryDay: DiaryDay,
     onFoodClick: (FoodId) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val dateFormatter = LocalDateFormatter.current
 
     val filterState = rememberMealsFilterState(diaryDay.nonEmptyMeals.toSet())
-    val meals by remember(filterState.selectedMeals) {
-        derivedStateOf {
-            diaryDay.nonEmptyMeals.filter { it.id in filterState.selectedMeals }
+    val meals by
+        remember(filterState.selectedMeals) {
+            derivedStateOf { diaryDay.nonEmptyMeals.filter { it.id in filterState.selectedMeals } }
         }
-    }
 
-    val topBar = @Composable {
-        val insets = TopAppBarDefaults.windowInsets
+    val topBar =
+        @Composable {
+            val insets = TopAppBarDefaults.windowInsets
 
-        Surface(
-            color = MaterialTheme.colorScheme.surfaceContainerLow
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(insets.asPaddingValues())
-                    .consumeWindowInsets(insets)
-                    .padding(16.dp)
-            ) {
-                with(animatedVisibilityScope) {
-                    Text(
-                        text = dateFormatter.formatDate(diaryDay.date),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier
-                            .animateEnterExit(
-                                enter = fadeIn(
-                                    tween(
-                                        delayMillis = DefaultDurationMillis
-                                    )
+            Surface(color = MaterialTheme.colorScheme.surfaceContainerLow) {
+                Column(
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .padding(insets.asPaddingValues())
+                            .consumeWindowInsets(insets)
+                            .padding(16.dp)
+                ) {
+                    with(animatedVisibilityScope) {
+                        Text(
+                            text = dateFormatter.formatDate(diaryDay.date),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier =
+                                Modifier.animateEnterExit(
+                                    enter = fadeIn(tween(delayMillis = DefaultDurationMillis)),
+                                    exit = fadeOut(tween(50)),
                                 ),
-                                exit = fadeOut(tween(50))
-                            )
+                        )
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    CaloriesIndicator(
+                        calories = diaryDay.totalCalories,
+                        caloriesGoal = diaryDay.dailyGoals.calories,
+                        proteins = diaryDay.totalProteins,
+                        carbohydrates = diaryDay.totalCarbohydrates,
+                        fats = diaryDay.totalFats,
                     )
                 }
-
-                Spacer(Modifier.height(16.dp))
-
-                CaloriesIndicator(
-                    calories = diaryDay.totalCalories,
-                    caloriesGoal = diaryDay.dailyGoals.calories,
-                    proteins = diaryDay.totalProteins,
-                    carbohydrates = diaryDay.totalCarbohydrates,
-                    fats = diaryDay.totalFats
-                )
             }
         }
-    }
 
-    Scaffold(
-        topBar = topBar,
-        modifier = modifier
-    ) { paddingValues ->
-        CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.titleMedium
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = paddingValues
-            ) {
+    Scaffold(topBar = topBar, modifier = modifier) { paddingValues ->
+        CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.titleMedium) {
+            LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = paddingValues) {
                 item {
                     MealsFilter(
                         state = filterState,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     )
                 }
 
                 item {
                     NutritionFactsList(
-                        facts = diaryDay.nonEmptyMeals
-                            .filter { it in meals }
-                            .flatMap { diaryDay.foods[it] ?: emptyList() }
-                            .mapNotNull {
-                                val weight = it.weight ?: return@mapNotNull null
+                        facts =
+                            diaryDay.nonEmptyMeals
+                                .filter { it in meals }
+                                .flatMap { diaryDay.foods[it] ?: emptyList() }
+                                .mapNotNull {
+                                    val weight = it.weight ?: return@mapNotNull null
 
-                                it.food.nutritionFacts * weight / 100f
-                            }
-                            .sum(),
+                                    it.food.nutritionFacts * weight / 100f
+                                }
+                                .sum(),
                         incompleteValue = {
                             {
                                 val g = stringResource(Res.string.unit_gram_short)
                                 val value = it.value?.formatClipZeros() ?: "0"
                                 Text(
                                     text = "* $value $g",
-                                    color = MaterialTheme.colorScheme.outline
+                                    color = MaterialTheme.colorScheme.outline,
                                 )
                             }
                         },
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp),
                     )
                 }
 
                 item {
-                    val foods = diaryDay.nonEmptyMeals
-                        .filter { it in meals }
-                        .flatMap { diaryDay.foods[it] ?: emptyList() }
-                        .map { it.food }
+                    val foods =
+                        diaryDay.nonEmptyMeals
+                            .filter { it in meals }
+                            .flatMap { diaryDay.foods[it] ?: emptyList() }
+                            .map { it.food }
 
                     val incompleteFoods = IncompleteFoodData.fromFoodList(foods)
 
@@ -183,7 +169,7 @@ private fun CaloriesScreen(
                         IncompleteFoodsList(
                             foods = incompleteFoods,
                             onFoodClick = onFoodClick,
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                         )
                     }
                 }

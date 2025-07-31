@@ -18,18 +18,14 @@ import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
 @Composable
 fun FoodYouApp(showOnBoardingPreference: ShowOnboardingPreference = userPreference()) {
     val showOnBoarding =
-        showOnBoardingPreference.collectAsStateWithLifecycle(
-            showOnBoardingPreference.getBlocking()
-        ).value
+        showOnBoardingPreference
+            .collectAsStateWithLifecycle(showOnBoardingPreference.getBlocking())
+            .value
 
     FoodYouTheme {
         Surface {
             if (showOnBoarding) {
-                Onboarding(
-                    onFinish = {
-                        showOnBoardingPreference.setBlocking(false)
-                    }
-                )
+                Onboarding(onFinish = { showOnBoardingPreference.setBlocking(false) })
             } else {
                 FoodYouNavHost()
                 AppUpdateChangelogModalBottomSheet()

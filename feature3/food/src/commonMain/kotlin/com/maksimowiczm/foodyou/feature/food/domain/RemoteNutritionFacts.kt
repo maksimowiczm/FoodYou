@@ -2,9 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.domain
 
 import kotlinx.serialization.Serializable
 
-/**
- * Represents the nutritional facts of a 100 g of a product.
- */
+/** Represents the nutritional facts of a 100 g of a product. */
 @Serializable
 data class RemoteNutritionFacts(
     // Macronutrients
@@ -54,5 +52,5 @@ data class RemoteNutritionFacts(
     val phosphorusMilli: Float?,
     val seleniumMicro: Float?,
     val iodineMicro: Float?,
-    val chromiumMicro: Float?
+    val chromiumMicro: Float?,
 )

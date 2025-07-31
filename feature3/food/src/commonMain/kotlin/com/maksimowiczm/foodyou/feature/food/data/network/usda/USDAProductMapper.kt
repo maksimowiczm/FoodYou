@@ -53,91 +53,92 @@ private val allowedServingUnits by lazy { setOf("g", "GRM", "ml", "MLT") }
 private val liquidServingUnits by lazy { setOf("ml", "MLT") }
 
 internal class USDAProductMapper {
-    fun toRemoteProduct(food: Food) = with(food) {
-        val proteins = getNutrient(PROTEIN)?.normalize(GRAMS)
-        val carbohydrates = getNutrient(CARBOHYDRATE)?.normalize(GRAMS)
-        val fats = getNutrient(FAT)?.normalize(GRAMS)
+    fun toRemoteProduct(food: Food) =
+        with(food) {
+            val proteins = getNutrient(PROTEIN)?.normalize(GRAMS)
+            val carbohydrates = getNutrient(CARBOHYDRATE)?.normalize(GRAMS)
+            val fats = getNutrient(FAT)?.normalize(GRAMS)
 
-        val calories: Float? = getNutrient(CALORIES)?.amount?.toFloat()
-            ?: getNutrient(CALORIES_ALTERNATIVE)?.amount?.toFloat()
-            ?: if (proteins == null || carbohydrates == null || fats == null) {
-                null
-            } else {
-                NutrientsHelper.calculateEnergy(
-                    proteins = proteins,
-                    carbohydrates = carbohydrates,
-                    fats = fats
-                )
-            }
+            val calories: Float? =
+                getNutrient(CALORIES)?.amount?.toFloat()
+                    ?: getNutrient(CALORIES_ALTERNATIVE)?.amount?.toFloat()
+                    ?: if (proteins == null || carbohydrates == null || fats == null) {
+                        null
+                    } else {
+                        NutrientsHelper.calculateEnergy(
+                            proteins = proteins,
+                            carbohydrates = carbohydrates,
+                            fats = fats,
+                        )
+                    }
 
-        val source = FoodSource(
-            type = FoodSource.Type.USDA,
-            url = url
-        )
+            val source = FoodSource(type = FoodSource.Type.USDA, url = url)
 
-        val servingWeight = if (allowedServingUnits.contains(servingSizeUnit)) {
-            servingSize?.toFloat()
-        } else {
-            null
+            val servingWeight =
+                if (allowedServingUnits.contains(servingSizeUnit)) {
+                    servingSize?.toFloat()
+                } else {
+                    null
+                }
+
+            val isLiquid = liquidServingUnits.contains(servingSizeUnit)
+
+            RemoteProduct(
+                name = description.trim(),
+                brand = brand?.trim(),
+                barcode = barcode?.trim(),
+                nutritionFacts =
+                    RemoteNutritionFacts(
+                        proteins = proteins,
+                        carbohydrates = carbohydrates,
+                        fats = fats,
+                        energy = calories,
+                        saturatedFats = getNutrient(SATURATED_FAT)?.normalize(GRAMS),
+                        transFats = getNutrient(TRANS_FAT)?.normalize(GRAMS),
+                        monounsaturatedFats = getNutrient(MONOUNSATURATED_FAT)?.normalize(GRAMS),
+                        polyunsaturatedFats = getNutrient(POLYUNSATURATED_FAT)?.normalize(GRAMS),
+                        omega3 = null,
+                        omega6 = null,
+                        sugars = getNutrient(SUGARS)?.normalize(GRAMS),
+                        addedSugars = getNutrient(ADDED_SUGARS)?.normalize(GRAMS),
+                        salt = null,
+                        dietaryFiber = getNutrient(FIBER)?.normalize(GRAMS),
+                        solubleFiber = null,
+                        insolubleFiber = null,
+                        cholesterolMilli = getNutrient(CHOLESTEROL)?.normalize(MILLIGRAMS),
+                        caffeineMilli = getNutrient(CAFFEINE)?.normalize(MILLIGRAMS),
+                        vitaminAMicro = getNutrient(VITAMIN_A)?.normalize(MICROGRAMS),
+                        vitaminB1Milli = getNutrient(VITAMIN_B1)?.normalize(MILLIGRAMS),
+                        vitaminB2Milli = getNutrient(VITAMIN_B2)?.normalize(MILLIGRAMS),
+                        vitaminB3Milli = getNutrient(VITAMIN_B3)?.normalize(MILLIGRAMS),
+                        vitaminB5Milli = getNutrient(VITAMIN_B5)?.normalize(MILLIGRAMS),
+                        vitaminB6Milli = getNutrient(VITAMIN_B6)?.normalize(MILLIGRAMS),
+                        vitaminB7Micro = getNutrient(Nutrient.VITAMIN_B7)?.normalize(MICROGRAMS),
+                        vitaminB9Micro = getNutrient(VITAMIN_B9)?.normalize(MICROGRAMS),
+                        vitaminB12Micro = getNutrient(VITAMIN_B12)?.normalize(MICROGRAMS),
+                        vitaminCMilli = getNutrient(VITAMIN_C)?.normalize(MILLIGRAMS),
+                        vitaminDMicro = getNutrient(VITAMIN_D)?.normalize(MICROGRAMS),
+                        vitaminEMilli = getNutrient(VITAMIN_E)?.normalize(MILLIGRAMS),
+                        vitaminKMicro = getNutrient(VITAMIN_K)?.normalize(MICROGRAMS),
+                        manganeseMilli = getNutrient(MANGANESE)?.normalize(MILLIGRAMS),
+                        magnesiumMilli = getNutrient(MAGNESIUM)?.normalize(MILLIGRAMS),
+                        potassiumMilli = getNutrient(POTASSIUM)?.normalize(MILLIGRAMS),
+                        calciumMilli = getNutrient(CALCIUM)?.normalize(MILLIGRAMS),
+                        copperMilli = getNutrient(COPPER)?.normalize(MILLIGRAMS),
+                        zincMilli = getNutrient(ZINC)?.normalize(MILLIGRAMS),
+                        sodiumMilli = getNutrient(SODIUM)?.normalize(MILLIGRAMS),
+                        ironMilli = getNutrient(IRON)?.normalize(MILLIGRAMS),
+                        phosphorusMilli = getNutrient(PHOSPHORUS)?.normalize(MILLIGRAMS),
+                        seleniumMicro = getNutrient(SELENIUM)?.normalize(MICROGRAMS),
+                        iodineMicro = null,
+                        chromiumMicro = null,
+                    ),
+                packageWeight = null,
+                servingWeight = servingWeight,
+                source = source,
+                isLiquid = isLiquid,
+            )
         }
-
-        val isLiquid = liquidServingUnits.contains(servingSizeUnit)
-
-        RemoteProduct(
-            name = description.trim(),
-            brand = brand?.trim(),
-            barcode = barcode?.trim(),
-            nutritionFacts = RemoteNutritionFacts(
-                proteins = proteins,
-                carbohydrates = carbohydrates,
-                fats = fats,
-                energy = calories,
-                saturatedFats = getNutrient(SATURATED_FAT)?.normalize(GRAMS),
-                transFats = getNutrient(TRANS_FAT)?.normalize(GRAMS),
-                monounsaturatedFats = getNutrient(MONOUNSATURATED_FAT)?.normalize(GRAMS),
-                polyunsaturatedFats = getNutrient(POLYUNSATURATED_FAT)?.normalize(GRAMS),
-                omega3 = null,
-                omega6 = null,
-                sugars = getNutrient(SUGARS)?.normalize(GRAMS),
-                addedSugars = getNutrient(ADDED_SUGARS)?.normalize(GRAMS),
-                salt = null,
-                dietaryFiber = getNutrient(FIBER)?.normalize(GRAMS),
-                solubleFiber = null,
-                insolubleFiber = null,
-                cholesterolMilli = getNutrient(CHOLESTEROL)?.normalize(MILLIGRAMS),
-                caffeineMilli = getNutrient(CAFFEINE)?.normalize(MILLIGRAMS),
-                vitaminAMicro = getNutrient(VITAMIN_A)?.normalize(MICROGRAMS),
-                vitaminB1Milli = getNutrient(VITAMIN_B1)?.normalize(MILLIGRAMS),
-                vitaminB2Milli = getNutrient(VITAMIN_B2)?.normalize(MILLIGRAMS),
-                vitaminB3Milli = getNutrient(VITAMIN_B3)?.normalize(MILLIGRAMS),
-                vitaminB5Milli = getNutrient(VITAMIN_B5)?.normalize(MILLIGRAMS),
-                vitaminB6Milli = getNutrient(VITAMIN_B6)?.normalize(MILLIGRAMS),
-                vitaminB7Micro = getNutrient(Nutrient.VITAMIN_B7)?.normalize(MICROGRAMS),
-                vitaminB9Micro = getNutrient(VITAMIN_B9)?.normalize(MICROGRAMS),
-                vitaminB12Micro = getNutrient(VITAMIN_B12)?.normalize(MICROGRAMS),
-                vitaminCMilli = getNutrient(VITAMIN_C)?.normalize(MILLIGRAMS),
-                vitaminDMicro = getNutrient(VITAMIN_D)?.normalize(MICROGRAMS),
-                vitaminEMilli = getNutrient(VITAMIN_E)?.normalize(MILLIGRAMS),
-                vitaminKMicro = getNutrient(VITAMIN_K)?.normalize(MICROGRAMS),
-                manganeseMilli = getNutrient(MANGANESE)?.normalize(MILLIGRAMS),
-                magnesiumMilli = getNutrient(MAGNESIUM)?.normalize(MILLIGRAMS),
-                potassiumMilli = getNutrient(POTASSIUM)?.normalize(MILLIGRAMS),
-                calciumMilli = getNutrient(CALCIUM)?.normalize(MILLIGRAMS),
-                copperMilli = getNutrient(COPPER)?.normalize(MILLIGRAMS),
-                zincMilli = getNutrient(ZINC)?.normalize(MILLIGRAMS),
-                sodiumMilli = getNutrient(SODIUM)?.normalize(MILLIGRAMS),
-                ironMilli = getNutrient(IRON)?.normalize(MILLIGRAMS),
-                phosphorusMilli = getNutrient(PHOSPHORUS)?.normalize(MILLIGRAMS),
-                seleniumMicro = getNutrient(SELENIUM)?.normalize(MICROGRAMS),
-                iodineMicro = null,
-                chromiumMicro = null
-            ),
-            packageWeight = null,
-            servingWeight = servingWeight,
-            source = source,
-            isLiquid = isLiquid
-        )
-    }
 }
 
 private fun FoodNutrient.normalize(target: UnitType): Float? {

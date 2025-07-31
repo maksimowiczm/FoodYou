@@ -18,21 +18,16 @@ fun AboutSettingsListItem(
     shape: Shape,
     color: Color,
     contentColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     SettingsListItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Outlined.Info,
-                contentDescription = null
-            )
-        },
+        icon = { Icon(imageVector = Icons.Outlined.Info, contentDescription = null) },
         label = { Text(stringResource(Res.string.headline_about)) },
         supportingContent = { Text(stringResource(Res.string.description_about_setting)) },
         onClick = onClick,
         modifier = modifier,
         shape = shape,
         color = color,
-        contentColor = contentColor
+        contentColor = contentColor,
     )
 }

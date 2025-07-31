@@ -17,14 +17,17 @@ import kotlinx.coroutines.launch
 internal class UpdateRecipeViewModel(
     private val foodId: FoodId.Recipe,
     observeFoodUseCase: ObserveFoodUseCase,
-    private val updateRecipeUseCase: UpdateRecipeUseCase
+    private val updateRecipeUseCase: UpdateRecipeUseCase,
 ) : RecipeViewModel(observeFoodUseCase) {
 
-    val recipe = observeFoodUseCase.observe(foodId).stateIn(
-        scope = viewModelScope,
-        initialValue = null,
-        started = SharingStarted.WhileSubscribed(2_000)
-    )
+    val recipe =
+        observeFoodUseCase
+            .observe(foodId)
+            .stateIn(
+                scope = viewModelScope,
+                initialValue = null,
+                started = SharingStarted.WhileSubscribed(2_000),
+            )
 
     private val eventBus = Channel<UpdateRecipeEvent>()
     val events = eventBus.receiveAsFlow()
@@ -37,9 +40,7 @@ internal class UpdateRecipeViewModel(
 
         if (!form.isModified) {
             Logger.d(TAG) { "Form is not modified, no need to update recipe." }
-            viewModelScope.launch {
-                eventBus.send(UpdateRecipeEvent.Updated)
-            }
+            viewModelScope.launch { eventBus.send(UpdateRecipeEvent.Updated) }
             return
         }
 
@@ -50,7 +51,7 @@ internal class UpdateRecipeViewModel(
                 servings = form.servings.value,
                 note = form.note.value,
                 isLiquid = form.isLiquid,
-                ingredients = form.ingredients.map { it.intoPair() }
+                ingredients = form.ingredients.map { it.intoPair() },
             )
 
             eventBus.send(UpdateRecipeEvent.Updated)

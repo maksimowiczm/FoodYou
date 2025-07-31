@@ -30,53 +30,46 @@ internal fun ChatBubble(
     shape: Shape,
     containerColor: Color,
     contentColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     ChatBubble(
         shape = shape,
         containerColor = containerColor,
         contentColor = contentColor,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if (icon != null || author != null || authorExtra != null) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     if (icon != null) {
                         icon()
                         Spacer(Modifier.width(16.dp))
                     }
 
                     if (author != null) {
-                        Text(
-                            text = author,
-                            style = MaterialTheme.typography.labelLarge
-                        )
+                        Text(text = author, style = MaterialTheme.typography.labelLarge)
                         Spacer(Modifier.width(8.dp))
                     }
 
                     if (authorExtra != null) {
                         Text(
                             text = authorExtra,
-                            style = if (authorExtra.length > 20) {
-                                MaterialTheme.typography.bodySmall
-                            } else {
-                                MaterialTheme.typography.bodyMedium
-                            }
+                            style =
+                                if (authorExtra.length > 20) {
+                                    MaterialTheme.typography.bodySmall
+                                } else {
+                                    MaterialTheme.typography.bodyMedium
+                                },
                         )
                     }
                 }
             }
 
             if (message != null) {
-                Text(
-                    text = message,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                Text(text = message, style = MaterialTheme.typography.bodyMedium)
             }
         }
     }
@@ -88,14 +81,14 @@ internal fun ChatBubble(
     containerColor: Color,
     contentColor: Color,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Surface(
         modifier = modifier,
         shape = shape,
         color = containerColor,
         contentColor = contentColor,
-        content = content
+        content = content,
     )
 }
 
@@ -105,7 +98,7 @@ internal fun ChatBubbleSkeleton(
     containerColor: Color,
     contentColor: Color,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer = rememberShimmer(ShimmerBounds.View)
+    shimmer: Shimmer = rememberShimmer(ShimmerBounds.View),
 ) {
     ChatBubble(
         icon = null,
@@ -115,7 +108,7 @@ internal fun ChatBubbleSkeleton(
         shape = shape,
         containerColor = containerColor,
         contentColor = contentColor,
-        modifier = modifier.shimmer(shimmer)
+        modifier = modifier.shimmer(shimmer),
     )
 }
 

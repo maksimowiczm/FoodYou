@@ -72,7 +72,7 @@ internal fun SponsorMessagesScreen(
     onBack: () -> Unit,
     onSponsor: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SponsorMessagesViewModel = koinViewModel()
+    viewModel: SponsorMessagesViewModel = koinViewModel(),
 ) {
     val pages = viewModel.sponsorshipPages.collectAsLazyPagingItems()
     val sponsorsAllowed by viewModel.sponsorsAllowed.collectAsStateWithLifecycle()
@@ -84,14 +84,14 @@ internal fun SponsorMessagesScreen(
         onBack = onBack,
         onSponsor = onSponsor,
         pages = pages,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalMaterial3ExpressiveApi::class,
-    FlowPreview::class
+    FlowPreview::class,
 )
 @Composable
 private fun SponsorMessagesScreen(
@@ -101,20 +101,23 @@ private fun SponsorMessagesScreen(
     onBack: () -> Unit,
     onSponsor: () -> Unit,
     pages: LazyPagingItems<Sponsorship>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val dateFormatter = LocalDateFormatter.current
-    val shimmer = rememberShimmer(
-        shimmerBounds = ShimmerBounds.Window,
-        theme = defaultShimmerTheme.copy(
-            shaderColors = listOf(
-                Color.White.copy(alpha = 0.6f),
-                Color.White.copy(alpha = 1.00f),
-                Color.White.copy(alpha = 0.6f)
-            ),
-            shimmerWidth = 500.dp
+    val shimmer =
+        rememberShimmer(
+            shimmerBounds = ShimmerBounds.Window,
+            theme =
+                defaultShimmerTheme.copy(
+                    shaderColors =
+                        listOf(
+                            Color.White.copy(alpha = 0.6f),
+                            Color.White.copy(alpha = 1.00f),
+                            Color.White.copy(alpha = 0.6f),
+                        ),
+                    shimmerWidth = 500.dp,
+                ),
         )
-    )
 
     val apiStatus = pages.apiStatus
 
@@ -125,7 +128,8 @@ private fun SponsorMessagesScreen(
                 title = { Text(stringResource(Res.string.headline_sponsor)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 actions = {
-                    // Let's not dos the API with bored users, so we only show the refresh button when there is an error
+                    // Let's not dos the API with bored users, so we only show the refresh button
+                    // when there is an error
                     if (apiStatus == ApiStatus.Error) {
                         IconButton(
                             onClick = {
@@ -138,58 +142,60 @@ private fun SponsorMessagesScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Refresh,
-                                contentDescription = stringResource(Res.string.action_try_again)
+                                contentDescription = stringResource(Res.string.action_try_again),
                             )
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
-                )
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    ),
             )
-        }
+        },
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = paddingValues.calculateTopPadding()
-                )
-                .zIndex(10f),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier.fillMaxWidth()
+                    .padding(top = paddingValues.calculateTopPadding())
+                    .zIndex(10f),
+            contentAlignment = Alignment.Center,
         ) {
             AnimatedContent(
                 targetState = apiStatus,
                 transitionSpec = {
                     fadeIn() + slideInVertically { -it } togetherWith
                         fadeOut() + slideOutVertically { -it }
-                }
+                },
             ) {
                 when (it) {
-                    ApiStatus.Loading -> LoadingIndicator(
-                        modifier = Modifier.padding(top = 8.dp),
-                        polygons = listOf(
-                            MaterialShapes.Flower,
-                            MaterialShapes.SoftBurst,
-                            MaterialShapes.Sunny,
-                            MaterialShapes.Gem
+                    ApiStatus.Loading ->
+                        LoadingIndicator(
+                            modifier = Modifier.padding(top = 8.dp),
+                            polygons =
+                                listOf(
+                                    MaterialShapes.Flower,
+                                    MaterialShapes.SoftBurst,
+                                    MaterialShapes.Sunny,
+                                    MaterialShapes.Gem,
+                                ),
                         )
-                    )
 
-                    ApiStatus.Error -> Box(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.errorContainer)
-                            .padding(12.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.ErrorOutline,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onErrorContainer
-                        )
-                    }
+                    ApiStatus.Error ->
+                        Box(
+                            modifier =
+                                Modifier.padding(top = 8.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.errorContainer)
+                                    .padding(12.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.ErrorOutline,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onErrorContainer,
+                            )
+                        }
 
                     ApiStatus.Success -> Unit
                 }
@@ -197,26 +203,21 @@ private fun SponsorMessagesScreen(
         }
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
             reverseLayout = true,
-            contentPadding = paddingValues.add(vertical = 8.dp)
+            contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
             item {
                 BottomMessages(
                     sponsorsAllowed = sponsorsAllowed,
                     onOnlyOnce = onOnlyOnce,
                     onAllowAlways = onAllowAlways,
-                    onSponsor = onSponsor
+                    onSponsor = onSponsor,
                 )
                 Spacer(Modifier.height(16.dp))
             }
 
-            items(
-                count = pages.itemCount,
-                key = pages.itemKey { it.id }
-            ) { i ->
+            items(count = pages.itemCount, key = pages.itemKey { it.id }) { i ->
                 val sponsorship = pages[i]
                 val nextSponsorship = if (i < pages.itemCount - 1) pages.peek(i + 1) else null
                 val previousSponsorship = if (i > 0) pages.peek(i - 1) else null
@@ -225,48 +226,53 @@ private fun SponsorMessagesScreen(
                     val showDateHeader =
                         nextSponsorship == null ||
                             sponsorship.sponsorshipDate().date !=
-                            nextSponsorship.sponsorshipDate().date
+                                nextSponsorship.sponsorshipDate().date
 
                     val previousSameDate =
                         previousSponsorship?.sponsorshipDate()?.date ==
                             sponsorship.sponsorshipDate().date
 
                     val iconResource = sponsorship.iconResource
-                    val icon = if (iconResource != null) {
-                        @Composable {
-                            Image(
-                                painter = painterResource(iconResource),
-                                contentDescription = null,
-                                modifier = Modifier.sizeIn(
-                                    maxWidth = ChatBubbleDefaults.iconSize,
-                                    maxHeight = ChatBubbleDefaults.iconSize
+                    val icon =
+                        if (iconResource != null) {
+                            @Composable {
+                                Image(
+                                    painter = painterResource(iconResource),
+                                    contentDescription = null,
+                                    modifier =
+                                        Modifier.sizeIn(
+                                            maxWidth = ChatBubbleDefaults.iconSize,
+                                            maxHeight = ChatBubbleDefaults.iconSize,
+                                        ),
                                 )
-                            )
+                            }
+                        } else {
+                            null
                         }
-                    } else {
-                        null
-                    }
 
                     Sent {
                         ChatBubble(
                             icon = icon,
-                            author = sponsorship.sponsorName
-                                ?: stringResource(Res.string.headline_anonymous),
-                            authorExtra = if (sponsorship.currency == "EUR") {
-                                "€${sponsorship.amount}"
-                            } else {
-                                "${sponsorship.amount} ${sponsorship.currency} (€${sponsorship.inEuro})"
-                            },
+                            author =
+                                sponsorship.sponsorName
+                                    ?: stringResource(Res.string.headline_anonymous),
+                            authorExtra =
+                                if (sponsorship.currency == "EUR") {
+                                    "€${sponsorship.amount}"
+                                } else {
+                                    "${sponsorship.amount} ${sponsorship.currency} (€${sponsorship.inEuro})"
+                                },
                             message = sponsorship.message,
-                            shape = RoundedCornerShape(
-                                topStart = if (showDateHeader) 16.dp else 4.dp,
-                                topEnd = if (showDateHeader) 16.dp else 4.dp,
-                                bottomStart = if (previousSameDate) 4.dp else 16.dp,
-                                bottomEnd = 4.dp
-                            ),
+                            shape =
+                                RoundedCornerShape(
+                                    topStart = if (showDateHeader) 16.dp else 4.dp,
+                                    topEnd = if (showDateHeader) 16.dp else 4.dp,
+                                    bottomStart = if (previousSameDate) 4.dp else 16.dp,
+                                    bottomEnd = 4.dp,
+                                ),
                             containerColor = ChatBubbleDefaults.sentContainerColor,
                             contentColor = ChatBubbleDefaults.sentContentColor,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
 
@@ -282,17 +288,16 @@ private fun SponsorMessagesScreen(
                 } else {
                     Sent {
                         ChatBubbleSkeleton(
-                            shape = RoundedCornerShape(
-                                topStart = 16.dp,
-                                topEnd = 16.dp,
-                                bottomStart = 16.dp,
-                                bottomEnd = 4.dp
-                            ),
+                            shape =
+                                RoundedCornerShape(
+                                    topStart = 16.dp,
+                                    topEnd = 16.dp,
+                                    bottomStart = 16.dp,
+                                    bottomEnd = 4.dp,
+                                ),
                             containerColor = ChatBubbleDefaults.sentContainerColor,
                             contentColor = ChatBubbleDefaults.sentContentColor,
-                            modifier = Modifier
-                                .shimmer(shimmer)
-                                .fillMaxWidth()
+                            modifier = Modifier.shimmer(shimmer).fillMaxWidth(),
                         )
                     }
                     Spacer(Modifier.height(8.dp))
@@ -309,11 +314,9 @@ private fun BottomMessages(
     onOnlyOnce: () -> Unit,
     onAllowAlways: () -> Unit,
     onSponsor: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         ChatGroupHeader(stringResource(Res.string.headline_now))
 
         Spacer(Modifier.height(4.dp))
@@ -322,32 +325,32 @@ private fun BottomMessages(
             Column {
                 Sent {
                     ChatBubble(
-                        shape = RoundedCornerShape(
-                            topStart = 16.dp,
-                            topEnd = 16.dp,
-                            bottomStart = 16.dp,
-                            bottomEnd = 4.dp
-                        ),
+                        shape =
+                            RoundedCornerShape(
+                                topStart = 16.dp,
+                                topEnd = 16.dp,
+                                bottomStart = 16.dp,
+                                bottomEnd = 4.dp,
+                            ),
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Column(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 16.dp, bottom = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            modifier =
+                                Modifier.padding(horizontal = 16.dp)
+                                    .padding(top = 16.dp, bottom = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             Text(
-                                text = stringResource(
-                                    Res.string.description_sponsors_external_server
-                                ),
-                                style = MaterialTheme.typography.bodyMedium
+                                text =
+                                    stringResource(Res.string.description_sponsors_external_server),
+                                style = MaterialTheme.typography.bodyMedium,
                             )
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 TextButton(onOnlyOnce) {
                                     Text(stringResource(Res.string.action_allow_only_once))
@@ -370,14 +373,15 @@ private fun BottomMessages(
                 author = null,
                 authorExtra = null,
                 message = stringResource(Res.string.thank_you_for_your_support),
-                shape = RoundedCornerShape(
-                    topStart = 16.dp,
-                    topEnd = 16.dp,
-                    bottomStart = 4.dp,
-                    bottomEnd = 16.dp
-                ),
+                shape =
+                    RoundedCornerShape(
+                        topStart = 16.dp,
+                        topEnd = 16.dp,
+                        bottomStart = 4.dp,
+                        bottomEnd = 16.dp,
+                    ),
                 containerColor = ChatBubbleDefaults.receivedContainerColor,
-                contentColor = ChatBubbleDefaults.receivedContentColor
+                contentColor = ChatBubbleDefaults.receivedContentColor,
             )
         }
 
@@ -387,31 +391,30 @@ private fun BottomMessages(
             Surface(
                 onClick = onSponsor,
                 modifier = Modifier.height(96.dp),
-                shape = RoundedCornerShape(
-                    topStart = 28.dp,
-                    topEnd = 28.dp,
-                    bottomStart = 28.dp,
-                    bottomEnd = 4.dp
-                ),
+                shape =
+                    RoundedCornerShape(
+                        topStart = 28.dp,
+                        topEnd = 28.dp,
+                        bottomStart = 28.dp,
+                        bottomEnd = 4.dp,
+                    ),
                 color = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             ) {
                 Row(
-                    modifier = Modifier.padding(
-                        horizontal = 48.dp
-                    ),
+                    modifier = Modifier.padding(horizontal = 48.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.VolunteerActivism,
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                     Text(
                         text = stringResource(Res.string.headline_sponsor),
                         fontSize = 24.sp,
-                        lineHeight = 32.sp
+                        lineHeight = 32.sp,
                     )
                 }
             }
@@ -421,24 +424,16 @@ private fun BottomMessages(
 
 @Composable
 private fun ChatGroupHeader(text: String) {
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelSmall
-        )
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Text(text = text, style = MaterialTheme.typography.labelSmall)
     }
 }
 
 @Composable
 private fun Sent(content: @Composable () -> Unit) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp),
-        contentAlignment = Alignment.CenterEnd
+        modifier = Modifier.fillMaxWidth().padding(start = 32.dp),
+        contentAlignment = Alignment.CenterEnd,
     ) {
         content()
     }
@@ -447,10 +442,8 @@ private fun Sent(content: @Composable () -> Unit) {
 @Composable
 private fun Received(content: @Composable () -> Unit) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(end = 32.dp),
-        contentAlignment = Alignment.CenterStart
+        modifier = Modifier.fillMaxWidth().padding(end = 32.dp),
+        contentAlignment = Alignment.CenterStart,
     ) {
         content()
     }
@@ -459,22 +452,25 @@ private fun Received(content: @Composable () -> Unit) {
 private enum class ApiStatus {
     Loading,
     Error,
-    Success
+    Success,
 }
 
 private val LazyPagingItems<Sponsorship>.apiStatus
-    @Composable get() = remember(this) {
-        derivedStateOf {
-            when {
-                loadState.append is LoadState.Loading ||
-                    loadState.refresh is LoadState.Loading ||
-                    loadState.prepend is LoadState.Loading -> ApiStatus.Loading
+    @Composable
+    get() =
+        remember(this) {
+                derivedStateOf {
+                    when {
+                        loadState.append is LoadState.Loading ||
+                            loadState.refresh is LoadState.Loading ||
+                            loadState.prepend is LoadState.Loading -> ApiStatus.Loading
 
-                loadState.append is LoadState.Error ||
-                    loadState.refresh is LoadState.Error ||
-                    loadState.prepend is LoadState.Error -> ApiStatus.Error
+                        loadState.append is LoadState.Error ||
+                            loadState.refresh is LoadState.Error ||
+                            loadState.prepend is LoadState.Error -> ApiStatus.Error
 
-                else -> ApiStatus.Success
+                        else -> ApiStatus.Success
+                    }
+                }
             }
-        }
-    }.value
+            .value

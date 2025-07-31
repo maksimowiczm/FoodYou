@@ -20,7 +20,7 @@ interface CreateMeasurementUseCase {
         measurement: Measurement,
         foodId: FoodId,
         mealId: Long,
-        date: LocalDate
+        date: LocalDate,
     )
 }
 
@@ -28,7 +28,7 @@ interface CreateMeasurementUseCase {
 internal class CreateMeasurementUseCaseImpl(
     foodDatabase: FoodDatabase,
     foodDiaryDatabase: FoodDiaryDatabase,
-    private val foodEventMapper: FoodEventMapper
+    private val foodEventMapper: FoodEventMapper,
 ) : CreateMeasurementUseCase {
     private val measurementDao = foodDiaryDatabase.measurementDao
     private val foodEventDao = foodDatabase.foodEventDao
@@ -37,22 +37,21 @@ internal class CreateMeasurementUseCaseImpl(
         measurement: Measurement,
         foodId: FoodId,
         mealId: Long,
-        date: LocalDate
+        date: LocalDate,
     ) {
-        val entity = MeasurementEntity(
-            mealId = mealId,
-            epochDay = date.toEpochDays(),
-            productId = (foodId as? FoodId.Product)?.id,
-            recipeId = (foodId as? FoodId.Recipe)?.id,
-            measurement = measurement.type,
-            quantity = measurement.rawValue,
-            createdAt = Clock.System.now().epochSeconds
-        )
+        val entity =
+            MeasurementEntity(
+                mealId = mealId,
+                epochDay = date.toEpochDays(),
+                productId = (foodId as? FoodId.Product)?.id,
+                recipeId = (foodId as? FoodId.Recipe)?.id,
+                measurement = measurement.type,
+                quantity = measurement.rawValue,
+                createdAt = Clock.System.now().epochSeconds,
+            )
 
-        val event = foodEventMapper.toEntity(
-            model = FoodEvent.Used(LocalDateTime.now()),
-            foodId = foodId
-        )
+        val event =
+            foodEventMapper.toEntity(model = FoodEvent.Used(LocalDateTime.now()), foodId = foodId)
 
         measurementDao.insertMeasurement(entity)
         foodEventDao.insert(event)

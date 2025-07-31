@@ -24,26 +24,38 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
-        maven {
-            url = uri("https://jitpack.io")
-        }
+        maven { url = uri("https://jitpack.io") }
     }
 }
 
 rootProject.name = "FoodYou"
+
 include(":feature:goals")
 
 include(":composeApp")
+
 include(":core3")
+
 include(":feature3:about")
+
 include(":feature3:food")
+
 include(":feature3:measurement")
+
 include(":feature3:barcodescanner")
+
 include(":feature3:fooddiary")
+
 include(":feature3:openfoodfacts")
+
 include(":feature3:calendar")
+
 include(":feature3:language")
+
 include(":feature3:usda")
+
 include(":feature3:swissfoodcompositiondatabase")
+
 include(":feature3:onboarding")
+
 include(":feature3:importexport")

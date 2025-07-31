@@ -21,10 +21,8 @@ sealed interface FoodId {
 }
 
 abstract class FoodIdAsLongSerializer<T : FoodId> : KSerializer<T> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
-        serialName = "FoodId",
-        kind = PrimitiveKind.LONG
-    )
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor(serialName = "FoodId", kind = PrimitiveKind.LONG)
 
     abstract fun deserialize(long: Long): T
 

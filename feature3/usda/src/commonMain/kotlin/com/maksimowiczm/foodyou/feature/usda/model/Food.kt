@@ -12,6 +12,7 @@ interface Food {
     val packageWeight: String?
 
     val foodNutrients: List<FoodNutrient>
+
     fun getNutrient(nutrient: Nutrient): FoodNutrient? =
         foodNutrients.firstOrNull { it.number == nutrient.number }
 

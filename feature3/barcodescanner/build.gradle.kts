@@ -10,11 +10,8 @@ plugins {
 }
 
 kotlin {
-
     androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
+        compilerOptions { jvmTarget.set(JvmTarget.JVM_11) }
 
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
@@ -25,9 +22,7 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        commonMain.dependencies {
-            implementation(project(":core3"))
-        }
+        commonMain.dependencies { implementation(project(":core3")) }
 
         androidMain.dependencies {
             implementation(libs.accompanist.permissions)
@@ -43,9 +38,7 @@ android {
     namespace = "com.maksimowiczm.foodyou.feature.barcodescanner"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
+    defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
 
     buildTypes {
         release {
@@ -54,7 +47,7 @@ android {
             // Not sure why this is can't be consumer proguard file
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
         create("devRelease") {
@@ -66,9 +59,7 @@ android {
             initWith(getByName("devRelease"))
             isMinifyEnabled = true
         }
-        create("preview") {
-            initWith(getByName("release"))
-        }
+        create("preview") { initWith(getByName("release")) }
     }
 
     compileOptions {
@@ -76,7 +67,5 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
+    buildFeatures { viewBinding = true }
 }

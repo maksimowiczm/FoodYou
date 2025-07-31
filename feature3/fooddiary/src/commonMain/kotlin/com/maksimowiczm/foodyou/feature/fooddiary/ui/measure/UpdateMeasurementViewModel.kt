@@ -43,7 +43,7 @@ internal class UpdateMeasurementViewModel(
     foodDiaryDatabase: FoodDiaryDatabase,
     dateProvider: DateProvider,
     foodEventMapper: FoodEventMapper,
-    private val measurementId: Long
+    private val measurementId: Long,
 ) : ViewModel() {
 
     private val measurementDao = foodDiaryDatabase.measurementDao
@@ -55,87 +55,109 @@ internal class UpdateMeasurementViewModel(
     private val measurementEntity =
         foodDiaryDatabase.measurementDao.observeMeasurementById(measurementId).filterNotNull()
 
-    val mealId = measurementEntity.map { it.mealId }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = null
-    )
-
-    val measurement = measurementEntity.map { it.toMeasurement() }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = null
-    )
-
-    val measurementDate = measurementEntity.map { LocalDate.fromEpochDays(it.epochDay) }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = LocalDate.now()
-    )
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val food = measurementEntity.flatMapLatest { measurement ->
-        val foodId = when {
-            measurement.productId != null -> FoodId.Product(measurement.productId)
-            measurement.recipeId != null -> FoodId.Recipe(measurement.recipeId)
-            else -> error("Measurement does not have a productId or recipeId")
-        }
-
-        observeFoodUseCase.observe(foodId)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = null
-    )
-
-    val meals = mealsDao.observeMeals().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = emptyList()
-    )
-
-    val today = dateProvider.observeDate().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = LocalDate.now()
-    )
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val suggestions: StateFlow<List<Measurement>?> = food.filterNotNull().flatMapLatest { food ->
-        observeMeasurementSuggestionsUseCase.observe(
-            food = food,
-            limit = 5
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = null
-    )
-
-    val possibleMeasurementTypes = food
-        .filterNotNull()
-        .map { food -> food.possibleMeasurementTypes }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = null
-        )
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val foodEvents = food
-        .filterNotNull()
-        .flatMapLatest { food ->
-            foodEventDao.observeEvents(
-                productId = (food.id as? FoodId.Product)?.id,
-                recipeId = (food.id as? FoodId.Recipe)?.id
+    val mealId =
+        measurementEntity
+            .map { it.mealId }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
             )
-        }
-        .mapValues(foodEventMapper::toModel)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = emptyList()
-        )
+
+    val measurement =
+        measurementEntity
+            .map { it.toMeasurement() }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
+
+    val measurementDate =
+        measurementEntity
+            .map { LocalDate.fromEpochDays(it.epochDay) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = LocalDate.now(),
+            )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val food =
+        measurementEntity
+            .flatMapLatest { measurement ->
+                val foodId =
+                    when {
+                        measurement.productId != null -> FoodId.Product(measurement.productId)
+                        measurement.recipeId != null -> FoodId.Recipe(measurement.recipeId)
+                        else -> error("Measurement does not have a productId or recipeId")
+                    }
+
+                observeFoodUseCase.observe(foodId)
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
+
+    val meals =
+        mealsDao
+            .observeMeals()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = emptyList(),
+            )
+
+    val today =
+        dateProvider
+            .observeDate()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = LocalDate.now(),
+            )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val suggestions: StateFlow<List<Measurement>?> =
+        food
+            .filterNotNull()
+            .flatMapLatest { food ->
+                observeMeasurementSuggestionsUseCase.observe(food = food, limit = 5)
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
+
+    val possibleMeasurementTypes =
+        food
+            .filterNotNull()
+            .map { food -> food.possibleMeasurementTypes }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val foodEvents =
+        food
+            .filterNotNull()
+            .flatMapLatest { food ->
+                foodEventDao.observeEvents(
+                    productId = (food.id as? FoodId.Product)?.id,
+                    recipeId = (food.id as? FoodId.Recipe)?.id,
+                )
+            }
+            .mapValues(foodEventMapper::toModel)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = emptyList(),
+            )
 
     private val eventBus = Channel<MeasurementEvent>()
     val events = eventBus.receiveAsFlow()
@@ -178,12 +200,13 @@ internal class UpdateMeasurementViewModel(
                 return@launch
             }
 
-            val updatedEntity = entity.copy(
-                measurement = measurement.type,
-                quantity = measurement.rawValue,
-                mealId = mealId,
-                epochDay = date.toEpochDays()
-            )
+            val updatedEntity =
+                entity.copy(
+                    measurement = measurement.type,
+                    quantity = measurement.rawValue,
+                    mealId = mealId,
+                    epochDay = date.toEpochDays(),
+                )
 
             measurementDao.updateMeasurement(updatedEntity)
 
@@ -204,20 +227,21 @@ internal class UpdateMeasurementViewModel(
         val ingredients = recipe.measuredIngredients(weight)
         val now = Clock.System.now()
 
-        val measurements = ingredients.map { ingredient ->
-            val productId = (ingredient.food.id as? FoodId.Product)?.id
-            val recipeId = (ingredient.food.id as? FoodId.Recipe)?.id
+        val measurements =
+            ingredients.map { ingredient ->
+                val productId = (ingredient.food.id as? FoodId.Product)?.id
+                val recipeId = (ingredient.food.id as? FoodId.Recipe)?.id
 
-            MeasurementEntity(
-                mealId = mealId,
-                epochDay = date.toEpochDays(),
-                productId = productId,
-                recipeId = recipeId,
-                measurement = ingredient.measurement.type,
-                quantity = ingredient.measurement.rawValue,
-                createdAt = now.epochSeconds
-            )
-        }
+                MeasurementEntity(
+                    mealId = mealId,
+                    epochDay = date.toEpochDays(),
+                    productId = productId,
+                    recipeId = recipeId,
+                    measurement = ingredient.measurement.type,
+                    quantity = ingredient.measurement.rawValue,
+                    createdAt = now.epochSeconds,
+                )
+            }
 
         viewModelScope.launch {
             measurementDao.replaceMeasurement(measurementId, measurements)

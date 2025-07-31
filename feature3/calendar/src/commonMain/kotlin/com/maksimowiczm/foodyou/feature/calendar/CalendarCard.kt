@@ -7,8 +7,5 @@ import com.maksimowiczm.foodyou.feature.calendar.ui.CalendarCard
 
 @Composable
 fun CalendarCard(homeState: HomeState, modifier: Modifier = Modifier) {
-    CalendarCard(
-        homeState = homeState,
-        modifier = modifier
-    )
+    CalendarCard(homeState = homeState, modifier = modifier)
 }

@@ -11,39 +11,51 @@ import kotlinx.datetime.LocalDate
 internal data class DiaryDay(
     val date: LocalDate,
     val foods: Map<Meal, List<FoodWithMeasurement>>,
-    val dailyGoals: DailyGoals
+    val dailyGoals: DailyGoals,
 ) {
     val totalCalories: Int
-        get() = foods.values.sumOf {
-            it.sumOf {
-                val weight = it.weight ?: return@sumOf 0f
-                weight * it.food.nutritionFacts.calories.value / 100f
-            }
-        }.roundToInt()
+        get() =
+            foods.values
+                .sumOf {
+                    it.sumOf {
+                        val weight = it.weight ?: return@sumOf 0f
+                        weight * it.food.nutritionFacts.calories.value / 100f
+                    }
+                }
+                .roundToInt()
 
     val totalProteins: Int
-        get() = foods.values.sumOf {
-            it.sumOf {
-                val weight = it.weight ?: return@sumOf 0f
-                weight * it.food.nutritionFacts.proteins.value / 100f
-            }
-        }.roundToInt()
+        get() =
+            foods.values
+                .sumOf {
+                    it.sumOf {
+                        val weight = it.weight ?: return@sumOf 0f
+                        weight * it.food.nutritionFacts.proteins.value / 100f
+                    }
+                }
+                .roundToInt()
 
     val totalCarbohydrates: Int
-        get() = foods.values.sumOf {
-            it.sumOf {
-                val weight = it.weight ?: return@sumOf 0f
-                weight * it.food.nutritionFacts.carbohydrates.value / 100f
-            }
-        }.roundToInt()
+        get() =
+            foods.values
+                .sumOf {
+                    it.sumOf {
+                        val weight = it.weight ?: return@sumOf 0f
+                        weight * it.food.nutritionFacts.carbohydrates.value / 100f
+                    }
+                }
+                .roundToInt()
 
     val totalFats: Int
-        get() = foods.values.sumOf {
-            it.sumOf {
-                val weight = it.weight ?: return@sumOf 0f
-                weight * it.food.nutritionFacts.fats.value / 100f
-            }
-        }.roundToInt()
+        get() =
+            foods.values
+                .sumOf {
+                    it.sumOf {
+                        val weight = it.weight ?: return@sumOf 0f
+                        weight * it.food.nutritionFacts.fats.value / 100f
+                    }
+                }
+                .roundToInt()
 
     private val meals = foods.keys.toList()
 

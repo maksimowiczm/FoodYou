@@ -58,7 +58,7 @@ fun ChangelogModalBottomSheet(onDismissRequest: () -> Unit, modifier: Modifier =
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         sheetState = sheetState,
-        contentWindowInsets = { WindowInsets(0) }
+        contentWindowInsets = { WindowInsets(0) },
     ) {
         SheetContent()
     }
@@ -67,42 +67,39 @@ fun ChangelogModalBottomSheet(onDismissRequest: () -> Unit, modifier: Modifier =
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SheetContent(modifier: Modifier = Modifier) {
-    val paddingValues = WindowInsets.systemBars
-        .only(WindowInsetsSides.Bottom)
-        .add(WindowInsets(bottom = 8.dp))
-        .asPaddingValues()
+    val paddingValues =
+        WindowInsets.systemBars
+            .only(WindowInsetsSides.Bottom)
+            .add(WindowInsets(bottom = 8.dp))
+            .asPaddingValues()
 
-    val versions = remember(Changelog) {
-        val currentVersion = Changelog.currentVersion
+    val versions =
+        remember(Changelog) {
+            val currentVersion = Changelog.currentVersion
 
-        if (currentVersion?.isPreview == true) {
-            Changelog.versions
-        } else {
-            Changelog.versions.filterNot { it.isPreview }
+            if (currentVersion?.isPreview == true) {
+                Changelog.versions
+            } else {
+                Changelog.versions.filterNot { it.isPreview }
+            }
         }
-    }
 
     LazyColumn(
         modifier = modifier,
         contentPadding = paddingValues,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(Res.string.headline_whats_new),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
             )
         }
 
-        items(
-            items = versions
-        ) { version ->
-            ChangelogItem(
-                version = version,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+        items(items = versions) { version ->
+            ChangelogItem(version = version, modifier = Modifier.padding(horizontal = 16.dp))
         }
     }
 }
@@ -125,31 +122,27 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
 
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-        )
+        colors =
+            CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Column {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Text(
-                            text = version.version,
-                            style = MaterialTheme.typography.titleLarge
-                        )
+                        Text(text = version.version, style = MaterialTheme.typography.titleLarge)
                         if (version.isCurrentVersion) {
                             Badge(
                                 containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
                             ) {
                                 Text(stringResource(Res.string.headline_installed))
                             }
@@ -158,35 +151,32 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                     Text(
                         text = dateFormatter.formatDateShort(version.date),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
 
                 IconButton(
                     onClick = {
                         coroutineScope.launch {
-                            clipboardManager.copy(
-                                label = changelogString,
-                                text = changelogText
-                            )
+                            clipboardManager.copy(label = changelogString, text = changelogText)
                             copied = true
                         }
                     }
                 ) {
-                    Crossfade(
-                        targetState = copied
-                    ) {
+                    Crossfade(targetState = copied) {
                         when (it) {
-                            false -> Icon(
-                                imageVector = Icons.Default.ContentCopy,
-                                contentDescription = stringResource(Res.string.action_copy)
-                            )
+                            false ->
+                                Icon(
+                                    imageVector = Icons.Default.ContentCopy,
+                                    contentDescription = stringResource(Res.string.action_copy),
+                                )
 
-                            true -> Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
+                            true ->
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
                         }
                     }
                 }
@@ -196,11 +186,11 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                 Column {
                     Text(
                         text = stringResource(Res.string.changelog_new_features),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
                         text = unorderedList(version.newFeatures),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
@@ -209,11 +199,11 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                 Column {
                     Text(
                         text = stringResource(Res.string.changelog_changes),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
                         text = unorderedList(version.changes),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
@@ -222,11 +212,11 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                 Column {
                     Text(
                         text = stringResource(Res.string.changelog_bug_fixes),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
                         text = unorderedList(version.bugFixes),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
@@ -235,11 +225,11 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                 Column {
                     Text(
                         text = stringResource(Res.string.changelog_translations),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
                         text = unorderedList(version.translations),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
@@ -248,12 +238,9 @@ private fun ChangelogItem(version: Version, modifier: Modifier = Modifier) {
                 Column {
                     Text(
                         text = stringResource(Res.string.changelog_notes),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
-                    Text(
-                        text = version.notes,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    Text(text = version.notes, style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }

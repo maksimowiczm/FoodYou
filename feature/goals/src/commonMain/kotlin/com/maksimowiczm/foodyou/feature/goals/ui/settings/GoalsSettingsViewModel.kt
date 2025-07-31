@@ -14,11 +14,14 @@ import kotlinx.coroutines.runBlocking
 
 internal class GoalsSettingsViewModel(private val goalsRepository: GoalsRepository) : ViewModel() {
 
-    val goals = goalsRepository.observeDailyGoals().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = runBlocking { goalsRepository.observeDailyGoals().first() }
-    )
+    val goals =
+        goalsRepository
+            .observeDailyGoals()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = runBlocking { goalsRepository.observeDailyGoals().first() },
+            )
 
     private val _saved = MutableStateFlow(false)
     val saved = _saved.asStateFlow()

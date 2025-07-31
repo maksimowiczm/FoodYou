@@ -18,9 +18,10 @@ internal class SwissFoodCompositionDatabaseViewModel(
     private val importSwissDatabaseUseCase: ImportSwissDatabaseUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<SwissFoodCompositionDatabaseUiState>(
-        SwissFoodCompositionDatabaseUiState.LanguagePick
-    )
+    private val _uiState =
+        MutableStateFlow<SwissFoodCompositionDatabaseUiState>(
+            SwissFoodCompositionDatabaseUiState.LanguagePick
+        )
     val uiState = _uiState.asStateFlow()
 
     private val mutex = Mutex()
@@ -42,9 +43,7 @@ internal class SwissFoodCompositionDatabaseViewModel(
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {
-                    Logger.e(TAG, e) {
-                        "Error while importing Swiss Food Composition Database"
-                    }
+                    Logger.e(TAG, e) { "Error while importing Swiss Food Composition Database" }
                 }
 
                 delay(200)

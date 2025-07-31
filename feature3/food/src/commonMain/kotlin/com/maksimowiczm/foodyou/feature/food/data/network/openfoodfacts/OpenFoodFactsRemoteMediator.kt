@@ -29,7 +29,7 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
     private val offMapper: OpenFoodFactsProductMapper,
     private val remoteMapper: RemoteProductMapper,
     private val createProductUseCase: CreateProductUseCase,
-    private val productMapper: ProductMapper
+    private val productMapper: ProductMapper,
 ) : RemoteMediator<Int, T>() {
 
     private val openFoodFactsDao = foodDatabase.openFoodFactsDao
@@ -38,75 +38,77 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, T>): MediatorResult {
         try {
-            val page = when (loadType) {
-                LoadType.REFRESH -> {
-                    // Currently there is no way to refresh the data other than delete all and fetch again.
-                    return MediatorResult.Success(endOfPaginationReached = false)
-                }
-
-                LoadType.PREPEND -> {
-                    return MediatorResult.Success(endOfPaginationReached = true)
-                }
-
-                // Handle barcode search as a special case.
-                LoadType.APPEND if (isBarcode) -> {
-                    val response = remoteDataSource.getProduct(
-                        barcode = query,
-                        countries = country
-                    ).getOrElse {
-                        return if (it is ProductNotFoundException) {
-                            MediatorResult.Success(endOfPaginationReached = true)
-                        } else {
-                            MediatorResult.Error(it)
-                        }
+            val page =
+                when (loadType) {
+                    LoadType.REFRESH -> {
+                        // Currently there is no way to refresh the data other than delete all and
+                        // fetch again.
+                        return MediatorResult.Success(endOfPaginationReached = false)
                     }
 
-                    val product = response.toEntity()
-
-                    if (product != null) {
-                        createProductUseCase.createUnique(
-                            name = product.name,
-                            brand = product.brand,
-                            barcode = product.barcode,
-                            nutritionFacts = productMapper.toModel(product).nutritionFacts,
-                            packageWeight = product.packageWeight,
-                            servingWeight = product.servingWeight,
-                            note = product.note,
-                            source = FoodSource(
-                                type = product.sourceType,
-                                url = product.sourceUrl
-                            ),
-                            isLiquid = product.isLiquid,
-                            event = FoodEvent.Downloaded(LocalDateTime.now(), product.sourceUrl)
-                        )
-                    }
-                    return MediatorResult.Success(endOfPaginationReached = true)
-                }
-
-                LoadType.APPEND -> {
-                    val pagingKey = openFoodFactsDao.getPagingKey(
-                        query = query,
-                        country = country ?: "world"
-                    )
-
-                    if (pagingKey != null && pagingKey.totalCount == pagingKey.fetchedCount) {
+                    LoadType.PREPEND -> {
                         return MediatorResult.Success(endOfPaginationReached = true)
                     }
 
-                    val nextPage = (pagingKey?.fetchedCount?.div(PAGE_SIZE) ?: 0) + 1
+                    // Handle barcode search as a special case.
+                    LoadType.APPEND if (isBarcode) -> {
+                        val response =
+                            remoteDataSource
+                                .getProduct(barcode = query, countries = country)
+                                .getOrElse {
+                                    return if (it is ProductNotFoundException) {
+                                        MediatorResult.Success(endOfPaginationReached = true)
+                                    } else {
+                                        MediatorResult.Error(it)
+                                    }
+                                }
 
-                    nextPage
+                        val product = response.toEntity()
+
+                        if (product != null) {
+                            createProductUseCase.createUnique(
+                                name = product.name,
+                                brand = product.brand,
+                                barcode = product.barcode,
+                                nutritionFacts = productMapper.toModel(product).nutritionFacts,
+                                packageWeight = product.packageWeight,
+                                servingWeight = product.servingWeight,
+                                note = product.note,
+                                source =
+                                    FoodSource(type = product.sourceType, url = product.sourceUrl),
+                                isLiquid = product.isLiquid,
+                                event = FoodEvent.Downloaded(LocalDateTime.now(), product.sourceUrl),
+                            )
+                        }
+                        return MediatorResult.Success(endOfPaginationReached = true)
+                    }
+
+                    LoadType.APPEND -> {
+                        val pagingKey =
+                            openFoodFactsDao.getPagingKey(
+                                query = query,
+                                country = country ?: "world",
+                            )
+
+                        if (pagingKey != null && pagingKey.totalCount == pagingKey.fetchedCount) {
+                            return MediatorResult.Success(endOfPaginationReached = true)
+                        }
+
+                        val nextPage = (pagingKey?.fetchedCount?.div(PAGE_SIZE) ?: 0) + 1
+
+                        nextPage
+                    }
                 }
-            }
 
             Logger.d(TAG) { "Loading page $page" }
 
-            val response = remoteDataSource.queryProducts(
-                query = query,
-                countries = country,
-                page = page,
-                pageSize = PAGE_SIZE
-            )
+            val response =
+                remoteDataSource.queryProducts(
+                    query = query,
+                    countries = country,
+                    page = page,
+                    pageSize = PAGE_SIZE,
+                )
 
             val fetchedCount =
                 ((response.page - 1) * response.pageSize).coerceAtLeast(0) + response.products.size
@@ -116,19 +118,20 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
                     queryString = query,
                     country = country ?: "world",
                     fetchedCount = fetchedCount,
-                    totalCount = response.count
+                    totalCount = response.count,
                 )
             )
 
-            val products = response.products.map { remoteProduct ->
-                remoteProduct.toEntity().also {
-                    if (it == null) {
-                        Logger.w(TAG) {
-                            "Failed to convert product: (name=${remoteProduct.name}, code=${remoteProduct.barcode})"
+            val products =
+                response.products.map { remoteProduct ->
+                    remoteProduct.toEntity().also {
+                        if (it == null) {
+                            Logger.w(TAG) {
+                                "Failed to convert product: (name=${remoteProduct.name}, code=${remoteProduct.barcode})"
+                            }
                         }
                     }
                 }
-            }
 
             val now = LocalDateTime.now()
             products.filterNotNull().forEach { product ->
@@ -140,12 +143,9 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
                     packageWeight = product.packageWeight,
                     servingWeight = product.servingWeight,
                     note = product.note,
-                    source = FoodSource(
-                        type = product.sourceType,
-                        url = product.sourceUrl
-                    ),
+                    source = FoodSource(type = product.sourceType, url = product.sourceUrl),
                     isLiquid = product.isLiquid,
-                    event = FoodEvent.Downloaded(now, product.sourceUrl)
+                    event = FoodEvent.Downloaded(now, product.sourceUrl),
                 )
             }
 
@@ -171,9 +171,11 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
         private const val PAGE_SIZE = 50
     }
 
-    private fun NetworkOpenFoodFactsProduct.toEntity(): Product? = runCatching {
-        val remoteProduct = offMapper.toRemoteProduct(this)
-        val entity = remoteMapper.toEntity(remoteProduct)
-        return entity
-    }.getOrNull()
+    private fun NetworkOpenFoodFactsProduct.toEntity(): Product? =
+        runCatching {
+                val remoteProduct = offMapper.toRemoteProduct(this)
+                val entity = remoteMapper.toEntity(remoteProduct)
+                return entity
+            }
+            .getOrNull()
 }

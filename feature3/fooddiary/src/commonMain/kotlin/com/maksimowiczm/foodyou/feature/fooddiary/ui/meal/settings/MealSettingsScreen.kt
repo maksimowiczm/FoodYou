@@ -63,61 +63,54 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 internal fun MealSettingsScreen(
     onBack: () -> Unit,
     onMealsCardsSettings: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     val mealDao = koinInject<FoodDiaryDatabase>().mealDao
     val meals = mealDao.observeMeals().collectAsStateWithLifecycle(null).value
 
-    val onDelete: (Meal) -> Unit = {
-        coroutineScope.launch {
-            mealDao.deleteMeal(it)
-        }
-    }
+    val onDelete: (Meal) -> Unit = { coroutineScope.launch { mealDao.deleteMeal(it) } }
     val onSave: (mealId: Long, MealCardState) -> Unit = { mealId, state ->
         coroutineScope.launch {
             val meal = mealDao.observeMealById(mealId).first() ?: return@launch
 
-            val (from, to) = if (state.isAllDay) {
-                state.fromTime to state.fromTime
-            } else {
-                state.fromTime to state.toTime
-            }
+            val (from, to) =
+                if (state.isAllDay) {
+                    state.fromTime to state.fromTime
+                } else {
+                    state.fromTime to state.toTime
+                }
 
-            val updated = meal.copy(
-                name = state.name.value,
-                from = from,
-                to = to
-            )
+            val updated = meal.copy(name = state.name.value, from = from, to = to)
 
             mealDao.updateMeal(updated)
         }
     }
     val onCreate: (MealCardState) -> Unit = { state ->
         coroutineScope.launch {
-            val (from, to) = if (state.isAllDay) {
-                state.fromTime to state.fromTime
-            } else {
-                state.fromTime to state.toTime
-            }
+            val (from, to) =
+                if (state.isAllDay) {
+                    state.fromTime to state.fromTime
+                } else {
+                    state.fromTime to state.toTime
+                }
 
-            val meal = Meal(
-                name = state.name.value,
-                fromHour = from.hour,
-                fromMinute = from.minute,
-                toHour = to.hour,
-                toMinute = to.minute
-            )
+            val meal =
+                Meal(
+                    name = state.name.value,
+                    fromHour = from.hour,
+                    fromMinute = from.minute,
+                    toHour = to.hour,
+                    toMinute = to.minute,
+                )
 
             mealDao.insertWithLastRank(meal)
         }
     }
     val onSaveOrder: (List<Meal>) -> Unit = { meals ->
         coroutineScope.launch {
-            val map = meals
-                .mapIndexed { i, meal -> meal.id to i }
-                .toMap()
+            val map = meals.mapIndexed { i, meal -> meal.id to i }.toMap()
 
             mealDao.updateMealsRanks(map)
         }
@@ -134,7 +127,7 @@ internal fun MealSettingsScreen(
             onCreate = onCreate,
             onSaveOrder = onSaveOrder,
             meals = meals,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -149,38 +142,29 @@ internal fun MealSettingsScreen(
     onCreate: (MealCardState) -> Unit,
     onSaveOrder: (List<Meal>) -> Unit,
     meals: List<Meal>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
     var isReordering by rememberSaveable { mutableStateOf(false) }
     var showForm by rememberSaveable { mutableStateOf(false) }
     val formFocusRequester = remember { FocusRequester() }
-    LaunchedEffect(showForm) {
-        runCatching {
-            formFocusRequester.requestFocus()
-        }
-    }
+    LaunchedEffect(showForm) { runCatching { formFocusRequester.requestFocus() } }
 
     val lazyListState = rememberLazyListState()
     var mealsOrder by remember(meals) { mutableStateOf(meals) }
-    val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        mealsOrder = mealsOrder.toMutableList().apply {
-            add(to.index, removeAt(from.index))
+    val reorderableLazyListState =
+        rememberReorderableLazyListState(lazyListState) { from, to ->
+            mealsOrder = mealsOrder.toMutableList().apply { add(to.index, removeAt(from.index)) }
         }
-    }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = {
-                    Text(stringResource(Res.string.headline_meals))
-                },
-                navigationIcon = {
-                    ArrowBackIconButton(onBack)
-                },
+                title = { Text(stringResource(Res.string.headline_meals)) },
+                navigationIcon = { ArrowBackIconButton(onBack) },
                 actions = {
                     if (isReordering) {
                         IconButton(
@@ -192,18 +176,16 @@ internal fun MealSettingsScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Save,
-                                contentDescription = stringResource(Res.string.action_save)
+                                contentDescription = stringResource(Res.string.action_save),
                             )
                         }
                     } else {
                         TooltipBox(
                             positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
                             tooltip = {
-                                PlainTooltip {
-                                    Text(stringResource(Res.string.action_reorder))
-                                }
+                                PlainTooltip { Text(stringResource(Res.string.action_reorder)) }
                             },
-                            state = rememberTooltipState()
+                            state = rememberTooltipState(),
                         ) {
                             IconButton(
                                 onClick = {
@@ -213,65 +195,59 @@ internal fun MealSettingsScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Reorder,
-                                    contentDescription = stringResource(Res.string.action_reorder)
+                                    contentDescription = stringResource(Res.string.action_reorder),
                                 )
                             }
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                ),
-                scrollBehavior = scrollBehavior
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    ),
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .imePadding()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier =
+                Modifier.fillMaxSize()
+                    .imePadding()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
             state = lazyListState,
-            contentPadding = paddingValues.add(vertical = 8.dp)
+            contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
-            items(
-                items = mealsOrder,
-                key = { it.id }
-            ) { meal ->
+            items(items = mealsOrder, key = { it.id }) { meal ->
                 val state = rememberMealCardState(meal)
 
-                ReorderableItem(
-                    state = reorderableLazyListState,
-                    key = meal.id
-                ) { isDragging ->
+                ReorderableItem(state = reorderableLazyListState, key = meal.id) { isDragging ->
                     MealCard(
                         state = state,
                         isDragging = isDragging,
                         onSave = { onSave(meal.id, state) },
                         onDelete = { onDelete(meal) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .padding(bottom = 8.dp),
-                        action = if (isReordering) {
-                            {
-                                IconButton(
-                                    onClick = {},
-                                    modifier = Modifier
-                                        .clearAndSetSemantics { }
-                                        .hapticDraggableHandle()
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.DragHandle,
-                                        contentDescription = stringResource(
-                                            Res.string.action_reorder
+                        modifier =
+                            Modifier.fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 8.dp),
+                        action =
+                            if (isReordering) {
+                                {
+                                    IconButton(
+                                        onClick = {},
+                                        modifier =
+                                            Modifier.clearAndSetSemantics {}.hapticDraggableHandle(),
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.DragHandle,
+                                            contentDescription =
+                                                stringResource(Res.string.action_reorder),
                                         )
-                                    )
+                                    }
                                 }
-                            }
-                        } else {
-                            null
-                        }
+                            } else {
+                                null
+                            },
                     )
                 }
             }
@@ -281,10 +257,10 @@ internal fun MealSettingsScreen(
                     showForm = showForm,
                     onShowFormChange = { showForm = it },
                     onSave = onCreate,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .focusRequester(formFocusRequester)
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .focusRequester(formFocusRequester),
                 )
                 Spacer(Modifier.height(8.dp))
             }
@@ -295,7 +271,7 @@ internal fun MealSettingsScreen(
                     headlineContent = {
                         Text(stringResource(Res.string.headline_meals_cards_settings))
                     },
-                    modifier = Modifier.clickable { onMealsCardsSettings() }
+                    modifier = Modifier.clickable { onMealsCardsSettings() },
                 )
             }
         }
@@ -307,7 +283,7 @@ private fun CreateMealCard(
     showForm: Boolean,
     onShowFormChange: (Boolean) -> Unit,
     onSave: (MealCardState) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (showForm) {
         val state = rememberMealCardState(null)
@@ -323,44 +299,38 @@ private fun CreateMealCard(
             modifier = modifier,
             action = {
                 when {
-                    !state.isModified -> IconButton(
-                        onClick = { onShowFormChange(false) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = null
-                        )
-                    }
+                    !state.isModified ->
+                        IconButton(onClick = { onShowFormChange(false) }) {
+                            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                        }
 
-                    else -> FilledIconButton(
-                        onClick = {
-                            onSave(state)
-                            onShowFormChange(false)
-                        },
-                        enabled = state.isValid
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Save,
-                            contentDescription = stringResource(Res.string.action_save)
-                        )
-                    }
+                    else ->
+                        FilledIconButton(
+                            onClick = {
+                                onSave(state)
+                                onShowFormChange(false)
+                            },
+                            enabled = state.isValid,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Save,
+                                contentDescription = stringResource(Res.string.action_save),
+                            )
+                        }
                 }
-            }
+            },
         )
     } else {
         Surface(
             onClick = { onShowFormChange(true) },
             modifier = modifier,
             shape = MaterialTheme.shapes.medium,
-            color = MaterialTheme.colorScheme.surfaceContainer
+            color = MaterialTheme.colorScheme.surfaceContainer,
         ) {
-            Box(
-                modifier = Modifier.padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
+            Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.Center) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(Res.string.action_add_meal)
+                    contentDescription = stringResource(Res.string.action_add_meal),
                 )
             }
         }

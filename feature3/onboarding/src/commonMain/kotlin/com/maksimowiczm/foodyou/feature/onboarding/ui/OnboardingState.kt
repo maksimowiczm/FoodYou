@@ -19,7 +19,7 @@ internal fun rememberOnboardingState(): OnboardingState {
         OnboardingState(
             openFoodFactsState = openFoodFactsState,
             usdaState = usdaState,
-            swissLanguagesState = swissLanguagesState
+            swissLanguagesState = swissLanguagesState,
         )
     }
 }
@@ -27,7 +27,7 @@ internal fun rememberOnboardingState(): OnboardingState {
 internal class OnboardingState(
     openFoodFactsState: MutableState<Boolean>,
     usdaState: MutableState<Boolean>,
-    swissLanguagesState: MutableState<Set<Language>>
+    swissLanguagesState: MutableState<Set<Language>>,
 ) {
     var useOpenFoodFacts by openFoodFactsState
     var useUsda by usdaState

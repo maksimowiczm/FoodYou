@@ -13,15 +13,12 @@ import androidx.compose.ui.unit.dp
 internal fun Phone(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.surface,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Surface(
         modifier = modifier.size(width = 120.dp, height = 100.dp),
-        shape = RoundedCornerShape(
-            topStart = 12.dp,
-            topEnd = 12.dp
-        ),
-        color = color
+        shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+        color = color,
     ) {
         content()
     }

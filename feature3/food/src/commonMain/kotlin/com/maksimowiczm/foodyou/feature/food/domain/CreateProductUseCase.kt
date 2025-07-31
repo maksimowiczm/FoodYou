@@ -21,12 +21,12 @@ interface CreateProductUseCase {
         note: String?,
         source: FoodSource,
         isLiquid: Boolean,
-        event: FoodEvent.FoodCreationEvent
+        event: FoodEvent.FoodCreationEvent,
     ): FoodId.Product
 
     /**
-     * Creates a product in the database, ensuring that it is unique.
-     * If the product already exists, it returns null.
+     * Creates a product in the database, ensuring that it is unique. If the product already exists,
+     * it returns null.
      *
      * @param event The event associated with the product creation.
      * @return The ID of the created product, or null if the product already exists.
@@ -41,14 +41,14 @@ interface CreateProductUseCase {
         note: String?,
         source: FoodSource,
         isLiquid: Boolean,
-        event: FoodEvent.FoodCreationEvent
+        event: FoodEvent.FoodCreationEvent,
     ): FoodId.Product?
 }
 
 internal class CreateProductUseCaseImpl(
     foodDatabase: FoodDatabase,
     private val productMapper: ProductMapper,
-    private val foodEventMapper: FoodEventMapper
+    private val foodEventMapper: FoodEventMapper,
 ) : CreateProductUseCase {
 
     private val foodEventDao = foodDatabase.foodEventDao
@@ -68,24 +68,25 @@ internal class CreateProductUseCaseImpl(
         note: String?,
         source: FoodSource,
         isLiquid: Boolean,
-        event: FoodEvent.FoodCreationEvent
+        event: FoodEvent.FoodCreationEvent,
     ): FoodId.Product {
         val (nutrients, vitamins, minerals) = productMapper.toEntityNutrients(nutritionFacts)
 
-        val entity = Product(
-            name = name,
-            brand = brand,
-            barcode = barcode,
-            nutrients = nutrients,
-            vitamins = vitamins,
-            minerals = minerals,
-            packageWeight = packageWeight,
-            servingWeight = servingWeight,
-            note = note,
-            sourceType = source.type,
-            sourceUrl = source.url,
-            isLiquid = isLiquid
-        )
+        val entity =
+            Product(
+                name = name,
+                brand = brand,
+                barcode = barcode,
+                nutrients = nutrients,
+                vitamins = vitamins,
+                minerals = minerals,
+                packageWeight = packageWeight,
+                servingWeight = servingWeight,
+                note = note,
+                sourceType = source.type,
+                sourceUrl = source.url,
+                isLiquid = isLiquid,
+            )
 
         val id = productDao.insert(entity)
 
@@ -105,23 +106,24 @@ internal class CreateProductUseCaseImpl(
         note: String?,
         source: FoodSource,
         isLiquid: Boolean,
-        event: FoodEvent.FoodCreationEvent
+        event: FoodEvent.FoodCreationEvent,
     ): FoodId.Product? {
         val (nutrients, vitamins, minerals) = productMapper.toEntityNutrients(nutritionFacts)
-        val entity = Product(
-            name = name,
-            brand = brand,
-            barcode = barcode,
-            nutrients = nutrients,
-            vitamins = vitamins,
-            minerals = minerals,
-            packageWeight = packageWeight,
-            servingWeight = servingWeight,
-            note = note,
-            sourceType = source.type,
-            sourceUrl = source.url,
-            isLiquid = isLiquid
-        )
+        val entity =
+            Product(
+                name = name,
+                brand = brand,
+                barcode = barcode,
+                nutrients = nutrients,
+                vitamins = vitamins,
+                minerals = minerals,
+                packageWeight = packageWeight,
+                servingWeight = servingWeight,
+                note = note,
+                sourceType = source.type,
+                sourceUrl = source.url,
+                isLiquid = isLiquid,
+            )
 
         val id = productDao.insertUniqueProduct(entity)
 

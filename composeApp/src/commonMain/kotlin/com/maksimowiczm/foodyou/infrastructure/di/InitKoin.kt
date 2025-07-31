@@ -6,10 +6,7 @@ import org.koin.dsl.KoinAppDeclaration
 fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     config?.invoke(this)
 
-    modules(
-        databaseModule,
-        dataStoreModule
-    )
+    modules(databaseModule, dataStoreModule)
 
     modules(
         aboutModule,
@@ -21,6 +18,6 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         onboardingModule,
         openFoodFactsModule,
         swissFoodCompositionDatabaseModule,
-        usdaModule
+        usdaModule,
     )
 }

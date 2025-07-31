@@ -19,22 +19,22 @@ internal abstract class RecipeViewModel(private val observeFoodUseCase: ObserveF
             return flowOf(null)
         }
 
-        return state.ingredients.map { ingredient ->
-            observeFoodUseCase.observe(ingredient.foodId).filterNotNull().map { food ->
-                RecipeIngredient(
-                    food = food,
-                    measurement = ingredient.measurement
+        return state.ingredients
+            .map { ingredient ->
+                observeFoodUseCase.observe(ingredient.foodId).filterNotNull().map { food ->
+                    RecipeIngredient(food = food, measurement = ingredient.measurement)
+                }
+            }
+            .combine()
+            .map { ingredients ->
+                Recipe(
+                    id = FoodId.Recipe(-1),
+                    name = state.name.value,
+                    servings = state.servings.value,
+                    note = state.note.value,
+                    ingredients = ingredients,
+                    isLiquid = state.isLiquid,
                 )
             }
-        }.combine().map { ingredients ->
-            Recipe(
-                id = FoodId.Recipe(-1),
-                name = state.name.value,
-                servings = state.servings.value,
-                note = state.note.value,
-                ingredients = ingredients,
-                isLiquid = state.isLiquid
-            )
-        }
     }
 }

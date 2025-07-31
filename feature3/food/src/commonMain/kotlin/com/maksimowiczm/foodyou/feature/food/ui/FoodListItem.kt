@@ -49,93 +49,94 @@ fun FoodListItem(
     containerColor: Color = Color.Transparent,
     contentColor: Color = LocalContentColor.current,
     shape: Shape = RectangleShape,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
     val orderPreference = userPreference<NutrientsOrderPreference>()
     val order = orderPreference.collectAsStateWithLifecycle(orderPreference.getBlocking()).value
 
-    val headlineContent = @Composable {
-        CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
-        ) {
-            name()
-        }
-    }
-
-    val supportingContent = @Composable {
-        CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.bodyMedium
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth()
+    val headlineContent =
+        @Composable {
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    CompositionLocalProvider(
-                        LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                name()
+            }
+        }
+
+    val supportingContent =
+        @Composable {
+            CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
-                        calories()
-                    }
+                        CompositionLocalProvider(
+                            LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                        ) {
+                            calories()
+                        }
 
-                    order.forEach { field ->
-                        when (field) {
-                            NutrientsOrder.Proteins -> CompositionLocalProvider(
-                                LocalContentColor provides
-                                    nutrientsPalette.proteinsOnSurfaceContainer,
-                                LocalTextStyle provides MaterialTheme.typography.bodyMedium
-                            ) {
-                                proteins()
+                        order.forEach { field ->
+                            when (field) {
+                                NutrientsOrder.Proteins ->
+                                    CompositionLocalProvider(
+                                        LocalContentColor provides
+                                            nutrientsPalette.proteinsOnSurfaceContainer,
+                                        LocalTextStyle provides MaterialTheme.typography.bodyMedium,
+                                    ) {
+                                        proteins()
+                                    }
+
+                                NutrientsOrder.Fats ->
+                                    CompositionLocalProvider(
+                                        LocalContentColor provides
+                                            nutrientsPalette.fatsOnSurfaceContainer,
+                                        LocalTextStyle provides MaterialTheme.typography.bodyMedium,
+                                    ) {
+                                        fats()
+                                    }
+
+                                NutrientsOrder.Carbohydrates ->
+                                    CompositionLocalProvider(
+                                        LocalContentColor provides
+                                            nutrientsPalette.carbohydratesOnSurfaceContainer,
+                                        LocalTextStyle provides MaterialTheme.typography.bodyMedium,
+                                    ) {
+                                        carbohydrates()
+                                    }
+
+                                NutrientsOrder.Other,
+                                NutrientsOrder.Vitamins,
+                                NutrientsOrder.Minerals -> Unit
                             }
-
-                            NutrientsOrder.Fats -> CompositionLocalProvider(
-                                LocalContentColor provides nutrientsPalette.fatsOnSurfaceContainer,
-                                LocalTextStyle provides MaterialTheme.typography.bodyMedium
-                            ) {
-                                fats()
-                            }
-
-                            NutrientsOrder.Carbohydrates -> CompositionLocalProvider(
-                                LocalContentColor provides
-                                    nutrientsPalette.carbohydratesOnSurfaceContainer,
-                                LocalTextStyle provides MaterialTheme.typography.bodyMedium
-                            ) {
-                                carbohydrates()
-                            }
-
-                            NutrientsOrder.Other,
-                            NutrientsOrder.Vitamins,
-                            NutrientsOrder.Minerals -> Unit
                         }
                     }
                 }
             }
-        }
-        CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.bodyMedium
-        ) {
-            measurement()
-        }
-    }
-
-    val content = @Composable {
-        Row(
-            modifier = Modifier.padding(contentPadding),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                headlineContent()
-                supportingContent()
+            CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
+                measurement()
             }
-
-            trailingContent?.invoke()
         }
-    }
+
+    val content =
+        @Composable {
+            Row(
+                modifier = Modifier.padding(contentPadding),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    headlineContent()
+                    supportingContent()
+                }
+
+                trailingContent?.invoke()
+            }
+        }
 
     if (onClick != null) {
         Surface(
@@ -144,7 +145,7 @@ fun FoodListItem(
             color = containerColor,
             contentColor = contentColor,
             shape = shape,
-            content = content
+            content = content,
         )
     } else {
         Surface(
@@ -152,7 +153,7 @@ fun FoodListItem(
             color = containerColor,
             contentColor = contentColor,
             shape = shape,
-            content = content
+            content = content,
         )
     }
 }
@@ -165,25 +166,26 @@ fun FoodErrorListItem(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     shape: Shape = RectangleShape,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
 ) {
-    val content = @Composable {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(contentPadding),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
+    val content =
+        @Composable {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(contentPadding),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Text(headline)
-            }
-            CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
-                Text(errorMessage)
+                CompositionLocalProvider(
+                    LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
+                ) {
+                    Text(headline)
+                }
+                CompositionLocalProvider(
+                    LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                ) {
+                    Text(errorMessage)
+                }
             }
         }
-    }
 
     if (onClick != null) {
         Surface(
@@ -192,7 +194,7 @@ fun FoodErrorListItem(
             shape = shape,
             color = MaterialTheme.colorScheme.errorContainer,
             contentColor = MaterialTheme.colorScheme.onErrorContainer,
-            content = content
+            content = content,
         )
     } else {
         Surface(
@@ -200,7 +202,7 @@ fun FoodErrorListItem(
             shape = shape,
             color = MaterialTheme.colorScheme.errorContainer,
             contentColor = MaterialTheme.colorScheme.onErrorContainer,
-            content = content
+            content = content,
         )
     }
 }
@@ -211,15 +213,14 @@ fun FoodErrorListItem(
 fun FoodListItemSkeleton(
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
-    trailingContent: (@Composable () -> Unit)? = null
+    trailingContent: (@Composable () -> Unit)? = null,
 ) {
     ListItem(
         headlineContent = {
             Column {
                 Spacer(Modifier.height(2.dp))
                 Spacer(
-                    Modifier
-                        .shimmer(shimmer)
+                    Modifier.shimmer(shimmer)
                         .height(LocalTextStyle.current.toDp() - 4.dp)
                         .width(200.dp)
                         .clip(MaterialTheme.shapes.medium)
@@ -231,8 +232,7 @@ fun FoodListItemSkeleton(
         modifier = modifier,
         overlineContent = {
             Spacer(
-                Modifier
-                    .shimmer(shimmer)
+                Modifier.shimmer(shimmer)
                     .height(LocalTextStyle.current.toDp())
                     .width(100.dp)
                     .clip(MaterialTheme.shapes.medium)
@@ -242,19 +242,17 @@ fun FoodListItemSkeleton(
         supportingContent = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Spacer(
-                    Modifier
-                        .shimmer(shimmer)
+                    Modifier.shimmer(shimmer)
                         .height(LocalTextStyle.current.toDp())
                         .width(125.dp)
                         .clip(MaterialTheme.shapes.medium)
                         .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 )
                 Spacer(
-                    Modifier
-                        .shimmer(shimmer)
+                    Modifier.shimmer(shimmer)
                         .height(LocalTextStyle.current.toDp())
                         .width(75.dp)
                         .clip(MaterialTheme.shapes.medium)
@@ -262,6 +260,6 @@ fun FoodListItemSkeleton(
                 )
             }
         },
-        trailingContent = trailingContent
+        trailingContent = trailingContent,
     )
 }
