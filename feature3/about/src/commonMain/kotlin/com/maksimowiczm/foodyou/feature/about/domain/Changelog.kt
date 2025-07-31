@@ -6,7 +6,7 @@ import kotlinx.datetime.LocalDate
 
 object Changelog {
     val currentVersion: Version?
-        get() = versions.firstOrNull { it.isCurrentVersion } ?: v_3_0_0_beta_1
+        get() = versions.firstOrNull { it.isCurrentVersion }
 
     val versions: List<Version>
         get() = listOfNotNull(
