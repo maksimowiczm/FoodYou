@@ -279,6 +279,7 @@ internal class FoodSearchViewModel(
         }
     ).flow.mapData(foodSearchMapper::toModel)
 
+    @OptIn(ExperimentalTime::class)
     private fun FoodSearchDao.observeFood(
         query: String?,
         source: FoodFilter.Source
@@ -286,7 +287,7 @@ internal class FoodSearchViewModel(
         val isBarcode = query?.all { it.isDigit() } ?: false
 
         return if (source == FoodFilter.Source.Recent) {
-            observeRecentFood()
+            observeRecentFood(Clock.System.now().epochSeconds)
         } else if (isBarcode) {
             observeFoodByBarcode(
                 barcode = query,
@@ -301,6 +302,7 @@ internal class FoodSearchViewModel(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun FoodSearchDao.observeFoodCount(
         query: String?,
         source: FoodFilter.Source
@@ -308,7 +310,7 @@ internal class FoodSearchViewModel(
         val isBarcode = query?.all { it.isDigit() } ?: false
 
         return if (source == FoodFilter.Source.Recent) {
-            observeRecentFoodCount()
+            observeRecentFoodCount(Clock.System.now().epochSeconds)
         } else if (isBarcode) {
             observeFoodCountByBarcode(
                 barcode = query,

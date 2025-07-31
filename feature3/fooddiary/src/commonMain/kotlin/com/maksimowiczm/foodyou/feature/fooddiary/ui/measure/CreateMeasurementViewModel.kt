@@ -13,14 +13,11 @@ import com.maksimowiczm.foodyou.feature.food.domain.Recipe
 import com.maksimowiczm.foodyou.feature.food.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.feature.food.domain.weight
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
-import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement as MeasurementEntity
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.CreateMeasurementUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMeasurementSuggestionsUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.defaultMeasurement
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.toMeasurement
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
-import com.maksimowiczm.foodyou.feature.measurement.domain.rawValue
-import com.maksimowiczm.foodyou.feature.measurement.domain.type
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -42,7 +39,8 @@ internal class CreateMeasurementViewModel(
     foodDatabase: FoodDatabase,
     foodDiaryDatabase: FoodDiaryDatabase,
     dateProvider: DateProvider,
-    foodEventMapper: FoodEventMapper,
+    private val foodEventMapper: FoodEventMapper,
+    private val createMeasurementUseCase: CreateMeasurementUseCase,
     private val foodId: FoodId
 ) : ViewModel() {
     private val productDao = foodDatabase.productDao
@@ -157,18 +155,13 @@ internal class CreateMeasurementViewModel(
 
     @OptIn(ExperimentalTime::class)
     fun createMeasurement(measurement: Measurement, mealId: Long, date: LocalDate) {
-        val entity = MeasurementEntity(
-            mealId = mealId,
-            epochDay = date.toEpochDays(),
-            productId = (foodId as? FoodId.Product)?.id,
-            recipeId = (foodId as? FoodId.Recipe)?.id,
-            measurement = measurement.type,
-            quantity = measurement.rawValue,
-            createdAt = Clock.System.now().epochSeconds
-        )
-
         viewModelScope.launch {
-            measurementDao.insertMeasurement(entity)
+            createMeasurementUseCase.createMeasurement(
+                measurement = measurement,
+                foodId = foodId,
+                mealId = mealId,
+                date = date
+            )
             eventBus.send(MeasurementEvent.Saved)
         }
     }
@@ -184,25 +177,17 @@ internal class CreateMeasurementViewModel(
 
         val weight = measurement.weight(recipe)
         val ingredients = recipe.measuredIngredients(weight)
-        val now = Clock.System.now()
-
-        val measurements = ingredients.map { ingredient ->
-            val productId = (ingredient.food.id as? FoodId.Product)?.id
-            val recipeId = (ingredient.food.id as? FoodId.Recipe)?.id
-
-            MeasurementEntity(
-                mealId = mealId,
-                epochDay = date.toEpochDays(),
-                productId = productId,
-                recipeId = recipeId,
-                measurement = ingredient.measurement.type,
-                quantity = ingredient.measurement.rawValue,
-                createdAt = now.epochSeconds
-            )
-        }
 
         viewModelScope.launch {
-            measurementDao.insertMeasurements(measurements)
+            ingredients.forEach { ingredient ->
+                createMeasurementUseCase.createMeasurement(
+                    measurement = ingredient.measurement,
+                    foodId = ingredient.food.id,
+                    mealId = mealId,
+                    date = date
+                )
+            }
+
             eventBus.send(MeasurementEvent.Saved)
         }
     }

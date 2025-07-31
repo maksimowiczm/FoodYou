@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.food.domain
 
 import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEvent as FoodEventEntity
-import com.maksimowiczm.foodyou.feature.food.data.database.food.ProductEventType
+import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEventType
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
@@ -22,21 +22,27 @@ internal class FoodEventMapperImpl : FoodEventMapper {
             Instant.fromEpochSeconds(epochSeconds).toLocalDateTime(TimeZone.currentSystemDefault())
 
         when (type) {
-            ProductEventType.Created -> FoodEvent.Created(date)
+            FoodEventType.Created -> FoodEvent.Created(date)
 
-            ProductEventType.Downloaded -> FoodEvent.Downloaded(
+            FoodEventType.Downloaded -> FoodEvent.Downloaded(
                 date = date,
                 url = extra
             )
 
-            ProductEventType.Imported -> FoodEvent.Imported(date)
+            FoodEventType.Imported -> FoodEvent.Imported(date)
 
-            ProductEventType.Edited if (extra != null) -> FoodEvent.Edited(
-                oldFood = Json.decodeFromString(extra),
-                date = date
-            )
+            FoodEventType.Edited -> {
+                if (extra == null) {
+                    error("Extra field cannot be null for Edited event")
+                }
 
-            else -> error("Unknown ProductEventType: $type with extra: $extra")
+                FoodEvent.Edited(
+                    oldFood = Json.decodeFromString(extra),
+                    date = date
+                )
+            }
+
+            FoodEventType.Used -> FoodEvent.Used(date)
         }
     }
 
@@ -48,13 +54,15 @@ internal class FoodEventMapperImpl : FoodEventMapper {
             is FoodEvent.Downloaded -> url
             is FoodEvent.Imported -> null
             is FoodEvent.Edited -> Json.encodeToString(oldFood)
+            is FoodEvent.Used -> null
         }
 
         val type = when (this) {
-            is FoodEvent.Created -> ProductEventType.Created
-            is FoodEvent.Downloaded -> ProductEventType.Downloaded
-            is FoodEvent.Imported -> ProductEventType.Imported
-            is FoodEvent.Edited -> ProductEventType.Edited
+            is FoodEvent.Created -> FoodEventType.Created
+            is FoodEvent.Downloaded -> FoodEventType.Downloaded
+            is FoodEvent.Imported -> FoodEventType.Imported
+            is FoodEvent.Edited -> FoodEventType.Edited
+            is FoodEvent.Used -> FoodEventType.Used
         }
 
         FoodEventEntity(

@@ -8,8 +8,8 @@ import com.maksimowiczm.foodyou.feature.about.data.database.Sponsorship
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.SourceTypeConverter
 import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEvent
+import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEventTypeConverter
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
-import com.maksimowiczm.foodyou.feature.food.data.database.food.ProductEventTypeConverter
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe
 import com.maksimowiczm.foodyou.feature.food.data.database.food.RecipeIngredient
 import com.maksimowiczm.foodyou.feature.food.data.database.openfoodfacts.OpenFoodFactsPagingKey
@@ -44,7 +44,7 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
 @TypeConverters(
     MeasurementTypeConverter::class,
     SourceTypeConverter::class,
-    ProductEventTypeConverter::class
+    FoodEventTypeConverter::class
 )
 abstract class FoodYouDatabase :
     RoomDatabase(),

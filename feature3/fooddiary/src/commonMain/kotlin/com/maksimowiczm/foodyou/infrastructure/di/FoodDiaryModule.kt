@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.CreateMeasurementUseCase
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.CreateMeasurementUseCaseImpl
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMealsUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMealsUseCaseImpl
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.ObserveMeasurementSuggestionsUseCase
@@ -22,4 +24,5 @@ val foodDiaryModule = module {
         ::ObserveMeasurementSuggestionsUseCaseImpl
     ).bind<ObserveMeasurementSuggestionsUseCase>()
     viewModelOf(::FoodSearchViewModel)
+    factoryOf(::CreateMeasurementUseCaseImpl).bind<CreateMeasurementUseCase>()
 }

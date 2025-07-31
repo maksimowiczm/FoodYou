@@ -26,7 +26,7 @@ import androidx.room.PrimaryKey
 data class FoodEvent(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val type: ProductEventType,
+    val type: FoodEventType,
     val epochSeconds: Long,
     val extra: String? = null,
     val productId: Long?,

@@ -1,8 +1,9 @@
 package com.maksimowiczm.foodyou.feature.food.data.database.food
 
-enum class ProductEventType {
+enum class FoodEventType {
     Created,
     Downloaded,
     Imported,
-    Edited
+    Edited,
+    Used
 }

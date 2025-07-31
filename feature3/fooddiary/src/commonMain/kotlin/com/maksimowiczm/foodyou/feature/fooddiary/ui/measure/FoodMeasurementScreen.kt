@@ -581,9 +581,11 @@ private fun FoodMeasurementForm(state: ProductMeasurementFormState, modifier: Mo
 @Composable
 private fun FoodEvents(events: List<FoodEvent>, modifier: Modifier = Modifier) {
     val dateFormatter = LocalDateFormatter.current
-    val strings = events.map {
-        it.stringResource() + ", " + dateFormatter.formatDateTime(it.date)
-    }
+    val strings = events
+        .filterNot { it is FoodEvent.Used }
+        .map {
+            it.stringResource() + ", " + dateFormatter.formatDateTime(it.date)
+        }
     val list = unorderedList(strings)
 
     Column(modifier) {
@@ -607,4 +609,5 @@ private fun FoodEvent.stringResource(): String = when (this) {
     is FoodEvent.Downloaded -> stringResource(Res.string.headline_downloaded)
     is FoodEvent.Imported -> stringResource(Res.string.headline_imported)
     is FoodEvent.Edited -> stringResource(Res.string.headline_edited)
+    is FoodEvent.Used -> error("FoodEvent.Used should not be displayed in the history")
 }

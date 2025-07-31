@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodSourceSQLConstants
+import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEventTypeSQLConstants
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import kotlinx.coroutines.flow.Flow
 
@@ -15,42 +16,66 @@ interface FoodSearchDao {
     @Query(
         """
         WITH ProductsSearch AS (
-            SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT
-            FROM Product p
-            WHERE 1 = 0
+            SELECT 
+                $PRODUCT_FOOD_SEARCH_SQL_SELECT,
+                fe.epochSeconds AS lastUsedEpochSeconds
+            FROM Product p LEFT JOIN FoodEvent fe ON p.id = fe.productId
+            WHERE 
+                fe.id IS NOT NULL AND
+                fe.type = ${FoodEventTypeSQLConstants.USED} AND
+                fe.epochSeconds >= :nowEpochSeconds - (60 * 60 * 24 * 30) -- 30 days
         ),
         RecipesSearch AS (
-            SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT
-            FROM Recipe r
-            WHERE 1 = 0
+            SELECT 
+                $RECIPE_FOOD_SEARCH_SQL_SELECT,
+                fe.epochSeconds AS lastUsedEpochSeconds
+            FROM Recipe r LEFT JOIN FoodEvent fe ON r.id = fe.recipeId
+            WHERE 
+                fe.id IS NOT NULL AND
+                fe.type = ${FoodEventTypeSQLConstants.USED} AND
+                fe.epochSeconds >= :nowEpochSeconds - (60 * 60 * 24 * 30) -- 30 days
+        ),
+        MergedSearch AS (
+            SELECT * FROM ProductsSearch
+            UNION ALL
+            SELECT * FROM RecipesSearch
+            ORDER BY lastUsedEpochSeconds DESC
         )
-        SELECT *
-        FROM ProductsSearch
-        UNION ALL
-        SELECT *
-        FROM RecipesSearch
-        ORDER BY headline ASC
+        SELECT DISTINCT $FOOD_SEARCH_SQL_SELECT
+        FROM MergedSearch
         """
     )
-    fun observeRecentFood(): PagingSource<Int, FoodSearch>
+    fun observeRecentFood(nowEpochSeconds: Long): PagingSource<Int, FoodSearch>
 
     // TODO
     @Query(
         """
         WITH ProductsSearch AS (
-            SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT
+            SELECT 1
             FROM Product p
-            WHERE 1 = 0
+            WHERE p.id IN (
+                SELECT DISTINCT productId
+                FROM FoodEvent 
+                WHERE type = ${FoodEventTypeSQLConstants.USED}
+                AND epochSeconds >= :nowEpochSeconds - (60 * 60 * 24 * 30) -- 30 days
+                AND productId IS NOT NULL
+            )
         ),
         RecipesSearch AS (
-            SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT
+            SELECT 1
             FROM Recipe r
-            WHERE 1 = 0
+            WHERE r.id IN (
+                SELECT DISTINCT recipeId
+                FROM FoodEvent 
+                WHERE type = ${FoodEventTypeSQLConstants.USED}
+                AND epochSeconds >= :nowEpochSeconds - (60 * 60 * 24 * 30) -- 30 days
+                AND recipeId IS NOT NULL
+            )
         )
         SELECT (SELECT COUNT(*) FROM ProductsSearch) + (SELECT COUNT(*) FROM RecipesSearch)
         """
     )
-    fun observeRecentFoodCount(): Flow<Int>
+    fun observeRecentFoodCount(nowEpochSeconds: Long): Flow<Int>
 
     @Query(
         """
@@ -109,7 +134,7 @@ interface FoodSearchDao {
     @Query(
         """
         WITH ProductsSearch AS (
-            SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT
+            SELECT 1
             FROM Product p
             WHERE
                 (
@@ -119,7 +144,7 @@ interface FoodSearchDao {
                 (:source IS NULL OR p.sourceType = :source)
         ),
         RecipesSearch AS (
-            SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT
+            SELECT 1
             FROM Recipe r
             WHERE
                 -- All recipes are from the user
@@ -177,7 +202,7 @@ CASE
     WHEN p.brand IS NOT NULL THEN p.name || ' (' || p.brand || ')'
     ELSE p.name
 END AS headline,
-p.isLiquid AS isLiquid,
+p.isLiquid,
 p.energy,
 p.proteins,
 p.fats,
@@ -229,7 +254,7 @@ private const val RECIPE_FOOD_SEARCH_SQL_SELECT = """
 NULL AS productId,
 r.id AS recipeId,
 r.name AS headline,
-r.isLiquid AS isLiquid,
+r.isLiquid,
 NULL AS energy,
 NULL AS proteins,
 NULL AS fats,
@@ -273,6 +298,58 @@ NULL AS phosphorusMilli,
 NULL AS seleniumMicro,
 NULL AS iodineMicro,
 NULL AS chromiumMicro,
-NULL AS packageWeight,
+NULL AS totalWeight,
 NULL AS servingWeight
+"""
+
+private const val FOOD_SEARCH_SQL_SELECT = """
+productId,
+recipeId,
+headline,
+isLiquid,
+energy,
+proteins,
+fats,
+transFats,
+saturatedFats,
+monounsaturatedFats,
+polyunsaturatedFats,
+omega3,
+omega6,
+carbohydrates,
+sugars,
+addedSugars,
+dietaryFiber,
+solubleFiber,
+insolubleFiber,
+salt,
+cholesterolMilli,
+caffeineMilli,
+vitaminAMicro,
+vitaminB1Milli,
+vitaminB2Milli,
+vitaminB3Milli,
+vitaminB5Milli,
+vitaminB6Milli,
+vitaminB7Micro,
+vitaminB9Micro,
+vitaminB12Micro,
+vitaminCMilli,
+vitaminDMicro,
+vitaminEMilli,
+vitaminKMicro,
+manganeseMilli,
+magnesiumMilli,
+potassiumMilli,
+calciumMilli,
+copperMilli,
+zincMilli,
+sodiumMilli,
+ironMilli,
+phosphorusMilli,
+seleniumMicro,
+iodineMicro,
+chromiumMicro,
+totalWeight,
+servingWeight
 """

@@ -14,4 +14,9 @@ sealed interface FoodEvent {
     class Imported(override val date: LocalDateTime) : FoodCreationEvent
 
     class Edited(override val date: LocalDateTime, val oldFood: Food) : FoodEvent
+
+    /**
+     * Represents an event when a food item is used by an user in any way.
+     */
+    class Used(override val date: LocalDateTime) : FoodEvent
 }
