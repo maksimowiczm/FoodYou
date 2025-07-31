@@ -42,14 +42,17 @@ object Changelog {
             "Redesigned food search screen with filtering options."
         ),
         changes = listOf(
-            "Refreshed food search screen UI.",
-            "Refreshed settings screen UI.",
-            "Refreshed measurement screen UI.",
+            "Refreshed food search.",
+            "Refreshed settings.",
+            "Refreshed measurement screen.",
             "Refreshed product and recipe forms.",
             "Simplified nutrition facts preferences: only reordering is allowed, hiding is no longer supported.",
             "Changed default nutrition facts order to: proteins, fats, carbohydrates.",
             "Updated Swiss Food Composition Database to version v7.0."
         ),
+        notes = """
+            This is a preview version. Please don't report missing features, as this is still a work-in-progress.
+        """.trimIndent(),
         isPreview = true
     )
 
