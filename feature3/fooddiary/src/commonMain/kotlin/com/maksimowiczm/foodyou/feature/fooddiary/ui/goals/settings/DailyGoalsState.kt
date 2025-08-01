@@ -50,12 +50,12 @@ internal class DailyGoalsState(
 ) {
     val isValid by derivedStateOf {
         monday.isValid &&
-            tuesday.isValid &&
-            wednesday.isValid &&
-            thursday.isValid &&
-            friday.isValid &&
-            saturday.isValid &&
-            sunday.isValid
+                tuesday.isValid &&
+                wednesday.isValid &&
+                thursday.isValid &&
+                friday.isValid &&
+                saturday.isValid &&
+                sunday.isValid
     }
 
     fun intoWeeklyGoals() = WeeklyGoals(
@@ -94,7 +94,9 @@ internal fun rememberDayGoalsState(goal: DailyGoal): DayGoalsState {
 
     val additionalState = rememberAdditionalGoalsFormState(goal)
 
-    val useDistribution = rememberSaveable { mutableStateOf(false) }
+    val useDistribution = rememberSaveable {
+        mutableStateOf(goal.isDistribution)
+    }
 
     return remember(useDistribution, sliderState, weightState, additionalState) {
         DayGoalsState(
