@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.settings
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
@@ -33,6 +34,12 @@ internal fun rememberDailyGoalsState(weeklyGoals: WeeklyGoals): DailyGoalsState 
 
     val useSeparateGoalsState = rememberSaveable {
         mutableStateOf(weeklyGoals.useSeparateGoals)
+    }
+
+    LaunchedEffect(useSeparateGoalsState.value) {
+        if (!useSeparateGoalsState.value) {
+            selectedDayState.value = 0
+        }
     }
 
     return remember(
@@ -95,15 +102,41 @@ internal class DailyGoalsState(
             sunday.isModified
     }
 
-    fun intoWeeklyGoals() = WeeklyGoals(
-        monday = monday.intoDailyGoals(),
-        tuesday = tuesday.intoDailyGoals(),
-        wednesday = wednesday.intoDailyGoals(),
-        thursday = thursday.intoDailyGoals(),
-        friday = friday.intoDailyGoals(),
-        saturday = saturday.intoDailyGoals(),
-        sunday = sunday.intoDailyGoals()
-    )
+    val selectedDayGoals: DayGoalsState by derivedStateOf {
+        when (selectedDay) {
+            0 -> monday
+            1 -> tuesday
+            2 -> wednesday
+            3 -> thursday
+            4 -> friday
+            5 -> saturday
+            6 -> sunday
+            else -> error("Invalid day index: $selectedDay")
+        }
+    }
+
+    fun intoWeeklyGoals() = if (!useSeparateGoals) {
+        val dailyGoals = monday.intoDailyGoals()
+        WeeklyGoals(
+            monday = dailyGoals,
+            tuesday = dailyGoals,
+            wednesday = dailyGoals,
+            thursday = dailyGoals,
+            friday = dailyGoals,
+            saturday = dailyGoals,
+            sunday = dailyGoals
+        )
+    } else {
+        WeeklyGoals(
+            monday = monday.intoDailyGoals(),
+            tuesday = tuesday.intoDailyGoals(),
+            wednesday = wednesday.intoDailyGoals(),
+            thursday = thursday.intoDailyGoals(),
+            friday = friday.intoDailyGoals(),
+            saturday = saturday.intoDailyGoals(),
+            sunday = sunday.intoDailyGoals()
+        )
+    }
 }
 
 @Composable

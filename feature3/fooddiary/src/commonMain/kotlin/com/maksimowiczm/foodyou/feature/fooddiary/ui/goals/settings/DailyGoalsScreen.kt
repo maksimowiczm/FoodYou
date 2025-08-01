@@ -135,18 +135,8 @@ internal fun DailyGoalsScreen(
             }
 
             item {
-                val state = when (state.selectedDay) {
-                    0 -> state.sunday
-                    1 -> state.monday
-                    2 -> state.tuesday
-                    3 -> state.wednesday
-                    4 -> state.thursday
-                    5 -> state.friday
-                    6 -> state.saturday
-                    else -> error("Invalid day selected: ${state.selectedDay}")
-                }
                 DailyGoalsForm(
-                    state = state,
+                    state = state.selectedDayGoals,
                     contentPadding = PaddingValues(horizontal = 16.dp)
                 )
             }
@@ -258,7 +248,10 @@ private fun DayPicker(
                         weekDayNamesShort.forEachIndexed { i, name ->
                             ToggleButton(
                                 checked = selectedDay == i,
-                                onCheckedChange = { onSelectedDayChange(i) },
+                                onCheckedChange = {
+                                    // TODO We don't know if 0 is Sunday or Monday
+                                    onSelectedDayChange(i)
+                                },
                                 modifier = Modifier.semantics { role = Role.RadioButton },
                                 shapes = when (i) {
                                     0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
