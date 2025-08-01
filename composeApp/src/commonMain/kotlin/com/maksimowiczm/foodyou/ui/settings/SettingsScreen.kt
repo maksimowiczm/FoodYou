@@ -47,6 +47,7 @@ import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.SettingsListItem
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.GoalsSettingsListItem
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.MealSettingsListItem
 import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
 import com.maksimowiczm.foodyou.ui.personalization.PersonalizationSettingsListItem
@@ -62,6 +63,7 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onPersonalization: () -> Unit,
     onMeals: () -> Unit,
+    onGoals: () -> Unit,
     onLanguage: () -> Unit,
     onSponsor: () -> Unit,
     onAbout: () -> Unit,
@@ -124,6 +126,15 @@ fun SettingsScreen(
             item {
                 MealSettingsListItem(
                     onClick = onMeals,
+                    shape = shape,
+                    color = color,
+                    contentColor = contentColor
+                )
+            }
+
+            item {
+                GoalsSettingsListItem(
+                    onClick = onGoals,
                     shape = shape,
                     color = color,
                     contentColor = contentColor

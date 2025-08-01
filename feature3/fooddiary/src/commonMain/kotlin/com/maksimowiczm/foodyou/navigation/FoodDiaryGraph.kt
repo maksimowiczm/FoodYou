@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.feature.food.ui.CreateRecipeScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateRecipeScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.settings.DailyGoalsScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.cardsettings.MealsCardsSettings
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.settings.MealSettingsScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateMeasurementScreen
@@ -113,6 +114,9 @@ data object MealSettings
 @Serializable
 data object MealsCardsSettings
 
+@Serializable
+data object DailyGoals
+
 fun NavGraphBuilder.foodDiaryGraph(
     foodSearchOnBack: () -> Unit,
     foodSearchOnCreateProduct: (mealId: Long, date: LocalDate) -> Unit,
@@ -137,7 +141,8 @@ fun NavGraphBuilder.foodDiaryGraph(
     mealSettingsOnBack: () -> Unit,
     mealSettingsOnMealsCardsSettings: () -> Unit,
     mealsCardsSettingsOnBack: () -> Unit,
-    mealsCardsOnMealSettings: () -> Unit
+    mealsCardsOnMealSettings: () -> Unit,
+    dailyGoalsOnBack: () -> Unit
 ) {
     forwardBackwardComposable<FoodSearch> { backStack ->
         val route = backStack.toRoute<FoodSearch>()
@@ -231,6 +236,11 @@ fun NavGraphBuilder.foodDiaryGraph(
         MealsCardsSettings(
             onBack = mealsCardsSettingsOnBack,
             onMealSettings = mealsCardsOnMealSettings
+        )
+    }
+    forwardBackwardComposable<DailyGoals> {
+        DailyGoalsScreen(
+            onBack = dailyGoalsOnBack
         )
     }
 }

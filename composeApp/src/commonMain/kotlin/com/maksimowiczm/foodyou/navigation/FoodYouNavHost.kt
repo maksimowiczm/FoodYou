@@ -26,13 +26,11 @@ fun FoodYouNavHost(
                 navController.navigate(About) {
                     launchSingleTop = true
                 }
-            },
-            homeOnSettings = {
+            }, homeOnSettings = {
                 navController.navigate(Settings) {
                     launchSingleTop = true
                 }
-            },
-            homeMealCardOnAdd = { epochDay, mealId ->
+            }, homeMealCardOnAdd = { epochDay, mealId ->
                 navController.navigate(
                     FoodSearch(
                         mealId = mealId,
@@ -41,87 +39,72 @@ fun FoodYouNavHost(
                 ) {
                     launchSingleTop = true
                 }
-            },
-            homeMealCardOnEditMeasurement = {
+            }, homeMealCardOnEditMeasurement = {
                 navController.navigate(UpdateProductMeasurement(it)) {
                     launchSingleTop = true
                 }
-            },
-            homeMealCardOnLongClick = {
+            }, homeMealCardOnLongClick = {
                 navController.navigate(MealsCardsSettings) {
                     launchSingleTop = true
                 }
-            },
-            settingsOnPersonalization = {
+            }, settingsOnPersonalization = {
                 navController.navigate(Personalization) {
                     launchSingleTop = true
                 }
-            },
-            settingsOnMeals = {
+            }, settingsOnMeals = {
                 navController.navigate(MealSettings) {
                     launchSingleTop = true
                 }
-            },
-            settingsOnLanguage = {
+            }, settingsOnLanguage = {
                 navController.navigate(Language) {
                     launchSingleTop = true
                 }
-            },
-            settingsOnSponsor = {
+            }, settingsOnSponsor = {
                 navController.navigate(SponsorMessages) {
                     launchSingleTop = true
                 }
-            },
-            settingsOnAbout = {
+            }, settingsOnAbout = {
                 navController.navigate(About) {
                     launchSingleTop = true
                 }
-            },
-            settingsOnDatabase = {
+            }, settingsOnDatabase = {
                 navController.navigate(Database) {
                     launchSingleTop = true
                 }
-            },
-            settingsOnBack = {
+            }, settingsOnBack = {
                 navController.popBackStack<Settings>(true)
-            },
-            personalizationOnBack = {
+            }, settingsOnDailyGoals = {
+                navController.navigate(DailyGoals) {
+                    launchSingleTop = true
+                }
+            }, personalizationOnBack = {
                 navController.popBackStack<Personalization>(true)
-            },
-            personalizationOnHomePersonalization = {
+            }, personalizationOnHomePersonalization = {
                 navController.navigate(HomePersonalization) {
                     launchSingleTop = true
                 }
-            },
-            personalizationOnNutritionFactsPersonalization = {
+            }, personalizationOnNutritionFactsPersonalization = {
                 navController.navigate(NutritionFactsPersonalization) {
                     launchSingleTop = true
                 }
-            },
-            homePersonalizationOnBack = {
+            }, homePersonalizationOnBack = {
                 navController.popBackStack<HomePersonalization>(true)
-            },
-            homePersonalizationOnMealsSettings = {
+            }, homePersonalizationOnMealsSettings = {
                 navController.navigate(MealsCardsSettings) {
                     launchSingleTop = true
                     popUpTo<MealsCardsSettings>()
                 }
-            },
-            nutritionFactsPersonalizationOnBack = {
+            }, nutritionFactsPersonalizationOnBack = {
                 navController.popBackStack<NutritionFactsPersonalization>(true)
-            },
-            externalDatabasesOnBack = {
+            }, externalDatabasesOnBack = {
                 navController.popBackStack<ExternalDatabases>(true)
-            },
-            externalDatabasesOnSwissFoodCompositionDatabase = {
+            }, externalDatabasesOnSwissFoodCompositionDatabase = {
                 navController.navigate(SwissFoodCompositionDatabase) {
                     launchSingleTop = true
                 }
-            },
-            databaseOnBack = {
+            }, databaseOnBack = {
                 navController.popBackStack<Database>(true)
-            },
-            databaseOnExternalDatabases = {
+            }, databaseOnExternalDatabases = {
                 navController.navigate(ExternalDatabases) {
                     launchSingleTop = true
                 }
@@ -270,6 +253,9 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                     popUpTo<MealSettings>()
                 }
+            },
+            dailyGoalsOnBack = {
+                navController.popBackStack<DailyGoals>(true)
             }
         )
         aboutGraph(
