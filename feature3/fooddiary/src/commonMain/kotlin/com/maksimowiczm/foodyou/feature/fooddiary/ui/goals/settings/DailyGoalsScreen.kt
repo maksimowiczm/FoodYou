@@ -149,7 +149,7 @@ internal fun DailyGoalsForm(
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary
         )
-        DistributionButtons(
+        WeightOrPercentageToggle(
             useDistribution = useDistribution,
             onUseDistributionChange = { useDistribution = it },
             modifier = Modifier
@@ -183,7 +183,7 @@ internal fun DailyGoalsForm(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun DistributionButtons(
+private fun WeightOrPercentageToggle(
     useDistribution: Boolean,
     onUseDistributionChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
