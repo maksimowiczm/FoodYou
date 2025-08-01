@@ -33,6 +33,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -179,13 +180,21 @@ internal fun rememberMacroWeightInputFormState(
         }
     }
 
-    return MacroWeightInputFormState(
-        proteins = proteinsField,
-        carbohydrates = carbohydratesField,
-        fats = fatsField,
-        energy = energyField,
-        autoCalculateEnergyState = autoCalculateEnergy
-    )
+    return remember(
+        proteinsField,
+        carbohydratesField,
+        fatsField,
+        energyField,
+        autoCalculateEnergy
+    ) {
+        MacroWeightInputFormState(
+            proteins = proteinsField,
+            carbohydrates = carbohydratesField,
+            fats = fatsField,
+            energy = energyField,
+            autoCalculateEnergyState = autoCalculateEnergy
+        )
+    }
 }
 
 @Stable

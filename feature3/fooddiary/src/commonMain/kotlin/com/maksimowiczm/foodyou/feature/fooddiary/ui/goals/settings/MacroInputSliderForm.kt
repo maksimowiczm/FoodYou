@@ -203,12 +203,14 @@ internal fun rememberMacroInputSliderFormState(
         adjustMacros(fatsState, listOf(proteinsState, carbohydratesState))
     }
 
-    return MacroInputSliderFormState(
-        proteinsState = proteinsState,
-        carbohydratesState = carbohydratesState,
-        fatsState = fatsState,
-        energy = energyField
-    )
+    return remember(proteinsState, carbohydratesState, fatsState, energyField) {
+        MacroInputSliderFormState(
+            proteinsState = proteinsState,
+            carbohydratesState = carbohydratesState,
+            fatsState = fatsState,
+            energy = energyField
+        )
+    }
 }
 
 @Stable
