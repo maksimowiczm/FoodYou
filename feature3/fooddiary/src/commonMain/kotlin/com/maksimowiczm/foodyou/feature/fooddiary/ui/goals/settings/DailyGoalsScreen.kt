@@ -248,10 +248,7 @@ private fun DayPicker(
                         weekDayNamesShort.forEachIndexed { i, name ->
                             ToggleButton(
                                 checked = selectedDay == i,
-                                onCheckedChange = {
-                                    // TODO We don't know if 0 is Sunday or Monday
-                                    onSelectedDayChange(i)
-                                },
+                                onCheckedChange = { onSelectedDayChange(i) },
                                 modifier = Modifier.semantics { role = Role.RadioButton },
                                 shapes = when (i) {
                                     0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
