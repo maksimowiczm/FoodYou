@@ -18,11 +18,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Undo
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Percent
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,12 +35,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -57,6 +64,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.transformLatest
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,7 +100,7 @@ internal fun DailyGoalsScreen(onBack: () -> Unit, modifier: Modifier = Modifier)
     }
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun DailyGoalsForm(
     formState: DailyGoalsFormState,
@@ -136,10 +144,67 @@ internal fun DailyGoalsForm(
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary
         )
-        AnimatedVisibility(
-            visible = formState.autoCalculateEnergy,
-            modifier = Modifier.padding(contentPadding)
+        DistributionButtons(
+            formState = formState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(contentPadding)
+        )
+        if (formState.useDistribution) {
+            // TODO
+        } else {
+            WeightForm(
+                formState = formState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(contentPadding)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun DistributionButtons(formState: DailyGoalsFormState, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(
+            ButtonGroupDefaults.ConnectedSpaceBetween,
+            Alignment.CenterHorizontally
+        )
+    ) {
+        ToggleButton(
+            checked = !formState.useDistribution,
+            onCheckedChange = { formState.useDistribution = !it },
+            modifier = Modifier
+                .height(56.dp)
+                .semantics { role = Role.RadioButton }
         ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_weight),
+                contentDescription = null
+            )
+        }
+        ToggleButton(
+            checked = formState.useDistribution,
+            onCheckedChange = { formState.useDistribution = it },
+            modifier = Modifier
+                .height(56.dp)
+                .semantics { role = Role.RadioButton }
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Percent,
+                contentDescription = null
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+@Composable
+private fun WeightForm(formState: DailyGoalsFormState, modifier: Modifier = Modifier) {
+    Column(modifier) {
+        AnimatedVisibility(formState.autoCalculateEnergy) {
             Column {
                 Spacer(Modifier.height(8.dp))
                 AutoCalculateCard(
@@ -160,10 +225,7 @@ internal fun DailyGoalsForm(
                 badEnergy = it
             }
         }
-        AnimatedVisibility(
-            visible = badEnergy,
-            modifier = Modifier.padding(contentPadding)
-        ) {
+        AnimatedVisibility(badEnergy) {
             Column {
                 Spacer(Modifier.height(8.dp))
                 BadEnergyCard(
@@ -173,10 +235,7 @@ internal fun DailyGoalsForm(
             }
         }
         Spacer(Modifier.height(8.dp))
-        MacroInput(
-            formState = formState,
-            modifier = Modifier.padding(contentPadding)
-        )
+        MacroInput(formState)
     }
 }
 
