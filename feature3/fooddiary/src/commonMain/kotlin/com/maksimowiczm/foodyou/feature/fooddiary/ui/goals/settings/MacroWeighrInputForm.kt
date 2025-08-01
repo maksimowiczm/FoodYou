@@ -43,6 +43,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.form.FormField
 import com.maksimowiczm.foodyou.core.ui.form.floatParser
 import com.maksimowiczm.foodyou.core.ui.form.intParser
@@ -50,13 +52,9 @@ import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.util.NutrientsHelper
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.nutriment_carbohydrates
-import foodyou.app.generated.resources.nutriment_fats
-import foodyou.app.generated.resources.nutriment_proteins
-import foodyou.app.generated.resources.unit_energy
-import foodyou.app.generated.resources.unit_gram_short
-import foodyou.app.generated.resources.unit_kcal
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
+import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -312,26 +310,39 @@ private fun AutoCalculateCard(state: MacroWeightInputFormState, modifier: Modifi
 @Composable
 private fun MacroInput(state: MacroWeightInputFormState, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val nutrientsOrder by userPreference<NutrientsOrderPreference>()
+        .collectAsStateWithLifecycleInitialBlock()
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        state.proteins.TextField(
-            label = stringResource(Res.string.nutriment_proteins),
-            color = nutrientsPalette.proteinsOnSurfaceContainer,
-            modifier = Modifier.fillMaxWidth()
-        )
-        state.carbohydrates.TextField(
-            label = stringResource(Res.string.nutriment_carbohydrates),
-            color = nutrientsPalette.carbohydratesOnSurfaceContainer,
-            modifier = Modifier.fillMaxWidth()
-        )
-        state.fats.TextField(
-            label = stringResource(Res.string.nutriment_fats),
-            color = nutrientsPalette.fatsOnSurfaceContainer,
-            modifier = Modifier.fillMaxWidth()
-        )
+        nutrientsOrder.forEach {
+            when (it) {
+                NutrientsOrder.Proteins -> state.proteins.TextField(
+                    label = stringResource(Res.string.nutriment_proteins),
+                    color = nutrientsPalette.proteinsOnSurfaceContainer,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                NutrientsOrder.Fats -> state.fats.TextField(
+                    label = stringResource(Res.string.nutriment_fats),
+                    color = nutrientsPalette.fatsOnSurfaceContainer,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                NutrientsOrder.Carbohydrates -> state.carbohydrates.TextField(
+                    label = stringResource(Res.string.nutriment_carbohydrates),
+                    color = nutrientsPalette.carbohydratesOnSurfaceContainer,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                NutrientsOrder.Other,
+                NutrientsOrder.Vitamins,
+                NutrientsOrder.Minerals -> Unit
+            }
+        }
+
         if (state.autoCalculateEnergy) {
             val str = buildString {
                 append("=")

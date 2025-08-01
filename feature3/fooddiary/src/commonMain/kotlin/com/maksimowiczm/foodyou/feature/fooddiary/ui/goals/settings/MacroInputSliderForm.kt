@@ -19,10 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.form.FormField
 import com.maksimowiczm.foodyou.core.ui.form.intParser
 import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
@@ -30,6 +34,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun MacroInputSliderForm(state: MacroInputSliderFormState, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val nutrientsOrder by userPreference<NutrientsOrderPreference>()
+        .collectAsStateWithLifecycleInitialBlock()
 
     Column(
         modifier = modifier,
@@ -46,26 +52,34 @@ internal fun MacroInputSliderForm(state: MacroInputSliderFormState, modifier: Mo
             )
         )
 
-        MacroSlider(
-            value = state.proteins,
-            onValueChange = { state.proteins = it },
-            color = nutrientsPalette.proteinsOnSurfaceContainer,
-            label = stringResource(Res.string.nutriment_proteins)
-        )
+        nutrientsOrder.forEach {
+            when (it) {
+                NutrientsOrder.Proteins -> MacroSlider(
+                    value = state.proteins,
+                    onValueChange = { state.proteins = it },
+                    color = nutrientsPalette.proteinsOnSurfaceContainer,
+                    label = stringResource(Res.string.nutriment_proteins)
+                )
 
-        MacroSlider(
-            value = state.carbohydrates,
-            onValueChange = { state.carbohydrates = it },
-            color = nutrientsPalette.carbohydratesOnSurfaceContainer,
-            label = stringResource(Res.string.nutriment_carbohydrates)
-        )
+                NutrientsOrder.Fats -> MacroSlider(
+                    value = state.fats,
+                    onValueChange = { state.fats = it },
+                    color = nutrientsPalette.fatsOnSurfaceContainer,
+                    label = stringResource(Res.string.nutriment_fats)
+                )
 
-        MacroSlider(
-            value = state.fats,
-            onValueChange = { state.fats = it },
-            color = nutrientsPalette.fatsOnSurfaceContainer,
-            label = stringResource(Res.string.nutriment_fats)
-        )
+                NutrientsOrder.Carbohydrates -> MacroSlider(
+                    value = state.carbohydrates,
+                    onValueChange = { state.carbohydrates = it },
+                    color = nutrientsPalette.carbohydratesOnSurfaceContainer,
+                    label = stringResource(Res.string.nutriment_carbohydrates)
+                )
+
+                NutrientsOrder.Other,
+                NutrientsOrder.Vitamins,
+                NutrientsOrder.Minerals -> Unit
+            }
+        }
     }
 }
 

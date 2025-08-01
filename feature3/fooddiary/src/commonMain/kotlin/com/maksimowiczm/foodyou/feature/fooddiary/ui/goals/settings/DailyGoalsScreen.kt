@@ -52,8 +52,6 @@ internal fun DailyGoalsScreen(onBack: () -> Unit, modifier: Modifier = Modifier)
     val goalsPreference = userPreference<GoalsPreference>()
     val weeklyGoals by goalsPreference.collectAsStateWithLifecycleInitialBlock()
 
-    val state = rememberDailyGoalsFormState(weeklyGoals.monday)
-
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -72,6 +70,9 @@ internal fun DailyGoalsScreen(onBack: () -> Unit, modifier: Modifier = Modifier)
             item {
                 DailyGoalsForm(
                     goal = weeklyGoals.monday,
+                    onChange = {
+                        // TODO
+                    },
                     contentPadding = PaddingValues(horizontal = 16.dp)
                 )
             }
@@ -83,6 +84,7 @@ internal fun DailyGoalsScreen(onBack: () -> Unit, modifier: Modifier = Modifier)
 @Composable
 internal fun DailyGoalsForm(
     goal: DailyGoal,
+    onChange: (DailyGoal) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
