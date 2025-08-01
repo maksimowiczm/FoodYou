@@ -68,13 +68,12 @@ import org.jetbrains.compose.resources.stringResource
 internal fun MacroWeightInputForm(state: MacroWeightInputFormState, modifier: Modifier = Modifier) {
     Column(modifier) {
         AnimatedVisibility(state.autoCalculateEnergy) {
-            Column {
-                Spacer(Modifier.height(8.dp))
-                AutoCalculateCard(
-                    state = state,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            AutoCalculateCard(
+                state = state,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
         }
         var badEnergy by rememberSaveable { mutableStateOf(false) }
         LaunchedEffect(state) {
@@ -90,10 +89,11 @@ internal fun MacroWeightInputForm(state: MacroWeightInputFormState, modifier: Mo
         }
         AnimatedVisibility(badEnergy) {
             Column {
-                Spacer(Modifier.height(8.dp))
                 BadEnergyCard(
                     state = state,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
                 )
             }
         }
