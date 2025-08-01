@@ -439,4 +439,9 @@
 
     <string name="headline_imported_from_food_you_2">Imported from Food You 2</string>
 
+    <string name="action_set_goals">Set goals</string>
+    <string name="action_fix_it">Fix it</string>
+    <string name="error_total_energy_not_matching">The total energy from your proteins, carbohydrates, and fat don't add up to your daily energy goal</string>
+    <string name="neutral_set_energy_manually">I want to set energy manually</string>
+    <string name="description_energy_is_calculated_automatically">Energy is calculated automatically based on macronutrients</string>
 </resources>

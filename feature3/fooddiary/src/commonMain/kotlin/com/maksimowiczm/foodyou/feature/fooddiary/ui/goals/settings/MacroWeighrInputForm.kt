@@ -244,7 +244,7 @@ private fun BadEnergyCard(state: MacroWeightInputFormState, modifier: Modifier =
                 contentDescription = null
             )
             Text(
-                text = "The total calories from your proteins, carbohydrates, and fat don't add up to your daily energy goal",
+                text = stringResource(Res.string.error_total_energy_not_matching),
                 style = MaterialTheme.typography.bodyMedium
             )
             Row(
@@ -258,7 +258,7 @@ private fun BadEnergyCard(state: MacroWeightInputFormState, modifier: Modifier =
                         contentColor = MaterialTheme.colorScheme.errorContainer
                     )
                 ) {
-                    Text("Fix it")
+                    Text(stringResource(Res.string.action_fix_it))
                 }
             }
         }
@@ -292,7 +292,9 @@ private fun AutoCalculateCard(state: MacroWeightInputFormState, modifier: Modifi
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "Energy is calculated automatically based on macronutrients",
+                    text = stringResource(
+                        Res.string.description_energy_is_calculated_automatically
+                    ),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -301,7 +303,7 @@ private fun AutoCalculateCard(state: MacroWeightInputFormState, modifier: Modifi
                     state.autoCalculateEnergy = false
                 }
             ) {
-                Text("I want to set energy manually")
+                Text(stringResource(Res.string.neutral_set_energy_manually))
             }
         }
     }

@@ -1,11 +1,9 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.settings
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Percent
 import androidx.compose.material3.ButtonGroupDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
@@ -113,38 +110,38 @@ internal fun DailyGoalsForm(
     val additionalState = rememberAdditionalGoalsFormState(goal)
 
     Column(modifier) {
+//        Text(
+//            text = "Pick the days",
+//            modifier = Modifier.padding(contentPadding),
+//            style = MaterialTheme.typography.labelLarge,
+//            color = MaterialTheme.colorScheme.primary
+//        )
+//        Spacer(Modifier.height(8.dp))
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .clickable {
+//                    // TODO
+//                }
+//                .padding(contentPadding),
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(16.dp)
+//        ) {
+//            Checkbox(
+//                modifier = Modifier.padding(
+//                    vertical = 16.dp
+//                ),
+//                checked = false,
+//                onCheckedChange = null
+//            )
+//            Text(
+//                text = "Set separate goals for each day",
+//                style = MaterialTheme.typography.bodyMedium
+//            )
+//        }
+//        Spacer(Modifier.height(8.dp))
         Text(
-            text = "Pick the days",
-            modifier = Modifier.padding(contentPadding),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Spacer(Modifier.height(8.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    // TODO
-                }
-                .padding(contentPadding),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Checkbox(
-                modifier = Modifier.padding(
-                    vertical = 16.dp
-                ),
-                checked = false,
-                onCheckedChange = null
-            )
-            Text(
-                text = "Set separate goals for each day",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = "Set goals",
+            text = stringResource(Res.string.action_set_goals),
             modifier = Modifier.padding(contentPadding),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary
