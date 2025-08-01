@@ -22,6 +22,17 @@ data class WeeklyGoals(
         sunday = sunday.fillMissingFields()
     )
 
+    val useSeparateGoals: Boolean
+        get() = listOf(
+            monday,
+            tuesday,
+            wednesday,
+            thursday,
+            friday,
+            saturday,
+            sunday
+        ).distinct().size > 1
+
     companion object {
         val defaultGoals = WeeklyGoals(
             monday = DailyGoal.Companion.defaultGoals,

@@ -6,6 +6,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -26,7 +27,25 @@ internal fun rememberDailyGoalsState(weeklyGoals: WeeklyGoals): DailyGoalsState 
     val saturday = rememberDayGoalsState(weeklyGoals.saturday)
     val sunday = rememberDayGoalsState(weeklyGoals.sunday)
 
-    return remember(monday, tuesday, wednesday, thursday, friday, saturday, sunday) {
+    val selectedDayState = rememberSaveable {
+        mutableIntStateOf(0)
+    }
+
+    val useSeparateGoalsState = rememberSaveable {
+        mutableStateOf(weeklyGoals.useSeparateGoals)
+    }
+
+    return remember(
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday,
+        sunday,
+        selectedDayState,
+        useSeparateGoalsState
+    ) {
         DailyGoalsState(
             monday = monday,
             tuesday = tuesday,
@@ -34,7 +53,9 @@ internal fun rememberDailyGoalsState(weeklyGoals: WeeklyGoals): DailyGoalsState 
             thursday = thursday,
             friday = friday,
             saturday = saturday,
-            sunday = sunday
+            sunday = sunday,
+            selectedDayState = selectedDayState,
+            useSeparateGoalsState = useSeparateGoalsState
         )
     }
 }
@@ -47,8 +68,13 @@ internal class DailyGoalsState(
     val thursday: DayGoalsState,
     val friday: DayGoalsState,
     val saturday: DayGoalsState,
-    val sunday: DayGoalsState
+    val sunday: DayGoalsState,
+    selectedDayState: MutableState<Int>,
+    useSeparateGoalsState: MutableState<Boolean>
 ) {
+    var selectedDay by selectedDayState
+    var useSeparateGoals by useSeparateGoalsState
+
     val isValid by derivedStateOf {
         monday.isValid &&
             tuesday.isValid &&
