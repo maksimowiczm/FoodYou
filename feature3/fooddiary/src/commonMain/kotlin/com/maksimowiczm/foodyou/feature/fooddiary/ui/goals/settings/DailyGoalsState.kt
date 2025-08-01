@@ -42,6 +42,19 @@ internal fun rememberDailyGoalsState(weeklyGoals: WeeklyGoals): DailyGoalsState 
         }
     }
 
+    val isModified = remember {
+        derivedStateOf {
+            monday.isModified ||
+                tuesday.isModified ||
+                wednesday.isModified ||
+                thursday.isModified ||
+                friday.isModified ||
+                saturday.isModified ||
+                sunday.isModified ||
+                useSeparateGoalsState.value != weeklyGoals.useSeparateGoals
+        }
+    }
+
     return remember(
         monday,
         tuesday,
@@ -51,7 +64,8 @@ internal fun rememberDailyGoalsState(weeklyGoals: WeeklyGoals): DailyGoalsState 
         saturday,
         sunday,
         selectedDayState,
-        useSeparateGoalsState
+        useSeparateGoalsState,
+        isModified
     ) {
         DailyGoalsState(
             monday = monday,
@@ -62,7 +76,8 @@ internal fun rememberDailyGoalsState(weeklyGoals: WeeklyGoals): DailyGoalsState 
             saturday = saturday,
             sunday = sunday,
             selectedDayState = selectedDayState,
-            useSeparateGoalsState = useSeparateGoalsState
+            useSeparateGoalsState = useSeparateGoalsState,
+            isModifiedState = isModified
         )
     }
 }
@@ -77,7 +92,8 @@ internal class DailyGoalsState(
     val saturday: DayGoalsState,
     val sunday: DayGoalsState,
     selectedDayState: MutableState<Int>,
-    useSeparateGoalsState: MutableState<Boolean>
+    useSeparateGoalsState: MutableState<Boolean>,
+    isModifiedState: State<Boolean>
 ) {
     var selectedDay by selectedDayState
     var useSeparateGoals by useSeparateGoalsState
@@ -92,15 +108,7 @@ internal class DailyGoalsState(
             sunday.isValid
     }
 
-    val isModified by derivedStateOf {
-        monday.isModified ||
-            tuesday.isModified ||
-            wednesday.isModified ||
-            thursday.isModified ||
-            friday.isModified ||
-            saturday.isModified ||
-            sunday.isModified
-    }
+    val isModified by isModifiedState
 
     val selectedDayGoals: DayGoalsState by derivedStateOf {
         when (selectedDay) {

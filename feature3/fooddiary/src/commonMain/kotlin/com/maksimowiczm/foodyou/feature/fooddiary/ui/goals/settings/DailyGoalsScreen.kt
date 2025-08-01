@@ -135,6 +135,10 @@ internal fun DailyGoalsScreen(
             }
 
             item {
+                Spacer(Modifier.height(16.dp))
+            }
+
+            item {
                 DailyGoalsForm(
                     state = state.selectedDayGoals,
                     contentPadding = PaddingValues(horizontal = 16.dp)
@@ -263,7 +267,6 @@ private fun DayPicker(
                 }
             }
         }
-        Spacer(Modifier.height(8.dp))
     }
 }
 
