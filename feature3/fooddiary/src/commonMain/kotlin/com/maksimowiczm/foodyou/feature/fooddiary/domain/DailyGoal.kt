@@ -1,7 +1,9 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.domain
 
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DailyGoal(
     private val map: Map<NutritionFactsField, Double>,
     /**

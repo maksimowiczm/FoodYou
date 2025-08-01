@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class WeeklyGoals(
     val monday: DailyGoal,
     val tuesday: DailyGoal,
