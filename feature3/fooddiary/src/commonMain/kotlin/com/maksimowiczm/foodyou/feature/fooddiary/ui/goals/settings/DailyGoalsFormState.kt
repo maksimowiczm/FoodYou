@@ -22,13 +22,20 @@ internal enum class DailyGoalsFormFieldError {
 internal class DailyGoalsFormState(
     useDistributionState: MutableState<Boolean>,
     val proteins: FormField<Float, DailyGoalsFormFieldError>,
+    proteinsSliderState: MutableState<Float>,
     val carbohydrates: FormField<Float, DailyGoalsFormFieldError>,
+    carbohydratesSliderState: MutableState<Float>,
     val fats: FormField<Float, DailyGoalsFormFieldError>,
+    fatsSliderState: MutableState<Float>,
     autoCalculateEnergyState: MutableState<Boolean>,
     val energy: FormField<Float, DailyGoalsFormFieldError>
 ) {
     var useDistribution by useDistributionState
     var autoCalculateEnergy by autoCalculateEnergyState
+
+    var proteinsSlider by proteinsSliderState
+    var carbohydratesSlider by carbohydratesSliderState
+    var fatsSlider by fatsSliderState
 
     val badEnergy by derivedStateOf {
         val kcal = NutrientsHelper.calculateEnergy(
@@ -108,13 +115,46 @@ internal fun rememberDailyGoalsFormState(dailyGoals: DailyGoal): DailyGoalsFormS
         )
     )
 
+    val proteinsSliderState = rememberSaveable {
+        mutableStateOf(
+            NutrientsHelper.proteinsPercentage(
+                energy = dailyGoals[NutritionFactsField.Energy].toInt(),
+                proteins = dailyGoals[NutritionFactsField.Proteins].toFloat()
+            ) * 100f
+        )
+    }
+    LaunchedEffect(
+        energy.value,
+        proteins.value,
+        proteinsSliderState.value,
+        useDistributionState.value
+    ) {
+    }
+    val carbohydratesSliderState = rememberSaveable {
+        mutableStateOf(
+            NutrientsHelper.carbohydratesPercentage(
+                energy = dailyGoals[NutritionFactsField.Energy].toInt(),
+                carbohydrates = dailyGoals[NutritionFactsField.Carbohydrates].toFloat()
+            ) * 100f
+        )
+    }
+    val fatsSliderState = rememberSaveable {
+        mutableStateOf(
+            NutrientsHelper.fatsPercentage(
+                energy = dailyGoals[NutritionFactsField.Energy].toInt(),
+                fats = dailyGoals[NutritionFactsField.Fats].toFloat()
+            ) * 100f
+        )
+    }
+
     LaunchedEffect(
         proteins.value,
         carbohydrates.value,
         fats.value,
-        autoCalculateEnergyState.value
+        autoCalculateEnergyState.value,
+        useDistributionState.value
     ) {
-        if (autoCalculateEnergyState.value) {
+        if (!useDistributionState.value && autoCalculateEnergyState.value) {
             val kcal = NutrientsHelper.calculateEnergy(
                 proteins = proteins.value,
                 carbohydrates = carbohydrates.value,
@@ -128,8 +168,11 @@ internal fun rememberDailyGoalsFormState(dailyGoals: DailyGoal): DailyGoalsFormS
     return DailyGoalsFormState(
         useDistributionState = useDistributionState,
         proteins = proteins,
+        proteinsSliderState = proteinsSliderState,
         carbohydrates = carbohydrates,
+        carbohydratesSliderState = carbohydratesSliderState,
         fats = fats,
+        fatsSliderState = fatsSliderState,
         autoCalculateEnergyState = autoCalculateEnergyState,
         energy = energy
     )
