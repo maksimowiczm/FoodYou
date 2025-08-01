@@ -211,6 +211,7 @@ internal fun rememberMacroInputSliderFormState(
     )
 }
 
+@Stable
 internal class MacroInputSliderFormState(
     proteinsState: MutableState<Float>,
     carbohydratesState: MutableState<Float>,

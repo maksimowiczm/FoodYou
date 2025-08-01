@@ -405,6 +405,7 @@ private fun rememberFormField(initialValue: Double): FormField<Float, DailyGoals
         textFieldState = rememberTextFieldState(initialValue.formatClipZeros())
     )
 
+@Stable
 internal class AdditionalGoalsFormState(
     val saturatedFats: FormField<Float, DailyGoalsFormFieldError>,
     val transFats: FormField<Float, DailyGoalsFormFieldError>,
