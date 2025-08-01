@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,12 +51,22 @@ internal class DailyGoalsState(
 ) {
     val isValid by derivedStateOf {
         monday.isValid &&
-                tuesday.isValid &&
-                wednesday.isValid &&
-                thursday.isValid &&
-                friday.isValid &&
-                saturday.isValid &&
-                sunday.isValid
+            tuesday.isValid &&
+            wednesday.isValid &&
+            thursday.isValid &&
+            friday.isValid &&
+            saturday.isValid &&
+            sunday.isValid
+    }
+
+    val isModified by derivedStateOf {
+        monday.isModified ||
+            tuesday.isModified ||
+            wednesday.isModified ||
+            thursday.isModified ||
+            friday.isModified ||
+            saturday.isModified ||
+            sunday.isModified
     }
 
     fun intoWeeklyGoals() = WeeklyGoals(
@@ -98,12 +109,25 @@ internal fun rememberDayGoalsState(goal: DailyGoal): DayGoalsState {
         mutableStateOf(goal.isDistribution)
     }
 
-    return remember(useDistribution, sliderState, weightState, additionalState) {
+    val isModified = remember {
+        derivedStateOf {
+            if (useDistribution.value != goal.isDistribution) {
+                true
+            } else if (useDistribution.value) {
+                sliderState.isModified || additionalState.isModified
+            } else {
+                weightState.isModified || additionalState.isModified
+            }
+        }
+    }
+
+    return remember(useDistribution, sliderState, weightState, additionalState, isModified) {
         DayGoalsState(
             useDistributionState = useDistribution,
             sliderState = sliderState,
             weightState = weightState,
-            additionalState = additionalState
+            additionalState = additionalState,
+            isModifiedState = isModified
         )
     }
 }
@@ -113,7 +137,8 @@ internal class DayGoalsState(
     useDistributionState: MutableState<Boolean>,
     val sliderState: MacroInputSliderFormState,
     val weightState: MacroWeightInputFormState,
-    val additionalState: AdditionalGoalsFormState
+    val additionalState: AdditionalGoalsFormState,
+    isModifiedState: State<Boolean>
 ) {
     var useDistribution by useDistributionState
 
@@ -124,6 +149,8 @@ internal class DayGoalsState(
             weightState.isValid && additionalState.isValid
         }
     }
+
+    val isModified: Boolean by isModifiedState
 
     fun intoDailyGoals() = if (useDistribution) {
         intoDailyGoals(sliderState, additionalState)

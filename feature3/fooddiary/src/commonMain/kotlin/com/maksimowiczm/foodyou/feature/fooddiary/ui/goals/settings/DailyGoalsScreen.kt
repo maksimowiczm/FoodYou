@@ -28,6 +28,7 @@ import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -39,6 +40,8 @@ import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInit
 import com.maksimowiczm.foodyou.core.preferences.setBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.BackHandler
+import com.maksimowiczm.foodyou.core.ui.DiscardDialog
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.fooddiary.preferences.GoalsPreference
 import foodyou.app.generated.resources.*
@@ -58,7 +61,19 @@ internal fun DailyGoalsScreen(
 
     val state = rememberDailyGoalsState(weeklyGoals)
 
-    val monday = state.monday
+    var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
+    BackHandler(state.isModified) {
+        showDiscardDialog = true
+    }
+
+    if (showDiscardDialog) {
+        DiscardDialog(
+            onDismissRequest = { showDiscardDialog = false },
+            onDiscard = onBack
+        ) {
+            Text(stringResource(Res.string.question_discard_changes))
+        }
+    }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -66,7 +81,17 @@ internal fun DailyGoalsScreen(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(Res.string.headline_daily_goals)) },
-                navigationIcon = { ArrowBackIconButton(onBack) },
+                navigationIcon = {
+                    ArrowBackIconButton(
+                        onClick = {
+                            if (state.isModified) {
+                                showDiscardDialog = true
+                            } else {
+                                onBack()
+                            }
+                        }
+                    )
+                },
                 actions = {
                     FilledIconButton(
                         onClick = {
@@ -94,6 +119,8 @@ internal fun DailyGoalsScreen(
             contentPadding = paddingValues.add(vertical = 8.dp)
         ) {
             item {
+                val monday = state.monday
+
                 DailyGoalsForm(
                     state = monday,
                     contentPadding = PaddingValues(horizontal = 16.dp)

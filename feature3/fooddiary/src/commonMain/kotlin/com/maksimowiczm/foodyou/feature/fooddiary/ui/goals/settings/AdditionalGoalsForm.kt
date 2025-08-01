@@ -351,6 +351,50 @@ internal fun rememberAdditionalGoalsFormState(dailyGoal: DailyGoal): AdditionalG
     val iodineMicro = rememberFormField(dailyGoal[NutritionFactsField.Iodine] * 1000_000)
     val chromiumMicro = rememberFormField(dailyGoal[NutritionFactsField.Chromium] * 1000_000)
 
+    val isModified = remember {
+        derivedStateOf {
+            saturatedFats.value != dailyGoal[NutritionFactsField.SaturatedFats] ||
+                transFats.value != dailyGoal[NutritionFactsField.TransFats] ||
+                monounsaturatedFats.value != dailyGoal[NutritionFactsField.MonounsaturatedFats] ||
+                polyunsaturatedFats.value != dailyGoal[NutritionFactsField.PolyunsaturatedFats] ||
+                omega3.value != dailyGoal[NutritionFactsField.Omega3] ||
+                omega6.value != dailyGoal[NutritionFactsField.Omega6] ||
+                sugars.value != dailyGoal[NutritionFactsField.Sugars] ||
+                addedSugars.value != dailyGoal[NutritionFactsField.AddedSugars] ||
+                dietaryFiber.value != dailyGoal[NutritionFactsField.DietaryFiber] ||
+                solubleFiber.value != dailyGoal[NutritionFactsField.SolubleFiber] ||
+                insolubleFiber.value != dailyGoal[NutritionFactsField.InsolubleFiber] ||
+                salt.value != dailyGoal[NutritionFactsField.Salt] ||
+                cholesterolMilli.value != (dailyGoal[NutritionFactsField.Cholesterol] * 1000) ||
+                caffeineMilli.value != (dailyGoal[NutritionFactsField.Caffeine] * 1000) ||
+                vitaminAMicro.value != dailyGoal[NutritionFactsField.VitaminA] ||
+                vitaminB1Milli.value != dailyGoal[NutritionFactsField.VitaminB1] ||
+                vitaminB2Milli.value != (dailyGoal[NutritionFactsField.VitaminB2] * 1000) ||
+                vitaminB3Milli.value != (dailyGoal[NutritionFactsField.VitaminB3] * 1000) ||
+                vitaminB5Milli.value != (dailyGoal[NutritionFactsField.VitaminB5] * 1000) ||
+                vitaminB6Milli.value != (dailyGoal[NutritionFactsField.VitaminB6] * 1000) ||
+                vitaminB7Micro.value != (dailyGoal[NutritionFactsField.VitaminB7] * 1000_000) ||
+                vitaminB9Micro.value != (dailyGoal[NutritionFactsField.VitaminB9] * 1000_000) ||
+                vitaminB12Micro.value != (dailyGoal[NutritionFactsField.VitaminB12] * 1000_000) ||
+                vitaminCMilli.value != (dailyGoal[NutritionFactsField.VitaminC] * 1000) ||
+                vitaminDMicro.value != (dailyGoal[NutritionFactsField.VitaminD] * 1000_000) ||
+                vitaminEMilli.value != (dailyGoal[NutritionFactsField.VitaminE] * 1000) ||
+                vitaminKMicro.value != (dailyGoal[NutritionFactsField.VitaminK] * 1000_000) ||
+                manganeseMilli.value != (dailyGoal[NutritionFactsField.Manganese] * 1000) ||
+                magnesiumMilli.value != (dailyGoal[NutritionFactsField.Magnesium] * 1000) ||
+                potassiumMilli.value != (dailyGoal[NutritionFactsField.Potassium] * 1000) ||
+                calciumMilli.value != (dailyGoal[NutritionFactsField.Calcium] * 1000) ||
+                copperMilli.value != (dailyGoal[NutritionFactsField.Copper] * 1000) ||
+                zincMilli.value != (dailyGoal[NutritionFactsField.Zinc] * 1000) ||
+                sodiumMilli.value != (dailyGoal[NutritionFactsField.Sodium] * 1000) ||
+                ironMilli.value != (dailyGoal[NutritionFactsField.Iron] * 1000) ||
+                phosphorusMilli.value != (dailyGoal[NutritionFactsField.Phosphorus] * 1000) ||
+                seleniumMicro.value != (dailyGoal[NutritionFactsField.Selenium] * 1000_000) ||
+                iodineMicro.value != (dailyGoal[NutritionFactsField.Iodine] * 1000_000) ||
+                chromiumMicro.value != (dailyGoal[NutritionFactsField.Chromium] * 1000_000)
+        }
+    }
+
     return remember(
         saturatedFats,
         transFats,
@@ -390,7 +434,8 @@ internal fun rememberAdditionalGoalsFormState(dailyGoal: DailyGoal): AdditionalG
         phosphorusMilli,
         seleniumMicro,
         iodineMicro,
-        chromiumMicro
+        chromiumMicro,
+        isModified
     ) {
         AdditionalGoalsFormState(
             saturatedFats = saturatedFats,
@@ -431,7 +476,8 @@ internal fun rememberAdditionalGoalsFormState(dailyGoal: DailyGoal): AdditionalG
             phosphorusMilli = phosphorusMilli,
             seleniumMicro = seleniumMicro,
             iodineMicro = iodineMicro,
-            chromiumMicro = chromiumMicro
+            chromiumMicro = chromiumMicro,
+            isModifiedState = isModified
         )
     }
 }
@@ -487,7 +533,8 @@ internal class AdditionalGoalsFormState(
     val phosphorusMilli: FormField<Double, DailyGoalsFormFieldError>,
     val seleniumMicro: FormField<Double, DailyGoalsFormFieldError>,
     val iodineMicro: FormField<Double, DailyGoalsFormFieldError>,
-    val chromiumMicro: FormField<Double, DailyGoalsFormFieldError>
+    val chromiumMicro: FormField<Double, DailyGoalsFormFieldError>,
+    isModifiedState: State<Boolean>
 ) {
     val isValid by derivedStateOf {
         listOf(
@@ -532,4 +579,6 @@ internal class AdditionalGoalsFormState(
             chromiumMicro
         ).all { it.error == null }
     }
+
+    val isModified: Boolean by isModifiedState
 }

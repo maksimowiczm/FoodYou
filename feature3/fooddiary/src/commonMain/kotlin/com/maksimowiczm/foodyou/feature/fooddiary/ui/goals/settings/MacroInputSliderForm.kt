@@ -203,12 +203,22 @@ internal fun rememberMacroInputSliderFormState(
         adjustMacros(fatsState, listOf(proteinsState, carbohydratesState))
     }
 
-    return remember(proteinsState, carbohydratesState, fatsState, energyField) {
+    val isModifiedState = remember {
+        derivedStateOf {
+            proteinsState.value != proteins ||
+                carbohydratesState.value != carbohydrates ||
+                fatsState.value != fats ||
+                energyField.value != energy
+        }
+    }
+
+    return remember(proteinsState, carbohydratesState, fatsState, energyField, isModifiedState) {
         MacroInputSliderFormState(
             proteinsState = proteinsState,
             carbohydratesState = carbohydratesState,
             fatsState = fatsState,
-            energy = energyField
+            energy = energyField,
+            isModifiedState = isModifiedState
         )
     }
 }
@@ -218,9 +228,12 @@ internal class MacroInputSliderFormState(
     proteinsState: MutableState<Float>,
     carbohydratesState: MutableState<Float>,
     fatsState: MutableState<Float>,
-    val energy: FormField<Int, DailyGoalsFormFieldError>
+    val energy: FormField<Int, DailyGoalsFormFieldError>,
+    isModifiedState: State<Boolean>
 ) {
     var proteins: Float by proteinsState
     var carbohydrates: Float by carbohydratesState
     var fats: Float by fatsState
+
+    val isModified: Boolean by isModifiedState
 }

@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -180,19 +181,30 @@ internal fun rememberMacroWeightInputFormState(
         }
     }
 
+    val isModified = remember {
+        derivedStateOf {
+            proteinsField.value != proteins ||
+                carbohydratesField.value != carbohydrates ||
+                fatsField.value != fats ||
+                energyField.value != energy
+        }
+    }
+
     return remember(
         proteinsField,
         carbohydratesField,
         fatsField,
         energyField,
-        autoCalculateEnergy
+        autoCalculateEnergy,
+        isModified
     ) {
         MacroWeightInputFormState(
             proteins = proteinsField,
             carbohydrates = carbohydratesField,
             fats = fatsField,
             energy = energyField,
-            autoCalculateEnergyState = autoCalculateEnergy
+            autoCalculateEnergyState = autoCalculateEnergy,
+            isModifiedState = isModified
         )
     }
 }
@@ -203,7 +215,8 @@ internal class MacroWeightInputFormState(
     val carbohydrates: FormField<Float, DailyGoalsFormFieldError>,
     val fats: FormField<Float, DailyGoalsFormFieldError>,
     val energy: FormField<Int, DailyGoalsFormFieldError>,
-    autoCalculateEnergyState: MutableState<Boolean>
+    autoCalculateEnergyState: MutableState<Boolean>,
+    isModifiedState: State<Boolean>
 ) {
     var autoCalculateEnergy by autoCalculateEnergyState
 
@@ -213,6 +226,8 @@ internal class MacroWeightInputFormState(
             fats.error == null &&
             energy.error == null
     }
+
+    val isModified: Boolean by isModifiedState
 
     val badEnergy by derivedStateOf {
         val kcal = NutrientsHelper.calculateEnergy(
