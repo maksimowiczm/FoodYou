@@ -18,7 +18,7 @@ fun FoodYouNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = DailyGoals,
+        startDestination = Home,
         modifier = modifier
     ) {
         appGraph(
@@ -277,6 +277,9 @@ fun FoodYouNavHost(
                 }
             },
             dailyGoalsOnBack = {
+                navController.popBackStack<DailyGoals>(true)
+            },
+            dailyGoalsOnSave = {
                 navController.popBackStack<DailyGoals>(true)
             }
         )

@@ -48,7 +48,11 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun DailyGoalsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+internal fun DailyGoalsScreen(
+    onBack: () -> Unit,
+    onSave: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val goalsPreference = userPreference<GoalsPreference>()
     val weeklyGoals by goalsPreference.collectAsStateWithLifecycleInitialBlock()
 
@@ -68,6 +72,7 @@ internal fun DailyGoalsScreen(onBack: () -> Unit, modifier: Modifier = Modifier)
                         onClick = {
                             val weeklyGoals = state.intoWeeklyGoals()
                             goalsPreference.setBlocking(weeklyGoals)
+                            onSave()
                         },
                         enabled = state.isValid
                     ) {
