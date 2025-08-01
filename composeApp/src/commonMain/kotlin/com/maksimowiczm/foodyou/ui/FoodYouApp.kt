@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.core.preferences.setBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.feature.about.AppUpdateChangelogModalBottomSheet
-import com.maksimowiczm.foodyou.feature.about.PreviewReleaseDialog
 import com.maksimowiczm.foodyou.feature.language.TranslationWarningStartupDialog
 import com.maksimowiczm.foodyou.feature.onboarding.preferences.ShowOnboardingPreference
 import com.maksimowiczm.foodyou.feature.onboarding.ui.Onboarding
@@ -37,6 +36,6 @@ fun FoodYouApp(showOnBoardingPreference: ShowOnboardingPreference = userPreferen
         }
 
         TranslationWarningStartupDialog()
-        PreviewReleaseDialog()
+//        PreviewReleaseDialog()
     }
 }

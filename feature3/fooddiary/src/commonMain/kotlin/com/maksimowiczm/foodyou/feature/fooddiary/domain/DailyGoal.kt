@@ -2,7 +2,13 @@ package com.maksimowiczm.foodyou.feature.fooddiary.domain
 
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
 
-data class DailyGoal(private val map: Map<NutritionFactsField, Double>) {
+data class DailyGoal(
+    private val map: Map<NutritionFactsField, Double>,
+    /**
+     * Indicates whether the macronutrient goals are set as a distribution in percentages
+     */
+    val isDistribution: Boolean
+) {
     operator fun get(field: NutritionFactsField) =
         map[field] ?: error("Field $field not found in DailyGoal")
 
@@ -16,22 +22,22 @@ data class DailyGoal(private val map: Map<NutritionFactsField, Double>) {
             map[field] ?: defaultGoals[field]
         }
 
-        return DailyGoal(filledMap)
+        return DailyGoal(filledMap, isDistribution)
     }
 
     companion object {
         val defaultGoals = NutritionFactsField.entries.associateWith {
             when (it) {
                 NutritionFactsField.Energy -> 2000.0 // kcal
-                NutritionFactsField.Proteins -> 50.0 // g
-                NutritionFactsField.Fats -> 70.0 // g
+                NutritionFactsField.Proteins -> 100.0 // g
+                NutritionFactsField.Fats -> 66.7 // g
                 NutritionFactsField.SaturatedFats -> 20.0 // g
                 NutritionFactsField.TransFats -> 0.0 // g
                 NutritionFactsField.MonounsaturatedFats -> 20.0 // g
                 NutritionFactsField.PolyunsaturatedFats -> 15.0 // g
                 NutritionFactsField.Omega3 -> 1.6 // g
                 NutritionFactsField.Omega6 -> 17.0 // g
-                NutritionFactsField.Carbohydrates -> 275.0 // g
+                NutritionFactsField.Carbohydrates -> 250.0 // g
                 NutritionFactsField.Sugars -> 50.0 // g
                 NutritionFactsField.AddedSugars -> 25.0 // g
                 NutritionFactsField.DietaryFiber -> 28.0 // g
@@ -68,6 +74,11 @@ data class DailyGoal(private val map: Map<NutritionFactsField, Double>) {
                 NutritionFactsField.Iodine -> 0.00015 // g (150 µg)
                 NutritionFactsField.Chromium -> 0.000035 // g (35 µg)
             }
-        }.let(::DailyGoal)
+        }.let {
+            DailyGoal(
+                map = it,
+                isDistribution = false
+            )
+        }
     }
 }

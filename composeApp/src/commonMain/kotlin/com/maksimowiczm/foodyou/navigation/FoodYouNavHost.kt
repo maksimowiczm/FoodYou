@@ -18,7 +18,7 @@ fun FoodYouNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Home,
+        startDestination = DailyGoals,
         modifier = modifier
     ) {
         appGraph(
