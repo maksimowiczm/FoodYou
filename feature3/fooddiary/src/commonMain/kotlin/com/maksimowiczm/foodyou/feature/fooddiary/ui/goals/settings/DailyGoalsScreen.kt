@@ -32,8 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -153,8 +151,30 @@ internal fun DailyGoalsForm(
                 .padding(contentPadding)
         )
         if (formState.useDistribution) {
-            DistributionForm(
-                formState = formState,
+            val energy = NutrientsHelper.calculateEnergy(
+                proteins = formState.proteins.value,
+                carbohydrates = formState.carbohydrates.value,
+                fats = formState.fats.value
+            ).roundToInt()
+
+            val state = rememberMacroInputSliderFormState(
+                proteins = NutrientsHelper.proteinsPercentage(
+                    energy = energy,
+                    proteins = formState.proteins.value
+                ) * 100f,
+                carbohydrates = NutrientsHelper.carbohydratesPercentage(
+                    energy = energy,
+                    carbohydrates = formState.carbohydrates.value
+                ) * 100f,
+                fats = NutrientsHelper.fatsPercentage(
+                    energy = energy,
+                    fats = formState.fats.value
+                ) * 100f,
+                energy = energy
+            )
+
+            MacroInputSliderForm(
+                state = state,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(contentPadding)
@@ -202,116 +222,6 @@ private fun DistributionButtons(formState: DailyGoalsFormState, modifier: Modifi
             Icon(
                 imageVector = Icons.Outlined.Percent,
                 contentDescription = null
-            )
-        }
-    }
-}
-
-@Composable
-private fun DistributionForm(formState: DailyGoalsFormState, modifier: Modifier = Modifier) {
-    val nutrientsPalette = LocalNutrientsPalette.current
-
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        OutlinedTextField(
-            state = formState.energy.textFieldState,
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text(stringResource(Res.string.unit_energy)) },
-            suffix = { Text(stringResource(Res.string.unit_kcal)) },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            )
-        )
-        Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(Res.string.nutriment_proteins),
-                    color = nutrientsPalette.proteinsOnSurfaceContainer,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = buildString {
-                        append(formState.proteinsSlider.roundToInt())
-                        append("%")
-                    },
-                    color = nutrientsPalette.proteinsOnSurfaceContainer,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Slider(
-                value = formState.proteinsSlider,
-                onValueChange = { formState.proteinsSlider = it },
-                valueRange = 0f..100f,
-                colors = SliderDefaults.colors(
-                    activeTrackColor = nutrientsPalette.proteinsOnSurfaceContainer,
-                    thumbColor = nutrientsPalette.proteinsOnSurfaceContainer
-                )
-            )
-        }
-
-        Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(Res.string.nutriment_carbohydrates),
-                    color = nutrientsPalette.carbohydratesOnSurfaceContainer,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = buildString {
-                        append(formState.carbohydratesSlider.roundToInt())
-                        append("%")
-                    },
-                    color = nutrientsPalette.carbohydratesOnSurfaceContainer,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Slider(
-                value = formState.carbohydratesSlider,
-                onValueChange = { formState.carbohydratesSlider = it },
-                valueRange = 0f..100f,
-                colors = SliderDefaults.colors(
-                    activeTrackColor = nutrientsPalette.carbohydratesOnSurfaceContainer,
-                    thumbColor = nutrientsPalette.carbohydratesOnSurfaceContainer
-                )
-            )
-        }
-
-        Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(Res.string.nutriment_fats),
-                    color = nutrientsPalette.fatsOnSurfaceContainer,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = buildString {
-                        append(formState.fatsSlider.roundToInt())
-                        append("%")
-                    },
-                    color = nutrientsPalette.fatsOnSurfaceContainer,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Slider(
-                value = formState.fatsSlider,
-                onValueChange = { formState.fatsSlider = it },
-                valueRange = 0f..100f,
-                colors = SliderDefaults.colors(
-                    activeTrackColor = nutrientsPalette.fatsOnSurfaceContainer,
-                    thumbColor = nutrientsPalette.fatsOnSurfaceContainer
-                )
             )
         }
     }
