@@ -229,7 +229,7 @@ private fun WeightOrPercentageToggle(
     ) {
         ToggleButton(
             checked = !useDistribution,
-            onCheckedChange = { onUseDistributionChange(!it) },
+            onCheckedChange = { onUseDistributionChange(false) },
             modifier = Modifier
                 .height(56.dp)
                 .semantics { role = Role.RadioButton }
@@ -243,7 +243,7 @@ private fun WeightOrPercentageToggle(
         }
         ToggleButton(
             checked = useDistribution,
-            onCheckedChange = { onUseDistributionChange(it) },
+            onCheckedChange = { onUseDistributionChange(true) },
             modifier = Modifier
                 .height(56.dp)
                 .semantics { role = Role.RadioButton }
