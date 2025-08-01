@@ -198,6 +198,13 @@ internal class MacroWeightInputFormState(
 ) {
     var autoCalculateEnergy by autoCalculateEnergyState
 
+    val isValid by derivedStateOf {
+        proteins.error == null &&
+            carbohydrates.error == null &&
+            fats.error == null &&
+            energy.error == null
+    }
+
     val badEnergy by derivedStateOf {
         val kcal = NutrientsHelper.calculateEnergy(
             proteins = proteins.value,

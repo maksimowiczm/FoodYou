@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.form.FormField
-import com.maksimowiczm.foodyou.core.ui.form.floatParser
+import com.maksimowiczm.foodyou.core.ui.form.doubleParser
 import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
@@ -285,7 +285,7 @@ private fun ColumnScope.Minerals(state: AdditionalGoalsFormState) {
 }
 
 @Composable
-private fun FormField<Float, DailyGoalsFormFieldError>.TextField(
+private fun FormField<Double, DailyGoalsFormFieldError>.TextField(
     label: String,
     modifier: Modifier = Modifier,
     suffix: String = stringResource(Res.string.unit_gram_short),
@@ -395,10 +395,10 @@ internal fun rememberAdditionalGoalsFormState(dailyGoal: DailyGoal): AdditionalG
 }
 
 @Composable
-private fun rememberFormField(initialValue: Double): FormField<Float, DailyGoalsFormFieldError> =
+private fun rememberFormField(initialValue: Double): FormField<Double, DailyGoalsFormFieldError> =
     rememberFormField(
-        initialValue = initialValue.toFloat(),
-        parser = floatParser(
+        initialValue = initialValue,
+        parser = doubleParser(
             onBlank = { DailyGoalsFormFieldError.Required },
             onNotANumber = { DailyGoalsFormFieldError.NotANumber }
         ),
@@ -407,43 +407,87 @@ private fun rememberFormField(initialValue: Double): FormField<Float, DailyGoals
 
 @Stable
 internal class AdditionalGoalsFormState(
-    val saturatedFats: FormField<Float, DailyGoalsFormFieldError>,
-    val transFats: FormField<Float, DailyGoalsFormFieldError>,
-    val monounsaturatedFats: FormField<Float, DailyGoalsFormFieldError>,
-    val polyunsaturatedFats: FormField<Float, DailyGoalsFormFieldError>,
-    val omega3: FormField<Float, DailyGoalsFormFieldError>,
-    val omega6: FormField<Float, DailyGoalsFormFieldError>,
-    val sugars: FormField<Float, DailyGoalsFormFieldError>,
-    val addedSugars: FormField<Float, DailyGoalsFormFieldError>,
-    val dietaryFiber: FormField<Float, DailyGoalsFormFieldError>,
-    val solubleFiber: FormField<Float, DailyGoalsFormFieldError>,
-    val insolubleFiber: FormField<Float, DailyGoalsFormFieldError>,
-    val salt: FormField<Float, DailyGoalsFormFieldError>,
-    val cholesterolMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val caffeineMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminAMicro: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminB1Milli: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminB2Milli: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminB3Milli: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminB5Milli: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminB6Milli: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminB7Micro: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminB9Micro: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminB12Micro: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminCMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminDMicro: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminEMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val vitaminKMicro: FormField<Float, DailyGoalsFormFieldError>,
-    val manganeseMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val magnesiumMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val potassiumMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val calciumMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val copperMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val zincMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val sodiumMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val ironMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val phosphorusMilli: FormField<Float, DailyGoalsFormFieldError>,
-    val seleniumMicro: FormField<Float, DailyGoalsFormFieldError>,
-    val iodineMicro: FormField<Float, DailyGoalsFormFieldError>,
-    val chromiumMicro: FormField<Float, DailyGoalsFormFieldError>
-)
+    val saturatedFats: FormField<Double, DailyGoalsFormFieldError>,
+    val transFats: FormField<Double, DailyGoalsFormFieldError>,
+    val monounsaturatedFats: FormField<Double, DailyGoalsFormFieldError>,
+    val polyunsaturatedFats: FormField<Double, DailyGoalsFormFieldError>,
+    val omega3: FormField<Double, DailyGoalsFormFieldError>,
+    val omega6: FormField<Double, DailyGoalsFormFieldError>,
+    val sugars: FormField<Double, DailyGoalsFormFieldError>,
+    val addedSugars: FormField<Double, DailyGoalsFormFieldError>,
+    val dietaryFiber: FormField<Double, DailyGoalsFormFieldError>,
+    val solubleFiber: FormField<Double, DailyGoalsFormFieldError>,
+    val insolubleFiber: FormField<Double, DailyGoalsFormFieldError>,
+    val salt: FormField<Double, DailyGoalsFormFieldError>,
+    val cholesterolMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val caffeineMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminAMicro: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminB1Milli: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminB2Milli: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminB3Milli: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminB5Milli: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminB6Milli: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminB7Micro: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminB9Micro: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminB12Micro: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminCMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminDMicro: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminEMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val vitaminKMicro: FormField<Double, DailyGoalsFormFieldError>,
+    val manganeseMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val magnesiumMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val potassiumMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val calciumMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val copperMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val zincMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val sodiumMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val ironMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val phosphorusMilli: FormField<Double, DailyGoalsFormFieldError>,
+    val seleniumMicro: FormField<Double, DailyGoalsFormFieldError>,
+    val iodineMicro: FormField<Double, DailyGoalsFormFieldError>,
+    val chromiumMicro: FormField<Double, DailyGoalsFormFieldError>
+) {
+    val isValid by derivedStateOf {
+        listOf(
+            saturatedFats,
+            transFats,
+            monounsaturatedFats,
+            polyunsaturatedFats,
+            omega3,
+            omega6,
+            sugars,
+            addedSugars,
+            dietaryFiber,
+            solubleFiber,
+            insolubleFiber,
+            salt,
+            cholesterolMilli,
+            caffeineMilli,
+            vitaminAMicro,
+            vitaminB1Milli,
+            vitaminB2Milli,
+            vitaminB3Milli,
+            vitaminB5Milli,
+            vitaminB6Milli,
+            vitaminB7Micro,
+            vitaminB9Micro,
+            vitaminB12Micro,
+            vitaminCMilli,
+            vitaminDMicro,
+            vitaminEMilli,
+            vitaminKMicro,
+            manganeseMilli,
+            magnesiumMilli,
+            potassiumMilli,
+            calciumMilli,
+            copperMilli,
+            zincMilli,
+            sodiumMilli,
+            ironMilli,
+            phosphorusMilli,
+            seleniumMicro,
+            iodineMicro,
+            chromiumMicro
+        ).all { it.error == null }
+    }
+}

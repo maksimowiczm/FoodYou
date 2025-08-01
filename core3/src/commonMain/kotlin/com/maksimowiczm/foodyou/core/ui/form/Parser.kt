@@ -79,3 +79,18 @@ fun <E> floatParser(onNotANumber: () -> E, onBlank: () -> E): (String) -> ParseR
             }
         }
     }
+
+fun <E> doubleParser(onNotANumber: () -> E, onBlank: () -> E): (String) -> ParseResult<Double, E> =
+    { input ->
+        if (input.isBlank()) {
+            ParseResult.Failure(onBlank())
+        } else {
+            val value = input.toDoubleOrNull()
+
+            if (value == null) {
+                ParseResult.Failure(onNotANumber())
+            } else {
+                ParseResult.Success(value)
+            }
+        }
+    }
