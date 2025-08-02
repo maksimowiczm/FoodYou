@@ -20,7 +20,7 @@ fun FoodYouNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Goals(LocalDate.now()),
+        startDestination = Home,
         modifier = modifier
     ) {
         appGraph(
