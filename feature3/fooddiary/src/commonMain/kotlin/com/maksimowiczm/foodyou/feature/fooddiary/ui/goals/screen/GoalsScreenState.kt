@@ -24,9 +24,16 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.until
 
+/**
+ * The maximum number of pages allowed in the pager.
+ * This limit is set to 50,000 to ensure reasonable performance and memory usage,
+ * while allowing users to select dates far into the past and future.
+ */
+private const val MAX_PAGER_SIZE = 50_000
+
 @Composable
 internal fun rememberGoalsScreenState(selectedDate: LocalDate): GoalsScreenState {
-    val maxSize = 50_000
+    val maxSize = MAX_PAGER_SIZE
 
     val zeroDate = LocalDate.fromEpochDays(0)
     val initialPage = (zeroDate.until(selectedDate, DateTimeUnit.DAY)).toInt()
