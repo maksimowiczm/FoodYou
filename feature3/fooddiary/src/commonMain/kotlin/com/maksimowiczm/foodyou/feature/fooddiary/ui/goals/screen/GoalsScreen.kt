@@ -407,7 +407,8 @@ private fun Vitamins(
             label = NutritionFactsField.VitaminA.stringResource(),
             nutrientValue = nutritionFacts.vitaminAMicro,
             target = (goals[NutritionFactsField.VitaminA] * 1000_000).toFloat(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_microgram_short)
         )
         NutrientGoal(
             label = NutritionFactsField.VitaminB1.stringResource(),
