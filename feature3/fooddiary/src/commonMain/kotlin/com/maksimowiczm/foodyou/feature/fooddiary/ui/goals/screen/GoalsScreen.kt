@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,10 +25,10 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +43,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ext.plus
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
@@ -62,8 +61,13 @@ import com.maksimowiczm.foodyou.feature.food.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.Meal
-import foodyou.app.generated.resources.*
-import kotlin.time.Duration.Companion.days
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.action_go_to_today
+import foodyou.app.generated.resources.headline_summary
+import foodyou.app.generated.resources.unit_gram_short
+import foodyou.app.generated.resources.unit_kcal
+import foodyou.app.generated.resources.unit_microgram_short
+import foodyou.app.generated.resources.unit_milligram_short
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 
@@ -78,17 +82,9 @@ internal fun GoalsScreen(
 ) {
     val dateFormatter = LocalDateFormatter.current
 
-    val zeroDate = date
-    val pagerState = rememberPagerState(
-        initialPage = 500
-    ) {
-        1_000
-    }
-    val selectedDate by remember {
-        derivedStateOf {
-            zeroDate.plus((pagerState.currentPage - 500).days)
-        }
-    }
+    val screenState = rememberGoalsScreenState(
+        zeroDate = date
+    )
 
     val order by userPreference<NutrientsOrderPreference>()
         .collectAsStateWithLifecycleInitialBlock()
@@ -100,7 +96,16 @@ internal fun GoalsScreen(
             TopAppBar(
                 title = { Text(stringResource(Res.string.headline_summary)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
-                subtitle = { Text(dateFormatter.formatDate(selectedDate)) },
+                actions = {
+                    AnimatedVisibility(!screenState.zeroDateSelected) {
+                        TextButton(
+                            onClick = screenState::goToZeroDate
+                        ) {
+                            Text(stringResource(Res.string.action_go_to_today))
+                        }
+                    }
+                },
+                subtitle = { Text(dateFormatter.formatDate(screenState.selectedDate)) },
                 scrollBehavior = scrollBehavior
             )
         }
@@ -111,7 +116,7 @@ internal fun GoalsScreen(
         ) {
             item {
                 HorizontalPager(
-                    state = pagerState,
+                    state = screenState.pagerState,
                     verticalAlignment = Alignment.Top,
                     beyondViewportPageCount = 3
                 ) { page ->
