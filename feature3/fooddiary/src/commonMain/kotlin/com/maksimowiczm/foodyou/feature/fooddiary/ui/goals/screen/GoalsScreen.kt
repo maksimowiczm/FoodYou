@@ -1,9 +1,14 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.screen
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +19,8 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -26,11 +33,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
+import com.maksimowiczm.foodyou.feature.food.domain.sum
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.Meal
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalDate
@@ -44,14 +58,16 @@ internal fun GoalsScreen(
 ) {
     val date by viewModel.date.collectAsStateWithLifecycle()
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
+    val goals = viewModel.goals.collectAsStateWithLifecycle().value
 
-    if (meals == null) {
+    if (meals == null || goals == null) {
         // TODO loading state
     } else {
         GoalsScreen(
             onBack = onBack,
             date = date,
             meals = meals,
+            goals = goals,
             modifier = modifier
         )
     }
@@ -63,6 +79,7 @@ private fun GoalsScreen(
     onBack: () -> Unit,
     date: LocalDate,
     meals: List<Meal>,
+    goals: DailyGoal,
     modifier: Modifier = Modifier
 ) {
     val dateFormatter = LocalDateFormatter.current
@@ -73,6 +90,9 @@ private fun GoalsScreen(
 
     val filteredMeals = remember(meals, selectedMealsIds) {
         meals.filter { it.id in selectedMealsIds }
+    }
+    val nutritionFacts = remember(filteredMeals) {
+        filteredMeals.map { it.nutritionFacts }.sum()
     }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -105,6 +125,18 @@ private fun GoalsScreen(
             }
 
             item {
+                NutrientGoal(
+                    label = "Energy",
+                    value = nutritionFacts.get(NutritionFactsField.Energy).value!!,
+                    target = goals[NutritionFactsField.Energy].toFloat(),
+                    disclaimer = false,
+                    unit = "kcal",
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(
+                        horizontal = 16.dp,
+                        vertical = 8.dp
+                    )
+                )
             }
         }
     }
@@ -149,5 +181,95 @@ private fun MealsFilter(
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+internal fun NutrientGoal(
+    label: String,
+    value: Float,
+    target: Float,
+    disclaimer: Boolean,
+    color: Color,
+    modifier: Modifier = Modifier,
+    unit: String = stringResource(Res.string.unit_gram_short)
+) {
+    val isExceeded = remember(value, target) {
+        value > target
+    }
+    val color by animateColorAsState(if (isExceeded) MaterialTheme.colorScheme.error else color)
+
+    val progress by animateFloatAsState(
+        targetValue = if (value > target) {
+            ((value - target) / target).coerceIn(0f, 1f)
+        } else {
+            value / target
+        },
+        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
+    )
+
+    val colorScheme = MaterialTheme.colorScheme
+    val typography = MaterialTheme.typography
+
+    val valueString =
+        remember(colorScheme, typography, value, target, unit, disclaimer, isExceeded) {
+            buildAnnotatedString {
+                val color = if (isExceeded) {
+                    colorScheme.error
+                } else {
+                    colorScheme.onSurface
+                }
+                val labelStyle = typography.bodyLarge.copy(
+                    color = color
+                )
+
+                withStyle(labelStyle.toSpanStyle()) {
+                    if (disclaimer) {
+                        append("* ")
+                    }
+
+                    append(value.formatClipZeros())
+                }
+
+                val targetStyle = typography.bodyLarge.copy(
+                    color = colorScheme.outline
+                )
+
+                withStyle(targetStyle.toSpanStyle()) {
+                    append(" / ")
+                    append(target.formatClipZeros())
+                    append(" $unit")
+                }
+            }
+        }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.titleMedium,
+                color = color
+            )
+            Text(
+                text = valueString,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+        LinearProgressIndicator(
+            progress = { progress },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp),
+            color = color,
+            trackColor = color.copy(alpha = 0.25f),
+            drawStopIndicator = {}
+        )
     }
 }
