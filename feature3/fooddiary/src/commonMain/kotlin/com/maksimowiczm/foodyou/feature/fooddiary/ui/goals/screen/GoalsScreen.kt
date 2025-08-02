@@ -681,23 +681,6 @@ private fun NutrientGoal(
     val isExceeded = remember(value, target) {
         value > target
     }
-    val trackColor by animateColorAsState(
-        if (isExceeded) MaterialTheme.colorScheme.error else trackColor
-    )
-    val color = if (isExceeded) MaterialTheme.colorScheme.error else color
-
-    val progress by animateFloatAsState(
-        targetValue = run {
-            val target = target.coerceAtLeast(.01f)
-
-            if (value > target) {
-                ((value - target) / target).coerceIn(0f, 1f)
-            } else {
-                value / target
-            }
-        },
-        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
-    )
 
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -745,15 +728,24 @@ private fun NutrientGoal(
             Text(
                 text = label,
                 style = MaterialTheme.typography.titleMedium,
-                color = color
+                color = if (isExceeded) MaterialTheme.colorScheme.error else color
             )
             Text(
                 text = valueString,
                 style = MaterialTheme.typography.bodyLarge
             )
         }
+
+        val progress by animateFloatAsState(
+            targetValue = value / target.coerceAtLeast(.01f),
+            animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
+        )
+        val trackColor by animateColorAsState(
+            if (progress > 1) MaterialTheme.colorScheme.error else trackColor
+        )
+
         LinearProgressIndicator(
-            progress = { progress },
+            progress = { progress % 1f },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp),
