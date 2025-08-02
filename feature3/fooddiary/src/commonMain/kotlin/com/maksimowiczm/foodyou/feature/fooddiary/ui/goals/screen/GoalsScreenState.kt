@@ -46,4 +46,6 @@ internal class GoalsScreenState(
             pagerState.animateScrollToPage(initialPage)
         }
     }
+
+    fun dateForPage(page: Int) = zeroDate.plus((page - initialPage).days)
 }
