@@ -39,11 +39,19 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
+import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue
+import com.maksimowiczm.foodyou.feature.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
 import com.maksimowiczm.foodyou.feature.food.domain.sum
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
+import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.Meal
 import foodyou.app.generated.resources.*
@@ -59,6 +67,8 @@ internal fun GoalsScreen(
     val date by viewModel.date.collectAsStateWithLifecycle()
     val meals = viewModel.meals.collectAsStateWithLifecycle().value
     val goals = viewModel.goals.collectAsStateWithLifecycle().value
+    val order by userPreference<NutrientsOrderPreference>()
+        .collectAsStateWithLifecycleInitialBlock()
 
     if (meals == null || goals == null) {
         // TODO loading state
@@ -68,6 +78,7 @@ internal fun GoalsScreen(
             date = date,
             meals = meals,
             goals = goals,
+            order = order,
             modifier = modifier
         )
     }
@@ -80,6 +91,7 @@ private fun GoalsScreen(
     date: LocalDate,
     meals: List<Meal>,
     goals: DailyGoal,
+    order: List<NutrientsOrder>,
     modifier: Modifier = Modifier
 ) {
     val dateFormatter = LocalDateFormatter.current
@@ -125,17 +137,13 @@ private fun GoalsScreen(
             }
 
             item {
-                NutrientGoal(
-                    label = "Energy",
-                    value = nutritionFacts.get(NutritionFactsField.Energy).value!!,
-                    target = goals[NutritionFactsField.Energy].toFloat(),
-                    disclaimer = false,
-                    unit = "kcal",
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(
-                        horizontal = 16.dp,
-                        vertical = 8.dp
-                    )
+                NutrientList(
+                    nutritionFacts = nutritionFacts,
+                    goals = goals,
+                    order = order,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
         }
@@ -184,9 +192,424 @@ private fun MealsFilter(
     }
 }
 
+@Composable
+private fun NutrientList(
+    nutritionFacts: NutritionFacts,
+    goals: DailyGoal,
+    order: List<NutrientsOrder>,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        NutrientGoal(
+            label = NutritionFactsField.Energy.stringResource(),
+            value = nutritionFacts.get(NutritionFactsField.Energy).value!!,
+            target = goals[NutritionFactsField.Energy].toFloat(),
+            disclaimer = false,
+            unit = stringResource(Res.string.unit_kcal),
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        order.forEach {
+            when (it) {
+                NutrientsOrder.Proteins -> Proteins(nutritionFacts, goals)
+                NutrientsOrder.Fats -> Fats(nutritionFacts, goals)
+                NutrientsOrder.Carbohydrates -> Carbohydrates(nutritionFacts, goals)
+                NutrientsOrder.Other -> Other(nutritionFacts, goals)
+                NutrientsOrder.Vitamins -> Vitamins(nutritionFacts, goals)
+                NutrientsOrder.Minerals -> Minerals(nutritionFacts, goals)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Proteins(
+    nutritionFacts: NutritionFacts,
+    goals: DailyGoal,
+    modifier: Modifier = Modifier
+) {
+    val nutrientsPalette = LocalNutrientsPalette.current
+    val value = nutritionFacts.proteins
+    val target = goals[NutritionFactsField.Proteins].toFloat()
+    val label = NutritionFactsField.Proteins.stringResource()
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        NutrientGoal(
+            label = label,
+            value = value.value!!,
+            target = target,
+            disclaimer = value.isComplete,
+            color = nutrientsPalette.proteinsOnSurfaceContainer,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_gram_short)
+        )
+    }
+}
+
+@Composable
+private fun Fats(nutritionFacts: NutritionFacts, goals: DailyGoal, modifier: Modifier = Modifier) {
+    val nutrientsPalette = LocalNutrientsPalette.current
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        NutrientGoal(
+            label = NutritionFactsField.Fats.stringResource(),
+            nutrientValue = nutritionFacts.fats,
+            target = goals[NutritionFactsField.Fats].toFloat(),
+            color = nutrientsPalette.fatsOnSurfaceContainer,
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.SaturatedFats.stringResource(),
+            nutrientValue = nutritionFacts.saturatedFats,
+            target = goals[NutritionFactsField.SaturatedFats].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.TransFats.stringResource(),
+            nutrientValue = nutritionFacts.transFats,
+            target = goals[NutritionFactsField.TransFats].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.MonounsaturatedFats.stringResource(),
+            nutrientValue = nutritionFacts.monounsaturatedFats,
+            target = goals[NutritionFactsField.MonounsaturatedFats].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.PolyunsaturatedFats.stringResource(),
+            nutrientValue = nutritionFacts.polyunsaturatedFats,
+            target = goals[NutritionFactsField.PolyunsaturatedFats].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Omega3.stringResource(),
+            nutrientValue = nutritionFacts.omega3,
+            target = goals[NutritionFactsField.Omega3].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Omega6.stringResource(),
+            nutrientValue = nutritionFacts.omega6,
+            target = goals[NutritionFactsField.Omega6].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+private fun Carbohydrates(
+    nutritionFacts: NutritionFacts,
+    goals: DailyGoal,
+    modifier: Modifier = Modifier
+) {
+    val nutrientsPalette = LocalNutrientsPalette.current
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        NutrientGoal(
+            label = NutritionFactsField.Carbohydrates.stringResource(),
+            nutrientValue = nutritionFacts.carbohydrates,
+            target = goals[NutritionFactsField.Carbohydrates].toFloat(),
+            color = nutrientsPalette.carbohydratesOnSurfaceContainer,
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Sugars.stringResource(),
+            nutrientValue = nutritionFacts.sugars,
+            target = goals[NutritionFactsField.Sugars].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.AddedSugars.stringResource(),
+            nutrientValue = nutritionFacts.addedSugars,
+            target = goals[NutritionFactsField.AddedSugars].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.DietaryFiber.stringResource(),
+            nutrientValue = nutritionFacts.dietaryFiber,
+            target = goals[NutritionFactsField.DietaryFiber].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.SolubleFiber.stringResource(),
+            nutrientValue = nutritionFacts.solubleFiber,
+            target = goals[NutritionFactsField.SolubleFiber].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.InsolubleFiber.stringResource(),
+            nutrientValue = nutritionFacts.insolubleFiber,
+            target = goals[NutritionFactsField.InsolubleFiber].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+private fun Other(nutritionFacts: NutritionFacts, goals: DailyGoal, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        NutrientGoal(
+            label = NutritionFactsField.Salt.stringResource(),
+            nutrientValue = nutritionFacts.salt,
+            target = goals[NutritionFactsField.Salt].toFloat(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Cholesterol.stringResource(),
+            nutrientValue = nutritionFacts.cholesterolMilli,
+            target = goals[NutritionFactsField.Cholesterol].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Caffeine.stringResource(),
+            nutrientValue = nutritionFacts.caffeineMilli,
+            target = goals[NutritionFactsField.Caffeine].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+    }
+}
+
+@Composable
+private fun Vitamins(
+    nutritionFacts: NutritionFacts,
+    goals: DailyGoal,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        NutrientGoal(
+            label = NutritionFactsField.VitaminA.stringResource(),
+            nutrientValue = nutritionFacts.vitaminAMicro,
+            target = goals[NutritionFactsField.VitaminA].toFloat() * 1000_000f,
+            modifier = Modifier.fillMaxWidth()
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminB1.stringResource(),
+            nutrientValue = nutritionFacts.vitaminB1Milli,
+            target = goals[NutritionFactsField.VitaminB1].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminB2.stringResource(),
+            nutrientValue = nutritionFacts.vitaminB2Milli,
+            target = goals[NutritionFactsField.VitaminB2].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminB3.stringResource(),
+            nutrientValue = nutritionFacts.vitaminB3Milli,
+            target = goals[NutritionFactsField.VitaminB3].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminB5.stringResource(),
+            nutrientValue = nutritionFacts.vitaminB5Milli,
+            target = goals[NutritionFactsField.VitaminB5].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminB6.stringResource(),
+            nutrientValue = nutritionFacts.vitaminB6Milli,
+            target = goals[NutritionFactsField.VitaminB6].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminB7.stringResource(),
+            nutrientValue = nutritionFacts.vitaminB7Micro,
+            target = goals[NutritionFactsField.VitaminB7].toFloat() * 1000_000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_microgram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminB9.stringResource(),
+            nutrientValue = nutritionFacts.vitaminB9Micro,
+            target = goals[NutritionFactsField.VitaminB9].toFloat() * 1000_000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_microgram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminB12.stringResource(),
+            nutrientValue = nutritionFacts.vitaminB12Micro,
+            target = goals[NutritionFactsField.VitaminB12].toFloat() * 1000_000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_microgram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminC.stringResource(),
+            nutrientValue = nutritionFacts.vitaminCMilli,
+            target = goals[NutritionFactsField.VitaminC].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminD.stringResource(),
+            nutrientValue = nutritionFacts.vitaminDMicro,
+            target = goals[NutritionFactsField.VitaminD].toFloat() * 1000_000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_microgram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminE.stringResource(),
+            nutrientValue = nutritionFacts.vitaminEMilli,
+            target = goals[NutritionFactsField.VitaminE].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.VitaminK.stringResource(),
+            nutrientValue = nutritionFacts.vitaminKMicro,
+            target = goals[NutritionFactsField.VitaminK].toFloat() * 1000_000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_microgram_short)
+        )
+    }
+}
+
+@Composable
+private fun Minerals(
+    nutritionFacts: NutritionFacts,
+    goals: DailyGoal,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        NutrientGoal(
+            label = NutritionFactsField.Manganese.stringResource(),
+            nutrientValue = nutritionFacts.manganeseMilli,
+            target = goals[NutritionFactsField.Manganese].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Magnesium.stringResource(),
+            nutrientValue = nutritionFacts.magnesiumMilli,
+            target = goals[NutritionFactsField.Magnesium].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Potassium.stringResource(),
+            nutrientValue = nutritionFacts.potassiumMilli,
+            target = goals[NutritionFactsField.Potassium].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Calcium.stringResource(),
+            nutrientValue = nutritionFacts.calciumMilli,
+            target = goals[NutritionFactsField.Calcium].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Copper.stringResource(),
+            nutrientValue = nutritionFacts.copperMilli,
+            target = goals[NutritionFactsField.Copper].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Zinc.stringResource(),
+            nutrientValue = nutritionFacts.zincMilli,
+            target = goals[NutritionFactsField.Zinc].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Sodium.stringResource(),
+            nutrientValue = nutritionFacts.sodiumMilli,
+            target = goals[NutritionFactsField.Sodium].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Iron.stringResource(),
+            nutrientValue = nutritionFacts.ironMilli,
+            target = goals[NutritionFactsField.Iron].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Phosphorus.stringResource(),
+            nutrientValue = nutritionFacts.phosphorusMilli,
+            target = goals[NutritionFactsField.Phosphorus].toFloat() * 1000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_milligram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Selenium.stringResource(),
+            nutrientValue = nutritionFacts.seleniumMicro,
+            target = goals[NutritionFactsField.Selenium].toFloat() * 1000_000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_microgram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Iodine.stringResource(),
+            nutrientValue = nutritionFacts.iodineMicro,
+            target = goals[NutritionFactsField.Iodine].toFloat() * 1000_000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_microgram_short)
+        )
+        NutrientGoal(
+            label = NutritionFactsField.Chromium.stringResource(),
+            nutrientValue = nutritionFacts.chromiumMicro,
+            target = goals[NutritionFactsField.Chromium].toFloat() * 1000_000f,
+            modifier = Modifier.fillMaxWidth(),
+            unit = stringResource(Res.string.unit_microgram_short)
+        )
+    }
+}
+
+@Composable
+private fun NutrientGoal(
+    label: String,
+    nutrientValue: NutrientValue,
+    target: Float,
+    modifier: Modifier = Modifier,
+    unit: String = stringResource(Res.string.unit_gram_short),
+    color: Color = MaterialTheme.colorScheme.outline
+) {
+    NutrientGoal(
+        label = label,
+        value = nutrientValue.value!!,
+        target = target,
+        disclaimer = !nutrientValue.isComplete,
+        color = color,
+        modifier = modifier,
+        unit = unit
+    )
+}
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun NutrientGoal(
+private fun NutrientGoal(
     label: String,
     value: Float,
     target: Float,
@@ -201,10 +624,14 @@ internal fun NutrientGoal(
     val color by animateColorAsState(if (isExceeded) MaterialTheme.colorScheme.error else color)
 
     val progress by animateFloatAsState(
-        targetValue = if (value > target) {
-            ((value - target) / target).coerceIn(0f, 1f)
-        } else {
-            value / target
+        targetValue = run {
+            val target = target.coerceAtLeast(.01f)
+
+            if (value > target) {
+                ((value - target) / target).coerceIn(0f, 1f)
+            } else {
+                value / target
+            }
         },
         animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
     )
