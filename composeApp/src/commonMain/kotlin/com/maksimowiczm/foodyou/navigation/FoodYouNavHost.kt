@@ -308,6 +308,17 @@ fun FoodYouNavHost(
             },
             goalsOnBack = {
                 navController.popBackStack<Goals>(true)
+            },
+            goalsOnFood = {
+                when (it) {
+                    is FoodId.Product -> navController.navigate(UpdateProduct.from(it)) {
+                        launchSingleTop = true
+                    }
+
+                    is FoodId.Recipe -> navController.navigate(UpdateRecipe.from(it)) {
+                        launchSingleTop = true
+                    }
+                }
             }
         )
         aboutGraph(

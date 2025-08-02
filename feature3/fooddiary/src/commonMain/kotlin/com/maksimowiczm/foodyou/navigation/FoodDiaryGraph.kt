@@ -157,7 +157,8 @@ fun NavGraphBuilder.foodDiaryGraph(
     mealsCardsOnMealSettings: () -> Unit,
     dailyGoalsOnBack: () -> Unit,
     dailyGoalsOnSave: () -> Unit,
-    goalsOnBack: () -> Unit
+    goalsOnBack: () -> Unit,
+    goalsOnFood: (FoodId) -> Unit
 ) {
     forwardBackwardComposable<FoodSearch> { backStack ->
         val route = backStack.toRoute<FoodSearch>()
@@ -266,6 +267,7 @@ fun NavGraphBuilder.foodDiaryGraph(
 
         GoalsScreen(
             onBack = goalsOnBack,
+            onFoodClick = goalsOnFood,
             viewModel = koinViewModel { parametersOf(route.date) }
         )
     }

@@ -46,12 +46,15 @@ import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
+import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
+import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.food.domain.sum
 import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
+import com.maksimowiczm.foodyou.feature.food.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.Meal
@@ -62,6 +65,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun GoalsScreen(
     onBack: () -> Unit,
+    onFoodClick: (FoodId) -> Unit,
     viewModel: GoalsViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -76,6 +80,7 @@ internal fun GoalsScreen(
     } else {
         GoalsScreen(
             onBack = onBack,
+            onFoodClick = onFoodClick,
             date = date,
             meals = meals,
             goals = goals,
@@ -89,6 +94,7 @@ internal fun GoalsScreen(
 @Composable
 private fun GoalsScreen(
     onBack: () -> Unit,
+    onFoodClick: (FoodId) -> Unit,
     date: LocalDate,
     meals: List<Meal>,
     goals: DailyGoal,
@@ -146,6 +152,32 @@ private fun GoalsScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
+            }
+
+            if (!nutritionFacts.isComplete) {
+                item {
+                    val incomplete = filteredMeals
+                        .flatMap { it.food }
+                        .map { it.food }
+                        .filter { it is Product }
+                        .filter { !it.nutritionFacts.isComplete }
+
+                    IncompleteFoodsList(
+                        foods = incomplete.map { it.headline },
+                        onFoodClick = { foodName ->
+                            val id = incomplete.firstOrNull {
+                                it.headline == foodName
+                            }?.id
+
+                            if (id != null) {
+                                onFoodClick(id)
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
             }
         }
     }
