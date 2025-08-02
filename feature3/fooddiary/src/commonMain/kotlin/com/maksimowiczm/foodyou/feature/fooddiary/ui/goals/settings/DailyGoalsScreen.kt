@@ -211,7 +211,7 @@ private fun DayPicker(
 
     Column(modifier) {
         Text(
-            text = "Pick the days",
+            text = stringResource(Res.string.headline_pick_the_days),
             modifier = Modifier.padding(contentPadding),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary
@@ -233,7 +233,7 @@ private fun DayPicker(
                 onCheckedChange = null
             )
             Text(
-                text = "Set separate goals for each day",
+                text = stringResource(Res.string.action_set_separate_goals),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -265,7 +265,9 @@ private fun DayPicker(
                                 modifier = Modifier.semantics { role = Role.RadioButton },
                                 shapes = when (i) {
                                     0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                    weekDayNamesShort.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                    weekDayNamesShort.lastIndex ->
+                                        ButtonGroupDefaults.connectedTrailingButtonShapes()
+
                                     else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                                 }
                             ) {
@@ -305,7 +307,7 @@ private fun WeightOrPercentageToggle(
                 contentDescription = null
             )
             Spacer(Modifier.width(8.dp))
-            Text("Weight")
+            Text(stringResource(Res.string.weight))
         }
         ToggleButton(
             checked = useDistribution,
@@ -319,7 +321,7 @@ private fun WeightOrPercentageToggle(
                 contentDescription = null
             )
             Spacer(Modifier.width(8.dp))
-            Text("Percentage")
+            Text(stringResource(Res.string.headline_percentages))
         }
     }
 }

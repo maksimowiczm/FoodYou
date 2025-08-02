@@ -444,4 +444,9 @@
     <string name="error_total_energy_not_matching">The total energy from your proteins, carbohydrates, and fat don't add up to your daily energy goal</string>
     <string name="neutral_set_energy_manually">I want to set energy manually</string>
     <string name="description_energy_is_calculated_automatically">Energy is calculated automatically based on macronutrients</string>
+
+    <string name="headline_pick_the_days">Pick the days</string>
+    <string name="action_set_separate_goals">Set separate goals for each day</string>
+    <string name="headline_percentages">Percentages</string>
+
 </resources>
