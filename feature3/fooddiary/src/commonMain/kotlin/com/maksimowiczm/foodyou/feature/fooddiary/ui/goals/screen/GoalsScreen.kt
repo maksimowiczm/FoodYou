@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -96,15 +97,6 @@ internal fun GoalsScreen(
             TopAppBar(
                 title = { Text(stringResource(Res.string.headline_summary)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
-                actions = {
-                    AnimatedVisibility(!screenState.zeroDateSelected) {
-                        TextButton(
-                            onClick = screenState::goToZeroDate
-                        ) {
-                            Text(stringResource(Res.string.action_go_to_today))
-                        }
-                    }
-                },
                 subtitle = { Text(dateFormatter.formatDate(screenState.selectedDate)) },
                 scrollBehavior = scrollBehavior
             )
@@ -118,7 +110,9 @@ internal fun GoalsScreen(
                 HorizontalPager(
                     state = screenState.pagerState,
                     verticalAlignment = Alignment.Top,
-                    beyondViewportPageCount = 3
+                    beyondViewportPageCount = 3,
+                    userScrollEnabled = false,
+                    modifier = Modifier.clearAndSetSemantics { } // Hide it from user for now
                 ) { page ->
                     val meals = viewModel.observeMeals(date).collectAsStateWithLifecycle(null).value
                     val goals = viewModel.observeGoals(date).collectAsStateWithLifecycle(null).value
@@ -738,7 +732,7 @@ private fun NutrientGoal(
 
         val progress by animateFloatAsState(
             targetValue = value / target.coerceAtLeast(.01f),
-            animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
+            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()
         )
         val trackColor by animateColorAsState(
             if (progress > 1) MaterialTheme.colorScheme.error else trackColor
