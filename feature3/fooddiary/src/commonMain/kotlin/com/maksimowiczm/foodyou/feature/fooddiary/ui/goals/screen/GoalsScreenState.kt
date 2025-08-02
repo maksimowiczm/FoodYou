@@ -4,18 +4,16 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.*
 import com.maksimowiczm.foodyou.core.ext.plus
+import kotlin.time.Duration.Companion.days
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlin.time.Duration.Companion.days
 
 @Composable
-internal fun rememberGoalsScreenState(
-    zeroDate: LocalDate,
-): GoalsScreenState {
+internal fun rememberGoalsScreenState(zeroDate: LocalDate): GoalsScreenState {
     val maxSize = 50_000
     val pagerState = rememberPagerState(
-        initialPage = maxSize / 2,
+        initialPage = maxSize / 2
     ) { maxSize }
     val coroutineScope = rememberCoroutineScope()
 
