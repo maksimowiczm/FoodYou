@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FoodSearchDao {
 
-    // TODO
     @Query(
         """
         WITH ProductsSearch AS (
@@ -23,6 +22,11 @@ interface FoodSearchDao {
             WHERE 
                 fe.id IS NOT NULL AND
                 fe.type = ${FoodEventTypeSQLConstants.USED} AND
+                (
+                    :query IS NULL OR
+                    p.name COLLATE NOCASE LIKE '%' || :query || '%' OR
+                    p.brand COLLATE NOCASE LIKE '%' || :query || '%'
+                ) AND
                 fe.epochSeconds >= :nowEpochSeconds - (60 * 60 * 24 * 30) -- 30 days
         ),
         RecipesSearch AS (
@@ -33,6 +37,10 @@ interface FoodSearchDao {
             WHERE 
                 fe.id IS NOT NULL AND
                 fe.type = ${FoodEventTypeSQLConstants.USED} AND
+                (
+                    :query IS NULL OR
+                    r.name COLLATE NOCASE LIKE '%' || :query || '%'
+                ) AND
                 fe.epochSeconds >= :nowEpochSeconds - (60 * 60 * 24 * 30) -- 30 days
         ),
         MergedSearch AS (
@@ -45,7 +53,7 @@ interface FoodSearchDao {
         FROM MergedSearch
         """
     )
-    fun observeRecentFood(nowEpochSeconds: Long): PagingSource<Int, FoodSearch>
+    fun observeRecentFood(query: String?, nowEpochSeconds: Long): PagingSource<Int, FoodSearch>
 
     // TODO
     @Query(
@@ -56,9 +64,14 @@ interface FoodSearchDao {
             WHERE p.id IN (
                 SELECT DISTINCT productId
                 FROM FoodEvent 
-                WHERE type = ${FoodEventTypeSQLConstants.USED}
-                AND epochSeconds >= :nowEpochSeconds - (60 * 60 * 24 * 30) -- 30 days
-                AND productId IS NOT NULL
+                WHERE type = ${FoodEventTypeSQLConstants.USED} AND
+                productId IS NOT NULL AND
+                (
+                    :query IS NULL OR
+                    p.name COLLATE NOCASE LIKE '%' || :query || '%' OR
+                    p.brand COLLATE NOCASE LIKE '%' || :query || '%'
+                ) AND
+                epochSeconds >= :nowEpochSeconds - (60 * 60 * 24 * 30) -- 30 days
             )
         ),
         RecipesSearch AS (
@@ -67,15 +80,19 @@ interface FoodSearchDao {
             WHERE r.id IN (
                 SELECT DISTINCT recipeId
                 FROM FoodEvent 
-                WHERE type = ${FoodEventTypeSQLConstants.USED}
-                AND epochSeconds >= :nowEpochSeconds - (60 * 60 * 24 * 30) -- 30 days
-                AND recipeId IS NOT NULL
+                WHERE type = ${FoodEventTypeSQLConstants.USED} AND
+                recipeId IS NOT NULL AND
+                (
+                    :query IS NULL OR
+                    r.name COLLATE NOCASE LIKE '%' || :query || '%'
+                ) AND
+                epochSeconds >= :nowEpochSeconds - (60 * 60 * 24 * 30) -- 30 days
             )
         )
         SELECT (SELECT COUNT(*) FROM ProductsSearch) + (SELECT COUNT(*) FROM RecipesSearch)
         """
     )
-    fun observeRecentFoodCount(nowEpochSeconds: Long): Flow<Int>
+    fun observeRecentFoodCount(query: String?, nowEpochSeconds: Long): Flow<Int>
 
     @Query(
         """

@@ -287,7 +287,7 @@ internal class FoodSearchViewModel(
         val isBarcode = query?.all { it.isDigit() } ?: false
 
         return if (source == FoodFilter.Source.Recent) {
-            observeRecentFood(Clock.System.now().epochSeconds)
+            observeRecentFood(query, Clock.System.now().epochSeconds)
         } else if (isBarcode) {
             observeFoodByBarcode(
                 barcode = query,
@@ -310,7 +310,7 @@ internal class FoodSearchViewModel(
         val isBarcode = query?.all { it.isDigit() } ?: false
 
         return if (source == FoodFilter.Source.Recent) {
-            observeRecentFoodCount(Clock.System.now().epochSeconds)
+            observeRecentFoodCount(query, Clock.System.now().epochSeconds)
         } else if (isBarcode) {
             observeFoodCountByBarcode(
                 barcode = query,
