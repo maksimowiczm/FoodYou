@@ -152,41 +152,43 @@ internal fun rememberMacroInputSliderFormState(
         energyField.textFieldState.setTextAndPlaceCursorAtEnd(energy.toString())
     }
 
-    fun adjustMacros(changedState: MutableState<Float>, otherStates: List<MutableState<Float>>) {
-        val total = proteinsState.value + carbohydratesState.value + fatsState.value
-        val excess = total - 100f
+    val adjustMacros: (MutableState<Float>, List<MutableState<Float>>) -> Unit = remember {
+        { changedState, otherStates ->
+            val total = proteinsState.value + carbohydratesState.value + fatsState.value
+            val excess = total - 100f
 
-        if (excess == 0f) return
+            if (excess == 0f) return@remember
 
-        if (excess > 0) {
-            // Reduce other macros when total exceeds 100% (smaller values first)
-            var remaining = excess
-            otherStates.sortedBy { it.value }.forEach { state ->
-                if (remaining > 0 && state.value > 0) {
-                    val reduction = minOf(remaining, state.value)
-                    state.value -= reduction
-                    remaining -= reduction
+            if (excess > 0) {
+                // Reduce other macros when total exceeds 100% (smaller values first)
+                var remaining = excess
+                otherStates.sortedBy { it.value }.forEach { state ->
+                    if (remaining > 0 && state.value > 0) {
+                        val reduction = minOf(remaining, state.value)
+                        state.value -= reduction
+                        remaining -= reduction
+                    }
                 }
-            }
 
-            // If we still have excess, reduce the changed state
-            if (remaining > 0) {
-                changedState.value = (changedState.value - remaining).coerceAtLeast(0f)
-            }
-        } else {
-            // Increase other macros when total is under 100% (smaller values first)
-            var remaining = -excess
-            otherStates.sortedBy { it.value }.forEach { state ->
-                if (remaining > 0 && state.value < 100f) {
-                    val increase = minOf(remaining, 100f - state.value)
-                    state.value += increase
-                    remaining -= increase
+                // If we still have excess, reduce the changed state
+                if (remaining > 0) {
+                    changedState.value = (changedState.value - remaining).coerceAtLeast(0f)
                 }
-            }
+            } else {
+                // Increase other macros when total is under 100% (smaller values first)
+                var remaining = -excess
+                otherStates.sortedBy { it.value }.forEach { state ->
+                    if (remaining > 0 && state.value < 100f) {
+                        val increase = minOf(remaining, 100f - state.value)
+                        state.value += increase
+                        remaining -= increase
+                    }
+                }
 
-            // If we still have deficit, increase the changed state
-            if (remaining > 0) {
-                changedState.value = (changedState.value + remaining).coerceAtMost(100f)
+                // If we still have deficit, increase the changed state
+                if (remaining > 0) {
+                    changedState.value = (changedState.value + remaining).coerceAtMost(100f)
+                }
             }
         }
     }
