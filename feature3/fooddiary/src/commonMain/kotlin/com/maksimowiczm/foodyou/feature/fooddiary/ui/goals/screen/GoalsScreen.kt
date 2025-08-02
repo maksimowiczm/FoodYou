@@ -102,9 +102,9 @@ internal fun GoalsScreen(
         ) {
             item {
                 val meals =
-                    viewModel.observeMeals(date).collectAsStateWithLifecycle(null).value
+                    viewModel.observeMeals(date).collectAsStateWithLifecycle().value
                 val goals =
-                    viewModel.observeGoals(date).collectAsStateWithLifecycle(null).value
+                    viewModel.observeGoals(date).collectAsStateWithLifecycle().value
 
                 if (meals == null || goals == null) {
                     // TODO loading state
