@@ -6,12 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,12 +28,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -40,6 +43,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.core.ext.plus
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
@@ -59,50 +63,85 @@ import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.Meal
 import foodyou.app.generated.resources.*
+import kotlin.time.Duration.Companion.days
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun GoalsScreen(
     onBack: () -> Unit,
     onFoodClick: (FoodId) -> Unit,
-    viewModel: GoalsViewModel,
-    modifier: Modifier = Modifier
-) {
-    val date by viewModel.date.collectAsStateWithLifecycle()
-    val meals = viewModel.meals.collectAsStateWithLifecycle().value
-    val goals = viewModel.goals.collectAsStateWithLifecycle().value
-    val order by userPreference<NutrientsOrderPreference>()
-        .collectAsStateWithLifecycleInitialBlock()
-
-    if (meals == null || goals == null) {
-        // TODO loading state
-    } else {
-        GoalsScreen(
-            onBack = onBack,
-            onFoodClick = onFoodClick,
-            date = date,
-            meals = meals,
-            goals = goals,
-            order = order,
-            modifier = modifier
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun GoalsScreen(
-    onBack: () -> Unit,
-    onFoodClick: (FoodId) -> Unit,
     date: LocalDate,
-    meals: List<Meal>,
-    goals: DailyGoal,
-    order: List<NutrientsOrder>,
+    viewModel: GoalsViewModel,
     modifier: Modifier = Modifier
 ) {
     val dateFormatter = LocalDateFormatter.current
 
+    val zeroDate = date
+    val pagerState = rememberPagerState(
+        initialPage = 500
+    ) {
+        1_000
+    }
+    val selectedDate by remember {
+        derivedStateOf {
+            zeroDate.plus((pagerState.currentPage - 500).days)
+        }
+    }
+
+    val order by userPreference<NutrientsOrderPreference>()
+        .collectAsStateWithLifecycleInitialBlock()
+
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(Res.string.headline_summary)) },
+                navigationIcon = { ArrowBackIconButton(onBack) },
+                subtitle = { Text(dateFormatter.formatDate(selectedDate)) },
+                scrollBehavior = scrollBehavior
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues
+        ) {
+            item {
+                HorizontalPager(
+                    state = pagerState,
+                    verticalAlignment = Alignment.Top,
+                    beyondViewportPageCount = 3
+                ) { page ->
+                    val meals = viewModel.observeMeals(date).collectAsStateWithLifecycle(null).value
+                    val goals = viewModel.observeGoals(date).collectAsStateWithLifecycle(null).value
+
+                    if (meals == null || goals == null) {
+                        // TODO loading state
+                    } else {
+                        GoalsPage(
+                            meals = meals,
+                            goals = goals,
+                            order = order,
+                            onFoodClick = onFoodClick
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GoalsPage(
+    meals: List<Meal>,
+    goals: DailyGoal,
+    order: List<NutrientsOrder>,
+    onFoodClick: (FoodId) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var selectedMealsIds by rememberSaveable(meals) {
         mutableStateOf(meals.map { it.id })
     }
@@ -114,71 +153,45 @@ private fun GoalsScreen(
         filteredMeals.map { it.nutritionFacts }.sum()
     }
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(Res.string.headline_summary)) },
-                navigationIcon = { ArrowBackIconButton(onBack) },
-                subtitle = { Text(dateFormatter.formatDate(date)) },
-                scrollBehavior = scrollBehavior
-            )
-        }
-    ) { paddingValues ->
-        LazyColumn(
+    Column(modifier) {
+        MealsFilter(
+            meals = meals,
+            selectedMealsIds = selectedMealsIds,
+            onSelectedMealsIdsChange = { selectedMealsIds = it },
             modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
-        ) {
-            item {
-                MealsFilter(
-                    meals = meals,
-                    selectedMealsIds = selectedMealsIds,
-                    onSelectedMealsIdsChange = { selectedMealsIds = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+        NutrientList(
+            nutritionFacts = nutritionFacts,
+            goals = goals,
+            order = order,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+        if (!nutritionFacts.isComplete) {
+            val incomplete = filteredMeals
+                .flatMap { it.food }
+                .map { it.food }
+                .filter { it is Product }
+                .filter { !it.nutritionFacts.isComplete }
 
-            item {
-                NutrientList(
-                    nutritionFacts = nutritionFacts,
-                    goals = goals,
-                    order = order,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-            }
+            IncompleteFoodsList(
+                foods = incomplete.map { it.headline },
+                onFoodClick = { foodName ->
+                    val id = incomplete.firstOrNull {
+                        it.headline == foodName
+                    }?.id
 
-            if (!nutritionFacts.isComplete) {
-                item {
-                    val incomplete = filteredMeals
-                        .flatMap { it.food }
-                        .map { it.food }
-                        .filter { it is Product }
-                        .filter { !it.nutritionFacts.isComplete }
-
-                    IncompleteFoodsList(
-                        foods = incomplete.map { it.headline },
-                        onFoodClick = { foodName ->
-                            val id = incomplete.firstOrNull {
-                                it.headline == foodName
-                            }?.id
-
-                            if (id != null) {
-                                onFoodClick(id)
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
-                }
-            }
+                    if (id != null) {
+                        onFoodClick(id)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            )
         }
     }
 }

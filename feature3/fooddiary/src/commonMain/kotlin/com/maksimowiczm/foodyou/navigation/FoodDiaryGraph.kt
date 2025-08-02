@@ -23,7 +23,6 @@ import com.maksimowiczm.foodyou.feature.measurement.domain.type
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Serializable
 data class FoodSearch(val mealId: Long, val epochDay: Long) {
@@ -268,7 +267,8 @@ fun NavGraphBuilder.foodDiaryGraph(
         GoalsScreen(
             onBack = goalsOnBack,
             onFoodClick = goalsOnFood,
-            viewModel = koinViewModel { parametersOf(route.date) }
+            date = route.date,
+            viewModel = koinViewModel()
         )
     }
 }
