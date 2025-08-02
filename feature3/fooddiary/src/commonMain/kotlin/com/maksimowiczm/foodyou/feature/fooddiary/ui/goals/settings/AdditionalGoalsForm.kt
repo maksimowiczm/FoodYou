@@ -367,8 +367,8 @@ internal fun rememberAdditionalGoalsFormState(dailyGoal: DailyGoal): AdditionalG
                 salt.value != dailyGoal[NutritionFactsField.Salt] ||
                 cholesterolMilli.value != (dailyGoal[NutritionFactsField.Cholesterol] * 1000) ||
                 caffeineMilli.value != (dailyGoal[NutritionFactsField.Caffeine] * 1000) ||
-                vitaminAMicro.value != dailyGoal[NutritionFactsField.VitaminA] ||
-                vitaminB1Milli.value != dailyGoal[NutritionFactsField.VitaminB1] ||
+                vitaminAMicro.value != dailyGoal[NutritionFactsField.VitaminA] * 1000_000 ||
+                vitaminB1Milli.value != dailyGoal[NutritionFactsField.VitaminB1] * 1000 ||
                 vitaminB2Milli.value != (dailyGoal[NutritionFactsField.VitaminB2] * 1000) ||
                 vitaminB3Milli.value != (dailyGoal[NutritionFactsField.VitaminB3] * 1000) ||
                 vitaminB5Milli.value != (dailyGoal[NutritionFactsField.VitaminB5] * 1000) ||
