@@ -26,6 +26,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CreateRecipeScreen(
     onBack: () -> Unit,
     onCreate: (FoodId.Recipe) -> Unit,
+    onEditFood: (FoodId) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel = koinViewModel<CreateRecipeViewModel>()
@@ -75,6 +76,7 @@ fun CreateRecipeScreen(
             }
         },
         onSave = viewModel::create,
+        onEditFood = onEditFood,
         state = formState,
         topBarTitle = stringResource(Res.string.headline_create_recipe),
         mainRecipeId = null,

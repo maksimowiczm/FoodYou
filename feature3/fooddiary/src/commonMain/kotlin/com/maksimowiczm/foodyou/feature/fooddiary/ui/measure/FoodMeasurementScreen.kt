@@ -54,6 +54,7 @@ import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.feature.food.domain.Food
 import com.maksimowiczm.foodyou.feature.food.domain.FoodEvent
+import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource
 import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.food.domain.Recipe
@@ -63,6 +64,7 @@ import com.maksimowiczm.foodyou.feature.food.ui.EnergyProgressIndicator
 import com.maksimowiczm.foodyou.feature.food.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.food.ui.Icon
+import com.maksimowiczm.foodyou.feature.food.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.feature.food.ui.NutrientList
 import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Meal
@@ -80,7 +82,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun FoodMeasurementScreen(
     onBack: () -> Unit,
-    onEdit: () -> Unit,
+    onEditFood: (FoodId) -> Unit,
     onDelete: () -> Unit,
     onMeasure: (Measurement, mealId: Long, LocalDate) -> Unit,
     onUnpack: (Measurement, mealId: Long, LocalDate) -> Unit,
@@ -117,7 +119,7 @@ internal fun FoodMeasurementScreen(
                 navigationIcon = { ArrowBackIconButton(onBack) },
                 actions = {
                     Menu(
-                        onEdit = onEdit,
+                        onEdit = { onEditFood(food.id) },
                         onDelete = onDelete
                     )
                 },
@@ -226,7 +228,8 @@ internal fun FoodMeasurementScreen(
                 HorizontalDivider()
                 NutrientList(
                     food = food,
-                    measurement = state.measurementState.measurement
+                    measurement = state.measurementState.measurement,
+                    onEditFood = onEditFood
                 )
             }
 
@@ -484,7 +487,12 @@ private fun Ingredients(ingredients: List<RecipeIngredient>, modifier: Modifier 
 }
 
 @Composable
-private fun NutrientList(food: Food, measurement: Measurement, modifier: Modifier = Modifier) {
+private fun NutrientList(
+    food: Food,
+    measurement: Measurement,
+    onEditFood: (FoodId) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val facts = remember(food, measurement) {
         val weight = measurement.weight(food)
             ?: error("Invalid measurement: $measurement for food: ${food.headline}")
@@ -555,6 +563,27 @@ private fun NutrientList(food: Food, measurement: Measurement, modifier: Modifie
         )
 
         NutrientList(facts)
+
+        if (food is Recipe && !food.nutritionFacts.isComplete) {
+            val foods = food
+                .flatIngredients()
+                .filter { it is Product }
+                .filter { !it.nutritionFacts.isComplete }
+
+            IncompleteFoodsList(
+                foods = foods.map { it.headline },
+                onFoodClick = { name ->
+                    val id = foods.firstOrNull {
+                        it.headline == name
+                    }?.id
+
+                    if (id != null) {
+                        onEditFood(id)
+                    }
+                },
+                modifier = Modifier.padding(8.dp)
+            )
+        }
     }
 }
 

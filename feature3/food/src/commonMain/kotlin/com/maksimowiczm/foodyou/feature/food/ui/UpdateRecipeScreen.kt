@@ -28,6 +28,7 @@ import org.koin.core.parameter.parametersOf
 fun UpdateRecipeScreen(
     id: FoodId.Recipe,
     onBack: () -> Unit,
+    onEditFood: (FoodId) -> Unit,
     onUpdate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -87,6 +88,7 @@ fun UpdateRecipeScreen(
             }
         },
         onSave = viewModel::update,
+        onEditFood = onEditFood,
         state = formState,
         topBarTitle = stringResource(Res.string.headline_edit_recipe),
         mainRecipeId = id,

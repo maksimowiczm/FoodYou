@@ -206,6 +206,17 @@ fun FoodYouNavHost(
                     }
                 }
             },
+            createRecipeOnEditFood = {
+                when (it) {
+                    is FoodId.Product -> navController.navigate(UpdateProduct.from(it)) {
+                        launchSingleTop = true
+                    }
+
+                    is FoodId.Recipe -> navController.navigate(UpdateRecipe.from(it)) {
+                        launchSingleTop = true
+                    }
+                }
+            },
             updateProductOnBack = {
                 navController.popBackStack<UpdateProduct>(true)
             },
@@ -217,6 +228,17 @@ fun FoodYouNavHost(
             },
             updateRecipeOnUpdate = {
                 navController.popBackStack<UpdateRecipe>(true)
+            },
+            updateRecipeOnEditFood = {
+                when (it) {
+                    is FoodId.Product -> navController.navigate(UpdateProduct.from(it)) {
+                        launchSingleTop = true
+                    }
+
+                    is FoodId.Recipe -> navController.navigate(UpdateRecipe.from(it)) {
+                        launchSingleTop = true
+                    }
+                }
             },
             createMeasurementOnBack = {
                 navController.popBackStack<CreateMeasurement>(true)

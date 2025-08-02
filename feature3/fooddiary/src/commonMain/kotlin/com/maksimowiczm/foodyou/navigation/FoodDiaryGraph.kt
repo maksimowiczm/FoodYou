@@ -126,10 +126,12 @@ fun NavGraphBuilder.foodDiaryGraph(
     createProductOnCreate: (FoodId.Product, mealId: Long, date: LocalDate) -> Unit,
     createRecipeOnBack: () -> Unit,
     createRecipeOnCreate: (FoodId.Recipe, mealId: Long, date: LocalDate) -> Unit,
+    createRecipeOnEditFood: (FoodId) -> Unit,
     updateProductOnBack: () -> Unit,
     updateProductOnUpdate: () -> Unit,
     updateRecipeOnBack: () -> Unit,
     updateRecipeOnUpdate: () -> Unit,
+    updateRecipeOnEditFood: (FoodId) -> Unit,
     createMeasurementOnBack: () -> Unit,
     createMeasurementOnEditFood: (FoodId) -> Unit,
     createMeasurementOnDeleteFood: () -> Unit,
@@ -186,7 +188,7 @@ fun NavGraphBuilder.foodDiaryGraph(
 
         CreateMeasurementScreen(
             onBack = createMeasurementOnBack,
-            onEdit = { createMeasurementOnEditFood(route.foodId) },
+            onEditFood = createMeasurementOnEditFood,
             onDelete = createMeasurementOnDeleteFood,
             onCreateMeasurement = createMeasurementOnCreateMeasurement,
             foodId = route.foodId,
@@ -201,7 +203,7 @@ fun NavGraphBuilder.foodDiaryGraph(
 
         UpdateMeasurementScreen(
             onBack = updateMeasurementOnBack,
-            onEdit = updateMeasurementOnEdit,
+            onEditFood = updateMeasurementOnEdit,
             onDelete = updateMeasurementOnDelete,
             onUpdateMeasurement = updateMeasurementOnUpdate,
             measurementId = route.measurementId,
@@ -213,6 +215,7 @@ fun NavGraphBuilder.foodDiaryGraph(
 
         CreateRecipeScreen(
             onBack = createRecipeOnBack,
+            onEditFood = createRecipeOnEditFood,
             onCreate = { id ->
                 createRecipeOnCreate(id, route.mealId, route.localDate)
             }
@@ -224,6 +227,7 @@ fun NavGraphBuilder.foodDiaryGraph(
         UpdateRecipeScreen(
             id = route.foodId,
             onBack = updateRecipeOnBack,
+            onEditFood = updateRecipeOnEditFood,
             onUpdate = updateRecipeOnUpdate
         )
     }

@@ -31,8 +31,10 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
+import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.food.domain.Recipe
 import com.maksimowiczm.foodyou.feature.food.ui.FoodSearchApp
+import com.maksimowiczm.foodyou.feature.food.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.feature.food.ui.NutrientList
 import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
@@ -50,6 +52,7 @@ import org.koin.core.parameter.parametersOf
 internal fun RecipeApp(
     onBack: () -> Unit,
     onSave: (RecipeFormState) -> Unit,
+    onEditFood: (FoodId) -> Unit,
     state: RecipeFormState,
     topBarTitle: String,
     mainRecipeId: FoodId.Recipe?,
@@ -137,6 +140,27 @@ internal fun RecipeApp(
                                     horizontal = 8.dp
                                 )
                             )
+
+                            if (!facts.isComplete) {
+                                val foods = recipe
+                                    .flatIngredients()
+                                    .filter { it is Product }
+                                    .filter { !it.nutritionFacts.isComplete }
+
+                                IncompleteFoodsList(
+                                    foods = foods.map { it.headline },
+                                    modifier = Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 8.dp
+                                    ),
+                                    onFoodClick = { name ->
+                                        val id = foods.firstOrNull { it.headline == name }?.id
+                                        if (id != null) {
+                                            onEditFood(id)
+                                        }
+                                    }
+                                )
+                            }
                         }
                     }
                 }

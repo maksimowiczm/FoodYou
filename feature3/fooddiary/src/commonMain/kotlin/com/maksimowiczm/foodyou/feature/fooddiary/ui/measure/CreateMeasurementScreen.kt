@@ -15,7 +15,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 internal fun CreateMeasurementScreen(
     onBack: () -> Unit,
-    onEdit: () -> Unit,
+    onEditFood: (FoodId) -> Unit,
     onDelete: () -> Unit,
     onCreateMeasurement: () -> Unit,
     foodId: FoodId,
@@ -55,7 +55,7 @@ internal fun CreateMeasurementScreen(
     } else {
         FoodMeasurementScreen(
             onBack = onBack,
-            onEdit = onEdit,
+            onEditFood = onEditFood,
             onDelete = viewModel::deleteFood,
             onMeasure = viewModel::createMeasurement,
             onUnpack = viewModel::unpack,
