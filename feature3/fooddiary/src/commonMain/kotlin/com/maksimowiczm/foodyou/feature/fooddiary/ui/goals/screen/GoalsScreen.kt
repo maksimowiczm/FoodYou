@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,11 +32,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -60,7 +57,12 @@ import com.maksimowiczm.foodyou.feature.food.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.Meal
-import foodyou.app.generated.resources.*
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.headline_summary
+import foodyou.app.generated.resources.unit_gram_short
+import foodyou.app.generated.resources.unit_kcal
+import foodyou.app.generated.resources.unit_microgram_short
+import foodyou.app.generated.resources.unit_milligram_short
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 
@@ -99,26 +101,20 @@ internal fun GoalsScreen(
             contentPadding = paddingValues
         ) {
             item {
-                HorizontalPager(
-                    state = screenState.pagerState,
-                    verticalAlignment = Alignment.Top,
-                    beyondViewportPageCount = 3,
-                    userScrollEnabled = false,
-                    modifier = Modifier.clearAndSetSemantics { } // Hide it from user for now
-                ) { page ->
-                    val meals = viewModel.observeMeals(date).collectAsStateWithLifecycle(null).value
-                    val goals = viewModel.observeGoals(date).collectAsStateWithLifecycle(null).value
+                val meals =
+                    viewModel.observeMeals(date).collectAsStateWithLifecycle(null).value
+                val goals =
+                    viewModel.observeGoals(date).collectAsStateWithLifecycle(null).value
 
-                    if (meals == null || goals == null) {
-                        // TODO loading state
-                    } else {
-                        GoalsPage(
-                            meals = meals,
-                            goals = goals,
-                            order = order,
-                            onFoodClick = onFoodClick
-                        )
-                    }
+                if (meals == null || goals == null) {
+                    // TODO loading state
+                } else {
+                    GoalsPage(
+                        meals = meals,
+                        goals = goals,
+                        order = order,
+                        onFoodClick = onFoodClick
+                    )
                 }
             }
         }
@@ -271,23 +267,18 @@ private fun Proteins(
     modifier: Modifier = Modifier
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
-    val value = nutritionFacts.proteins
-    val target = goals[NutritionFactsField.Proteins].toFloat()
-    val label = NutritionFactsField.Proteins.stringResource()
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         NutrientGoal(
-            label = label,
-            value = value.value!!,
-            target = target,
-            disclaimer = value.isComplete,
+            label = NutritionFactsField.Proteins.stringResource(),
+            nutrientValue = nutritionFacts.proteins,
+            target = goals[NutritionFactsField.Proteins].toFloat(),
             modifier = Modifier.fillMaxWidth(),
             color = nutrientsPalette.proteinsOnSurfaceContainer,
-            trackColor = nutrientsPalette.proteinsOnSurfaceContainer,
-            unit = stringResource(Res.string.unit_gram_short)
+            trackColor = nutrientsPalette.proteinsOnSurfaceContainer
         )
     }
 }
