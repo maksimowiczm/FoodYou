@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.domain
 
+import com.maksimowiczm.foodyou.core.util.NutrientsHelper
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
 import kotlinx.serialization.Serializable
 
@@ -28,59 +29,68 @@ data class DailyGoal(
     }
 
     companion object {
-        val defaultGoals = NutritionFactsField.entries.associateWith {
-            when (it) {
-                NutritionFactsField.Energy -> 2000.0 // kcal
-                NutritionFactsField.Proteins -> 100.0 // g
-                NutritionFactsField.Fats -> 66.7 // g
-                NutritionFactsField.SaturatedFats -> 20.0 // g
-                NutritionFactsField.TransFats -> 0.0 // g
-                NutritionFactsField.MonounsaturatedFats -> 20.0 // g
-                NutritionFactsField.PolyunsaturatedFats -> 15.0 // g
-                NutritionFactsField.Omega3 -> 1.6 // g
-                NutritionFactsField.Omega6 -> 17.0 // g
-                NutritionFactsField.Carbohydrates -> 250.0 // g
-                NutritionFactsField.Sugars -> 50.0 // g
-                NutritionFactsField.AddedSugars -> 25.0 // g
-                NutritionFactsField.DietaryFiber -> 28.0 // g
-                NutritionFactsField.SolubleFiber -> 6.0 // g
-                NutritionFactsField.InsolubleFiber -> 22.0 // g
-                NutritionFactsField.Salt -> 5.0 // g
-                NutritionFactsField.Cholesterol -> 0.3 // g (300 mg)
-                NutritionFactsField.Caffeine -> 0.4 // g (400 mg)
+        val defaultGoals: DailyGoal
+            get() {
+                val energy = 2000
+                val proteins = NutrientsHelper.proteinsPercentageToGrams(energy, .2f).toDouble()
+                val carbohydrates =
+                    NutrientsHelper.carbohydratesPercentageToGrams(energy, .50f).toDouble()
+                val fats = NutrientsHelper.fatsPercentageToGrams(energy, .30f).toDouble()
 
-                NutritionFactsField.VitaminA -> 0.0009 // g (900 µg)
-                NutritionFactsField.VitaminB1 -> 0.0012 // g (1.2 mg)
-                NutritionFactsField.VitaminB2 -> 0.0013 // g (1.3 mg)
-                NutritionFactsField.VitaminB3 -> 0.016 // g (16 mg)
-                NutritionFactsField.VitaminB5 -> 0.005 // g (5 mg)
-                NutritionFactsField.VitaminB6 -> 0.0013 // g (1.3 mg)
-                NutritionFactsField.VitaminB7 -> 0.00003 // g (30 µg)
-                NutritionFactsField.VitaminB9 -> 0.0004 // g (400 µg)
-                NutritionFactsField.VitaminB12 -> 0.0000024 // g (2.4 µg)
-                NutritionFactsField.VitaminC -> 0.09 // g (90 mg)
-                NutritionFactsField.VitaminD -> 0.00002 // g (20 µg)
-                NutritionFactsField.VitaminE -> 0.015 // g (15 mg)
-                NutritionFactsField.VitaminK -> 0.00012 // g (120 µg)
+                return NutritionFactsField.entries.associateWith {
+                    when (it) {
+                        NutritionFactsField.Energy -> energy.toDouble()
+                        NutritionFactsField.Proteins -> proteins
+                        NutritionFactsField.Fats -> fats
+                        NutritionFactsField.SaturatedFats -> 18.0
+                        NutritionFactsField.TransFats -> 0.0
+                        NutritionFactsField.MonounsaturatedFats -> 25.0
+                        NutritionFactsField.PolyunsaturatedFats -> 18.0
+                        NutritionFactsField.Omega3 -> 1.4
+                        NutritionFactsField.Omega6 -> 9.0
+                        NutritionFactsField.Carbohydrates -> carbohydrates
+                        NutritionFactsField.Sugars -> 50.0
+                        NutritionFactsField.AddedSugars -> 25.0 // g
+                        NutritionFactsField.DietaryFiber -> 30.0
+                        NutritionFactsField.SolubleFiber -> 6.0 // g
+                        NutritionFactsField.InsolubleFiber -> 22.0 // g
+                        NutritionFactsField.Salt -> 5.0 // g
+                        NutritionFactsField.Cholesterol -> 0.3
+                        NutritionFactsField.Caffeine -> 0.4
 
-                NutritionFactsField.Manganese -> 0.0023 // g (2.3 mg)
-                NutritionFactsField.Magnesium -> 0.4 // g (400 mg)
-                NutritionFactsField.Potassium -> 4.7 // g (4700 mg)
-                NutritionFactsField.Calcium -> 1.0 // g (1000 mg)
-                NutritionFactsField.Copper -> 0.0009 // g (0.9 mg)
-                NutritionFactsField.Zinc -> 0.011 // g (11 mg)
-                NutritionFactsField.Sodium -> 2.0 // g (2000 mg)
-                NutritionFactsField.Iron -> 0.008 // g (8 mg)
-                NutritionFactsField.Phosphorus -> 0.7 // g (700 mg)
-                NutritionFactsField.Selenium -> 0.000055 // g (55 µg)
-                NutritionFactsField.Iodine -> 0.00015 // g (150 µg)
-                NutritionFactsField.Chromium -> 0.000035 // g (35 µg)
+                        NutritionFactsField.VitaminA -> 0.0009
+                        NutritionFactsField.VitaminB1 -> 0.0012
+                        NutritionFactsField.VitaminB2 -> 0.0012
+                        NutritionFactsField.VitaminB3 -> 0.016
+                        NutritionFactsField.VitaminB5 -> 0.005
+                        NutritionFactsField.VitaminB6 -> 0.0017
+                        NutritionFactsField.VitaminB7 -> 0.00003
+                        NutritionFactsField.VitaminB9 -> 0.0004
+                        NutritionFactsField.VitaminB12 -> 0.0000024
+                        NutritionFactsField.VitaminC -> 0.045
+                        NutritionFactsField.VitaminD -> 0.00002
+                        NutritionFactsField.VitaminE -> 0.015
+                        NutritionFactsField.VitaminK -> 0.00012
+
+                        NutritionFactsField.Manganese -> 0.0023
+                        NutritionFactsField.Magnesium -> 0.42
+                        NutritionFactsField.Potassium -> 4.7
+                        NutritionFactsField.Calcium -> 1.2
+                        NutritionFactsField.Copper -> 0.0009
+                        NutritionFactsField.Zinc -> 0.011
+                        NutritionFactsField.Sodium -> 2.3
+                        NutritionFactsField.Iron -> 0.008
+                        NutritionFactsField.Phosphorus -> 0.7
+                        NutritionFactsField.Selenium -> 0.000055
+                        NutritionFactsField.Iodine -> 0.00015
+                        NutritionFactsField.Chromium -> 0.000035
+                    }
+                }.let {
+                    DailyGoal(
+                        map = it,
+                        isDistribution = false
+                    )
+                }
             }
-        }.let {
-            DailyGoal(
-                map = it,
-                isDistribution = false
-            )
-        }
     }
 }
