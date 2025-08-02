@@ -9,10 +9,9 @@ import kotlinx.datetime.LocalTime
 
 interface DateFormatter {
     /**
-     * The abbreviated names of the days of the week, ordered starting from the first day
-     * of the week as defined by the system's locale.
+     * The abbreviated names of the days of the week, ordered starting from Monday.
      *
-     * For example, in English (US), this could return `["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]`.
+     * For example, in English (US), this could return `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]`.
      */
     val weekDayNamesShort: List<String>
 

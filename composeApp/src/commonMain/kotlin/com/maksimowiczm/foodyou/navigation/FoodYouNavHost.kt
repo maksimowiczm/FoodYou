@@ -85,6 +85,11 @@ fun FoodYouNavHost(
             settingsOnBack = {
                 navController.popBackStack<Settings>(true)
             },
+            settingsOnDailyGoals = {
+                navController.navigate(DailyGoals) {
+                    launchSingleTop = true
+                }
+            },
             personalizationOnBack = {
                 navController.popBackStack<Personalization>(true)
             },
@@ -270,6 +275,12 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                     popUpTo<MealSettings>()
                 }
+            },
+            dailyGoalsOnBack = {
+                navController.popBackStack<DailyGoals>(true)
+            },
+            dailyGoalsOnSave = {
+                navController.popBackStack<DailyGoals>(true)
             }
         )
         aboutGraph(

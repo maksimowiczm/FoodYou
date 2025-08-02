@@ -64,3 +64,33 @@ fun <E> nullableStringParser(): (String) -> ParseResult<String?, E> = { input ->
         ParseResult.Success(input)
     }
 }
+
+fun <E> floatParser(onNotANumber: () -> E, onBlank: () -> E): (String) -> ParseResult<Float, E> =
+    { input ->
+        if (input.isBlank()) {
+            ParseResult.Failure(onBlank())
+        } else {
+            val value = input.toFloatOrNull()
+
+            if (value == null) {
+                ParseResult.Failure(onNotANumber())
+            } else {
+                ParseResult.Success(value)
+            }
+        }
+    }
+
+fun <E> doubleParser(onNotANumber: () -> E, onBlank: () -> E): (String) -> ParseResult<Double, E> =
+    { input ->
+        if (input.isBlank()) {
+            ParseResult.Failure(onBlank())
+        } else {
+            val value = input.toDoubleOrNull()
+
+            if (value == null) {
+                ParseResult.Failure(onNotANumber())
+            } else {
+                ParseResult.Success(value)
+            }
+        }
+    }

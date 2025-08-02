@@ -25,5 +25,14 @@ object NutrientsHelper {
 
     fun fatsToEnergy(fats: Number) = fats.toFloat() * FATS
 
+    fun proteinsPercentageToGrams(energy: Int, proteinsPercentage: Float): Float =
+        (proteinsPercentage * energy) / PROTEINS
+
+    fun carbohydratesPercentageToGrams(energy: Int, carbohydratesPercentage: Float): Float =
+        (carbohydratesPercentage * energy) / CARBOHYDRATES
+
+    fun fatsPercentageToGrams(energy: Int, fatsPercentage: Float): Float =
+        (fatsPercentage * energy) / FATS
+
     fun caloriesToKilojoules(calories: Number): Float = calories.toFloat() * 4.184f
 }
