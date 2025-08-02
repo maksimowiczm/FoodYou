@@ -324,8 +324,8 @@ internal fun rememberAdditionalGoalsFormState(dailyGoal: DailyGoal): AdditionalG
     val cholesterolMilli = rememberFormField(dailyGoal[NutritionFactsField.Cholesterol] * 1000)
     val caffeineMilli = rememberFormField(dailyGoal[NutritionFactsField.Caffeine] * 1000)
 
-    val vitaminAMicro = rememberFormField(dailyGoal[NutritionFactsField.VitaminA])
-    val vitaminB1Milli = rememberFormField(dailyGoal[NutritionFactsField.VitaminB1])
+    val vitaminAMicro = rememberFormField(dailyGoal[NutritionFactsField.VitaminA] * 1000_000)
+    val vitaminB1Milli = rememberFormField(dailyGoal[NutritionFactsField.VitaminB1] * 1000)
     val vitaminB2Milli = rememberFormField(dailyGoal[NutritionFactsField.VitaminB2] * 1000)
     val vitaminB3Milli = rememberFormField(dailyGoal[NutritionFactsField.VitaminB3] * 1000)
     val vitaminB5Milli = rememberFormField(dailyGoal[NutritionFactsField.VitaminB5] * 1000)
