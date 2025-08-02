@@ -35,13 +35,13 @@ data class WeeklyGoals(
 
     companion object {
         val defaultGoals = WeeklyGoals(
-            monday = DailyGoal.Companion.defaultGoals,
-            tuesday = DailyGoal.Companion.defaultGoals,
-            wednesday = DailyGoal.Companion.defaultGoals,
-            thursday = DailyGoal.Companion.defaultGoals,
-            friday = DailyGoal.Companion.defaultGoals,
-            saturday = DailyGoal.Companion.defaultGoals,
-            sunday = DailyGoal.Companion.defaultGoals
+            monday = DailyGoal.defaultGoals,
+            tuesday = DailyGoal.defaultGoals,
+            wednesday = DailyGoal.defaultGoals,
+            thursday = DailyGoal.defaultGoals,
+            friday = DailyGoal.defaultGoals,
+            saturday = DailyGoal.defaultGoals,
+            sunday = DailyGoal.defaultGoals
         )
     }
 }
