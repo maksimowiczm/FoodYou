@@ -5,11 +5,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.feature.about.About
 import com.maksimowiczm.foodyou.feature.about.Sponsor
 import com.maksimowiczm.foodyou.feature.about.SponsorMessages
 import com.maksimowiczm.foodyou.feature.about.aboutGraph
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
+import kotlinx.datetime.LocalDate
 
 @Composable
 fun FoodYouNavHost(
@@ -303,6 +305,20 @@ fun FoodYouNavHost(
             },
             dailyGoalsOnSave = {
                 navController.popBackStack<DailyGoals>(true)
+            },
+            goalsOnBack = {
+                navController.popBackStack<Goals>(true)
+            },
+            goalsOnFood = {
+                when (it) {
+                    is FoodId.Product -> navController.navigate(UpdateProduct.from(it)) {
+                        launchSingleTop = true
+                    }
+
+                    is FoodId.Recipe -> navController.navigate(UpdateRecipe.from(it)) {
+                        launchSingleTop = true
+                    }
+                }
             }
         )
         aboutGraph(

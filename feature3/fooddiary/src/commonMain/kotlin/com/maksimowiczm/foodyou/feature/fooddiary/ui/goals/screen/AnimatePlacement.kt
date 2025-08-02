@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui
+package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.screen
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun Modifier.animatePlacement(
+internal fun Modifier.animatePlacement(
     scope: CoroutineScope = rememberCoroutineScope(),
     animationSpec: AnimationSpec<IntOffset> = MaterialTheme.motionScheme.defaultSpatialSpec()
 ): Modifier {

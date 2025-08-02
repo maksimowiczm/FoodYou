@@ -37,6 +37,9 @@ sealed interface NutrientValue {
         }
     }
 
+    val isComplete: Boolean
+        get() = this is Complete
+
     companion object {
         fun from(value: Float) = Complete(value)
 

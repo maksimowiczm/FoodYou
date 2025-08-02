@@ -107,7 +107,7 @@ data class NutritionFacts(
         get() = this == Empty
 
     val isComplete: Boolean
-        get() = map.values.all { it is NutrientValue.Complete }
+        get() = map.values.all { it.isComplete }
 
     operator fun plus(other: NutritionFacts): NutritionFacts = NutritionFacts(
         proteins = this.proteins + other.proteins,
