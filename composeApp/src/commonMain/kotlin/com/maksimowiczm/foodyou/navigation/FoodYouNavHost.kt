@@ -303,6 +303,9 @@ fun FoodYouNavHost(
             },
             dailyGoalsOnSave = {
                 navController.popBackStack<DailyGoals>(true)
+            },
+            goalsOnBack = {
+                navController.popBackStack<Goals>(true)
             }
         )
         aboutGraph(

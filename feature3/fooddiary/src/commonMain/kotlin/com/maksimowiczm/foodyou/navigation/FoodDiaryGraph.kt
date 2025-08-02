@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.feature.food.ui.CreateRecipeScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateRecipeScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.screen.GoalsScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.settings.DailyGoalsScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.cardsettings.MealsCardsSettings
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.settings.MealSettingsScreen
@@ -21,6 +22,8 @@ import com.maksimowiczm.foodyou.feature.measurement.domain.rawValue
 import com.maksimowiczm.foodyou.feature.measurement.domain.type
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Serializable
 data class FoodSearch(val mealId: Long, val epochDay: Long) {
@@ -117,6 +120,14 @@ data object MealsCardsSettings
 @Serializable
 data object DailyGoals
 
+@Serializable
+data class Goals(val epochDay: Long) {
+    val date: LocalDate
+        get() = LocalDate.fromEpochDays(epochDay)
+
+    constructor(date: LocalDate) : this(date.toEpochDays())
+}
+
 fun NavGraphBuilder.foodDiaryGraph(
     foodSearchOnBack: () -> Unit,
     foodSearchOnCreateProduct: (mealId: Long, date: LocalDate) -> Unit,
@@ -145,7 +156,8 @@ fun NavGraphBuilder.foodDiaryGraph(
     mealsCardsSettingsOnBack: () -> Unit,
     mealsCardsOnMealSettings: () -> Unit,
     dailyGoalsOnBack: () -> Unit,
-    dailyGoalsOnSave: () -> Unit
+    dailyGoalsOnSave: () -> Unit,
+    goalsOnBack: () -> Unit
 ) {
     forwardBackwardComposable<FoodSearch> { backStack ->
         val route = backStack.toRoute<FoodSearch>()
@@ -247,6 +259,14 @@ fun NavGraphBuilder.foodDiaryGraph(
         DailyGoalsScreen(
             onBack = dailyGoalsOnBack,
             onSave = dailyGoalsOnSave
+        )
+    }
+    forwardBackwardComposable<Goals> {
+        val route = it.toRoute<Goals>()
+
+        GoalsScreen(
+            onBack = goalsOnBack,
+            viewModel = koinViewModel { parametersOf(route.date) }
         )
     }
 }
