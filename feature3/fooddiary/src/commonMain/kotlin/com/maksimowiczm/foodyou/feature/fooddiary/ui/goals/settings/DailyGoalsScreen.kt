@@ -35,7 +35,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -205,6 +207,8 @@ private fun DayPicker(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     Column(modifier) {
         Text(
             text = "Pick the days",
@@ -252,7 +256,12 @@ private fun DayPicker(
                         weekDayNamesShort.forEachIndexed { i, name ->
                             ToggleButton(
                                 checked = selectedDay == i,
-                                onCheckedChange = { onSelectedDayChange(i) },
+                                onCheckedChange = {
+                                    onSelectedDayChange(i)
+                                    hapticFeedback.performHapticFeedback(
+                                        HapticFeedbackType.SegmentTick
+                                    )
+                                },
                                 modifier = Modifier.semantics { role = Role.RadioButton },
                                 shapes = when (i) {
                                     0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
