@@ -88,7 +88,7 @@ internal fun GoalsScreen(
     val dateFormatter = LocalDateFormatter.current
 
     val screenState = rememberGoalsScreenState(
-        zeroDate = date
+        selectedDate = date
     )
 
     val order by userPreference<NutrientsOrderPreference>()

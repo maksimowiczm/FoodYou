@@ -17,24 +17,29 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.until
 
 @Composable
-internal fun rememberGoalsScreenState(zeroDate: LocalDate): GoalsScreenState {
+internal fun rememberGoalsScreenState(selectedDate: LocalDate): GoalsScreenState {
     val maxSize = 50_000
+
+    val zeroDate = LocalDate.fromEpochDays(0)
+    val initialPage = (zeroDate.until(selectedDate, DateTimeUnit.DAY)).toInt()
+
     val pagerState = rememberPagerState(
-        initialPage = maxSize / 2
-    ) { maxSize }
+        initialPage = initialPage,
+        pageCount = { maxSize }
+    )
     val coroutineScope = rememberCoroutineScope()
 
-    return remember {
+    return remember(pagerState, coroutineScope, selectedDate) {
         GoalsScreenState(
             coroutineScope = coroutineScope,
-            initialPage = maxSize / 2,
             zeroDate = zeroDate,
             pagerState = pagerState
         )
@@ -43,12 +48,11 @@ internal fun rememberGoalsScreenState(zeroDate: LocalDate): GoalsScreenState {
 
 internal class GoalsScreenState(
     private val coroutineScope: CoroutineScope,
-    private val initialPage: Int,
     private val zeroDate: LocalDate,
     val pagerState: PagerState
 ) {
     val selectedDate by derivedStateOf {
-        zeroDate.plus((pagerState.currentPage - initialPage).days)
+        zeroDate.plus((pagerState.currentPage).days)
     }
 
     fun goToToday() {
@@ -56,18 +60,18 @@ internal class GoalsScreenState(
     }
 
     fun goToDate(date: LocalDate) {
-        val page = (date - zeroDate).days + initialPage
+        val page = (zeroDate.until(date, DateTimeUnit.DAY)).toInt()
         coroutineScope.launch {
             pagerState.animateScrollToPage(page)
         }
     }
 
-    fun dateForPage(page: Int) = zeroDate.plus((page - initialPage).days)
+    fun dateForPage(page: Int) = zeroDate.plus(page.days)
 
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
     @Composable
     fun rememberDatePickerState(): DatePickerState {
-        val lastDate = zeroDate.plus((pagerState.pageCount - initialPage - 1).days)
+        val lastDate = zeroDate + (pagerState.pageCount - 1).days
         val yearRange = zeroDate.year..lastDate.year
 
         val initialSelectedDateMillis = selectedDate
@@ -75,7 +79,7 @@ internal class GoalsScreenState(
             .toEpochMilliseconds()
             .takeIf { it >= 0 } ?: 0
 
-        val initialDisplayedMonthMillis = zeroDate
+        val initialDisplayedMonthMillis = selectedDate
             .atStartOfDayIn(TimeZone.UTC)
             .toEpochMilliseconds()
             .takeIf { it >= 0 } ?: 0
