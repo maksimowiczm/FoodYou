@@ -12,18 +12,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -59,13 +67,13 @@ import com.maksimowiczm.foodyou.feature.food.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.Meal
+import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.headline_summary
-import foodyou.app.generated.resources.unit_gram_short
-import foodyou.app.generated.resources.unit_kcal
-import foodyou.app.generated.resources.unit_microgram_short
-import foodyou.app.generated.resources.unit_milligram_short
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -86,6 +94,14 @@ internal fun GoalsScreen(
     val order by userPreference<NutrientsOrderPreference>()
         .collectAsStateWithLifecycleInitialBlock()
 
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    if (showDatePicker) {
+        CalendarCardDatePickerDialog(
+            goalsState = screenState,
+            onDismissRequest = { showDatePicker = false }
+        )
+    }
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         modifier = modifier,
@@ -93,6 +109,16 @@ internal fun GoalsScreen(
             TopAppBar(
                 title = { Text(stringResource(Res.string.headline_summary)) },
                 navigationIcon = { ArrowBackIconButton(onBack) },
+                actions = {
+                    IconButton(
+                        onClick = { showDatePicker = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.CalendarMonth,
+                            contentDescription = null
+                        )
+                    }
+                },
                 subtitle = { Text(dateFormatter.formatDate(screenState.selectedDate)) },
                 scrollBehavior = scrollBehavior
             )
@@ -739,6 +765,75 @@ private fun NutrientGoal(
             color = trackColor,
             trackColor = trackColor.copy(alpha = 0.25f),
             drawStopIndicator = {}
+        )
+    }
+}
+
+@OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
+@Composable
+private fun CalendarCardDatePickerDialog(
+    goalsState: GoalsScreenState,
+    onDismissRequest: () -> Unit
+) {
+    val state = goalsState.rememberDatePickerState()
+
+    DatePickerDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    state.selectedDateMillis?.let {
+                        goalsState.goToDate(
+                            date = Instant
+                                .fromEpochMilliseconds(it)
+                                .toLocalDateTime(TimeZone.currentSystemDefault())
+                                .date
+                        )
+                    }
+                    onDismissRequest()
+                }
+            ) {
+                Text(
+                    text = stringResource(Res.string.positive_ok)
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text(
+                    text = stringResource(Res.string.action_cancel)
+                )
+            }
+        }
+    ) {
+        DatePicker(
+            state = state,
+            title = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 24.dp, end = 12.dp, top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    DatePickerDefaults.DatePickerTitle(
+                        displayMode = state.displayMode
+                    )
+
+                    TextButton(
+                        onClick = {
+                            goalsState.goToToday()
+                            onDismissRequest()
+                        }
+                    ) {
+                        Text(stringResource(Res.string.action_go_to_today))
+                    }
+                }
+            },
+            // It won't fit on small screens, so we need to scroll
+            modifier = Modifier.verticalScroll(rememberScrollState())
         )
     }
 }
