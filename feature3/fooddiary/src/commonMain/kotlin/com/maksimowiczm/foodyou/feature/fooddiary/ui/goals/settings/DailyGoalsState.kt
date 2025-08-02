@@ -99,13 +99,17 @@ internal class DailyGoalsState(
     var useSeparateGoals by useSeparateGoalsState
 
     val isValid by derivedStateOf {
-        monday.isValid &&
-            tuesday.isValid &&
-            wednesday.isValid &&
-            thursday.isValid &&
-            friday.isValid &&
-            saturday.isValid &&
-            sunday.isValid
+        if (!useSeparateGoals) {
+            monday.isValid
+        } else {
+            monday.isValid &&
+                tuesday.isValid &&
+                wednesday.isValid &&
+                thursday.isValid &&
+                friday.isValid &&
+                saturday.isValid &&
+                sunday.isValid
+        }
     }
 
     val isModified by isModifiedState
@@ -211,7 +215,7 @@ internal class DayGoalsState(
 
     val isValid by derivedStateOf {
         if (useDistribution) {
-            additionalState.isValid
+            additionalState.isValid && sliderState.isValid
         } else {
             weightState.isValid && additionalState.isValid
         }

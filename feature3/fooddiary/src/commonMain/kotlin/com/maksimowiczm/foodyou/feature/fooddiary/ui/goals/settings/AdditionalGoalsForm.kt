@@ -19,6 +19,7 @@ import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInit
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.form.FormField
 import com.maksimowiczm.foodyou.core.ui.form.doubleParser
+import com.maksimowiczm.foodyou.core.ui.form.nonNegativeDoubleValidator
 import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
@@ -489,6 +490,9 @@ private fun rememberFormField(initialValue: Double): FormField<Double, DailyGoal
         parser = doubleParser(
             onBlank = { DailyGoalsFormFieldError.Required },
             onNotANumber = { DailyGoalsFormFieldError.NotANumber }
+        ),
+        validator = nonNegativeDoubleValidator(
+            onNegative = { DailyGoalsFormFieldError.Negative }
         ),
         textFieldState = rememberTextFieldState(initialValue.formatClipZeros())
     )

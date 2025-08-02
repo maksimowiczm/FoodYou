@@ -50,6 +50,8 @@ import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.form.FormField
 import com.maksimowiczm.foodyou.core.ui.form.floatParser
 import com.maksimowiczm.foodyou.core.ui.form.intParser
+import com.maksimowiczm.foodyou.core.ui.form.nonNegativeFloatValidator
+import com.maksimowiczm.foodyou.core.ui.form.nonNegativeIntValidator
 import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
@@ -119,7 +121,11 @@ internal fun rememberMacroWeightInputFormState(
             onNotANumber = { DailyGoalsFormFieldError.NotANumber },
             onBlank = { DailyGoalsFormFieldError.Required }
         ),
-        textFieldState = rememberTextFieldState(proteins.formatClipZeros())
+        validator = nonNegativeFloatValidator(
+            onNegative = { DailyGoalsFormFieldError.Negative }
+        ),
+        textFieldState = rememberTextFieldState(proteins.formatClipZeros()),
+        validateFirst = true
     )
 
     val carbohydratesField = rememberFormField(
@@ -128,7 +134,11 @@ internal fun rememberMacroWeightInputFormState(
             onNotANumber = { DailyGoalsFormFieldError.NotANumber },
             onBlank = { DailyGoalsFormFieldError.Required }
         ),
-        textFieldState = rememberTextFieldState(carbohydrates.formatClipZeros())
+        validator = nonNegativeFloatValidator(
+            onNegative = { DailyGoalsFormFieldError.Negative }
+        ),
+        textFieldState = rememberTextFieldState(carbohydrates.formatClipZeros()),
+        validateFirst = true
     )
 
     val fatsField = rememberFormField(
@@ -137,7 +147,11 @@ internal fun rememberMacroWeightInputFormState(
             onNotANumber = { DailyGoalsFormFieldError.NotANumber },
             onBlank = { DailyGoalsFormFieldError.Required }
         ),
-        textFieldState = rememberTextFieldState(fats.formatClipZeros())
+        validator = nonNegativeFloatValidator(
+            onNegative = { DailyGoalsFormFieldError.Negative }
+        ),
+        textFieldState = rememberTextFieldState(fats.formatClipZeros()),
+        validateFirst = true
     )
 
     val energyField = rememberFormField(
@@ -146,7 +160,11 @@ internal fun rememberMacroWeightInputFormState(
             onNotANumber = { DailyGoalsFormFieldError.NotANumber },
             onBlank = { DailyGoalsFormFieldError.Required }
         ),
-        textFieldState = rememberTextFieldState(energy.toString())
+        validator = nonNegativeIntValidator(
+            onNegative = { DailyGoalsFormFieldError.Negative }
+        ),
+        textFieldState = rememberTextFieldState(energy.toString()),
+        validateFirst = true
     )
 
     val autoCalculateEnergy = rememberSaveable {

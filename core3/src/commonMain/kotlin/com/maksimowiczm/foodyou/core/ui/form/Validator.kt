@@ -51,3 +51,22 @@ fun <E> positiveIntValidator(onNotPositive: () -> E, onNull: () -> E? = { null }
         else -> null
     }
 }
+
+fun <E> nonNegativeIntValidator(onNegative: () -> E, onNull: () -> E? = { null }): (Int?) -> E? = {
+    when {
+        it == null -> onNull()
+        it < 0 -> onNegative()
+        else -> null
+    }
+}
+
+fun <E> nonNegativeDoubleValidator(
+    onNegative: () -> E,
+    onNull: () -> E? = { null }
+): (Double?) -> E? = {
+    when {
+        it == null -> onNull()
+        it < 0.0 -> onNegative()
+        else -> null
+    }
+}

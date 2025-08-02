@@ -23,6 +23,7 @@ import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInit
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.form.FormField
 import com.maksimowiczm.foodyou.core.ui.form.intParser
+import com.maksimowiczm.foodyou.core.ui.form.nonNegativeIntValidator
 import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
@@ -46,6 +47,7 @@ internal fun MacroInputSliderForm(state: MacroInputSliderFormState, modifier: Mo
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(Res.string.unit_energy)) },
             suffix = { Text(stringResource(Res.string.unit_kcal)) },
+            isError = state.energy.error != null,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Decimal,
                 imeAction = ImeAction.Next
@@ -146,6 +148,9 @@ internal fun rememberMacroInputSliderFormState(
             onNotANumber = { DailyGoalsFormFieldError.NotANumber },
             onBlank = { DailyGoalsFormFieldError.Required }
         ),
+        validator = nonNegativeIntValidator(
+            onNegative = { DailyGoalsFormFieldError.Negative }
+        ),
         textFieldState = rememberTextFieldState(energy.toString())
     )
     LaunchedEffect(energy) {
@@ -238,4 +243,8 @@ internal class MacroInputSliderFormState(
     var fats: Float by fatsState
 
     val isModified: Boolean by isModifiedState
+
+    val isValid by derivedStateOf {
+        energy.error == null
+    }
 }
