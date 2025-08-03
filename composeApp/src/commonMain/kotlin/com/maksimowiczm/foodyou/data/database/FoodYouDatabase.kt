@@ -90,7 +90,8 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
          * @see [LegacyMigrations.MIGRATION_21_22]
          * Add `note` column to ProductEntity and RecipeEntity
          */
-        AutoMigration(from = 23, to = 24) // Add LatestFoodMeasuredEventView
+        AutoMigration(from = 23, to = 24), // Add LatestFoodMeasuredEventView
+        AutoMigration(from = 24, to = 25) // Add FoodEventEntity onDelete cascade
     ]
 )
 @TypeConverters(
@@ -105,7 +106,7 @@ abstract class FoodYouDatabase :
     FoodDiaryDatabase {
 
     companion object {
-        const val VERSION = 24
+        const val VERSION = 25
 
         private val migrations: List<Migration> = listOf(
             LegacyMigrations.MIGRATION_1_2,
