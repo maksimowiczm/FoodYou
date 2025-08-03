@@ -17,8 +17,7 @@ internal class FoodSearchMapperImpl : FoodSearchMapper {
             else -> error("Food must have either productId or recipeId")
         }
 
-        val decoded: Measurement? = data.measurementJson?.let(Json::decodeFromString)
-        val defaultMeasurement = decoded ?: defaultMeasurement(data)
+        val decodedMeasurement: Measurement? = data.measurementJson?.let(Json::decodeFromString)
 
         when (foodId) {
             is FoodId.Product -> FoodSearch.Product(
@@ -72,14 +71,14 @@ internal class FoodSearchMapperImpl : FoodSearchMapper {
                 ),
                 totalWeight = data.totalWeight,
                 servingWeight = data.servingWeight,
-                defaultMeasurement = defaultMeasurement
+                defaultMeasurement = decodedMeasurement ?: defaultMeasurement(data)
             )
 
             is FoodId.Recipe -> FoodSearch.Recipe(
                 id = foodId,
                 headline = data.headline,
                 isLiquid = data.isLiquid,
-                defaultMeasurement = defaultMeasurement
+                defaultMeasurement = decodedMeasurement ?: Measurement.Serving(1f)
             )
         }
     }
