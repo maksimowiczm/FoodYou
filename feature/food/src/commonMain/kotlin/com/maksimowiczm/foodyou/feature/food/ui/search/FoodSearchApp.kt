@@ -267,7 +267,7 @@ private fun FoodSearchApp(
             if (pages != null) {
                 items(
                     count = pages.itemCount,
-                    key = pages.itemKey { it.id.toString() }
+                    key = pages.itemKey { (it.id to uiState.filter.source).toString() }
                 ) { i ->
                     val food = pages[i]
 
