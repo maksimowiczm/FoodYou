@@ -201,7 +201,7 @@ private fun GoalsPage(
                 .filter { !it.nutritionFacts.isComplete }
 
             IncompleteFoodsList(
-                foods = incomplete.map { it.headline },
+                foods = incomplete.map { it.headline }.distinct(),
                 onFoodClick = { foodName ->
                     val id = incomplete.firstOrNull {
                         it.headline == foodName

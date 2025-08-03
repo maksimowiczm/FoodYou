@@ -148,7 +148,7 @@ internal fun RecipeApp(
                                     .filter { !it.nutritionFacts.isComplete }
 
                                 IncompleteFoodsList(
-                                    foods = foods.map { it.headline },
+                                    foods = foods.map { it.headline }.distinct(),
                                     modifier = Modifier.padding(
                                         horizontal = 16.dp,
                                         vertical = 8.dp

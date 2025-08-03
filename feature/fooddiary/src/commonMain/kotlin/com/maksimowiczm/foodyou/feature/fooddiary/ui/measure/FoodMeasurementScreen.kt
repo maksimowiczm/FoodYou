@@ -571,7 +571,7 @@ private fun NutrientList(
                 .filter { !it.nutritionFacts.isComplete }
 
             IncompleteFoodsList(
-                foods = foods.map { it.headline },
+                foods = foods.map { it.headline }.distinct(),
                 onFoodClick = { name ->
                     val id = foods.firstOrNull {
                         it.headline == name
