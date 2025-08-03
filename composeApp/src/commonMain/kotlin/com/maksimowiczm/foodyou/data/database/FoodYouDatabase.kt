@@ -11,6 +11,7 @@ import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.data.database.SourceTypeConverter
 import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEvent
 import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEventTypeConverter
+import com.maksimowiczm.foodyou.feature.food.data.database.food.LatestFoodMeasuredEventView
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Recipe
 import com.maksimowiczm.foodyou.feature.food.data.database.food.RecipeIngredient
@@ -38,7 +39,8 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
         FoodEvent::class
     ],
     views = [
-        RecipeAllIngredientsView::class
+        RecipeAllIngredientsView::class,
+        LatestFoodMeasuredEventView::class
     ],
     version = FoodYouDatabase.VERSION,
     exportSchema = true,
@@ -79,7 +81,7 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
          * @see [LegacyMigrations.MIGRATION_18_19]
          * Merge product and recipe measurements into MeasurementEntity
          */
-        AutoMigration(from = 19, to = 20)
+        AutoMigration(from = 19, to = 20),
         /**
          * @see [LegacyMigrations.MIGRATION_20_21]
          * Add isLiquid column to ProductEntity and RecipeEntity
@@ -88,6 +90,7 @@ import com.maksimowiczm.foodyou.feature.measurement.data.MeasurementTypeConverte
          * @see [LegacyMigrations.MIGRATION_21_22]
          * Add `note` column to ProductEntity and RecipeEntity
          */
+        AutoMigration(from = 23, to = 24) // Add LatestFoodMeasuredEventView
     ]
 )
 @TypeConverters(
@@ -102,7 +105,7 @@ abstract class FoodYouDatabase :
     FoodDiaryDatabase {
 
     companion object {
-        const val VERSION = 23
+        const val VERSION = 24
 
         private val migrations: List<Migration> = listOf(
             LegacyMigrations.MIGRATION_1_2,

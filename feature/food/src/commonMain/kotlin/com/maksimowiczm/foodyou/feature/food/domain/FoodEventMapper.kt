@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.domain
 
 import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEvent as FoodEventEntity
 import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEventType
+import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
@@ -42,7 +43,18 @@ internal class FoodEventMapperImpl : FoodEventMapper {
                 )
             }
 
-            FoodEventType.Used -> FoodEvent.Used(date)
+            FoodEventType.Measured -> {
+                val measurement = if (extra != null) {
+                    Json.decodeFromString<Measurement>(extra)
+                } else {
+                    Measurement.Gram(100f)
+                }
+
+                FoodEvent.Measured(
+                    date = date,
+                    measurement = measurement
+                )
+            }
 
             FoodEventType.ImportedFromFoodYou2 -> FoodEvent.ImportedFromFoodYou2(date)
         }
@@ -56,7 +68,7 @@ internal class FoodEventMapperImpl : FoodEventMapper {
             is FoodEvent.Downloaded -> url
             is FoodEvent.Imported -> null
             is FoodEvent.Edited -> Json.encodeToString(oldFood)
-            is FoodEvent.Used -> null
+            is FoodEvent.Measured -> Json.encodeToString(measurement)
             is FoodEvent.ImportedFromFoodYou2 -> null
         }
 
@@ -65,7 +77,7 @@ internal class FoodEventMapperImpl : FoodEventMapper {
             is FoodEvent.Downloaded -> FoodEventType.Downloaded
             is FoodEvent.Imported -> FoodEventType.Imported
             is FoodEvent.Edited -> FoodEventType.Edited
-            is FoodEvent.Used -> FoodEventType.Used
+            is FoodEvent.Measured -> FoodEventType.Measured
             is FoodEvent.ImportedFromFoodYou2 -> FoodEventType.ImportedFromFoodYou2
         }
 

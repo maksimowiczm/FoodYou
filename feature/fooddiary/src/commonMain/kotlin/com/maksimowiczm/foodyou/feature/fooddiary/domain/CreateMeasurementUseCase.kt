@@ -50,7 +50,7 @@ internal class CreateMeasurementUseCaseImpl(
         )
 
         val event = foodEventMapper.toEntity(
-            model = FoodEvent.Used(LocalDateTime.now()),
+            model = FoodEvent.Measured(date = LocalDateTime.now(), measurement = measurement),
             foodId = foodId
         )
 

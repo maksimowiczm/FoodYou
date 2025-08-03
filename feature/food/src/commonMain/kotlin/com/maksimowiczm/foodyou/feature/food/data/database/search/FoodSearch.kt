@@ -20,5 +20,6 @@ data class FoodSearch(
     @Embedded
     val minerals: Minerals?,
     val totalWeight: Float?,
-    val servingWeight: Float?
+    val servingWeight: Float?,
+    val measurementJson: String?
 )

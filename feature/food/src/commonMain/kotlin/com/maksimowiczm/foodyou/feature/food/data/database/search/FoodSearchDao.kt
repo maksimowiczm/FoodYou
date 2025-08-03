@@ -17,11 +17,11 @@ interface FoodSearchDao {
         WITH ProductsSearch AS (
             SELECT 
                 $PRODUCT_FOOD_SEARCH_SQL_SELECT,
-                fe.epochSeconds AS lastUsedEpochSeconds
-            FROM Product p LEFT JOIN FoodEvent fe ON p.id = fe.productId
+                fe.epochSeconds AS lastUsedEpochSeconds,
+                fe.extra AS measurementJson
+            FROM Product p LEFT JOIN LatestFoodMeasuredEventView fe ON p.id = fe.productId
             WHERE 
                 fe.id IS NOT NULL AND
-                fe.type = ${FoodEventTypeSQLConstants.USED} AND
                 (
                     :query IS NULL OR
                     p.name COLLATE NOCASE LIKE '%' || :query || '%' OR
@@ -32,11 +32,11 @@ interface FoodSearchDao {
         RecipesSearch AS (
             SELECT 
                 $RECIPE_FOOD_SEARCH_SQL_SELECT,
-                fe.epochSeconds AS lastUsedEpochSeconds
-            FROM Recipe r LEFT JOIN FoodEvent fe ON r.id = fe.recipeId
+                fe.epochSeconds AS lastUsedEpochSeconds,
+                fe.extra AS measurementJson
+            FROM Recipe r LEFT JOIN LatestFoodMeasuredEventView fe ON r.id = fe.recipeId
             WHERE 
                 fe.id IS NOT NULL AND
-                fe.type = ${FoodEventTypeSQLConstants.USED} AND
                 (
                     :query IS NULL OR
                     r.name COLLATE NOCASE LIKE '%' || :query || '%'
@@ -49,7 +49,7 @@ interface FoodSearchDao {
             SELECT * FROM RecipesSearch
             ORDER BY lastUsedEpochSeconds DESC
         )
-        SELECT DISTINCT $FOOD_SEARCH_SQL_SELECT
+        SELECT DISTINCT $FOOD_SEARCH_SQL_SELECT, measurementJson
         FROM MergedSearch
         """
     )
@@ -64,7 +64,7 @@ interface FoodSearchDao {
             WHERE p.id IN (
                 SELECT DISTINCT productId
                 FROM FoodEvent 
-                WHERE type = ${FoodEventTypeSQLConstants.USED} AND
+                WHERE type = ${FoodEventTypeSQLConstants.MEASURED} AND
                 productId IS NOT NULL AND
                 (
                     :query IS NULL OR
@@ -80,7 +80,7 @@ interface FoodSearchDao {
             WHERE r.id IN (
                 SELECT DISTINCT recipeId
                 FROM FoodEvent 
-                WHERE type = ${FoodEventTypeSQLConstants.USED} AND
+                WHERE type = ${FoodEventTypeSQLConstants.MEASURED} AND
                 recipeId IS NOT NULL AND
                 (
                     :query IS NULL OR

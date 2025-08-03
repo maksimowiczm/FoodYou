@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.feature.food.domain
 
+import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import kotlinx.datetime.LocalDateTime
 
 sealed interface FoodEvent {
@@ -16,9 +17,9 @@ sealed interface FoodEvent {
     class Edited(override val date: LocalDateTime, val oldFood: Food) : FoodEvent
 
     /**
-     * Represents an event when a food item is used by an user in any way.
+     * Represents an event when a food item is measured.
      */
-    class Used(override val date: LocalDateTime) : FoodEvent
+    class Measured(override val date: LocalDateTime, val measurement: Measurement) : FoodEvent
 
     /**
      * Represents an event when a food item is imported from FoodYou2. This event is used to track

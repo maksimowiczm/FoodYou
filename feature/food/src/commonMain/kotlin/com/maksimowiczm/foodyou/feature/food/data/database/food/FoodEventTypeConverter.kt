@@ -10,7 +10,7 @@ class FoodEventTypeConverter {
         FoodEventType.Downloaded -> FoodEventTypeSQLConstants.DOWNLOADED
         FoodEventType.Imported -> FoodEventTypeSQLConstants.IMPORTED
         FoodEventType.Edited -> FoodEventTypeSQLConstants.EDITED
-        FoodEventType.Used -> FoodEventTypeSQLConstants.USED
+        FoodEventType.Measured -> FoodEventTypeSQLConstants.MEASURED
         FoodEventType.ImportedFromFoodYou2 -> FoodEventTypeSQLConstants.IMPORTED_FROM_FOOD_YOU_2
     }
 
@@ -20,7 +20,7 @@ class FoodEventTypeConverter {
         FoodEventTypeSQLConstants.DOWNLOADED -> FoodEventType.Downloaded
         FoodEventTypeSQLConstants.IMPORTED -> FoodEventType.Imported
         FoodEventTypeSQLConstants.EDITED -> FoodEventType.Edited
-        FoodEventTypeSQLConstants.USED -> FoodEventType.Used
+        FoodEventTypeSQLConstants.MEASURED -> FoodEventType.Measured
         FoodEventTypeSQLConstants.IMPORTED_FROM_FOOD_YOU_2 -> FoodEventType.ImportedFromFoodYou2
         else -> error("Unknown food event type: $type")
     }
@@ -31,6 +31,6 @@ object FoodEventTypeSQLConstants {
     const val DOWNLOADED = 1
     const val IMPORTED = 2
     const val EDITED = 3
-    const val USED = 4
+    const val MEASURED = 4
     const val IMPORTED_FROM_FOOD_YOU_2 = 5
 }

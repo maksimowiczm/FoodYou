@@ -2,6 +2,8 @@ package com.maksimowiczm.foodyou.feature.food.domain
 
 import com.maksimowiczm.foodyou.feature.food.data.database.search.FoodSearch as FoodSearchData
 import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue.Companion.toNutrientValue
+import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
+import kotlinx.serialization.json.Json
 
 interface FoodSearchMapper {
     fun toModel(data: FoodSearchData): FoodSearch
@@ -14,6 +16,9 @@ internal class FoodSearchMapperImpl : FoodSearchMapper {
             recipeId != null -> FoodId.Recipe(recipeId)
             else -> error("Food must have either productId or recipeId")
         }
+
+        val decoded: Measurement? = data.measurementJson?.let(Json::decodeFromString)
+        val defaultMeasurement = decoded ?: defaultMeasurement(data)
 
         when (foodId) {
             is FoodId.Product -> FoodSearch.Product(
@@ -66,14 +71,22 @@ internal class FoodSearchMapperImpl : FoodSearchMapper {
                     chromiumMicro = minerals?.chromiumMicro.toNutrientValue()
                 ),
                 totalWeight = data.totalWeight,
-                servingWeight = data.servingWeight
+                servingWeight = data.servingWeight,
+                defaultMeasurement = defaultMeasurement
             )
 
             is FoodId.Recipe -> FoodSearch.Recipe(
                 id = foodId,
                 headline = data.headline,
-                isLiquid = data.isLiquid
+                isLiquid = data.isLiquid,
+                defaultMeasurement = defaultMeasurement
             )
         }
     }
+}
+
+private fun defaultMeasurement(food: FoodSearchData) = when {
+    food.servingWeight != null -> Measurement.Serving(1f)
+    food.totalWeight != null -> Measurement.Package(1f)
+    else -> Measurement.Gram(100f)
 }

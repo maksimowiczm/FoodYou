@@ -611,7 +611,7 @@ private fun FoodMeasurementForm(state: ProductMeasurementFormState, modifier: Mo
 private fun FoodEvents(events: List<FoodEvent>, modifier: Modifier = Modifier) {
     val dateFormatter = LocalDateFormatter.current
     val strings = events
-        .filterNot { it is FoodEvent.Used }
+        .filterNot { it is FoodEvent.Measured }
         .map {
             it.stringResource() + ", " + dateFormatter.formatDateTime(it.date)
         }
@@ -638,7 +638,7 @@ private fun FoodEvent.stringResource(): String = when (this) {
     is FoodEvent.Downloaded -> stringResource(Res.string.headline_downloaded)
     is FoodEvent.Imported -> stringResource(Res.string.headline_imported)
     is FoodEvent.Edited -> stringResource(Res.string.headline_edited)
-    is FoodEvent.Used -> error("FoodEvent.Used should not be displayed in the history")
+    is FoodEvent.Measured -> error("FoodEvent.Used should not be displayed in the history")
     is FoodEvent.ImportedFromFoodYou2 ->
         stringResource(Res.string.headline_imported_from_food_you_2)
 }

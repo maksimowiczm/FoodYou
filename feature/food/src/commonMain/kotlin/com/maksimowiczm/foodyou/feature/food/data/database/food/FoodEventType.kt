@@ -5,6 +5,6 @@ enum class FoodEventType {
     Downloaded,
     Imported,
     Edited,
-    Used,
+    Measured,
     ImportedFromFoodYou2
 }
