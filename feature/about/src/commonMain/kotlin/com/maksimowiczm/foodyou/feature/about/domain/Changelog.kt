@@ -10,6 +10,7 @@ object Changelog {
 
     val versions: List<Version>
         get() = listOfNotNull(
+            v_3_0_0_beta_2,
             v_3_0_0_beta_1,
             v2_10_1,
             v2_10_0,
@@ -29,6 +30,26 @@ object Changelog {
             v2_1_0,
             v2_0_0
         )
+
+    val v_3_0_0_beta_2 = Version(
+        version = "3.0.0-beta.2",
+        date = LocalDate(2025, 8, 3),
+        newFeatures = listOf(
+            "Added incomplete foods list to the nutrients section.",
+            "Added daily goals."
+        ),
+        changes = listOf(
+            "Recent foods can now be queried.",
+            "Recent foods now suggest the latest measurement for each item."
+        ),
+        bugFixes = listOf(
+            "Fixed incorrect values displayed in the home screen meal card summary."
+        ),
+        notes = """
+            This is a preview version. Please don't report missing features, as this is still a work-in-progress.
+        """.trimIndent(),
+        isPreview = true
+    )
 
     val v_3_0_0_beta_1 = Version(
         version = "3.0.0-beta.1",
