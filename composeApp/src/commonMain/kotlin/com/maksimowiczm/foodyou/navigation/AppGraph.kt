@@ -35,6 +35,8 @@ data object Database
 fun NavGraphBuilder.appGraph(
     homeOnAbout: () -> Unit,
     homeOnSettings: () -> Unit,
+    homeGoalsCardOnClick: (epochDay: Long) -> Unit,
+    homeGoalsCardOnLongClick: () -> Unit,
     homeMealCardOnAdd: (epochDay: Long, mealId: Long) -> Unit,
     homeMealCardOnEditMeasurement: (measurementId: Long) -> Unit,
     homeMealCardOnLongClick: () -> Unit,
@@ -51,6 +53,7 @@ fun NavGraphBuilder.appGraph(
     personalizationOnNutritionFactsPersonalization: () -> Unit,
     homePersonalizationOnBack: () -> Unit,
     homePersonalizationOnMealsSettings: () -> Unit,
+    homePersonalizationOnGoalsSettings: () -> Unit,
     nutritionFactsPersonalizationOnBack: () -> Unit,
     externalDatabasesOnBack: () -> Unit,
     externalDatabasesOnSwissFoodCompositionDatabase: () -> Unit,
@@ -61,6 +64,8 @@ fun NavGraphBuilder.appGraph(
         HomeScreen(
             onSettings = homeOnSettings,
             onAbout = homeOnAbout,
+            goalsCardOnClick = homeGoalsCardOnClick,
+            goalsCardOnLongClick = homeGoalsCardOnLongClick,
             mealCardOnAdd = homeMealCardOnAdd,
             mealCardOnEditMeasurement = homeMealCardOnEditMeasurement,
             mealCardOnLongClick = { homeMealCardOnLongClick() }
@@ -88,7 +93,8 @@ fun NavGraphBuilder.appGraph(
     forwardBackwardComposable<HomePersonalization> {
         HomePersonalizationScreen(
             onBack = homePersonalizationOnBack,
-            onMealsSettings = homePersonalizationOnMealsSettings
+            onMealsSettings = homePersonalizationOnMealsSettings,
+            onGoalsSettings = homePersonalizationOnGoalsSettings
         )
     }
     forwardBackwardComposable<NutritionFactsPersonalization> {

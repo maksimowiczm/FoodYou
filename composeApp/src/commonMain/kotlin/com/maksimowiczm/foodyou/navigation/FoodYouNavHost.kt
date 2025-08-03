@@ -32,6 +32,16 @@ fun FoodYouNavHost(
                     launchSingleTop = true
                 }
             },
+            homeGoalsCardOnClick = {
+                navController.navigate(Goals(it)) {
+                    launchSingleTop = true
+                }
+            },
+            homeGoalsCardOnLongClick = {
+                navController.navigate(GoalsCardSettings) {
+                    launchSingleTop = true
+                }
+            },
             homeMealCardOnAdd = { epochDay, mealId ->
                 navController.navigate(
                     FoodSearch(
@@ -86,7 +96,7 @@ fun FoodYouNavHost(
                 navController.popBackStack<Settings>(true)
             },
             settingsOnDailyGoals = {
-                navController.navigate(DailyGoals) {
+                navController.navigate(GoalsSetup) {
                     launchSingleTop = true
                 }
             },
@@ -110,6 +120,12 @@ fun FoodYouNavHost(
                 navController.navigate(MealsCardsSettings) {
                     launchSingleTop = true
                     popUpTo<MealsCardsSettings>()
+                }
+            },
+            homePersonalizationOnGoalsSettings = {
+                navController.navigate(GoalsCardSettings) {
+                    launchSingleTop = true
+                    popUpTo<GoalsCardSettings>()
                 }
             },
             nutritionFactsPersonalizationOnBack = {
@@ -299,10 +315,10 @@ fun FoodYouNavHost(
                 }
             },
             dailyGoalsOnBack = {
-                navController.popBackStack<DailyGoals>(true)
+                navController.popBackStack<GoalsSetup>(true)
             },
             dailyGoalsOnSave = {
-                navController.popBackStack<DailyGoals>(true)
+                navController.popBackStack<GoalsSetup>(true)
             },
             goalsOnBack = {
                 navController.popBackStack<Goals>(true)
@@ -316,6 +332,14 @@ fun FoodYouNavHost(
                     is FoodId.Recipe -> navController.navigate(UpdateRecipe.from(it)) {
                         launchSingleTop = true
                     }
+                }
+            },
+            goalsCardSettingsOnBack = {
+                navController.popBackStack<GoalsCardSettings>(true)
+            },
+            goalsCardSettingsOnGoalsSettings = {
+                navController.navigate(GoalsSetup) {
+                    launchSingleTop = true
                 }
             }
         )

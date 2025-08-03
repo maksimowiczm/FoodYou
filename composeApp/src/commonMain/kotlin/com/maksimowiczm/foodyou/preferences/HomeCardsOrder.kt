@@ -7,10 +7,11 @@ import com.maksimowiczm.foodyou.core.preferences.DataStoreUserPreference
 
 enum class HomeCard {
     Calendar,
+    Goals,
     Meals;
 
     companion object {
-        val defaultOrder: List<HomeCard> = listOf(Calendar, Meals)
+        val defaultOrder: List<HomeCard> = listOf(Calendar, Goals, Meals)
     }
 }
 
@@ -19,9 +20,14 @@ class HomeCardsOrder(dataStore: DataStore<Preferences>) :
         dataStore = dataStore,
         key = stringPreferencesKey("home_cards_order")
     ) {
-    override fun String?.toValue(): List<HomeCard> = this?.split(",")?.mapNotNull {
-        HomeCard.entries.find { card -> card.ordinal.toString() == it }
-    } ?: HomeCard.defaultOrder
+    override fun String?.toValue(): List<HomeCard> {
+        val order = this?.split(",")?.mapNotNull {
+            HomeCard.entries.find { card -> card.ordinal.toString() == it }
+        } ?: HomeCard.defaultOrder
+
+        // Make sure that all cards are included in the order
+        return order + HomeCard.defaultOrder.filterNot { it in order }
+    }
 
     override fun List<HomeCard>.toStore(): String? =
         if (isEmpty()) null else joinToString(",") { it.ordinal.toString() }

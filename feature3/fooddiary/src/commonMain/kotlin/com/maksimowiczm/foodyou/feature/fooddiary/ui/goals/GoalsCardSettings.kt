@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui.cardsettings
+package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,45 +13,37 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ext.getBlocking
-import com.maksimowiczm.foodyou.core.ext.lambda
-import com.maksimowiczm.foodyou.core.ext.observe
-import com.maksimowiczm.foodyou.core.ext.set
-import com.maksimowiczm.foodyou.core.ui.component.ArrowBackIconButton
-import com.maksimowiczm.foodyou.feature.goals.data.GoalsPreferences
-import com.maksimowiczm.foodyou.feature.goals.model.defaultGoals
-import com.maksimowiczm.foodyou.feature.goals.ui.card.GoalsCard
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
+import com.maksimowiczm.foodyou.core.preferences.userPreference
+import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
+import com.maksimowiczm.foodyou.feature.fooddiary.preferences.ExpandGoalsCard
 import foodyou.app.generated.resources.*
-import foodyou.app.generated.resources.Res
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 @Composable
 internal fun GoalsCardSettings(
     onBack: () -> Unit,
     onGoalsSettings: () -> Unit,
     modifier: Modifier = Modifier,
-    dataStore: DataStore<Preferences> = koinInject()
+    expandGoalsCardPreference: ExpandGoalsCard = userPreference()
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val showDetails = dataStore
-        .observe(GoalsPreferences.expandGoalsCard)
-        .collectAsStateWithLifecycle(dataStore.getBlocking(GoalsPreferences.expandGoalsCard)).value
+    val showDetails by expandGoalsCardPreference.collectAsStateWithLifecycleInitialBlock()
 
     GoalsCardSettings(
         onBack = onBack,
-        showDetails = showDetails ?: true,
-        onShowDetailsChange = coroutineScope.lambda<Boolean> {
-            dataStore.set(GoalsPreferences.expandGoalsCard to it)
+        showDetails = showDetails,
+        onShowDetailsChange = {
+            coroutineScope.launch {
+                expandGoalsCardPreference.set(it)
+            }
         },
         onGoalsSettings = onGoalsSettings,
         modifier = modifier
@@ -92,7 +84,7 @@ private fun GoalsCardSettings(
                     totalProteins = 50,
                     totalCarbohydrates = 125,
                     totalFats = 100,
-                    dailyGoals = defaultGoals(),
+                    dailyGoal = DailyGoal.defaultGoals,
                     onClick = {},
                     onLongClick = {},
                     modifier = Modifier.padding(16.dp)

@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -70,6 +71,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun HomePersonalizationScreen(
     onBack: () -> Unit,
     onMealsSettings: () -> Unit,
+    onGoalsSettings: () -> Unit,
     modifier: Modifier = Modifier,
     homeOrder: HomeCardsOrder = userPreference()
 ) {
@@ -79,6 +81,7 @@ fun HomePersonalizationScreen(
         order = order,
         onBack = onBack,
         onMealsSettings = onMealsSettings,
+        onGoalsSettings = onGoalsSettings,
         onReorder = { homeOrder.setBlocking(it) },
         modifier = modifier
     )
@@ -94,6 +97,7 @@ private fun HomePersonalizationScreen(
     order: List<HomeCard>,
     onBack: () -> Unit,
     onMealsSettings: () -> Unit,
+    onGoalsSettings: () -> Unit,
     onReorder: (List<HomeCard>) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -175,12 +179,17 @@ private fun HomePersonalizationScreen(
                     moveUp = { moveUp(card) },
                     moveDown = { moveDown(card) }
                 ) {
-                    when (card) {
-                        HomeCard.Calendar -> CalendarCardContent(it)
-                        HomeCard.Meals -> MealsCardContent(
-                            rs = it,
-                            onMore = onMealsSettings
-                        )
+                    with(it) {
+                        when (card) {
+                            HomeCard.Calendar -> CalendarCardContent()
+                            HomeCard.Goals -> GoalsCardContent(
+                                onMore = onGoalsSettings
+                            )
+
+                            HomeCard.Meals -> MealsCardContent(
+                                onMore = onMealsSettings
+                            )
+                        }
                     }
                 }
             }
@@ -244,7 +253,8 @@ private fun LazyItemScope.MyCard(
 }
 
 @Composable
-private fun ReorderableCollectionItemScope.CalendarCardContent(rs: RowScope) = with(rs) {
+context(_: ReorderableCollectionItemScope)
+private fun RowScope.CalendarCardContent() {
     Box(
         modifier = Modifier.size(48.dp),
         contentAlignment = Alignment.Center
@@ -263,32 +273,60 @@ private fun ReorderableCollectionItemScope.CalendarCardContent(rs: RowScope) = w
 }
 
 @Composable
-private fun ReorderableCollectionItemScope.MealsCardContent(rs: RowScope, onMore: () -> Unit) =
-    with(rs) {
-        Box(
-            modifier = Modifier.size(48.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Restaurant,
-                contentDescription = null
-            )
-        }
-        Spacer(Modifier.width(16.dp))
-        Text(stringResource(Res.string.headline_meals))
-        Spacer(Modifier.weight(1f))
-        IconButton(
-            onClick = onMore
-        ) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(Res.string.action_show_more)
-            )
-        }
-        DragHandle(
-            modifier = Modifier.hapticDraggableHandle()
+context(_: ReorderableCollectionItemScope)
+private fun RowScope.MealsCardContent(onMore: () -> Unit) {
+    Box(
+        modifier = Modifier.size(48.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Restaurant,
+            contentDescription = null
         )
     }
+    Spacer(Modifier.width(16.dp))
+    Text(stringResource(Res.string.headline_meals))
+    Spacer(Modifier.weight(1f))
+    IconButton(
+        onClick = onMore
+    ) {
+        Icon(
+            imageVector = Icons.Default.MoreVert,
+            contentDescription = stringResource(Res.string.action_show_more)
+        )
+    }
+    DragHandle(
+        modifier = Modifier.hapticDraggableHandle()
+    )
+}
+
+@Composable
+context(_: ReorderableCollectionItemScope)
+private fun RowScope.GoalsCardContent(onMore: () -> Unit) {
+    Box(
+        modifier = Modifier.size(48.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Flag,
+            contentDescription = null
+        )
+    }
+    Spacer(Modifier.width(16.dp))
+    Text(stringResource(Res.string.headline_daily_goals))
+    Spacer(Modifier.weight(1f))
+    IconButton(
+        onClick = onMore
+    ) {
+        Icon(
+            imageVector = Icons.Default.MoreVert,
+            contentDescription = stringResource(Res.string.action_show_more)
+        )
+    }
+    DragHandle(
+        modifier = Modifier.hapticDraggableHandle()
+    )
+}
 
 @Composable
 private fun DragHandle(modifier: Modifier = Modifier) {

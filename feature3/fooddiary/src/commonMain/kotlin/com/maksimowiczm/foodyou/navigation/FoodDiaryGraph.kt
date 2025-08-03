@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.feature.food.ui.CreateRecipeScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateRecipeScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.GoalsCardSettings
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.screen.GoalsScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.settings.DailyGoalsScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.cardsettings.MealsCardsSettings
@@ -22,7 +23,6 @@ import com.maksimowiczm.foodyou.feature.measurement.domain.rawValue
 import com.maksimowiczm.foodyou.feature.measurement.domain.type
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
-import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable
 data class FoodSearch(val mealId: Long, val epochDay: Long) {
@@ -117,15 +117,16 @@ data object MealSettings
 data object MealsCardsSettings
 
 @Serializable
-data object DailyGoals
+data object GoalsSetup
 
 @Serializable
 data class Goals(val epochDay: Long) {
     val date: LocalDate
         get() = LocalDate.fromEpochDays(epochDay)
-
-    constructor(date: LocalDate) : this(date.toEpochDays())
 }
+
+@Serializable
+data object GoalsCardSettings
 
 fun NavGraphBuilder.foodDiaryGraph(
     foodSearchOnBack: () -> Unit,
@@ -157,7 +158,9 @@ fun NavGraphBuilder.foodDiaryGraph(
     dailyGoalsOnBack: () -> Unit,
     dailyGoalsOnSave: () -> Unit,
     goalsOnBack: () -> Unit,
-    goalsOnFood: (FoodId) -> Unit
+    goalsOnFood: (FoodId) -> Unit,
+    goalsCardSettingsOnBack: () -> Unit,
+    goalsCardSettingsOnGoalsSettings: () -> Unit
 ) {
     forwardBackwardComposable<FoodSearch> { backStack ->
         val route = backStack.toRoute<FoodSearch>()
@@ -255,7 +258,7 @@ fun NavGraphBuilder.foodDiaryGraph(
             onMealSettings = mealsCardsOnMealSettings
         )
     }
-    forwardBackwardComposable<DailyGoals> {
+    forwardBackwardComposable<GoalsSetup> {
         DailyGoalsScreen(
             onBack = dailyGoalsOnBack,
             onSave = dailyGoalsOnSave
@@ -267,8 +270,13 @@ fun NavGraphBuilder.foodDiaryGraph(
         GoalsScreen(
             onBack = goalsOnBack,
             onFoodClick = goalsOnFood,
-            date = route.date,
-            viewModel = koinViewModel()
+            date = route.date
+        )
+    }
+    forwardBackwardComposable<GoalsCardSettings> {
+        GoalsCardSettings(
+            onBack = goalsCardSettingsOnBack,
+            onGoalsSettings = goalsCardSettingsOnGoalsSettings
         )
     }
 }

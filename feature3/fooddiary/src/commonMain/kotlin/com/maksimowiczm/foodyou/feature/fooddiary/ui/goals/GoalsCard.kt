@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.goals.ui.card
+package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -20,9 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,26 +31,21 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.model.NutritionFactsField
-import com.maksimowiczm.foodyou.core.preferences.getBlocking
+import com.maksimowiczm.foodyou.core.ext.sumOf
+import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
 import com.maksimowiczm.foodyou.core.preferences.userPreference
+import com.maksimowiczm.foodyou.core.ui.FoodYouHomeCard
+import com.maksimowiczm.foodyou.core.ui.HomeState
 import com.maksimowiczm.foodyou.core.ui.ext.toDp
-import com.maksimowiczm.foodyou.core.ui.home.FoodYouHomeCard
-import com.maksimowiczm.foodyou.core.ui.home.HomeState
-import com.maksimowiczm.foodyou.core.ui.nutrition.NutritionFactsListPreference
 import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
-import com.maksimowiczm.foodyou.feature.goals.model.DailyGoals
+import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
+import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
+import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
+import com.maksimowiczm.foodyou.feature.fooddiary.preferences.ExpandGoalsCard
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.negative_exceeded_by_calories
-import foodyou.app.generated.resources.neutral_remaining_calories
-import foodyou.app.generated.resources.nutriment_carbohydrates
-import foodyou.app.generated.resources.nutriment_fats
-import foodyou.app.generated.resources.nutriment_proteins
-import foodyou.app.generated.resources.positive_goal_reached
-import foodyou.app.generated.resources.unit_gram_short
-import foodyou.app.generated.resources.unit_kcal
+import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -61,33 +54,39 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun GoalsCard(
     homeState: HomeState,
-    onClick: () -> Unit,
+    onClick: (epochDay: Long) -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: GoalsCardViewModel = koinViewModel()
+    viewModel: GoalsViewModel = koinViewModel(),
+    expandGoalsCardPreference: ExpandGoalsCard = userPreference()
 ) {
-    val diaryDay =
-        viewModel.observeDiaryDay(homeState.selectedDate).collectAsStateWithLifecycle(null).value
+    val date = homeState.selectedDate
+    val meals = viewModel.observeMeals(date).collectAsStateWithLifecycle().value
+    val goals = viewModel.observeGoals(date).collectAsStateWithLifecycle().value
+    val expand by expandGoalsCardPreference.collectAsStateWithLifecycleInitialBlock()
 
-    val expand = viewModel.expand.collectAsStateWithLifecycle().value
-
-    if (diaryDay == null) {
+    if (meals == null || goals == null) {
         GoalsCardSkeleton(
             shimmer = homeState.shimmer,
             expand = expand,
-            onClick = onClick,
+            onClick = { onClick(date.toEpochDays()) },
             onLongClick = onLongClick,
             modifier = modifier
         )
     } else {
+        val energy = meals.sumOf { it.energy }.roundToInt()
+        val proteins = meals.sumOf { it.proteins }.roundToInt()
+        val carbohydrates = meals.sumOf { it.carbohydrates }.roundToInt()
+        val fats = meals.sumOf { it.fats }.roundToInt()
+
         GoalsCard(
             expand = expand,
-            totalCalories = diaryDay.totalCalories,
-            totalProteins = diaryDay.totalProteins,
-            totalCarbohydrates = diaryDay.totalCarbohydrates,
-            totalFats = diaryDay.totalFats,
-            dailyGoals = diaryDay.dailyGoals,
-            onClick = onClick,
+            totalCalories = energy,
+            totalProteins = proteins,
+            totalCarbohydrates = carbohydrates,
+            totalFats = fats,
+            dailyGoal = goals,
+            onClick = { onClick(date.toEpochDays()) },
             onLongClick = onLongClick,
             modifier = modifier
         )
@@ -102,23 +101,27 @@ internal fun GoalsCard(
     totalProteins: Int,
     totalCarbohydrates: Int,
     totalFats: Int,
-    dailyGoals: DailyGoals,
+    dailyGoal: DailyGoal,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val proteinsTarget = dailyGoal[NutritionFactsField.Proteins].toFloat()
+    val carbsTarget = dailyGoal[NutritionFactsField.Carbohydrates].toFloat()
+    val fatsTarget = dailyGoal[NutritionFactsField.Fats].toFloat()
+
     val proteinsPercentage = animateFloatAsState(
-        targetValue = totalProteins / dailyGoals.proteinsAsGrams,
+        targetValue = totalProteins / proteinsTarget,
         animationSpec = MaterialTheme.motionScheme.slowEffectsSpec()
     ).value
 
     val carbsPercentage = animateFloatAsState(
-        targetValue = totalCarbohydrates / dailyGoals.carbohydratesAsGrams,
+        targetValue = totalCarbohydrates / carbsTarget,
         animationSpec = MaterialTheme.motionScheme.slowEffectsSpec()
     ).value
 
     val fatsPercentage = animateFloatAsState(
-        targetValue = totalFats / dailyGoals.fatsAsGrams,
+        targetValue = totalFats / fatsTarget,
         animationSpec = MaterialTheme.motionScheme.slowEffectsSpec()
     ).value
 
@@ -132,7 +135,7 @@ internal fun GoalsCard(
         ) {
             GoalsCardContent(
                 calories = totalCalories,
-                caloriesGoal = dailyGoals.calories,
+                caloriesGoal = dailyGoal[NutritionFactsField.Energy].roundToInt(),
                 proteinsPercentage = proteinsPercentage,
                 carbsPercentage = carbsPercentage,
                 fatsPercentage = fatsPercentage,
@@ -149,11 +152,11 @@ internal fun GoalsCard(
 
                     ExpandedCardContent(
                         proteinsGrams = totalProteins,
-                        proteinsGoalGrams = dailyGoals.proteinsAsGrams.roundToInt(),
+                        proteinsGoalGrams = proteinsTarget.roundToInt(),
                         carbohydratesGrams = totalCarbohydrates,
-                        carbohydratesGoalGrams = dailyGoals.carbohydratesAsGrams.roundToInt(),
+                        carbohydratesGoalGrams = carbsTarget.roundToInt(),
                         fatsGrams = totalFats,
-                        fatsGoalGrams = dailyGoals.fatsAsGrams.roundToInt(),
+                        fatsGoalGrams = fatsTarget.roundToInt(),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -171,9 +174,9 @@ private fun GoalsCardContent(
     carbsPercentage: Float,
     fatsPercentage: Float,
     modifier: Modifier = Modifier,
-    preference: NutritionFactsListPreference = userPreference()
+    preference: NutrientsOrderPreference = userPreference()
 ) {
-    val preferences by preference.collectAsStateWithLifecycle(preference.getBlocking())
+    val preferences by preference.collectAsStateWithLifecycleInitialBlock()
 
     val nutrientsPalette = LocalNutrientsPalette.current
 
@@ -252,9 +255,9 @@ private fun GoalsCardContent(
             modifier = Modifier.height(64.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            preferences.orderedEnabled.forEach { field ->
+            preferences.forEach { field ->
                 when (field) {
-                    NutritionFactsField.Proteins -> MacroBar(
+                    NutrientsOrder.Proteins -> MacroBar(
                         progress = proteinsPercentage,
                         containerColor = nutrientsPalette.proteinsOnSurfaceContainer.copy(
                             alpha = .25f
@@ -262,15 +265,7 @@ private fun GoalsCardContent(
                         barColor = nutrientsPalette.proteinsOnSurfaceContainer
                     )
 
-                    NutritionFactsField.Carbohydrates -> MacroBar(
-                        progress = carbsPercentage,
-                        containerColor = nutrientsPalette.carbohydratesOnSurfaceContainer.copy(
-                            alpha = .25f
-                        ),
-                        barColor = nutrientsPalette.carbohydratesOnSurfaceContainer
-                    )
-
-                    NutritionFactsField.Fats -> MacroBar(
+                    NutrientsOrder.Fats -> MacroBar(
                         progress = fatsPercentage,
                         containerColor = nutrientsPalette.fatsOnSurfaceContainer.copy(
                             alpha = .25f
@@ -278,7 +273,17 @@ private fun GoalsCardContent(
                         barColor = nutrientsPalette.fatsOnSurfaceContainer
                     )
 
-                    else -> Unit
+                    NutrientsOrder.Carbohydrates -> MacroBar(
+                        progress = carbsPercentage,
+                        containerColor = nutrientsPalette.carbohydratesOnSurfaceContainer.copy(
+                            alpha = .25f
+                        ),
+                        barColor = nutrientsPalette.carbohydratesOnSurfaceContainer
+                    )
+
+                    NutrientsOrder.Other,
+                    NutrientsOrder.Vitamins,
+                    NutrientsOrder.Minerals -> Unit
                 }
             }
         }
@@ -362,9 +367,9 @@ private fun ExpandedCardContent(
     fatsGrams: Int,
     fatsGoalGrams: Int,
     modifier: Modifier = Modifier,
-    preference: NutritionFactsListPreference = userPreference()
+    preference: NutrientsOrderPreference = userPreference()
 ) {
-    val preferences by preference.collectAsStateWithLifecycle(preference.getBlocking())
+    val preferences by preference.collectAsStateWithLifecycleInitialBlock()
 
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
@@ -419,14 +424,14 @@ private fun ExpandedCardContent(
     Column(
         modifier = modifier
     ) {
-        preferences.orderedEnabled.forEach { field ->
+        preferences.forEach {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                when (field) {
-                    NutritionFactsField.Proteins -> {
+                when (it) {
+                    NutrientsOrder.Proteins -> {
                         RoundedSquare(LocalNutrientsPalette.current.proteinsOnSurfaceContainer)
 
                         Text(
@@ -441,7 +446,7 @@ private fun ExpandedCardContent(
                         )
                     }
 
-                    NutritionFactsField.Carbohydrates -> {
+                    NutrientsOrder.Carbohydrates -> {
                         RoundedSquare(LocalNutrientsPalette.current.carbohydratesOnSurfaceContainer)
 
                         Text(
@@ -456,7 +461,7 @@ private fun ExpandedCardContent(
                         )
                     }
 
-                    NutritionFactsField.Fats -> {
+                    NutrientsOrder.Fats -> {
                         RoundedSquare(LocalNutrientsPalette.current.fatsOnSurfaceContainer)
 
                         Text(
@@ -471,7 +476,9 @@ private fun ExpandedCardContent(
                         )
                     }
 
-                    else -> Unit
+                    NutrientsOrder.Other,
+                    NutrientsOrder.Vitamins,
+                    NutrientsOrder.Minerals -> Unit
                 }
             }
         }

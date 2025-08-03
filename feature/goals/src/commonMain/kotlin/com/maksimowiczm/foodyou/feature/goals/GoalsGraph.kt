@@ -5,7 +5,6 @@ import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.core.model.FoodId
 import com.maksimowiczm.foodyou.core.navigation.crossfadeComposable
 import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.feature.goals.ui.cardsettings.GoalsCardSettings
 import com.maksimowiczm.foodyou.feature.goals.ui.screen.CaloriesScreen
 import com.maksimowiczm.foodyou.feature.goals.ui.settings.GoalsSettingsScreen
 import kotlinx.datetime.LocalDate

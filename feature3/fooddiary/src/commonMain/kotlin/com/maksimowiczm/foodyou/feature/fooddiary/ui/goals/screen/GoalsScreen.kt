@@ -59,7 +59,6 @@ import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
-import com.maksimowiczm.foodyou.feature.food.domain.Product
 import com.maksimowiczm.foodyou.feature.food.domain.sum
 import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
@@ -67,6 +66,7 @@ import com.maksimowiczm.foodyou.feature.food.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.feature.food.ui.stringResource
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.feature.fooddiary.domain.Meal
+import com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.GoalsViewModel
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlin.time.ExperimentalTime
@@ -75,6 +75,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -82,8 +83,8 @@ internal fun GoalsScreen(
     onBack: () -> Unit,
     onFoodClick: (FoodId) -> Unit,
     date: LocalDate,
-    viewModel: GoalsViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: GoalsViewModel = koinViewModel()
 ) {
     val dateFormatter = LocalDateFormatter.current
 
@@ -197,7 +198,6 @@ private fun GoalsPage(
             val incomplete = filteredMeals
                 .flatMap { it.food }
                 .map { it.food }
-                .filter { it is Product }
                 .filter { !it.nutritionFacts.isComplete }
 
             IncompleteFoodsList(
