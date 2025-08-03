@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.preferences.getBlocking
 import com.maksimowiczm.foodyou.core.preferences.userPreference
+import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.GoalsCard
@@ -84,7 +85,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues,
+            contentPadding = paddingValues.add(bottom = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(order) {
