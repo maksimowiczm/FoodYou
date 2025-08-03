@@ -134,10 +134,10 @@ interface FoodSearchDao {
                     AND rai.ingredientId = :excludedRecipeId
                 ))
         )
-        SELECT *
+        SELECT *, NULL AS measurementJson
         FROM ProductsSearch
         UNION ALL
-        SELECT *
+        SELECT *, NULL AS measurementJson
         FROM RecipesSearch
         ORDER BY headline ASC
         """
@@ -186,7 +186,7 @@ interface FoodSearchDao {
 
     @Query(
         """
-        SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT
+        SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT, NULL AS measurementJson
         FROM Product p
         WHERE
             p.barcode = :barcode AND
