@@ -31,8 +31,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "FoodYou"
-include(":feature:goals")
-
 include(":composeApp")
 include(":core3")
 include(":feature3:about")
