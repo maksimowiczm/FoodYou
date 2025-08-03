@@ -741,7 +741,7 @@ private fun NutrientGoal(
             Text(
                 text = label,
                 style = MaterialTheme.typography.titleMedium,
-                color = if (isExceeded) MaterialTheme.colorScheme.error else color
+                color = color
             )
             Text(
                 text = valueString,
@@ -751,9 +751,9 @@ private fun NutrientGoal(
 
         val progress by animateFloatAsState(
             targetValue = value / target.coerceAtLeast(.01f),
-            animationSpec = MaterialTheme.motionScheme.defaultEffectsSpec()
+            animationSpec = MaterialTheme.motionScheme.slowSpatialSpec()
         )
-        val trackColor by animateColorAsState(
+        val progressBarColor by animateColorAsState(
             if (progress > 1) MaterialTheme.colorScheme.error else trackColor
         )
 
@@ -762,7 +762,7 @@ private fun NutrientGoal(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp),
-            color = trackColor,
+            color = progressBarColor,
             trackColor = trackColor.copy(alpha = 0.25f),
             drawStopIndicator = {}
         )
