@@ -114,10 +114,6 @@ internal fun FoodSearchApp(
 
     val uiState = viewModel.state.collectAsStateWithLifecycle().value
 
-    if (uiState == null) {
-        return
-    }
-
     val appState = rememberFoodSearchAppState()
 
     FoodSearchApp(
@@ -146,7 +142,7 @@ private fun FoodSearchApp(
     onFoodClick: (FoodSearch, Measurement) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val pages = uiState.currentSourceState.collectAsLazyPagingItems()
+    val pages = uiState.currentSourceState?.collectAsLazyPagingItems()
     val shimmer = rememberShimmer(ShimmerBounds.View)
 
     FullScreenCameraBarcodeScanner(
@@ -193,8 +189,7 @@ private fun FoodSearchApp(
                 .padding(top = paddingValues.calculateTopPadding())
                 .onSizeChanged { topContentHeight = it.height }
                 .padding(vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SearchBar(
                 state = appState.searchBarState,
@@ -208,21 +203,25 @@ private fun FoodSearchApp(
                 shadowElevation = 2.dp
             )
 
-            FoodSearchFilters(
-                uiState = uiState,
-                onSource = onSourceChange,
-                modifier = Modifier
-                    .height(32.dp + 8.dp + 32.dp)
-                    .fillMaxWidth()
-            )
+            if (uiState.sources.isNotEmpty()) {
+                Spacer(Modifier.height(8.dp))
+                FoodSearchFilters(
+                    uiState = uiState,
+                    onSource = onSourceChange,
+                    modifier = Modifier
+                        .height(32.dp + 8.dp + 32.dp)
+                        .fillMaxWidth()
+                )
+            }
 
-            when (val ex = pages.loadState.error) {
+            when (val ex = pages?.loadState?.error) {
                 null -> Unit
 
                 is USDAException -> UsdaErrorCard(
                     error = ex,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(top = 8.dp)
                         .padding(horizontal = 16.dp)
                 )
 
@@ -231,6 +230,7 @@ private fun FoodSearchApp(
                     onRetry = pages::retry,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(top = 8.dp)
                         .padding(horizontal = 16.dp)
                 )
             }
@@ -242,7 +242,7 @@ private fun FoodSearchApp(
         )
 
         Box(Modifier.fillMaxSize().zIndex(20f)) {
-            if (pages.itemCount == 0 && pages.loadState.append !is LoadState.Loading) {
+            if (pages?.itemCount == 0 && pages.loadState.append !is LoadState.Loading) {
                 Text(
                     text = stringResource(Res.string.neutral_no_food_found),
                     modifier = Modifier
@@ -251,7 +251,7 @@ private fun FoodSearchApp(
                 )
             }
 
-            if (pages.delayedLoadingState()) {
+            if (pages?.delayedLoadingState() == true) {
                 ContainedLoadingIndicator(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
@@ -264,36 +264,44 @@ private fun FoodSearchApp(
             modifier = Modifier.fillMaxSize(),
             contentPadding = paddingValues
         ) {
-            items(
-                count = pages.itemCount,
-                key = pages.itemKey { it.id.toString() }
-            ) { i ->
-                val food = pages[i]
+            if (pages != null) {
+                items(
+                    count = pages.itemCount,
+                    key = pages.itemKey { it.id.toString() }
+                ) { i ->
+                    val food = pages[i]
 
-                when (food) {
-                    null -> FoodListItemSkeleton(shimmer)
-                    is FoodSearch.Product -> {
-                        val measurement = food.defaultMeasurement
-                        FoodSearchListItem(
-                            food = food,
-                            measurement = measurement,
-                            onClick = { onFoodClick(food, measurement) }
-                        )
+                    when (food) {
+                        null -> FoodListItemSkeleton(shimmer)
+                        is FoodSearch.Product -> {
+                            val measurement = food.defaultMeasurement
+                            FoodSearchListItem(
+                                food = food,
+                                measurement = measurement,
+                                onClick = { onFoodClick(food, measurement) }
+                            )
+                        }
+
+                        is FoodSearch.Recipe -> {
+                            val measurement = food.defaultMeasurement
+                            FoodSearchListItem(
+                                food = food,
+                                measurement = measurement,
+                                onClick = { onFoodClick(food, measurement) },
+                                shimmer = shimmer
+                            )
+                        }
                     }
+                }
 
-                    is FoodSearch.Recipe -> {
-                        val measurement = food.defaultMeasurement
-                        FoodSearchListItem(
-                            food = food,
-                            measurement = measurement,
-                            onClick = { onFoodClick(food, measurement) },
-                            shimmer = shimmer
-                        )
+                if (pages.loadState.append is LoadState.Loading) {
+                    items(10) {
+                        FoodListItemSkeleton(shimmer)
                     }
                 }
             }
 
-            if (pages.loadState.append is LoadState.Loading) {
+            if (pages == null) {
                 items(10) {
                     FoodListItemSkeleton(shimmer)
                 }
@@ -419,6 +427,7 @@ private fun FoodSearchFilters(
                 label = {
                     Text(source.stringResource())
                 },
+                modifier = Modifier.animateItem(),
                 leadingIcon = {
                     source.Icon(Modifier.size(FilterChipDefaults.IconSize))
                 },

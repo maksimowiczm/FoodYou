@@ -1,18 +1,20 @@
 package com.maksimowiczm.foodyou.feature.food.ui.search
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
 import kotlinx.coroutines.flow.Flow
 
+@Immutable
 internal data class FoodSearchUiState(
     val sources: Map<FoodFilter.Source, FoodSourceUiState>,
     val filter: FoodFilter,
     val recentSearches: List<String>
 ) {
-    val currentSourceState: FoodSourceUiState
-        get() = sources[filter.source] ?: error("No state for source: ${filter.source}")
+    val currentSourceState: FoodSourceUiState?
+        get() = sources[filter.source]
 }
 
 enum class RemoteStatus {
@@ -25,6 +27,7 @@ enum class RemoteStatus {
     }
 }
 
+@Immutable
 internal data class FoodSourceUiState(
     /**
      * Indicates whether the source is enabled for remote search

@@ -259,7 +259,11 @@ internal class FoodSearchViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(2_000),
-        initialValue = null
+        initialValue = FoodSearchUiState(
+            sources = emptyMap(),
+            filter = FoodFilter(),
+            recentSearches = emptyList()
+        )
     )
 
     private fun pager(
