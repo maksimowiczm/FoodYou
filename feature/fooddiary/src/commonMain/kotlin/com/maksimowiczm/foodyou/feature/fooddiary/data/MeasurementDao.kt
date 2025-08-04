@@ -80,21 +80,6 @@ interface MeasurementDao {
         limit: Int
     ): Flow<List<MeasurementSuggestion>>
 
-    @Transaction
-    @Query(
-        """
-        SELECT m.*
-        FROM Measurement m
-        LEFT JOIN Product p ON m.productId == p.id
-        LEFT JOIN Recipe r ON m.recipeId == r.id
-        WHERE 
-            m.mealId = :mealId 
-            AND m.epochDay = :epochDay 
-            AND m.isDeleted = 0
-        """
-    )
-    fun observeFoodWithMeasurement(mealId: Long, epochDay: Long): Flow<List<FoodWithMeasurement>>
-
     @Query(
         """
         SELECT m.*

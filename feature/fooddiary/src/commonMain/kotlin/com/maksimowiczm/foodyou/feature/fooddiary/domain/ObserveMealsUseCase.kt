@@ -5,10 +5,9 @@ import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.util.DateProvider
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
-import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
+import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
-import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodWithMeasurement as FoodWithMeasurementEntity
+import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement as MeasurementEntity
 import com.maksimowiczm.foodyou.feature.fooddiary.data.from
 import com.maksimowiczm.foodyou.feature.fooddiary.data.to
 import com.maksimowiczm.foodyou.feature.fooddiary.preferences.IgnoreAllDayMeals
@@ -36,8 +35,7 @@ internal fun interface ObserveMealsUseCase {
 
 internal class ObserveMealsUseCaseImpl(
     foodDiaryDatabase: FoodDiaryDatabase,
-    private val observeRecipeUseCase: ObserveRecipeUseCase,
-    private val productMapper: ProductMapper,
+    private val observeFoodUseCase: ObserveFoodUseCase,
     dataStore: DataStore<Preferences>,
     private val dateProvider: DateProvider
 ) : ObserveMealsUseCase {
@@ -55,11 +53,11 @@ internal class ObserveMealsUseCaseImpl(
             }
 
             meals.map { meal ->
-                measurementDao.observeFoodWithMeasurement(
+                measurementDao.observeMeasurements(
                     mealId = meal.id,
                     epochDay = date.toEpochDays()
-                ).flatMapLatest { food ->
-                    if (food.isEmpty()) {
+                ).flatMapLatest { measurements ->
+                    if (measurements.isEmpty()) {
                         flowOf(
                             Meal(
                                 id = meal.id,
@@ -71,7 +69,7 @@ internal class ObserveMealsUseCaseImpl(
                             )
                         )
                     } else {
-                        food.map { it.toFood() }.combine().map { food ->
+                        measurements.map { it.toFood() }.combine().map { food ->
                             Meal(
                                 id = meal.id,
                                 name = meal.name,
@@ -106,37 +104,33 @@ internal class ObserveMealsUseCaseImpl(
     }
 
     @OptIn(ExperimentalTime::class)
-    private fun FoodWithMeasurementEntity.toFood(): Flow<FoodWithMeasurement> {
+    private fun MeasurementEntity.toFood(): Flow<FoodWithMeasurement> {
         val date = Instant
-            .fromEpochSeconds(measurement.createdAt)
+            .fromEpochSeconds(createdAt)
             .toLocalDateTime(TimeZone.currentSystemDefault())
             .date
 
         return when {
-            product != null -> flowOf(
-                FoodWithMeasurement(
-                    measurementId = measurement.id,
-                    measurement = Measurement.from(
-                        measurement.measurement,
-                        measurement.quantity
-                    ),
-                    measurementDate = date,
-                    mealId = measurement.mealId,
-                    food = productMapper.toModel(product)
-                )
-            )
+            productId != null -> observeFoodUseCase.observe(FoodId.Product(productId))
+                .filterNotNull()
+                .map { product ->
+                    FoodWithMeasurement(
+                        measurementId = id,
+                        measurement = Measurement.from(measurement, quantity),
+                        measurementDate = date,
+                        mealId = mealId,
+                        food = product
+                    )
+                }
 
-            recipe != null -> observeRecipeUseCase(FoodId.Recipe(recipe.id))
+            recipeId != null -> observeFoodUseCase.observe(FoodId.Recipe(recipeId))
                 .filterNotNull()
                 .map { recipeModel ->
                     FoodWithMeasurement(
-                        measurementId = measurement.id,
-                        measurement = Measurement.from(
-                            measurement.measurement,
-                            measurement.quantity
-                        ),
+                        measurementId = id,
+                        measurement = Measurement.from(measurement, quantity),
                         measurementDate = date,
-                        mealId = measurement.mealId,
+                        mealId = mealId,
                         food = recipeModel
                     )
                 }
