@@ -11,12 +11,8 @@ import com.maksimowiczm.foodyou.feature.food.domain.CreateRecipeUseCaseImpl
 import com.maksimowiczm.foodyou.feature.food.domain.FoodEventMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodEventMapperImpl
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapper
-import com.maksimowiczm.foodyou.feature.food.domain.FoodSearchMapperImpl
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCaseImpl
-import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
-import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCaseImpl
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapper
 import com.maksimowiczm.foodyou.feature.food.domain.ProductMapperImpl
 import com.maksimowiczm.foodyou.feature.food.domain.RemoteProductMapper
@@ -45,11 +41,9 @@ val foodModule = module {
     viewModelOf(::UpdateProductViewModel)
 
     factoryOf(::ProductMapperImpl).bind<ProductMapper>()
-    factoryOf(::FoodSearchMapperImpl).bind<FoodSearchMapper>()
 
     viewModel { (excludedRecipeId: FoodId.Recipe?) ->
         FoodSearchViewModel(
-            get(),
             get(),
             get(),
             get(),
@@ -80,8 +74,6 @@ val foodModule = module {
 
     viewModelOf(::CreateRecipeViewModel)
     viewModelOf(::MeasureIngredientViewModel)
-
-    factoryOf(::ObserveRecipeUseCaseImpl).bind<ObserveRecipeUseCase>()
 
     viewModelOf(::UpdateRecipeViewModel)
 

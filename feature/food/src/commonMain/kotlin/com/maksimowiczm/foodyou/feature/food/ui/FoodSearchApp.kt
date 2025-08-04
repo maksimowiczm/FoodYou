@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.feature.food.ui.search.FoodSearchApp
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
 import foodyou.app.generated.resources.*
@@ -24,12 +23,14 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun FoodSearchApp(
-    onFoodClick: (FoodSearch, Measurement) -> Unit,
+    onFoodClick: (FoodId, Measurement) -> Unit,
     modifier: Modifier = Modifier,
     excludedRecipe: FoodId.Recipe? = null
 ) {
     FoodSearchApp(
-        onFoodClick = onFoodClick,
+        onFoodClick = { model, measurement ->
+            onFoodClick(model.id, measurement)
+        },
         excludedFood = excludedRecipe,
         modifier = modifier
     )

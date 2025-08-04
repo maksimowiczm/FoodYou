@@ -119,9 +119,7 @@ fun FoodSearchScreen(
     }
     val content: @Composable (PaddingValues) -> Unit = @Composable { paddingValues ->
         FoodSearchApp(
-            onFoodClick = { food, measurement ->
-                onFoodClick(food.id, measurement)
-            },
+            onFoodClick = onFoodClick,
             modifier = Modifier
                 .padding(paddingValues)
                 .consumeWindowInsets(paddingValues)

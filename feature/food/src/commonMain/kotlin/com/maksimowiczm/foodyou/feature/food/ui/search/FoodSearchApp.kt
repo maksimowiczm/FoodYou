@@ -83,7 +83,6 @@ import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.feature.food.ui.UsdaErrorCard
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement

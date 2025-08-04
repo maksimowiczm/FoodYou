@@ -190,8 +190,8 @@ internal fun RecipeApp(
                 )
             ) { paddingValues ->
                 FoodSearchApp(
-                    onFoodClick = { food, measurement ->
-                        navController.navigate(IngredientMeasurement(food.id, measurement)) {
+                    onFoodClick = { id, measurement ->
+                        navController.navigate(IngredientMeasurement(id, measurement)) {
                             launchSingleTop = true
                         }
                     },

@@ -11,8 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.feature.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.feature.food.domain.ObserveRecipeUseCase
+import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.weight
 import com.maksimowiczm.foodyou.feature.food.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItem
@@ -112,7 +111,7 @@ internal fun FoodSearchListItem(
 }
 
 /**
- * Recipe has to be lazy loaded, so we use [ObserveRecipeUseCase] to observe the recipe.
+ * Recipe has to be lazy loaded, so we use [ObserveFoodUseCase] to observe the recipe.
  */
 @Composable
 internal fun FoodSearchListItem(
@@ -121,9 +120,10 @@ internal fun FoodSearchListItem(
     onClick: () -> Unit,
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
-    observeRecipeUseCase: ObserveRecipeUseCase = koinInject()
+    observeFoodUseCase: ObserveFoodUseCase = koinInject()
 ) {
-    val recipe = observeRecipeUseCase(food.id).collectAsStateWithLifecycle(null).value
+    val recipe = observeFoodUseCase.observe(food.id)
+        .collectAsStateWithLifecycle(null).value
 
     if (recipe == null) {
         return FoodListItemSkeleton(shimmer)
