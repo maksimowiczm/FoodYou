@@ -6,7 +6,7 @@ import com.maksimowiczm.foodyou.feature.food.data.database.food.Product as Produ
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Vitamins
 import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue.Companion.toNutrientValue
 
-interface ProductMapper {
+internal interface ProductMapper {
     fun toModel(entity: ProductEntity): Product
 
     fun toModel(nutrients: Nutrients, vitamins: Vitamins, minerals: Minerals): NutritionFacts

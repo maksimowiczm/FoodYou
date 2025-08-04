@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.feature.measurement.domain.type
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDateTime
 
-interface UpdateRecipeUseCase {
+internal interface UpdateRecipeUseCase {
     suspend fun update(
         id: FoodId.Recipe,
         name: String,
@@ -23,7 +23,7 @@ interface UpdateRecipeUseCase {
 internal class UpdateRecipeUseCaseImpl(
     foodDatabase: FoodDatabase,
     private val foodEventMapper: FoodEventMapper,
-    private val observeRecipeUseCase: ObserveRecipeUseCase
+    private val observeFoodUseCase: ObserveFoodUseCase
 ) : UpdateRecipeUseCase {
 
     private val recipeDao = foodDatabase.recipeDao
@@ -41,7 +41,7 @@ internal class UpdateRecipeUseCaseImpl(
             error("Recipe cannot contain itself as an ingredient.")
         }
 
-        val oldDomainRecipe = observeRecipeUseCase.observe(id).firstOrNull()
+        val oldDomainRecipe = observeFoodUseCase.observe(id).firstOrNull()
         val oldRecipe = recipeDao.observe(id.id).firstOrNull()
 
         if (oldRecipe == null || oldDomainRecipe == null) {

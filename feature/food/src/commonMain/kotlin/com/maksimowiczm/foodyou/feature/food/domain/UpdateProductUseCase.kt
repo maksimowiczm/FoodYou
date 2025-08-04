@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDateTime
 
-interface UpdateProductUseCase {
+internal interface UpdateProductUseCase {
     suspend fun update(
         id: FoodId.Product,
         name: String,

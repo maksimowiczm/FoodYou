@@ -5,7 +5,7 @@ import com.maksimowiczm.foodyou.feature.food.data.database.food.Nutrients
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Product
 import com.maksimowiczm.foodyou.feature.food.data.database.food.Vitamins
 
-interface RemoteProductMapper {
+internal interface RemoteProductMapper {
 
     /**
      * Maps a [RemoteProduct] to a [Product] entity.
