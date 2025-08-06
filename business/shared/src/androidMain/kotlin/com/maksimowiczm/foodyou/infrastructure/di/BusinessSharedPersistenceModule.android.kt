@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase.Companion.buildDatabase
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.InitializeMealsCallback
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.definition.KoinDefinition
@@ -25,6 +26,6 @@ actual val databaseDefinition: Module.() -> KoinDefinition<FoodYouDatabase> = {
             builder.openHelperFactory(RequerySQLiteOpenHelperFactory())
         }
 
-        builder.buildDatabase()
+        builder.buildDatabase(InitializeMealsCallback(get()))
     }
 }

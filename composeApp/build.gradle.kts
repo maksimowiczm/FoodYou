@@ -61,6 +61,7 @@ kotlin {
             implementation(project(":shared:common"))
             implementation(project(":business:food"))
             implementation(project(":business:shared"))
+            implementation(project(":business:fooddiary"))
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)

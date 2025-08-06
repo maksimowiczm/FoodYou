@@ -7,14 +7,15 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     config?.invoke(this)
 
     modules(
-//        databaseModule,
         dataStoreModule
     )
 
     modules(
         sharedModule,
         businessFoodModule,
-        businessSharedPersistenceModule
+        businessFoodDiaryModule,
+        businessSharedPersistenceModule,
+        localDatabaseModule
     )
 
     modules(

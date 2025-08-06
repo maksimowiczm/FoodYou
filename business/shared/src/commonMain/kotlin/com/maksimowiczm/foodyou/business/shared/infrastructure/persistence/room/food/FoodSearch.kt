@@ -1,6 +1,9 @@
 package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food
 
 import androidx.room.Embedded
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.Minerals
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.Nutrients
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.Vitamins
 
 data class FoodSearch(
     val productId: Long?,

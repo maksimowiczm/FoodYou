@@ -41,7 +41,6 @@ kotlin {
             implementation(project(":feature:usda"))
             implementation(libs.koin.core)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.kotlinx.datetime)

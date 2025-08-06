@@ -1,15 +1,17 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room
 
 import com.maksimowiczm.foodyou.business.food.domain.FoodId
-import com.maksimowiczm.foodyou.business.food.domain.Measurement
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.RecipeIngredient
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRecipeDataSource
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.MeasurementType
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeIngredientEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.MeasurementType
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityType
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -126,22 +128,6 @@ private fun Recipe.toEntity(): RecipeEntity =
         note = this.note,
         isLiquid = this.isLiquid,
     )
-
-private fun Measurement.toEntityType(): MeasurementType =
-    when (this) {
-        is Measurement.Gram -> MeasurementType.Gram
-        is Measurement.Milliliter -> MeasurementType.Milliliter
-        is Measurement.Package -> MeasurementType.Package
-        is Measurement.Serving -> MeasurementType.Serving
-    }
-
-private fun Measurement.toEntityValue(): Double =
-    when (this) {
-        is Measurement.Gram -> this.value
-        is Measurement.Milliliter -> this.value
-        is Measurement.Package -> this.quantity
-        is Measurement.Serving -> this.quantity
-    }
 
 private val RecipeIngredientEntity.foodId: FoodId
     get() =

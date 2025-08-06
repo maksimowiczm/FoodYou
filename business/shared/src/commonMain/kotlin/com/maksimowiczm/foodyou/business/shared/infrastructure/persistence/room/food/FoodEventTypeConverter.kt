@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room
 import androidx.room.TypeConverter
 
 @Suppress("unused")
-class FoodEventTypeConverter {
+internal class FoodEventTypeConverter {
     @TypeConverter
     fun fromFoodEventType(type: FoodEventType): Int =
         when (type) {
@@ -26,7 +26,7 @@ class FoodEventTypeConverter {
         }
 }
 
-object FoodEventTypeSQLConstants {
+internal object FoodEventTypeSQLConstants {
     const val CREATED = 0
     const val DOWNLOADED = 1
     const val IMPORTED = 2

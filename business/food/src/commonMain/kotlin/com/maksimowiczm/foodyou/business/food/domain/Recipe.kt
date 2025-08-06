@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
+import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
+import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
+
 data class Recipe(
     override val id: FoodId.Recipe,
     val name: String,
