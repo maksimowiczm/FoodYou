@@ -158,7 +158,7 @@ private fun CalendarCardDatePickerDialog(
                         calendarState.onDateSelect(
                             date = Instant
                                 .fromEpochMilliseconds(it)
-                                .toLocalDateTime(TimeZone.currentSystemDefault())
+                                .toLocalDateTime(TimeZone.UTC)
                                 .date,
                             scroll = true
                         )
