@@ -51,7 +51,7 @@ internal fun ChipsDatePicker(state: ChipsDatePickerState, modifier: Modifier = M
                     onClick = {
                         datePickerState.selectedDateMillis
                             ?.let(Instant::fromEpochMilliseconds)
-                            ?.toLocalDateTime(TimeZone.currentSystemDefault())?.date
+                            ?.toLocalDateTime(TimeZone.UTC)?.date
                             ?.let(state::addAndSelect)
 
                         showDatePicker = false
