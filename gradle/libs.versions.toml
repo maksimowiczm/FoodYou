@@ -2,7 +2,7 @@
 version-name = "3.0.0-beta.2"
 android-versionCode = "100"
 android-compileSdk = "36"
-android-minSdk = "24"
+android-minSdk = "26"
 android-targetSdk = "36"
 
 accompanistPermissions = "0.37.3"
@@ -60,6 +60,7 @@ desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref 
 jetbrains-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version = "1.9.0-alpha04" }
 gradle-android = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+gradle-compose= { group = "org.jetbrains.compose", name = "org.jetbrains.compose.gradle.plugin", version.ref = "composeMultiplatform" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
@@ -93,6 +94,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
 business = { id = "com.maksimowiczm.foodyou.plugins.libraries.business" }
+feature = { id = "com.maksimowiczm.foodyou.plugins.libraries.feature" }
 
 [bundles]
 business-library-implementation = [
@@ -100,4 +102,8 @@ business-library-implementation = [
     "kotlinx-coroutines-core",
     "kotlinx-datetime",
     "androidx-datastore-preferences-core"
+]
+
+feature-library-implementation = [
+    "koin-compose"
 ]

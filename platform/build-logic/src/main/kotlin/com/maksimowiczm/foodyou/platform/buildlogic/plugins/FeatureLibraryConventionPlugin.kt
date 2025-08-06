@@ -1,31 +1,40 @@
 package com.maksimowiczm.foodyou.platform.buildlogic.plugins
 
 import com.android.build.api.dsl.androidLibrary
+import kotlin.apply
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.jetbrains.compose.ComposeExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-internal class BusinessLibraryConventionPlugin : Plugin<Project> {
+internal class FeatureLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
-
         with(target) {
             apply(plugin = libs.findPlugin("kotlinMultiplatform").get().get().pluginId)
             apply(
                 plugin =
                     libs.findPlugin("android.kotlin.multiplatform.library").get().get().pluginId
             )
+            apply(plugin = libs.findPlugin("composeMultiplatform").get().get().pluginId)
+            apply(plugin = libs.findPlugin("composeCompiler").get().get().pluginId)
         }
 
         target.extensions.configure<KotlinMultiplatformExtension> {
-            target.configureKotlinMultiplatform(this)
+            val kmp = this
+            target.extensions.configure<ComposeExtension> {
+                target.configureKotlinMultiplatform(kmp, this)
+            }
         }
     }
 
-    internal fun Project.configureKotlinMultiplatform(extension: KotlinMultiplatformExtension) =
-        extension.apply {
-            androidLibrary {
+    internal fun Project.configureKotlinMultiplatform(
+        kmp: KotlinMultiplatformExtension,
+        compose: ComposeExtension,
+    ) =
+        kmp.apply {
+            kmp.androidLibrary {
                 compileSdk = libs.findVersion("android.compileSdk").get().requiredVersion.toInt()
                 minSdk = libs.findVersion("android.minSdk").get().requiredVersion.toInt()
 
@@ -37,9 +46,18 @@ internal class BusinessLibraryConventionPlugin : Plugin<Project> {
 
             sourceSets.apply {
                 commonMain.dependencies {
-                    implementation(libs.findBundle("business.library.implementation").get())
                     implementation(project(":shared:common"))
-                    implementation(project(":business:shared"))
+                    implementation(project(":shared:ui"))
+
+                    implementation(libs.findBundle("feature.library.implementation").get())
+
+                    implementation(compose.dependencies.runtime)
+                    implementation(compose.dependencies.foundation)
+                    // implementation(compose.dependencies.material3)
+                    implementation(libs.findLibrary("jetbrains.compose.material3").get())
+                    implementation(compose.dependencies.materialIconsExtended)
+                    implementation(compose.dependencies.ui)
+                    implementation(compose.dependencies.components.resources)
                 }
 
                 commonTest.dependencies { implementation(libs.findLibrary("kotlin.test").get()) }
