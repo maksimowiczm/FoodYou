@@ -45,3 +45,7 @@ include(":feature:usda")
 include(":feature:swissfoodcompositiondatabase")
 include(":feature:onboarding")
 include(":feature:importexport")
+
+include(":shared:common")
+include(":business:shared")
+include(":business:food")

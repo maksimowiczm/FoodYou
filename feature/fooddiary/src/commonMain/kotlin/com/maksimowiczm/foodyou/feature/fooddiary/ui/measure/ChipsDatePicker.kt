@@ -23,9 +23,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.ext.minus
-import com.maksimowiczm.foodyou.core.ext.now
-import com.maksimowiczm.foodyou.core.ext.plus
+import com.maksimowiczm.foodyou.shared.common.date.minus
+import com.maksimowiczm.foodyou.shared.common.date.now
+import com.maksimowiczm.foodyou.shared.common.date.plus
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.days

@@ -39,11 +39,11 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ext.now
 import com.maksimowiczm.foodyou.core.ui.FoodYouHomeCard
 import com.maksimowiczm.foodyou.core.ui.HomeState
 import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
 import com.maksimowiczm.foodyou.core.util.DateProvider
+import com.maksimowiczm.foodyou.shared.common.date.now
 import foodyou.app.generated.resources.*
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant

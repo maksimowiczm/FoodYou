@@ -62,6 +62,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core"))
+            implementation(project(":shared:common"))
 
             implementation(project(":feature:measurement"))
             implementation(project(":feature:barcodescanner"))

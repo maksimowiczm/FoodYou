@@ -39,6 +39,11 @@
         sha256 = "196a8aed6ca2bde9c02efeb13672881d99c733b3606fe65fe87a241655bb5d31";
       };
 
+      ktfmtJar = pkgs.fetchurl {
+        url = "https://github.com/facebook/ktfmt/releases/download/v0.56/ktfmt-0.56-with-dependencies.jar";
+        sha256 = "49b6b92baf2fc22562a96ba9522bd9eddc0f79706af830fbea0b2a159d57900c";
+      };
+
       pythonEnv = pkgs.python3.withPackages (ps: with ps; [ pandas openpyxl ]);
     in
     {
@@ -54,6 +59,7 @@
           ktlint_1_6_0.legacyPackages.${system}.ktlint
         ];
 
+        KTFMT_JAR = "${ktfmtJar}";
         KTLINT_COMPOSE_JAR = "${ktlintComposeJar}";
         ANDROID_HOME = "${androidComposition.androidsdk}/libexec/android-sdk";
         ANDROID_SDK_ROOT = "${androidComposition.androidsdk}/libexec/android-sdk";

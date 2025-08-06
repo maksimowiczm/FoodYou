@@ -3,7 +3,7 @@ package com.maksimowiczm.foodyou.feature.fooddiary.ui.measure
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.core.util.DateProvider
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodEventMapper

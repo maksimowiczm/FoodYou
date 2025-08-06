@@ -65,6 +65,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
 
+            api(project(":shared:common"))
+
             // Compose
             api(compose.runtime)
             api(compose.foundation)

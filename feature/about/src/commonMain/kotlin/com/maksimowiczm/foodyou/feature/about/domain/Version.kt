@@ -3,12 +3,8 @@ package com.maksimowiczm.foodyou.feature.about.domain
 import FoodYou.feature.about.BuildConfig
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.maksimowiczm.foodyou.core.ext.now
-import foodyou.app.generated.resources.Res
-import foodyou.app.generated.resources.changelog_bug_fixes
-import foodyou.app.generated.resources.changelog_changes
-import foodyou.app.generated.resources.changelog_new_features
-import foodyou.app.generated.resources.changelog_translations
+import com.maksimowiczm.foodyou.shared.common.date.now
+import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 
@@ -63,7 +59,7 @@ data class Version(
             notes: String?
         ) = Version(
             version = "next",
-            date = LocalDate.Companion.now(),
+            date = LocalDate.now(),
             newFeatures = newFeatures,
             changes = changes,
             bugFixes = bugFixes,

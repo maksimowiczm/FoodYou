@@ -2,7 +2,7 @@ package com.maksimowiczm.foodyou.feature.food.ui.recipe.create
 
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.feature.food.domain.CreateRecipeUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase

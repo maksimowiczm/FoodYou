@@ -1,0 +1,93 @@
+package com.maksimowiczm.foodyou.business.food.application.command
+
+import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
+import com.maksimowiczm.foodyou.business.food.domain.FoodId
+import com.maksimowiczm.foodyou.business.food.domain.Measurement
+import com.maksimowiczm.foodyou.business.food.domain.Recipe
+import com.maksimowiczm.foodyou.business.food.domain.RecipeIngredient
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRecipeDataSource
+import com.maksimowiczm.foodyou.business.shared.domain.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
+import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
+import com.maksimowiczm.foodyou.shared.common.domain.result.Result
+import kotlin.reflect.KClass
+import kotlinx.coroutines.flow.firstOrNull
+
+data class CreateRecipeCommand(
+    val name: String,
+    val servings: Int,
+    val note: String?,
+    val isLiquid: Boolean,
+    val ingredients: List<Pair<FoodId, Measurement>>,
+    val event: FoodEvent.FoodCreationEvent,
+) : Command
+
+sealed interface CreateRecipeError {
+    data class IngredientNotFound(val foodId: FoodId) : CreateRecipeError
+
+    data object CircularIngredient : CreateRecipeError
+}
+
+internal class CreateRecipeCommandHandler(
+    private val recipeDataSource: LocalRecipeDataSource,
+    private val productDataSource: LocalProductDataSource,
+    private val eventDataSource: LocalFoodEventDataSource,
+) : CommandHandler<CreateRecipeCommand, FoodId.Recipe, CreateRecipeError> {
+
+    override val commandType: KClass<CreateRecipeCommand> = CreateRecipeCommand::class
+
+    override suspend fun handle(
+        command: CreateRecipeCommand
+    ): Result<FoodId.Recipe, CreateRecipeError> {
+        if (command.ingredients.any { (foodId, _) -> foodId is FoodId.Recipe }) {
+            return ErrorLoggingUtils.logAndReturnFailure(
+                tag = TAG,
+                throwable = null,
+                error = CreateRecipeError.CircularIngredient,
+                message = { "Recipe cannot contain itself as an ingredient." },
+            )
+        }
+
+        val ingredients =
+            command.ingredients.map { (foodId, measurement) ->
+                val food =
+                    when (foodId) {
+                        is FoodId.Product -> productDataSource.observeProduct(foodId).firstOrNull()
+                        is FoodId.Recipe -> recipeDataSource.observeRecipe(foodId).firstOrNull()
+                    }
+
+                if (food == null) {
+                    return ErrorLoggingUtils.logAndReturnFailure(
+                        tag = TAG,
+                        throwable = null,
+                        error = CreateRecipeError.IngredientNotFound(foodId),
+                        message = { "Ingredient with ID $foodId not found." },
+                    )
+                }
+
+                RecipeIngredient(food, measurement)
+            }
+
+        val recipe =
+            Recipe(
+                id = FoodId.Recipe(0L),
+                name = command.name,
+                servings = command.servings,
+                note = command.note,
+                isLiquid = command.isLiquid,
+                ingredients = ingredients,
+            )
+
+        val recipeId = recipeDataSource.insertRecipe(recipe)
+        eventDataSource.insert(recipeId, command.event)
+
+        return Ok(recipeId)
+    }
+
+    private companion object {
+        private const val TAG = "CreateRecipeCommandHandler"
+    }
+}

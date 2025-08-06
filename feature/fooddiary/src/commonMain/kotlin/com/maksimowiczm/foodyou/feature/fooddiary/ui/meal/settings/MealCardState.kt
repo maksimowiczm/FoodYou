@@ -10,7 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.core.ui.ext.Saver
 import com.maksimowiczm.foodyou.core.ui.form.FormField
 import com.maksimowiczm.foodyou.core.ui.form.nonBlankStringValidator

@@ -12,7 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
-import com.maksimowiczm.foodyou.feature.food.ui.CreateProductScreen
+//import com.maksimowiczm.foodyou.feature.food.ui.CreateProductScreen
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.runBlocking
@@ -69,11 +69,11 @@ private fun ShareProductApp(text: String?, onBack: () -> Unit, onCreate: () -> U
             if (text == null) {
                 Spacer(Modifier.fillMaxSize())
             } else {
-                CreateProductScreen(
-                    url = text,
-                    onBack = onBack,
-                    onCreate = { onCreate() }
-                )
+//                CreateProductScreen(
+//                    url = text,
+//                    onBack = onBack,
+//                    onCreate = { onCreate() }
+//                )
             }
         }
     }

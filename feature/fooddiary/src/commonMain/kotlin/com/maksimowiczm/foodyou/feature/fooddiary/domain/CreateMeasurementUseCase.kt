@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.fooddiary.domain
 
-import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.feature.food.domain.FoodEventMapper

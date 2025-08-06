@@ -7,20 +7,26 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     config?.invoke(this)
 
     modules(
-        databaseModule,
+//        databaseModule,
         dataStoreModule
+    )
+
+    modules(
+        sharedModule,
+        businessFoodModule,
+        businessSharedPersistenceModule
     )
 
     modules(
         aboutModule,
         coreModule,
-        foodModule,
-        foodDiaryModule,
-        importExportModule,
+//        foodModule,
+//        foodDiaryModule,
+//        importExportModule,
         languageModule,
-        onboardingModule,
+//        onboardingModule,
         openFoodFactsModule,
-        swissFoodCompositionDatabaseModule,
+//        swissFoodCompositionDatabaseModule,
         usdaModule
     )
 }

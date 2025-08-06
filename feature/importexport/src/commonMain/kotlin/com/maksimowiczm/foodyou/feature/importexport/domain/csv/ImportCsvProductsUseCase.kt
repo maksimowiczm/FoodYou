@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.feature.importexport.domain.csv
 
-import com.maksimowiczm.foodyou.core.ext.now
+import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.feature.food.domain.CreateProductUseCase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.feature.food.domain.FoodSource

@@ -27,8 +27,6 @@ import com.maksimowiczm.foodyou.core.preferences.userPreference
 import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.rememberHomeState
 import com.maksimowiczm.foodyou.feature.calendar.CalendarCard
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.GoalsCard
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.MealsCards
 import com.maksimowiczm.foodyou.preferences.HomeCard
 import com.maksimowiczm.foodyou.preferences.HomeCardsOrder
 import foodyou.app.generated.resources.Res
@@ -95,20 +93,9 @@ fun HomeScreen(
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
 
-                    HomeCard.Goals -> GoalsCard(
-                        homeState = homeState,
-                        onClick = goalsCardOnClick,
-                        onLongClick = goalsCardOnLongClick,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
+                    HomeCard.Goals -> Unit
 
-                    HomeCard.Meals -> MealsCards(
-                        homeState = homeState,
-                        onAdd = mealCardOnAdd,
-                        onEditMeasurement = mealCardOnEditMeasurement,
-                        onLongClick = mealCardOnLongClick,
-                        contentPadding = PaddingValues(horizontal = 8.dp)
-                    )
+                    HomeCard.Meals -> Unit
                 }
             }
         }

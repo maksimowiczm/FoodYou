@@ -57,6 +57,11 @@ kotlin {
         }
 
         commonMain.dependencies {
+
+            implementation(project(":shared:common"))
+            implementation(project(":business:food"))
+            implementation(project(":business:shared"))
+
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
@@ -65,16 +70,16 @@ kotlin {
 
             implementation(project(":core"))
             implementation(project(":feature:about"))
-            implementation(project(":feature:food"))
+//            implementation(project(":feature:food"))
             implementation(project(":feature:measurement"))
-            implementation(project(":feature:fooddiary"))
+//            implementation(project(":feature:fooddiary"))
             implementation(project(":feature:openfoodfacts"))
             implementation(project(":feature:calendar"))
             implementation(project(":feature:language"))
             implementation(project(":feature:usda"))
-            implementation(project(":feature:onboarding"))
-            implementation(project(":feature:importexport"))
-            implementation(project(":feature:swissfoodcompositiondatabase"))
+//            implementation(project(":feature:onboarding"))
+//            implementation(project(":feature:importexport"))
+//            implementation(project(":feature:swissfoodcompositiondatabase"))
 
             implementation(libs.kotlinx.serialization.json)
         }
