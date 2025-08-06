@@ -10,9 +10,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import co.touchlab.kermit.Logger
-import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
-//import com.maksimowiczm.foodyou.feature.food.ui.CreateProductScreen
+import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.ui.theme.FoodYouTheme
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import kotlinx.coroutines.runBlocking
@@ -55,10 +54,14 @@ class ShareProductActivity : FoodYouAbstractActivity() {
         if (newText != null) {
             sharedText.value = newText
         } else {
-            Logger.e("No text found in intent")
+            FoodYouLogger.e(TAG) { "No text found in intent" }
             val error = runBlocking { getStringRes(Res.string.error_unknown_error) }
             Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         }
+    }
+
+    private companion object {
+        const val TAG = "ShareProductActivity"
     }
 }
 

@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.core.preferences.userPreference
-import com.maksimowiczm.foodyou.core.util.SystemDetails
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.system.SystemDetails
 import com.maksimowiczm.foodyou.feature.language.preferences.ShowTranslationWarning
 import java.util.Locale
 import kotlinx.coroutines.launch

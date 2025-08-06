@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.os.Bundle
-import com.maksimowiczm.foodyou.core.ui.theme.FoodYouTheme
+import com.maksimowiczm.foodyou.shared.ui.theme.FoodYouTheme
 import com.maksimowiczm.foodyou.ui.crashreport.CrashReportScreen
 
 class CrashReportActivity : FoodYouAbstractActivity() {

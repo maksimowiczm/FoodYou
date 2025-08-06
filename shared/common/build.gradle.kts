@@ -5,6 +5,8 @@ plugins {
 }
 
 kotlin {
+    sourceSets.all { languageSettings.enableLanguageFeature("ExpectActualClasses") }
+
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.shared.common"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -40,5 +42,7 @@ kotlin {
         }
 
         commonTest { dependencies { implementation(libs.kotlin.test) } }
+
+        androidMain.dependencies { implementation(libs.androidx.appcompat) }
     }
 }

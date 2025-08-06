@@ -7,11 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.lifecycleScope
-import com.maksimowiczm.foodyou.core.ui.utils.AndroidClipboardManager
-import com.maksimowiczm.foodyou.core.ui.utils.AndroidDateFormatter
-import com.maksimowiczm.foodyou.core.ui.utils.ClipboardManagerProvider
-import com.maksimowiczm.foodyou.core.ui.utils.DateFormatterProvider
 import com.maksimowiczm.foodyou.preferences.HideContent
+import com.maksimowiczm.foodyou.shared.ui.utils.AndroidClipboardManager
+import com.maksimowiczm.foodyou.shared.ui.utils.AndroidDateFormatter
+import com.maksimowiczm.foodyou.shared.ui.utils.ClipboardManagerProvider
+import com.maksimowiczm.foodyou.shared.ui.utils.DateFormatterProvider
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
@@ -45,15 +45,16 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     }
 
     private suspend fun observeShowContentSecurity() {
-        HideContent(get())
-            .observe()
-            .filterNotNull()
-            .collectLatest {
-                if (it) {
-                    window.setFlags(FLAG_SECURE, FLAG_SECURE)
-                } else {
-                    window.clearFlags(FLAG_SECURE)
-                }
-            }
+        // TODO
+//        HideContent(get())
+//            .observe()
+//            .filterNotNull()
+//            .collectLatest {
+//                if (it) {
+//                    window.setFlags(FLAG_SECURE, FLAG_SECURE)
+//                } else {
+//                    window.clearFlags(FLAG_SECURE)
+//                }
+//            }
     }
 }

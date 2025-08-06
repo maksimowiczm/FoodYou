@@ -51,9 +51,21 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core"))
+            implementation(projects.shared.common)
+            implementation(projects.shared.ui)
 
-            implementation(libs.androidx.room.runtime)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            // implementation(compose.material3)
+            implementation(libs.jetbrains.compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(libs.navigation.compose)
+
+            implementation(libs.koin.compose)
+
+            implementation(libs.kotlinx.datetime)
         }
 
         commonTest.dependencies {

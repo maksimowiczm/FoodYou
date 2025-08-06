@@ -4,24 +4,6 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.gmazzo.buildconfig)
-}
-
-buildConfig {
-    val versionName = libs.versions.version.name.get()
-
-    val feedbackEmail = "maksimowicz.dev@gmail.com"
-    val feedbackEmailUri =
-        "mailto:$feedbackEmail?subject=Food You Feedback&body=Food You Version: $versionName\\n"
-
-    buildConfigField("String", "FEEDBACK_EMAIL_URI", "\"$feedbackEmailUri\"")
-    buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
-
-    val sponsorApiUrl = "https://sponsors.foodyou.maksimowiczm.com"
-    buildConfigField("String", "SPONSOR_API_URL", "\"$sponsorApiUrl\"")
-
-    val sponsorApiUserAgent = "Food You/$versionName"
-    buildConfigField("String", "SPONSOR_API_USER_AGENT", "\"$sponsorApiUserAgent\"")
 }
 
 kotlin {
@@ -74,18 +56,10 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core"))
-
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.paging)
+            implementation(projects.shared.common)
+            implementation(projects.shared.ui)
 
             implementation(libs.kotlinx.serialization.json)
-
-            // Ktor
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.serialization.kotlinx.json)
-
             implementation(libs.compose.shimmer)
         }
 
@@ -93,20 +67,10 @@ kotlin {
             implementation(libs.kotlin.test)
         }
 
-        androidMain.dependencies {
-
-            // Ktor
-            implementation(libs.ktor.client.okhttp)
-        }
-
         getByName("androidDeviceTest").dependencies {
             implementation(libs.androidx.runner)
             implementation(libs.androidx.core)
             implementation(libs.androidx.junit)
-        }
-
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
         }
     }
 }

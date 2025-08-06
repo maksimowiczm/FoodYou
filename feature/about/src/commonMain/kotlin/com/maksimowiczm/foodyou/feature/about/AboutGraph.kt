@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.feature.about
 
 import androidx.navigation.NavGraphBuilder
-import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
 import com.maksimowiczm.foodyou.feature.about.ui.AboutScreen
 import com.maksimowiczm.foodyou.feature.about.ui.SponsorMessagesScreen
 import com.maksimowiczm.foodyou.feature.about.ui.SponsorScreen
+import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -54,11 +54,14 @@ kotlin {
             implementation(libs.androidx.appcompat)
 
             implementation(libs.sqlite.android)
+            implementation(libs.koin.android)
         }
 
         commonMain.dependencies {
 
             implementation(projects.shared.common)
+            implementation(projects.shared.ui)
+
             implementation(projects.business.shared)
             implementation(projects.business.food)
             implementation(projects.business.fooddiary)
@@ -72,13 +75,24 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)
 
-            implementation(project(":core"))
-            implementation(project(":feature:about"))
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            // implementation(compose.material3)
+            implementation(libs.jetbrains.compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(libs.navigation.compose)
+
+            implementation(libs.koin.compose)
+
+//            implementation(project(":core"))
+//            implementation(project(":feature:about"))
 //            implementation(project(":feature:food"))
-            implementation(project(":feature:measurement"))
+//            implementation(project(":feature:measurement"))
 //            implementation(project(":feature:fooddiary"))
             implementation(project(":feature:calendar"))
-            implementation(project(":feature:language"))
+//            implementation(project(":feature:language"))
 //            implementation(project(":feature:onboarding"))
 //            implementation(project(":feature:importexport"))
 //            implementation(project(":feature:swissfoodcompositiondatabase"))

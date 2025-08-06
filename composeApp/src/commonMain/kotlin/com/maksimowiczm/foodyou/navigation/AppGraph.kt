@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.navigation
 
 import androidx.navigation.NavGraphBuilder
-import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
 //import com.maksimowiczm.foodyou.feature.food.ui.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.ui.home.HomeScreen
 import com.maksimowiczm.foodyou.ui.personalization.HomePersonalizationScreen

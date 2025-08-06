@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.maksimowiczm.foodyou.shared.common.date.now
-import com.maksimowiczm.foodyou.core.util.DateProvider
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.feature.food.data.database.FoodDatabase
 import com.maksimowiczm.foodyou.feature.food.domain.FoodEventMapper
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId

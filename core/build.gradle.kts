@@ -123,9 +123,3 @@ kotlin {
         }
     }
 }
-
-compose.resources {
-    publicResClass = true
-    packageOfResClass = "foodyou.app.generated.resources"
-    generateResClass = always
-}

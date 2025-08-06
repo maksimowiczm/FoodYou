@@ -11,7 +11,7 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     )
 
     modules(
-        sharedModule,
+        sharedCommonModule,
         businessFoodModule,
         businessFoodDiaryModule,
         businessSharedPersistenceModule,
@@ -20,7 +20,6 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
 
     modules(
         aboutModule,
-        coreModule,
 //        foodModule,
 //        foodDiaryModule,
 //        importExportModule,

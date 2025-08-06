@@ -3,13 +3,11 @@ package com.maksimowiczm.foodyou.feature.fooddiary.domain
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.core.preferences.userPreference
-import com.maksimowiczm.foodyou.core.util.DateProvider
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.fooddiary.data.FoodDiaryDatabase
 import com.maksimowiczm.foodyou.feature.fooddiary.data.Measurement as MeasurementEntity
-import com.maksimowiczm.foodyou.feature.fooddiary.data.from
-import com.maksimowiczm.foodyou.feature.fooddiary.data.to
 import com.maksimowiczm.foodyou.feature.fooddiary.preferences.IgnoreAllDayMeals
 import com.maksimowiczm.foodyou.feature.fooddiary.preferences.UseTimeBasedSorting
 import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
