@@ -20,11 +20,11 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     )
 
     modules(
-        aboutModule,
+//        aboutModule,
 //        foodModule,
 //        foodDiaryModule,
 //        importExportModule,
-        languageModule,
+//        languageModule,
 //        onboardingModule,
         openFoodFactsModule,
 //        swissFoodCompositionDatabaseModule,

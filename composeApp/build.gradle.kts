@@ -62,6 +62,8 @@ kotlin {
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
 
+            implementation(projects.navigation)
+
             implementation(projects.business.shared)
             implementation(projects.business.food)
             implementation(projects.business.fooddiary)
@@ -76,6 +78,8 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)
 
+            implementation(libs.androidx.datastore.preferences)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             // implementation(compose.material3)
@@ -86,6 +90,8 @@ kotlin {
             implementation(libs.navigation.compose)
 
             implementation(libs.koin.compose)
+
+            implementation(libs.reorderable)
 
 //            implementation(project(":core"))
 //            implementation(project(":feature:about"))

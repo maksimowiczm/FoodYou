@@ -43,11 +43,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.SettingsListItem
-import com.maksimowiczm.foodyou.core.ui.ext.add
-import com.maksimowiczm.foodyou.feature.about.AboutSettingsListItem
-import com.maksimowiczm.foodyou.feature.language.LanguageSettingsListItem
+import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
+import com.maksimowiczm.foodyou.shared.ui.ext.add
 import com.maksimowiczm.foodyou.ui.personalization.PersonalizationSettingsListItem
 import foodyou.app.generated.resources.*
 import kotlin.math.PI
@@ -148,23 +146,23 @@ fun SettingsScreen(
                 )
             }
 
-            item {
-                LanguageSettingsListItem(
-                    onClick = onLanguage,
-                    shape = shape,
-                    containerColor = color,
-                    contentColor = contentColor
-                )
-            }
-
-            item {
-                AboutSettingsListItem(
-                    onClick = onAbout,
-                    shape = shape,
-                    color = color,
-                    contentColor = contentColor
-                )
-            }
+//            item {
+//                LanguageSettingsListItem(
+//                    onClick = onLanguage,
+//                    shape = shape,
+//                    containerColor = color,
+//                    contentColor = contentColor
+//                )
+//            }
+//
+//            item {
+//                AboutSettingsListItem(
+//                    onClick = onAbout,
+//                    shape = shape,
+//                    color = color,
+//                    contentColor = contentColor
+//                )
+//            }
         }
     }
 }

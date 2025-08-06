@@ -1,21 +1,16 @@
 package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.os.Bundle
-import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
-import com.maksimowiczm.foodyou.preferences.HideContent
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidClipboardManager
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utils.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.shared.ui.utils.DateFormatterProvider
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.get
 
 abstract class FoodYouAbstractActivity : AppCompatActivity() {
 

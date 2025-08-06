@@ -5,11 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.maksimowiczm.foodyou.feature.about.About
-import com.maksimowiczm.foodyou.feature.about.Sponsor
-import com.maksimowiczm.foodyou.feature.about.SponsorMessages
-import com.maksimowiczm.foodyou.feature.about.aboutGraph
-//import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 
 @Composable
 fun FoodYouNavHost(
@@ -23,9 +18,7 @@ fun FoodYouNavHost(
     ) {
         appGraph(
             homeOnAbout = {
-                navController.navigate(About) {
-                    launchSingleTop = true
-                }
+
             },
             homeOnSettings = {
                 navController.navigate(Settings) {
@@ -56,19 +49,13 @@ fun FoodYouNavHost(
 
             },
             settingsOnLanguage = {
-                navController.navigate(Language) {
-                    launchSingleTop = true
-                }
+
             },
             settingsOnSponsor = {
-                navController.navigate(SponsorMessages) {
-                    launchSingleTop = true
-                }
+
             },
             settingsOnAbout = {
-                navController.navigate(About) {
-                    launchSingleTop = true
-                }
+
             },
             settingsOnDatabase = {
                 navController.navigate(Database) {
@@ -119,32 +106,6 @@ fun FoodYouNavHost(
                 navController.navigate(ExternalDatabases) {
                     launchSingleTop = true
                 }
-            }
-        )
-        aboutGraph(
-            aboutOnBack = {
-                navController.popBackStack<About>(true)
-            },
-            aboutOnSponsor = {
-                navController.navigate(SponsorMessages) {
-                    launchSingleTop = true
-                }
-            },
-            sponsorMessagesOnBack = {
-                navController.popBackStack<SponsorMessages>(true)
-            },
-            sponsorMessagesOnSponsor = {
-                navController.navigate(Sponsor) {
-                    launchSingleTop = true
-                }
-            },
-            sponsorOnBack = {
-                navController.popBackStack<Sponsor>(true)
-            }
-        )
-        languageGraph(
-            onBack = {
-                navController.popBackStack<Language>(true)
             }
         )
     }

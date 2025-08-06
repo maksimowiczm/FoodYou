@@ -32,14 +32,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -48,13 +42,8 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.preferences.getBlocking
-import com.maksimowiczm.foodyou.core.preferences.setBlocking
-import com.maksimowiczm.foodyou.core.preferences.userPreference
-import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.preferences.HomeCard
-import com.maksimowiczm.foodyou.preferences.HomeCardsOrder
+import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -73,18 +62,18 @@ fun HomePersonalizationScreen(
     onMealsSettings: () -> Unit,
     onGoalsSettings: () -> Unit,
     modifier: Modifier = Modifier,
-    homeOrder: HomeCardsOrder = userPreference()
+//    homeOrder: HomeCardsOrder = userPreference()
 ) {
-    val order by homeOrder.collectAsStateWithLifecycle(homeOrder.getBlocking())
+//    val order by homeOrder.collectAsStateWithLifecycle(homeOrder.getBlocking())
 
-    HomePersonalizationScreen(
-        order = order,
-        onBack = onBack,
-        onMealsSettings = onMealsSettings,
-        onGoalsSettings = onGoalsSettings,
-        onReorder = { homeOrder.setBlocking(it) },
-        modifier = modifier
-    )
+//    HomePersonalizationScreen(
+//        order = order,
+//        onBack = onBack,
+//        onMealsSettings = onMealsSettings,
+//        onGoalsSettings = onGoalsSettings,
+//        onReorder = { homeOrder.setBlocking(it) },
+//        modifier = modifier
+//    )
 }
 
 @OptIn(

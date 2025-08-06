@@ -6,26 +6,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.preferences.getBlocking
-import com.maksimowiczm.foodyou.core.preferences.setBlocking
-import com.maksimowiczm.foodyou.core.preferences.userPreference
-import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.SettingsListItem
-import com.maksimowiczm.foodyou.preferences.HideContent
+import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -112,31 +105,31 @@ private fun PersonalizeNutritionFactsSettingsListItem(
 
 @Composable
 private fun SecureScreenSettingsListItem(modifier: Modifier = Modifier) {
-    val hideContent = userPreference<HideContent>()
-    val checked by hideContent.collectAsStateWithLifecycle(hideContent.getBlocking())
+//    val hideContent = userPreference<HideContent>()
+//    val checked by hideContent.collectAsStateWithLifecycle(hideContent.getBlocking())
 
-    SettingsListItem(
-        label = {
-            Text(stringResource(Res.string.headline_secure_screen))
-        },
-        onClick = { hideContent.setBlocking(!checked) },
-        modifier = modifier,
-        supportingContent = {
-            Text(stringResource(Res.string.action_prevent_screen_capture))
-        },
-        icon = {
-            Icon(
-                imageVector = Icons.Outlined.Lock,
-                contentDescription = null
-            )
-        },
-        trailingContent = {
-            Switch(
-                checked = checked,
-                onCheckedChange = null
-            )
-        },
-        color = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
-    )
+//    SettingsListItem(
+//        label = {
+//            Text(stringResource(Res.string.headline_secure_screen))
+//        },
+//        onClick = { hideContent.setBlocking(!checked) },
+//        modifier = modifier,
+//        supportingContent = {
+//            Text(stringResource(Res.string.action_prevent_screen_capture))
+//        },
+//        icon = {
+//            Icon(
+//                imageVector = Icons.Outlined.Lock,
+//                contentDescription = null
+//            )
+//        },
+//        trailingContent = {
+//            Switch(
+//                checked = checked,
+//                onCheckedChange = null
+//            )
+//        },
+//        color = MaterialTheme.colorScheme.surface,
+//        contentColor = MaterialTheme.colorScheme.onSurface
+//    )
 }
