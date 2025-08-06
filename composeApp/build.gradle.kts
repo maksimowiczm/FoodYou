@@ -29,7 +29,7 @@ kotlin {
 
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
 
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -58,10 +58,13 @@ kotlin {
 
         commonMain.dependencies {
 
-            implementation(project(":shared:common"))
-            implementation(project(":business:food"))
-            implementation(project(":business:shared"))
-            implementation(project(":business:fooddiary"))
+            implementation(projects.shared.common)
+            implementation(projects.business.shared)
+            implementation(projects.business.food)
+            implementation(projects.business.fooddiary)
+
+            implementation(projects.feature.openfoodfacts)
+            implementation(projects.feature.usda)
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
@@ -74,10 +77,8 @@ kotlin {
 //            implementation(project(":feature:food"))
             implementation(project(":feature:measurement"))
 //            implementation(project(":feature:fooddiary"))
-            implementation(project(":feature:openfoodfacts"))
             implementation(project(":feature:calendar"))
             implementation(project(":feature:language"))
-            implementation(project(":feature:usda"))
 //            implementation(project(":feature:onboarding"))
 //            implementation(project(":feature:importexport"))
 //            implementation(project(":feature:swissfoodcompositiondatabase"))

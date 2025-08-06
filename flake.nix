@@ -50,7 +50,7 @@
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
           pkgs.just
-          pkgs.temurin-bin-17
+          pkgs.temurin-bin-21
           androidComposition.androidsdk
           pythonEnv
         ];

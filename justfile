@@ -7,7 +7,7 @@ format:
 
 # $KTFMT_JAR - path to the ktfmt jar file
 ktfmt:
-    @find ./business ./shared -type f \( -name "*.kt" -o -name "*.kts" \) -not -path "*/build/*" | xargs java -jar $KTFMT_JAR --kotlinlang-style
+    @find ./platform ./business ./shared -type f \( -name "*.kt" -o -name "*.kts" \) -not -path "*/build/*" | xargs java -jar $KTFMT_JAR --kotlinlang-style
 
 release:
     @./gradlew --no-daemon --no-build-cache clean

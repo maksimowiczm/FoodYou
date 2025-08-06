@@ -58,6 +58,8 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 jetbrains-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version = "1.9.0-alpha04" }
+gradle-android = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
@@ -90,3 +92,12 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
+business = { id = "com.maksimowiczm.foodyou.plugins.libraries.business" }
+
+[bundles]
+business-library-implementation = [
+    "koin-core",
+    "kotlinx-coroutines-core",
+    "kotlinx-datetime",
+    "androidx-datastore-preferences-core"
+]

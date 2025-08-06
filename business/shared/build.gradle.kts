@@ -41,7 +41,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":shared:common"))
+            implementation(projects.shared.common)
             implementation(libs.koin.core)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)

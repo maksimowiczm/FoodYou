@@ -1,22 +1,9 @@
-plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.android.kotlin.multiplatform.library)
-    alias(libs.plugins.android.lint)
-}
+plugins { alias(libs.plugins.business) }
 
 kotlin {
     sourceSets.all { languageSettings.enableLanguageFeature("WhenGuards") }
 
-    androidLibrary {
-        namespace = "com.maksimowiczm.foodyou.business.food"
-        compileSdk = libs.versions.android.compileSdk.get().toInt()
-        minSdk = libs.versions.android.minSdk.get().toInt()
-
-        withHostTestBuilder {}
-
-        withDeviceTestBuilder { sourceSetTreeName = "test" }
-            .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
-    }
+    androidLibrary { namespace = "com.maksimowiczm.foodyou.business.food" }
 
     // For iOS targets, this is also where you should
     // configure native binary output. For more information, see:
@@ -35,23 +22,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":business:shared"))
-            implementation(project(":shared:common"))
-            implementation(project(":feature:openfoodfacts"))
-            implementation(project(":feature:usda"))
-            implementation(libs.koin.core)
-            implementation(libs.kotlinx.coroutines.core)
+            implementation(projects.feature.openfoodfacts)
+            implementation(projects.feature.usda)
             implementation(libs.androidx.paging.common)
-            implementation(libs.androidx.datastore.preferences.core)
-            implementation(libs.kotlinx.datetime)
-        }
-
-        commonTest.dependencies { implementation(libs.kotlin.test) }
-
-        getByName("androidDeviceTest").dependencies {
-            implementation(libs.androidx.runner)
-            implementation(libs.androidx.core)
-            implementation(libs.androidx.junit)
         }
     }
 }
