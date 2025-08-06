@@ -21,6 +21,7 @@ val businessSharedPersistenceModule = module {
     factory { database.foodEventDao }
     factory { database.measurementDao }
     factory { database.mealDao }
+    factory { database.sponsorshipDao }
 }
 
 private val Scope.database: FoodYouDatabase

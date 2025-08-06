@@ -20,7 +20,7 @@ import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)
-internal class OpenFoodFactsRemoteMediator<T : Any>(
+internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
     private val remoteDataSource: OpenFoodFactsRemoteDataSource,
     private val query: String,
     private val country: String?,
@@ -29,11 +29,11 @@ internal class OpenFoodFactsRemoteMediator<T : Any>(
     private val openFoodFactsPagingHelper: LocalOpenFoodFactsPagingHelper,
     private val offMapper: OpenFoodFactsProductMapper,
     private val remoteMapper: RemoteProductMapper,
-) : RemoteMediator<Int, T>() {
+) : RemoteMediator<K, T>() {
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
 
-    override suspend fun load(loadType: LoadType, state: PagingState<Int, T>): MediatorResult {
+    override suspend fun load(loadType: LoadType, state: PagingState<K, T>): MediatorResult {
         try {
             val page =
                 when (loadType) {

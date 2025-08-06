@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.about.data.database
+package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.sponsorship
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
@@ -9,14 +9,13 @@ import androidx.room.Upsert
 interface SponsorshipDao {
 
     @Query("SELECT * FROM Sponsorship ORDER BY sponsorshipEpochSeconds DESC")
-    fun pagedFromLatest(): PagingSource<Int, Sponsorship>
+    fun pagedFromLatest(): PagingSource<Int, SponsorshipEntity>
 
     @Query("SELECT * FROM Sponsorship ORDER BY sponsorshipEpochSeconds DESC LIMIT 1")
-    suspend fun getLatestSponsorship(): Sponsorship?
+    suspend fun getLatestSponsorship(): SponsorshipEntity?
 
     @Query("SELECT * FROM Sponsorship ORDER BY sponsorshipEpochSeconds ASC LIMIT 1")
-    suspend fun getOldestSponsorship(): Sponsorship?
+    suspend fun getOldestSponsorship(): SponsorshipEntity?
 
-    @Upsert
-    suspend fun upsert(sponsorship: List<Sponsorship>)
+    @Upsert suspend fun upsert(sponsorship: List<SponsorshipEntity>)
 }

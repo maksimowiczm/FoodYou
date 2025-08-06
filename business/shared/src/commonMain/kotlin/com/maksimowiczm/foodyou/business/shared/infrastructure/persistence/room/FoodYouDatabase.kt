@@ -27,6 +27,8 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsPagingKeyEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.MeasurementTypeConverter
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.sponsorship.SponsorshipDao
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.sponsorship.SponsorshipEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.usda.USDAPagingKeyDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.usda.USDAPagingKeyEntity
 
@@ -45,6 +47,7 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
             DiaryProductEntity::class,
             DiaryRecipeEntity::class,
             DiaryRecipeIngredientEntity::class,
+            SponsorshipEntity::class,
         ],
     views = [RecipeAllIngredientsView::class],
     version = FoodYouDatabase.VERSION,
@@ -64,6 +67,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val foodEventDao: FoodEventDao
     abstract val measurementDao: MeasurementDao
     abstract val mealDao: MealDao
+    abstract val sponsorshipDao: SponsorshipDao
 
     companion object {
         const val VERSION = 25

@@ -15,6 +15,7 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         businessFoodModule,
         businessFoodDiaryModule,
         businessSharedPersistenceModule,
+        businessSponsorshipModule,
         localDatabaseModule
     )
 

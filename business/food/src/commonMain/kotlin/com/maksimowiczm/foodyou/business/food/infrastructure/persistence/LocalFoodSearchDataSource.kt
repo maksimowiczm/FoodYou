@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.FoodSource
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistory
-import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMediatorFactory
 import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalPagingApi::class)

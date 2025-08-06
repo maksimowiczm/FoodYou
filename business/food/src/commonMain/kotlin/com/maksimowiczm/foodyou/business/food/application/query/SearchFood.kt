@@ -9,7 +9,6 @@ import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.FoodSource
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistory
-import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteMediator
@@ -19,6 +18,7 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFo
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalOpenFoodFactsPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.datastore.DataStoreFoodPreferencesDataSource
+import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.feature.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.shared.common.date.now
@@ -98,7 +98,7 @@ internal class SearchFoodQueryHandler(
 
     private fun openFoodFactsRemoteMediatorFactory(query: QueryType.NotBlank) =
         object : RemoteMediatorFactory {
-            override fun <T : Any> create(): RemoteMediator<Int, T>? =
+            override fun <K : Any, T : Any> create(): RemoteMediator<K, T>? =
                 OpenFoodFactsRemoteMediator(
                     remoteDataSource = offRemoteDataSource,
                     query = query.query,
@@ -116,7 +116,7 @@ internal class SearchFoodQueryHandler(
         apiKey: String?,
     ): RemoteMediatorFactory? =
         object : RemoteMediatorFactory {
-            override fun <T : Any> create(): RemoteMediator<Int, T>? =
+            override fun <K : Any, T : Any> create(): RemoteMediator<K, T>? =
                 USDARemoteMediator(
                     remoteDataSource = usdaRemoteDataSource,
                     query = query.query,
