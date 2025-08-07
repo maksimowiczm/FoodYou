@@ -68,6 +68,7 @@ kotlin {
             implementation(projects.business.food)
             implementation(projects.business.fooddiary)
             implementation(projects.business.sponsorship)
+            implementation(projects.business.settings)
 
             implementation(projects.feature.openfoodfacts)
             implementation(projects.feature.usda)
