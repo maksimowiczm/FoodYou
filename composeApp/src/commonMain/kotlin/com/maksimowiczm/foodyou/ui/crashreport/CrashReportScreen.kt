@@ -16,23 +16,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.shared.common.domain.config.AppConfig
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalClipboardManager
 import foodyou.app.generated.resources.*
 import foodyou.app.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CrashReportScreen(message: String, modifier: Modifier = Modifier) {
     val clipboardManager = LocalClipboardManager.current
     val uriHandler = LocalUriHandler.current
-    val bugReportLink = stringResource(Res.string.link_github_issue)
+    val appConfig: AppConfig = koinInject()
 
     CrashReportScreen(
         message = message,
         onCopyAndSend = {
             clipboardManager.copy("Report", message)
-            uriHandler.openUri(bugReportLink)
+            uriHandler.openUri(appConfig.issueTrackerUrl)
         },
         modifier = modifier
     )

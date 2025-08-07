@@ -34,6 +34,9 @@ kotlin {
 
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
+
+            implementation(projects.feature3.about.master)
+            implementation(projects.feature3.about.sponsor)
         }
     }
 }

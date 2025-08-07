@@ -1,5 +1,7 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
+import com.maksimowiczm.foodyou.business.sponsorship.application.command.AllowRemoteSponsorshipsCommandHandler
+import com.maksimowiczm.foodyou.business.sponsorship.application.query.ObserveSponsorshipPreferencesQueryHandler
 import com.maksimowiczm.foodyou.business.sponsorship.application.query.ObserveSponsorshipsQueryHandler
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.RemoteSponsorshipDataSource
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.ktor.KtorSponsorshipApiClient
@@ -7,6 +9,8 @@ import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.persistence.
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.persistence.room.RoomSponsorshipDataSource
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.preferences.SponsorshipPreferencesDataSource
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.preferences.datastore.DataStoreSponsorshipPreferencesDataSource
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -26,11 +30,26 @@ val businessSponsorshipModule = module {
             }
         }
         .onClose { it?.close() }
-    factory { KtorSponsorshipApiClient(client = get(named("ktorSponsorshipHttpClient"))) }
+    factory {
+            KtorSponsorshipApiClient(
+                client = get(named("ktorSponsorshipHttpClient")),
+                networkConfig = get(),
+            )
+        }
         .bind<RemoteSponsorshipDataSource>()
     factoryOf(::RoomSponsorshipDataSource).bind<LocalSponsorshipDataSource>()
 
-    factoryOf(::ObserveSponsorshipsQueryHandler) { named("ObserveSponsorshipsQueryHandler") }
-        .bind<ObserveSponsorshipsQueryHandler>()
     factoryOf(::DataStoreSponsorshipPreferencesDataSource).bind<SponsorshipPreferencesDataSource>()
+
+    factoryOf(::ObserveSponsorshipsQueryHandler) { named("ObserveSponsorshipsQueryHandler") }
+        .bind<QueryHandler<*, *>>()
+    factoryOf(::ObserveSponsorshipPreferencesQueryHandler) {
+            named("ObserveSponsorshipPreferencesQueryHandler")
+        }
+        .bind<QueryHandler<*, *>>()
+
+    factoryOf(::AllowRemoteSponsorshipsCommandHandler) {
+            named("AllowRemoteSponsorshipsCommandHandler")
+        }
+        .bind<CommandHandler<*, *, *>>()
 }

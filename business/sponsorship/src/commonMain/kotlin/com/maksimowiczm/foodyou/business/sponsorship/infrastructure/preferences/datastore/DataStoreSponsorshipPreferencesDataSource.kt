@@ -16,7 +16,7 @@ internal class DataStoreSponsorshipPreferencesDataSource(
         dataStore.data.map { preferences ->
             SponsorshipPreferences(
                 remoteAllowed =
-                    preferences[SponsorshipPreferencesKeys.allowRemoteSponsorships] ?: true
+                    preferences[SponsorshipPreferencesKeys.allowRemoteSponsorships] ?: false
             )
         }
 

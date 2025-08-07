@@ -47,25 +47,26 @@ internal class RoomSponsorshipDataSource(private val sponsorshipDao: Sponsorship
 @OptIn(ExperimentalTime::class)
 private fun Sponsorship.toEntity(): SponsorshipEntity =
     SponsorshipEntity(
-        id = 0,
+        id = id,
         sponsorName = sponsorName,
         message = message,
         amount = amount,
         currency = currency,
         inEuro = inEuro,
-        sponsorshipEpochSeconds = date.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
+        sponsorshipEpochSeconds = dateTime.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
         method = method,
     )
 
 @OptIn(ExperimentalTime::class)
 private fun SponsorshipEntity.toModel(): Sponsorship =
     Sponsorship(
+        id = id,
         sponsorName = sponsorName,
         message = message,
         amount = amount,
         currency = currency,
         inEuro = inEuro,
-        date =
+        dateTime =
             Instant.fromEpochSeconds(sponsorshipEpochSeconds)
                 .toLocalDateTime(TimeZone.currentSystemDefault()),
         method = method,

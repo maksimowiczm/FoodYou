@@ -4,11 +4,18 @@ plugins {
     alias(libs.plugins.android.lint)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.gmazzo.buildconfig)
+}
+
+buildConfig {
+    val sponsorApiUrl = "https://sponsors.foodyou.maksimowiczm.com"
+    buildConfigField("String", "SPONSOR_API_URL", "\"$sponsorApiUrl\"")
 }
 
 room { schemaDirectory("$projectDir/schemas") }
 
 kotlin {
+    sourceSets.all { languageSettings.enableLanguageFeature("ExpectActualClasses") }
 
     // Target declarations - add or remove as needed below. These define
     // which platforms this KMP module supports.

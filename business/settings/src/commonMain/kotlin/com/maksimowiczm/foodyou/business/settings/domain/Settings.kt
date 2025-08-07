@@ -1,3 +1,3 @@
 package com.maksimowiczm.foodyou.business.settings.domain
 
-class Settings {}
+data class Settings(val lastRememberedVersion: String?)

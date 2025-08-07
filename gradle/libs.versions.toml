@@ -105,5 +105,8 @@ business-library-implementation = [
 ]
 
 feature-library-implementation = [
-    "koin-compose"
+    "koin-core",
+    "koin-compose",
+    "koin-compose-viewmodel",
+    "kotlinx-coroutines-core",
 ]

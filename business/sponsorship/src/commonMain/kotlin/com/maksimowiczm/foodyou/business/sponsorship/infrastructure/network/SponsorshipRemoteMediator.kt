@@ -33,7 +33,7 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
                     val sponsorship = localSponsorshipDataSource.getLatestSponsorship()
 
                     // If there are no sponsorships, fetch the latest ones from the API
-                    val after = sponsorship?.date?.toInstant(TimeZone.currentSystemDefault())
+                    val after = sponsorship?.dateTime?.toInstant(TimeZone.currentSystemDefault())
 
                     val response =
                         remoteSponsorshipDataSource.getSponsorships(
@@ -64,7 +64,7 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
                         return MediatorResult.Success(endOfPaginationReached = true)
                     }
 
-                    val after = first.date.toInstant(TimeZone.currentSystemDefault())
+                    val after = first.dateTime.toInstant(TimeZone.currentSystemDefault())
 
                     val response =
                         remoteSponsorshipDataSource.getSponsorships(
@@ -82,7 +82,7 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
 
                     FoodYouLogger.d(TAG) { "Append, $last" }
 
-                    val before = last?.date?.toInstant(TimeZone.currentSystemDefault())
+                    val before = last?.dateTime?.toInstant(TimeZone.currentSystemDefault())
 
                     val response =
                         remoteSponsorshipDataSource.getSponsorships(
@@ -111,11 +111,12 @@ internal class SponsorshipRemoteMediator<K : Any, T : Any>(
 @OptIn(ExperimentalTime::class)
 private fun NetworkSponsorship.toSponsorship(): Sponsorship =
     Sponsorship(
+        id = id,
         sponsorName = sponsor,
         message = message,
         amount = amount,
         currency = currency,
         inEuro = inEuro,
-        date = Instant.parse(sponsorshipDate).toLocalDateTime(TimeZone.currentSystemDefault()),
+        dateTime = Instant.parse(sponsorshipDate).toLocalDateTime(TimeZone.currentSystemDefault()),
         method = method,
     )

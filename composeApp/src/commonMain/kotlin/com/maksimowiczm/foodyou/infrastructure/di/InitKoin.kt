@@ -6,18 +6,29 @@ import org.koin.dsl.KoinAppDeclaration
 fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     config?.invoke(this)
 
+    // Shared modules
     modules(
-        sharedCommonModule,
+        appModule,
+        businessSharedPersistenceModule,
+        featureSharedModule,
+        sharedCommonModule
+    )
+
+    // Business modules
+    modules(
         businessFoodModule,
         businessFoodDiaryModule,
         businessSettingsModule,
-        businessSharedPersistenceModule,
         businessSponsorshipModule,
-        localDatabaseModule
+    )
+
+    // About
+    modules(
+        featureAboutMasterModule,
+        featureAboutSponsorModule,
     )
 
     modules(
-//        aboutModule,
 //        foodModule,
 //        foodDiaryModule,
 //        importExportModule,

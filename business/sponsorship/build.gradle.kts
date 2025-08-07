@@ -1,24 +1,6 @@
 plugins {
     alias(libs.plugins.business)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.gmazzo.buildconfig)
-}
-
-buildConfig {
-    val versionName = libs.versions.version.name.get()
-
-    val feedbackEmail = "maksimowicz.dev@gmail.com"
-    val feedbackEmailUri =
-        "mailto:$feedbackEmail?subject=Food You Feedback&body=Food You Version: $versionName\\n"
-
-    buildConfigField("String", "FEEDBACK_EMAIL_URI", "\"$feedbackEmailUri\"")
-    buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
-
-    val sponsorApiUrl = "https://sponsors.foodyou.maksimowiczm.com"
-    buildConfigField("String", "SPONSOR_API_URL", "\"$sponsorApiUrl\"")
-
-    val sponsorApiUserAgent = "Food You/$versionName"
-    buildConfigField("String", "SPONSOR_API_USER_AGENT", "\"$sponsorApiUserAgent\"")
 }
 
 kotlin {

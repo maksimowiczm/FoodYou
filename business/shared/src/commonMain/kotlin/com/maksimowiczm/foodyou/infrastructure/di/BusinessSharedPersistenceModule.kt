@@ -3,12 +3,16 @@ package com.maksimowiczm.foodyou.infrastructure.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.RoomDatabase
+import com.maksimowiczm.foodyou.business.shared.domain.network.NetworkConfig
+import com.maksimowiczm.foodyou.business.shared.infrastructure.network.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase.Companion.buildDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.InitializeMealsCallback
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.scope.Scope
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 // internal const val DATABASE_NAME = "open_source_database.db"
@@ -43,4 +47,6 @@ private val dataStoreDefinition: Module.() -> KoinDefinition<DataStore<Preferenc
 val businessSharedPersistenceModule = module {
     databaseDefinition()
     dataStoreDefinition()
+
+    factoryOf(::FoodYouNetworkConfig).bind<NetworkConfig>()
 }
