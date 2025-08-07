@@ -45,6 +45,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)
+            implementation(libs.androidx.datastore.preferences.core)
         }
 
         commonTest.dependencies { implementation(libs.kotlin.test) }
