@@ -88,6 +88,7 @@ kotlin {
             implementation(projects.feature3.shared)
             implementation(projects.feature3.about.master)
             implementation(projects.feature3.about.sponsor)
+            implementation(projects.feature3.settings.master)
 
             implementation(projects.feature.openfoodfacts)
             implementation(projects.feature.usda)
@@ -113,8 +114,6 @@ kotlin {
 
             implementation(libs.reorderable)
 
-//            implementation(project(":core"))
-//            implementation(project(":feature:about"))
 //            implementation(project(":feature:food"))
 //            implementation(project(":feature:measurement"))
 //            implementation(project(":feature:fooddiary"))

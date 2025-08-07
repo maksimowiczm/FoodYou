@@ -1,7 +1,4 @@
-plugins {
-    alias(libs.plugins.feature)
-    alias(libs.plugins.gmazzo.buildconfig)
-}
+plugins { alias(libs.plugins.feature) }
 
 kotlin {
     androidLibrary { namespace = "com.maksimowiczm.foodyou.feature.about.master" }
