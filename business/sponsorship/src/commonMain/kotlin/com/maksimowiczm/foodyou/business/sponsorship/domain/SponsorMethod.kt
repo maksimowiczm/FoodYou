@@ -35,12 +35,12 @@ data object Monero : CryptoSponsorMethod {
 }
 
 data object Ko_Fi : LinkSponsorMethod {
-    override val name = "Ko-Fi"
-    override val url = "https://ko-fi.com/maksimowiczm"
+    override val name = "ko-fi.com/maksimowiczm"
+    override val url = "https://ko-fi.com/maksimowiczm/5"
     override val primary = true
 }
 
 data object Liberapay : LinkSponsorMethod {
-    override val name = "Liberapay"
+    override val name = "liberapay.com/maksimowiczm"
     override val url = "https://liberapay.com/maksimowiczm"
 }

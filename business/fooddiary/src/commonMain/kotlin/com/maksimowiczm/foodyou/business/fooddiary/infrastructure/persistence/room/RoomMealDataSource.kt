@@ -10,10 +10,13 @@ import kotlinx.datetime.LocalTime
 
 internal class RoomMealDataSource(private val mealDao: MealDao) : LocalMealDataSource {
 
-    override suspend fun observeMealById(mealId: Long): Flow<Meal?> =
+    override fun observeAllMeals(): Flow<List<Meal>> =
+        mealDao.observeMeals().map { meals -> meals.map { it.toModel() } }
+
+    override fun observeMealById(mealId: Long): Flow<Meal?> =
         mealDao.observeMealById(mealId).map { it?.toModel() }
 
-    override suspend fun insert(meal: Meal) {
+    override suspend fun insertWithLastRank(meal: Meal) {
         mealDao.insertWithLastRank(meal.toEntity())
     }
 
@@ -23,6 +26,11 @@ internal class RoomMealDataSource(private val mealDao: MealDao) : LocalMealDataS
 
     override suspend fun delete(meal: Meal) {
         mealDao.deleteMeal(meal.toEntity())
+    }
+
+    override suspend fun reorder(order: List<Long>) {
+        val rankMap = order.withIndex().associate { (index, id) -> id to index }
+        mealDao.updateMealsRanks(rankMap)
     }
 }
 

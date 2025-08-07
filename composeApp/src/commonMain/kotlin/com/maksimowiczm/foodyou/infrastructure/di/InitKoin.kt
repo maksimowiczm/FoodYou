@@ -28,6 +28,11 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         featureAboutSponsorModule,
     )
 
+    // Settings
+    modules(
+        featureSettingsMealModule
+    )
+
     modules(
 //        foodModule,
 //        foodDiaryModule,

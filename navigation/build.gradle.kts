@@ -39,6 +39,7 @@ kotlin {
             implementation(projects.feature3.about.sponsor)
 
             implementation(projects.feature3.settings.master)
+            implementation(projects.feature3.settings.meal)
         }
     }
 }

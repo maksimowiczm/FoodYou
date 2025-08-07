@@ -5,11 +5,15 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface LocalMealDataSource {
 
-    suspend fun observeMealById(mealId: Long): Flow<Meal?>
+    fun observeAllMeals(): Flow<List<Meal>>
 
-    suspend fun insert(meal: Meal)
+    fun observeMealById(mealId: Long): Flow<Meal?>
+
+    suspend fun insertWithLastRank(meal: Meal)
 
     suspend fun update(meal: Meal)
 
     suspend fun delete(meal: Meal)
+
+    suspend fun reorder(order: List<Long>)
 }
