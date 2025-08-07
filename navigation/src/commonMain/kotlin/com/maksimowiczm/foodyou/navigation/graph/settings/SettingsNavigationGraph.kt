@@ -2,9 +2,11 @@ package com.maksimowiczm.foodyou.navigation.graph.settings
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageScreen
 import com.maksimowiczm.foodyou.feature.settings.master.ui.SettingsScreen
 import com.maksimowiczm.foodyou.feature.settings.meal.ui.MealSettingsScreen
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsLanguageDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
@@ -14,8 +16,10 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
     masterOnSponsor: () -> Unit,
     masterOnAbout: () -> Unit,
     masterOnMeals: () -> Unit,
+    masterOnLanguage: () -> Unit,
     mealsOnBack: () -> Unit,
     mealsOnMealsCardsSettings: () -> Unit,
+    languageOnBack: () -> Unit,
 ) {
     navigation<SettingsDestination>(startDestination = SettingsMasterDestination) {
         forwardBackwardComposable<SettingsMasterDestination> {
@@ -24,6 +28,7 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
                 onSponsor = masterOnSponsor,
                 onAbout = masterOnAbout,
                 onMeals = masterOnMeals,
+                onLanguage = masterOnLanguage,
             )
         }
         forwardBackwardComposable<SettingsMealsDestination> {
@@ -31,6 +36,9 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
                 onBack = mealsOnBack,
                 onMealsCardsSettings = mealsOnMealsCardsSettings,
             )
+        }
+        forwardBackwardComposable<SettingsLanguageDestination> {
+            LanguageScreen(onBack = languageOnBack)
         }
     }
 }

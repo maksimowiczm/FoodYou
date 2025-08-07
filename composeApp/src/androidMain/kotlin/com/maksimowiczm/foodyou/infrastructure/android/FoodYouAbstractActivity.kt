@@ -6,13 +6,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
+import com.maksimowiczm.foodyou.shared.common.infrastructure.system.AndroidSystemDetails
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidClipboardManager
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utils.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.shared.ui.utils.DateFormatterProvider
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
 
 abstract class FoodYouAbstractActivity : AppCompatActivity() {
+
+    private val systemDetails: AndroidSystemDetails
+        get() = get()
 
     fun setContent(content: @Composable () -> Unit) {
         enableEdgeToEdge()
@@ -37,6 +42,13 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
         lifecycleScope.launch {
             observeShowContentSecurity()
         }
+
+        lifecycle.addObserver(systemDetails)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycle.removeObserver(systemDetails)
     }
 
     private suspend fun observeShowContentSecurity() {

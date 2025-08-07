@@ -26,7 +26,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.dsl.onClose
 
-expect fun Module.systemDetails()
+expect val systemDetails: Module.() -> Unit
 
 val sharedCommonModule = module {
     @Suppress("UNCHECKED_CAST")

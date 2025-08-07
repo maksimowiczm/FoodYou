@@ -7,3 +7,5 @@ import kotlinx.serialization.Serializable
 @Serializable internal data object SettingsMasterDestination : NavigationDestination
 
 @Serializable internal data object SettingsMealsDestination : NavigationDestination
+
+@Serializable internal data object SettingsLanguageDestination : NavigationDestination

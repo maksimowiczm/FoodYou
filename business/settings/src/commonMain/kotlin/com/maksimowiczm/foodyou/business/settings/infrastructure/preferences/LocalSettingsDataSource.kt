@@ -7,4 +7,6 @@ internal interface LocalSettingsDataSource {
     fun observe(): Flow<Settings>
 
     suspend fun update(settings: Settings)
+
+    suspend fun updateShowTranslationWarning(show: Boolean)
 }

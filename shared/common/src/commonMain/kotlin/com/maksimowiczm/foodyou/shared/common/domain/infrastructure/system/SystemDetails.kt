@@ -1,30 +1,16 @@
 package com.maksimowiczm.foodyou.shared.common.domain.infrastructure.system
 
-data class Country(
-    /** Country code in ISO 3166 format. */
-    val code: String,
-    val name: String,
-) {
-    companion object {
-        val Poland = Country("PL", "Poland")
-        val UnitedStates = Country("US", "United States")
-    }
-}
+import kotlinx.coroutines.flow.Flow
 
-/**
- * Provides information about system-specific settings and utilities for date and locale operations.
- */
 interface SystemDetails {
 
     /**
-     * The default country code of the system's locale.
-     *
      * This value is derived from the system configuration and represents the ISO 3166-1 alpha-2
      * country code.
      */
-    val defaultCountry: Country
-}
+    val languageTag: Flow<String>
 
-/** Checks if the system's default country is United States which is default locale for the app. */
-val SystemDetails.isUS: Boolean
-    get() = defaultCountry.code == "US"
+    fun setLanguage(tag: String)
+
+    fun setSystemLanguage()
+}

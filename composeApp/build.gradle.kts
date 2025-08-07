@@ -90,6 +90,7 @@ kotlin {
             implementation(projects.feature3.about.sponsor)
             implementation(projects.feature3.settings.master)
             implementation(projects.feature3.settings.meal)
+            implementation(projects.feature3.settings.language)
 
             implementation(projects.feature.openfoodfacts)
             implementation(projects.feature.usda)

@@ -29,6 +29,7 @@ fun SettingsScreen(
     onSponsor: () -> Unit,
     onAbout: () -> Unit,
     onMeals: () -> Unit,
+    onLanguage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -102,14 +103,14 @@ fun SettingsScreen(
             //                )
             //            }
 
-            //            item {
-            //                LanguageSettingsListItem(
-            //                    onClick = onLanguage,
-            //                    shape = shape,
-            //                    containerColor = color,
-            //                    contentColor = contentColor
-            //                )
-            //            }
+            item {
+                LanguageSettingsListItem(
+                    onClick = onLanguage,
+                    shape = shape,
+                    color = color,
+                    contentColor = contentColor,
+                )
+            }
 
             item {
                 AboutSettingsListItem(
