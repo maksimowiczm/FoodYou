@@ -80,7 +80,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.error
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.feature.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton

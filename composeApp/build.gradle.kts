@@ -96,8 +96,9 @@ kotlin {
             implementation(projects.feature3.home)
             implementation(projects.feature3.goals)
 
-            implementation(projects.feature.openfoodfacts)
-            implementation(projects.feature.usda)
+            implementation(projects.externaldatabase.openfoodfacts)
+            implementation(projects.externaldatabase.usda)
+            implementation(projects.externaldatabase.swissfoodcompositiondatabase)
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)

@@ -3,8 +3,8 @@ package com.maksimowiczm.foodyou.business.food.infrastructure.network.usda
 import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductRequest
 import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.FoodPreferencesDataSource
-import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.ProductNotFoundException
-import com.maksimowiczm.foodyou.feature.usda.USDARemoteDataSource
+import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
+import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import kotlinx.coroutines.flow.first
 
 internal class USDAProductRequest(
@@ -20,7 +20,7 @@ internal class USDAProductRequest(
             .getProduct(id, apiKey())
             .map { mapper.toRemoteProduct(it) }
             .onFailure {
-                if (it is ProductNotFoundException) {
+                if (it is USDAException.ProductNotFoundException) {
                     return Result.success(null)
                 }
             }

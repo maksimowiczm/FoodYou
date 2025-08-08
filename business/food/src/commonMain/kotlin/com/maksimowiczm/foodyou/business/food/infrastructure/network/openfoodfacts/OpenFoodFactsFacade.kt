@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts
 
-import com.maksimowiczm.foodyou.feature.fooddiary.openfoodfacts.network.OpenFoodFactsRemoteDataSource
+import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 
 internal class OpenFoodFactsFacade(
     val remoteDataSource: OpenFoodFactsRemoteDataSource,

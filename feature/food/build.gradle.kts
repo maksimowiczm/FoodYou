@@ -66,8 +66,6 @@ kotlin {
 
             implementation(project(":feature:measurement"))
             implementation(project(":feature:barcodescanner"))
-            implementation(project(":feature:openfoodfacts"))
-            implementation(project(":feature:usda"))
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)

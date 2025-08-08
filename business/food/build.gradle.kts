@@ -22,8 +22,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.feature.openfoodfacts)
-            implementation(projects.feature.usda)
+            implementation(projects.externaldatabase.openfoodfacts)
+            implementation(projects.externaldatabase.usda)
             implementation(libs.androidx.paging.common)
         }
     }
