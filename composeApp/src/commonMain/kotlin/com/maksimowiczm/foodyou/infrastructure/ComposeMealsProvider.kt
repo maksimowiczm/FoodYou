@@ -13,34 +13,35 @@ internal class ComposeMealsProvider : MealsProvider {
     override fun getMeals(): List<MealEntity> = runBlocking {
         val tag = Locale.current.toLanguageTag()
 
-        val content = try {
-            Res.readBytes("files/meals-$tag.json")
-        } catch (e: Exception) {
-            FoodYouLogger.w(TAG, e) {
-                "Failed to read meals file for locale $tag, falling back to default"
+        val content =
+            try {
+                Res.readBytes("files/meals-$tag.json")
+            } catch (e: Exception) {
+                FoodYouLogger.w(TAG, e) {
+                    "Failed to read meals file for locale $tag, falling back to default"
+                }
+
+                Res.readBytes("files/meals.json")
             }
 
-            Res.readBytes("files/meals.json")
-        }
-
-        val meals = Json
-            .decodeFromString<List<MealJson>>(content.decodeToString())
-            .mapIndexed { index, mealJson ->
+        val meals =
+            Json.decodeFromString<List<MealJson>>(content.decodeToString()).mapIndexed {
+                index,
+                mealJson ->
                 MealEntity(
                     name = mealJson.name,
                     fromHour = mealJson.from.substringBefore(':').toInt(),
                     fromMinute = mealJson.from.substringAfter(':').toInt(),
                     toHour = mealJson.to.substringBefore(':').toInt(),
                     toMinute = mealJson.to.substringAfter(':').toInt(),
-                    rank = index
+                    rank = index,
                 )
             }
 
         return@runBlocking meals
     }
 
-    @Serializable
-    private data class MealJson(val name: String, val from: String, val to: String)
+    @Serializable private data class MealJson(val name: String, val from: String, val to: String)
 
     private companion object {
         private const val TAG = "ComposeMealsProvider"

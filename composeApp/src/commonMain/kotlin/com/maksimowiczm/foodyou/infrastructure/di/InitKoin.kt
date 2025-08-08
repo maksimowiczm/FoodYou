@@ -7,12 +7,7 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     config?.invoke(this)
 
     // Shared modules
-    modules(
-        appModule,
-        businessSharedPersistenceModule,
-        featureSharedModule,
-        sharedCommonModule
-    )
+    modules(appModule, businessSharedPersistenceModule, featureSharedModule, sharedCommonModule)
 
     // Business modules
     modules(
@@ -23,40 +18,24 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     )
 
     // About
-    modules(
-        featureAboutMasterModule,
-        featureAboutSponsorModule,
-    )
+    modules(featureAboutMasterModule, featureAboutSponsorModule)
 
     // Settings
     modules(
         featureSettingsGoalsModule,
         featureSettingsLanguageModule,
         featureSettingsMealModule,
-        featureSettingsPersonalizationModule
+        featureSettingsPersonalizationModule,
     )
 
     // Home
-    modules(
-        featureHomeModule
-    )
+    modules(featureHomeModule)
 
     // Goals
-    modules(
-        featureGoalsModule
-    )
+    modules(featureGoalsModule)
 
     // Diary
-    modules(
-        featureFoodDiarySearchModule
-    )
+    modules(featureFoodDiarySearchModule)
 
-    modules(
-//        foodModule,
-//        importExportModule,
-//        onboardingModule,
-        openFoodFactsModule,
-//        swissFoodCompositionDatabaseModule,
-        usdaModule
-    )
+    modules(openFoodFactsModule, usdaModule)
 }

@@ -11,7 +11,6 @@ import com.maksimowiczm.foodyou.business.settings.application.query.ObserveSetti
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import com.maksimowiczm.foodyou.shared.common.infrastructure.system.AndroidSystemDetails
-import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidClipboardManager
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utils.ClipboardManagerProvider
@@ -33,14 +32,8 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
         enableEdgeToEdge()
         with<AppCompatActivity, Unit>(this) {
             setContent {
-                ClipboardManagerProvider(
-                    clipboardManager = AndroidClipboardManager(this)
-                ) {
-                    DateFormatterProvider(
-                        dateFormatter = AndroidDateFormatter(this)
-                    ) {
-                        content()
-                    }
+                ClipboardManagerProvider(AndroidClipboardManager(this)) {
+                    DateFormatterProvider(AndroidDateFormatter(this)) { content() }
                 }
             }
         }
@@ -49,9 +42,7 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            observeShowContentSecurity()
-        }
+        lifecycleScope.launch { observeShowContentSecurity() }
 
         lifecycle.addObserver(systemDetails)
     }
@@ -62,19 +53,15 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     }
 
     private suspend fun observeShowContentSecurity() {
-        queryBus.dispatch<Settings>(ObserveSettingsQuery).map { it.secureScreen }.collectLatest {
-            if (it) {
-                window.setFlags(FLAG_SECURE, FLAG_SECURE)
-            } else {
-                window.clearFlags(FLAG_SECURE)
+        queryBus
+            .dispatch<Settings>(ObserveSettingsQuery)
+            .map { it.secureScreen }
+            .collectLatest {
+                if (it) {
+                    window.setFlags(FLAG_SECURE, FLAG_SECURE)
+                } else {
+                    window.clearFlags(FLAG_SECURE)
+                }
             }
-            FoodYouLogger.d(TAG) {
-                "Secure screen is ${if (it) "enabled" else "disabled"}"
-            }
-        }
-    }
-
-    private companion object {
-        private const val TAG = "FoodYouAbstractActivity"
     }
 }

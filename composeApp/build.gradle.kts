@@ -37,25 +37,16 @@ buildConfig {
 }
 
 kotlin {
-
-    sourceSets.all {
-        languageSettings.enableLanguageFeature("ContextParameters")
-    }
+    sourceSets.all { languageSettings.enableLanguageFeature("ContextParameters") }
 
     androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
+        compilerOptions { jvmTarget.set(JvmTarget.JVM_21) }
 
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
+    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
@@ -63,17 +54,13 @@ kotlin {
     }
 
     sourceSets {
-
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
-
-            implementation(libs.sqlite.android)
             implementation(libs.koin.android)
         }
 
         commonMain.dependencies {
-
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
             implementation(projects.shared.barcodescanner)
@@ -103,14 +90,6 @@ kotlin {
             implementation(projects.externaldatabase.usda)
             implementation(projects.externaldatabase.swissfoodcompositiondatabase)
 
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.paging)
-
-            implementation(libs.androidx.datastore.preferences)
-
             implementation(compose.runtime)
             implementation(compose.foundation)
             // implementation(compose.material3)
@@ -118,28 +97,11 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
-            implementation(libs.navigation.compose)
-
-            implementation(libs.koin.compose)
-
-            implementation(libs.reorderable)
-
-//            implementation(project(":feature:food"))
-//            implementation(project(":feature:measurement"))
-//            implementation(project(":feature:fooddiary"))
-//            implementation(project(":feature:language"))
-//            implementation(project(":feature:onboarding"))
-//            implementation(project(":feature:importexport"))
-//            implementation(project(":feature:swissfoodcompositiondatabase"))
 
             implementation(libs.kotlinx.serialization.json)
         }
 
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.androidx.room.testing)
-            implementation(libs.androidx.sqlite.bundled)
-        }
+        commonTest.dependencies { implementation(libs.kotlin.test) }
 
         androidInstrumentedTest.dependencies {
             implementation(libs.androidx.test.core.ktx)
@@ -150,9 +112,7 @@ kotlin {
     }
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
+room { schemaDirectory("$projectDir/schemas") }
 
 android {
     namespace = "com.maksimowiczm.foodyou"
@@ -170,17 +130,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+    packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
         create("devRelease") {
@@ -204,8 +160,8 @@ android {
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
 
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 }
 
@@ -214,12 +170,11 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     listOf(
-        "kspCommonMainMetadata",
-        "kspAndroid",
-        "kspIosX64",
-        "kspIosArm64",
-        "kspIosSimulatorArm64"
-    ).forEach {
-        add(it, libs.androidx.room.compiler)
-    }
+            "kspCommonMainMetadata",
+            "kspAndroid",
+            "kspIosX64",
+            "kspIosArm64",
+            "kspIosSimulatorArm64",
+        )
+        .forEach { add(it, libs.androidx.room.compiler) }
 }

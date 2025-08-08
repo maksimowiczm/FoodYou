@@ -39,12 +39,9 @@ class SecureActivityTest {
         }
     }
 
-    @Test
-    fun testSecureMainActivity() = testSecureFlag<MainActivity>()
+    @Test fun testSecureMainActivity() = testSecureFlag<MainActivity>()
 
-    @Test
-    fun testSecureShareProductActivity() = testSecureFlag<ShareProductActivity>()
+    @Test fun testSecureShareProductActivity() = testSecureFlag<ShareProductActivity>()
 
-    @Test
-    fun testSecureCrashReportActivity() = testSecureFlag<CrashReportActivity>()
+    @Test fun testSecureCrashReportActivity() = testSecureFlag<CrashReportActivity>()
 }

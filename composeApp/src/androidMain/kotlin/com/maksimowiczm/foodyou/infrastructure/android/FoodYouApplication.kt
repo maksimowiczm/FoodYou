@@ -12,9 +12,7 @@ class FoodYouApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        initKoin {
-            androidContext(this@FoodYouApplication)
-        }
+        initKoin { androidContext(this@FoodYouApplication) }
 
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { t, e ->
