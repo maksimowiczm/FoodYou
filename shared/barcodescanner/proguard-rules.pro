@@ -1,0 +1,1 @@
+-keep class com.maksimowiczm.foodyou.shared.barcodescanner.FullScreenCameraBarcodeScannerKt { *; }

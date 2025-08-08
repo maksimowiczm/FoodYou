@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.barcodescanner
+package com.maksimowiczm.foodyou.shared.barcodescanner
 
 import android.Manifest
 import android.content.Context
@@ -52,27 +52,24 @@ import org.jetbrains.compose.resources.stringResource
 actual fun CameraBarcodeScannerScreen(
     onBarcodeScan: (String) -> Unit,
     onClose: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
 ) {
     val permissionState = rememberPermissionState(Manifest.permission.CAMERA)
     val activity = LocalActivity.current
 
     var requestInSettings by remember { mutableStateOf(false) }
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (
-            activity != null &&
-            !isGranted &&
-            !shouldShowRequestPermissionRationale(
-                activity,
-                Manifest.permission.CAMERA
-            )
-        ) {
-            requestInSettings = true
+    val permissionLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
+            isGranted ->
+            if (
+                activity != null &&
+                    !isGranted &&
+                    !shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)
+            ) {
+                requestInSettings = true
+            }
         }
-    }
 
     val context = LocalContext.current
     if (requestInSettings && !permissionState.status.isGranted) {
@@ -81,27 +78,20 @@ actual fun CameraBarcodeScannerScreen(
             onConfirm = {
                 redirectToSettings(context)
                 requestInSettings = false
-            }
+            },
         )
     }
 
     val hapticFeedback = LocalHapticFeedback.current
 
-    Box(
-        modifier = modifier
-    ) {
+    Box(modifier = modifier) {
         Box(
-            modifier = Modifier
-                .safeGesturesPadding()
-                .align(Alignment.TopEnd)
-                .zIndex(1f)
+            modifier = Modifier.Companion.safeGesturesPadding().align(Alignment.TopEnd).zIndex(1f)
         ) {
-            FilledIconButton(
-                onClick = onClose
-            ) {
+            FilledIconButton(onClick = onClose) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(Res.string.action_close)
+                    contentDescription = stringResource(Res.string.action_close),
                 )
             }
         }
@@ -112,12 +102,12 @@ actual fun CameraBarcodeScannerScreen(
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
                     onBarcodeScan(it)
                 },
-                modifier = Modifier
+                modifier = Modifier,
             )
         } else {
             RequestCameraPermissionScreen(
                 onRequest = { permissionLauncher.launch(Manifest.permission.CAMERA) },
-                shouldShowRationale = permissionState.status.shouldShowRationale
+                shouldShowRationale = permissionState.status.shouldShowRationale,
             )
         }
     }
@@ -127,35 +117,31 @@ actual fun CameraBarcodeScannerScreen(
 private fun RequestCameraPermissionScreen(
     onRequest: () -> Unit,
     shouldShowRationale: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val text = if (shouldShowRationale) {
-        stringResource(Res.string.neutral_barcode_scanner_camera_request_rationale)
-    } else {
-        stringResource(Res.string.neutral_barcode_scanner_camera_request)
-    }
+    val text =
+        if (shouldShowRationale) {
+            stringResource(Res.string.neutral_barcode_scanner_camera_request_rationale)
+        } else {
+            stringResource(Res.string.neutral_barcode_scanner_camera_request)
+        }
 
-    Surface(
-        modifier = modifier,
-        onClick = onRequest
-    ) {
+    Surface(modifier = modifier, onClick = onRequest) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .safeContentPadding(),
+            modifier = Modifier.Companion.fillMaxSize().safeContentPadding(),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = text,
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
             )
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.Companion.height(16.dp))
             Text(
                 text = stringResource(Res.string.action_tap_to_allow_access),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
             )
         }
     }
@@ -165,14 +151,12 @@ private fun RequestCameraPermissionScreen(
 private fun RedirectToSettingsAlertDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            TextButton(
-                onClick = onConfirm
-            ) {
+            TextButton(onClick = onConfirm) {
                 Text(stringResource(Res.string.action_go_to_settings))
             }
         },
@@ -182,22 +166,21 @@ private fun RedirectToSettingsAlertDialog(
                 Text(stringResource(Res.string.action_cancel))
             }
         },
-        title = {
-            Text(stringResource(Res.string.headline_permission_required))
-        },
+        title = { Text(stringResource(Res.string.headline_permission_required)) },
         text = {
             Text(
                 stringResource(
                     Res.string.neutral_barcode_scanner_camera_request_redirect_to_settings
                 )
             )
-        }
+        },
     )
 }
 
 private fun redirectToSettings(context: Context) {
-    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-        data = Uri.fromParts("package", context.packageName, null)
-    }
+    val intent =
+        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", context.packageName, null)
+        }
     context.startActivity(intent)
 }

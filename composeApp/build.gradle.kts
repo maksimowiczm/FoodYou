@@ -76,6 +76,7 @@ kotlin {
 
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
+            implementation(projects.shared.barcodescanner)
 
             implementation(projects.navigation)
 

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.barcodescanner
+package com.maksimowiczm.foodyou.shared.barcodescanner
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -7,5 +7,5 @@ import androidx.compose.ui.Modifier
 expect fun CameraBarcodeScannerScreen(
     onBarcodeScan: (String) -> Unit,
     onClose: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 )

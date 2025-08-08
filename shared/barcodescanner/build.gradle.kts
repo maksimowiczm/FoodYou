@@ -10,23 +10,22 @@ plugins {
 }
 
 kotlin {
-
     androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
+        compilerOptions { jvmTarget.set(JvmTarget.JVM_21) }
 
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
-    // Leave it here
-    // Otherwise IDE will not recognize the project as a multiplatform project
-    jvm("desktop")
-
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core"))
+            implementation(projects.shared.ui)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(libs.jetbrains.compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
         }
 
         androidMain.dependencies {
@@ -40,12 +39,10 @@ kotlin {
 }
 
 android {
-    namespace = "com.maksimowiczm.foodyou.feature.barcodescanner"
+    namespace = "com.maksimowiczm.foodyou.shared.barcodescanner"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
+    defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
 
     buildTypes {
         release {
@@ -54,7 +51,7 @@ android {
             // Not sure why this is can't be consumer proguard file
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
         create("devRelease") {
@@ -66,17 +63,13 @@ android {
             initWith(getByName("devRelease"))
             isMinifyEnabled = true
         }
-        create("preview") {
-            initWith(getByName("release"))
-        }
+        create("preview") { initWith(getByName("release")) }
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
+    buildFeatures { viewBinding = true }
 }

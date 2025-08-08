@@ -65,7 +65,6 @@ kotlin {
             implementation(project(":shared:common"))
 
             implementation(project(":feature:measurement"))
-            implementation(project(":feature:barcodescanner"))
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)
