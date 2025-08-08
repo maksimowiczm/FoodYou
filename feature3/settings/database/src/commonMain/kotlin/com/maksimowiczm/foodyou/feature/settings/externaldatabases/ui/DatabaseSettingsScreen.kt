@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.settings
+package com.maksimowiczm.foodyou.feature.settings.externaldatabases.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,38 +21,28 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun DatabaseScreen(
+fun DatabaseSettingsScreen(
     onBack: () -> Unit,
     onExternalDatabases: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         modifier = modifier,
         topBar = {
             LargeFlexibleTopAppBar(
-                title = {
-                    Text(stringResource(Res.string.headline_database))
-                },
-                subtitle = {
-                    Text(stringResource(Res.string.description_manage_database))
-                },
-                navigationIcon = {
-                    ArrowBackIconButton(onBack)
-                },
-                scrollBehavior = scrollBehavior
+                title = { Text(stringResource(Res.string.headline_database)) },
+                subtitle = { Text(stringResource(Res.string.description_manage_database)) },
+                navigationIcon = { ArrowBackIconButton(onBack) },
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues,
         ) {
-            item {
-                ExternalDatabasesSettingsListItem(onExternalDatabases)
-            }
+            item { ExternalDatabasesSettingsListItem(onExternalDatabases) }
         }
     }
 }
@@ -60,19 +50,10 @@ fun DatabaseScreen(
 @Composable
 private fun ExternalDatabasesSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
     SettingsListItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Outlined.CloudDownload,
-                contentDescription = null
-            )
-        },
-        label = {
-            Text(stringResource(Res.string.headline_external_databases))
-        },
-        supportingContent = {
-            Text(stringResource(Res.string.description_external_databases))
-        },
+        icon = { Icon(imageVector = Icons.Outlined.CloudDownload, contentDescription = null) },
+        label = { Text(stringResource(Res.string.headline_external_databases)) },
+        supportingContent = { Text(stringResource(Res.string.description_external_databases)) },
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
     )
 }

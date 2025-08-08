@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.navigation.domain.GoalsCardSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.HomeDestination
 import com.maksimowiczm.foodyou.navigation.domain.MealsCardsSettingsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsGoalsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsHomeDestination
@@ -80,6 +81,7 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnPersonalization = {
                 navController.navigateSingleTop(SettingsPersonalizationDestination)
             },
+            masterOnDatabase = { navController.navigateSingleTop(SettingsDatabaseDestination) },
             mealsOnBack = { navController.popBackStack<SettingsMealsDestination>(true) },
             mealsOnMealsCardsSettings = {
                 navController.navigateSingleTop(MealsCardsSettingsDestination)
@@ -100,6 +102,10 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             homeOnBack = { navController.popBackStack<SettingsHomeDestination>(true) },
             homeOnGoals = { navController.navigateSingleTop(GoalsCardSettingsDestination) },
             homeOnMeals = { navController.navigateSingleTop(MealsCardsSettingsDestination) },
+            databaseOnBack = { navController.popBackStack<SettingsDatabaseDestination>(true) },
+            databaseOnExternalDatabases = {
+                // TODO
+            },
         )
         goalsNavigationGraph(
             masterOnBack = { navController.popBackStack<GoalsMasterDestination>(true) }

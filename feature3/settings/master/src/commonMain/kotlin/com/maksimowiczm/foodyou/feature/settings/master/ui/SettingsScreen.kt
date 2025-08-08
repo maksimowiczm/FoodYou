@@ -32,6 +32,7 @@ fun SettingsScreen(
     onLanguage: () -> Unit,
     onGoals: () -> Unit,
     onPersonalization: () -> Unit,
+    onDatabase: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -96,14 +97,14 @@ fun SettingsScreen(
                 )
             }
 
-            //            item {
-            //                DatabaseSettingsListItem(
-            //                    onClick = onDatabase,
-            //                    shape = shape,
-            //                    color = color,
-            //                    contentColor = contentColor,
-            //                )
-            //            }
+            item {
+                DatabaseSettingsListItem(
+                    onClick = onDatabase,
+                    shape = shape,
+                    color = color,
+                    contentColor = contentColor,
+                )
+            }
 
             item {
                 LanguageSettingsListItem(
