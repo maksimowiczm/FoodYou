@@ -1,12 +1,8 @@
 default:
     @just --list
 
-# KTLINT_COMPOSE_JAR - path to the ktlint-compose jar file
-format:
-    @ktlint -R $KTLINT_COMPOSE_JAR --editorconfig="./.editorconfig" --format
-
 # $KTFMT_JAR - path to the ktfmt jar file
-ktfmt:
+format:
     @find ./composeApp ./externaldatabase ./feature3 ./navigation ./platform ./business ./shared -type f \( -name "*.kt" -o -name "*.kts" \) -not -path "*/build/*" | xargs java -jar $KTFMT_JAR --kotlinlang-style
 
 release:
