@@ -1,22 +1,32 @@
 package com.maksimowiczm.foodyou.infrastructure.android
 
 import android.os.Bundle
+import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
+import com.maksimowiczm.foodyou.business.settings.application.query.ObserveSettingsQuery
+import com.maksimowiczm.foodyou.business.settings.domain.Settings
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import com.maksimowiczm.foodyou.shared.common.infrastructure.system.AndroidSystemDetails
+import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidClipboardManager
 import com.maksimowiczm.foodyou.shared.ui.utils.AndroidDateFormatter
 import com.maksimowiczm.foodyou.shared.ui.utils.ClipboardManagerProvider
 import com.maksimowiczm.foodyou.shared.ui.utils.DateFormatterProvider
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 
 abstract class FoodYouAbstractActivity : AppCompatActivity() {
 
     private val systemDetails: AndroidSystemDetails
+        get() = get()
+
+    private val queryBus: QueryBus
         get() = get()
 
     fun setContent(content: @Composable () -> Unit) {
@@ -52,16 +62,19 @@ abstract class FoodYouAbstractActivity : AppCompatActivity() {
     }
 
     private suspend fun observeShowContentSecurity() {
-        // TODO
-//        HideContent(get())
-//            .observe()
-//            .filterNotNull()
-//            .collectLatest {
-//                if (it) {
-//                    window.setFlags(FLAG_SECURE, FLAG_SECURE)
-//                } else {
-//                    window.clearFlags(FLAG_SECURE)
-//                }
-//            }
+        queryBus.dispatch<Settings>(ObserveSettingsQuery).map { it.secureScreen }.collectLatest {
+            if (it) {
+                window.setFlags(FLAG_SECURE, FLAG_SECURE)
+            } else {
+                window.clearFlags(FLAG_SECURE)
+            }
+            FoodYouLogger.d(TAG) {
+                "Secure screen is ${if (it) "enabled" else "disabled"}"
+            }
+        }
+    }
+
+    private companion object {
+        private const val TAG = "FoodYouAbstractActivity"
     }
 }

@@ -4,9 +4,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.business.settings.application.command.SetTranslationWarningCommand
 import com.maksimowiczm.foodyou.feature.settings.language.presentation.LanguageViewModel
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
-import com.maksimowiczm.foodyou.feature.shared.usecase.UpdateSettingsUseCase
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -15,21 +18,26 @@ import org.koin.compose.viewmodel.koinViewModel
 fun TranslationWarningStartupDialog(modifier: Modifier = Modifier) {
     val viewModel: LanguageViewModel = koinViewModel()
     val observeSettingsUseCase: ObserveSettingsUseCase = koinInject()
-    val updateSettingsUseCase: UpdateSettingsUseCase = koinInject()
+    val commandBus: CommandBus = koinInject()
 
-    val settings = observeSettingsUseCase.observe().collectAsStateWithLifecycle(null).value
+    val showTranslationWarning =
+        observeSettingsUseCase
+            .observe()
+            .map { it.showTranslationWarning }
+            .collectAsStateWithLifecycle(null)
+            .value
 
-    if (settings == null) return
+    if (showTranslationWarning == null) return
 
     val translation by viewModel.translation.collectAsStateWithLifecycle()
 
-    if (settings.showTranslationWarning && !translation.isVerified) {
+    if (showTranslationWarning && !translation.isVerified) {
         LanguageWarningDialog(
             onDismissRequest = {},
             onConfirm = {
                 // Okay, that is a bit awkward
                 viewModel.viewModelScope.launch {
-                    updateSettingsUseCase.update(settings.copy(showTranslationWarning = false))
+                    commandBus.dispatchIgnoreResult(SetTranslationWarningCommand(false))
                 }
             },
             modifier = modifier,

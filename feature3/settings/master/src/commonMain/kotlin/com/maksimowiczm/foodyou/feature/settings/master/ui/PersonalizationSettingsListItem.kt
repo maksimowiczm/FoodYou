@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.ui.personalization
+package com.maksimowiczm.foodyou.feature.settings.master.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Tune
@@ -18,25 +18,16 @@ fun PersonalizationSettingsListItem(
     shape: Shape,
     color: Color,
     contentColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     SettingsListItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Outlined.Tune,
-                contentDescription = null
-            )
-        },
-        label = {
-            Text(stringResource(Res.string.headline_personalization))
-        },
-        supportingContent = {
-            Text(stringResource(Res.string.description_personalization))
-        },
+        icon = { Icon(imageVector = Icons.Outlined.Tune, contentDescription = null) },
+        label = { Text(stringResource(Res.string.headline_personalization)) },
+        supportingContent = { Text(stringResource(Res.string.description_personalization)) },
         onClick = onClick,
         modifier = modifier,
         shape = shape,
         color = color,
-        contentColor = contentColor
+        contentColor = contentColor,
     )
 }

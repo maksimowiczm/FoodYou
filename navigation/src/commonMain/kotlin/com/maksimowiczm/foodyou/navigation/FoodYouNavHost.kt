@@ -10,8 +10,11 @@ import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsGoalsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsHomeDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsLanguageDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
 import com.maksimowiczm.foodyou.navigation.graph.about.aboutNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.settings.settingsNavigationGraph
 
@@ -40,6 +43,9 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnMeals = { navController.navigateSingleTop(SettingsMealsDestination) },
             masterOnLanguage = { navController.navigateSingleTop(SettingsLanguageDestination) },
             masterOnGoals = { navController.navigateSingleTop(SettingsGoalsDestination) },
+            masterOnPersonalization = {
+                navController.navigateSingleTop(SettingsPersonalizationDestination)
+            },
             mealsOnBack = { navController.popBackStack<SettingsMealsDestination>(true) },
             mealsOnMealsCardsSettings = {
                 // TODO
@@ -47,6 +53,23 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             languageOnBack = { navController.popBackStack<SettingsLanguageDestination>(true) },
             goalsOnBack = { navController.popBackStack<SettingsGoalsDestination>(true) },
             goalsOnSave = { navController.popBackStack<SettingsGoalsDestination>(true) },
+            personalizationOnBack = {
+                navController.popBackStack<SettingsPersonalizationDestination>(true)
+            },
+            personalizationOnHome = { navController.navigateSingleTop(SettingsHomeDestination) },
+            personalizationOnNutrition = {
+                navController.navigateSingleTop(SettingsNutritionFactsDestination)
+            },
+            nutritionOnBack = {
+                navController.popBackStack<SettingsNutritionFactsDestination>(true)
+            },
+            homeOnBack = { navController.popBackStack<SettingsHomeDestination>(true) },
+            homeOnGoals = {
+                // TODO
+            },
+            homeOnMeals = {
+                // TODO
+            },
         )
     }
 }

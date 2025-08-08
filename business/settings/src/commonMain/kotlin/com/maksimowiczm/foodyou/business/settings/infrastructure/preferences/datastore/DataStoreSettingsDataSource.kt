@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.business.settings.infrastructure.preferences.LocalSettingsDataSource
@@ -23,20 +24,15 @@ internal class DataStoreSettingsDataSource(private val dataStore: DataStore<Pref
                     preferences[SettingsPreferencesKeys.showTranslationWarning] ?: true,
                 nutrientsOrder =
                     preferences.getNutrientsOrder(SettingsPreferencesKeys.nutrientsOrder),
+                secureScreen = preferences[SettingsPreferencesKeys.secureScreen] ?: false,
+                homeCardOrder = preferences.getHomeCardOrder(SettingsPreferencesKeys.homeCardOrder),
             )
         }
 
-    override suspend fun update(settings: Settings) {
+    override suspend fun updateLastRememberedVersion(version: String) {
         dataStore.updateData { currentPreferences ->
             currentPreferences.toMutablePreferences().apply {
-                setWithNull(
-                    SettingsPreferencesKeys.lastRememberedVersion,
-                    settings.lastRememberedVersion,
-                )
-
-                set(SettingsPreferencesKeys.showTranslationWarning, settings.showTranslationWarning)
-
-                setNutrientsOrder(SettingsPreferencesKeys.nutrientsOrder, settings.nutrientsOrder)
+                setWithNull(SettingsPreferencesKeys.lastRememberedVersion, version)
             }
         }
     }
@@ -45,6 +41,30 @@ internal class DataStoreSettingsDataSource(private val dataStore: DataStore<Pref
         dataStore.updateData { currentPreferences ->
             currentPreferences.toMutablePreferences().apply {
                 set(SettingsPreferencesKeys.showTranslationWarning, show)
+            }
+        }
+    }
+
+    override suspend fun updateSecureScreen(secureScreen: Boolean) {
+        dataStore.updateData { currentPreferences ->
+            currentPreferences.toMutablePreferences().apply {
+                set(SettingsPreferencesKeys.secureScreen, secureScreen)
+            }
+        }
+    }
+
+    override suspend fun updateNutrientsOrder(order: List<NutrientsOrder>) {
+        dataStore.updateData { currentPreferences ->
+            currentPreferences.toMutablePreferences().apply {
+                setNutrientsOrder(SettingsPreferencesKeys.nutrientsOrder, order)
+            }
+        }
+    }
+
+    override suspend fun updateHomeCardOrder(order: List<HomeCard>) {
+        dataStore.updateData { currentPreferences ->
+            currentPreferences.toMutablePreferences().apply {
+                setHomeCardOrder(SettingsPreferencesKeys.homeCardOrder, order)
             }
         }
     }
@@ -67,8 +87,19 @@ private fun Preferences.getNutrientsOrder(key: Preferences.Key<String>): List<Nu
     runCatching { this[key]?.split(",")?.map { NutrientsOrder.entries[it.toInt()] } }.getOrNull()
         ?: NutrientsOrder.defaultOrder
 
+private fun MutablePreferences.setHomeCardOrder(
+    key: Preferences.Key<String>,
+    value: List<HomeCard>,
+) = setWithNull(key, value.joinToString(",") { it.ordinal.toString() })
+
+private fun Preferences.getHomeCardOrder(key: Preferences.Key<String>): List<HomeCard> =
+    runCatching { this[key]?.split(",")?.map { HomeCard.entries[it.toInt()] } }.getOrNull()
+        ?: HomeCard.defaultOrder
+
 private object SettingsPreferencesKeys {
     val lastRememberedVersion = stringPreferencesKey("settings:lastRememberedVersion")
     val showTranslationWarning = booleanPreferencesKey("settings:showTranslationWarning")
     val nutrientsOrder = stringPreferencesKey("settings:nutrientsOrder")
+    val secureScreen = booleanPreferencesKey("settings:secureScreen")
+    val homeCardOrder = stringPreferencesKey("settings:homeCardOrder")
 }

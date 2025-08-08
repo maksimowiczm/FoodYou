@@ -3,7 +3,9 @@ package com.maksimowiczm.foodyou.infrastructure.android
 import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import androidx.lifecycle.lifecycleScope
 import androidx.test.core.app.launchActivity
-import com.maksimowiczm.foodyou.preferences.HideContent
+import com.maksimowiczm.foodyou.business.settings.application.command.SetSecureScreenCommand
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import org.junit.Test
@@ -14,18 +16,18 @@ class SecureActivityTest {
         launchActivity<A>().use {
             it.onActivity { activity ->
                 with(activity) {
-                    val hideContent = HideContent(get())
+                    val commandBus: CommandBus = get()
 
                     // Run on same thread as the activity
                     lifecycleScope.launch {
-                        hideContent.set(true)
+                        commandBus.dispatchIgnoreResult(SetSecureScreenCommand(true))
 
                         // Yield just to be safe
                         yield()
 
                         assert((window.attributes.flags and FLAG_SECURE) == FLAG_SECURE)
 
-                        hideContent.set(false)
+                        commandBus.dispatchIgnoreResult(SetSecureScreenCommand(false))
 
                         // Yield just to be safe
                         yield()

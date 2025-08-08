@@ -11,3 +11,9 @@ import kotlinx.serialization.Serializable
 @Serializable internal data object SettingsLanguageDestination : NavigationDestination
 
 @Serializable internal data object SettingsGoalsDestination : NavigationDestination
+
+@Serializable internal data object SettingsPersonalizationDestination : NavigationDestination
+
+@Serializable internal data object SettingsNutritionFactsDestination : NavigationDestination
+
+@Serializable internal data object SettingsHomeDestination : NavigationDestination

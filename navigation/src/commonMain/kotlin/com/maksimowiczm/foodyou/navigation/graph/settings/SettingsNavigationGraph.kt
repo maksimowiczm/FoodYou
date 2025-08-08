@@ -6,11 +6,17 @@ import com.maksimowiczm.foodyou.feature.settings.goals.ui.DailyGoalsScreen
 import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageScreen
 import com.maksimowiczm.foodyou.feature.settings.master.ui.SettingsScreen
 import com.maksimowiczm.foodyou.feature.settings.meal.ui.MealSettingsScreen
+import com.maksimowiczm.foodyou.feature.settings.personalization.ui.HomePersonalizationScreen
+import com.maksimowiczm.foodyou.feature.settings.personalization.ui.PersonalizationScreen
+import com.maksimowiczm.foodyou.feature.settings.personalization.ui.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsGoalsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsHomeDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsLanguageDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
 import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
 
 internal fun NavGraphBuilder.settingsNavigationGraph(
@@ -20,11 +26,19 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
     masterOnMeals: () -> Unit,
     masterOnLanguage: () -> Unit,
     masterOnGoals: () -> Unit,
+    masterOnPersonalization: () -> Unit,
     mealsOnBack: () -> Unit,
     mealsOnMealsCardsSettings: () -> Unit,
     goalsOnBack: () -> Unit,
     goalsOnSave: () -> Unit,
     languageOnBack: () -> Unit,
+    personalizationOnBack: () -> Unit,
+    personalizationOnHome: () -> Unit,
+    personalizationOnNutrition: () -> Unit,
+    nutritionOnBack: () -> Unit,
+    homeOnBack: () -> Unit,
+    homeOnGoals: () -> Unit,
+    homeOnMeals: () -> Unit,
 ) {
     navigation<SettingsDestination>(startDestination = SettingsMasterDestination) {
         forwardBackwardComposable<SettingsMasterDestination> {
@@ -34,6 +48,7 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
                 onAbout = masterOnAbout,
                 onMeals = masterOnMeals,
                 onGoals = masterOnGoals,
+                onPersonalization = masterOnPersonalization,
                 onLanguage = masterOnLanguage,
             )
         }
@@ -48,6 +63,23 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
         }
         forwardBackwardComposable<SettingsGoalsDestination> {
             DailyGoalsScreen(onBack = goalsOnBack, onSave = goalsOnSave)
+        }
+        forwardBackwardComposable<SettingsPersonalizationDestination> {
+            PersonalizationScreen(
+                onBack = personalizationOnBack,
+                onHomePersonalization = personalizationOnHome,
+                onNutritionFactsPersonalization = personalizationOnNutrition,
+            )
+        }
+        forwardBackwardComposable<SettingsNutritionFactsDestination> {
+            PersonalizeNutritionFactsScreen(onBack = nutritionOnBack)
+        }
+        forwardBackwardComposable<SettingsHomeDestination> {
+            HomePersonalizationScreen(
+                onBack = homeOnBack,
+                onGoals = homeOnGoals,
+                onMeals = homeOnMeals,
+            )
         }
     }
 }
