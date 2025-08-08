@@ -43,6 +43,8 @@ kotlin {
             implementation(projects.feature3.settings.language)
             implementation(projects.feature3.settings.goals)
             implementation(projects.feature3.settings.personalization)
+
+            implementation(projects.feature3.home)
         }
     }
 }

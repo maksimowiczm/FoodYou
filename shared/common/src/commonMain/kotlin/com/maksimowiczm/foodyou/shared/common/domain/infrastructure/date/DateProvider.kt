@@ -17,5 +17,5 @@ interface DateProvider {
     fun observeDate(): Flow<LocalDate>
 
     /** Returns a [Flow] that emits the current time and updates it every minute. */
-    fun observeMinutes(): Flow<LocalTime>
+    fun observeTime(): Flow<LocalTime>
 }

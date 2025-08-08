@@ -93,6 +93,7 @@ kotlin {
             implementation(projects.feature3.settings.language)
             implementation(projects.feature3.settings.goals)
             implementation(projects.feature3.settings.personalization)
+            implementation(projects.feature3.home)
 
             implementation(projects.feature.openfoodfacts)
             implementation(projects.feature.usda)
@@ -121,7 +122,6 @@ kotlin {
 //            implementation(project(":feature:food"))
 //            implementation(project(":feature:measurement"))
 //            implementation(project(":feature:fooddiary"))
-            implementation(project(":feature:calendar"))
 //            implementation(project(":feature:language"))
 //            implementation(project(":feature:onboarding"))
 //            implementation(project(":feature:importexport"))

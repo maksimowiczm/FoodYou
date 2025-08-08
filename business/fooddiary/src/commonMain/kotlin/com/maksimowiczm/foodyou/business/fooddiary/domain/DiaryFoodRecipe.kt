@@ -7,6 +7,7 @@ data class DiaryFoodRecipe(
     override val name: String,
     val servings: Int,
     val ingredients: List<DiaryFoodRecipeIngredient>,
+    override val isLiquid: Boolean,
 ) : DiaryFood {
     override val nutritionFacts: NutritionFacts by lazy {
         ingredients.map { it.nutritionFacts }.sum()

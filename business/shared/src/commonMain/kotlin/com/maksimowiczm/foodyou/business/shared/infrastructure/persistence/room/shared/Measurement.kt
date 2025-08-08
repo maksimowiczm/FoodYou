@@ -17,3 +17,11 @@ fun Measurement.toEntityValue(): Double =
         is Measurement.Package -> this.quantity
         is Measurement.Serving -> this.quantity
     }
+
+fun measurementFrom(type: MeasurementType, rawValue: Double): Measurement =
+    when (type) {
+        MeasurementType.Gram -> Measurement.Gram(rawValue)
+        MeasurementType.Milliliter -> Measurement.Milliliter(rawValue)
+        MeasurementType.Package -> Measurement.Package(rawValue)
+        MeasurementType.Serving -> Measurement.Serving(rawValue)
+    }

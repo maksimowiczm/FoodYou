@@ -17,4 +17,6 @@ internal interface LocalSettingsDataSource {
     suspend fun updateNutrientsOrder(order: List<NutrientsOrder>)
 
     suspend fun updateHomeCardOrder(order: List<HomeCard>)
+
+    suspend fun updateExpandGoalCard(expand: Boolean)
 }

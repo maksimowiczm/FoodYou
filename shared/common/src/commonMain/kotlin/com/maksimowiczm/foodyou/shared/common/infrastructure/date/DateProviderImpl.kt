@@ -59,7 +59,7 @@ internal class DateProviderImpl : DateProvider {
         }
     }
 
-    override fun observeMinutes(): Flow<LocalTime> = flow {
+    override fun observeTime(): Flow<LocalTime> = flow {
         while (true) {
             val time = getCurrentDateTime().time
             emit(time)

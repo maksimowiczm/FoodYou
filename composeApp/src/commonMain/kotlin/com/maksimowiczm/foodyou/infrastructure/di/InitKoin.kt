@@ -36,6 +36,11 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         featureSettingsPersonalizationModule
     )
 
+    // Home
+    modules(
+        featureHomeModule
+    )
+
     modules(
 //        foodModule,
 //        foodDiaryModule,

@@ -9,4 +9,5 @@ sealed interface DiaryFood {
     val nutritionFacts: NutritionFacts
     val servingWeight: Double?
     val totalWeight: Double?
+    val isLiquid: Boolean
 }

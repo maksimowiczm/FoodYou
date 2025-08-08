@@ -16,4 +16,5 @@ data class DiaryProductEntity(
     @Embedded val minerals: Minerals,
     val packageWeight: Double?,
     val servingWeight: Double?,
+    val isLiquid: Boolean,
 )

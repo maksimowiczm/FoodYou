@@ -9,10 +9,8 @@ import com.maksimowiczm.foodyou.feature.food.ui.CreateRecipeScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateProductScreen
 import com.maksimowiczm.foodyou.feature.food.ui.UpdateRecipeScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.FoodSearchScreen
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.GoalsCardSettings
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.screen.GoalsScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.settings.DailyGoalsScreen
-import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.cardsettings.MealsCardsSettings
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.meal.settings.MealSettingsScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.CreateMeasurementScreen
 import com.maksimowiczm.foodyou.feature.fooddiary.ui.measure.UpdateMeasurementScreen

@@ -5,11 +5,10 @@ import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.RecipeIngredient
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRecipeDataSource
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeIngredientEntity
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.MeasurementType
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.measurementFrom
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityType
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -136,11 +135,3 @@ private val RecipeIngredientEntity.foodId: FoodId
             ?: error(
                 "RecipeIngredientEntity must have either ingredientRecipeId or ingredientProductId set"
             )
-
-private fun measurementFrom(type: MeasurementType, rawValue: Double): Measurement =
-    when (type) {
-        MeasurementType.Gram -> Measurement.Gram(rawValue)
-        MeasurementType.Milliliter -> Measurement.Milliliter(rawValue)
-        MeasurementType.Package -> Measurement.Package(rawValue)
-        MeasurementType.Serving -> Measurement.Serving(rawValue)
-    }

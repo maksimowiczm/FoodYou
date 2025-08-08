@@ -80,7 +80,7 @@ abstract class MeasurementDao {
         WHERE id = :id
         """
     )
-    abstract fun observeDiaryRecipe(id: Long): Flow<DiaryRecipeEntity>
+    abstract fun observeDiaryRecipe(id: Long): Flow<DiaryRecipeEntity?>
 
     @Query(
         """

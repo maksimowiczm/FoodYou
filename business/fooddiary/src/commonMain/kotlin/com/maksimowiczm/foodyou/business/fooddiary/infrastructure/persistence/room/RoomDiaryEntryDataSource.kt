@@ -1,24 +1,68 @@
 package com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.room
 
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFood
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodProduct
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipeIngredient
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.DiaryProductEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.DiaryRecipeEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.DiaryRecipeIngredientEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.measurementFrom
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityType
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityValue
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toNutritionFacts
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 
 internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementDao) :
     LocalDiaryEntryDataSource {
+
+    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
+    override fun observeEntries(mealId: Long, date: LocalDate): Flow<List<DiaryEntry>> =
+        measurementDao
+            .observeMeasurements(mealId = mealId, epochDay = date.toEpochDays())
+            .flatMapLatest { entities ->
+                if (entities.isEmpty()) {
+                    return@flatMapLatest flowOf(emptyList())
+                }
+
+                entities
+                    .map { entity ->
+                        val foodFlow = observeFood(entity)
+                        val createdAt =
+                            Instant.fromEpochSeconds(entity.createdAt)
+                                .toLocalDateTime(TimeZone.currentSystemDefault())
+
+                        foodFlow.map {
+                            DiaryEntry(
+                                id = entity.id,
+                                mealId = entity.mealId,
+                                date = LocalDate.fromEpochDays(entity.epochDay),
+                                measurement = measurementFrom(entity.measurement, entity.quantity),
+                                food = it,
+                                createdAt = createdAt,
+                            )
+                        }
+                    }
+                    .combine()
+            }
 
     @OptIn(ExperimentalTime::class)
     override suspend fun insert(diaryEntry: DiaryEntry): Long {
@@ -82,9 +126,24 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
         return measurementDao.insertDiaryProduct(entity)
     }
 
+    private fun observeFood(measurementEntity: MeasurementEntity): Flow<DiaryFood> =
+        measurementEntity.productId?.let { productId -> observeProduct(productId) }
+            ?: measurementEntity.recipeId?.let { recipeId -> observeRecipe(recipeId) }
+            ?: error("Measurement entity must have either a product or a recipe")
+
+    private fun observeProduct(productId: Long): Flow<DiaryFoodProduct> =
+        measurementDao.observeDiaryProduct(productId).filterNotNull().map { entity ->
+            entity.toModel()
+        }
+
     private suspend fun insertRecipe(diaryRecipe: DiaryFoodRecipe): Long {
 
-        val recipe = DiaryRecipeEntity(name = diaryRecipe.name, servings = diaryRecipe.servings)
+        val recipe =
+            DiaryRecipeEntity(
+                name = diaryRecipe.name,
+                servings = diaryRecipe.servings,
+                isLiquid = diaryRecipe.isLiquid,
+            )
 
         val recipeId = measurementDao.insertDiaryRecipe(recipe)
 
@@ -119,6 +178,58 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
 
         return recipeId
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun observeRecipe(recipeId: Long): Flow<DiaryFoodRecipe> =
+        measurementDao
+            .observeDiaryRecipe(recipeId)
+            .filterNotNull()
+            .map { entity ->
+                val ingredients =
+                    measurementDao
+                        .observeDiaryRecipeIngredients(entity.id)
+                        .map { ingredients ->
+                            ingredients
+                                .map { ingredient ->
+                                    ingredient.ingredientProductId?.let {
+                                        observeProduct(it).filterNotNull().map {
+                                            measurementFrom(
+                                                ingredient.measurement,
+                                                ingredient.quantity,
+                                            ) to it
+                                        }
+                                    }
+                                        ?: ingredient.ingredientRecipeId?.let { recipeId ->
+                                            observeRecipe(recipeId).filterNotNull().map {
+                                                measurementFrom(
+                                                    ingredient.measurement,
+                                                    ingredient.quantity,
+                                                ) to it
+                                            }
+                                        }
+                                        ?: error(
+                                            "Recipe ingredient must have either a product or a recipe"
+                                        )
+                                }
+                                .combine()
+                        }
+                        .flatMapLatest { it }
+                        .map { list ->
+                            list.map { (measurement, food) ->
+                                DiaryFoodRecipeIngredient(food = food, measurement = measurement)
+                            }
+                        }
+
+                ingredients.map { ingredients ->
+                    DiaryFoodRecipe(
+                        name = entity.name,
+                        servings = entity.servings,
+                        ingredients = ingredients,
+                        isLiquid = entity.isLiquid,
+                    )
+                }
+            }
+            .flatMapLatest { it }
 }
 
 private fun DiaryFoodProduct.toEntity(): DiaryProductEntity {
@@ -131,5 +242,15 @@ private fun DiaryFoodProduct.toEntity(): DiaryProductEntity {
         minerals = minerals,
         servingWeight = servingWeight,
         packageWeight = totalWeight,
+        isLiquid = isLiquid,
     )
 }
+
+private fun DiaryProductEntity.toModel(): DiaryFoodProduct =
+    DiaryFoodProduct(
+        name = name,
+        nutritionFacts = toNutritionFacts(nutrients, vitamins, minerals),
+        servingWeight = servingWeight,
+        totalWeight = packageWeight,
+        isLiquid = isLiquid,
+    )

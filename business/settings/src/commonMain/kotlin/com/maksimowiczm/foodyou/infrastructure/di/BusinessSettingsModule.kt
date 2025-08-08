@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
+import com.maksimowiczm.foodyou.business.settings.application.command.SetExpandGoalCardCommandHandler
 import com.maksimowiczm.foodyou.business.settings.application.command.SetHomeCardOrderCommandHandler
 import com.maksimowiczm.foodyou.business.settings.application.command.SetLastRememberedVersionCommandHandler
 import com.maksimowiczm.foodyou.business.settings.application.command.SetNutrientsOrderCommandHandler
@@ -42,6 +43,8 @@ val businessSettingsModule = module {
         }
         .bind<CommandHandler<*, *, *>>()
     factoryOf(::SetHomeCardOrderCommandHandler) { named("SetHomeCardOrderCommandHandler") }
+        .bind<CommandHandler<*, *, *>>()
+    factoryOf(::SetExpandGoalCardCommandHandler) { named("SetExpandGoalCardCommandHandler") }
         .bind<CommandHandler<*, *, *>>()
 
     factoryOf(::DataStoreSettingsDataSource).bind<LocalSettingsDataSource>()

@@ -1,6 +1,7 @@
 package com.maksimowiczm.foodyou.business.fooddiary.domain
 
 import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
@@ -11,4 +12,9 @@ data class DiaryEntry(
     val measurement: Measurement,
     val food: DiaryFood,
     val createdAt: LocalDateTime,
-)
+) {
+    val weight: Double
+        get() = measurement.weight(food)
+
+    val nutritionFacts: NutritionFacts by lazy { weight.div(100).let { food.nutritionFacts * it } }
+}

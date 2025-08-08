@@ -7,4 +7,5 @@ data class DiaryFoodProduct(
     override val nutritionFacts: NutritionFacts,
     override val servingWeight: Double?,
     override val totalWeight: Double?,
+    override val isLiquid: Boolean,
 ) : DiaryFood

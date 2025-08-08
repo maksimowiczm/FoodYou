@@ -26,47 +26,36 @@ internal class DataStoreSettingsDataSource(private val dataStore: DataStore<Pref
                     preferences.getNutrientsOrder(SettingsPreferencesKeys.nutrientsOrder),
                 secureScreen = preferences[SettingsPreferencesKeys.secureScreen] ?: false,
                 homeCardOrder = preferences.getHomeCardOrder(SettingsPreferencesKeys.homeCardOrder),
+                expandGoalCard = preferences[SettingsPreferencesKeys.expandGoalCard] ?: true,
             )
         }
 
     override suspend fun updateLastRememberedVersion(version: String) {
-        dataStore.updateData { currentPreferences ->
-            currentPreferences.toMutablePreferences().apply {
-                setWithNull(SettingsPreferencesKeys.lastRememberedVersion, version)
-            }
-        }
+        updateData { setWithNull(SettingsPreferencesKeys.lastRememberedVersion, version) }
     }
 
     override suspend fun updateShowTranslationWarning(show: Boolean) {
-        dataStore.updateData { currentPreferences ->
-            currentPreferences.toMutablePreferences().apply {
-                set(SettingsPreferencesKeys.showTranslationWarning, show)
-            }
-        }
+        updateData { set(SettingsPreferencesKeys.showTranslationWarning, show) }
     }
 
     override suspend fun updateSecureScreen(secureScreen: Boolean) {
-        dataStore.updateData { currentPreferences ->
-            currentPreferences.toMutablePreferences().apply {
-                set(SettingsPreferencesKeys.secureScreen, secureScreen)
-            }
-        }
+        updateData { set(SettingsPreferencesKeys.secureScreen, secureScreen) }
     }
 
     override suspend fun updateNutrientsOrder(order: List<NutrientsOrder>) {
-        dataStore.updateData { currentPreferences ->
-            currentPreferences.toMutablePreferences().apply {
-                setNutrientsOrder(SettingsPreferencesKeys.nutrientsOrder, order)
-            }
-        }
+        updateData { setNutrientsOrder(SettingsPreferencesKeys.nutrientsOrder, order) }
     }
 
     override suspend fun updateHomeCardOrder(order: List<HomeCard>) {
-        dataStore.updateData { currentPreferences ->
-            currentPreferences.toMutablePreferences().apply {
-                setHomeCardOrder(SettingsPreferencesKeys.homeCardOrder, order)
-            }
-        }
+        updateData { setHomeCardOrder(SettingsPreferencesKeys.homeCardOrder, order) }
+    }
+
+    override suspend fun updateExpandGoalCard(expand: Boolean) {
+        updateData { set(SettingsPreferencesKeys.expandGoalCard, expand) }
+    }
+
+    private suspend fun updateData(transform: suspend MutablePreferences.() -> Unit) {
+        dataStore.updateData { it.toMutablePreferences().apply { transform() } }
     }
 }
 
@@ -102,4 +91,5 @@ private object SettingsPreferencesKeys {
     val nutrientsOrder = stringPreferencesKey("settings:nutrientsOrder")
     val secureScreen = booleanPreferencesKey("settings:secureScreen")
     val homeCardOrder = stringPreferencesKey("settings:homeCardOrder")
+    val expandGoalCard = booleanPreferencesKey("settings:expandGoalCard")
 }

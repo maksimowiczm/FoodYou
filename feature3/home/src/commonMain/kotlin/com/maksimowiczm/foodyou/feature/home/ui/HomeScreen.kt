@@ -1,0 +1,115 @@
+package com.maksimowiczm.foodyou.feature.home.ui
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
+import com.maksimowiczm.foodyou.feature.home.presentation.HomeViewModel
+import com.maksimowiczm.foodyou.feature.home.ui.calendar.CalendarCard
+import com.maksimowiczm.foodyou.feature.home.ui.goals.GoalsCard
+import com.maksimowiczm.foodyou.feature.home.ui.meals.card.MealsCards
+import com.maksimowiczm.foodyou.feature.home.ui.shared.rememberHomeState
+import com.maksimowiczm.foodyou.shared.ui.ext.add
+import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(
+    onSettings: () -> Unit,
+    onTitle: () -> Unit,
+    onMealCardLongClick: (mealId: Long) -> Unit,
+    onGoalsCardLongClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val viewModel: HomeViewModel = koinViewModel()
+    val order by viewModel.homeOrder.collectAsStateWithLifecycle()
+    val homeState = rememberHomeState()
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(Res.string.app_name),
+                        modifier =
+                            Modifier.clickable(
+                                interactionSource = null,
+                                indication = null,
+                                onClick = onTitle,
+                            ),
+                    )
+                },
+                actions = {
+                    IconButton(onClick = onSettings) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = stringResource(Res.string.action_go_to_settings),
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior,
+            )
+        },
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues.add(bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(order) {
+                when (it) {
+                    HomeCard.Calendar ->
+                        CalendarCard(
+                            homeState = homeState,
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                        )
+
+                    HomeCard.Goals ->
+                        GoalsCard(
+                            homeState = homeState,
+                            onClick = {
+                                // TODO
+                            },
+                            onLongClick = onGoalsCardLongClick,
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                        )
+
+                    HomeCard.Meals ->
+                        MealsCards(
+                            homeState = homeState,
+                            onAdd = { epochDay, mealId ->
+                                // TODO
+                            },
+                            onEditMeasurement = {
+                                // TODO
+                            },
+                            onLongClick = onMealCardLongClick,
+                            contentPadding = PaddingValues(horizontal = 8.dp),
+                        )
+                }
+            }
+        }
+    }
+}
