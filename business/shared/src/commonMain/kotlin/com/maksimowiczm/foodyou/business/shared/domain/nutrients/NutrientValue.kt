@@ -15,6 +15,9 @@ sealed interface NutrientValue {
         override operator fun div(other: Double) = Complete(value / other)
     }
 
+    val isComplete: Boolean
+        get() = this is Complete
+
     /**
      * Represents a nutrient value that is not known or incomplete (e.g. not all ingredients have
      * complete data).
@@ -27,6 +30,9 @@ sealed interface NutrientValue {
                 else -> Incomplete((value ?: 0.0) + (other.value ?: 0.0))
             }
     }
+
+    val isIncomplete: Boolean
+        get() = this is Incomplete
 
     operator fun plus(other: NutrientValue): NutrientValue =
         when (this) {

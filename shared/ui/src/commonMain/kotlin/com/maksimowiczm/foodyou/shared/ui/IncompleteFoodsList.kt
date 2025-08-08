@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.ui
+package com.maksimowiczm.foodyou.shared.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -16,8 +16,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun IncompleteFoodsList(
     foods: List<String>,
-    onFoodClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFoodClick: ((String) -> Unit)? = null,
 ) {
     val desc = "* " + stringResource(Res.string.description_incomplete_nutrition_data)
 
@@ -25,13 +25,13 @@ fun IncompleteFoodsList(
         Text(
             text = desc,
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.outline
+            color = MaterialTheme.colorScheme.outline,
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = stringResource(Res.string.headline_incomplete_products),
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.outline
+            color = MaterialTheme.colorScheme.outline,
         )
         foods.forEach { food ->
             Text(
@@ -39,11 +39,14 @@ fun IncompleteFoodsList(
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.outline,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.clickable(
-                    interactionSource = null,
-                    indication = null,
-                    onClick = { onFoodClick(food) }
-                )
+                modifier =
+                    if (onFoodClick == null) Modifier
+                    else
+                        Modifier.clickable(
+                            interactionSource = null,
+                            indication = null,
+                            onClick = { onFoodClick(food) },
+                        ),
             )
         }
     }

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.screen
+package com.maksimowiczm.foodyou.feature.goals.ui
 
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -25,9 +25,9 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.until
 
 /**
- * The maximum number of pages allowed in the pager.
- * This limit is set to 50,000 to ensure reasonable performance and memory usage,
- * while allowing users to select dates far into the past and future.
+ * The maximum number of pages allowed in the pager. This limit is set to 50,000 to ensure
+ * reasonable performance and memory usage, while allowing users to select dates far into the past
+ * and future.
  */
 private const val MAX_PAGER_SIZE = 50_000
 
@@ -38,17 +38,14 @@ internal fun rememberGoalsScreenState(selectedDate: LocalDate): GoalsScreenState
     val zeroDate = LocalDate.fromEpochDays(0)
     val initialPage = (zeroDate.until(selectedDate, DateTimeUnit.DAY)).toInt()
 
-    val pagerState = rememberPagerState(
-        initialPage = initialPage,
-        pageCount = { maxSize }
-    )
+    val pagerState = rememberPagerState(initialPage = initialPage, pageCount = { maxSize })
     val coroutineScope = rememberCoroutineScope()
 
     return remember(pagerState, coroutineScope, selectedDate) {
         GoalsScreenState(
             coroutineScope = coroutineScope,
             zeroDate = zeroDate,
-            pagerState = pagerState
+            pagerState = pagerState,
         )
     }
 }
@@ -56,11 +53,9 @@ internal fun rememberGoalsScreenState(selectedDate: LocalDate): GoalsScreenState
 internal class GoalsScreenState(
     private val coroutineScope: CoroutineScope,
     private val zeroDate: LocalDate,
-    val pagerState: PagerState
+    val pagerState: PagerState,
 ) {
-    val selectedDate by derivedStateOf {
-        zeroDate.plus((pagerState.currentPage).days)
-    }
+    val selectedDate by derivedStateOf { zeroDate.plus((pagerState.currentPage).days) }
 
     fun goToToday() {
         goToDate(LocalDate.now())
@@ -68,9 +63,7 @@ internal class GoalsScreenState(
 
     fun goToDate(date: LocalDate) {
         val page = (zeroDate.until(date, DateTimeUnit.DAY)).toInt()
-        coroutineScope.launch {
-            pagerState.animateScrollToPage(page)
-        }
+        coroutineScope.launch { pagerState.animateScrollToPage(page) }
     }
 
     fun dateForPage(page: Int) = zeroDate.plus(page.days)
@@ -81,30 +74,28 @@ internal class GoalsScreenState(
         val lastDate = zeroDate + (pagerState.pageCount - 1).days
         val yearRange = zeroDate.year..lastDate.year
 
-        val initialSelectedDateMillis = selectedDate
-            .atStartOfDayIn(TimeZone.UTC)
-            .toEpochMilliseconds()
-            .takeIf { it >= 0 } ?: 0
+        val initialSelectedDateMillis =
+            selectedDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds().takeIf { it >= 0 } ?: 0
 
-        val initialDisplayedMonthMillis = selectedDate
-            .atStartOfDayIn(TimeZone.UTC)
-            .toEpochMilliseconds()
-            .takeIf { it >= 0 } ?: 0
+        val initialDisplayedMonthMillis =
+            selectedDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds().takeIf { it >= 0 } ?: 0
 
         return androidx.compose.material3.rememberDatePickerState(
             initialSelectedDateMillis = initialSelectedDateMillis,
             initialDisplayedMonthMillis = initialDisplayedMonthMillis,
             yearRange = yearRange,
-            selectableDates = object : SelectableDates {
-                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                    val date = Instant
-                        .fromEpochMilliseconds(utcTimeMillis)
-                        .toLocalDateTime(TimeZone.UTC).date
-                    return date in zeroDate..lastDate
-                }
+            selectableDates =
+                object : SelectableDates {
+                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                        val date =
+                            Instant.fromEpochMilliseconds(utcTimeMillis)
+                                .toLocalDateTime(TimeZone.UTC)
+                                .date
+                        return date in zeroDate..lastDate
+                    }
 
-                override fun isSelectableYear(year: Int) = year in yearRange
-            }
+                    override fun isSelectableYear(year: Int) = year in yearRange
+                },
         )
     }
 }

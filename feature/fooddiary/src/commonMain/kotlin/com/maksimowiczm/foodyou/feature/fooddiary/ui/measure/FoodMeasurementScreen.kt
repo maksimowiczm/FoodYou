@@ -47,7 +47,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.shared.common.date.minus
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.core.ui.unorderedList
 import com.maksimowiczm.foodyou.core.ui.utils.LocalClipboardManager

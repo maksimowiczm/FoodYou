@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsCardSettingsDestination
+import com.maksimowiczm.foodyou.navigation.domain.GoalsMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.HomeDestination
 import com.maksimowiczm.foodyou.navigation.domain.MealsCardsSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination
@@ -19,6 +20,7 @@ import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
 import com.maksimowiczm.foodyou.navigation.graph.about.aboutNavigationGraph
+import com.maksimowiczm.foodyou.navigation.graph.goals.goalsNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.home.homeNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.settings.settingsNavigationGraph
 
@@ -40,6 +42,7 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnGoalsCardSettings = {
                 navController.navigateSingleTop(GoalsCardSettingsDestination)
             },
+            masterOnGoals = { navController.navigateSingleTop(GoalsMasterDestination(it)) },
             mealsCardsSettingsOnBack = {
                 navController.popBackStack<MealsCardsSettingsDestination>(true)
             },
@@ -50,7 +53,7 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
                 navController.popBackStack<GoalsCardSettingsDestination>(true)
             },
             goalsCardSettingsOnGoalsSettings = {
-                // TODO
+                navController.navigateSingleTop(GoalsCardSettingsDestination)
             },
         )
         aboutNavigationGraph(
@@ -92,6 +95,9 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             homeOnBack = { navController.popBackStack<SettingsHomeDestination>(true) },
             homeOnGoals = { navController.navigateSingleTop(GoalsCardSettingsDestination) },
             homeOnMeals = { navController.navigateSingleTop(MealsCardsSettingsDestination) },
+        )
+        goalsNavigationGraph(
+            masterOnBack = { navController.popBackStack<GoalsMasterDestination>(true) }
         )
     }
 }

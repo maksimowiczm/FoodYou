@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.screen
+package com.maksimowiczm.foodyou.feature.goals.ui
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
@@ -25,38 +25,30 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun Modifier.animatePlacement(
     scope: CoroutineScope = rememberCoroutineScope(),
-    animationSpec: AnimationSpec<IntOffset> = MaterialTheme.motionScheme.defaultSpatialSpec()
+    animationSpec: AnimationSpec<IntOffset> = MaterialTheme.motionScheme.defaultSpatialSpec(),
 ): Modifier {
     var targetOffset by remember { mutableStateOf(IntOffset.Zero) }
-    var animatable by remember {
-        mutableStateOf<Animatable<IntOffset, AnimationVector2D>?>(null)
-    }
+    var animatable by remember { mutableStateOf<Animatable<IntOffset, AnimationVector2D>?>(null) }
 
-    return onPlaced {
-        targetOffset = it.positionInParent().round()
-    }.offset {
-        val isInitialized = animatable != null
-        val anim = animatable
-            ?: Animatable(targetOffset, IntOffset.VectorConverter).also {
-                animatable = it
-            }
+    return onPlaced { targetOffset = it.positionInParent().round() }
+        .offset {
+            val isInitialized = animatable != null
+            val anim =
+                animatable
+                    ?: Animatable(targetOffset, IntOffset.VectorConverter).also { animatable = it }
 
-        if (!isInitialized) {
-            scope.launch {
-                anim.snapTo(targetOffset)
-            }
+            if (!isInitialized) {
+                scope.launch { anim.snapTo(targetOffset) }
 
-            animatable?.let { it.value - targetOffset } ?: IntOffset.Zero
-        } else {
-            if (anim.targetValue != targetOffset) {
-                scope.launch {
-                    anim.animateTo(targetOffset, animationSpec)
+                animatable?.let { it.value - targetOffset } ?: IntOffset.Zero
+            } else {
+                if (anim.targetValue != targetOffset) {
+                    scope.launch { anim.animateTo(targetOffset, animationSpec) }
                 }
-            }
 
-            // Offset the child in the opposite direction to the targetOffset, and slowly catch
-            // up to zero offset via an animation to achieve an overall animated movement.
-            animatable?.let { it.value - targetOffset } ?: IntOffset.Zero
+                // Offset the child in the opposite direction to the targetOffset, and slowly catch
+                // up to zero offset via an animation to achieve an overall animated movement.
+                animatable?.let { it.value - targetOffset } ?: IntOffset.Zero
+            }
         }
-    }
 }

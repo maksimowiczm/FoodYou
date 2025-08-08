@@ -94,6 +94,7 @@ kotlin {
             implementation(projects.feature3.settings.goals)
             implementation(projects.feature3.settings.personalization)
             implementation(projects.feature3.home)
+            implementation(projects.feature3.goals)
 
             implementation(projects.feature.openfoodfacts)
             implementation(projects.feature.usda)
