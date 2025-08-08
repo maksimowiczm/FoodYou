@@ -17,9 +17,6 @@ room { schemaDirectory("$projectDir/schemas") }
 kotlin {
     sourceSets.all { languageSettings.enableLanguageFeature("ExpectActualClasses") }
 
-    // Target declarations - add or remove as needed below. These define
-    // which platforms this KMP module supports.
-    // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
         namespace = "com.maksimowiczm.foodyou.business.shared"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -29,15 +26,10 @@ kotlin {
 
         withDeviceTestBuilder { sourceSetTreeName = "test" }
             .configure { instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
+
+        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
     }
 
-    // For iOS targets, this is also where you should
-    // configure native binary output. For more information, see:
-    // https://kotlinlang.org/docs/multiplatform-build-native-binaries.html#build-xcframeworks
-
-    // A step-by-step guide on how to include this library in an XCode
-    // project can be found here:
-    // https://developer.android.com/kotlin/multiplatform/migrate
     val xcfName = "business:sharedKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }
@@ -55,7 +47,11 @@ kotlin {
             implementation(libs.androidx.datastore.preferences.core)
         }
 
-        commonTest.dependencies { implementation(libs.kotlin.test) }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.androidx.room.testing)
+            implementation(libs.androidx.sqlite.bundled)
+        }
 
         androidMain.dependencies {
             implementation(libs.koin.android)
@@ -63,12 +59,11 @@ kotlin {
             implementation(libs.sqlite.android)
         }
 
-        getByName("androidDeviceTest") {
-            dependencies {
-                implementation(libs.androidx.runner)
-                implementation(libs.androidx.core)
-                implementation(libs.androidx.junit)
-            }
+        getByName("androidDeviceTest").dependencies {
+            implementation(libs.androidx.test.core.ktx)
+            implementation(libs.androidx.runner)
+            implementation(libs.androidx.core)
+            implementation(libs.androidx.junit)
         }
     }
 }

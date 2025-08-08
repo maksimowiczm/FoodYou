@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.data.database
+package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room
 
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.SQLiteDriver
@@ -13,12 +13,13 @@ class FoodYou3MigrationTest : AbstractFoodYou3MigrationTest() {
     private val driver: SQLiteDriver = BundledSQLiteDriver()
 
     @get:Rule
-    val helper: MigrationTestHelper = MigrationTestHelper(
-        instrumentation = instrumentation,
-        file = file,
-        driver = driver,
-        databaseClass = FoodYouDatabase::class
-    )
+    val helper: MigrationTestHelper =
+        MigrationTestHelper(
+            instrumentation = instrumentation,
+            file = file,
+            driver = driver,
+            databaseClass = FoodYouDatabase::class,
+        )
 
     override fun getTestHelper() = helper
 

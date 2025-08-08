@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -24,6 +25,8 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MealEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.LegacyMigrations
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.foodYou3Migration
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsPagingKeyEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.MeasurementTypeConverter
@@ -51,7 +54,48 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
         ],
     views = [RecipeAllIngredientsView::class],
     version = FoodYouDatabase.VERSION,
-    exportSchema = false, // TODO
+    exportSchema = true,
+    autoMigrations =
+        [
+            /** @see [LegacyMigrations.MIGRATION_1_2] Add rank to MealEntity */
+            /** @see [LegacyMigrations.MIGRATION_2_3] 2.0.0 schema change */
+            AutoMigration(from = 3, to = 4),
+            AutoMigration(from = 4, to = 5),
+            AutoMigration(from = 5, to = 6),
+            AutoMigration(from = 6, to = 7),
+            /**
+             * @see [LegacyMigrations.MIGRATION_7_8] Remove unused products from OpenFoodFacts
+             *   source
+             */
+            /** @see [LegacyMigrations.MIGRATION_8_9] Remove OpenFoodFactsPagingKeyEntity */
+            AutoMigration(from = 9, to = 10, spec = LegacyMigrations.MIGRATION_9_10::class),
+            AutoMigration(from = 10, to = 11),
+            /**
+             * @see [LegacyMigrations.MIGRATION_11_12] Fix sodium value in ProductEntity. Convert
+             *   grams to milligrams.
+             */
+            AutoMigration(from = 12, to = 13),
+            AutoMigration(from = 13, to = 14),
+            AutoMigration(from = 14, to = 15),
+            AutoMigration(from = 15, to = 16),
+            AutoMigration(from = 16, to = 17),
+            AutoMigration(from = 17, to = 18),
+            /**
+             * @see [LegacyMigrations.MIGRATION_18_19] Merge product and recipe measurements into
+             *   MeasurementEntity
+             */
+            AutoMigration(from = 19, to = 20),
+            /**
+             * @see [LegacyMigrations.MIGRATION_20_21] Add isLiquid column to ProductEntity and
+             *   RecipeEntity
+             */
+            /**
+             * @see [LegacyMigrations.MIGRATION_21_22] Add `note` column to ProductEntity and
+             *   RecipeEntity
+             */
+            AutoMigration(from = 23, to = 24), // Add LatestFoodMeasuredEventView
+            AutoMigration(from = 24, to = 25), // Add FoodEventEntity onDelete cascade
+        ],
 )
 @TypeConverters(
     FoodSourceTypeConverter::class,
@@ -70,11 +114,19 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val sponsorshipDao: SponsorshipDao
 
     companion object {
-        const val VERSION = 25
+        const val VERSION = 26
 
         private val migrations: List<Migration> =
             listOf(
-                // TODO
+                LegacyMigrations.MIGRATION_1_2,
+                LegacyMigrations.MIGRATION_2_3,
+                LegacyMigrations.MIGRATION_7_8,
+                LegacyMigrations.MIGRATION_8_9,
+                LegacyMigrations.MIGRATION_11_12,
+                LegacyMigrations.MIGRATION_18_19,
+                LegacyMigrations.MIGRATION_20_21,
+                LegacyMigrations.MIGRATION_21_22,
+                foodYou3Migration,
             )
 
         fun Builder<FoodYouDatabase>.buildDatabase(

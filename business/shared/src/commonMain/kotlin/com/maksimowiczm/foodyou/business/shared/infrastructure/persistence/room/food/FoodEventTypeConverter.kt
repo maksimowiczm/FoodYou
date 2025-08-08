@@ -26,7 +26,7 @@ internal class FoodEventTypeConverter {
         }
 }
 
-internal object FoodEventTypeSQLConstants {
+object FoodEventTypeSQLConstants {
     const val CREATED = 0
     const val DOWNLOADED = 1
     const val IMPORTED = 2

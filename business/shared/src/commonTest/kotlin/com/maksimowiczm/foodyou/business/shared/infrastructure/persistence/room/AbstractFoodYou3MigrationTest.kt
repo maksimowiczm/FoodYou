@@ -1,10 +1,11 @@
-package com.maksimowiczm.foodyou.data.database
+package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room
 
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteStatement
 import androidx.sqlite.execSQL
-import com.maksimowiczm.foodyou.feature.food.data.database.food.FoodEventTypeSQLConstants
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventTypeSQLConstants
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.foodYou3Migration
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -62,7 +63,7 @@ abstract class AbstractFoodYou3MigrationTest {
                 phosphorusMilli = null,
                 seleniumMicro = null,
                 iodineMicro = null,
-                chromiumMicro = null
+                chromiumMicro = null,
             )
             execSQL(
                 "INSERT INTO RecipeEntity (id, name, servings, isLiquid) VALUES (1, 'Test Recipe', 2, 0)"
@@ -85,12 +86,14 @@ abstract class AbstractFoodYou3MigrationTest {
         val connection = helper.runMigrationsAndValidate(23, listOf(foodYou3Migration))
 
         // Verify that the data has been migrated correctly
-        connection.prepare(
-            """
+        connection
+            .prepare(
+                """
                 SELECT id, name, brand, barcode, packageWeight, servingWeight, isLiquid, note, energy, proteins, fats, saturatedFats, transFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, carbohydrates, sugars, addedSugars, dietaryFiber, solubleFiber, insolubleFiber, salt, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro, chromiumMicro
                 FROM Product
-            """.trimIndent()
-        )
+            """
+                    .trimIndent()
+            )
             .use { statement ->
                 statement.step()
 
@@ -160,9 +163,10 @@ abstract class AbstractFoodYou3MigrationTest {
             assertFalse { statement.step() }
         }
 
-        connection.prepare(
-            "SELECT id, recipeId, ingredientProductId, measurement, quantity FROM RecipeIngredient"
-        )
+        connection
+            .prepare(
+                "SELECT id, recipeId, ingredientProductId, measurement, quantity FROM RecipeIngredient"
+            )
             .use { statement ->
                 statement.step()
 
@@ -215,15 +219,13 @@ abstract class AbstractFoodYou3MigrationTest {
         }
 
         // Verify that food events were created
-        connection.prepare(
-            "SELECT type, extra, productId, recipeId FROM FoodEvent WHERE productId = 1"
-        )
+        connection
+            .prepare("SELECT type, extra, productId, recipeId FROM FoodEvent WHERE productId = 1")
             .use { statement ->
                 statement.step()
 
                 assertTrue {
-                    statement.getInt(0) ==
-                        FoodEventTypeSQLConstants.IMPORTED_FROM_FOOD_YOU_2
+                    statement.getInt(0) == FoodEventTypeSQLConstants.IMPORTED_FROM_FOOD_YOU_2
                 }
                 assertTrue { statement.isNull(1) } // extra
                 assertTrue { statement.getLong(2) == 1L } // productId
@@ -231,9 +233,8 @@ abstract class AbstractFoodYou3MigrationTest {
 
                 assertFalse { statement.step() }
             }
-        connection.prepare(
-            "SELECT type, extra, productId, recipeId FROM FoodEvent WHERE recipeId = 1"
-        )
+        connection
+            .prepare("SELECT type, extra, productId, recipeId FROM FoodEvent WHERE recipeId = 1")
             .use { statement ->
                 statement.step()
 
@@ -258,9 +259,9 @@ abstract class AbstractFoodYou3MigrationTest {
         connection.close()
     }
 
-    private fun isTableExists(connection: SQLiteConnection, tableName: String): Boolean = connection
-        .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=?")
-        .use { statement ->
+    private fun isTableExists(connection: SQLiteConnection, tableName: String): Boolean =
+        connection.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=?").use {
+            statement ->
             statement.bindText(1, tableName)
             val hasRows = statement.step()
 
@@ -322,10 +323,11 @@ private fun SQLiteConnection.insertFoodYou2Product(
     phosphorusMilli: Float?,
     seleniumMicro: Float?,
     iodineMicro: Float?,
-    chromiumMicro: Float?
+    chromiumMicro: Float?,
 ) {
-    val statement = prepare(
-        """
+    val statement =
+        prepare(
+            """
             INSERT INTO ProductEntity (
                 id, name, brand, barcode, packageWeight, servingWeight, isLiquid, note, proteins, 
                 carbohydrates, fats, calories, saturatedFats, monounsaturatedFats, 
@@ -345,8 +347,9 @@ private fun SQLiteConnection.insertFoodYou2Product(
                 ?, ?, ?, ?, ?, ?,
                 ?, ?, ?, ?, ?
             )
-        """.trimIndent()
-    )
+        """
+                .trimIndent()
+        )
 
     statement.bindLong(1, id)
     statement.bindText(2, name)
