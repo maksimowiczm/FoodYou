@@ -5,11 +5,15 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateMea
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteMealCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.ReorderMealsCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMealCommandHandler
+import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateWeeklyGoalsCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsQueryHandler
+import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveWeeklyGoalsQueryHandler
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.room.RoomDiaryEntryDataSource
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.room.RoomMealDataSource
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.LocalGoalsDataSource
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.datastore.DataStoreGoalsDataSource
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
 import org.koin.core.module.dsl.factoryOf
@@ -30,10 +34,15 @@ val businessFoodDiaryModule = module {
         .bind<CommandHandler<*, *, *>>()
     factoryOf(::ReorderMealsCommandHandler) { named("ReorderMealsCommandHandler") }
         .bind<CommandHandler<*, *, *>>()
+    factoryOf(::UpdateWeeklyGoalsCommandHandler) { named("UpdateWeeklyGoalsCommandHandler") }
+        .bind<CommandHandler<*, *, *>>()
 
     factoryOf(::ObserveMealsQueryHandler) { named("ObserveMealsQueryHandler") }
+        .bind<QueryHandler<*, *>>()
+    factoryOf(::ObserveWeeklyGoalsQueryHandler) { named("ObserveWeeklyGoalsQueryHandler") }
         .bind<QueryHandler<*, *>>()
 
     factoryOf(::RoomDiaryEntryDataSource).bind<LocalDiaryEntryDataSource>()
     factoryOf(::RoomMealDataSource).bind<LocalMealDataSource>()
+    factoryOf(::DataStoreGoalsDataSource).bind<LocalGoalsDataSource>()
 }

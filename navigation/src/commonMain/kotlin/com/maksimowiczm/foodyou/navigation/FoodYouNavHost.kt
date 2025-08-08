@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsGoalsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsLanguageDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.navigation.graph.about.aboutNavigationGraph
@@ -38,11 +39,14 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnAbout = { navController.navigateSingleTop(AboutDestination) },
             masterOnMeals = { navController.navigateSingleTop(SettingsMealsDestination) },
             masterOnLanguage = { navController.navigateSingleTop(SettingsLanguageDestination) },
+            masterOnGoals = { navController.navigateSingleTop(SettingsGoalsDestination) },
             mealsOnBack = { navController.popBackStack<SettingsMealsDestination>(true) },
             mealsOnMealsCardsSettings = {
                 // TODO
             },
             languageOnBack = { navController.popBackStack<SettingsLanguageDestination>(true) },
+            goalsOnBack = { navController.popBackStack<SettingsGoalsDestination>(true) },
+            goalsOnSave = { navController.popBackStack<SettingsGoalsDestination>(true) },
         )
     }
 }

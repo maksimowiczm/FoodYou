@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.settings
+package com.maksimowiczm.foodyou.feature.settings.goals.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,63 +19,60 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
-import com.maksimowiczm.foodyou.core.preferences.userPreference
-import com.maksimowiczm.foodyou.core.ui.form.FormField
-import com.maksimowiczm.foodyou.core.ui.form.intParser
-import com.maksimowiczm.foodyou.core.ui.form.nonNegativeIntValidator
-import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
-import com.maksimowiczm.foodyou.core.ui.theme.LocalNutrientsPalette
-import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
-import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
+import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.shared.ui.form.FormField
+import com.maksimowiczm.foodyou.shared.ui.form.intParser
+import com.maksimowiczm.foodyou.shared.ui.form.nonNegativeIntValidator
+import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
+import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun MacroInputSliderForm(state: MacroInputSliderFormState, modifier: Modifier = Modifier) {
+internal fun MacroInputSliderForm(
+    state: MacroInputSliderFormState,
+    nutrientsOrder: List<NutrientsOrder>,
+    modifier: Modifier = Modifier,
+) {
     val nutrientsPalette = LocalNutrientsPalette.current
-    val nutrientsOrder by userPreference<NutrientsOrderPreference>()
-        .collectAsStateWithLifecycleInitialBlock()
 
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
         OutlinedTextField(
             state = state.energy.textFieldState,
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(Res.string.unit_energy)) },
             suffix = { Text(stringResource(Res.string.unit_kcal)) },
             isError = state.energy.error != null,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = ImeAction.Next
-            )
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
         )
 
         nutrientsOrder.forEach {
             when (it) {
-                NutrientsOrder.Proteins -> MacroSlider(
-                    value = state.proteins,
-                    onValueChange = { state.proteins = it },
-                    color = nutrientsPalette.proteinsOnSurfaceContainer,
-                    label = stringResource(Res.string.nutriment_proteins)
-                )
+                NutrientsOrder.Proteins ->
+                    MacroSlider(
+                        value = state.proteins,
+                        onValueChange = { state.proteins = it },
+                        color = nutrientsPalette.proteinsOnSurfaceContainer,
+                        label = stringResource(Res.string.nutriment_proteins),
+                    )
 
-                NutrientsOrder.Fats -> MacroSlider(
-                    value = state.fats,
-                    onValueChange = { state.fats = it },
-                    color = nutrientsPalette.fatsOnSurfaceContainer,
-                    label = stringResource(Res.string.nutriment_fats)
-                )
+                NutrientsOrder.Fats ->
+                    MacroSlider(
+                        value = state.fats,
+                        onValueChange = { state.fats = it },
+                        color = nutrientsPalette.fatsOnSurfaceContainer,
+                        label = stringResource(Res.string.nutriment_fats),
+                    )
 
-                NutrientsOrder.Carbohydrates -> MacroSlider(
-                    value = state.carbohydrates,
-                    onValueChange = { state.carbohydrates = it },
-                    color = nutrientsPalette.carbohydratesOnSurfaceContainer,
-                    label = stringResource(Res.string.nutriment_carbohydrates)
-                )
+                NutrientsOrder.Carbohydrates ->
+                    MacroSlider(
+                        value = state.carbohydrates,
+                        onValueChange = { state.carbohydrates = it },
+                        color = nutrientsPalette.carbohydratesOnSurfaceContainer,
+                        label = stringResource(Res.string.nutriment_carbohydrates),
+                    )
 
                 NutrientsOrder.Other,
                 NutrientsOrder.Vitamins,
@@ -91,37 +88,26 @@ private fun MacroSlider(
     onValueChange: (Float) -> Unit,
     color: Color,
     label: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(text = label, color = color, style = MaterialTheme.typography.bodyMedium)
             Text(
-                text = label,
+                text =
+                    buildString {
+                        append(value.roundToInt())
+                        append("%")
+                    },
                 color = color,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = buildString {
-                    append(value.roundToInt())
-                    append("%")
-                },
-                color = color,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
         Slider(
             value = value,
-            onValueChange = {
-                onValueChange(it.roundToInt().toFloat())
-            },
+            onValueChange = { onValueChange(it.roundToInt().toFloat()) },
             valueRange = 0f..100f,
-            colors = SliderDefaults.colors(
-                activeTrackColor = color,
-                thumbColor = color
-            )
+            colors = SliderDefaults.colors(activeTrackColor = color, thumbColor = color),
         )
     }
 }
@@ -131,28 +117,22 @@ internal fun rememberMacroInputSliderFormState(
     proteins: Float,
     carbohydrates: Float,
     fats: Float,
-    energy: Int
+    energy: Int,
 ): MacroInputSliderFormState {
-    val proteinsState = rememberSaveable(proteins) {
-        mutableFloatStateOf(proteins)
-    }
-    val carbohydratesState = rememberSaveable(carbohydrates) {
-        mutableFloatStateOf(carbohydrates)
-    }
-    val fatsState = rememberSaveable(fats) {
-        mutableFloatStateOf(fats)
-    }
-    val energyField = rememberFormField(
-        initialValue = energy,
-        parser = intParser(
-            onNotANumber = { DailyGoalsFormFieldError.NotANumber },
-            onBlank = { DailyGoalsFormFieldError.Required }
-        ),
-        validator = nonNegativeIntValidator(
-            onNegative = { DailyGoalsFormFieldError.Negative }
-        ),
-        textFieldState = rememberTextFieldState(energy.toString())
-    )
+    val proteinsState = rememberSaveable(proteins) { mutableFloatStateOf(proteins) }
+    val carbohydratesState = rememberSaveable(carbohydrates) { mutableFloatStateOf(carbohydrates) }
+    val fatsState = rememberSaveable(fats) { mutableFloatStateOf(fats) }
+    val energyField =
+        rememberFormField(
+            initialValue = energy,
+            parser =
+                intParser(
+                    onNotANumber = { DailyGoalsFormFieldError.NotANumber },
+                    onBlank = { DailyGoalsFormFieldError.Required },
+                ),
+            validator = nonNegativeIntValidator(onNegative = { DailyGoalsFormFieldError.Negative }),
+            textFieldState = rememberTextFieldState(energy.toString()),
+        )
     LaunchedEffect(energy) {
         energyField.textFieldState.setTextAndPlaceCursorAtEnd(energy.toString())
     }
@@ -167,13 +147,15 @@ internal fun rememberMacroInputSliderFormState(
             if (excess > 0) {
                 // Reduce other macros when total exceeds 100% (smaller values first)
                 var remaining = excess
-                otherStates.sortedBy { it.value }.forEach { state ->
-                    if (remaining > 0 && state.value > 0) {
-                        val reduction = minOf(remaining, state.value)
-                        state.value -= reduction
-                        remaining -= reduction
+                otherStates
+                    .sortedBy { it.value }
+                    .forEach { state ->
+                        if (remaining > 0 && state.value > 0) {
+                            val reduction = minOf(remaining, state.value)
+                            state.value -= reduction
+                            remaining -= reduction
+                        }
                     }
-                }
 
                 // If we still have excess, reduce the changed state
                 if (remaining > 0) {
@@ -182,13 +164,15 @@ internal fun rememberMacroInputSliderFormState(
             } else {
                 // Increase other macros when total is under 100% (smaller values first)
                 var remaining = -excess
-                otherStates.sortedBy { it.value }.forEach { state ->
-                    if (remaining > 0 && state.value < 100f) {
-                        val increase = minOf(remaining, 100f - state.value)
-                        state.value += increase
-                        remaining -= increase
+                otherStates
+                    .sortedBy { it.value }
+                    .forEach { state ->
+                        if (remaining > 0 && state.value < 100f) {
+                            val increase = minOf(remaining, 100f - state.value)
+                            state.value += increase
+                            remaining -= increase
+                        }
                     }
-                }
 
                 // If we still have deficit, increase the changed state
                 if (remaining > 0) {
@@ -225,7 +209,7 @@ internal fun rememberMacroInputSliderFormState(
             carbohydratesState = carbohydratesState,
             fatsState = fatsState,
             energy = energyField,
-            isModifiedState = isModifiedState
+            isModifiedState = isModifiedState,
         )
     }
 }
@@ -236,7 +220,7 @@ internal class MacroInputSliderFormState(
     carbohydratesState: MutableState<Float>,
     fatsState: MutableState<Float>,
     val energy: FormField<Int, DailyGoalsFormFieldError>,
-    isModifiedState: State<Boolean>
+    isModifiedState: State<Boolean>,
 ) {
     var proteins: Float by proteinsState
     var carbohydrates: Float by carbohydratesState
@@ -244,7 +228,5 @@ internal class MacroInputSliderFormState(
 
     val isModified: Boolean by isModifiedState
 
-    val isValid by derivedStateOf {
-        energy.error == null
-    }
+    val isValid by derivedStateOf { energy.error == null }
 }

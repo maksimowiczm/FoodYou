@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.settings
+package com.maksimowiczm.foodyou.feature.settings.goals.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,29 +15,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
-import com.maksimowiczm.foodyou.core.preferences.userPreference
-import com.maksimowiczm.foodyou.core.ui.form.FormField
-import com.maksimowiczm.foodyou.core.ui.form.doubleParser
-import com.maksimowiczm.foodyou.core.ui.form.nonNegativeDoubleValidator
-import com.maksimowiczm.foodyou.core.ui.form.rememberFormField
-import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
-import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
-import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
-import com.maksimowiczm.foodyou.feature.fooddiary.domain.DailyGoal
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DailyGoal
+import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
+import com.maksimowiczm.foodyou.shared.ui.form.FormField
+import com.maksimowiczm.foodyou.shared.ui.form.doubleParser
+import com.maksimowiczm.foodyou.shared.ui.form.nonNegativeDoubleValidator
+import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField
+import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun AdditionalGoalsForm(state: AdditionalGoalsFormState, modifier: Modifier = Modifier) {
-    val nutrientsOrder by userPreference<NutrientsOrderPreference>()
-        .collectAsStateWithLifecycleInitialBlock()
-
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+internal fun AdditionalGoalsForm(
+    state: AdditionalGoalsFormState,
+    nutrientsOrder: List<NutrientsOrder>,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         nutrientsOrder.forEach {
             when (it) {
                 NutrientsOrder.Proteins -> Unit
@@ -57,31 +52,31 @@ private fun ColumnScope.Fats(state: AdditionalGoalsFormState) {
         text = stringResource(Res.string.nutriment_fats),
         modifier = Modifier.padding(top = 8.dp),
         style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primary,
     )
     state.saturatedFats.TextField(
         label = stringResource(Res.string.nutriment_saturated_fats),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
     state.transFats.TextField(
         label = stringResource(Res.string.nutriment_trans_fats),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
     state.monounsaturatedFats.TextField(
         label = stringResource(Res.string.nutriment_monounsaturated_fats),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
     state.polyunsaturatedFats.TextField(
         label = stringResource(Res.string.nutriment_polyunsaturated_fats),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
     state.omega3.TextField(
         label = stringResource(Res.string.nutriment_omega_3),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
     state.omega6.TextField(
         label = stringResource(Res.string.nutriment_omega_6),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
 }
 
@@ -91,28 +86,28 @@ private fun ColumnScope.Carbohydrates(state: AdditionalGoalsFormState) {
         text = stringResource(Res.string.nutriment_carbohydrates),
         modifier = Modifier.padding(top = 8.dp),
         style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primary,
     )
 
     state.sugars.TextField(
         label = stringResource(Res.string.nutriment_sugars),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
     state.addedSugars.TextField(
         label = stringResource(Res.string.nutriment_added_sugars),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
     state.dietaryFiber.TextField(
         label = stringResource(Res.string.nutriment_fiber),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
     state.solubleFiber.TextField(
         label = stringResource(Res.string.nutriment_soluble_fiber),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
     state.insolubleFiber.TextField(
         label = stringResource(Res.string.nutriment_insoluble_fiber),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
 }
 
@@ -122,21 +117,21 @@ private fun ColumnScope.Other(state: AdditionalGoalsFormState) {
         text = stringResource(Res.string.headline_other),
         modifier = Modifier.padding(top = 8.dp),
         style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primary,
     )
     state.salt.TextField(
         label = stringResource(Res.string.nutriment_salt),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
     state.cholesterolMilli.TextField(
         label = stringResource(Res.string.nutriment_cholesterol),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.caffeineMilli.TextField(
         label = stringResource(Res.string.nutriment_caffeine),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
 }
 
@@ -146,72 +141,72 @@ private fun ColumnScope.Vitamins(state: AdditionalGoalsFormState) {
         text = stringResource(Res.string.headline_vitamins),
         modifier = Modifier.padding(top = 8.dp),
         style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primary,
     )
     state.vitaminAMicro.TextField(
         label = stringResource(Res.string.vitamin_a),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_microgram_short)
+        suffix = stringResource(Res.string.unit_microgram_short),
     )
     state.vitaminB1Milli.TextField(
         label = stringResource(Res.string.vitamin_b1),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.vitaminB2Milli.TextField(
         label = stringResource(Res.string.vitamin_b2),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.vitaminB3Milli.TextField(
         label = stringResource(Res.string.vitamin_b3),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.vitaminB5Milli.TextField(
         label = stringResource(Res.string.vitamin_b5),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.vitaminB6Milli.TextField(
         label = stringResource(Res.string.vitamin_b6),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.vitaminB7Micro.TextField(
         label = stringResource(Res.string.vitamin_b7),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_microgram_short)
+        suffix = stringResource(Res.string.unit_microgram_short),
     )
     state.vitaminB9Micro.TextField(
         label = stringResource(Res.string.vitamin_b9),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_microgram_short)
+        suffix = stringResource(Res.string.unit_microgram_short),
     )
     state.vitaminB12Micro.TextField(
         label = stringResource(Res.string.vitamin_b12),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_microgram_short)
+        suffix = stringResource(Res.string.unit_microgram_short),
     )
     state.vitaminCMilli.TextField(
         label = stringResource(Res.string.vitamin_c),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.vitaminDMicro.TextField(
         label = stringResource(Res.string.vitamin_d),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_microgram_short)
+        suffix = stringResource(Res.string.unit_microgram_short),
     )
     state.vitaminEMilli.TextField(
         label = stringResource(Res.string.vitamin_e),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.vitaminKMicro.TextField(
         label = stringResource(Res.string.vitamin_k),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_microgram_short)
+        suffix = stringResource(Res.string.unit_microgram_short),
     )
 }
 
@@ -221,67 +216,67 @@ private fun ColumnScope.Minerals(state: AdditionalGoalsFormState) {
         text = stringResource(Res.string.headline_minerals),
         modifier = Modifier.padding(top = 8.dp),
         style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primary,
     )
     state.manganeseMilli.TextField(
         label = stringResource(Res.string.mineral_manganese),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.magnesiumMilli.TextField(
         label = stringResource(Res.string.mineral_magnesium),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.potassiumMilli.TextField(
         label = stringResource(Res.string.mineral_potassium),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.calciumMilli.TextField(
         label = stringResource(Res.string.mineral_calcium),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.copperMilli.TextField(
         label = stringResource(Res.string.mineral_copper),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.zincMilli.TextField(
         label = stringResource(Res.string.mineral_zinc),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.sodiumMilli.TextField(
         label = stringResource(Res.string.mineral_sodium),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.ironMilli.TextField(
         label = stringResource(Res.string.mineral_iron),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.phosphorusMilli.TextField(
         label = stringResource(Res.string.mineral_phosphorus),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_milligram_short)
+        suffix = stringResource(Res.string.unit_milligram_short),
     )
     state.seleniumMicro.TextField(
         label = stringResource(Res.string.mineral_selenium),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_microgram_short)
+        suffix = stringResource(Res.string.unit_microgram_short),
     )
     state.iodineMicro.TextField(
         label = stringResource(Res.string.mineral_iodine),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_microgram_short)
+        suffix = stringResource(Res.string.unit_microgram_short),
     )
     state.chromiumMicro.TextField(
         label = stringResource(Res.string.mineral_chromium),
         modifier = Modifier.fillMaxWidth(),
-        suffix = stringResource(Res.string.unit_microgram_short)
+        suffix = stringResource(Res.string.unit_microgram_short),
     )
 }
 
@@ -290,18 +285,16 @@ private fun FormField<Double, DailyGoalsFormFieldError>.TextField(
     label: String,
     modifier: Modifier = Modifier,
     suffix: String = stringResource(Res.string.unit_gram_short),
-    imeAction: ImeAction = ImeAction.Next
+    imeAction: ImeAction = ImeAction.Next,
 ) {
     OutlinedTextField(
         state = textFieldState,
         modifier = modifier,
         label = { Text(label) },
         suffix = { Text(suffix) },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Decimal,
-            imeAction = imeAction
-        ),
-        isError = error != null
+        keyboardOptions =
+            KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = imeAction),
+        isError = error != null,
     )
 }
 
@@ -315,8 +308,7 @@ internal fun rememberAdditionalGoalsFormState(dailyGoal: DailyGoal): AdditionalG
     val omega3 = rememberFormField(dailyGoal[NutritionFactsField.Omega3])
     val omega6 = rememberFormField(dailyGoal[NutritionFactsField.Omega6])
 
-    val sugars =
-        rememberFormField(initialValue = dailyGoal[NutritionFactsField.Sugars])
+    val sugars = rememberFormField(initialValue = dailyGoal[NutritionFactsField.Sugars])
     val addedSugars = rememberFormField(dailyGoal[NutritionFactsField.AddedSugars])
     val dietaryFiber = rememberFormField(dailyGoal[NutritionFactsField.DietaryFiber])
     val solubleFiber = rememberFormField(dailyGoal[NutritionFactsField.SolubleFiber])
@@ -436,7 +428,7 @@ internal fun rememberAdditionalGoalsFormState(dailyGoal: DailyGoal): AdditionalG
         seleniumMicro,
         iodineMicro,
         chromiumMicro,
-        isModified
+        isModified,
     ) {
         AdditionalGoalsFormState(
             saturatedFats = saturatedFats,
@@ -478,7 +470,7 @@ internal fun rememberAdditionalGoalsFormState(dailyGoal: DailyGoal): AdditionalG
             seleniumMicro = seleniumMicro,
             iodineMicro = iodineMicro,
             chromiumMicro = chromiumMicro,
-            isModifiedState = isModified
+            isModifiedState = isModified,
         )
     }
 }
@@ -487,14 +479,13 @@ internal fun rememberAdditionalGoalsFormState(dailyGoal: DailyGoal): AdditionalG
 private fun rememberFormField(initialValue: Double): FormField<Double, DailyGoalsFormFieldError> =
     rememberFormField(
         initialValue = initialValue,
-        parser = doubleParser(
-            onBlank = { DailyGoalsFormFieldError.Required },
-            onNotANumber = { DailyGoalsFormFieldError.NotANumber }
-        ),
-        validator = nonNegativeDoubleValidator(
-            onNegative = { DailyGoalsFormFieldError.Negative }
-        ),
-        textFieldState = rememberTextFieldState(initialValue.formatClipZeros())
+        parser =
+            doubleParser(
+                onBlank = { DailyGoalsFormFieldError.Required },
+                onNotANumber = { DailyGoalsFormFieldError.NotANumber },
+            ),
+        validator = nonNegativeDoubleValidator(onNegative = { DailyGoalsFormFieldError.Negative }),
+        textFieldState = rememberTextFieldState(initialValue.formatClipZeros()),
     )
 
 @Stable
@@ -538,50 +529,51 @@ internal class AdditionalGoalsFormState(
     val seleniumMicro: FormField<Double, DailyGoalsFormFieldError>,
     val iodineMicro: FormField<Double, DailyGoalsFormFieldError>,
     val chromiumMicro: FormField<Double, DailyGoalsFormFieldError>,
-    isModifiedState: State<Boolean>
+    isModifiedState: State<Boolean>,
 ) {
     val isValid by derivedStateOf {
         listOf(
-            saturatedFats,
-            transFats,
-            monounsaturatedFats,
-            polyunsaturatedFats,
-            omega3,
-            omega6,
-            sugars,
-            addedSugars,
-            dietaryFiber,
-            solubleFiber,
-            insolubleFiber,
-            salt,
-            cholesterolMilli,
-            caffeineMilli,
-            vitaminAMicro,
-            vitaminB1Milli,
-            vitaminB2Milli,
-            vitaminB3Milli,
-            vitaminB5Milli,
-            vitaminB6Milli,
-            vitaminB7Micro,
-            vitaminB9Micro,
-            vitaminB12Micro,
-            vitaminCMilli,
-            vitaminDMicro,
-            vitaminEMilli,
-            vitaminKMicro,
-            manganeseMilli,
-            magnesiumMilli,
-            potassiumMilli,
-            calciumMilli,
-            copperMilli,
-            zincMilli,
-            sodiumMilli,
-            ironMilli,
-            phosphorusMilli,
-            seleniumMicro,
-            iodineMicro,
-            chromiumMicro
-        ).all { it.error == null }
+                saturatedFats,
+                transFats,
+                monounsaturatedFats,
+                polyunsaturatedFats,
+                omega3,
+                omega6,
+                sugars,
+                addedSugars,
+                dietaryFiber,
+                solubleFiber,
+                insolubleFiber,
+                salt,
+                cholesterolMilli,
+                caffeineMilli,
+                vitaminAMicro,
+                vitaminB1Milli,
+                vitaminB2Milli,
+                vitaminB3Milli,
+                vitaminB5Milli,
+                vitaminB6Milli,
+                vitaminB7Micro,
+                vitaminB9Micro,
+                vitaminB12Micro,
+                vitaminCMilli,
+                vitaminDMicro,
+                vitaminEMilli,
+                vitaminKMicro,
+                manganeseMilli,
+                magnesiumMilli,
+                potassiumMilli,
+                calciumMilli,
+                copperMilli,
+                zincMilli,
+                sodiumMilli,
+                ironMilli,
+                phosphorusMilli,
+                seleniumMicro,
+                iodineMicro,
+                chromiumMicro,
+            )
+            .all { it.error == null }
     }
 
     val isModified: Boolean by isModifiedState

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.fooddiary.ui.goals.settings
+package com.maksimowiczm.foodyou.feature.settings.goals.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -42,42 +42,47 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.preferences.collectAsStateWithLifecycleInitialBlock
-import com.maksimowiczm.foodyou.core.preferences.setBlocking
-import com.maksimowiczm.foodyou.core.preferences.userPreference
-import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.BackHandler
-import com.maksimowiczm.foodyou.core.ui.DiscardDialog
-import com.maksimowiczm.foodyou.core.ui.ext.add
-import com.maksimowiczm.foodyou.core.ui.utils.LocalDateFormatter
-import com.maksimowiczm.foodyou.feature.fooddiary.preferences.GoalsPreference
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.feature.settings.goals.presentation.DailyGoalsViewModel
+import com.maksimowiczm.foodyou.feature.settings.goals.presentation.DailyGoalsViewModelEvent
+import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.ui.BackHandler
+import com.maksimowiczm.foodyou.shared.ui.DiscardDialog
+import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
+import com.maksimowiczm.foodyou.shared.ui.ext.add
+import com.maksimowiczm.foodyou.shared.ui.utils.LocalDateFormatter
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun DailyGoalsScreen(
-    onBack: () -> Unit,
-    onSave: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val goalsPreference = userPreference<GoalsPreference>()
-    val weeklyGoals by goalsPreference.collectAsStateWithLifecycleInitialBlock()
+fun DailyGoalsScreen(onBack: () -> Unit, onSave: () -> Unit, modifier: Modifier = Modifier) {
+    val viewModel: DailyGoalsViewModel = koinViewModel()
+    val nutrientsOrder by viewModel.nutrientsOrder.collectAsStateWithLifecycle()
+    val weeklyGoals = viewModel.weeklyGoals.collectAsStateWithLifecycle().value
+
+    LaunchedCollectWithLifecycle(viewModel.events) {
+        when (it) {
+            DailyGoalsViewModelEvent.Updated -> onSave()
+        }
+    }
+
+    if (weeklyGoals == null) {
+        // TODO loading state
+        return
+    }
 
     val state = rememberDailyGoalsState(weeklyGoals)
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
-    BackHandler(state.isModified) {
-        showDiscardDialog = true
-    }
+    BackHandler(state.isModified) { showDiscardDialog = true }
 
     if (showDiscardDialog) {
-        DiscardDialog(
-            onDismissRequest = { showDiscardDialog = false },
-            onDiscard = onBack
-        ) {
+        DiscardDialog(onDismissRequest = { showDiscardDialog = false }, onDiscard = onBack) {
             Text(stringResource(Res.string.question_discard_changes))
         }
     }
@@ -103,27 +108,24 @@ internal fun DailyGoalsScreen(
                     FilledIconButton(
                         onClick = {
                             val weeklyGoals = state.intoWeeklyGoals()
-                            goalsPreference.setBlocking(weeklyGoals)
+                            viewModel.updateWeeklyGoals(weeklyGoals)
                             onSave()
                         },
-                        enabled = state.isValid
+                        enabled = state.isValid,
                     ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Save,
-                            contentDescription = null
-                        )
+                        Icon(imageVector = Icons.Outlined.Save, contentDescription = null)
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .imePadding()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues.add(vertical = 8.dp)
+            modifier =
+                Modifier.fillMaxSize()
+                    .imePadding()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues.add(vertical = 8.dp),
         ) {
             item {
                 DayPicker(
@@ -132,18 +134,17 @@ internal fun DailyGoalsScreen(
                     selectedDay = state.selectedDay,
                     onSelectedDayChange = { state.selectedDay = it },
                     contentPadding = PaddingValues(horizontal = 16.dp),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
+            item { Spacer(Modifier.height(16.dp)) }
 
             item {
                 DailyGoalsForm(
                     state = state.selectedDayGoals,
-                    contentPadding = PaddingValues(horizontal = 16.dp)
+                    nutrientsOrder = nutrientsOrder,
+                    contentPadding = PaddingValues(horizontal = 16.dp),
                 )
             }
         }
@@ -153,46 +154,41 @@ internal fun DailyGoalsScreen(
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun DailyGoalsForm(
+    nutrientsOrder: List<NutrientsOrder>,
     state: DayGoalsState,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
         Text(
             text = stringResource(Res.string.action_set_goals),
             modifier = Modifier.padding(contentPadding),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         WeightOrPercentageToggle(
             useDistribution = state.useDistribution,
             onUseDistributionChange = { state.useDistribution = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(contentPadding)
-                .padding(vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth().padding(contentPadding).padding(vertical = 8.dp),
         )
         if (state.useDistribution) {
             MacroInputSliderForm(
                 state = state.sliderState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(contentPadding)
+                nutrientsOrder = nutrientsOrder,
+                modifier = Modifier.fillMaxWidth().padding(contentPadding),
             )
         } else {
             MacroWeightInputForm(
                 state = state.weightState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(contentPadding)
+                nutrientsOrder = nutrientsOrder,
+                modifier = Modifier.fillMaxWidth().padding(contentPadding),
             )
         }
         HorizontalDivider(Modifier.padding(vertical = 8.dp))
         AdditionalGoalsForm(
             state = state.additionalState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(contentPadding)
+            nutrientsOrder = nutrientsOrder,
+            modifier = Modifier.fillMaxWidth().padding(contentPadding),
         )
     }
 }
@@ -205,7 +201,7 @@ private fun DayPicker(
     selectedDay: Int,
     onSelectedDayChange: (Int) -> Unit,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
@@ -214,44 +210,43 @@ private fun DayPicker(
             text = stringResource(Res.string.headline_pick_the_days),
             modifier = Modifier.padding(contentPadding),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Spacer(Modifier.height(8.dp))
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onUseSeparateGoalsChange(!useSeparateGoals) }
-                .padding(contentPadding),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .clickable { onUseSeparateGoalsChange(!useSeparateGoals) }
+                    .padding(contentPadding),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Checkbox(
-                modifier = Modifier.padding(
-                    vertical = 16.dp
-                ),
+                modifier = Modifier.padding(vertical = 16.dp),
                 checked = useSeparateGoals,
-                onCheckedChange = null
+                onCheckedChange = null,
             )
             Text(
                 text = stringResource(Res.string.action_set_separate_goals),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
         AnimatedVisibility(useSeparateGoals) {
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
             ) {
                 item {
                     val dateFormatter = LocalDateFormatter.current
                     val weekDayNamesShort = dateFormatter.weekDayNamesShort
 
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(
-                            ButtonGroupDefaults.ConnectedSpaceBetween,
-                            Alignment.CenterHorizontally
-                        )
+                        horizontalArrangement =
+                            Arrangement.spacedBy(
+                                ButtonGroupDefaults.ConnectedSpaceBetween,
+                                Alignment.CenterHorizontally,
+                            )
                     ) {
                         weekDayNamesShort.forEachIndexed { i, name ->
                             ToggleButton(
@@ -263,13 +258,14 @@ private fun DayPicker(
                                     )
                                 },
                                 modifier = Modifier.semantics { role = Role.RadioButton },
-                                shapes = when (i) {
-                                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                    weekDayNamesShort.lastIndex ->
-                                        ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                shapes =
+                                    when (i) {
+                                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                        weekDayNamesShort.lastIndex ->
+                                            ButtonGroupDefaults.connectedTrailingButtonShapes()
 
-                                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                                }
+                                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                                    },
                             ) {
                                 Text(name)
                             }
@@ -286,40 +282,31 @@ private fun DayPicker(
 private fun WeightOrPercentageToggle(
     useDistribution: Boolean,
     onUseDistributionChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(
-            ButtonGroupDefaults.ConnectedSpaceBetween,
-            Alignment.CenterHorizontally
-        )
+        horizontalArrangement =
+            Arrangement.spacedBy(
+                ButtonGroupDefaults.ConnectedSpaceBetween,
+                Alignment.CenterHorizontally,
+            ),
     ) {
         ToggleButton(
             checked = !useDistribution,
             onCheckedChange = { onUseDistributionChange(false) },
-            modifier = Modifier
-                .height(56.dp)
-                .semantics { role = Role.RadioButton }
+            modifier = Modifier.height(56.dp).semantics { role = Role.RadioButton },
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_weight),
-                contentDescription = null
-            )
+            Icon(painter = painterResource(Res.drawable.ic_weight), contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text(stringResource(Res.string.weight))
         }
         ToggleButton(
             checked = useDistribution,
             onCheckedChange = { onUseDistributionChange(true) },
-            modifier = Modifier
-                .height(56.dp)
-                .semantics { role = Role.RadioButton }
+            modifier = Modifier.height(56.dp).semantics { role = Role.RadioButton },
         ) {
-            Icon(
-                imageVector = Icons.Outlined.Percent,
-                contentDescription = null
-            )
+            Icon(imageVector = Icons.Outlined.Percent, contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Text(stringResource(Res.string.headline_percentages))
         }

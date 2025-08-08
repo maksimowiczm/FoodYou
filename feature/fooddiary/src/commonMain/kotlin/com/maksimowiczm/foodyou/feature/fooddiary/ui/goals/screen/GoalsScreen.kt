@@ -59,7 +59,6 @@ import com.maksimowiczm.foodyou.feature.food.domain.FoodId
 import com.maksimowiczm.foodyou.feature.food.domain.NutrientValue
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFacts
 import com.maksimowiczm.foodyou.feature.food.domain.NutritionFactsField
-import com.maksimowiczm.foodyou.feature.food.domain.sum
 import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.food.preferences.NutrientsOrderPreference
 import com.maksimowiczm.foodyou.feature.food.ui.IncompleteFoodsList

@@ -30,8 +30,9 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
 
     // Settings
     modules(
+        featureSettingsGoalsModule,
+        featureSettingsLanguageModule,
         featureSettingsMealModule,
-        featureSettingsLanguageModule
     )
 
     modules(
