@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.android.lint)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
@@ -25,10 +28,24 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":shared:common"))
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            // implementation(compose.material3)
+            implementation(libs.jetbrains.compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+
+            implementation(projects.shared.common)
+            implementation(projects.shared.ui)
+
+            implementation(projects.business.shared)
             implementation(projects.business.settings)
+
+            implementation(libs.compose.shimmer)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
+            implementation(libs.koin.compose)
         }
 
         commonTest.dependencies { implementation(libs.kotlin.test) }

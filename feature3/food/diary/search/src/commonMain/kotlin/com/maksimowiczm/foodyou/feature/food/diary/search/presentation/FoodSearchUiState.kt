@@ -1,22 +1,23 @@
-package com.maksimowiczm.foodyou.feature.food.ui.search
+package com.maksimowiczm.foodyou.feature.food.diary.search.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import kotlinx.coroutines.flow.Flow
 
 @Immutable
 internal data class FoodSearchUiState(
     val sources: Map<FoodFilter.Source, FoodSourceUiState>,
     val filter: FoodFilter,
-    val recentSearches: List<String>
+    val recentSearches: List<String>,
 ) {
     val currentSourceState: FoodSourceUiState?
         get() = sources[filter.source]
 }
 
-enum class RemoteStatus {
+internal enum class RemoteStatus {
     Enabled,
     Disabled,
     LocalOnly;
@@ -26,26 +27,23 @@ enum class RemoteStatus {
     }
 }
 
+/**
+ * @param remoteEnabled Indicates whether the source is enabled for remote search.
+ * @param pages Flow of paginated food search results.
+ * @param count The number of total items available in the database.
+ * @param alwaysShowFilter If true, the filter button will always be shown regardless of the count
+ *   or remote status. If false, the filter button will only be shown if there are items to filter
+ *   or if remote search is enabled.
+ */
 @Immutable
 internal data class FoodSourceUiState(
-    /**
-     * Indicates whether the source is enabled for remote search
-     */
     val remoteEnabled: RemoteStatus,
-    /**
-     * Flow of paginated food search results
-     */
     val pages: Flow<PagingData<FoodSearch>>,
-    /**
-     * The number of total items available in the database
-     */
     val count: Int,
-    // You can hard override the visibility of the filter button
-    private val alwaysShowFilter: Boolean = false
+    private val alwaysShowFilter: Boolean = false,
 ) {
     val shouldShowFilter: Boolean
         @Composable get() = alwaysShowFilter || count > 0 || remoteEnabled == RemoteStatus.Enabled
 
-    @Composable
-    fun collectAsLazyPagingItems() = pages.collectAsLazyPagingItems()
+    @Composable fun collectAsLazyPagingItems() = pages.collectAsLazyPagingItems()
 }

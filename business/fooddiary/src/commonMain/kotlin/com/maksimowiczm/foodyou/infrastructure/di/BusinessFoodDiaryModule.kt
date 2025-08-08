@@ -9,6 +9,7 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMea
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateWeeklyGoalsCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDailyGoalsQueryHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQueryHandler
+import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealQueryHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsPreferencesQueryHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsQueryHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveWeeklyGoalsQueryHandler
@@ -58,6 +59,8 @@ val businessFoodDiaryModule = module {
         }
         .bind<QueryHandler<*, *>>()
     factoryOf(::ObserveDailyGoalsQueryHandler) { named("ObserveDailyGoalsQueryHandler") }
+        .bind<QueryHandler<*, *>>()
+    factoryOf(::ObserveMealQueryHandler) { named("ObserveMealQueryHandler") }
         .bind<QueryHandler<*, *>>()
 
     factoryOf(::RoomDiaryEntryDataSource).bind<LocalDiaryEntryDataSource>()

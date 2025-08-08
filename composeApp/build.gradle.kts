@@ -96,6 +96,7 @@ kotlin {
             implementation(projects.feature3.settings.personalization)
             implementation(projects.feature3.home)
             implementation(projects.feature3.goals)
+            implementation(projects.feature3.food.diary.search)
 
             implementation(projects.externaldatabase.openfoodfacts)
             implementation(projects.externaldatabase.usda)

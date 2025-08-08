@@ -34,6 +34,7 @@ internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao
         source: FoodSource.Type,
         config: PagingConfig,
         remoteMediatorFactory: RemoteMediatorFactory?,
+        excludedRecipeId: Long?,
     ): Flow<PagingData<FoodSearch>> =
         Pager(
                 config = config,
@@ -41,7 +42,7 @@ internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao
                     foodSearchDao.observeFoodByQuery(
                         query = query,
                         source = source.toEntity(),
-                        excludedRecipeId = null,
+                        excludedRecipeId = excludedRecipeId,
                     )
                 },
                 remoteMediator = remoteMediatorFactory?.create(),
@@ -55,6 +56,17 @@ internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao
     override suspend fun insertSearchHistory(entry: SearchHistory) {
         foodSearchDao.insertSearchEntry(entry.toEntity())
     }
+
+    override fun observeFoodCount(
+        query: String?,
+        source: FoodSource.Type,
+        excludedRecipeId: Long?,
+    ): Flow<Int> =
+        foodSearchDao.observeFoodCountByQuery(
+            query = query,
+            source = source.toEntity(),
+            excludedRecipeId = excludedRecipeId,
+        )
 }
 
 private fun FoodSearchData.toModel(): FoodSearch =

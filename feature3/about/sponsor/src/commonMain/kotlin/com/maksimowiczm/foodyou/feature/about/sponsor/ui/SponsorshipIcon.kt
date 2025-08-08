@@ -13,7 +13,7 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-internal fun SponsorMethod.Icon(modifier: Modifier) {
+internal fun SponsorMethod.Icon(modifier: Modifier = Modifier) {
     when (this) {
         Bitcoin ->
             Image(

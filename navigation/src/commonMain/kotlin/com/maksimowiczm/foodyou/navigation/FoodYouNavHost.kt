@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
+import com.maksimowiczm.foodyou.navigation.domain.FoodDiarySearchDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsCardSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.HomeDestination
@@ -20,6 +21,7 @@ import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
 import com.maksimowiczm.foodyou.navigation.graph.about.aboutNavigationGraph
+import com.maksimowiczm.foodyou.navigation.graph.fooddiary.foodDiaryNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.goals.goalsNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.home.homeNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.settings.settingsNavigationGraph
@@ -38,6 +40,9 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnTitle = { navController.navigateSingleTop(AboutDestination) },
             masterOnMealCardsSettings = {
                 navController.navigateSingleTop(MealsCardsSettingsDestination)
+            },
+            masterOnFoodDiarySearch = { epochDay, mealId ->
+                navController.navigateSingleTop(FoodDiarySearchDestination(epochDay, mealId))
             },
             masterOnGoalsCardSettings = {
                 navController.navigateSingleTop(GoalsCardSettingsDestination)
@@ -98,6 +103,15 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
         )
         goalsNavigationGraph(
             masterOnBack = { navController.popBackStack<GoalsMasterDestination>(true) }
+        )
+        foodDiaryNavigationGraph(
+            searchOnBack = { navController.popBackStack<FoodDiarySearchDestination>(true) },
+            searchOnCreateRecipe = {
+                // TODO
+            },
+            searchOnCreateProduct = {
+                // TODO
+            },
         )
     }
 }

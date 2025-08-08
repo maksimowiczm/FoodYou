@@ -7,12 +7,12 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
 import com.maksimowiczm.foodyou.business.food.domain.OpenFoodFactsPreferences
 import com.maksimowiczm.foodyou.business.food.domain.UsdaPreferences
-import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.FoodPreferencesDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class DataStoreFoodPreferencesDataSource(private val dataStore: DataStore<Preferences>) :
-    FoodPreferencesDataSource {
+    LocalFoodPreferencesDataSource {
 
     override fun observe(): Flow<FoodPreferences> =
         dataStore.data.map { preferences ->

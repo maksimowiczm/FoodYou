@@ -6,8 +6,13 @@ import com.maksimowiczm.foodyou.business.food.application.command.DeleteFoodComm
 import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateProductCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateRecipeCommandHandler
+import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodQueryHandler
+import com.maksimowiczm.foodyou.business.food.application.query.ObserveSearchHistoryQueryHandler
+import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodCountQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodQueryHandler
+import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodCountQueryHandler
+import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodQueryHandler
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductRequestFactory
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductRequestFactoryImpl
@@ -27,7 +32,7 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.Ro
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomRecipeDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomUsdaPagingHelper
-import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.FoodPreferencesDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.datastore.DataStoreFoodPreferencesDataSource
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
@@ -82,8 +87,18 @@ val businessFoodModule = module {
         .bind<CommandHandler<*, *, *>>()
     factoryOf(::UpdateRecipeCommandHandler) { named("UpdateRecipeCommandHandler") }
         .bind<CommandHandler<*, *, *>>()
+    factoryOf(::SearchFoodCountQueryHandler) { named("SearchFoodCountQueryHandler") }
+        .bind<QueryHandler<*, *>>()
+    factoryOf(::ObserveFoodPreferencesQueryHandler) { named("ObserveFoodPreferencesQueryHandler") }
+        .bind<QueryHandler<*, *>>()
+    factoryOf(::ObserveSearchHistoryQueryHandler) { named("ObserveSearchHistoryQueryHandler") }
+        .bind<QueryHandler<*, *>>()
+    factoryOf(::SearchRecentFoodQueryHandler) { named("SearchRecentFoodQueryHandler") }
+        .bind<QueryHandler<*, *>>()
+    factoryOf(::SearchRecentFoodCountQueryHandler) { named("SearchRecentFoodCountQueryHandler") }
+        .bind<QueryHandler<*, *>>()
 
-    factoryOf(::DataStoreFoodPreferencesDataSource).bind<FoodPreferencesDataSource>()
+    factoryOf(::DataStoreFoodPreferencesDataSource).bind<LocalFoodPreferencesDataSource>()
 
     factoryOf(::RoomProductDataSource).bind<LocalProductDataSource>()
     factoryOf(::RoomRecipeDataSource).bind<LocalRecipeDataSource>()

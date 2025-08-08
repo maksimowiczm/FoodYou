@@ -17,9 +17,16 @@ internal interface LocalFoodSearchDataSource {
         source: FoodSource.Type,
         config: PagingConfig,
         remoteMediatorFactory: RemoteMediatorFactory?,
+        excludedRecipeId: Long?,
     ): Flow<PagingData<FoodSearch>>
 
     fun observeSearchHistory(limit: Int): Flow<List<SearchHistory>>
 
     suspend fun insertSearchHistory(entry: SearchHistory)
+
+    fun observeFoodCount(
+        query: String?,
+        source: FoodSource.Type,
+        excludedRecipeId: Long?,
+    ): Flow<Int>
 }

@@ -76,6 +76,7 @@ internal class SearchFoodQueryHandler(
                 source = source,
                 config = PagingConfig(pageSize = PAGE_SIZE),
                 remoteMediatorFactory = mediatorFactory,
+                excludedRecipeId = excludedRecipeId?.id,
             )
         }
     }

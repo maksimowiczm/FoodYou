@@ -38,6 +38,7 @@ fun HomeScreen(
     onSettings: () -> Unit,
     onTitle: () -> Unit,
     onMealCardLongClick: (mealId: Long) -> Unit,
+    onMealCardClick: (epochDay: Long, mealId: Long) -> Unit,
     onGoalsCardLongClick: () -> Unit,
     onGoalsCardClick: (epochDay: Long) -> Unit,
     modifier: Modifier = Modifier,
@@ -98,9 +99,7 @@ fun HomeScreen(
                     HomeCard.Meals ->
                         MealsCards(
                             homeState = homeState,
-                            onAdd = { epochDay, mealId ->
-                                // TODO
-                            },
+                            onAdd = onMealCardClick,
                             onEditMeasurement = {
                                 // TODO
                             },

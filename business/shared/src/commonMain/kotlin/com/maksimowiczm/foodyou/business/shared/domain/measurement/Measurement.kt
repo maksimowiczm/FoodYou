@@ -21,4 +21,6 @@ sealed interface Measurement {
         /** Calculates the weight of the serving based on the given serving weight. */
         fun weight(servingWeight: Double): Double = servingWeight * quantity
     }
+
+    companion object
 }

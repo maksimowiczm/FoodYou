@@ -15,6 +15,7 @@ fun NavGraphBuilder.homeNavigationGraph(
     masterOnSettings: () -> Unit,
     masterOnTitle: () -> Unit,
     masterOnMealCardsSettings: () -> Unit,
+    masterOnFoodDiarySearch: (epochDay: Long, mealId: Long) -> Unit,
     masterOnGoalsCardSettings: () -> Unit,
     masterOnGoals: (epochDay: Long) -> Unit,
     mealsCardsSettingsOnBack: () -> Unit,
@@ -28,6 +29,7 @@ fun NavGraphBuilder.homeNavigationGraph(
                 onSettings = masterOnSettings,
                 onTitle = masterOnTitle,
                 onMealCardLongClick = { masterOnMealCardsSettings() },
+                onMealCardClick = masterOnFoodDiarySearch,
                 onGoalsCardLongClick = masterOnGoalsCardSettings,
                 onGoalsCardClick = masterOnGoals,
             )

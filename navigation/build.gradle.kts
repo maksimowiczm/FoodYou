@@ -44,6 +44,8 @@ kotlin {
             implementation(projects.feature3.settings.goals)
             implementation(projects.feature3.settings.personalization)
 
+            implementation(projects.feature3.food.diary.search)
+
             implementation(projects.feature3.home)
 
             implementation(projects.feature3.goals)

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.ui.search
+package com.maksimowiczm.foodyou.feature.food.diary.search.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -10,14 +10,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.feature.food.domain.weight
-import com.maksimowiczm.foodyou.feature.food.ui.FoodErrorListItem
-import com.maksimowiczm.foodyou.feature.food.ui.FoodListItem
-import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton
-import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
-import com.maksimowiczm.foodyou.feature.measurement.ui.stringResource
+import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
+import com.maksimowiczm.foodyou.business.food.domain.weight
+import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.weight
+import com.maksimowiczm.foodyou.feature.food.diary.search.usecase.ObserveRecipeUseCase
+import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
+import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
+import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
+import com.maksimowiczm.foodyou.feature.shared.ui.stringResource
+import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -30,16 +32,17 @@ internal fun FoodSearchListItem(
     food: FoodSearch.Product,
     measurement: Measurement,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val factor = measurement.weight(food)?.div(100f)
+    val weight = measurement.weight(food)
+    val factor = weight?.div(100)
 
     if (factor == null) {
         return FoodErrorListItem(
             headline = food.headline,
             errorMessage = stringResource(Res.string.error_measurement_error),
             modifier = modifier,
-            onClick = onClick
+            onClick = onClick,
         )
     }
 
@@ -54,16 +57,14 @@ internal fun FoodSearchListItem(
             headline = food.headline,
             modifier = modifier,
             onClick = onClick,
-            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields)
+            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
         )
     }
 
     val g = stringResource(Res.string.unit_gram_short)
 
     FoodListItem(
-        name = {
-            Text(text = food.headline)
-        },
+        name = { Text(text = food.headline) },
         proteins = {
             val text = proteins.formatClipZeros()
             Text("$text $g")
@@ -82,22 +83,24 @@ internal fun FoodSearchListItem(
             Text("$text $kcal")
         },
         measurement = {
-            val weight = when (measurement) {
-                is Measurement.Gram,
-                is Measurement.Milliliter -> null
+            val weight =
+                when (measurement) {
+                    is Measurement.Gram,
+                    is Measurement.Milliliter -> null
 
-                is Measurement.Package -> food.totalWeight?.let(measurement::weight)
-                is Measurement.Serving -> food.servingWeight?.let(measurement::weight)
-            }
+                    is Measurement.Package -> weight
+                    is Measurement.Serving -> weight
+                }
 
             val text = buildString {
                 append(measurement.stringResource())
                 if (weight != null) {
-                    val suffix = if (food.isLiquid) {
-                        stringResource(Res.string.unit_milliliter_short)
-                    } else {
-                        g
-                    }
+                    val suffix =
+                        if (food.isLiquid) {
+                            stringResource(Res.string.unit_milliliter_short)
+                        } else {
+                            g
+                        }
 
                     append(" (${weight.formatClipZeros()} $suffix)")
                 }
@@ -106,13 +109,11 @@ internal fun FoodSearchListItem(
             Text(text)
         },
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     )
 }
 
-/**
- * Recipe has to be lazy loaded, so we use [ObserveFoodUseCase] to observe the recipe.
- */
+/** Recipe has to be lazy loaded, so we use [ObserveRecipeUseCase] to observe the recipe. */
 @Composable
 internal fun FoodSearchListItem(
     food: FoodSearch.Recipe,
@@ -120,16 +121,16 @@ internal fun FoodSearchListItem(
     onClick: () -> Unit,
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
-    observeFoodUseCase: ObserveFoodUseCase = koinInject()
 ) {
-    val recipe = observeFoodUseCase.observe(food.id)
-        .collectAsStateWithLifecycle(null).value
+    val observeRecipeUseCase: ObserveRecipeUseCase = koinInject()
+
+    val recipe = observeRecipeUseCase.observe(food.id).collectAsStateWithLifecycle(null).value
 
     if (recipe == null) {
         return FoodListItemSkeleton(shimmer)
     }
 
-    val factor = measurement.weight(recipe) / 100f
+    val factor = measurement.weight(recipe) / 100
     val measurementFacts = recipe.nutritionFacts * factor
     val proteins = measurementFacts.proteins.value
     val carbohydrates = measurementFacts.carbohydrates.value
@@ -141,7 +142,7 @@ internal fun FoodSearchListItem(
             headline = food.headline,
             modifier = modifier,
             onClick = onClick,
-            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields)
+            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
         )
     }
 
@@ -151,12 +152,12 @@ internal fun FoodSearchListItem(
         name = {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = food.headline)
                 Icon(
                     painter = painterResource(Res.drawable.ic_skillet_filled),
-                    contentDescription = stringResource(Res.string.headline_recipe)
+                    contentDescription = stringResource(Res.string.headline_recipe),
                 )
             }
         },
@@ -178,22 +179,24 @@ internal fun FoodSearchListItem(
             Text("$text $kcal")
         },
         measurement = {
-            val weight = when (measurement) {
-                is Measurement.Gram,
-                is Measurement.Milliliter -> null
+            val weight =
+                when (measurement) {
+                    is Measurement.Gram,
+                    is Measurement.Milliliter -> null
 
-                is Measurement.Package -> recipe.totalWeight.let(measurement::weight)
-                is Measurement.Serving -> recipe.servingWeight.let(measurement::weight)
-            }
+                    is Measurement.Package -> recipe.totalWeight.let(measurement::weight)
+                    is Measurement.Serving -> recipe.servingWeight.let(measurement::weight)
+                }
 
             val text = buildString {
                 append(measurement.stringResource())
                 if (weight != null) {
-                    val suffix = if (food.isLiquid) {
-                        stringResource(Res.string.unit_milliliter_short)
-                    } else {
-                        g
-                    }
+                    val suffix =
+                        if (food.isLiquid) {
+                            stringResource(Res.string.unit_milliliter_short)
+                        } else {
+                            g
+                        }
 
                     append(" (${weight.formatClipZeros()} $suffix)")
                 }
@@ -202,6 +205,6 @@ internal fun FoodSearchListItem(
             Text(text)
         },
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     )
 }

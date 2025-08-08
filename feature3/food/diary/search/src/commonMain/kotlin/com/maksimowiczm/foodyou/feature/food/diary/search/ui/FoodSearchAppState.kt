@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.ui.search
+package com.maksimowiczm.foodyou.feature.food.diary.search.ui
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -19,17 +19,16 @@ import androidx.compose.runtime.setValue
 internal fun rememberFoodSearchAppState(
     searchBarState: SearchBarState = rememberSearchBarState(),
     searchTextFieldState: TextFieldState = rememberTextFieldState(),
-    showBarcodeScanner: Boolean = false
+    showBarcodeScanner: Boolean = false,
 ): FoodSearchAppState {
-    val showBarcodeScanner = rememberSaveable(showBarcodeScanner) {
-        mutableStateOf(showBarcodeScanner)
-    }
+    val showBarcodeScanner =
+        rememberSaveable(showBarcodeScanner) { mutableStateOf(showBarcodeScanner) }
 
     return remember(searchBarState, searchTextFieldState, showBarcodeScanner) {
         FoodSearchAppState(
             searchBarState = searchBarState,
             searchTextFieldState = searchTextFieldState,
-            showBarcodeScannerState = showBarcodeScanner
+            showBarcodeScannerState = showBarcodeScanner,
         )
     }
 }
@@ -39,7 +38,7 @@ internal fun rememberFoodSearchAppState(
 internal class FoodSearchAppState(
     val searchBarState: SearchBarState,
     val searchTextFieldState: TextFieldState,
-    showBarcodeScannerState: MutableState<Boolean>
+    showBarcodeScannerState: MutableState<Boolean>,
 ) {
     var showBarcodeScanner by showBarcodeScannerState
 }
