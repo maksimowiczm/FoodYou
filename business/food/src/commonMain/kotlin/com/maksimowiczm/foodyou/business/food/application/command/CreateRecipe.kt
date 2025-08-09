@@ -26,6 +26,12 @@ data class CreateRecipeCommand(
 ) : Command
 
 sealed interface CreateRecipeError {
+    data object EmptyName : CreateRecipeError
+
+    data object NonPositiveServings : CreateRecipeError
+
+    data object EmptyIngredients : CreateRecipeError
+
     data class IngredientNotFound(val foodId: FoodId) : CreateRecipeError
 
     data object CircularIngredient : CreateRecipeError
@@ -42,12 +48,30 @@ internal class CreateRecipeCommandHandler(
     override suspend fun handle(
         command: CreateRecipeCommand
     ): Result<FoodId.Recipe, CreateRecipeError> {
-        if (command.ingredients.any { (foodId, _) -> foodId is FoodId.Recipe }) {
+        if (command.name.isBlank()) {
             return ErrorLoggingUtils.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
-                error = CreateRecipeError.CircularIngredient,
-                message = { "Recipe cannot contain itself as an ingredient." },
+                error = CreateRecipeError.EmptyName,
+                message = { "Recipe name cannot be empty." },
+            )
+        }
+
+        if (command.servings <= 0) {
+            return ErrorLoggingUtils.logAndReturnFailure(
+                tag = TAG,
+                throwable = null,
+                error = CreateRecipeError.NonPositiveServings,
+                message = { "Recipe servings must be a positive integer." },
+            )
+        }
+
+        if (command.ingredients.isEmpty()) {
+            return ErrorLoggingUtils.logAndReturnFailure(
+                tag = TAG,
+                throwable = null,
+                error = CreateRecipeError.EmptyIngredients,
+                message = { "Recipe must have at least one ingredient." },
             )
         }
 
@@ -76,10 +100,22 @@ internal class CreateRecipeCommandHandler(
                 id = FoodId.Recipe(0L),
                 name = command.name,
                 servings = command.servings,
-                note = command.note,
+                note = command.note?.takeIf { it.isNotBlank() },
                 isLiquid = command.isLiquid,
                 ingredients = ingredients,
             )
+
+        // Check for circular references in ingredients
+        val flatIngredients = recipe.allIngredients()
+        val ingredientIds = flatIngredients.map { it.id }.toSet()
+        if (flatIngredients.size != ingredientIds.size) {
+            return ErrorLoggingUtils.logAndReturnFailure(
+                tag = TAG,
+                throwable = null,
+                error = CreateRecipeError.CircularIngredient,
+                message = { "Recipe contains circular ingredient references." },
+            )
+        }
 
         val recipeId = recipeDataSource.insertRecipe(recipe)
         eventDataSource.insert(recipeId, command.event)

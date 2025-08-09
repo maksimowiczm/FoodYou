@@ -666,12 +666,17 @@ private fun NutrientGoal(
             )
         val progressBarColor by
             animateColorAsState(if (progress > 1) MaterialTheme.colorScheme.error else trackColor)
+        val trackColor by
+            animateColorAsState(
+                if (progress > 1) MaterialTheme.colorScheme.errorContainer.copy(alpha = .5f)
+                else trackColor.copy(alpha = 0.25f)
+            )
 
         LinearProgressIndicator(
             progress = { progress % 1f },
             modifier = Modifier.fillMaxWidth().height(8.dp),
             color = progressBarColor,
-            trackColor = trackColor.copy(alpha = 0.25f),
+            trackColor = trackColor,
             drawStopIndicator = {},
         )
     }

@@ -11,8 +11,9 @@ import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.weight
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateDiaryEntryCommand
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateDiaryEntryError
-import com.maksimowiczm.foodyou.business.fooddiary.domain.weight
 import com.maksimowiczm.foodyou.feature.food.diary.add.usecase.ObserveMealsUseCase
+import com.maksimowiczm.foodyou.feature.food.shared.presentation.defaultMeasurement
+import com.maksimowiczm.foodyou.feature.food.shared.presentation.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId

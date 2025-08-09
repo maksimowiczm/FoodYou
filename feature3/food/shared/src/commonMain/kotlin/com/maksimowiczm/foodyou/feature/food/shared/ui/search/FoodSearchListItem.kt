@@ -6,9 +6,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
+import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.weight
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.weight
-import com.maksimowiczm.foodyou.feature.food.shared.usecase.FoodSearchObserveRecipeUseCase
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
@@ -18,6 +18,7 @@ import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.res.stringResource
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
+import kotlinx.coroutines.flow.mapNotNull
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -118,9 +119,14 @@ internal fun FoodSearchListItem(
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
 ) {
-    val observeRecipeUseCase: FoodSearchObserveRecipeUseCase = koinInject()
+    val observeRecipeUseCase: ObserveFoodUseCase = koinInject()
 
-    val recipe = observeRecipeUseCase.observe(food.id).collectAsStateWithLifecycle(null).value
+    val recipe =
+        observeRecipeUseCase
+            .observe(food.id)
+            .mapNotNull { it as? Recipe }
+            .collectAsStateWithLifecycle(null)
+            .value
 
     if (recipe == null) {
         return FoodListItemSkeleton(shimmer)

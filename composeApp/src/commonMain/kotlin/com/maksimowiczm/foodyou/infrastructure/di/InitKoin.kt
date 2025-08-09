@@ -40,6 +40,7 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
         featureFoodDiarySearchModule,
         featureFoodDiaryAddModule,
         featureFoodProductModule,
+        featureFoodRecipeModule,
         featureFoodSharedModule,
     )
 

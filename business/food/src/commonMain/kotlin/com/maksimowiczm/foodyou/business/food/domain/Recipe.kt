@@ -23,7 +23,7 @@ data class Recipe(
         if (ingredients.isEmpty() || totalWeight == 0.0) {
             NutritionFacts.Empty
         } else {
-            ingredients.mapNotNull { it.nutritionFacts }.sum() / totalWeight
+            ingredients.mapNotNull { it.nutritionFacts }.sum() / totalWeight * 100.0
         }
     }
 

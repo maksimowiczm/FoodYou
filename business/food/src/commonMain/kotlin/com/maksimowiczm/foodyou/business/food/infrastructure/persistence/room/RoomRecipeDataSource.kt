@@ -123,6 +123,7 @@ internal class RoomRecipeDataSource(
 
 private fun Recipe.toEntity(): RecipeEntity =
     RecipeEntity(
+        id = this.id.id,
         name = this.name,
         servings = this.servings,
         note = this.note,

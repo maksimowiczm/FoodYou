@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.ui.recipe
+package com.maksimowiczm.foodyou.feature.food.recipe.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -28,19 +28,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.maksimowiczm.foodyou.core.navigation.forwardBackwardComposable
-import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.domain.Product
-import com.maksimowiczm.foodyou.feature.food.domain.Recipe
-import com.maksimowiczm.foodyou.feature.food.ui.FoodSearchApp
-import com.maksimowiczm.foodyou.feature.food.ui.IncompleteFoodsList
-import com.maksimowiczm.foodyou.feature.food.ui.NutrientList
-import com.maksimowiczm.foodyou.feature.measurement.data.Measurement as MeasurementType
-import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
-import com.maksimowiczm.foodyou.feature.measurement.domain.from
-import com.maksimowiczm.foodyou.feature.measurement.domain.rawValue
-import com.maksimowiczm.foodyou.feature.measurement.domain.type
+import com.maksimowiczm.foodyou.business.food.domain.Product
+import com.maksimowiczm.foodyou.business.food.domain.Recipe
+import com.maksimowiczm.foodyou.business.shared.domain.nutrients.isComplete
+import com.maksimowiczm.foodyou.feature.food.recipe.presentation.MinimalIngredient
+import com.maksimowiczm.foodyou.feature.food.shared.ui.NutrientList
+import com.maksimowiczm.foodyou.feature.food.shared.ui.search.FoodSearchApp
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.MeasurementType
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.from
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.rawValue
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.type
+import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
+import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList
 import foodyou.app.generated.resources.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
@@ -53,51 +55,41 @@ internal fun RecipeApp(
     onBack: () -> Unit,
     onSave: (RecipeFormState) -> Unit,
     onEditFood: (FoodId) -> Unit,
+    onUpdateUsdaApiKey: () -> Unit,
     state: RecipeFormState,
     topBarTitle: String,
     mainRecipeId: FoodId.Recipe?,
     recipe: Recipe?,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Form,
-        modifier = modifier
-    ) {
+    NavHost(navController = navController, startDestination = Form, modifier = modifier) {
         forwardBackwardComposable<Form> {
             val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = {
-                            Text(topBarTitle)
-                        },
-                        navigationIcon = {
-                            ArrowBackIconButton(onBack)
-                        },
+                        title = { Text(topBarTitle) },
+                        navigationIcon = { ArrowBackIconButton(onBack) },
                         actions = {
-                            FilledIconButton(
-                                onClick = { onSave(state) },
-                                enabled = state.isValid
-                            ) {
+                            FilledIconButton(onClick = { onSave(state) }, enabled = state.isValid) {
                                 Icon(
                                     imageVector = Icons.Outlined.Save,
-                                    contentDescription = stringResource(Res.string.action_save)
+                                    contentDescription = stringResource(Res.string.action_save),
                                 )
                             }
                         },
-                        scrollBehavior = scrollBehavior
+                        scrollBehavior = scrollBehavior,
                     )
                 }
             ) { paddingValues ->
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .imePadding()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    contentPadding = paddingValues
+                    modifier =
+                        Modifier.fillMaxSize()
+                            .imePadding()
+                            .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    contentPadding = paddingValues,
                 ) {
                     item {
                         RecipeForm(
@@ -113,9 +105,7 @@ internal fun RecipeApp(
                                     launchSingleTop = true
                                 }
                             },
-                            contentPadding = PaddingValues(
-                                horizontal = 16.dp
-                            )
+                            contentPadding = PaddingValues(horizontal = 16.dp),
                         )
                     }
 
@@ -124,41 +114,31 @@ internal fun RecipeApp(
                             HorizontalDivider(Modifier.padding(bottom = 8.dp))
                             Text(
                                 text = stringResource(Res.string.headline_summary),
-                                modifier = Modifier.padding(
-                                    horizontal = 16.dp,
-                                    vertical = 8.dp
-                                ),
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                                 color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.labelLarge
+                                style = MaterialTheme.typography.labelLarge,
                             )
 
-                            val facts = recipe.nutritionFacts * Measurement.Package(1f)
-                                .weight(recipe.totalWeight) / 100f
+                            val facts =
+                                recipe.nutritionFacts *
+                                    Measurement.Package(1.0).weight(recipe.totalWeight) / 100.0
                             NutrientList(
                                 facts = facts,
-                                modifier = Modifier.padding(
-                                    horizontal = 8.dp
-                                )
+                                modifier = Modifier.padding(horizontal = 8.dp),
                             )
 
                             if (!facts.isComplete) {
-                                val foods = recipe
-                                    .flatIngredients()
-                                    .filter { it is Product }
-                                    .filter { !it.nutritionFacts.isComplete }
+                                val foods =
+                                    recipe
+                                        .allIngredients()
+                                        .filter { it is Product }
+                                        .filter { !it.nutritionFacts.isComplete }
 
                                 IncompleteFoodsList(
                                     foods = foods.map { it.headline }.distinct(),
-                                    modifier = Modifier.padding(
-                                        horizontal = 16.dp,
-                                        vertical = 8.dp
-                                    ),
-                                    onFoodClick = { name ->
-                                        val id = foods.firstOrNull { it.headline == name }?.id
-                                        if (id != null) {
-                                            onEditFood(id)
-                                        }
-                                    }
+                                    modifier =
+                                        Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                    onFoodClick = { i -> onEditFood(foods[i].id) },
                                 )
                             }
                         }
@@ -172,35 +152,31 @@ internal fun RecipeApp(
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = {
-                            Text(stringResource(Res.string.headline_choose_ingredient))
-                        },
+                        title = { Text(stringResource(Res.string.headline_choose_ingredient)) },
                         navigationIcon = {
                             ArrowBackIconButton(
-                                onClick = {
-                                    navController.popBackStack<IngredientsSearch>(true)
-                                }
+                                onClick = { navController.popBackStack<IngredientsSearch>(true) }
                             )
                         },
-                        scrollBehavior = scrollBehavior
+                        scrollBehavior = scrollBehavior,
                     )
                 },
-                contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(
-                    WindowInsetsSides.Top
-                )
+                contentWindowInsets =
+                    ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Top),
             ) { paddingValues ->
                 FoodSearchApp(
-                    onFoodClick = { id, measurement ->
-                        navController.navigate(IngredientMeasurement(id, measurement)) {
+                    onFoodClick = { model, measurement ->
+                        navController.navigate(IngredientMeasurement(model.id, measurement)) {
                             launchSingleTop = true
                         }
                     },
+                    onUpdateUsdaApiKey = onUpdateUsdaApiKey,
                     excludedRecipe = mainRecipeId,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
-                        .padding(paddingValues)
-                        .consumeWindowInsets(paddingValues)
+                    modifier =
+                        Modifier.fillMaxSize()
+                            .nestedScroll(scrollBehavior.nestedScrollConnection)
+                            .padding(paddingValues)
+                            .consumeWindowInsets(paddingValues),
                 )
             }
         }
@@ -208,23 +184,16 @@ internal fun RecipeApp(
             val route = it.toRoute<IngredientMeasurement>()
 
             MeasureIngredientScreen(
-                onBack = {
-                    navController.popBackStack<IngredientMeasurement>(true)
-                },
+                onBack = { navController.popBackStack<IngredientMeasurement>(true) },
                 onSave = { measurement ->
                     state.addIngredient(
-                        MinimalIngredient(
-                            foodId = route.foodId,
-                            measurement = measurement
-                        )
+                        MinimalIngredient(foodId = route.foodId, measurement = measurement)
                     )
                     navController.popBackStack<IngredientMeasurement>(true)
                     navController.popBackStack<IngredientsSearch>(true, saveState = true)
                 },
                 measurement = route.measurement,
-                viewModel = koinViewModel {
-                    parametersOf(route.foodId)
-                }
+                viewModel = koinViewModel { parametersOf(route.foodId) },
             )
         }
         forwardBackwardComposable<EditIngredient> {
@@ -240,61 +209,52 @@ internal fun RecipeApp(
 
             if (ingredient != null) {
                 MeasureIngredientScreen(
-                    onBack = {
-                        navController.popBackStack<EditIngredient>(true)
-                    },
+                    onBack = { navController.popBackStack<EditIngredient>(true) },
                     onSave = { measurement ->
                         state.updateIngredient(
                             route.index,
-                            MinimalIngredient(
-                                foodId = ingredient.foodId,
-                                measurement = measurement
-                            )
+                            MinimalIngredient(foodId = ingredient.foodId, measurement = measurement),
                         )
                         navController.popBackStack<EditIngredient>(true)
                     },
                     measurement = ingredient.measurement,
-                    viewModel = koinViewModel {
-                        parametersOf(ingredient.foodId)
-                    }
+                    viewModel = koinViewModel { parametersOf(ingredient.foodId) },
                 )
             }
         }
     }
 }
 
-@Serializable
-private data object Form
+@Serializable private data object Form
 
-@Serializable
-private data object IngredientsSearch
+@Serializable private data object IngredientsSearch
 
-@Serializable
-private data class EditIngredient(val index: Int)
+@Serializable private data class EditIngredient(val index: Int)
 
 @Serializable
 private data class IngredientMeasurement(
     val productId: Long?,
     val recipeId: Long?,
     val measurementType: MeasurementType,
-    val quantity: Float
+    val quantity: Double,
 ) {
     constructor(
         foodId: FoodId,
-        measurement: Measurement
+        measurement: Measurement,
     ) : this(
         productId = (foodId as? FoodId.Product)?.id,
         recipeId = (foodId as? FoodId.Recipe)?.id,
         measurementType = measurement.type,
-        quantity = measurement.rawValue
+        quantity = measurement.rawValue,
     )
 
     val foodId: FoodId
-        get() = when {
-            productId != null -> FoodId.Product(productId)
-            recipeId != null -> FoodId.Recipe(recipeId)
-            else -> throw IllegalStateException("Food ID is not set")
-        }
+        get() =
+            when {
+                productId != null -> FoodId.Product(productId)
+                recipeId != null -> FoodId.Recipe(recipeId)
+                else -> throw IllegalStateException("Food ID is not set")
+            }
 
     val measurement: Measurement
         get() = Measurement.from(measurementType, quantity)

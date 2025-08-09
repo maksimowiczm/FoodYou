@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.ui.recipe
+package com.maksimowiczm.foodyou.feature.food.recipe.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,16 +37,18 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ui.ext.add
-import com.maksimowiczm.foodyou.core.ui.form.FormField
-import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
-import com.maksimowiczm.foodyou.feature.food.domain.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.feature.food.domain.weight
-import com.maksimowiczm.foodyou.feature.food.ui.FoodErrorListItem
-import com.maksimowiczm.foodyou.feature.food.ui.FoodListItem
-import com.maksimowiczm.foodyou.feature.food.ui.FoodListItemSkeleton
-import com.maksimowiczm.foodyou.feature.measurement.domain.Measurement
-import com.maksimowiczm.foodyou.feature.measurement.ui.stringResource
+import com.maksimowiczm.foodyou.business.food.domain.weight
+import com.maksimowiczm.foodyou.feature.food.recipe.presentation.MinimalIngredient
+import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
+import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
+import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
+import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.ui.ext.add
+import com.maksimowiczm.foodyou.shared.ui.form.FormField
+import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.shared.ui.res.stringResource
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
@@ -60,144 +62,122 @@ internal fun RecipeForm(
     onAddIngredient: () -> Unit,
     onEditIngredient: (index: Int) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val layoutDirection = LocalLayoutDirection.current
 
-    val horizontalPadding = PaddingValues(
-        start = contentPadding.calculateStartPadding(layoutDirection),
-        end = contentPadding.calculateStartPadding(layoutDirection)
-    )
+    val horizontalPadding =
+        PaddingValues(
+            start = contentPadding.calculateStartPadding(layoutDirection),
+            end = contentPadding.calculateStartPadding(layoutDirection),
+        )
 
-    val verticalPadding = PaddingValues(
-        top = contentPadding.calculateTopPadding(),
-        bottom = contentPadding.calculateBottomPadding()
-    )
+    val verticalPadding =
+        PaddingValues(
+            top = contentPadding.calculateTopPadding(),
+            bottom = contentPadding.calculateBottomPadding(),
+        )
 
     var ingredientToRemoveIndex by rememberSaveable { mutableStateOf<Int?>(null) }
-    LaunchedEffect(state.ingredients) {
-        ingredientToRemoveIndex = null
-    }
+    LaunchedEffect(state.ingredients) { ingredientToRemoveIndex = null }
     when (val index = ingredientToRemoveIndex) {
         null -> Unit
-        else -> AlertDialog(
-            onDismissRequest = { ingredientToRemoveIndex = null },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        state.removeIngredient(state.ingredients[index])
-                        ingredientToRemoveIndex = null
+        else ->
+            AlertDialog(
+                onDismissRequest = { ingredientToRemoveIndex = null },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            state.removeIngredient(state.ingredients[index])
+                            ingredientToRemoveIndex = null
+                        }
+                    ) {
+                        Text(stringResource(Res.string.action_delete))
                     }
-                ) {
-                    Text(stringResource(Res.string.action_delete))
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = { ingredientToRemoveIndex = null }
-                ) {
-                    Text(stringResource(Res.string.action_cancel))
-                }
-            },
-            title = {
-                Text(stringResource(Res.string.action_delete_ingredient))
-            },
-            text = {
-                Text(stringResource(Res.string.description_delete_ingredient))
-            }
-        )
+                },
+                dismissButton = {
+                    TextButton(onClick = { ingredientToRemoveIndex = null }) {
+                        Text(stringResource(Res.string.action_cancel))
+                    }
+                },
+                title = { Text(stringResource(Res.string.action_delete_ingredient)) },
+                text = { Text(stringResource(Res.string.description_delete_ingredient)) },
+            )
     }
 
-    Column(
-        modifier = modifier.padding(verticalPadding)
-    ) {
+    Column(modifier = modifier.padding(verticalPadding)) {
         Column(
             modifier = Modifier.padding(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
                 text = stringResource(Res.string.headline_general),
                 modifier = Modifier.padding(horizontalPadding),
                 color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.labelLarge,
             )
 
             state.name.TextField(
                 label = stringResource(Res.string.product_name),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontalPadding),
-                supportingText = stringResource(Res.string.neutral_required)
+                modifier = Modifier.fillMaxWidth().padding(horizontalPadding),
+                supportingText = stringResource(Res.string.neutral_required),
             )
 
             state.servings.TextField(
                 label = stringResource(Res.string.recipe_servings),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontalPadding),
+                modifier = Modifier.fillMaxWidth().padding(horizontalPadding),
                 imeAction = ImeAction.Next,
-                supportingText = stringResource(Res.string.description_recipe_servings)
+                supportingText = stringResource(Res.string.description_recipe_servings),
             )
 
             state.note.TextField(
                 label = stringResource(Res.string.headline_note),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontalPadding),
+                modifier = Modifier.fillMaxWidth().padding(horizontalPadding),
                 imeAction = ImeAction.Done,
-                supportingText = stringResource(Res.string.description_add_note)
+                supportingText = stringResource(Res.string.description_add_note),
             )
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { state.isLiquid = !state.isLiquid }
-                    .padding(vertical = 8.dp)
-                    .padding(horizontalPadding),
-                verticalAlignment = Alignment.CenterVertically
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .clickable { state.isLiquid = !state.isLiquid }
+                        .padding(vertical = 8.dp)
+                        .padding(horizontalPadding),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
                     modifier = Modifier.size(48.dp),
                     contentAlignment = Alignment.Center,
-                    content = {
-                        Checkbox(
-                            checked = state.isLiquid,
-                            onCheckedChange = null
-                        )
-                    }
+                    content = { Checkbox(checked = state.isLiquid, onCheckedChange = null) },
                 )
                 Column {
                     Text(
                         text = stringResource(Res.string.action_treat_as_liquid),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                     Text(
                         text = stringResource(Res.string.description_treat_as_liquid),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
         }
 
-        HorizontalDivider(
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+        HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
 
         Text(
             text = stringResource(Res.string.headline_ingredients),
-            modifier = Modifier
-                .padding(horizontalPadding)
-                .padding(bottom = 8.dp),
+            modifier = Modifier.padding(horizontalPadding).padding(bottom = 8.dp),
             color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge,
         )
 
         AddIngredientButton(
             onAddIngredient = onAddIngredient,
             contentPadding = horizontalPadding,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         val shimmer = rememberShimmer(ShimmerBounds.View)
@@ -207,7 +187,7 @@ internal fun RecipeForm(
                 onEdit = { onEditIngredient(i) },
                 onDelete = { ingredientToRemoveIndex = i },
                 contentPadding = horizontalPadding.add(vertical = 12.dp),
-                shimmer = shimmer
+                shimmer = shimmer,
             )
         }
     }
@@ -220,24 +200,23 @@ private fun IngredientListItem(
     onDelete: () -> Unit,
     contentPadding: PaddingValues,
     shimmer: Shimmer,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val observeFoodUseCase: ObserveFoodUseCase = koinInject()
 
-    val food = observeFoodUseCase.observe(ingredient.foodId)
-        .collectAsStateWithLifecycle(null).value
+    val food = observeFoodUseCase.observe(ingredient.foodId).collectAsStateWithLifecycle(null).value
 
     if (food == null) {
         return FoodListItemSkeleton(shimmer, modifier)
     }
 
-    val factor = ingredient.measurement.weight(food)?.div(100f)
+    val factor = ingredient.measurement.weight(food)?.div(100)
     if (factor == null) {
         return FoodErrorListItem(
             headline = food.headline,
             errorMessage = stringResource(Res.string.error_measurement_error),
             modifier = modifier,
-            onClick = onEdit
+            onClick = onEdit,
         )
     }
 
@@ -252,16 +231,14 @@ private fun IngredientListItem(
             headline = food.headline,
             modifier = modifier,
             onClick = onEdit,
-            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields)
+            errorMessage = stringResource(Res.string.error_food_is_missing_required_fields),
         )
     }
 
     val g = stringResource(Res.string.unit_gram_short)
 
     FoodListItem(
-        name = {
-            Text(text = food.headline)
-        },
+        name = { Text(text = food.headline) },
         proteins = {
             val text = proteins.formatClipZeros()
             Text("$text $g")
@@ -280,13 +257,15 @@ private fun IngredientListItem(
             Text("$text $kcal")
         },
         measurement = {
-            val weight = when (ingredient.measurement) {
-                is Measurement.Gram,
-                is Measurement.Milliliter -> null
+            val weight =
+                when (ingredient.measurement) {
+                    is Measurement.Gram,
+                    is Measurement.Milliliter -> null
 
-                is Measurement.Package -> food.totalWeight?.let(ingredient.measurement::weight)
-                is Measurement.Serving -> food.servingWeight?.let(ingredient.measurement::weight)
-            }
+                    is Measurement.Package -> food.totalWeight?.let(ingredient.measurement::weight)
+                    is Measurement.Serving ->
+                        food.servingWeight?.let(ingredient.measurement::weight)
+                }
 
             val text = buildString {
                 append(ingredient.measurement.stringResource())
@@ -302,19 +281,14 @@ private fun IngredientListItem(
         trailingContent = {
             Row {
                 IconButton(onEdit) {
-                    Icon(
-                        imageVector = Icons.Outlined.Edit,
-                        contentDescription = null
-                    )
+                    Icon(imageVector = Icons.Outlined.Edit, contentDescription = null)
                 }
                 IconButton(onDelete) {
-                    Icon(
-                        imageVector = Icons.Outlined.Delete,
-                        contentDescription = null
-                    )
+                    Icon(imageVector = Icons.Outlined.Delete, contentDescription = null)
                 }
             }
-        }
+        },
+        isRecipe = ingredient.foodId is FoodId.Recipe,
     )
 }
 
@@ -323,7 +297,7 @@ private inline fun <reified T> FormField<T, RecipeFormFieldError>.TextField(
     label: String,
     modifier: Modifier = Modifier,
     imeAction: ImeAction = ImeAction.Next,
-    supportingText: String? = null
+    supportingText: String? = null,
 ) {
     OutlinedTextField(
         state = textFieldState,
@@ -338,17 +312,12 @@ private inline fun <reified T> FormField<T, RecipeFormFieldError>.TextField(
             }
         },
         isError = error != null,
-        keyboardOptions = if (T::class == Int::class) {
-            KeyboardOptions(
-                keyboardType = KeyboardType.Decimal,
-                imeAction = imeAction
-            )
-        } else {
-            KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = imeAction
-            )
-        }
+        keyboardOptions =
+            if (T::class == Int::class) {
+                KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = imeAction)
+            } else {
+                KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = imeAction)
+            },
     )
 }
 
@@ -356,27 +325,26 @@ private inline fun <reified T> FormField<T, RecipeFormFieldError>.TextField(
 private fun AddIngredientButton(
     onAddIngredient: () -> Unit,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .clickable { onAddIngredient() }
-            .padding(contentPadding)
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .clickable { onAddIngredient() }
+                .padding(contentPadding)
+                .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Surface(
             modifier = Modifier,
             shape = CircleShape,
             color = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = null,
-                modifier = Modifier
-                    .size(40.dp)
-                    .padding(8.dp)
+                modifier = Modifier.size(40.dp).padding(8.dp),
             )
         }
 
@@ -385,7 +353,7 @@ private fun AddIngredientButton(
         Text(
             text = stringResource(Res.string.action_add_ingredient),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
     }
 }

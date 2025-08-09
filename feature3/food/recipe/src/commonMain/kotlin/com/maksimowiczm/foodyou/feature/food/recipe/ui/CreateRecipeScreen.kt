@@ -1,23 +1,16 @@
-package com.maksimowiczm.foodyou.feature.food.ui
+package com.maksimowiczm.foodyou.feature.food.recipe.ui
 
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ui.BackHandler
-import com.maksimowiczm.foodyou.core.ui.DiscardDialog
-import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
-import com.maksimowiczm.foodyou.feature.food.domain.FoodId
-import com.maksimowiczm.foodyou.feature.food.ui.recipe.RecipeApp
-import com.maksimowiczm.foodyou.feature.food.ui.recipe.create.CreateRecipeEvent
-import com.maksimowiczm.foodyou.feature.food.ui.recipe.create.CreateRecipeViewModel
-import com.maksimowiczm.foodyou.feature.food.ui.recipe.rememberRecipeFormState
+import com.maksimowiczm.foodyou.feature.food.recipe.presentation.CreateRecipeEvent
+import com.maksimowiczm.foodyou.feature.food.recipe.presentation.CreateRecipeViewModel
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.shared.ui.BackHandler
+import com.maksimowiczm.foodyou.shared.ui.DiscardDialog
+import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -27,7 +20,8 @@ fun CreateRecipeScreen(
     onBack: () -> Unit,
     onCreate: (FoodId.Recipe) -> Unit,
     onEditFood: (FoodId) -> Unit,
-    modifier: Modifier = Modifier
+    onUpdateUsdaApiKey: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val viewModel = koinViewModel<CreateRecipeViewModel>()
     val latestOnCreate by rememberUpdatedState(onCreate)
@@ -37,31 +31,28 @@ fun CreateRecipeScreen(
         }
     }
 
-    val formState = rememberRecipeFormState(
-        initialName = "",
-        initialServings = 1,
-        initialNote = null,
-        initialIsLiquid = false,
-        initialIngredients = emptyList()
-    )
-    val asRecipe = remember(formState.ingredients) {
-        viewModel.intoRecipe(formState)
-    }.collectAsStateWithLifecycle(null).value
+    val formState =
+        rememberRecipeFormState(
+            initialName = "",
+            initialServings = 1,
+            initialNote = null,
+            initialIsLiquid = false,
+            initialIngredients = emptyList(),
+        )
+    val asRecipe =
+        remember(formState.ingredients) { viewModel.intoRecipe(formState) }
+            .collectAsStateWithLifecycle(null)
+            .value
 
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
-    BackHandler(
-        enabled = formState.isModified,
-        onBack = { showDiscardDialog = true }
-    )
+    BackHandler(enabled = formState.isModified, onBack = { showDiscardDialog = true })
     if (showDiscardDialog) {
         DiscardDialog(
-            onDismissRequest = {
-                showDiscardDialog = false
-            },
+            onDismissRequest = { showDiscardDialog = false },
             onDiscard = {
                 showDiscardDialog = false
                 onBack()
-            }
+            },
         ) {
             Text(stringResource(Res.string.question_discard_recipe))
         }
@@ -77,10 +68,11 @@ fun CreateRecipeScreen(
         },
         onSave = viewModel::create,
         onEditFood = onEditFood,
+        onUpdateUsdaApiKey = onUpdateUsdaApiKey,
         state = formState,
         topBarTitle = stringResource(Res.string.headline_create_recipe),
         mainRecipeId = null,
         recipe = asRecipe,
-        modifier = modifier
+        modifier = modifier,
     )
 }

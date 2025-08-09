@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddEntryDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateProductDestination
+import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateRecipeDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiarySearchDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsCardSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsMasterDestination
@@ -25,6 +26,7 @@ import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateProductDestination
+import com.maksimowiczm.foodyou.navigation.domain.UpdateRecipeDestination
 import com.maksimowiczm.foodyou.navigation.domain.UsdaApiKeyDestination
 import com.maksimowiczm.foodyou.navigation.graph.about.aboutNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.food.foodNavigationGraphBuilder
@@ -127,8 +129,8 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
         )
         foodDiaryNavigationGraph(
             searchOnBack = { navController.popBackStack<FoodDiarySearchDestination>(true) },
-            searchOnCreateRecipe = {
-                // TODO
+            searchOnCreateRecipe = { date, mealId ->
+                navController.navigateSingleTop(FoodDiaryCreateRecipeDestination(mealId, date))
             },
             searchOnCreateProduct = { date, mealId ->
                 navController.navigateSingleTop(FoodDiaryCreateProductDestination(mealId, date))
@@ -147,7 +149,7 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             addOnEditFood = {
                 when (it) {
                     is FoodId.Product -> UpdateProductDestination(it)
-                    is FoodId.Recipe -> TODO()
+                    is FoodId.Recipe -> UpdateRecipeDestination(it)
                 }.let(navController::navigateSingleTop)
             },
             createProductOnBack = {
@@ -167,10 +169,41 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
                 }
             },
             onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKeyDestination) },
+            createRecipeOnBack = {
+                navController.popBackStack<FoodDiaryCreateRecipeDestination>(true)
+            },
+            createRecipeOnCreate = { foodId, date, mealId ->
+                navController.navigate(
+                    FoodDiaryAddEntryDestination(
+                        foodId = foodId,
+                        mealId = mealId,
+                        date = date,
+                        measurement = null,
+                    )
+                ) {
+                    launchSingleTop = true
+                    popUpTo<FoodDiaryCreateRecipeDestination> { inclusive = true }
+                }
+            },
+            createOnEditFood = { foodId ->
+                when (foodId) {
+                    is FoodId.Product -> UpdateProductDestination(foodId)
+                    is FoodId.Recipe -> UpdateRecipeDestination(foodId)
+                }.let(navController::navigateSingleTop)
+            },
         )
         foodNavigationGraphBuilder(
             updateProductOnBack = { navController.popBackStack<UpdateProductDestination>(true) },
             updateProductOnSave = { navController.popBackStack<UpdateProductDestination>(true) },
+            updateRecipeOnBack = { navController.popBackStack<UpdateRecipeDestination>(true) },
+            updateRecipeOnSave = { navController.popBackStack<UpdateRecipeDestination>(true) },
+            updateRecipeOnEditFood = { foodId ->
+                when (foodId) {
+                    is FoodId.Product -> UpdateProductDestination(foodId)
+                    is FoodId.Recipe -> UpdateRecipeDestination(foodId)
+                }.let(navController::navigateSingleTop)
+            },
+            onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKeyDestination) },
         )
     }
 }

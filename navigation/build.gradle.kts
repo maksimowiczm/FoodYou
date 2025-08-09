@@ -50,6 +50,7 @@ kotlin {
             implementation(projects.feature3.food.diary.add)
 
             implementation(projects.feature3.food.product)
+            implementation(projects.feature3.food.recipe)
 
             implementation(projects.feature3.home)
 
