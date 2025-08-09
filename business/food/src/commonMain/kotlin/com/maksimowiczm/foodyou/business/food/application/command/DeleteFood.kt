@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.business.food.application.command
 
-import com.maksimowiczm.foodyou.business.food.domain.FoodId
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok

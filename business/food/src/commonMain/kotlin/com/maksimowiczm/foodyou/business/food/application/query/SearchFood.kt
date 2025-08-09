@@ -4,7 +4,6 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.business.food.domain.FoodId
 import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.FoodSource
@@ -22,6 +21,7 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMed
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.shared.common.date.now
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler

@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.food.application.query
 
-import com.maksimowiczm.foodyou.business.food.domain.FoodId
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
 import kotlin.reflect.KClass

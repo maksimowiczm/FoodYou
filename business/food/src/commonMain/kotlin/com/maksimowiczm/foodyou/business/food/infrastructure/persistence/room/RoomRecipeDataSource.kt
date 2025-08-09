@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room
 
-import com.maksimowiczm.foodyou.business.food.domain.FoodId
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.RecipeIngredient
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
@@ -8,9 +7,11 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRe
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeIngredientEntity
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.measurementFrom
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityType
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityValue
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.from
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.rawValue
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.type
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -47,7 +48,7 @@ internal class RoomRecipeDataSource(
                         foodFlow.map { food ->
                             RecipeIngredient(
                                 food = food,
-                                measurement = measurementFrom(it.measurement, it.quantity),
+                                measurement = Measurement.from(it.measurement, it.quantity),
                             )
                         }
                     }
@@ -88,8 +89,8 @@ internal class RoomRecipeDataSource(
                 RecipeIngredientEntity(
                     ingredientRecipeId = (foodId as? FoodId.Recipe)?.id,
                     ingredientProductId = (foodId as? FoodId.Product)?.id,
-                    measurement = measurement.toEntityType(),
-                    quantity = measurement.toEntityValue(),
+                    measurement = measurement.type,
+                    quantity = measurement.rawValue,
                 )
             }
 
@@ -111,8 +112,8 @@ internal class RoomRecipeDataSource(
                 RecipeIngredientEntity(
                     ingredientRecipeId = (foodId as? FoodId.Recipe)?.id,
                     ingredientProductId = (foodId as? FoodId.Product)?.id,
-                    measurement = measurement.toEntityType(),
-                    quantity = measurement.toEntityValue(),
+                    measurement = measurement.type,
+                    quantity = measurement.rawValue,
                 )
             }
 

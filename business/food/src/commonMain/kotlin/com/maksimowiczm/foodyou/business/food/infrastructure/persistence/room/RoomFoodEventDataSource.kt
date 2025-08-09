@@ -1,11 +1,11 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room
 
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
-import com.maksimowiczm.foodyou.business.food.domain.FoodId
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventType
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow

@@ -12,14 +12,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.weight
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.weight
 import com.maksimowiczm.foodyou.feature.food.diary.search.usecase.ObserveRecipeUseCase
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
-import com.maksimowiczm.foodyou.feature.shared.ui.stringResource
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.shared.ui.res.stringResource
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource

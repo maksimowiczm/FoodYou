@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.home.presentation.meals.card
 
 import androidx.compose.runtime.Immutable
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import kotlinx.datetime.LocalTime
 
 @Immutable

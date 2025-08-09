@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared
+package com.maksimowiczm.foodyou.shared.common.domain.measurement
 
 enum class MeasurementType {
     /** The weight is measured in grams. */

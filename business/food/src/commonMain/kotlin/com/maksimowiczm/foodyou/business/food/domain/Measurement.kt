@@ -1,6 +1,6 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 
 fun Measurement.weight(food: Food): Double? =
     when (this) {

@@ -11,11 +11,12 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.DiaryRecipeIngredientEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementEntity
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.measurementFrom
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityNutrients
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityType
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityValue
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toNutritionFacts
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.from
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.rawValue
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.type
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,7 +56,7 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                                 id = entity.id,
                                 mealId = entity.mealId,
                                 date = LocalDate.fromEpochDays(entity.epochDay),
-                                measurement = measurementFrom(entity.measurement, entity.quantity),
+                                measurement = Measurement.from(entity.measurement, entity.quantity),
                                 food = it,
                                 createdAt = createdAt,
                             )
@@ -98,8 +99,8 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                 epochDay = diaryEntry.date.toEpochDays(),
                 productId = productId,
                 recipeId = recipeId,
-                measurement = diaryEntry.measurement.toEntityType(),
-                quantity = diaryEntry.measurement.toEntityValue(),
+                measurement = diaryEntry.measurement.type,
+                quantity = diaryEntry.measurement.rawValue,
                 createdAt =
                     diaryEntry.createdAt.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
             )
@@ -169,8 +170,8 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                     recipeId = recipeId,
                     ingredientProductId = ingredientProductId,
                     ingredientRecipeId = ingredientRecipeId,
-                    measurement = ingredient.measurement.toEntityType(),
-                    quantity = ingredient.measurement.toEntityValue(),
+                    measurement = ingredient.measurement.type,
+                    quantity = ingredient.measurement.rawValue,
                 )
 
             measurementDao.insertDiaryRecipeIngredient(ingredientEntity)
@@ -193,7 +194,7 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                                 .map { ingredient ->
                                     ingredient.ingredientProductId?.let {
                                         observeProduct(it).filterNotNull().map {
-                                            measurementFrom(
+                                            Measurement.from(
                                                 ingredient.measurement,
                                                 ingredient.quantity,
                                             ) to it
@@ -201,7 +202,7 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                                     }
                                         ?: ingredient.ingredientRecipeId?.let { recipeId ->
                                             observeRecipe(recipeId).filterNotNull().map {
-                                                measurementFrom(
+                                                Measurement.from(
                                                     ingredient.measurement,
                                                     ingredient.quantity,
                                                 ) to it

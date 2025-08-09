@@ -10,10 +10,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.home.presentation.meals.card.MealEntryModel
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource

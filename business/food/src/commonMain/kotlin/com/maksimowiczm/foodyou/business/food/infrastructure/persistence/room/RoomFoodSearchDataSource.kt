@@ -5,18 +5,18 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.maksimowiczm.foodyou.business.food.domain.FoodId
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.FoodSource
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistory
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodSearchDataSource
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearch as FoodSearchData
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearchDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.SearchEntry
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow

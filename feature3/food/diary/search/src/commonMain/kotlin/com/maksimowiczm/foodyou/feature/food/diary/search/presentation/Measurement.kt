@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.food.diary.search.presentation
 
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 
 internal fun Measurement.weight(product: FoodSearch.Product): Double? =
     when (this) {

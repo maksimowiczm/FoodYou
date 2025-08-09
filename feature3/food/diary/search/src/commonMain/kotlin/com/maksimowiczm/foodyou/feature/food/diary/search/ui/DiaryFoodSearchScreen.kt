@@ -61,12 +61,12 @@ import androidx.paging.LoadState
 import androidx.paging.compose.error
 import androidx.paging.compose.itemKey
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.business.shared.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.DiaryFoodSearchViewModel
 import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.FoodFilter
 import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.FoodSearchUiState
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.shared.barcodescanner.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.BackHandler
 import com.maksimowiczm.foodyou.shared.ui.Scrim
@@ -93,6 +93,8 @@ fun DiaryFoodSearchScreen(
     onBack: () -> Unit,
     onCreateRecipe: () -> Unit,
     onCreateProduct: () -> Unit,
+    onMeasure:
+        (productId: Long?, recipeId: Long?, measurementType: Int, measurementQuantity: Int) -> Unit,
     epochDay: Long,
     mealId: Long,
     animatedVisibilityScope: AnimatedVisibilityScope,

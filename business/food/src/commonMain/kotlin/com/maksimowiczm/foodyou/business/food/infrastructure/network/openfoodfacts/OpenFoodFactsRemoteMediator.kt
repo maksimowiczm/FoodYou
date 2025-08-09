@@ -7,7 +7,6 @@ import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.business.food.application.command.CreateProductCommand
 import com.maksimowiczm.foodyou.business.food.application.command.CreateProductError
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
-import com.maksimowiczm.foodyou.business.food.domain.FoodId
 import com.maksimowiczm.foodyou.business.food.domain.OpenFoodFactsPagingKey
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalOpenFoodFactsPagingHelper
@@ -15,6 +14,7 @@ import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemo
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.ProductNotFoundException
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.shared.common.date.now
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import kotlinx.datetime.LocalDateTime

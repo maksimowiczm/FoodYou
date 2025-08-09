@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.food.domain
+package com.maksimowiczm.foodyou.shared.common.domain.food
 
 sealed interface FoodId {
 

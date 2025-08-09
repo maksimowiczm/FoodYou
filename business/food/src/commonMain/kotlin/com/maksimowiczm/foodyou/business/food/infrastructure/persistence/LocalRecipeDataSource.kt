@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.persistence
 
-import com.maksimowiczm.foodyou.business.food.domain.FoodId
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlinx.coroutines.flow.Flow
 
 internal interface LocalRecipeDataSource {

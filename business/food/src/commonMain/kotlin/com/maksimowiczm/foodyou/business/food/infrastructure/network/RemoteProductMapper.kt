@@ -1,10 +1,10 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network
 
-import com.maksimowiczm.foodyou.business.food.domain.FoodId
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 
 internal class RemoteProductMapper {
     fun toModel(remote: RemoteProduct, id: FoodId.Product = FoodId.Product(0)): Product {

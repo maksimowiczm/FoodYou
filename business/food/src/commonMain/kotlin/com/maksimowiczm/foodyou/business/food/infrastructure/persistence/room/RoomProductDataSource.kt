@@ -1,6 +1,5 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room
 
-import com.maksimowiczm.foodyou.business.food.domain.FoodId
 import com.maksimowiczm.foodyou.business.food.domain.FoodSource
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
@@ -10,6 +9,7 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.ProductEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toNutritionFacts
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
