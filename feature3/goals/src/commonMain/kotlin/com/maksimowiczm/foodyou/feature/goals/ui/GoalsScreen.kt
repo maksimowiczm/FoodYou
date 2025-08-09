@@ -58,6 +58,7 @@ import com.maksimowiczm.foodyou.feature.goals.presentation.GoalsViewModel
 import com.maksimowiczm.foodyou.feature.goals.presentation.MealModel
 import com.maksimowiczm.foodyou.feature.goals.presentation.incompleteFoods
 import com.maksimowiczm.foodyou.feature.goals.presentation.stringResource
+import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
@@ -78,8 +79,6 @@ fun GoalsScreen(onBack: () -> Unit, epochDay: Long, modifier: Modifier = Modifie
     val date = LocalDate.fromEpochDays(epochDay)
     val viewModel: GoalsViewModel = koinViewModel()
     val dateFormatter = LocalDateFormatter.current
-
-    val nutrientsOrder by viewModel.nutrientsOrder.collectAsStateWithLifecycle()
 
     val screenState = rememberGoalsScreenState(selectedDate = date)
 
@@ -130,7 +129,7 @@ fun GoalsScreen(onBack: () -> Unit, epochDay: Long, modifier: Modifier = Modifie
                             ContainedLoadingIndicator()
                         }
                     } else {
-                        GoalsPage(uiState = uiState, order = nutrientsOrder)
+                        GoalsPage(uiState = uiState)
                     }
                 }
             }
@@ -139,11 +138,7 @@ fun GoalsScreen(onBack: () -> Unit, epochDay: Long, modifier: Modifier = Modifie
 }
 
 @Composable
-private fun GoalsPage(
-    uiState: GoalsScreenUiState,
-    order: List<NutrientsOrder>,
-    modifier: Modifier = Modifier,
-) {
+private fun GoalsPage(uiState: GoalsScreenUiState, modifier: Modifier = Modifier) {
     val meals = uiState.meals
     val goals = uiState.goal
 
@@ -163,7 +158,6 @@ private fun GoalsPage(
         NutrientList(
             nutritionFacts = nutritionFacts,
             goals = goals,
-            order = order,
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         )
         if (meals.incompleteFoods.isNotEmpty()) {
@@ -219,9 +213,10 @@ private fun MealsFilter(
 private fun NutrientList(
     nutritionFacts: NutritionFacts,
     goals: DailyGoal,
-    order: List<NutrientsOrder>,
     modifier: Modifier = Modifier,
 ) {
+    val order = LocalNutrientsOrder.current
+
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(24.dp)) {
         NutrientGoal(
             label = NutritionFactsField.Energy.stringResource(),

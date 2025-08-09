@@ -7,17 +7,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
+import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.MultiColorProgressIndicator
 import com.maksimowiczm.foodyou.shared.ui.MultiColorProgressIndicatorItem
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
 import kotlin.math.max
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
-import org.koin.compose.koinInject
 
 /** Indicator with goal. */
 @Composable
@@ -27,10 +22,10 @@ fun EnergyProgressIndicator(
     carbohydrates: Float,
     fats: Float,
     goal: Float,
-    order: List<NutrientsOrder>,
     modifier: Modifier = Modifier,
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val order = LocalNutrientsOrder.current
 
     val animatedProteins by animateFloatAsState(proteins)
     val animatedCarbohydrates by animateFloatAsState(carbohydrates)
@@ -77,10 +72,10 @@ fun EnergyProgressIndicator(
     proteins: Float,
     carbohydrates: Float,
     fats: Float,
-    order: List<NutrientsOrder>,
     modifier: Modifier = Modifier,
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val order = LocalNutrientsOrder.current
 
     val sum = proteins + carbohydrates + fats
     val items =
@@ -116,36 +111,5 @@ fun EnergyProgressIndicator(
             modifier
                 .defaultMinSize(minWidth = 0.dp, minHeight = 16.dp)
                 .clip(MaterialTheme.shapes.small),
-    )
-}
-
-/**
- * Overloaded version of [EnergyProgressIndicator] that uses the current [NutrientsOrder] from
- * [ObserveSettingsUseCase].
- */
-@Composable
-fun EnergyProgressIndicator(
-    proteins: Float,
-    carbohydrates: Float,
-    fats: Float,
-    modifier: Modifier = Modifier,
-) {
-    val observeSettingsUseCase: ObserveSettingsUseCase = koinInject()
-
-    val order =
-        observeSettingsUseCase
-            .observe()
-            .map { it.nutrientsOrder }
-            .collectAsStateWithLifecycle(
-                runBlocking { observeSettingsUseCase.observe().map { it.nutrientsOrder }.first() }
-            )
-            .value
-
-    EnergyProgressIndicator(
-        proteins = proteins,
-        carbohydrates = carbohydrates,
-        fats = fats,
-        order = order,
-        modifier = modifier,
     )
 }

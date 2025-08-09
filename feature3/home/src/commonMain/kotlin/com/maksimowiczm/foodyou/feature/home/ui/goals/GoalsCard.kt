@@ -35,6 +35,7 @@ import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.home.presentation.goals.GoalsViewModel
 import com.maksimowiczm.foodyou.feature.home.ui.shared.FoodYouHomeCard
 import com.maksimowiczm.foodyou.feature.home.ui.shared.HomeState
+import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.ext.toDp
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
 import com.valentinilk.shimmer.Shimmer
@@ -56,7 +57,6 @@ internal fun GoalsCard(
 
     val model = viewModel.model.collectAsStateWithLifecycle().value
     val expand by viewModel.expandGoalsCard.collectAsStateWithLifecycle()
-    val nutrientsOrder by viewModel.nutrientsOrder.collectAsStateWithLifecycle()
 
     if (model == null) {
         GoalsCardSkeleton(
@@ -77,7 +77,6 @@ internal fun GoalsCard(
             carbohydratesGoal = model.carbohydratesGoal,
             fats = model.fats,
             fatsGoal = model.fatsGoal,
-            nutrientsOrder = nutrientsOrder,
             onClick = { onClick(homeState.selectedDate.toEpochDays()) },
             onLongClick = onLongClick,
             modifier = modifier,
@@ -97,7 +96,6 @@ internal fun GoalsCard(
     carbohydratesGoal: Int,
     fats: Int,
     fatsGoal: Int,
-    nutrientsOrder: List<NutrientsOrder>,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -131,7 +129,6 @@ internal fun GoalsCard(
                 proteinsPercentage = proteinsPercentage,
                 carbsPercentage = carbsPercentage,
                 fatsPercentage = fatsPercentage,
-                nutrientsOrder = nutrientsOrder,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -150,7 +147,6 @@ internal fun GoalsCard(
                         carbohydratesGoalGrams = carbohydratesGoal,
                         fatsGrams = fats,
                         fatsGoalGrams = fatsGoal,
-                        nutrientsOrder = nutrientsOrder,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
@@ -167,10 +163,10 @@ private fun GoalsCardContent(
     proteinsPercentage: Float,
     carbsPercentage: Float,
     fatsPercentage: Float,
-    nutrientsOrder: List<NutrientsOrder>,
     modifier: Modifier = Modifier,
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val nutrientsOrder = LocalNutrientsOrder.current
 
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
@@ -342,12 +338,12 @@ private fun ExpandedCardContent(
     carbohydratesGoalGrams: Int,
     fatsGrams: Int,
     fatsGoalGrams: Int,
-    nutrientsOrder: List<NutrientsOrder>,
     modifier: Modifier = Modifier,
 ) {
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
     val nutrientsPalette = LocalNutrientsPalette.current
+    val nutrientsOrder = LocalNutrientsOrder.current
     val gramShort = stringResource(Res.string.unit_gram_short)
 
     val proteinsString = buildAnnotatedString {

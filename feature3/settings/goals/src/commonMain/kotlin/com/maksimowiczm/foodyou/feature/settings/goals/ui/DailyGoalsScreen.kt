@@ -43,7 +43,6 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.settings.goals.presentation.DailyGoalsViewModel
 import com.maksimowiczm.foodyou.feature.settings.goals.presentation.DailyGoalsViewModelEvent
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
@@ -62,7 +61,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DailyGoalsScreen(onBack: () -> Unit, onSave: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel: DailyGoalsViewModel = koinViewModel()
-    val nutrientsOrder by viewModel.nutrientsOrder.collectAsStateWithLifecycle()
     val weeklyGoals = viewModel.weeklyGoals.collectAsStateWithLifecycle().value
 
     LaunchedCollectWithLifecycle(viewModel.events) {
@@ -143,7 +141,6 @@ fun DailyGoalsScreen(onBack: () -> Unit, onSave: () -> Unit, modifier: Modifier 
             item {
                 DailyGoalsForm(
                     state = state.selectedDayGoals,
-                    nutrientsOrder = nutrientsOrder,
                     contentPadding = PaddingValues(horizontal = 16.dp),
                 )
             }
@@ -154,7 +151,6 @@ fun DailyGoalsScreen(onBack: () -> Unit, onSave: () -> Unit, modifier: Modifier 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun DailyGoalsForm(
-    nutrientsOrder: List<NutrientsOrder>,
     state: DayGoalsState,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
@@ -174,20 +170,17 @@ internal fun DailyGoalsForm(
         if (state.useDistribution) {
             MacroInputSliderForm(
                 state = state.sliderState,
-                nutrientsOrder = nutrientsOrder,
                 modifier = Modifier.fillMaxWidth().padding(contentPadding),
             )
         } else {
             MacroWeightInputForm(
                 state = state.weightState,
-                nutrientsOrder = nutrientsOrder,
                 modifier = Modifier.fillMaxWidth().padding(contentPadding),
             )
         }
         HorizontalDivider(Modifier.padding(vertical = 8.dp))
         AdditionalGoalsForm(
             state = state.additionalState,
-            nutrientsOrder = nutrientsOrder,
             modifier = Modifier.fillMaxWidth().padding(contentPadding),
         )
     }

@@ -17,14 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
-import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -35,7 +29,6 @@ fun FoodListItem(
     fats: @Composable () -> Unit,
     calories: @Composable () -> Unit,
     measurement: @Composable () -> Unit,
-    order: List<NutrientsOrder>,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     trailingContent: (@Composable () -> Unit)? = null,
@@ -45,6 +38,7 @@ fun FoodListItem(
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val order = LocalNutrientsOrder.current
 
     val headlineContent =
         @Composable {
@@ -147,54 +141,4 @@ fun FoodListItem(
             content = content,
         )
     }
-}
-
-/**
- * Overloaded version of [FoodListItem] that uses the current [NutrientsOrder] from
- * [ObserveSettingsUseCase].
- */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-fun FoodListItem(
-    name: @Composable () -> Unit,
-    proteins: @Composable () -> Unit,
-    carbohydrates: @Composable () -> Unit,
-    fats: @Composable () -> Unit,
-    calories: @Composable () -> Unit,
-    measurement: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
-    trailingContent: (@Composable () -> Unit)? = null,
-    containerColor: Color = Color.Transparent,
-    contentColor: Color = LocalContentColor.current,
-    shape: Shape = RectangleShape,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-) {
-    val observeSettingsUseCase: ObserveSettingsUseCase = koinInject()
-
-    val order =
-        observeSettingsUseCase
-            .observe()
-            .map { it.nutrientsOrder }
-            .collectAsStateWithLifecycle(
-                runBlocking { observeSettingsUseCase.observe().map { it.nutrientsOrder }.first() }
-            )
-            .value
-
-    FoodListItem(
-        name = name,
-        proteins = proteins,
-        carbohydrates = carbohydrates,
-        fats = fats,
-        calories = calories,
-        measurement = measurement,
-        order = order,
-        modifier = modifier,
-        onClick = onClick,
-        trailingContent = trailingContent,
-        containerColor = containerColor,
-        contentColor = contentColor,
-        shape = shape,
-        contentPadding = contentPadding,
-    )
 }

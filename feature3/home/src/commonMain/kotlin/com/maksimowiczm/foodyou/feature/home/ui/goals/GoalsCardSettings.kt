@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.home.presentation.goals.GoalsViewModel
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import foodyou.app.generated.resources.*
@@ -33,14 +32,12 @@ fun GoalsCardSettings(
 ) {
     val viewModel: GoalsViewModel = koinViewModel()
     val expand by viewModel.expandGoalsCard.collectAsStateWithLifecycle()
-    val nutrientsOrder by viewModel.nutrientsOrder.collectAsStateWithLifecycle()
 
     GoalsCardSettings(
         onBack = onBack,
         expand = expand,
         onShowDetailsChange = viewModel::setExpandGoalsCard,
         onGoalsSettings = onGoalsSettings,
-        nutrientsOrder = nutrientsOrder,
         modifier = modifier,
     )
 }
@@ -52,7 +49,6 @@ private fun GoalsCardSettings(
     onGoalsSettings: () -> Unit,
     onShowDetailsChange: (Boolean) -> Unit,
     expand: Boolean,
-    nutrientsOrder: List<NutrientsOrder>,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -82,7 +78,6 @@ private fun GoalsCardSettings(
                     carbohydratesGoal = 300,
                     fats = 70,
                     fatsGoal = 90,
-                    nutrientsOrder = nutrientsOrder,
                     onClick = {},
                     onLongClick = {},
                     modifier = Modifier.padding(16.dp),

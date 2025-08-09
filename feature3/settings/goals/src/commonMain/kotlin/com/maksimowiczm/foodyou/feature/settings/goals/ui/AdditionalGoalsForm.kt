@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DailyGoal
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
+import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.doubleParser
 import com.maksimowiczm.foodyou.shared.ui.form.nonNegativeDoubleValidator
@@ -27,11 +28,9 @@ import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun AdditionalGoalsForm(
-    state: AdditionalGoalsFormState,
-    nutrientsOrder: List<NutrientsOrder>,
-    modifier: Modifier = Modifier,
-) {
+internal fun AdditionalGoalsForm(state: AdditionalGoalsFormState, modifier: Modifier = Modifier) {
+    val nutrientsOrder = LocalNutrientsOrder.current
+
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         nutrientsOrder.forEach {
             when (it) {

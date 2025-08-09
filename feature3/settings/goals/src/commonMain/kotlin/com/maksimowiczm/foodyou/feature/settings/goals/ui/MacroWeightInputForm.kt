@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientsHelper
+import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.floatParser
 import com.maksimowiczm.foodyou.shared.ui.form.intParser
@@ -56,11 +57,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
-internal fun MacroWeightInputForm(
-    state: MacroWeightInputFormState,
-    nutrientsOrder: List<NutrientsOrder>,
-    modifier: Modifier = Modifier,
-) {
+internal fun MacroWeightInputForm(state: MacroWeightInputFormState, modifier: Modifier = Modifier) {
     Column(modifier) {
         AnimatedVisibility(state.autoCalculateEnergy) {
             AutoCalculateCard(
@@ -89,7 +86,7 @@ internal fun MacroWeightInputForm(
             }
         }
         Spacer(Modifier.height(8.dp))
-        MacroInput(state, nutrientsOrder)
+        MacroInput(state)
     }
 }
 
@@ -332,12 +329,9 @@ private fun AutoCalculateCard(state: MacroWeightInputFormState, modifier: Modifi
 }
 
 @Composable
-private fun MacroInput(
-    state: MacroWeightInputFormState,
-    nutrientsOrder: List<NutrientsOrder>,
-    modifier: Modifier = Modifier,
-) {
+private fun MacroInput(state: MacroWeightInputFormState, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val nutrientsOrder = LocalNutrientsOrder.current
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         nutrientsOrder.forEach {

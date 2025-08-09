@@ -19,50 +19,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientsHelper
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
-import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
+import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
 import foodyou.app.generated.resources.*
 import kotlin.math.roundToInt
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
-@Composable
-fun NutrientList(
-    facts: NutritionFacts,
-    order: List<NutrientsOrder>,
-    modifier: Modifier = Modifier,
-    incompleteValue: (NutrientValue.Incomplete) -> (@Composable () -> Unit) =
-        NutrientListDefaults::incompleteValue,
-) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Energy(facts, incompleteValue)
-
-        order.forEach {
-            when (it) {
-                NutrientsOrder.Proteins -> Proteins(facts, incompleteValue)
-                NutrientsOrder.Fats -> Fats(facts, incompleteValue)
-                NutrientsOrder.Carbohydrates -> Carbohydrates(facts, incompleteValue)
-                NutrientsOrder.Other -> Other(facts, incompleteValue)
-                NutrientsOrder.Vitamins -> Vitamins(facts, incompleteValue)
-                NutrientsOrder.Minerals -> Minerals(facts, incompleteValue)
-            }
-        }
-    }
-}
-
-/**
- * Overloaded version of [NutrientList] that uses the current [NutrientsOrder] from
- * [ObserveSettingsUseCase].
- */
 @Composable
 fun NutrientList(
     facts: NutritionFacts,
@@ -70,16 +37,7 @@ fun NutrientList(
     incompleteValue: (NutrientValue.Incomplete) -> (@Composable () -> Unit) =
         NutrientListDefaults::incompleteValue,
 ) {
-    val observeSettingsUseCase: ObserveSettingsUseCase = koinInject()
-
-    val order =
-        observeSettingsUseCase
-            .observe()
-            .map { it.nutrientsOrder }
-            .collectAsStateWithLifecycle(
-                runBlocking { observeSettingsUseCase.observe().map { it.nutrientsOrder }.first() }
-            )
-            .value
+    val order = LocalNutrientsOrder.current
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Energy(facts, incompleteValue)

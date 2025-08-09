@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.home.presentation.meals.card.MealEntryModel
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
@@ -22,7 +21,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun MealFoodListItem(
     entry: MealEntryModel,
-    nutrientsOrder: List<NutrientsOrder>,
     color: Color,
     contentColor: Color,
     shape: Shape,
@@ -68,7 +66,6 @@ internal fun MealFoodListItem(
             measurement = {
                 Text(text = measurementString, style = MaterialTheme.typography.bodySmall)
             },
-            order = nutrientsOrder,
             modifier = modifier,
             containerColor = color,
             contentColor = contentColor,

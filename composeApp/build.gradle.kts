@@ -100,6 +100,8 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
 
+            implementation(libs.koin.compose)
+
             implementation(libs.kotlinx.serialization.json)
         }
 

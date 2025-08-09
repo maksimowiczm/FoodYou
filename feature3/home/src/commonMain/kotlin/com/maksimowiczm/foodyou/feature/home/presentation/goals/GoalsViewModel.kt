@@ -52,14 +52,6 @@ internal class GoalsViewModel(
         viewModelScope.launch { commandBus.dispatchIgnoreResult(SetExpandGoalCardCommand(expand)) }
     }
 
-    private val _nutrientsOrder = observeSettingsUseCase.observe().map { it.nutrientsOrder }
-    val nutrientsOrder =
-        _nutrientsOrder.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = runBlocking { _nutrientsOrder.first() },
-        )
-
     @OptIn(ExperimentalCoroutinesApi::class)
     val model: StateFlow<DaySummaryModel?> =
         dateState

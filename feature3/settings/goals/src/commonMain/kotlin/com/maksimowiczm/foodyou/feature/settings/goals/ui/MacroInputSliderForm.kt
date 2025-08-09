@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
+import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.intParser
 import com.maksimowiczm.foodyou.shared.ui.form.nonNegativeIntValidator
@@ -30,12 +31,9 @@ import kotlin.math.roundToInt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun MacroInputSliderForm(
-    state: MacroInputSliderFormState,
-    nutrientsOrder: List<NutrientsOrder>,
-    modifier: Modifier = Modifier,
-) {
+internal fun MacroInputSliderForm(state: MacroInputSliderFormState, modifier: Modifier = Modifier) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val nutrientsOrder = LocalNutrientsOrder.current
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
         OutlinedTextField(

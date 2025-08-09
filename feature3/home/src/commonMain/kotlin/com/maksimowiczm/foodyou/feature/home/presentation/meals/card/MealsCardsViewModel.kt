@@ -9,7 +9,6 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
-import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
@@ -27,11 +26,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDate
 
-internal class MealsCardsViewModel(
-    observeSettingsUseCase: ObserveSettingsUseCase,
-    queryBus: QueryBus,
-    private val commandBus: CommandBus,
-) : ViewModel() {
+internal class MealsCardsViewModel(queryBus: QueryBus, private val commandBus: CommandBus) :
+    ViewModel() {
     private val dateState = MutableStateFlow<LocalDate?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -55,14 +51,6 @@ internal class MealsCardsViewModel(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(2_000),
             initialValue = runBlocking { _layout.first() },
-        )
-
-    private val _nutrientsOrder = observeSettingsUseCase.observe().map { it.nutrientsOrder }
-    val nutrientsOrder =
-        _nutrientsOrder.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2_000),
-            initialValue = runBlocking { _nutrientsOrder.first() },
         )
 
     fun setDate(date: LocalDate) {

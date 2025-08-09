@@ -48,6 +48,7 @@ import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.home.presentation.meals.card.MealEntryModel
 import com.maksimowiczm.foodyou.feature.home.presentation.meals.card.MealModel
 import com.maksimowiczm.foodyou.feature.home.ui.shared.FoodYouHomeCard
+import com.maksimowiczm.foodyou.feature.shared.ui.LocalNutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalDateFormatter
@@ -59,7 +60,6 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun MealCard(
     meal: MealModel,
-    nutrientsOrder: List<NutrientsOrder>,
     onAddFood: () -> Unit,
     onEditMeasurement: (Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
@@ -67,6 +67,7 @@ internal fun MealCard(
     modifier: Modifier = Modifier,
 ) {
     val nutrientsPalette = LocalNutrientsPalette.current
+    val nutrientsOrder = LocalNutrientsOrder.current
     val dateFormatter = LocalDateFormatter.current
     val enDash = stringResource(Res.string.en_dash)
     val allDayString = stringResource(Res.string.headline_all_day)
@@ -101,7 +102,6 @@ internal fun MealCard(
 
             FoodContainer(
                 foods = meal.foods,
-                nutrientsOrder = nutrientsOrder,
                 onEditMeasurement = onEditMeasurement,
                 onDeleteEntry = onDeleteEntry,
                 modifier =
@@ -184,7 +184,6 @@ internal fun MealCard(
 @Composable
 private fun FoodContainer(
     foods: List<MealEntryModel>,
-    nutrientsOrder: List<NutrientsOrder>,
     onEditMeasurement: (Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     modifier: Modifier = Modifier,
@@ -200,7 +199,6 @@ private fun FoodContainer(
 
                 FoodContainerItem(
                     entry = entry,
-                    nutrientsOrder = nutrientsOrder,
                     onEditMeasurement = onEditMeasurement,
                     onDeleteEntry = onDeleteEntry,
                     shape = shape,
@@ -242,7 +240,6 @@ private fun <T> List<T>.animateBottomCornerRadius(index: Int, defaultRadius: Dp 
 @Composable
 private fun FoodContainerItem(
     entry: MealEntryModel,
-    nutrientsOrder: List<NutrientsOrder>,
     onEditMeasurement: (Long) -> Unit,
     onDeleteEntry: (Long) -> Unit,
     shape: Shape,
@@ -257,7 +254,6 @@ private fun FoodContainerItem(
         ModalBottomSheet(onDismissRequest = { showBottomSheet = false }, sheetState = sheetState) {
             BottomSheetContent(
                 entry = entry,
-                nutrientsOrder = nutrientsOrder,
                 onEdit = {
                     coroutineScope.launch {
                         onEditMeasurement(entry.id)
@@ -278,7 +274,6 @@ private fun FoodContainerItem(
 
     MealFoodListItem(
         entry = entry,
-        nutrientsOrder = nutrientsOrder,
         modifier = modifier.clickable { showBottomSheet = true },
         color = MaterialTheme.colorScheme.surfaceVariant,
         contentColor = MaterialTheme.colorScheme.onSurface,
@@ -321,7 +316,6 @@ private fun ValueColumn(
 @Composable
 private fun BottomSheetContent(
     entry: MealEntryModel,
-    nutrientsOrder: List<NutrientsOrder>,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -341,7 +335,6 @@ private fun BottomSheetContent(
     Column(modifier = modifier) {
         MealFoodListItem(
             entry = entry,
-            nutrientsOrder = nutrientsOrder,
             color = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.onSurface,
             shape = RectangleShape,

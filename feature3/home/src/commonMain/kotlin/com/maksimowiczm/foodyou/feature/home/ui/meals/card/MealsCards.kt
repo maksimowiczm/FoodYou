@@ -21,7 +21,6 @@ internal fun MealsCards(
     val viewModel: MealsCardsViewModel = koinViewModel()
     val diaryMeals = viewModel.diaryMeals.collectAsStateWithLifecycle().value
     val layout by viewModel.layout.collectAsStateWithLifecycle()
-    val nutrientsOrder by viewModel.nutrientsOrder.collectAsStateWithLifecycle()
 
     LaunchedEffect(homeState.selectedDate, viewModel) { viewModel.setDate(homeState.selectedDate) }
 
@@ -29,7 +28,6 @@ internal fun MealsCards(
         MealsCardsLayout.Horizontal ->
             HorizontalMealsCards(
                 meals = diaryMeals,
-                nutrientsOrder = nutrientsOrder,
                 onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
                 onEditMeasurement = onEditMeasurement,
                 onDeleteEntry = viewModel::onDeleteEntry,
@@ -42,7 +40,6 @@ internal fun MealsCards(
         MealsCardsLayout.Vertical ->
             VerticalMealsCards(
                 meals = diaryMeals,
-                nutrientsOrder = nutrientsOrder,
                 onAdd = { mealId -> onAdd(homeState.selectedDate.toEpochDays(), mealId) },
                 onEditMeasurement = onEditMeasurement,
                 onDeleteEntry = viewModel::onDeleteEntry,
