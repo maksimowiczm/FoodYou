@@ -49,8 +49,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core"))
-            implementation(project(":feature:food"))
             implementation(libs.kotlinx.coroutines.core)
         }
 

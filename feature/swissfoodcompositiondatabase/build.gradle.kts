@@ -56,9 +56,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core"))
             implementation(project(":feature:importexport"))
-            implementation(project(":feature:food"))
 
             implementation(compose.components.resources)
 
