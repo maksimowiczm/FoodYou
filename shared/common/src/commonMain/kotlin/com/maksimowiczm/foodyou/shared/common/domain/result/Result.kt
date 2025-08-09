@@ -11,6 +11,12 @@ sealed interface Result<out R, out E> {
             is Success -> onSuccess(data)
             is Failure -> onFailure(error)
         }
+
+    suspend fun consume(onSuccess: (R) -> Unit = {}, onFailure: (E) -> Unit = {}) =
+        when (this) {
+            is Success -> onSuccess(data)
+            is Failure -> onFailure(error)
+        }
 }
 
 @Suppress("FunctionName") fun <R, E> Ok(data: R): Result<R, E> = Result.Success(data)

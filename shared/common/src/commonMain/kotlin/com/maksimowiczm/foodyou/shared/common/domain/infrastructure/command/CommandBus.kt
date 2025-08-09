@@ -6,6 +6,7 @@ interface CommandBus {
     suspend fun <R, E> dispatch(command: Command): Result<R, E>
 }
 
+// I think this will crash if returned types are not Unit
 suspend fun CommandBus.dispatchIgnoreResult(command: Command) {
     dispatch<Unit, Unit>(command)
 }

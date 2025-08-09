@@ -84,7 +84,9 @@ kotlin {
             implementation(projects.feature3.settings.database)
             implementation(projects.feature3.home)
             implementation(projects.feature3.goals)
+            implementation(projects.feature3.food.shared)
             implementation(projects.feature3.food.diary.search)
+            implementation(projects.feature3.food.diary.add)
 
             implementation(projects.externaldatabase.openfoodfacts)
             implementation(projects.externaldatabase.usda)

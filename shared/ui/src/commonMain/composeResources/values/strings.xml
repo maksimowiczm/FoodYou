@@ -12,7 +12,7 @@
     <string name="headline_general">General</string>
     <string name="headline_macronutrients">Macronutrients</string>
     <string name="headline_meals">Meals</string>
-    <string name="headline_delete_product">Delete product</string>
+    <string name="headline_delete_food">Delete food</string>
     <string name="headline_edit_product">Edit product</string>
     <string name="headline_permission_required">Permission required</string>
     <string name="headline_language">Language</string>
@@ -241,7 +241,7 @@
     </plurals>
 
     <string name="description_calories_goal">Set your daily calorie intake goal. This will help you to track your progress and stay on track.</string>
-    <string name="description_delete_product" description="Warn user that it will cause permanent deletion of the product and all related diary entries.">Product will be deleted permanently. This action can't be undone. All diary entries related to this product will be deleted.</string>
+    <string name="description_delete_food">Food will be deleted permanently</string>
     <string name="description_delete_product_entry" description="Tell user that this entry will be deleted only from diary and won't affect the product itself. Product won't be deleted from the database.">This entry will be deleted from your diary. You can add it again anytime.</string>
     <string name="description_about_setting">Learn more about the app</string>
     <string name="description_time_based_meals_sorting">When enabled, meals that are currently happening will be displayed first</string>

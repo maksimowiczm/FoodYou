@@ -64,8 +64,6 @@ kotlin {
             implementation(project(":core"))
             implementation(project(":shared:common"))
 
-            implementation(project(":feature:measurement"))
-
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)
 

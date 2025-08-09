@@ -24,11 +24,22 @@ data class Product(
     val brand: String?,
     val barcode: String?,
     val note: String?,
-    val isLiquid: Boolean,
+    override val isLiquid: Boolean,
     val packageWeight: Double?,
     override val servingWeight: Double?,
     val source: FoodSource,
     override val nutritionFacts: NutritionFacts,
 ) : Food {
     override val totalWeight: Double? = packageWeight
+
+    override val headline = run {
+        val brandSuffix =
+            if (!brand.isNullOrEmpty()) {
+                " $brand"
+            } else {
+                ""
+            }
+
+        "${name}$brandSuffix"
+    }
 }

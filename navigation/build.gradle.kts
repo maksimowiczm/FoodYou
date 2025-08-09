@@ -31,6 +31,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
 
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
@@ -46,6 +47,7 @@ kotlin {
             implementation(projects.feature3.settings.database)
 
             implementation(projects.feature3.food.diary.search)
+            implementation(projects.feature3.food.diary.add)
 
             implementation(projects.feature3.home)
 

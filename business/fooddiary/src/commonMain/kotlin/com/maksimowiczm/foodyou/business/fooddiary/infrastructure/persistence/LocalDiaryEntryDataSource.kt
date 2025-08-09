@@ -8,6 +8,8 @@ internal interface LocalDiaryEntryDataSource {
 
     fun observeEntries(mealId: Long, date: LocalDate): Flow<List<DiaryEntry>>
 
+    fun observeEntry(entryId: Long): Flow<DiaryEntry?>
+
     suspend fun insert(diaryEntry: DiaryEntry): Long
 
     suspend fun update(diaryEntry: DiaryEntry)

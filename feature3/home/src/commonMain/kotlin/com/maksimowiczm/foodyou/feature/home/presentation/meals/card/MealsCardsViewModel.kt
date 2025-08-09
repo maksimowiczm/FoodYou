@@ -2,13 +2,17 @@ package com.maksimowiczm.foodyou.feature.home.presentation.meals.card
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteDiaryEntryCommand
+import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteDiaryEntryError
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQuery
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsPreferencesQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
+import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +30,7 @@ import kotlinx.datetime.LocalDate
 internal class MealsCardsViewModel(
     observeSettingsUseCase: ObserveSettingsUseCase,
     queryBus: QueryBus,
+    private val commandBus: CommandBus,
 ) : ViewModel() {
     private val dateState = MutableStateFlow<LocalDate?>(null)
 
@@ -64,7 +69,23 @@ internal class MealsCardsViewModel(
         viewModelScope.launch { dateState.value = date }
     }
 
-    fun onDeleteEntry(measurementId: Long) {}
+    fun onDeleteEntry(measurementId: Long) {
+        viewModelScope.launch {
+            commandBus
+                .dispatch<Unit, DeleteDiaryEntryError>(DeleteDiaryEntryCommand(measurementId))
+                .consume(
+                    onFailure = {
+                        FoodYouLogger.e(TAG) {
+                            "Failed to delete diary entry with ID $measurementId"
+                        }
+                    }
+                )
+        }
+    }
+
+    private companion object {
+        private const val TAG = "MealsCardsViewModel"
+    }
 }
 
 private fun DiaryMeal.toMealModel(): MealModel =

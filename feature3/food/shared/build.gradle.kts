@@ -13,6 +13,7 @@ kotlin {
 
     sourceSets.commonMain.dependencies {
         implementation(projects.business.shared)
+        implementation(projects.business.settings)
         implementation(projects.business.food)
     }
 }

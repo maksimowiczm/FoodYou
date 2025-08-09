@@ -1,5 +1,72 @@
 package com.maksimowiczm.foodyou.navigation.domain
 
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.MeasurementType
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.from
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.rawValue
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.type
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
-@Serializable internal data class FoodDiarySearchDestination(val epochDay: Long, val mealId: Long)
+@Serializable
+internal data class FoodDiarySearchDestination(val epochDay: Long, val mealId: Long) {
+    val date: LocalDate
+        get() = LocalDate.fromEpochDays(epochDay)
+}
+
+@Serializable
+internal data class FoodDiaryAddDestination(
+    val productId: Long?,
+    val recipeId: Long?,
+    val mealId: Long,
+    val epochDay: Long,
+    val measurementType: MeasurementType?,
+    val quantity: Double?,
+) {
+    init {
+        if (productId == null && recipeId == null) {
+            error("Either productId or recipeId must be provided")
+        }
+
+        if (
+            (measurementType != null && quantity == null) ||
+                (measurementType == null && quantity != null)
+        ) {
+            error("If measurementType is provided, quantity must also be provided")
+        }
+    }
+
+    constructor(
+        foodId: FoodId,
+        mealId: Long,
+        date: LocalDate,
+        measurement: Measurement?,
+    ) : this(
+        productId = (foodId as? FoodId.Product)?.id,
+        recipeId = (foodId as? FoodId.Recipe)?.id,
+        mealId = mealId,
+        epochDay = date.toEpochDays(),
+        measurementType = measurement?.type,
+        quantity = measurement?.rawValue,
+    )
+
+    val foodId: FoodId
+        get() =
+            when {
+                productId != null -> FoodId.Product(productId)
+                recipeId != null -> FoodId.Recipe(recipeId)
+                else -> error("Either productId or recipeId must be provided")
+            }
+
+    val measurement: Measurement?
+        get() =
+            if (measurementType != null && quantity != null) {
+                Measurement.from(measurementType, quantity)
+            } else {
+                null
+            }
+
+    val date: LocalDate
+        get() = LocalDate.fromEpochDays(epochDay)
+}

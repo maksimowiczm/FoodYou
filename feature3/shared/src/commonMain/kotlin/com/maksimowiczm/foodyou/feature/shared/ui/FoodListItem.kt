@@ -172,7 +172,6 @@ fun FoodListItem(
 ) {
     val observeSettingsUseCase: ObserveSettingsUseCase = koinInject()
 
-    val nutrientsPalette = LocalNutrientsPalette.current
     val order =
         observeSettingsUseCase
             .observe()
@@ -182,105 +181,20 @@ fun FoodListItem(
             )
             .value
 
-    val headlineContent =
-        @Composable {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
-            ) {
-                name()
-            }
-        }
-
-    val supportingContent =
-        @Composable {
-            CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    ) {
-                        CompositionLocalProvider(
-                            LocalTextStyle provides MaterialTheme.typography.bodyMedium
-                        ) {
-                            calories()
-                        }
-
-                        order.forEach { field ->
-                            when (field) {
-                                NutrientsOrder.Proteins ->
-                                    CompositionLocalProvider(
-                                        LocalContentColor provides
-                                            nutrientsPalette.proteinsOnSurfaceContainer,
-                                        LocalTextStyle provides MaterialTheme.typography.bodyMedium,
-                                    ) {
-                                        proteins()
-                                    }
-
-                                NutrientsOrder.Fats ->
-                                    CompositionLocalProvider(
-                                        LocalContentColor provides
-                                            nutrientsPalette.fatsOnSurfaceContainer,
-                                        LocalTextStyle provides MaterialTheme.typography.bodyMedium,
-                                    ) {
-                                        fats()
-                                    }
-
-                                NutrientsOrder.Carbohydrates ->
-                                    CompositionLocalProvider(
-                                        LocalContentColor provides
-                                            nutrientsPalette.carbohydratesOnSurfaceContainer,
-                                        LocalTextStyle provides MaterialTheme.typography.bodyMedium,
-                                    ) {
-                                        carbohydrates()
-                                    }
-
-                                NutrientsOrder.Other,
-                                NutrientsOrder.Vitamins,
-                                NutrientsOrder.Minerals -> Unit
-                            }
-                        }
-                    }
-                }
-            }
-            CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
-                measurement()
-            }
-        }
-
-    val content =
-        @Composable {
-            Row(
-                modifier = Modifier.padding(contentPadding),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    headlineContent()
-                    supportingContent()
-                }
-
-                trailingContent?.invoke()
-            }
-        }
-
-    if (onClick != null) {
-        Surface(
-            onClick = onClick,
-            modifier = modifier,
-            color = containerColor,
-            contentColor = contentColor,
-            shape = shape,
-            content = content,
-        )
-    } else {
-        Surface(
-            modifier = modifier,
-            color = containerColor,
-            contentColor = contentColor,
-            shape = shape,
-            content = content,
-        )
-    }
+    FoodListItem(
+        name = name,
+        proteins = proteins,
+        carbohydrates = carbohydrates,
+        fats = fats,
+        calories = calories,
+        measurement = measurement,
+        order = order,
+        modifier = modifier,
+        onClick = onClick,
+        trailingContent = trailingContent,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        shape = shape,
+        contentPadding = contentPadding,
+    )
 }

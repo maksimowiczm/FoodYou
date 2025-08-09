@@ -1,0 +1,44 @@
+package com.maksimowiczm.foodyou.business.fooddiary.application.command
+
+import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
+import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
+import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
+import com.maksimowiczm.foodyou.shared.common.domain.result.Result
+import kotlin.reflect.KClass
+import kotlinx.coroutines.flow.first
+
+class DeleteDiaryEntryCommand(val entryId: Long) : Command
+
+sealed interface DeleteDiaryEntryError {
+    data object EntryNotFound : DeleteDiaryEntryError
+}
+
+internal class DeleteDiaryEntryCommandHandler(private val localDiary: LocalDiaryEntryDataSource) :
+    CommandHandler<DeleteDiaryEntryCommand, Unit, DeleteDiaryEntryError> {
+    override val commandType: KClass<DeleteDiaryEntryCommand>
+        get() = DeleteDiaryEntryCommand::class
+
+    override suspend fun handle(
+        command: DeleteDiaryEntryCommand
+    ): Result<Unit, DeleteDiaryEntryError> {
+        val entry = localDiary.observeEntry(command.entryId).first()
+
+        if (entry == null) {
+            return ErrorLoggingUtils.logAndReturnFailure(
+                tag = TAG,
+                throwable = null,
+                error = DeleteDiaryEntryError.EntryNotFound,
+                message = { "Diary entry with ID ${command.entryId} not found." },
+            )
+        }
+
+        localDiary.delete(entry)
+        return Ok(Unit)
+    }
+
+    private companion object {
+        const val TAG = "DeleteDiaryEntryCommandHandler"
+    }
+}

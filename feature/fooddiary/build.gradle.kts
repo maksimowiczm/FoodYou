@@ -65,7 +65,6 @@ kotlin {
             implementation(compose.components.resources)
 
             implementation(project(":feature:food"))
-            implementation(project(":feature:measurement"))
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.paging)

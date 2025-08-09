@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
+import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiarySearchDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsCardSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsMasterDestination
@@ -125,6 +126,17 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             searchOnCreateProduct = {
                 // TODO
             },
+            searchOnMeasure = { foodId, measurement, date, mealId ->
+                navController.navigateSingleTop(
+                    FoodDiaryAddDestination(
+                        foodId = foodId,
+                        mealId = mealId,
+                        date = date,
+                        measurement = measurement,
+                    )
+                )
+            },
+            addOnBack = { navController.popBackStack<FoodDiaryAddDestination>(true) },
         )
     }
 }

@@ -1,0 +1,127 @@
+package com.maksimowiczm.foodyou.feature.food.diary.add.ui
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.maksimowiczm.foodyou.business.shared.domain.nutrients.isComplete
+import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.FoodModel
+import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.RecipeModel
+import com.maksimowiczm.foodyou.feature.food.shared.ui.EnergyProgressIndicator
+import com.maksimowiczm.foodyou.feature.food.shared.ui.NutrientList
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.ui.IncompleteFoodsList
+import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
+import com.maksimowiczm.foodyou.shared.ui.res.stringResource
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.unit_gram_short
+import foodyou.app.generated.resources.unit_milliliter_short
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+internal fun NutrientList(
+    food: FoodModel,
+    measurement: Measurement,
+    onEditFood: (FoodId) -> Unit,
+    modifier: Modifier = Modifier.Companion,
+) {
+    val facts =
+        remember(food, measurement) {
+            val weight =
+                food.weight(measurement)
+                    ?: error("Invalid measurement: $measurement for food: ${food.foodId}")
+            food.nutritionFacts * (weight / 100)
+        }
+
+    Column(modifier) {
+        Row(
+            modifier = Modifier.Companion.fillMaxWidth().padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Companion.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier.Companion.size(48.dp),
+                contentAlignment = Alignment.Companion.Center,
+            ) {
+                Icon(imageVector = Icons.AutoMirrored.Outlined.ViewList, contentDescription = null)
+            }
+
+            val proteins = facts.proteins.value
+            val carbohydrates = facts.carbohydrates.value
+            val fats = facts.fats.value
+
+            if (proteins != null && carbohydrates != null && fats != null) {
+                EnergyProgressIndicator(
+                    proteins = proteins.toFloat(),
+                    carbohydrates = carbohydrates.toFloat(),
+                    fats = fats.toFloat(),
+                    modifier = Modifier.Companion.weight(1f),
+                )
+            }
+        }
+
+        val weight =
+            food.weight(measurement)
+                ?: error("Invalid measurement: $measurement for food: ${food.foodId}")
+
+        val text = buildString {
+            append(measurement.stringResource())
+
+            when (measurement) {
+                is Measurement.Gram,
+                is Measurement.Milliliter -> Unit
+
+                is Measurement.Package,
+                is Measurement.Serving -> {
+                    val suffix =
+                        if (food.isLiquid) {
+                            stringResource(Res.string.unit_milliliter_short)
+                        } else {
+                            stringResource(Res.string.unit_gram_short)
+                        }
+
+                    append(" (${weight.formatClipZeros()} $suffix)")
+                }
+            }
+        }
+
+        Text(
+            text = text,
+            modifier = Modifier.Companion.padding(horizontal = 8.dp).padding(bottom = 8.dp),
+            style = MaterialTheme.typography.labelLarge,
+        )
+
+        NutrientList(facts)
+
+        if (food is RecipeModel && !food.nutritionFacts.isComplete) {
+            val foods =
+                food.allIngredients
+                    .filter { (foodId, _, facts) -> foodId is FoodId.Product && !facts.isComplete }
+                    .map { (foodId, name) -> foodId to name }
+
+            IncompleteFoodsList(
+                foods = foods.map { (_, name) -> name }.distinct(),
+                onFoodClick = { i -> onEditFood(foods[i].first) },
+                modifier = Modifier.Companion.padding(8.dp),
+            )
+        } else {
+            Spacer(Modifier.Companion.height(8.dp))
+        }
+    }
+}

@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.infrastructure.di
 
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateDiaryEntryCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateMealWithLastRankCommandHandler
+import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteDiaryEntryCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteMealCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.ReorderMealsCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMealCommandHandler
@@ -46,6 +47,8 @@ val businessFoodDiaryModule = module {
     factoryOf(::UpdateMealsPreferencesCommandHandler) {
             named("UpdateMealsPreferencesCommandHandler")
         }
+        .bind<CommandHandler<*, *, *>>()
+    factoryOf(::DeleteDiaryEntryCommandHandler) { named("DeleteDiaryEntryCommandHandler") }
         .bind<CommandHandler<*, *, *>>()
 
     factoryOf(::ObserveMealsQueryHandler) { named("ObserveMealsQueryHandler") }

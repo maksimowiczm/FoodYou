@@ -19,7 +19,6 @@ kotlin {
         implementation(projects.business.food)
 
         implementation(projects.feature3.food.shared)
-        implementation(projects.feature3.shared)
 
         implementation(libs.compose.shimmer)
         implementation(libs.kotlinx.datetime)

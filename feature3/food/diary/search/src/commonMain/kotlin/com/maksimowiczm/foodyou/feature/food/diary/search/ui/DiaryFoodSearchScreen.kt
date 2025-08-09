@@ -66,6 +66,7 @@ import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.FoodFilte
 import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.FoodSearchUiState
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.shared.barcodescanner.FullScreenCameraBarcodeScanner
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.BackHandler
@@ -93,14 +94,12 @@ fun DiaryFoodSearchScreen(
     onBack: () -> Unit,
     onCreateRecipe: () -> Unit,
     onCreateProduct: () -> Unit,
-    onMeasure:
-        (productId: Long?, recipeId: Long?, measurementType: Int, measurementQuantity: Int) -> Unit,
-    epochDay: Long,
+    onMeasure: (FoodId, Measurement) -> Unit,
+    date: LocalDate,
     mealId: Long,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
-    val date = remember(epochDay) { LocalDate.fromEpochDays(epochDay) }
     val dateFormatter = LocalDateFormatter.current
 
     val viewModel: DiaryFoodSearchViewModel = koinViewModel { parametersOf(mealId) }
@@ -145,9 +144,7 @@ fun DiaryFoodSearchScreen(
                 uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
                 onSearch = viewModel::search,
                 onSourceChange = viewModel::changeSource,
-                onFoodClick = { food, measurement ->
-                    // TODO
-                },
+                onFoodClick = { food, measurement -> onMeasure(food.id, measurement) },
                 modifier =
                     Modifier.padding(paddingValues)
                         .consumeWindowInsets(paddingValues)

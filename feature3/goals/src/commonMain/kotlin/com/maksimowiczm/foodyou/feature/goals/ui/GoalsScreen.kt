@@ -51,11 +51,11 @@ import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsField
+import com.maksimowiczm.foodyou.business.shared.domain.nutrients.get
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
 import com.maksimowiczm.foodyou.feature.goals.presentation.GoalsScreenUiState
 import com.maksimowiczm.foodyou.feature.goals.presentation.GoalsViewModel
 import com.maksimowiczm.foodyou.feature.goals.presentation.MealModel
-import com.maksimowiczm.foodyou.feature.goals.presentation.get
 import com.maksimowiczm.foodyou.feature.goals.presentation.incompleteFoods
 import com.maksimowiczm.foodyou.feature.goals.presentation.stringResource
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
@@ -225,7 +225,7 @@ private fun NutrientList(
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(24.dp)) {
         NutrientGoal(
             label = NutritionFactsField.Energy.stringResource(),
-            value = nutritionFacts.get(NutritionFactsField.Energy).value!!,
+            value = nutritionFacts[NutritionFactsField.Energy].value!!,
             target = goals[NutritionFactsField.Energy],
             disclaimer = false,
             modifier = Modifier.fillMaxWidth(),

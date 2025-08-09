@@ -32,10 +32,10 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
+@OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementDao) :
     LocalDiaryEntryDataSource {
 
-    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
     override fun observeEntries(mealId: Long, date: LocalDate): Flow<List<DiaryEntry>> =
         measurementDao
             .observeMeasurements(mealId = mealId, epochDay = date.toEpochDays())
@@ -65,7 +65,26 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                     .combine()
             }
 
-    @OptIn(ExperimentalTime::class)
+    override fun observeEntry(entryId: Long): Flow<DiaryEntry?> {
+        return measurementDao.observeMeasurementById(entryId).filterNotNull().flatMapLatest { entity
+            ->
+            observeFood(entity).map { food ->
+                val createdAt =
+                    Instant.fromEpochSeconds(entity.createdAt)
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+
+                DiaryEntry(
+                    id = entity.id,
+                    mealId = entity.mealId,
+                    date = LocalDate.fromEpochDays(entity.epochDay),
+                    measurement = Measurement.from(entity.measurement, entity.quantity),
+                    food = food,
+                    createdAt = createdAt,
+                )
+            }
+        }
+    }
+
     override suspend fun insert(diaryEntry: DiaryEntry): Long {
 
         // The issue here is that it doesn't run in a transaction, so if one of the inserts fails,
@@ -180,7 +199,6 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
         return recipeId
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     fun observeRecipe(recipeId: Long): Flow<DiaryFoodRecipe> =
         measurementDao
             .observeDiaryRecipe(recipeId)

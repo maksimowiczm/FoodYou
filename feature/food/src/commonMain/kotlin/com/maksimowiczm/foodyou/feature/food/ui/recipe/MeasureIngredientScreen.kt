@@ -29,7 +29,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.ext.add
 import com.maksimowiczm.foodyou.core.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.feature.food.domain.weight
 import com.maksimowiczm.foodyou.feature.food.ui.EnergyProgressIndicator

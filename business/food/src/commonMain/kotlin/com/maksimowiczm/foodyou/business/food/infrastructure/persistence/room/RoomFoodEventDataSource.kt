@@ -20,7 +20,7 @@ internal class RoomFoodEventDataSource(private val foodEventDao: FoodEventDao) :
         foodEventDao.insert(event.toEntity(foodId))
     }
 
-    override suspend fun observeFoodEvents(foodId: FoodId): Flow<List<FoodEvent>> =
+    override fun observeFoodEvents(foodId: FoodId): Flow<List<FoodEvent>> =
         when (foodId) {
             is FoodId.Product -> foodEventDao.observeProductEvents(foodId.id)
             is FoodId.Recipe -> foodEventDao.observeRecipeEvents(foodId.id)
