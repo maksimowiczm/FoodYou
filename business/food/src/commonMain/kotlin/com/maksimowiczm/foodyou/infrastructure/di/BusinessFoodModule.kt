@@ -6,6 +6,8 @@ import com.maksimowiczm.foodyou.business.food.application.command.DeleteFoodComm
 import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateProductCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateRecipeCommandHandler
+import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseOpenFoodFactsCommandHandler
+import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseUsdaCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveSearchHistoryQueryHandler
@@ -97,6 +99,12 @@ val businessFoodModule = module {
         .bind<QueryHandler<*, *>>()
     factoryOf(::SearchRecentFoodCountQueryHandler) { named("SearchRecentFoodCountQueryHandler") }
         .bind<QueryHandler<*, *>>()
+    factoryOf(::UpdateUseOpenFoodFactsCommandHandler) {
+            named("UpdateUseOpenFoodFactsCommandHandler")
+        }
+        .bind<CommandHandler<*, *, *>>()
+    factoryOf(::UpdateUseUsdaCommandHandler) { named("UpdateUseUsdaCommandHandler") }
+        .bind<CommandHandler<*, *, *>>()
 
     factoryOf(::DataStoreFoodPreferencesDataSource).bind<LocalFoodPreferencesDataSource>()
 

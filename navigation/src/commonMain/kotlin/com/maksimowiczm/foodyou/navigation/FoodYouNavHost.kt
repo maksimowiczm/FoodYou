@@ -15,6 +15,7 @@ import com.maksimowiczm.foodyou.navigation.domain.HomeDestination
 import com.maksimowiczm.foodyou.navigation.domain.MealsCardsSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsExternalDatabasesDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsGoalsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsHomeDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsLanguageDestination
@@ -104,6 +105,12 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             homeOnMeals = { navController.navigateSingleTop(MealsCardsSettingsDestination) },
             databaseOnBack = { navController.popBackStack<SettingsDatabaseDestination>(true) },
             databaseOnExternalDatabases = {
+                navController.navigateSingleTop(SettingsExternalDatabasesDestination)
+            },
+            externalDatabasesOnBack = {
+                navController.popBackStack<SettingsExternalDatabasesDestination>(true)
+            },
+            externalDatabasesOnSwissFoodCompositionDatabase = {
                 // TODO
             },
         )

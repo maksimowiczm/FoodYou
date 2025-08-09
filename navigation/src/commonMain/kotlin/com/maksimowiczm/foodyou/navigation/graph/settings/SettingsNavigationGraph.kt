@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.navigation.graph.settings
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
 import com.maksimowiczm.foodyou.feature.settings.externaldatabases.ui.DatabaseSettingsScreen
+import com.maksimowiczm.foodyou.feature.settings.externaldatabases.ui.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.feature.settings.goals.ui.DailyGoalsScreen
 import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageScreen
 import com.maksimowiczm.foodyou.feature.settings.master.ui.SettingsScreen
@@ -12,6 +13,7 @@ import com.maksimowiczm.foodyou.feature.settings.personalization.ui.Personalizat
 import com.maksimowiczm.foodyou.feature.settings.personalization.ui.PersonalizeNutritionFactsScreen
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsExternalDatabasesDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsGoalsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsHomeDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsLanguageDestination
@@ -44,6 +46,8 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
     homeOnMeals: () -> Unit,
     databaseOnBack: () -> Unit,
     databaseOnExternalDatabases: () -> Unit,
+    externalDatabasesOnBack: () -> Unit,
+    externalDatabasesOnSwissFoodCompositionDatabase: () -> Unit,
 ) {
     navigation<SettingsDestination>(startDestination = SettingsMasterDestination) {
         forwardBackwardComposable<SettingsMasterDestination> {
@@ -91,6 +95,12 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
             DatabaseSettingsScreen(
                 onBack = databaseOnBack,
                 onExternalDatabases = databaseOnExternalDatabases,
+            )
+        }
+        forwardBackwardComposable<SettingsExternalDatabasesDestination> {
+            ExternalDatabasesScreen(
+                onBack = externalDatabasesOnBack,
+                onSwissFoodCompositionDatabase = externalDatabasesOnSwissFoodCompositionDatabase,
             )
         }
     }

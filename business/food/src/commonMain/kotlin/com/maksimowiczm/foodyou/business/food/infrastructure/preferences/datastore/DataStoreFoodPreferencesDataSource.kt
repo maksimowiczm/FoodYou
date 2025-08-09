@@ -29,17 +29,18 @@ internal class DataStoreFoodPreferencesDataSource(private val dataStore: DataSto
             )
         }
 
-    override suspend fun update(preferences: FoodPreferences) {
+    override suspend fun updateOpenFoodFactsEnabled(enabled: Boolean) {
         dataStore.updateData { currentPreferences ->
             currentPreferences.toMutablePreferences().apply {
-                set(FoodPreferencesKeys.UseOpenFoodFacts, preferences.openFoodFacts.enabled)
-                set(FoodPreferencesKeys.UseUsda, preferences.usda.enabled)
+                set(FoodPreferencesKeys.UseOpenFoodFacts, enabled)
+            }
+        }
+    }
 
-                if (preferences.usda.apiKey != null) {
-                    set(FoodPreferencesKeys.UsdaApiKey, preferences.usda.apiKey)
-                } else {
-                    remove(FoodPreferencesKeys.UsdaApiKey)
-                }
+    override suspend fun updateUsdaEnabled(enabled: Boolean) {
+        dataStore.updateData { currentPreferences ->
+            currentPreferences.toMutablePreferences().apply {
+                set(FoodPreferencesKeys.UseUsda, enabled)
             }
         }
     }

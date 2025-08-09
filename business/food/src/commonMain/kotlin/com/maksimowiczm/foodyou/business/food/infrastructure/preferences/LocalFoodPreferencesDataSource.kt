@@ -6,5 +6,7 @@ import kotlinx.coroutines.flow.Flow
 internal interface LocalFoodPreferencesDataSource {
     fun observe(): Flow<FoodPreferences>
 
-    suspend fun update(preferences: FoodPreferences)
+    suspend fun updateOpenFoodFactsEnabled(enabled: Boolean)
+
+    suspend fun updateUsdaEnabled(enabled: Boolean)
 }
