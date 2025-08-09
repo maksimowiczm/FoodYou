@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.search.presentation
+package com.maksimowiczm.foodyou.feature.food.shared.presentation.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable

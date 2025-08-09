@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.search.ui
+package com.maksimowiczm.foodyou.feature.food.shared.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement

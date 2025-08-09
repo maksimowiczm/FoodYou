@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.search.ui
+package com.maksimowiczm.foodyou.feature.food.shared.ui.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -12,8 +12,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.weight
-import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.weight
-import com.maksimowiczm.foodyou.feature.food.diary.search.usecase.ObserveRecipeUseCase
+import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.weight
+import com.maksimowiczm.foodyou.feature.food.shared.usecase.FoodSearchObserveRecipeUseCase
+import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodErrorListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItem
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
@@ -113,7 +114,7 @@ internal fun FoodSearchListItem(
     )
 }
 
-/** Recipe has to be lazy loaded, so we use [ObserveRecipeUseCase] to observe the recipe. */
+/** Recipe has to be lazy loaded, so we use [ObserveFoodUseCase] to observe the recipe. */
 @Composable
 internal fun FoodSearchListItem(
     food: FoodSearch.Recipe,
@@ -122,7 +123,7 @@ internal fun FoodSearchListItem(
     shimmer: Shimmer,
     modifier: Modifier = Modifier,
 ) {
-    val observeRecipeUseCase: ObserveRecipeUseCase = koinInject()
+    val observeRecipeUseCase: FoodSearchObserveRecipeUseCase = koinInject()
 
     val recipe = observeRecipeUseCase.observe(food.id).collectAsStateWithLifecycle(null).value
 

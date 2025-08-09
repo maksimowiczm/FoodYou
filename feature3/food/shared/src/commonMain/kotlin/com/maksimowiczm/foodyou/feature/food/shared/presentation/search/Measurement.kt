@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.search.presentation
+package com.maksimowiczm.foodyou.feature.food.shared.presentation.search
 
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement

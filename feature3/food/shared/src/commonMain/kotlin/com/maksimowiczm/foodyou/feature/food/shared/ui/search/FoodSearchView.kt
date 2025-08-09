@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.search.ui
+package com.maksimowiczm.foodyou.feature.food.shared.ui.search
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
@@ -38,8 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.FoodFilter
-import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.FoodSearchUiState
+import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodFilter
+import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodSearchUiState
 import foodyou.app.generated.resources.Res
 import foodyou.app.generated.resources.action_insert_suggested_search
 import foodyou.app.generated.resources.headline_filters

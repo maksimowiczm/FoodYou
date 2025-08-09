@@ -2,36 +2,14 @@ package com.maksimowiczm.foodyou.feature.food.diary.search.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQuery
-import com.maksimowiczm.foodyou.business.food.application.query.ObserveSearchHistoryQuery
-import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodCountQuery
-import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodQuery
-import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodCount
-import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodQuery
-import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
-import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.business.food.domain.FoodSource
-import com.maksimowiczm.foodyou.business.food.domain.SearchHistory
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
-import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.RemoteStatus.Companion.toRemoteStatus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapIfNotNull
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 internal class DiaryFoodSearchViewModel(mealId: Long, private val queryBus: QueryBus) :
@@ -44,159 +22,5 @@ internal class DiaryFoodSearchViewModel(mealId: Long, private val queryBus: Quer
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
                 initialValue = null,
-            )
-
-    // Use shared flow to allow emitting same value multiple times
-    private val searchQuery =
-        MutableSharedFlow<String?>(replay = 1).apply { runBlocking { emit(null) } }
-
-    private val filter = MutableStateFlow(FoodFilter())
-
-    fun search(query: String?) {
-        viewModelScope.launch { searchQuery.emit(query) }
-    }
-
-    fun changeSource(source: FoodFilter.Source) {
-        filter.update { it.copy(source = source) }
-    }
-
-    private val foodPreferences =
-        queryBus
-            .dispatch<FoodPreferences>(ObserveFoodPreferencesQuery)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
-                initialValue =
-                    runBlocking {
-                        queryBus.dispatch<FoodPreferences>(ObserveFoodPreferencesQuery).first()
-                    },
-            )
-
-    private val recentFoodPages =
-        searchQuery.flatMapLatest { query ->
-            queryBus
-                .dispatch<PagingData<FoodSearch>>(
-                    SearchRecentFoodQuery(query = query, excludedRecipeId = null)
-                )
-                .cachedIn(viewModelScope)
-        }
-    private val recentFoodState =
-        searchQuery
-            .flatMapLatest { query -> queryBus.dispatch<Int>(SearchRecentFoodCount(query, null)) }
-            .map { count ->
-                FoodSourceUiState(
-                    remoteEnabled = RemoteStatus.LocalOnly,
-                    pages = recentFoodPages,
-                    count = count,
-                    alwaysShowFilter = true,
-                )
-            }
-
-    private val yourFoodPages = observeFoodPages(FoodSource.Type.User).cachedIn(viewModelScope)
-    private val yourFoodState =
-        observeFoodCount(FoodSource.Type.User).map { count ->
-            FoodSourceUiState(
-                remoteEnabled = RemoteStatus.LocalOnly,
-                pages = yourFoodPages,
-                count = count,
-                alwaysShowFilter = true,
-            )
-        }
-
-    private val openFoodFactsPages =
-        observeFoodPages(FoodSource.Type.OpenFoodFacts).cachedIn(viewModelScope)
-    private val openFoodFactsState =
-        combine(observeFoodCount(FoodSource.Type.OpenFoodFacts), foodPreferences) { count, prefs ->
-            FoodSourceUiState(
-                remoteEnabled = prefs.isOpenFoodFactsEnabled.toRemoteStatus(),
-                pages = openFoodFactsPages,
-                count = count,
-            )
-        }
-
-    private val usdaPages = observeFoodPages(FoodSource.Type.USDA).cachedIn(viewModelScope)
-    private val usdaState =
-        combine(observeFoodCount(FoodSource.Type.USDA), foodPreferences) { count, prefs ->
-            FoodSourceUiState(
-                remoteEnabled = prefs.isUsdaEnabled.toRemoteStatus(),
-                pages = usdaPages,
-                count = count,
-            )
-        }
-
-    private val swissPages =
-        observeFoodPages(FoodSource.Type.SwissFoodCompositionDatabase).cachedIn(viewModelScope)
-    private val swissState =
-        observeFoodCount(FoodSource.Type.SwissFoodCompositionDatabase).map { count ->
-            FoodSourceUiState(
-                remoteEnabled = RemoteStatus.LocalOnly,
-                pages = swissPages,
-                count = count,
-            )
-        }
-
-    private fun observeFoodCount(source: FoodSource.Type) =
-        searchQuery.flatMapLatest { query ->
-            queryBus.dispatch<Int>(
-                SearchFoodCountQuery(query = query, source = source, excludedRecipeId = null)
-            )
-        }
-
-    private fun observeFoodPages(source: FoodSource.Type) =
-        searchQuery.flatMapLatest { query ->
-            queryBus.dispatch<PagingData<FoodSearch>>(
-                SearchFoodQuery(query = query, source = source, excludedRecipeId = null)
-            )
-        }
-
-    private val searchHistory =
-        queryBus
-            .dispatch<List<SearchHistory>>(ObserveSearchHistoryQuery)
-            .map { list -> list.map { it.query } }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
-                initialValue = emptyList(),
-            )
-
-    val uiState =
-        combine(
-                recentFoodState,
-                yourFoodState,
-                openFoodFactsState,
-                usdaState,
-                swissState,
-                filter,
-                searchHistory,
-            ) {
-                recentFoodState,
-                yourFoodState,
-                openFoodFactsState,
-                usdaState,
-                swissState,
-                filter,
-                searchHistory ->
-                FoodSearchUiState(
-                    sources =
-                        mapOf(
-                            FoodFilter.Source.Recent to recentFoodState,
-                            FoodFilter.Source.YourFood to yourFoodState,
-                            FoodFilter.Source.OpenFoodFacts to openFoodFactsState,
-                            FoodFilter.Source.USDA to usdaState,
-                            FoodFilter.Source.SwissFoodCompositionDatabase to swissState,
-                        ),
-                    filter = filter,
-                    recentSearches = searchHistory,
-                )
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(2_000),
-                initialValue =
-                    FoodSearchUiState(
-                        sources = emptyMap(),
-                        filter = FoodFilter(),
-                        recentSearches = emptyList(),
-                    ),
             )
 }

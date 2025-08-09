@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.search.presentation
+package com.maksimowiczm.foodyou.feature.food.shared.presentation.search
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History

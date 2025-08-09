@@ -12,19 +12,13 @@ kotlin {
     iosSimulatorArm64 { binaries.framework { baseName = xcfName } }
 
     sourceSets.commonMain.dependencies {
-        implementation(projects.shared.barcodescanner)
-
         implementation(projects.business.shared)
         implementation(projects.business.fooddiary)
         implementation(projects.business.food)
 
         implementation(projects.feature3.food.shared)
 
-        // Have to get rid of this
-        implementation(projects.externaldatabase.usda)
-
         implementation(libs.compose.shimmer)
         implementation(libs.kotlinx.datetime)
-        implementation(libs.androidx.paging.common)
     }
 }

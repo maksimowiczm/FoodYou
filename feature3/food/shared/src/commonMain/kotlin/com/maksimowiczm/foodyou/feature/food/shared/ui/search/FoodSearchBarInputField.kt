@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.search.ui
+package com.maksimowiczm.foodyou.feature.food.shared.ui.search
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.text.input.TextFieldState

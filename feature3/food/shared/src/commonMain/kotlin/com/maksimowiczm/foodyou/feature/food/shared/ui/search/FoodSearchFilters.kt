@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.search.ui
+package com.maksimowiczm.foodyou.feature.food.shared.ui.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,9 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.FoodFilter
-import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.FoodSearchUiState
-import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.RemoteStatus
+import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodFilter
+import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.FoodSearchUiState
+import com.maksimowiczm.foodyou.feature.food.shared.presentation.search.RemoteStatus
 
 @Composable
 internal fun FoodSearchFilters(
