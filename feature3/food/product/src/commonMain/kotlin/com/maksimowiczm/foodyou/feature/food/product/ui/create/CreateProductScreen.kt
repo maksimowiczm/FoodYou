@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.ui.product.create
+package com.maksimowiczm.foodyou.feature.food.product.ui.create
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,11 +23,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.BackHandler
-import com.maksimowiczm.foodyou.core.ui.DiscardDialog
-import com.maksimowiczm.foodyou.feature.food.ui.product.ProductForm
-import com.maksimowiczm.foodyou.feature.food.ui.product.ProductFormState
+import com.maksimowiczm.foodyou.feature.food.product.ui.ProductForm
+import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
+import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.ui.BackHandler
+import com.maksimowiczm.foodyou.shared.ui.DiscardDialog
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -38,7 +38,7 @@ internal fun CreateProductScreen(
     onBack: () -> Unit,
     onCreate: (ProductFormState) -> Unit,
     onDownload: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var showDiscardDialog by rememberSaveable { mutableStateOf(false) }
     val handleBack = {
@@ -48,18 +48,14 @@ internal fun CreateProductScreen(
             showDiscardDialog = true
         }
     }
-    BackHandler(
-        enabled = state.isModified
-    ) {
-        showDiscardDialog = true
-    }
+    BackHandler(enabled = state.isModified) { showDiscardDialog = true }
     if (showDiscardDialog) {
         DiscardDialog(
             onDismissRequest = { showDiscardDialog = false },
             onDiscard = {
                 showDiscardDialog = false
                 onBack()
-            }
+            },
         ) {
             Text(stringResource(Res.string.question_discard_product))
         }
@@ -74,26 +70,20 @@ internal fun CreateProductScreen(
                 title = { Text(stringResource(Res.string.headline_create_product)) },
                 navigationIcon = { ArrowBackIconButton(handleBack) },
                 actions = {
-                    FilledIconButton(
-                        onClick = { onCreate(state) },
-                        enabled = state.isValid
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Save,
-                            contentDescription = null
-                        )
+                    FilledIconButton(onClick = { onCreate(state) }, enabled = state.isValid) {
+                        Icon(imageVector = Icons.Outlined.Save, contentDescription = null)
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .imePadding()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
+            modifier =
+                Modifier.fillMaxSize()
+                    .imePadding()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues,
         ) {
             item {
                 AssistChip(
@@ -104,18 +94,13 @@ internal fun CreateProductScreen(
                         Icon(
                             imageVector = Icons.Default.Download,
                             contentDescription = null,
-                            modifier = Modifier.size(AssistChipDefaults.IconSize)
+                            modifier = Modifier.size(AssistChipDefaults.IconSize),
                         )
-                    }
+                    },
                 )
             }
 
-            item {
-                ProductForm(
-                    state = state,
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                )
-            }
+            item { ProductForm(state = state, contentPadding = PaddingValues(horizontal = 16.dp)) }
         }
     }
 }

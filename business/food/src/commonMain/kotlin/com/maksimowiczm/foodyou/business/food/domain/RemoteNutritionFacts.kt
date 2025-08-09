@@ -1,5 +1,8 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class RemoteNutritionFacts(
     val proteins: Double?,
     val carbohydrates: Double?,

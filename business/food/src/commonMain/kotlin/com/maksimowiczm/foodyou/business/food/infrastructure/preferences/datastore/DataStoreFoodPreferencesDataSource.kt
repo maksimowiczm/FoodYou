@@ -44,6 +44,18 @@ internal class DataStoreFoodPreferencesDataSource(private val dataStore: DataSto
             }
         }
     }
+
+    override suspend fun updateUsdaApiKey(apiKey: String?) {
+        dataStore.updateData { currentPreferences ->
+            currentPreferences.toMutablePreferences().apply {
+                if (apiKey == null) {
+                    remove(FoodPreferencesKeys.UsdaApiKey)
+                } else {
+                    set(FoodPreferencesKeys.UsdaApiKey, apiKey)
+                }
+            }
+        }
+    }
 }
 
 private object FoodPreferencesKeys {

@@ -12,7 +12,7 @@ sealed interface Result<out R, out E> {
             is Failure -> onFailure(error)
         }
 
-    suspend fun consume(onSuccess: (R) -> Unit = {}, onFailure: (E) -> Unit = {}) =
+    suspend fun consume(onSuccess: suspend (R) -> Unit = {}, onFailure: suspend (E) -> Unit = {}) =
         when (this) {
             is Success -> onSuccess(data)
             is Failure -> onFailure(error)

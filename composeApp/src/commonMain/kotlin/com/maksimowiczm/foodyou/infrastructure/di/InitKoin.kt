@@ -36,7 +36,12 @@ fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
     modules(featureGoalsModule)
 
     // Food
-    modules(featureFoodSharedModule, featureFoodDiarySearchModule, featureFoodDiaryAddModule)
+    modules(
+        featureFoodDiarySearchModule,
+        featureFoodDiaryAddModule,
+        featureFoodProductModule,
+        featureFoodSharedModule,
+    )
 
     modules(openFoodFactsModule, usdaModule)
 }

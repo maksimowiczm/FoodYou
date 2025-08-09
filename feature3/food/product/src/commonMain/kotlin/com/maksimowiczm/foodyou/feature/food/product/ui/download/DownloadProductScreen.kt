@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.ui.product.download
+package com.maksimowiczm.foodyou.feature.food.product.ui.download
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -50,8 +50,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.unorderedList
+import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductError
+import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.ui.unorderedList
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -59,7 +60,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun DownloadProductScreen(
     isDownloading: Boolean,
-    error: DownloadError?,
+    error: DownloadProductError?,
     textFieldState: TextFieldState,
     onBack: () -> Unit,
     onDownload: () -> Unit,
@@ -67,7 +68,8 @@ internal fun DownloadProductScreen(
     onOpenFoodFacts: () -> Unit,
     onUsda: () -> Unit,
     onSuggestDatabase: () -> Unit,
-    modifier: Modifier = Modifier
+    onUpdateUsdaApiKey: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -75,23 +77,20 @@ internal fun DownloadProductScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = {
-                    Text(stringResource(Res.string.action_download_product))
-                },
-                navigationIcon = {
-                    ArrowBackIconButton(onBack)
-                },
-                scrollBehavior = scrollBehavior
+                title = { Text(stringResource(Res.string.action_download_product)) },
+                navigationIcon = { ArrowBackIconButton(onBack) },
+                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {
             Column(
-                modifier = Modifier.animateFloatingActionButton(
-                    visible = !isDownloading,
-                    alignment = Alignment.BottomEnd
-                ),
+                modifier =
+                    Modifier.animateFloatingActionButton(
+                        visible = !isDownloading,
+                        alignment = Alignment.BottomEnd,
+                    ),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.End
+                horizontalAlignment = Alignment.End,
             ) {
                 FloatingActionButton(
                     onClick = {
@@ -100,11 +99,11 @@ internal fun DownloadProductScreen(
                         }
                     },
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                 ) {
                     Icon(
                         imageVector = Icons.Default.ContentPaste,
-                        contentDescription = stringResource(Res.string.action_paste_url)
+                        contentDescription = stringResource(Res.string.action_paste_url),
                     )
                 }
 
@@ -115,34 +114,24 @@ internal fun DownloadProductScreen(
                         }
                     },
                     icon = {
-                        Icon(
-                            imageVector = Icons.Default.Download,
-                            contentDescription = null
-                        )
+                        Icon(imageVector = Icons.Default.Download, contentDescription = null)
                     },
-                    text = {
-                        Text(stringResource(Res.string.action_download))
-                    }
+                    text = { Text(stringResource(Res.string.action_download)) },
                 )
             }
-        }
+        },
     ) { paddingValues ->
-
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = paddingValues
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = paddingValues,
         ) {
             stickyHeader {
                 AnimatedContent(
                     targetState = isDownloading,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 12.dp),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 12.dp),
                     transitionSpec = {
                         fadeIn() + expandVertically() togetherWith fadeOut() + shrinkVertically()
-                    }
+                    },
                 ) {
                     if (it) {
                         LinearWavyProgressIndicator()
@@ -152,37 +141,29 @@ internal fun DownloadProductScreen(
                 }
             }
 
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
+            item { Spacer(Modifier.height(16.dp)) }
 
             item {
                 Text(
                     text = stringResource(Res.string.description_download_product),
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
 
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
+            item { Spacer(Modifier.height(16.dp)) }
 
             item {
                 OutlinedTextField(
                     state = textFieldState,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
+                    modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
                     enabled = !isDownloading,
                     trailingIcon = {
                         if (textFieldState.text.isNotEmpty()) {
-                            IconButton(
-                                onClick = textFieldState::clearText
-                            ) {
+                            IconButton(onClick = textFieldState::clearText) {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
-                                    contentDescription = stringResource(Res.string.action_clear)
+                                    contentDescription = stringResource(Res.string.action_clear),
                                 )
                             }
                         }
@@ -191,50 +172,36 @@ internal fun DownloadProductScreen(
                         Text(stringResource(Res.string.description_download_product_hint))
                     },
                     placeholder = { Text(stringResource(Res.string.product_link)) },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done
-                    ),
-                    onKeyboardAction = { onDownload() }
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    onKeyboardAction = { onDownload() },
                 )
             }
 
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
+            item { Spacer(Modifier.height(16.dp)) }
 
             item {
-                val ref = remember {
-                    Ref<DownloadError>()
-                }
+                val ref = remember { Ref<DownloadProductError>() }
 
                 ref.value = error ?: ref.value
 
                 AnimatedVisibility(
                     visible = error != null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically()
+                    exit = fadeOut() + shrinkVertically(),
                 ) {
                     ref.value?.let {
                         Column {
-                            DownloadErrorCard(it)
+                            DownloadErrorCard(it, onUpdateUsdaApiKey)
                             Spacer(Modifier.height(16.dp))
                         }
                     }
                 }
             }
 
-            item {
-                SupportedUrls(
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
+            item { SupportedUrls(modifier = Modifier.padding(horizontal = 16.dp)) }
 
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
+            item { Spacer(Modifier.height(16.dp)) }
 
             item {
                 ActionChips(
@@ -243,7 +210,7 @@ internal fun DownloadProductScreen(
                     onOpenFoodFacts = onOpenFoodFacts,
                     onUsda = onUsda,
                     onSuggestDatabase = onSuggestDatabase,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
             }
         }
@@ -252,21 +219,19 @@ internal fun DownloadProductScreen(
 
 @Composable
 private fun SupportedUrls(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text = stringResource(Res.string.headline_supported_URLs),
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.labelMedium,
         )
 
         Text(
-            text = unorderedList(
-                "Open Food Facts (world.openfoodfacts.org)",
-                "USDA FoodData Central (fdc.nal.usda.gov)"
-            ),
-            style = MaterialTheme.typography.bodySmall
+            text =
+                unorderedList(
+                    "Open Food Facts (world.openfoodfacts.org)",
+                    "USDA FoodData Central (fdc.nal.usda.gov)",
+                ),
+            style = MaterialTheme.typography.bodySmall,
         )
     }
 }
@@ -278,12 +243,12 @@ private fun ActionChips(
     onOpenFoodFacts: () -> Unit,
     onUsda: () -> Unit,
     onSuggestDatabase: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     FlowRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         AssistChip(
             onClick = onPaste,
@@ -293,9 +258,9 @@ private fun ActionChips(
                 Icon(
                     imageVector = Icons.Default.ContentPaste,
                     contentDescription = null,
-                    modifier = Modifier.size(AssistChipDefaults.IconSize)
+                    modifier = Modifier.size(AssistChipDefaults.IconSize),
                 )
-            }
+            },
         )
         AssistChip(
             onClick = onOpenFoodFacts,
@@ -303,12 +268,10 @@ private fun ActionChips(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    modifier = Modifier.size(AssistChipDefaults.IconSize)
+                    modifier = Modifier.size(AssistChipDefaults.IconSize),
                 )
             },
-            label = {
-                Text(stringResource(Res.string.action_browse_open_food_facts))
-            }
+            label = { Text(stringResource(Res.string.action_browse_open_food_facts)) },
         )
         AssistChip(
             onClick = onUsda,
@@ -316,12 +279,10 @@ private fun ActionChips(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    modifier = Modifier.size(AssistChipDefaults.IconSize)
+                    modifier = Modifier.size(AssistChipDefaults.IconSize),
                 )
             },
-            label = {
-                Text(stringResource(Res.string.action_browse_usda))
-            }
+            label = { Text(stringResource(Res.string.action_browse_usda)) },
         )
         AssistChip(
             onClick = onSuggestDatabase,
@@ -329,12 +290,10 @@ private fun ActionChips(
                 Icon(
                     imageVector = Icons.Outlined.Lightbulb,
                     contentDescription = null,
-                    modifier = Modifier.size(AssistChipDefaults.IconSize)
+                    modifier = Modifier.size(AssistChipDefaults.IconSize),
                 )
             },
-            label = {
-                Text(stringResource(Res.string.action_suggest_external_database))
-            }
+            label = { Text(stringResource(Res.string.action_suggest_external_database)) },
         )
     }
 }

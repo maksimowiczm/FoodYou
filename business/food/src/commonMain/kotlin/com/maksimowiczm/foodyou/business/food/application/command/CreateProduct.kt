@@ -13,7 +13,6 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
 import kotlin.reflect.KClass
-import kotlinx.coroutines.CancellationException
 
 /**
  * @param name Name of the product.
@@ -41,7 +40,9 @@ data class CreateProductCommand(
     val event: FoodEvent.FoodCreationEvent,
 ) : Command
 
-typealias CreateProductError = Unit
+sealed interface CreateProductError {
+    object NameEmpty : CreateProductError
+}
 
 /**
  * Command handler for creating a new product.
@@ -52,26 +53,28 @@ typealias CreateProductError = Unit
 internal class CreateProductCommandHandler(
     private val localProductDataSource: LocalProductDataSource,
     private val foodEventDataSource: LocalFoodEventDataSource,
-) : CommandHandler<CreateProductCommand, FoodId, CreateProductError> {
+) : CommandHandler<CreateProductCommand, FoodId.Product, CreateProductError> {
 
     override val commandType: KClass<CreateProductCommand> = CreateProductCommand::class
 
-    override suspend fun handle(command: CreateProductCommand): Result<FoodId, CreateProductError> =
-        try {
-            val product = command.toProduct()
-            val productId = localProductDataSource.insertProduct(product)
-            foodEventDataSource.insert(productId, command.event)
-            Ok(productId)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            ErrorLoggingUtils.logAndReturnFailure(
+    override suspend fun handle(
+        command: CreateProductCommand
+    ): Result<FoodId.Product, CreateProductError> {
+        if (command.name.isBlank()) {
+            return ErrorLoggingUtils.logAndReturnFailure(
                 tag = TAG,
-                throwable = e,
-                error = CreateProductError,
-                message = { "Failed to create product: ${e.message}" },
+                throwable = null,
+                error = CreateProductError.NameEmpty,
+                message = { "Product name cannot be empty." },
             )
         }
+
+        val product = command.toProduct()
+        val productId = localProductDataSource.insertProduct(product)
+        foodEventDataSource.insert(productId, command.event)
+
+        return Ok(productId)
+    }
 
     private companion object {
         private const val TAG = "CreateProductCommandHandler"

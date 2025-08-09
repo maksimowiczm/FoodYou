@@ -13,13 +13,16 @@ import kotlin.reflect.KClass
 data class DownloadProductCommand(val url: String) : Command
 
 sealed interface DownloadProductError {
-    data object UrlNotFound : DownloadProductError
 
-    data object UrlNotSupported : DownloadProductError
+    sealed interface Generic : DownloadProductError {
+        data object UrlNotFound : Generic
 
-    data object ProductNotFound : DownloadProductError
+        data object UrlNotSupported : Generic
 
-    data class Custom(val message: String?) : DownloadProductError
+        data object ProductNotFound : Generic
+
+        data class Custom(val message: String?) : Generic
+    }
 
     sealed interface Usda : DownloadProductError {
         data object RateLimit : Usda
@@ -46,7 +49,7 @@ internal class DownloadProductCommandHandler(
             return ErrorLoggingUtils.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
-                error = DownloadProductError.UrlNotFound,
+                error = DownloadProductError.Generic.UrlNotFound,
                 message = { "No valid URL found in the command: $command" },
             )
         }
@@ -57,7 +60,7 @@ internal class DownloadProductCommandHandler(
             return ErrorLoggingUtils.logAndReturnFailure(
                 tag = TAG,
                 throwable = null,
-                error = DownloadProductError.UrlNotSupported,
+                error = DownloadProductError.Generic.UrlNotSupported,
                 message = { "No supported request found for URL: $link" },
             )
         }
@@ -70,7 +73,7 @@ internal class DownloadProductCommandHandler(
                         ErrorLoggingUtils.logAndReturnFailure(
                             tag = TAG,
                             throwable = null,
-                            error = DownloadProductError.ProductNotFound,
+                            error = DownloadProductError.Generic.ProductNotFound,
                             message = { "No product found for URL: $link" },
                         )
                     } else {
@@ -114,7 +117,7 @@ internal class DownloadProductCommandHandler(
                             ErrorLoggingUtils.logAndReturnFailure(
                                 tag = TAG,
                                 throwable = error,
-                                error = DownloadProductError.Custom(error.message),
+                                error = DownloadProductError.Generic.Custom(error.message),
                                 message = { "Failed to download product from URL: $link" },
                             )
                     }

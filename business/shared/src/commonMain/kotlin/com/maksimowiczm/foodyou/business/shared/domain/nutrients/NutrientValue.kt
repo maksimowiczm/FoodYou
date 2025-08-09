@@ -73,7 +73,7 @@ sealed interface NutrientValue {
 
         fun Double?.toNutrientValue() = from(this)
 
-        fun Double.toNutrientValue() = from(this)
+        fun Float?.toNutrientValue() = from(this?.toDouble())
     }
 }
 

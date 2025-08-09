@@ -1,9 +1,11 @@
 package com.maksimowiczm.foodyou.navigation.graph.settings
 
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.dialog
 import androidx.navigation.navigation
 import com.maksimowiczm.foodyou.feature.settings.externaldatabases.ui.DatabaseSettingsScreen
 import com.maksimowiczm.foodyou.feature.settings.externaldatabases.ui.ExternalDatabasesScreen
+import com.maksimowiczm.foodyou.feature.settings.externaldatabases.ui.UpdateUsdaApiKeyDialog
 import com.maksimowiczm.foodyou.feature.settings.goals.ui.DailyGoalsScreen
 import com.maksimowiczm.foodyou.feature.settings.language.ui.LanguageScreen
 import com.maksimowiczm.foodyou.feature.settings.master.ui.SettingsScreen
@@ -21,6 +23,7 @@ import com.maksimowiczm.foodyou.navigation.domain.SettingsMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
+import com.maksimowiczm.foodyou.navigation.domain.UsdaApiKeyDestination
 import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
 
 internal fun NavGraphBuilder.settingsNavigationGraph(
@@ -48,6 +51,8 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
     databaseOnExternalDatabases: () -> Unit,
     externalDatabasesOnBack: () -> Unit,
     externalDatabasesOnSwissFoodCompositionDatabase: () -> Unit,
+    usdaApiKeyOnDismiss: () -> Unit,
+    usdaApiKeyOnSave: () -> Unit,
 ) {
     navigation<SettingsDestination>(startDestination = SettingsMasterDestination) {
         forwardBackwardComposable<SettingsMasterDestination> {
@@ -101,6 +106,12 @@ internal fun NavGraphBuilder.settingsNavigationGraph(
             ExternalDatabasesScreen(
                 onBack = externalDatabasesOnBack,
                 onSwissFoodCompositionDatabase = externalDatabasesOnSwissFoodCompositionDatabase,
+            )
+        }
+        dialog<UsdaApiKeyDestination> {
+            UpdateUsdaApiKeyDialog(
+                onDismissRequest = usdaApiKeyOnDismiss,
+                onSave = usdaApiKeyOnSave,
             )
         }
     }

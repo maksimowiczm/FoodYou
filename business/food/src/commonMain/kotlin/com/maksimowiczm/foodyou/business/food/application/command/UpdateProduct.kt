@@ -29,6 +29,8 @@ data class UpdateProductCommand(
 ) : Command
 
 sealed interface UpdateProductError {
+    data object NameEmpty : UpdateProductError
+
     data class ProductNotFound(val id: FoodId.Product) : UpdateProductError
 }
 
@@ -39,6 +41,15 @@ internal class UpdateProductCommandHandler(
     override val commandType = UpdateProductCommand::class
 
     override suspend fun handle(command: UpdateProductCommand): Result<Unit, UpdateProductError> {
+        if (command.name.isBlank()) {
+            return ErrorLoggingUtils.logAndReturnFailure(
+                tag = TAG,
+                throwable = null,
+                error = UpdateProductError.NameEmpty,
+                message = { "Product name cannot be empty." },
+            )
+        }
+
         val product = productDataSource.observeProduct(command.id).firstOrNull()
 
         if (product == null) {

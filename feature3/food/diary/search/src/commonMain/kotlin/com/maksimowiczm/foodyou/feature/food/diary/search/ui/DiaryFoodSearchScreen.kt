@@ -40,14 +40,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.animateFloatingActionButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,10 +54,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.error
 import androidx.paging.compose.itemKey
+import com.maksimowiczm.foodyou.business.food.application.command.DownloadProductError
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
+import com.maksimowiczm.foodyou.externaldatabase.usda.USDAException
 import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.DiaryFoodSearchViewModel
 import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.FoodFilter
 import com.maksimowiczm.foodyou.feature.food.diary.search.presentation.FoodSearchUiState
+import com.maksimowiczm.foodyou.feature.food.shared.ui.usda.UsdaErrorCard
 import com.maksimowiczm.foodyou.feature.shared.ui.FoodListItemSkeleton
 import com.maksimowiczm.foodyou.shared.barcodescanner.FullScreenCameraBarcodeScanner
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
@@ -95,6 +92,7 @@ fun DiaryFoodSearchScreen(
     onCreateRecipe: () -> Unit,
     onCreateProduct: () -> Unit,
     onMeasure: (FoodId, Measurement) -> Unit,
+    onUpdateUsdaApiKey: () -> Unit,
     date: LocalDate,
     mealId: Long,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -145,6 +143,7 @@ fun DiaryFoodSearchScreen(
                 onSearch = viewModel::search,
                 onSourceChange = viewModel::changeSource,
                 onFoodClick = { food, measurement -> onMeasure(food.id, measurement) },
+                onUpdateUsdaApiKey = onUpdateUsdaApiKey,
                 modifier =
                     Modifier.padding(paddingValues)
                         .consumeWindowInsets(paddingValues)
@@ -196,6 +195,7 @@ private fun DiaryFoodSearchScreen(
     onSearch: (String?) -> Unit,
     onSourceChange: (FoodFilter.Source) -> Unit,
     onFoodClick: (FoodSearch, Measurement) -> Unit,
+    onUpdateUsdaApiKey: () -> Unit,
     modifier: Modifier = Modifier,
     appState: FoodSearchAppState = rememberFoodSearchAppState(),
 ) {
@@ -282,14 +282,17 @@ private fun DiaryFoodSearchScreen(
             when (val ex = pages?.loadState?.error) {
                 null -> Unit
 
-                // TODO
-                //                is USDAException ->
-                //                    UsdaErrorCard(
-                //                        error = ex,
-                //                        modifier =
-                //                            Modifier.fillMaxWidth().padding(top =
-                // 8.dp).padding(horizontal = 16.dp),
-                //                    )
+                // This is really stupid but Paging 3 library exposes the exception from remote
+                // mediator and we can't know what it is if we don't check it. For now this is
+                // a "temporary" solution because fixing this would require rethinking how the
+                // remote food search works in business module.
+                is USDAException ->
+                    UsdaErrorCard(
+                        error = ex.toUsdaError(),
+                        onUpdateApiKey = onUpdateUsdaApiKey,
+                        modifier =
+                            Modifier.fillMaxWidth().padding(top = 8.dp).padding(horizontal = 16.dp),
+                    )
 
                 else ->
                     FoodSearchErrorCard(
@@ -366,3 +369,15 @@ private fun DiaryFoodSearchScreen(
         }
     }
 }
+
+private fun USDAException.toUsdaError(): DownloadProductError.Usda =
+    when (this) {
+        is USDAException.ApiKeyDisabledException,
+        is USDAException.ApiKeyInvalidException,
+        is USDAException.ApiKeyIsMissingException,
+        is USDAException.ApiKeyUnauthorizedException,
+        is USDAException.ProductNotFoundException -> DownloadProductError.Usda.ApiKeyInvalid
+
+        is USDAException.ApiKeyUnverifiedException -> DownloadProductError.Usda.ApiKeyUnverified
+        is USDAException.RateLimitException -> DownloadProductError.Usda.RateLimit
+    }

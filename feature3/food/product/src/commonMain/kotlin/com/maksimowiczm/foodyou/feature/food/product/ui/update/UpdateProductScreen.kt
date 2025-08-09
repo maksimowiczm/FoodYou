@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.ui.product.update
+package com.maksimowiczm.foodyou.feature.food.product.ui.update
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,12 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.BackHandler
-import com.maksimowiczm.foodyou.core.ui.DiscardDialog
-import com.maksimowiczm.foodyou.core.ui.ext.LaunchedCollectWithLifecycle
-import com.maksimowiczm.foodyou.feature.food.ui.product.ProductForm
-import com.maksimowiczm.foodyou.feature.food.ui.product.rememberProductFormState
+import com.maksimowiczm.foodyou.feature.food.product.presentation.update.UpdateProductEvent
+import com.maksimowiczm.foodyou.feature.food.product.presentation.update.UpdateProductViewModel
+import com.maksimowiczm.foodyou.feature.food.product.ui.ProductForm
+import com.maksimowiczm.foodyou.feature.food.product.ui.rememberProductFormState
+import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.ui.BackHandler
+import com.maksimowiczm.foodyou.shared.ui.DiscardDialog
+import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -38,7 +40,7 @@ internal fun UpdateProductScreen(
     onBack: () -> Unit,
     onUpdate: () -> Unit,
     viewModel: UpdateProductViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val latestOnUpdate by rememberUpdatedState(onUpdate)
     LaunchedCollectWithLifecycle(viewModel.events) { event ->
@@ -64,18 +66,14 @@ internal fun UpdateProductScreen(
                 showDiscardDialog = true
             }
         }
-        BackHandler(
-            enabled = productForm.isModified
-        ) {
-            showDiscardDialog = true
-        }
+        BackHandler(enabled = productForm.isModified) { showDiscardDialog = true }
         if (showDiscardDialog) {
             DiscardDialog(
                 onDismissRequest = { showDiscardDialog = false },
                 onDiscard = {
                     showDiscardDialog = false
                     onBack()
-                }
+                },
             ) {
                 Text(stringResource(Res.string.question_discard_changes))
             }
@@ -85,40 +83,31 @@ internal fun UpdateProductScreen(
             modifier = modifier,
             topBar = {
                 TopAppBar(
-                    title = {
-                        Text(stringResource(Res.string.headline_edit_product))
-                    },
-                    navigationIcon = {
-                        ArrowBackIconButton(handleBack)
-                    },
+                    title = { Text(stringResource(Res.string.headline_edit_product)) },
+                    navigationIcon = { ArrowBackIconButton(handleBack) },
                     actions = {
                         FilledIconButton(
-                            onClick = {
-                                viewModel.updateProduct(productForm)
-                            },
-                            enabled = productForm.isValid
+                            onClick = { viewModel.updateProduct(productForm) },
+                            enabled = productForm.isValid,
                         ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Save,
-                                contentDescription = null
-                            )
+                            Icon(imageVector = Icons.Outlined.Save, contentDescription = null)
                         }
                     },
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = scrollBehavior,
                 )
-            }
+            },
         ) { paddingValues ->
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .imePadding()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-                contentPadding = paddingValues
+                modifier =
+                    Modifier.fillMaxSize()
+                        .imePadding()
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                contentPadding = paddingValues,
             ) {
                 item {
                     ProductForm(
                         state = productForm,
-                        contentPadding = PaddingValues(horizontal = 16.dp)
+                        contentPadding = PaddingValues(horizontal = 16.dp),
                     )
                 }
             }

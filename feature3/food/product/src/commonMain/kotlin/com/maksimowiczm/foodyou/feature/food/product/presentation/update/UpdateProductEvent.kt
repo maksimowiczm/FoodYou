@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.ui.product.update
+package com.maksimowiczm.foodyou.feature.food.product.presentation.update
 
 internal sealed interface UpdateProductEvent {
 

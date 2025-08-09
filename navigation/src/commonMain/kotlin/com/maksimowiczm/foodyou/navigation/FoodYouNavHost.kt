@@ -8,7 +8,8 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
-import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddDestination
+import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddEntryDestination
+import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiarySearchDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsCardSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsMasterDestination
@@ -23,11 +24,15 @@ import com.maksimowiczm.foodyou.navigation.domain.SettingsLanguageDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
+import com.maksimowiczm.foodyou.navigation.domain.UpdateProductDestination
+import com.maksimowiczm.foodyou.navigation.domain.UsdaApiKeyDestination
 import com.maksimowiczm.foodyou.navigation.graph.about.aboutNavigationGraph
+import com.maksimowiczm.foodyou.navigation.graph.food.foodNavigationGraphBuilder
 import com.maksimowiczm.foodyou.navigation.graph.fooddiary.foodDiaryNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.goals.goalsNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.home.homeNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.settings.settingsNavigationGraph
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 
 @Composable
 fun FoodYouNavHost(modifier: Modifier = Modifier) {
@@ -114,6 +119,8 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             externalDatabasesOnSwissFoodCompositionDatabase = {
                 // TODO
             },
+            usdaApiKeyOnDismiss = { navController.popBackStack<UsdaApiKeyDestination>(true) },
+            usdaApiKeyOnSave = { navController.popBackStack<UsdaApiKeyDestination>(true) },
         )
         goalsNavigationGraph(
             masterOnBack = { navController.popBackStack<GoalsMasterDestination>(true) }
@@ -123,12 +130,12 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             searchOnCreateRecipe = {
                 // TODO
             },
-            searchOnCreateProduct = {
-                // TODO
+            searchOnCreateProduct = { date, mealId ->
+                navController.navigateSingleTop(FoodDiaryCreateProductDestination(mealId, date))
             },
             searchOnMeasure = { foodId, measurement, date, mealId ->
                 navController.navigateSingleTop(
-                    FoodDiaryAddDestination(
+                    FoodDiaryAddEntryDestination(
                         foodId = foodId,
                         mealId = mealId,
                         date = date,
@@ -136,7 +143,34 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
                     )
                 )
             },
-            addOnBack = { navController.popBackStack<FoodDiaryAddDestination>(true) },
+            addOnBack = { navController.popBackStack<FoodDiaryAddEntryDestination>(true) },
+            addOnEditFood = {
+                when (it) {
+                    is FoodId.Product -> UpdateProductDestination(it)
+                    is FoodId.Recipe -> TODO()
+                }.let(navController::navigateSingleTop)
+            },
+            createProductOnBack = {
+                navController.popBackStack<FoodDiaryCreateProductDestination>(true)
+            },
+            createProductOnCreate = { foodId, date, mealId ->
+                navController.navigate(
+                    FoodDiaryAddEntryDestination(
+                        foodId = foodId,
+                        mealId = mealId,
+                        date = date,
+                        measurement = null,
+                    )
+                ) {
+                    launchSingleTop = true
+                    popUpTo<FoodDiaryCreateProductDestination> { inclusive = true }
+                }
+            },
+            onUpdateUsdaApiKey = { navController.navigateSingleTop(UsdaApiKeyDestination) },
+        )
+        foodNavigationGraphBuilder(
+            updateProductOnBack = { navController.popBackStack<UpdateProductDestination>(true) },
+            updateProductOnSave = { navController.popBackStack<UpdateProductDestination>(true) },
         )
     }
 }

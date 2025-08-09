@@ -16,7 +16,7 @@ internal data class FoodDiarySearchDestination(val epochDay: Long, val mealId: L
 }
 
 @Serializable
-internal data class FoodDiaryAddDestination(
+internal data class FoodDiaryAddEntryDestination(
     val productId: Long?,
     val recipeId: Long?,
     val mealId: Long,
@@ -69,4 +69,12 @@ internal data class FoodDiaryAddDestination(
 
     val date: LocalDate
         get() = LocalDate.fromEpochDays(epochDay)
+}
+
+@Serializable
+internal class FoodDiaryCreateProductDestination(val mealId: Long, val epochDay: Long) {
+    val date: LocalDate
+        get() = LocalDate.fromEpochDays(epochDay)
+
+    constructor(mealId: Long, date: LocalDate) : this(mealId, date.toEpochDays())
 }

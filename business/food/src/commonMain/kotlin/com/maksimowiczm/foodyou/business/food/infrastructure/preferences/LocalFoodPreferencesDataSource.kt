@@ -9,4 +9,6 @@ internal interface LocalFoodPreferencesDataSource {
     suspend fun updateOpenFoodFactsEnabled(enabled: Boolean)
 
     suspend fun updateUsdaEnabled(enabled: Boolean)
+
+    suspend fun updateUsdaApiKey(apiKey: String? = null)
 }

@@ -1,9 +1,14 @@
-plugins { alias(libs.plugins.feature) }
+plugins {
+    alias(libs.plugins.feature)
+    alias(libs.plugins.kotlin.serialization)
+}
 
 kotlin {
-    androidLibrary { namespace = "com.maksimowiczm.foodyou.feature.food.diary.search" }
+    sourceSets.all { languageSettings.enableLanguageFeature("WhenGuards") }
 
-    val xcfName = "feature3:food:diary:searchKit"
+    androidLibrary { namespace = "com.maksimowiczm.foodyou.feature.food.product" }
+
+    val xcfName = "feature3:food:productKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }
 
@@ -15,16 +20,14 @@ kotlin {
         implementation(projects.shared.barcodescanner)
 
         implementation(projects.business.shared)
-        implementation(projects.business.fooddiary)
+        implementation(projects.business.settings)
         implementation(projects.business.food)
 
         implementation(projects.feature3.food.shared)
 
-        // Have to get rid of this
-        implementation(projects.externaldatabase.usda)
+        implementation(libs.navigation.compose)
 
-        implementation(libs.compose.shimmer)
+        implementation(libs.kotlinx.serialization.json)
         implementation(libs.kotlinx.datetime)
-        implementation(libs.androidx.paging.common)
     }
 }
