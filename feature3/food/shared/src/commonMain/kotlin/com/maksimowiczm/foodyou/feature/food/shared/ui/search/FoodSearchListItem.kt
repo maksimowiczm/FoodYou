@@ -1,14 +1,9 @@
 package com.maksimowiczm.foodyou.feature.food.shared.ui.search
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.weight
@@ -23,7 +18,6 @@ import com.maksimowiczm.foodyou.shared.ui.res.formatClipZeros
 import com.maksimowiczm.foodyou.shared.ui.res.stringResource
 import com.valentinilk.shimmer.Shimmer
 import foodyou.app.generated.resources.*
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -109,6 +103,7 @@ internal fun FoodSearchListItem(
 
             Text(text)
         },
+        isRecipe = false,
         modifier = modifier,
         onClick = onClick,
     )
@@ -150,18 +145,7 @@ internal fun FoodSearchListItem(
     val g = stringResource(Res.string.unit_gram_short)
 
     FoodListItem(
-        name = {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(text = food.headline)
-                Icon(
-                    painter = painterResource(Res.drawable.ic_skillet_filled),
-                    contentDescription = stringResource(Res.string.headline_recipe),
-                )
-            }
-        },
+        name = { Text(text = food.headline) },
         proteins = {
             val text = proteins.formatClipZeros()
             Text("$text $g")
@@ -205,6 +189,7 @@ internal fun FoodSearchListItem(
 
             Text(text)
         },
+        isRecipe = true,
         modifier = modifier,
         onClick = onClick,
     )

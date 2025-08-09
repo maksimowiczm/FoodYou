@@ -7,6 +7,7 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteDia
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQuery
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsPreferencesQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
+import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryMeal
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
@@ -101,4 +102,5 @@ private fun DiaryEntry.toMealEntryModel(): MealEntryModel =
         measurement = measurement,
         weight = weight,
         isLiquid = food.isLiquid,
+        isRecipe = food is DiaryFoodRecipe,
     )

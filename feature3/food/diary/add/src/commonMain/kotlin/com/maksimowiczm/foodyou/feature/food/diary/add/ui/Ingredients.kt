@@ -70,6 +70,7 @@ internal fun Ingredients(
                     },
                     measurement = { Text(ingredient.measurement.stringResource()) },
                     contentPadding = contentPadding,
+                    isRecipe = ingredient.isRecipe,
                 )
             }
         }

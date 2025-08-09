@@ -66,6 +66,7 @@ internal fun MealFoodListItem(
             measurement = {
                 Text(text = measurementString, style = MaterialTheme.typography.bodySmall)
             },
+            isRecipe = entry.isRecipe,
             modifier = modifier,
             containerColor = color,
             contentColor = contentColor,

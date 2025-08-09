@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -19,6 +21,11 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.shared.ui.theme.LocalNutrientsPalette
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.headline_recipe
+import foodyou.app.generated.resources.ic_skillet_filled
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -29,6 +36,7 @@ fun FoodListItem(
     fats: @Composable () -> Unit,
     calories: @Composable () -> Unit,
     measurement: @Composable () -> Unit,
+    isRecipe: Boolean,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     trailingContent: (@Composable () -> Unit)? = null,
@@ -45,7 +53,18 @@ fun FoodListItem(
             CompositionLocalProvider(
                 LocalTextStyle provides MaterialTheme.typography.titleMediumEmphasized
             ) {
-                name()
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    name()
+                    if (isRecipe) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_skillet_filled),
+                            contentDescription = stringResource(Res.string.headline_recipe),
+                        )
+                    }
+                }
             }
         }
 
