@@ -152,6 +152,7 @@ internal class AddEntryViewModel(
             commandBus
                 .dispatch<Long, CreateDiaryEntryError>(
                     CreateDiaryEntryCommand(
+                        foodId = food.id,
                         measurement = measurement,
                         mealId = mealId,
                         date = date,
@@ -185,6 +186,7 @@ internal class AddEntryViewModel(
                         commandBus
                             .dispatch<Long, CreateDiaryEntryError>(
                                 CreateDiaryEntryCommand(
+                                    foodId = food.id,
                                     measurement = measurement,
                                     mealId = mealId,
                                     date = date,

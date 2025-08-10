@@ -26,6 +26,8 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -47,10 +49,14 @@ import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.BackHandler
 import com.maksimowiczm.foodyou.shared.ui.Scrim
+import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.ext.toDp
 import com.maksimowiczm.foodyou.shared.ui.utils.LocalDateFormatter
 import com.valentinilk.shimmer.shimmer
+import foodyou.app.generated.resources.Res
+import foodyou.app.generated.resources.neutral_measurement_added
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -75,6 +81,13 @@ fun DiaryFoodSearchScreen(
 
     val viewModel: DiaryFoodSearchViewModel = koinViewModel { parametersOf(mealId) }
     val meal = viewModel.meal.collectAsStateWithLifecycle().value
+
+    val snackBarHostState = remember { SnackbarHostState() }
+    val message = stringResource(Res.string.neutral_measurement_added)
+
+    LaunchedCollectWithLifecycle(viewModel.newEntryEvents) {
+        snackBarHostState.showSnackbar(message)
+    }
 
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
     BackHandler(fabExpanded) { fabExpanded = false }
@@ -153,6 +166,7 @@ fun DiaryFoodSearchScreen(
             floatingActionButton = {
                 Box(modifier = Modifier.windowInsetsPadding(fabInsets).height(56.dp))
             },
+            snackbarHost = { SnackbarHost(snackBarHostState) },
             content = content,
         )
     }

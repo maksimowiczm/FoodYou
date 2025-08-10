@@ -17,6 +17,8 @@ val sharedCommonModule = module {
     singleOf(::KoinCommandBus).bind<CommandBus>()
     singleOf(::KoinQueryBus).bind<QueryBus>()
 
+    eventBus()
+
     singleOf(::DateProviderImpl).bind<DateProvider>()
 
     systemDetails()

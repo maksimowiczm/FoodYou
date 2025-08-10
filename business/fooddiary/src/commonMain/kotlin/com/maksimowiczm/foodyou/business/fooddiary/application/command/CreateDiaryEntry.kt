@@ -4,19 +4,22 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryEntry
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFood
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
+import com.maksimowiczm.foodyou.business.shared.application.event.FoodDiaryEntryCreatedEvent
 import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
 import com.maksimowiczm.foodyou.shared.common.date.now
+import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.event.EventBus
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 data class CreateDiaryEntryCommand(
+    val foodId: FoodId,
     val measurement: Measurement,
     val mealId: Long,
     val date: LocalDate,
@@ -25,13 +28,12 @@ data class CreateDiaryEntryCommand(
 
 sealed interface CreateDiaryEntryError {
     data object MealNotFound : CreateDiaryEntryError
-
-    data object Unknown : CreateDiaryEntryError
 }
 
 internal class CreateDiaryEntryCommandHandler(
     private val diaryEntryDataSource: LocalDiaryEntryDataSource,
     private val mealDataSource: LocalMealDataSource,
+    private val eventBus: EventBus,
 ) : CommandHandler<CreateDiaryEntryCommand, Long, CreateDiaryEntryError> {
 
     override suspend fun handle(
@@ -51,19 +53,17 @@ internal class CreateDiaryEntryCommandHandler(
         }
 
         val entry = command.toDiaryEntry()
-
-        return try {
-            Ok(diaryEntryDataSource.insert(entry))
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            return ErrorLoggingUtils.logAndReturnFailure(
-                tag = TAG,
-                throwable = e,
-                error = CreateDiaryEntryError.Unknown,
-                message = { "Failed to create diary entry for food" },
+        val id = diaryEntryDataSource.insert(entry)
+        eventBus.publish(
+            FoodDiaryEntryCreatedEvent(
+                foodId = command.foodId,
+                entryId = id,
+                date = LocalDateTime.now(),
+                measurement = command.measurement,
             )
-        }
+        )
+
+        return Ok(id)
     }
 
     private companion object {
