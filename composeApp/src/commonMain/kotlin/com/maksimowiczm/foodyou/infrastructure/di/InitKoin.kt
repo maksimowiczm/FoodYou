@@ -1,13 +1,25 @@
 package com.maksimowiczm.foodyou.infrastructure.di
 
+import kotlinx.coroutines.CoroutineScope
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
-fun initKoin(config: KoinAppDeclaration? = null) = startKoin {
+/**
+ * Initializes Koin with the provided configuration and modules.
+ *
+ * @param coroutineScope CoroutineScope with whole application lifecycle.
+ * @param config Optional KoinAppDeclaration to configure Koin.
+ */
+fun initKoin(coroutineScope: CoroutineScope, config: KoinAppDeclaration? = null) = startKoin {
     config?.invoke(this)
 
     // Shared modules
-    modules(appModule, businessSharedPersistenceModule, featureSharedModule, sharedCommonModule)
+    modules(
+        appModule,
+        businessSharedPersistenceModule,
+        featureSharedModule,
+        sharedCommonModule(coroutineScope),
+    )
 
     // Business modules
     modules(

@@ -39,27 +39,11 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.Ro
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.datastore.DataStoreFoodPreferencesDataSource
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.koin.dsl.onClose
-
-private const val BG_COROUTINE_SCOPE_NAME = "FoodCommandHandlersBgScope"
 
 val businessFoodModule = module {
-    single(named(BG_COROUTINE_SCOPE_NAME)) {
-            CoroutineScope(
-                Dispatchers.Default + SupervisorJob() + CoroutineName(BG_COROUTINE_SCOPE_NAME)
-            )
-        }
-        .onClose { it?.cancel() }
-
     commandHandlerOf(::CreateProductCommandHandler)
     commandHandlerOf(::DeleteFoodCommandHandler)
     commandHandlerOf(::CreateRecipeCommandHandler)
@@ -73,7 +57,7 @@ val businessFoodModule = module {
     queryHandlerOf(::ObserveFoodQueryHandler)
     queryHandler {
         SearchFoodQueryHandler(
-            get(named(BG_COROUTINE_SCOPE_NAME)),
+            applicationCoroutineScope(),
             get(),
             get(),
             get(),

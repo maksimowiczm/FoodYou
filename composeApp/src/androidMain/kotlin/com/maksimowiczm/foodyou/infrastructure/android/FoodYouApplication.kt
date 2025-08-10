@@ -5,14 +5,22 @@ import android.content.Intent
 import android.os.Build
 import com.maksimowiczm.foodyou.BuildConfig
 import com.maksimowiczm.foodyou.infrastructure.di.initKoin
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
 
 class FoodYouApplication : Application() {
 
+    private val coroutineScope by lazy {
+        CoroutineScope(Dispatchers.Default + SupervisorJob() + CoroutineName("FoodYouApplication"))
+    }
+
     override fun onCreate() {
         super.onCreate()
 
-        initKoin { androidContext(this@FoodYouApplication) }
+        initKoin(coroutineScope) { androidContext(this@FoodYouApplication) }
 
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { t, e ->
