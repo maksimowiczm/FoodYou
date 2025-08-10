@@ -6,16 +6,13 @@ import com.maksimowiczm.foodyou.business.settings.domain.languages
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.system.SystemDetails
-import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-data object ObserveCurrentTranslationQuery : Query
+data object ObserveCurrentTranslationQuery : Query<Translation>
 
 internal class ObserveCurrentTranslationQueryHandler(private val systemDetails: SystemDetails) :
     QueryHandler<ObserveCurrentTranslationQuery, Translation> {
-    override val queryType: KClass<ObserveCurrentTranslationQuery>
-        get() = ObserveCurrentTranslationQuery::class
 
     override fun handle(query: ObserveCurrentTranslationQuery): Flow<Translation> =
         systemDetails.languageTag.map { currentLanguage ->

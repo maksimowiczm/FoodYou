@@ -13,7 +13,6 @@ import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.preferences.
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
-import kotlin.reflect.KClass
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -25,7 +24,8 @@ import kotlinx.coroutines.flow.flatMapLatest
  *   the user's preferences. If false, only local sponsorships will be observed, regardless of the
  *   user's preferences. If null, the user's preferences will be respected.
  */
-data class ObserveSponsorshipsQuery(val allowRemote: Boolean? = null) : Query
+data class ObserveSponsorshipsQuery(val allowRemote: Boolean? = null) :
+    Query<PagingData<Sponsorship>>
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalPagingApi::class)
 internal class ObserveSponsorshipsQueryHandler(
@@ -33,8 +33,6 @@ internal class ObserveSponsorshipsQueryHandler(
     private val remoteSponsorshipDataSource: RemoteSponsorshipDataSource,
     private val sponsorshipPreferencesDataSource: SponsorshipPreferencesDataSource,
 ) : QueryHandler<ObserveSponsorshipsQuery, PagingData<Sponsorship>> {
-    override val queryType: KClass<ObserveSponsorshipsQuery> = ObserveSponsorshipsQuery::class
-
     override fun handle(query: ObserveSponsorshipsQuery): Flow<PagingData<Sponsorship>> =
         sponsorshipPreferencesDataSource.observe().flatMapLatest { prefs ->
             val (allowRemote) = query

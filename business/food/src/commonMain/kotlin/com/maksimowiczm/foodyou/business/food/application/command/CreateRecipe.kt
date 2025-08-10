@@ -13,7 +13,6 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.firstOrNull
 
 data class CreateRecipeCommand(
@@ -23,7 +22,7 @@ data class CreateRecipeCommand(
     val isLiquid: Boolean,
     val ingredients: List<Pair<FoodId, Measurement>>,
     val event: FoodEvent.FoodCreationEvent,
-) : Command
+) : Command<FoodId.Recipe, CreateRecipeError> {}
 
 sealed interface CreateRecipeError {
     data object EmptyName : CreateRecipeError
@@ -42,8 +41,6 @@ internal class CreateRecipeCommandHandler(
     private val productDataSource: LocalProductDataSource,
     private val eventDataSource: LocalFoodEventDataSource,
 ) : CommandHandler<CreateRecipeCommand, FoodId.Recipe, CreateRecipeError> {
-
-    override val commandType: KClass<CreateRecipeCommand> = CreateRecipeCommand::class
 
     override suspend fun handle(
         command: CreateRecipeCommand

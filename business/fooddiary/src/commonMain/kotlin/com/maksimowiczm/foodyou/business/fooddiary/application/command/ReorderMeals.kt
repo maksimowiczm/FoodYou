@@ -6,12 +6,10 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
 
-data class ReorderMealsCommand(val order: List<Long>) : Command
+data class ReorderMealsCommand(val order: List<Long>) : Command<Unit, Unit>
 
 internal class ReorderMealsCommandHandler(private val mealDataSource: LocalMealDataSource) :
     CommandHandler<ReorderMealsCommand, Unit, Unit> {
-
-    override val commandType = ReorderMealsCommand::class
 
     override suspend fun handle(command: ReorderMealsCommand): Result<Unit, Unit> {
         mealDataSource.reorder(command.order)

@@ -10,7 +10,6 @@ import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodCountQ
 import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodQuery
 import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodCount
 import com.maksimowiczm.foodyou.business.food.application.query.SearchRecentFoodQuery
-import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.FoodSource
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistory
@@ -53,14 +52,12 @@ internal class FoodSearchViewModel(
 
     private val foodPreferences =
         queryBus
-            .dispatch<FoodPreferences>(ObserveFoodPreferencesQuery)
+            .dispatch(ObserveFoodPreferencesQuery)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
                 initialValue =
-                    runBlocking {
-                        queryBus.dispatch<FoodPreferences>(ObserveFoodPreferencesQuery).first()
-                    },
+                    runBlocking { queryBus.dispatch(ObserveFoodPreferencesQuery).first() },
             )
 
     private val recentFoodPages =

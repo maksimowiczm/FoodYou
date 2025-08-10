@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalTime
 
@@ -15,7 +14,7 @@ data class UpdateMealCommand(
     val name: String,
     val from: LocalTime,
     val to: LocalTime,
-) : Command
+) : Command<Unit, UpdateMealError>
 
 sealed interface UpdateMealError {
     data object MealNotFound : UpdateMealError
@@ -27,8 +26,6 @@ sealed interface UpdateMealError {
 
 internal class UpdateMealCommandHandler(private val mealDataSource: LocalMealDataSource) :
     CommandHandler<UpdateMealCommand, Unit, UpdateMealError> {
-    override val commandType: KClass<UpdateMealCommand>
-        get() = UpdateMealCommand::class
 
     override suspend fun handle(command: UpdateMealCommand): Result<Unit, UpdateMealError> {
         if (command.name.isBlank()) {

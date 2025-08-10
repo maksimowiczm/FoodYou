@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMea
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsPreferencesQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.MealsPreferences
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -26,8 +25,6 @@ internal class MealsCardsSettingsViewModel(queryBus: QueryBus, private val comma
         )
 
     fun updatePreferences(preferences: MealsPreferences) {
-        viewModelScope.launch {
-            commandBus.dispatchIgnoreResult(UpdateMealsPreferencesCommand(preferences))
-        }
+        viewModelScope.launch { commandBus.dispatch(UpdateMealsPreferencesCommand(preferences)) }
     }
 }

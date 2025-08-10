@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.business.settings.application.command.SetTransla
 import com.maksimowiczm.foodyou.feature.settings.language.presentation.LanguageViewModel
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -37,7 +36,7 @@ fun TranslationWarningStartupDialog(modifier: Modifier = Modifier) {
             onConfirm = {
                 // Okay, that is a bit awkward
                 viewModel.viewModelScope.launch {
-                    commandBus.dispatchIgnoreResult(SetTranslationWarningCommand(false))
+                    commandBus.dispatch(SetTranslationWarningCommand(false))
                 }
             },
             modifier = modifier,

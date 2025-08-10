@@ -8,14 +8,12 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
 import kotlinx.coroutines.flow.Flow
 
-data class ObserveFoodQuery(val foodId: FoodId) : Query
+data class ObserveFoodQuery(val foodId: FoodId) : Query<Food?>
 
 internal class ObserveFoodQueryHandler(
     private val productDataSource: LocalProductDataSource,
     private val recipeDataSource: LocalRecipeDataSource,
 ) : QueryHandler<ObserveFoodQuery, Food?> {
-    override val queryType = ObserveFoodQuery::class
-
     override fun handle(query: ObserveFoodQuery): Flow<Food?> {
         val (foodId) = query
 

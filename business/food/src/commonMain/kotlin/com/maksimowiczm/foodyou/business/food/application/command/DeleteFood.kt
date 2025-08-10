@@ -10,11 +10,10 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 
-data class DeleteFoodCommand(val foodId: FoodId) : Command
+data class DeleteFoodCommand(val foodId: FoodId) : Command<Unit, DeleteFoodError> {}
 
 sealed interface DeleteFoodError {
     data object FoodNotFound : DeleteFoodError
@@ -26,8 +25,6 @@ internal class DeleteFoodCommandHandler(
     private val localProductDataSource: LocalProductDataSource,
     private val localRecipe: LocalRecipeDataSource,
 ) : CommandHandler<DeleteFoodCommand, Unit, DeleteFoodError> {
-
-    override val commandType: KClass<DeleteFoodCommand> = DeleteFoodCommand::class
 
     override suspend fun handle(command: DeleteFoodCommand): Result<Unit, DeleteFoodError> {
         val (id) = command

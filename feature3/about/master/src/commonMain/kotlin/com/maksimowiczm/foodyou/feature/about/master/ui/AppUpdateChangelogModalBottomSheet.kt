@@ -7,7 +7,6 @@ import com.maksimowiczm.foodyou.business.settings.application.command.SetLastRem
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.config.AppConfig
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -26,7 +25,7 @@ fun AppUpdateChangelogModalBottomSheet(modifier: Modifier = Modifier) {
         ChangelogModalBottomSheet(
             onDismissRequest = {
                 coroutineScope.launch {
-                    commandBus.dispatchIgnoreResult(SetLastRememberedVersionCommand(currentVersion))
+                    commandBus.dispatch(SetLastRememberedVersionCommand(currentVersion))
                 }
             },
             modifier = modifier,

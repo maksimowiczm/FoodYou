@@ -8,7 +8,6 @@ import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.preferences.Lo
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
-import kotlin.reflect.KClass
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -16,7 +15,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
-data class ObserveDiaryMealsQuery(val date: LocalDate) : Query
+data class ObserveDiaryMealsQuery(val date: LocalDate) : Query<List<DiaryMeal>>
 
 internal class ObserveDiaryMealsQueryHandler(
     private val localMeals: LocalMealDataSource,
@@ -24,8 +23,6 @@ internal class ObserveDiaryMealsQueryHandler(
     private val localMealsPreferences: LocalMealsPreferencesDataSource,
     private val dateProvider: DateProvider,
 ) : QueryHandler<ObserveDiaryMealsQuery, List<DiaryMeal>> {
-    override val queryType: KClass<ObserveDiaryMealsQuery>
-        get() = ObserveDiaryMealsQuery::class
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun handle(query: ObserveDiaryMealsQuery): Flow<List<DiaryMeal>> =

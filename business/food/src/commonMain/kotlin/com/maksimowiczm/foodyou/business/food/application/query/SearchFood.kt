@@ -25,7 +25,6 @@ import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
-import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -37,7 +36,7 @@ data class SearchFoodQuery(
     val query: String?,
     val source: FoodSource.Type,
     val excludedRecipeId: FoodId.Recipe?,
-) : Query
+) : Query<PagingData<FoodSearch>>
 
 @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
 internal class SearchFoodQueryHandler(
@@ -53,7 +52,6 @@ internal class SearchFoodQueryHandler(
     private val usdaMapper: USDAProductMapper,
     private val usdaHelper: LocalUsdaPagingHelper,
 ) : QueryHandler<SearchFoodQuery, PagingData<FoodSearch>> {
-    override val queryType: KClass<SearchFoodQuery> = SearchFoodQuery::class
 
     override fun handle(query: SearchFoodQuery): Flow<PagingData<FoodSearch>> {
         val (query, source, excludedRecipeId) = query

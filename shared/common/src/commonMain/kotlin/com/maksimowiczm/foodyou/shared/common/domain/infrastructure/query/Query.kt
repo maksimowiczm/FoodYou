@@ -1,3 +1,3 @@
 package com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query
 
-interface Query
+interface Query<R>

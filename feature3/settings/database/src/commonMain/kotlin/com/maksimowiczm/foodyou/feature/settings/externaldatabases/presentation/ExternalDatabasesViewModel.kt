@@ -7,7 +7,6 @@ import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseUsda
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQuery
 import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -28,12 +27,10 @@ internal class ExternalDatabasesViewModel(queryBus: QueryBus, private val comman
             )
 
     fun toggleOpenFoodFacts(newState: Boolean) {
-        viewModelScope.launch {
-            commandBus.dispatchIgnoreResult(UpdateUseOpenFoodFactsCommand(newState))
-        }
+        viewModelScope.launch { commandBus.dispatch(UpdateUseOpenFoodFactsCommand(newState)) }
     }
 
     fun toggleUsda(newState: Boolean) {
-        viewModelScope.launch { commandBus.dispatchIgnoreResult(UpdateUseUsda(newState)) }
+        viewModelScope.launch { commandBus.dispatch(UpdateUseUsda(newState)) }
     }
 }

@@ -9,7 +9,6 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMea
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -45,7 +44,7 @@ internal class MealSettingsViewModel(queryBus: QueryBus, private val commandBus:
             )
 
     fun deleteMeal(mealModel: MealModel) {
-        viewModelScope.launch { commandBus.dispatchIgnoreResult(DeleteMealCommand(mealModel.id)) }
+        viewModelScope.launch { commandBus.dispatch(DeleteMealCommand(mealModel.id)) }
     }
 
     fun updateMeal(mealModel: MealModel) {
@@ -56,7 +55,7 @@ internal class MealSettingsViewModel(queryBus: QueryBus, private val commandBus:
                     from = mealModel.from,
                     to = mealModel.to,
                 )
-                .let { command -> commandBus.dispatchIgnoreResult(command) }
+                .let { command -> commandBus.dispatch(command) }
         }
     }
 
@@ -67,14 +66,14 @@ internal class MealSettingsViewModel(queryBus: QueryBus, private val commandBus:
                     from = mealModel.from,
                     to = mealModel.to,
                 )
-                .let { command -> commandBus.dispatchIgnoreResult(command) }
+                .let { command -> commandBus.dispatch(command) }
         }
     }
 
     fun updateMealOrder(mealModels: List<MealModel>) {
         viewModelScope.launch {
             ReorderMealsCommand(mealModels.map { it.id }).let { command ->
-                commandBus.dispatchIgnoreResult(command)
+                commandBus.dispatch(command)
             }
         }
     }

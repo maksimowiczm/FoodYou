@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.business.settings.application.command.SetNutrien
 import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -30,11 +29,11 @@ internal class PersonalizeNutritionFactsViewModel(
 
     fun resetOrder() {
         viewModelScope.launch {
-            commandBus.dispatchIgnoreResult(SetNutrientsOrderCommand(NutrientsOrder.defaultOrder))
+            commandBus.dispatch(SetNutrientsOrderCommand(NutrientsOrder.defaultOrder))
         }
     }
 
     fun updateOrder(order: List<NutrientsOrder>) {
-        viewModelScope.launch { commandBus.dispatchIgnoreResult(SetNutrientsOrderCommand(order)) }
+        viewModelScope.launch { commandBus.dispatch(SetNutrientsOrderCommand(order)) }
     }
 }

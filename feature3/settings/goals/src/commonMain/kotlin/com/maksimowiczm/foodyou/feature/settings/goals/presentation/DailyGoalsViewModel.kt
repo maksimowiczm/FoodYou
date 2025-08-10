@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateWee
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveWeeklyGoalsQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.WeeklyGoals
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,7 +30,7 @@ internal class DailyGoalsViewModel(queryBus: QueryBus, private val commandBus: C
 
     fun updateWeeklyGoals(weeklyGoals: WeeklyGoals) {
         viewModelScope.launch {
-            commandBus.dispatchIgnoreResult(UpdateWeeklyGoalsCommand(weeklyGoals))
+            commandBus.dispatch(UpdateWeeklyGoalsCommand(weeklyGoals))
             _eventChannel.send(DailyGoalsViewModelEvent.Updated)
         }
     }

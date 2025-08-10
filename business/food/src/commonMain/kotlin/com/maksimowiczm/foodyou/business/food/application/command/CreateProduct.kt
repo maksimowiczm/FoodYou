@@ -12,7 +12,6 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 
 /**
  * @param name Name of the product.
@@ -38,7 +37,7 @@ data class CreateProductCommand(
     val source: FoodSource,
     val nutritionFacts: NutritionFacts,
     val event: FoodEvent.FoodCreationEvent,
-) : Command
+) : Command<FoodId.Product, CreateProductError>
 
 sealed interface CreateProductError {
     object NameEmpty : CreateProductError
@@ -54,8 +53,6 @@ internal class CreateProductCommandHandler(
     private val localProductDataSource: LocalProductDataSource,
     private val foodEventDataSource: LocalFoodEventDataSource,
 ) : CommandHandler<CreateProductCommand, FoodId.Product, CreateProductError> {
-
-    override val commandType: KClass<CreateProductCommand> = CreateProductCommand::class
 
     override suspend fun handle(
         command: CreateProductCommand

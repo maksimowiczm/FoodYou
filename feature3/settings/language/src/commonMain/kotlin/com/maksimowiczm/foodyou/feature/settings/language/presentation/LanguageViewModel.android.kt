@@ -7,7 +7,6 @@ import com.maksimowiczm.foodyou.business.settings.application.query.ObserveCurre
 import com.maksimowiczm.foodyou.business.settings.application.query.ObserveTranslationsQuery
 import com.maksimowiczm.foodyou.business.settings.domain.Translation
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -39,7 +38,7 @@ internal class LanguageViewModel(queryBus: QueryBus, private val commandBus: Com
 
     fun selectTranslation(translation: Translation?) {
         viewModelScope.launch {
-            commandBus.dispatchIgnoreResult(SetTranslationCommand(translation?.languageTag))
+            commandBus.dispatch(SetTranslationCommand(translation?.languageTag))
         }
     }
 }

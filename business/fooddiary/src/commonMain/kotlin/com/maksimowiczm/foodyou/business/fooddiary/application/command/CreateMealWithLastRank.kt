@@ -6,17 +6,14 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 import kotlinx.datetime.LocalTime
 
 data class CreateMealWithLastRankCommand(val name: String, val from: LocalTime, val to: LocalTime) :
-    Command
+    Command<Unit, Unit>
 
 internal class CreateMealWithLastRankCommandHandler(
     private val mealDataSource: LocalMealDataSource
 ) : CommandHandler<CreateMealWithLastRankCommand, Unit, Unit> {
-    override val commandType: KClass<CreateMealWithLastRankCommand>
-        get() = CreateMealWithLastRankCommand::class
 
     override suspend fun handle(command: CreateMealWithLastRankCommand): Result<Unit, Unit> {
         mealDataSource.insertWithLastRank(command.toMeal())

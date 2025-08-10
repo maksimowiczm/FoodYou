@@ -6,10 +6,9 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.first
 
-class DeleteDiaryEntryCommand(val entryId: Long) : Command
+class DeleteDiaryEntryCommand(val entryId: Long) : Command<Unit, DeleteDiaryEntryError>
 
 sealed interface DeleteDiaryEntryError {
     data object EntryNotFound : DeleteDiaryEntryError
@@ -17,8 +16,6 @@ sealed interface DeleteDiaryEntryError {
 
 internal class DeleteDiaryEntryCommandHandler(private val localDiary: LocalDiaryEntryDataSource) :
     CommandHandler<DeleteDiaryEntryCommand, Unit, DeleteDiaryEntryError> {
-    override val commandType: KClass<DeleteDiaryEntryCommand>
-        get() = DeleteDiaryEntryCommand::class
 
     override suspend fun handle(
         command: DeleteDiaryEntryCommand

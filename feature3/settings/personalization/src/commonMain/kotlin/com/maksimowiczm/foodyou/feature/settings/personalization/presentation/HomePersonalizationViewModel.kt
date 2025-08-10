@@ -6,7 +6,6 @@ import com.maksimowiczm.foodyou.business.settings.application.command.SetHomeCar
 import com.maksimowiczm.foodyou.business.settings.domain.HomeCard
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -28,6 +27,6 @@ internal class HomePersonalizationViewModel(
         )
 
     fun updateOrder(order: List<HomeCard>) {
-        viewModelScope.launch { commandBus.dispatchIgnoreResult(SetHomeCardOrderCommand(order)) }
+        viewModelScope.launch { commandBus.dispatch(SetHomeCardOrderCommand(order)) }
     }
 }

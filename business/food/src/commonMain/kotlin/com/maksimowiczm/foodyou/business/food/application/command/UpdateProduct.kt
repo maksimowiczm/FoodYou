@@ -26,7 +26,7 @@ data class UpdateProductCommand(
     val note: String?,
     val source: FoodSource,
     val isLiquid: Boolean,
-) : Command
+) : Command<Unit, UpdateProductError> {}
 
 sealed interface UpdateProductError {
     data object NameEmpty : UpdateProductError
@@ -38,7 +38,6 @@ internal class UpdateProductCommandHandler(
     private val productDataSource: LocalProductDataSource,
     private val eventDataSource: LocalFoodEventDataSource,
 ) : CommandHandler<UpdateProductCommand, Unit, UpdateProductError> {
-    override val commandType = UpdateProductCommand::class
 
     override suspend fun handle(command: UpdateProductCommand): Result<Unit, UpdateProductError> {
         if (command.name.isBlank()) {

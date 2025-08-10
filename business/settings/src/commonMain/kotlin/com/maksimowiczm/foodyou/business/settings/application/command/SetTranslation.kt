@@ -8,9 +8,8 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.system.SystemDetails
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 
-data class SetTranslationCommand(val tag: String?) : Command
+data class SetTranslationCommand(val tag: String?) : Command<Unit, SetTranslationError>
 
 sealed interface SetTranslationError {
     data object TranslationNotFound : SetTranslationError
@@ -20,8 +19,6 @@ internal class SetTranslationCommandHandler(
     private val systemDetails: SystemDetails,
     private val settingsDataSource: LocalSettingsDataSource,
 ) : CommandHandler<SetTranslationCommand, Unit, SetTranslationError> {
-    override val commandType: KClass<SetTranslationCommand>
-        get() = SetTranslationCommand::class
 
     override suspend fun handle(command: SetTranslationCommand): Result<Unit, SetTranslationError> {
 

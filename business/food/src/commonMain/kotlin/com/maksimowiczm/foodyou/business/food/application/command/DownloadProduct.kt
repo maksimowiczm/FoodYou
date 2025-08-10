@@ -8,9 +8,8 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 
-data class DownloadProductCommand(val url: String) : Command
+data class DownloadProductCommand(val url: String) : Command<RemoteProduct, DownloadProductError>
 
 sealed interface DownloadProductError {
 
@@ -36,7 +35,6 @@ sealed interface DownloadProductError {
 internal class DownloadProductCommandHandler(
     private val remoteRequestFactory: RemoteProductRequestFactory
 ) : CommandHandler<DownloadProductCommand, RemoteProduct, DownloadProductError> {
-    override val commandType: KClass<DownloadProductCommand> = DownloadProductCommand::class
 
     override suspend fun handle(
         command: DownloadProductCommand

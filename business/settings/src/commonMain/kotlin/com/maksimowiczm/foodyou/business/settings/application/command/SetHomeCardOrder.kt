@@ -7,9 +7,9 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 
-data class SetHomeCardOrderCommand(val order: List<HomeCard>) : Command
+data class SetHomeCardOrderCommand(val order: List<HomeCard>) :
+    Command<Unit, SetHomeCardOrderError>
 
 sealed interface SetHomeCardOrderError {
     data object MissingHomeCard : SetHomeCardOrderError
@@ -17,8 +17,6 @@ sealed interface SetHomeCardOrderError {
 
 internal class SetHomeCardOrderCommandHandler(private val localSettings: LocalSettingsDataSource) :
     CommandHandler<SetHomeCardOrderCommand, Unit, SetHomeCardOrderError> {
-    override val commandType: KClass<SetHomeCardOrderCommand>
-        get() = SetHomeCardOrderCommand::class
 
     override suspend fun handle(
         command: SetHomeCardOrderCommand

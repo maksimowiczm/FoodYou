@@ -6,10 +6,9 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.firstOrNull
 
-data class DeleteMealCommand(val mealId: Long) : Command
+data class DeleteMealCommand(val mealId: Long) : Command<Unit, DeleteMealError>
 
 sealed interface DeleteMealError {
     data object MealNotFound : DeleteMealError
@@ -17,8 +16,6 @@ sealed interface DeleteMealError {
 
 internal class DeleteMealCommandHandler(private val mealDataSource: LocalMealDataSource) :
     CommandHandler<DeleteMealCommand, Unit, DeleteMealError> {
-    override val commandType: KClass<DeleteMealCommand>
-        get() = DeleteMealCommand::class
 
     override suspend fun handle(command: DeleteMealCommand): Result<Unit, DeleteMealError> {
         val meal = mealDataSource.observeMealById(command.mealId).firstOrNull()

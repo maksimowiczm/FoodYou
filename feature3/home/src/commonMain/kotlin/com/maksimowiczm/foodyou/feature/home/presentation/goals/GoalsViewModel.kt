@@ -11,7 +11,6 @@ import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFactsF
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import kotlin.math.roundToInt
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,7 +48,7 @@ internal class GoalsViewModel(
         )
 
     fun setExpandGoalsCard(expand: Boolean) {
-        viewModelScope.launch { commandBus.dispatchIgnoreResult(SetExpandGoalCardCommand(expand)) }
+        viewModelScope.launch { commandBus.dispatch(SetExpandGoalCardCommand(expand)) }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

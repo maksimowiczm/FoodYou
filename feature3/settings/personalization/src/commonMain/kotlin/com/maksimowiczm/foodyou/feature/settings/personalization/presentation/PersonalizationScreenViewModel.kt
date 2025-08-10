@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.settings.application.command.SetSecureScreenCommand
 import com.maksimowiczm.foodyou.feature.shared.usecase.ObserveSettingsUseCase
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.dispatchIgnoreResult
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -28,6 +27,6 @@ internal class PersonalizationScreenViewModel(
         )
 
     fun toggleSecureScreen(newState: Boolean) {
-        viewModelScope.launch { commandBus.dispatchIgnoreResult(SetSecureScreenCommand(newState)) }
+        viewModelScope.launch { commandBus.dispatch(SetSecureScreenCommand(newState)) }
     }
 }

@@ -35,9 +35,7 @@ internal class MealsCardsViewModel(queryBus: QueryBus, private val commandBus: C
     val diaryMeals: StateFlow<List<MealModel>?> =
         dateState
             .filterNotNull()
-            .flatMapLatest { date ->
-                queryBus.dispatch<List<DiaryMeal>>(ObserveDiaryMealsQuery(date))
-            }
+            .flatMapLatest { date -> queryBus.dispatch(ObserveDiaryMealsQuery(date)) }
             .map { list -> list.map { it.toMealModel() } }
             .stateIn(
                 scope = viewModelScope,

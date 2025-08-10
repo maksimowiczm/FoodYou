@@ -7,9 +7,9 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 
-data class SetNutrientsOrderCommand(val order: List<NutrientsOrder>) : Command
+data class SetNutrientsOrderCommand(val order: List<NutrientsOrder>) :
+    Command<Unit, SetNutrientsOrderError>
 
 sealed interface SetNutrientsOrderError {
     data object NutrientsMissing : SetNutrientsOrderError
@@ -17,8 +17,6 @@ sealed interface SetNutrientsOrderError {
 
 internal class SetNutrientsOrderCommandHandler(private val localSettings: LocalSettingsDataSource) :
     CommandHandler<SetNutrientsOrderCommand, Unit, SetNutrientsOrderError> {
-    override val commandType: KClass<SetNutrientsOrderCommand>
-        get() = SetNutrientsOrderCommand::class
 
     override suspend fun handle(
         command: SetNutrientsOrderCommand

@@ -11,7 +11,6 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Comm
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlin.reflect.KClass
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDate
@@ -22,7 +21,7 @@ data class CreateDiaryEntryCommand(
     val mealId: Long,
     val date: LocalDate,
     val food: DiaryFood,
-) : Command
+) : Command<Long, CreateDiaryEntryError>
 
 sealed interface CreateDiaryEntryError {
     data object MealNotFound : CreateDiaryEntryError
@@ -34,7 +33,6 @@ internal class CreateDiaryEntryCommandHandler(
     private val diaryEntryDataSource: LocalDiaryEntryDataSource,
     private val mealDataSource: LocalMealDataSource,
 ) : CommandHandler<CreateDiaryEntryCommand, Long, CreateDiaryEntryError> {
-    override val commandType: KClass<CreateDiaryEntryCommand> = CreateDiaryEntryCommand::class
 
     override suspend fun handle(
         command: CreateDiaryEntryCommand

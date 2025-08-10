@@ -1,7 +1,3 @@
 # Keep constructors of BaseDataStoreUserPreference classes, required for dependency injection
 # because it uses reflection to instantiate these classes.
--keepclassmembers class * extends com.maksimowiczm.foodyou.core.preferences.BaseDataStoreUserPreference {
-    <init>(...);
-}
-
--keep enum com.maksimowiczm.foodyou.feature.measurement.data.Measurement
+-keep enum com.maksimowiczm.foodyou.shared.common.domain.measurement.MeasurementType
