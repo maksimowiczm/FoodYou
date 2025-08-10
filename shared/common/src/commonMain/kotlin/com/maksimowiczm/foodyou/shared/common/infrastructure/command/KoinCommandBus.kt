@@ -12,7 +12,7 @@ internal class KoinCommandBus() : CommandBus, KoinComponent {
 
     override suspend fun <R, E> dispatch(command: Command<R, E>): Result<R, E> {
         val kclass = command::class.qualifiedName!!
-        val handler = get<CommandHandler<Command<R, E>, R, E>>(named(kclass))
+        val handler = get(named(kclass)) as CommandHandler<Command<R, E>, R, E>
         return handler.handle(command)
     }
 }
