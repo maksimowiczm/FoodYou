@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFo
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRecipeDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
@@ -43,6 +44,7 @@ internal class UpdateRecipeCommandHandler(
     private val recipeDataSource: LocalRecipeDataSource,
     private val productDataSource: LocalProductDataSource,
     private val eventDataSource: LocalFoodEventDataSource,
+    private val transactionProvider: DatabaseTransactionProvider,
 ) : CommandHandler<UpdateRecipeCommand, Unit, UpdateRecipeError> {
 
     override suspend fun handle(command: UpdateRecipeCommand): Result<Unit, UpdateRecipeError> {
@@ -125,9 +127,10 @@ internal class UpdateRecipeCommandHandler(
             )
         }
 
-        recipeDataSource.updateRecipe(updatedRecipe)
-
-        eventDataSource.insert(command.id, FoodEvent.Edited(LocalDateTime.now()))
+        transactionProvider.withTransaction {
+            recipeDataSource.updateRecipe(updatedRecipe)
+            eventDataSource.insert(command.id, FoodEvent.Edited(LocalDateTime.now()))
+        }
 
         return Ok(Unit)
     }

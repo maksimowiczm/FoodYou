@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
@@ -52,6 +53,7 @@ sealed interface CreateProductError {
 internal class CreateProductCommandHandler(
     private val localProductDataSource: LocalProductDataSource,
     private val foodEventDataSource: LocalFoodEventDataSource,
+    private val transactionProvider: DatabaseTransactionProvider,
 ) : CommandHandler<CreateProductCommand, FoodId.Product, CreateProductError> {
 
     override suspend fun handle(
@@ -67,8 +69,13 @@ internal class CreateProductCommandHandler(
         }
 
         val product = command.toProduct()
-        val productId = localProductDataSource.insertProduct(product)
-        foodEventDataSource.insert(productId, command.event)
+
+        val productId =
+            transactionProvider.withTransaction {
+                val productId = localProductDataSource.insertProduct(product)
+                foodEventDataSource.insert(productId, command.event)
+                productId
+            }
 
         return Ok(productId)
     }
