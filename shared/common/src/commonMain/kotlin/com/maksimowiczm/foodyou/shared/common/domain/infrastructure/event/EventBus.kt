@@ -12,7 +12,7 @@ interface EventBus {
 
     val events: Flow<Event>
 
-    suspend fun publish(event: Event)
+    fun publish(event: Event)
 }
 
 inline fun <reified E : Event> EventBus.subscribe(
