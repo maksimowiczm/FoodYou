@@ -3,14 +3,12 @@ package com.maksimowiczm.foodyou.feature.food.diary.add.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.command.DeleteFoodCommand
-import com.maksimowiczm.foodyou.business.food.application.command.DeleteFoodError
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodEventsQuery
-import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
+import com.maksimowiczm.foodyou.business.food.application.query.ObserveMeasurementSuggestionsQuery
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.weight
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateDiaryEntryCommand
-import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateDiaryEntryError
 import com.maksimowiczm.foodyou.feature.food.diary.add.usecase.ObserveMealsUseCase
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.defaultMeasurement
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.possibleMeasurementTypes
@@ -23,14 +21,13 @@ import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryB
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import kotlin.collections.emptyList
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapIfNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -76,7 +73,7 @@ internal class AddEntryViewModel(
 
     val foodEvents =
         queryBus
-            .dispatch<List<FoodEvent>>(ObserveFoodEventsQuery(foodId))
+            .dispatch(ObserveFoodEventsQuery(foodId))
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -111,13 +108,24 @@ internal class AddEntryViewModel(
                 initialValue = null,
             )
 
-    // TODO
-    val suggestions: StateFlow<List<Measurement>?> = MutableStateFlow(emptyList())
+    val suggestions: StateFlow<List<Measurement>?> =
+        queryBus
+            .dispatch(ObserveMeasurementSuggestionsQuery(foodId))
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(2_000),
+                initialValue = null,
+            )
 
-    // TODO
+    @OptIn(ExperimentalCoroutinesApi::class)
     val suggestedMeasurement: StateFlow<Measurement?> =
         domainFood
-            .map { it?.defaultMeasurement }
+            .filterNotNull()
+            .flatMapLatest { food ->
+                suggestions.filterNotNull().map { list ->
+                    list.firstOrNull() ?: food.defaultMeasurement
+                }
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(2_000),
@@ -127,7 +135,7 @@ internal class AddEntryViewModel(
     fun deleteFood() {
         viewModelScope.launch {
             commandBus
-                .dispatch<Unit, DeleteFoodError>(DeleteFoodCommand(foodId))
+                .dispatch(DeleteFoodCommand(foodId))
                 .fold(
                     onSuccess = {
                         FoodYouLogger.d(TAG) { "Food with ID $foodId deleted successfully." }
@@ -150,7 +158,7 @@ internal class AddEntryViewModel(
             val diaryFood = food.toDiaryFood()
 
             commandBus
-                .dispatch<Long, CreateDiaryEntryError>(
+                .dispatch(
                     CreateDiaryEntryCommand(
                         foodId = food.id,
                         measurement = measurement,
@@ -178,38 +186,32 @@ internal class AddEntryViewModel(
             }
 
             val weight = measurement.weight(food)
-            val jobs =
-                food.measuredIngredients(weight).map { (food, measurement) ->
-                    val diaryFood = food.toDiaryFood()
+            food.measuredIngredients(weight).map { (food, measurement) ->
+                val diaryFood = food.toDiaryFood()
 
-                    async {
-                        commandBus
-                            .dispatch<Long, CreateDiaryEntryError>(
-                                CreateDiaryEntryCommand(
-                                    foodId = food.id,
-                                    measurement = measurement,
-                                    mealId = mealId,
-                                    date = date,
-                                    food = diaryFood,
-                                )
-                            )
-                            .fold(
-                                onSuccess = {
-                                    FoodYouLogger.d(TAG) {
-                                        "Diary entry for ingredient created successfully"
-                                    }
-                                },
-                                onFailure = {
-                                    FoodYouLogger.e(TAG) {
-                                        "Failed to create diary entry for ingredient"
-                                    }
-                                },
-                            )
-                    }
-                }
+                commandBus
+                    .dispatch(
+                        CreateDiaryEntryCommand(
+                            foodId = food.id,
+                            measurement = measurement,
+                            mealId = mealId,
+                            date = date,
+                            food = diaryFood,
+                        )
+                    )
+                    .fold(
+                        onSuccess = {
+                            FoodYouLogger.d(TAG) {
+                                "Diary entry for ingredient created successfully"
+                            }
+                        },
+                        onFailure = {
+                            FoodYouLogger.e(TAG) { "Failed to create diary entry for ingredient" }
+                        },
+                    )
 
-            awaitAll(*jobs.toTypedArray())
-            _uiEventBus.send(AddEntryEvent.EntryAdded)
+                _uiEventBus.send(AddEntryEvent.EntryAdded)
+            }
         }
     }
 

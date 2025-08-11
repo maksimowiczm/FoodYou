@@ -50,10 +50,10 @@ interface FoodSearchDao {
                     AND rai.ingredientId = :excludedRecipeId
                 ))
         )
-        SELECT *, NULL AS measurementJson
+        SELECT *, NULL AS measurementType, NULL AS measurementValue
         FROM ProductsSearch
         UNION ALL
-        SELECT *, NULL AS measurementJson
+        SELECT *, NULL AS measurementType, NULL AS measurementValue
         FROM RecipesSearch
         ORDER BY headline ASC
         """
@@ -102,7 +102,7 @@ interface FoodSearchDao {
 
     @Query(
         """
-        SELECT ${PRODUCT_FOOD_SEARCH_SQL_SELECT}, NULL AS measurementJson
+        SELECT ${PRODUCT_FOOD_SEARCH_SQL_SELECT}, NULL AS measurementType, NULL AS measurementValue
         FROM Product p
         WHERE
             p.barcode = :barcode AND
@@ -125,6 +125,117 @@ interface FoodSearchDao {
         """
     )
     fun observeFoodCountByBarcode(barcode: String, source: FoodSourceType?): Flow<Int>
+
+    @Query(
+        """
+        WITH ProductsSearch AS (
+            SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
+            FROM LatestMeasurementSuggestion s LEFT JOIN Product p ON s.productId = p.id
+            WHERE
+                s.productId IS NOT NULL AND
+                s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+                (
+                    (:query IS NULL OR p.name COLLATE NOCASE LIKE '%' || :query || '%') OR
+                    (:query IS NULL OR p.brand COLLATE NOCASE LIKE '%' || :query || '%')
+                )
+        ),
+        RecipesSearch AS (
+            SELECT $RECIPE_FOOD_SEARCH_SQL_SELECT, s.type AS measurementType, s.value AS measurementValue, s.epochSeconds AS epochSeconds
+            FROM LatestMeasurementSuggestion s LEFT JOIN Recipe r ON s.recipeId = r.id
+            WHERE
+                s.recipeId IS NOT NULL AND
+                s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+                (:query IS NULL OR r.name COLLATE NOCASE LIKE '%' || :query || '%') AND
+                (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
+                (:excludedRecipeId IS NULL OR NOT EXISTS (
+                    SELECT 1
+                    FROM RecipeAllIngredientsView rai
+                    WHERE rai.targetRecipeId = r.id 
+                    AND rai.ingredientId = :excludedRecipeId
+                ))
+        ),
+        Merged AS (
+            SELECT *
+            FROM ProductsSearch
+            UNION ALL
+            SELECT *
+            FROM RecipesSearch
+        )
+        SELECT $FOOD_SEARCH_SQL_SELECT
+        FROM Merged
+        ORDER BY epochSeconds DESC
+        """
+    )
+    fun observeRecentFoodByQuery(
+        query: String?,
+        nowEpochSeconds: Long,
+        excludedRecipeId: Long? = null,
+    ): PagingSource<Int, FoodSearch>
+
+    @Query(
+        """
+        WITH ProductsSearch AS (
+            SELECT 1
+            FROM LatestMeasurementSuggestion s LEFT JOIN Product p ON s.productId = p.id
+            WHERE
+                s.productId IS NOT NULL AND
+                s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+                (
+                    (:query IS NULL OR p.name COLLATE NOCASE LIKE '%' || :query || '%') OR
+                    (:query IS NULL OR p.brand COLLATE NOCASE LIKE '%' || :query || '%')
+                )
+        ),
+        RecipesSearch AS (
+            SELECT 1
+            FROM LatestMeasurementSuggestion s LEFT JOIN Recipe r ON s.recipeId = r.id
+            WHERE
+                s.recipeId IS NOT NULL AND
+                s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+                (:query IS NULL OR r.name COLLATE NOCASE LIKE '%' || :query || '%') AND
+                (:excludedRecipeId IS NULL OR r.id != :excludedRecipeId) AND
+                (:excludedRecipeId IS NULL OR NOT EXISTS (
+                    SELECT 1
+                    FROM RecipeAllIngredientsView rai
+                    WHERE rai.targetRecipeId = r.id 
+                    AND rai.ingredientId = :excludedRecipeId
+                ))
+        )
+        SELECT (SELECT COUNT(*) FROM ProductsSearch) + (SELECT COUNT(*) FROM RecipesSearch) 
+        """
+    )
+    fun observeRecentFoodCountByQuery(
+        query: String?,
+        nowEpochSeconds: Long,
+        excludedRecipeId: Long? = null,
+    ): Flow<Int>
+
+    @Query(
+        """
+        SELECT $PRODUCT_FOOD_SEARCH_SQL_SELECT, NULL AS measurementType, NULL AS measurementValue
+        FROM LatestMeasurementSuggestion s LEFT JOIN Product p ON s.productId = p.id
+        WHERE
+            s.productId IS NOT NULL AND
+            s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+            p.barcode = :barcode
+        ORDER BY s.epochSeconds DESC
+        """
+    )
+    fun observeRecentFoodByBarcode(
+        barcode: String,
+        nowEpochSeconds: Long,
+    ): PagingSource<Int, FoodSearch>
+
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM LatestMeasurementSuggestion s LEFT JOIN Product p ON s.productId = p.id
+        WHERE
+            s.productId IS NOT NULL AND
+            s.epochSeconds >= :nowEpochSeconds - 2592000 AND
+            p.barcode = :barcode
+        """
+    )
+    fun observeRecentFoodCountByBarcode(barcode: String, nowEpochSeconds: Long): Flow<Int>
 }
 
 // Don't do it twice
@@ -287,5 +398,7 @@ seleniumMicro,
 iodineMicro,
 chromiumMicro,
 totalWeight,
-servingWeight
+servingWeight,
+measurementType,
+measurementValue
 """

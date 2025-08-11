@@ -13,6 +13,7 @@ import com.maksimowiczm.foodyou.business.food.application.event.FoodDiaryEntryCr
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodEventsQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodQueryHandler
+import com.maksimowiczm.foodyou.business.food.application.query.ObserveMeasurementSuggestionsQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveSearchHistoryQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodCountQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.SearchFoodQueryHandler
@@ -27,12 +28,14 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAFa
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodSearchDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalMeasurementSuggestionDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalOpenFoodFactsPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRecipeDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomFoodEventDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomFoodSearchDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomMeasurementSuggestionDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomOpenFoodFactsPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room.RoomRecipeDataSource
@@ -57,7 +60,7 @@ val businessFoodModule = module {
     queryHandlerOf(::ObserveFoodQueryHandler)
     queryHandler {
         SearchFoodQueryHandler(
-            applicationCoroutineScope(),
+            coroutineScope = applicationCoroutineScope(),
             get(),
             get(),
             get(),
@@ -73,9 +76,15 @@ val businessFoodModule = module {
     queryHandlerOf(::SearchFoodCountQueryHandler)
     queryHandlerOf(::ObserveFoodPreferencesQueryHandler)
     queryHandlerOf(::ObserveSearchHistoryQueryHandler)
-    queryHandlerOf(::SearchRecentFoodQueryHandler)
+    queryHandler {
+        SearchRecentFoodQueryHandler(
+            coroutineScope = applicationCoroutineScope(),
+            get<LocalFoodSearchDataSource>(),
+        )
+    }
     queryHandlerOf(::SearchRecentFoodCountQueryHandler)
     queryHandlerOf(::ObserveFoodEventsQueryHandler)
+    queryHandlerOf(::ObserveMeasurementSuggestionsQueryHandler)
 
     factoryOf(::DataStoreFoodPreferencesDataSource).bind<LocalFoodPreferencesDataSource>()
 
@@ -85,6 +94,7 @@ val businessFoodModule = module {
     factoryOf(::RoomOpenFoodFactsPagingHelper).bind<LocalOpenFoodFactsPagingHelper>()
     factoryOf(::RoomUsdaPagingHelper).bind<LocalUsdaPagingHelper>()
     factoryOf(::RoomFoodEventDataSource).bind<LocalFoodEventDataSource>()
+    factoryOf(::RoomMeasurementSuggestionDataSource).bind<LocalMeasurementSuggestionDataSource>()
 
     factoryOf(::RemoteProductMapper)
     factoryOf(::OpenFoodFactsProductMapper)

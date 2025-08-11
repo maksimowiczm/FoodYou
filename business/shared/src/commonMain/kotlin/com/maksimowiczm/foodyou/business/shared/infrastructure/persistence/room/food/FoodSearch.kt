@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.Minerals
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.Nutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.Vitamins
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.MeasurementType
 
 data class FoodSearch(
     val productId: Long?,
@@ -15,5 +16,6 @@ data class FoodSearch(
     @Embedded val minerals: Minerals?,
     val totalWeight: Float?,
     val servingWeight: Float?,
-    val measurementJson: String?,
+    val measurementType: MeasurementType?,
+    val measurementValue: Float?,
 )

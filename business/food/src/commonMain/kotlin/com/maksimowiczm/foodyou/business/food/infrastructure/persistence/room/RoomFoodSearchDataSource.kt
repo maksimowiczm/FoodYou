@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.FoodSource
+import com.maksimowiczm.foodyou.business.food.domain.QueryType
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistory
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodSearchDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
@@ -17,6 +18,8 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.SearchEntry
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.from
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +33,7 @@ import kotlinx.datetime.toLocalDateTime
 internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao) :
     LocalFoodSearchDataSource {
     override fun search(
-        query: String?,
+        query: QueryType,
         source: FoodSource.Type,
         config: PagingConfig,
         remoteMediatorFactory: RemoteMediatorFactory?,
@@ -39,16 +42,56 @@ internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao
         Pager(
                 config = config,
                 pagingSourceFactory = {
-                    foodSearchDao.observeFoodByQuery(
-                        query = query,
-                        source = source.toEntity(),
-                        excludedRecipeId = excludedRecipeId,
-                    )
+                    when (query) {
+                        QueryType.Blank,
+                        is QueryType.NotBlank.Text ->
+                            foodSearchDao.observeFoodByQuery(
+                                query = query.query,
+                                source = source.toEntity(),
+                                excludedRecipeId = excludedRecipeId,
+                            )
+
+                        is QueryType.NotBlank.Barcode ->
+                            foodSearchDao.observeFoodByBarcode(
+                                barcode = query.query,
+                                source = source.toEntity(),
+                            )
+                    }
                 },
                 remoteMediator = remoteMediatorFactory?.create(),
             )
             .flow
             .map { data -> data.map { it.toModel() } }
+
+    @OptIn(ExperimentalTime::class)
+    override fun searchRecent(
+        query: QueryType,
+        config: PagingConfig,
+        excludedRecipeId: Long?,
+    ): Flow<PagingData<FoodSearch>> {
+        return Pager(
+                config = config,
+                pagingSourceFactory = {
+                    when (query) {
+                        QueryType.Blank,
+                        is QueryType.NotBlank.Text ->
+                            foodSearchDao.observeRecentFoodByQuery(
+                                query = query.query,
+                                nowEpochSeconds = Clock.System.now().epochSeconds,
+                                excludedRecipeId = excludedRecipeId,
+                            )
+
+                        is QueryType.NotBlank.Barcode ->
+                            foodSearchDao.observeRecentFoodByBarcode(
+                                barcode = query.query,
+                                nowEpochSeconds = Clock.System.now().epochSeconds,
+                            )
+                    }
+                },
+            )
+            .flow
+            .map { data -> data.map { it.toModel() } }
+    }
 
     override fun observeSearchHistory(limit: Int): Flow<List<SearchHistory>> =
         foodSearchDao.observeRecentSearches(limit).mapValues { it.toModel() }
@@ -58,15 +101,43 @@ internal class RoomFoodSearchDataSource(private val foodSearchDao: FoodSearchDao
     }
 
     override fun observeFoodCount(
-        query: String?,
+        query: QueryType,
         source: FoodSource.Type,
         excludedRecipeId: Long?,
     ): Flow<Int> =
-        foodSearchDao.observeFoodCountByQuery(
-            query = query,
-            source = source.toEntity(),
-            excludedRecipeId = excludedRecipeId,
-        )
+        when (query) {
+            QueryType.Blank,
+            is QueryType.NotBlank.Text ->
+                foodSearchDao.observeFoodCountByQuery(
+                    query = query.query,
+                    source = source.toEntity(),
+                    excludedRecipeId = excludedRecipeId,
+                )
+
+            is QueryType.NotBlank.Barcode ->
+                foodSearchDao.observeFoodCountByBarcode(
+                    barcode = query.query,
+                    source = source.toEntity(),
+                )
+        }
+
+    @OptIn(ExperimentalTime::class)
+    override fun observeRecentFoodCount(query: QueryType, excludedRecipeId: Long?): Flow<Int> =
+        when (query) {
+            QueryType.Blank,
+            is QueryType.NotBlank.Text ->
+                foodSearchDao.observeRecentFoodCountByQuery(
+                    query = query.query,
+                    nowEpochSeconds = Clock.System.now().epochSeconds,
+                    excludedRecipeId = excludedRecipeId,
+                )
+
+            is QueryType.NotBlank.Barcode ->
+                foodSearchDao.observeRecentFoodCountByBarcode(
+                    barcode = query.query,
+                    nowEpochSeconds = Clock.System.now().epochSeconds,
+                )
+        }
 }
 
 private fun FoodSearchData.toModel(): FoodSearch =
@@ -145,6 +216,9 @@ private val FoodSearchData.foodId: FoodId
 private val FoodSearchData.defaultMeasurement
     get() =
         when {
+            measurementType != null && measurementValue != null ->
+                Measurement.from(measurementType!!, measurementValue!!.toDouble())
+
             servingWeight != null -> Measurement.Serving(1.0)
             totalWeight != null -> Measurement.Package(1.0)
             isLiquid -> Measurement.Milliliter(100.0)

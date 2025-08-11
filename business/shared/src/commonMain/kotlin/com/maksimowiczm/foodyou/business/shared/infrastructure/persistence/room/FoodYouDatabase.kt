@@ -10,6 +10,9 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventTypeConverter
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearchDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSourceTypeConverter
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.LatestMeasurementSuggestion
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.MeasurementSuggestionDao
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.MeasurementSuggestionEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.ProductDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.ProductEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.RecipeAllIngredientsView
@@ -51,8 +54,9 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
             DiaryRecipeEntity::class,
             DiaryRecipeIngredientEntity::class,
             SponsorshipEntity::class,
+            MeasurementSuggestionEntity::class,
         ],
-    views = [RecipeAllIngredientsView::class],
+    views = [RecipeAllIngredientsView::class, LatestMeasurementSuggestion::class],
     version = FoodYouDatabase.VERSION,
     exportSchema = true,
     autoMigrations =
@@ -112,6 +116,7 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val measurementDao: MeasurementDao
     abstract val mealDao: MealDao
     abstract val sponsorshipDao: SponsorshipDao
+    abstract val measurementSuggestionDao: MeasurementSuggestionDao
 
     companion object {
         const val VERSION = 26

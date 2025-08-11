@@ -34,3 +34,10 @@ inline fun <reified H : EventHandler<E>, reified E : Event> Module.eventHandlerO
 ) {
     eventHandler(qualifier) { new(constructor) }
 }
+
+inline fun <reified H : EventHandler<E>, reified E : Event, reified T1> Module.eventHandlerOf(
+    crossinline constructor: (T1) -> H,
+    qualifier: Qualifier = named(E::class.qualifiedName!!),
+) {
+    eventHandler(qualifier) { new(constructor) }
+}

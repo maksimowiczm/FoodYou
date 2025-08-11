@@ -7,7 +7,9 @@ import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.FoodSource
+import com.maksimowiczm.foodyou.business.food.domain.QueryType
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistory
+import com.maksimowiczm.foodyou.business.food.domain.queryType
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteMediator
@@ -61,7 +63,7 @@ internal class SearchFoodQueryHandler(
         if (queryType is QueryType.NotBlank.Text) {
             coroutineScope.launch {
                 foodSearchSource.insertSearchHistory(
-                    SearchHistory(query = queryType.query, date = LocalDateTime.now())
+                    SearchHistory(LocalDateTime.now(), queryType.query)
                 )
             }
         }
@@ -70,7 +72,7 @@ internal class SearchFoodQueryHandler(
             val mediatorFactory = mediatorFactory(queryType, source, prefs)
 
             foodSearchSource.search(
-                query = query,
+                query = queryType,
                 source = source,
                 config = PagingConfig(pageSize = PAGE_SIZE),
                 remoteMediatorFactory = mediatorFactory,
@@ -129,28 +131,5 @@ internal class SearchFoodQueryHandler(
 
     private companion object {
         const val PAGE_SIZE = 30
-    }
-}
-
-private fun queryType(query: String?): QueryType =
-    when {
-        query.isNullOrBlank() -> QueryType.Blank
-        query.all { it.isDigit() } -> QueryType.NotBlank.Barcode(query)
-        else -> QueryType.NotBlank.Text(query)
-    }
-
-private sealed interface QueryType {
-    val query: String?
-
-    data object Blank : QueryType {
-        override val query: String? = null
-    }
-
-    sealed interface NotBlank : QueryType {
-        override val query: String
-
-        data class Barcode(override val query: String) : NotBlank
-
-        data class Text(override val query: String) : NotBlank
     }
 }
