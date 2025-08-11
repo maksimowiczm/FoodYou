@@ -4,7 +4,11 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.immediateTransaction
 import androidx.room.migration.Migration
+import androidx.room.useWriterConnection
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.TransactionScope as DomainTransactionScope
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventTypeConverter
@@ -106,7 +110,7 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
     MeasurementTypeConverter::class,
     FoodEventTypeConverter::class,
 )
-abstract class FoodYouDatabase : RoomDatabase() {
+abstract class FoodYouDatabase : RoomDatabase(), DatabaseTransactionProvider {
     abstract val productDao: ProductDao
     abstract val recipeDao: RecipeDao
     abstract val foodSearchDao: FoodSearchDao
@@ -117,6 +121,14 @@ abstract class FoodYouDatabase : RoomDatabase() {
     abstract val mealDao: MealDao
     abstract val sponsorshipDao: SponsorshipDao
     abstract val measurementSuggestionDao: MeasurementSuggestionDao
+
+    override suspend fun <T> withTransaction(block: suspend DomainTransactionScope<T>.() -> T): T =
+        useWriterConnection {
+            it.immediateTransaction {
+                val scope = RoomTransactionScope<T>(this)
+                scope.block()
+            }
+        }
 
     companion object {
         const val VERSION = 26

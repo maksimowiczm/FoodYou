@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.infrastructure.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.RoomDatabase
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.network.NetworkConfig
 import com.maksimowiczm.foodyou.business.shared.infrastructure.network.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase
@@ -25,6 +26,7 @@ private val Scope.database: FoodYouDatabase
 
 private val databaseDefinition: Module.() -> Unit = {
     single { createDatabaseBuilder().buildDatabase(InitializeMealsCallback(get())) }
+        .bind<DatabaseTransactionProvider>()
     factory { database.productDao }
     factory { database.recipeDao }
     factory { database.foodSearchDao }
