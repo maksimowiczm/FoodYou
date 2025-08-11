@@ -12,17 +12,18 @@ import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
 import org.koin.dsl.onClose
 
-inline fun <reified E : Event> Module.eventHandler(
-    qualifier: Qualifier = named(E::class.qualifiedName!!),
+inline fun <reified H : EventHandler<E>, reified E : Event> Module.eventHandler(
+    eventQualifier: Qualifier = named(E::class.qualifiedName!!),
+    handlerQualifier: Qualifier = named(H::class.qualifiedName!!),
     noinline definition: Scope.(ParametersHolder) -> EventHandler<E>,
 ) {
-    factory(qualifier, definition)
+    factory(eventQualifier, definition)
 
-    single(createdAtStart = true) {
+    single(qualifier = handlerQualifier, createdAtStart = true) {
             get<EventBus>()
                 .subscribe<E>(
                     coroutineScope = applicationCoroutineScope(),
-                    eventHandler = get(qualifier),
+                    eventHandler = get(eventQualifier),
                 )
         }
         .onClose { it?.cancel() }
@@ -31,13 +32,15 @@ inline fun <reified E : Event> Module.eventHandler(
 inline fun <reified H : EventHandler<E>, reified E : Event> Module.eventHandlerOf(
     crossinline constructor: () -> H,
     qualifier: Qualifier = named(E::class.qualifiedName!!),
+    handlerQualifier: Qualifier = named(H::class.qualifiedName!!),
 ) {
-    eventHandler(qualifier) { new(constructor) }
+    eventHandler(qualifier, handlerQualifier) { new(constructor) }
 }
 
 inline fun <reified H : EventHandler<E>, reified E : Event, reified T1> Module.eventHandlerOf(
     crossinline constructor: (T1) -> H,
     qualifier: Qualifier = named(E::class.qualifiedName!!),
+    handlerQualifier: Qualifier = named(H::class.qualifiedName!!),
 ) {
-    eventHandler(qualifier) { new(constructor) }
+    eventHandler(qualifier, handlerQualifier) { new(constructor) }
 }

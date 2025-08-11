@@ -38,9 +38,9 @@ internal class InMemoryEventBus : EventBus {
 
     override fun publish(event: Event) {
         if (_events.tryEmit(event)) {
-            FoodYouLogger.w(TAG) { "Failed to publish event: $event" }
-        } else {
             FoodYouLogger.d(TAG) { "Published event: $event" }
+        } else {
+            FoodYouLogger.w(TAG) { "Failed to publish event: $event" }
         }
     }
 
