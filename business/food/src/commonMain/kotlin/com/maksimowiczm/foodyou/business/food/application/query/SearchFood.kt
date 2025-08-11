@@ -4,11 +4,11 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
+import com.maksimowiczm.foodyou.business.food.application.event.FoodSearchEvent
 import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
 import com.maksimowiczm.foodyou.business.food.domain.FoodSource
 import com.maksimowiczm.foodyou.business.food.domain.QueryType
-import com.maksimowiczm.foodyou.business.food.domain.SearchHistory
 import com.maksimowiczm.foodyou.business.food.domain.queryType
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsProductMapper
@@ -25,13 +25,12 @@ import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.event.EventBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 
 data class SearchFoodQuery(
@@ -42,7 +41,7 @@ data class SearchFoodQuery(
 
 @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
 internal class SearchFoodQueryHandler(
-    private val coroutineScope: CoroutineScope,
+    private val eventBus: EventBus,
     private val commandBus: CommandBus,
     private val foodSearchSource: LocalFoodSearchDataSource,
     private val foodPreferencesSource: DataStoreFoodPreferencesDataSource,
@@ -61,11 +60,7 @@ internal class SearchFoodQueryHandler(
         val queryType = queryType(query)
 
         if (queryType is QueryType.NotBlank.Text) {
-            coroutineScope.launch {
-                foodSearchSource.insertSearchHistory(
-                    SearchHistory(LocalDateTime.now(), queryType.query)
-                )
-            }
+            eventBus.publish(FoodSearchEvent(queryType = queryType, date = LocalDateTime.now()))
         }
 
         return foodPreferencesSource.observe().flatMapLatest { prefs ->

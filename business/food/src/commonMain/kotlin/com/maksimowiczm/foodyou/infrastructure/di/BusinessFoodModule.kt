@@ -10,6 +10,7 @@ import com.maksimowiczm.foodyou.business.food.application.command.UpdateUsdaApiK
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseOpenFoodFactsCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseUsdaCommandHandler
 import com.maksimowiczm.foodyou.business.food.application.event.FoodDiaryEntryCreatedEventHandler
+import com.maksimowiczm.foodyou.business.food.application.event.FoodSearchEventHandler
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodEventsQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQueryHandler
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodQueryHandler
@@ -58,30 +59,11 @@ val businessFoodModule = module {
     commandHandlerOf(::UpdateUseUsdaCommandHandler)
 
     queryHandlerOf(::ObserveFoodQueryHandler)
-    queryHandler {
-        SearchFoodQueryHandler(
-            coroutineScope = applicationCoroutineScope(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-        )
-    }
+    queryHandlerOf(::SearchFoodQueryHandler)
     queryHandlerOf(::SearchFoodCountQueryHandler)
     queryHandlerOf(::ObserveFoodPreferencesQueryHandler)
     queryHandlerOf(::ObserveSearchHistoryQueryHandler)
-    queryHandler {
-        SearchRecentFoodQueryHandler(
-            coroutineScope = applicationCoroutineScope(),
-            get<LocalFoodSearchDataSource>(),
-        )
-    }
+    queryHandlerOf(::SearchRecentFoodQueryHandler)
     queryHandlerOf(::SearchRecentFoodCountQueryHandler)
     queryHandlerOf(::ObserveFoodEventsQueryHandler)
     queryHandlerOf(::ObserveMeasurementSuggestionsQueryHandler)
@@ -106,4 +88,5 @@ val businessFoodModule = module {
     factoryOf(::RemoteProductRequestFactoryImpl).bind<RemoteProductRequestFactory>()
 
     eventHandlerOf(::FoodDiaryEntryCreatedEventHandler)
+    eventHandlerOf(::FoodSearchEventHandler)
 }
