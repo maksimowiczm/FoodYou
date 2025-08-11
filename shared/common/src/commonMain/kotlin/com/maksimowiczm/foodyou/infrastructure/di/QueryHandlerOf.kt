@@ -79,8 +79,10 @@ inline fun <
     reified T9,
     reified T10,
     reified T11,
+    reified T12,
+    reified T13,
 > Module.queryHandlerOf(
-    crossinline constructor: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11) -> H,
+    crossinline constructor: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13) -> H,
     qualifier: Qualifier = named(Q::class.qualifiedName!!),
     noinline options: DefinitionOptions<QueryHandler<*, *>>? = null,
 ): KoinDefinition<QueryHandler<*, *>> =

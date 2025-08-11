@@ -15,16 +15,18 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfac
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts.OpenFoodFactsRemoteMediator
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDAProductMapper
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.usda.USDARemoteMediator
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodSearchDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalOpenFoodFactsPagingHelper
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalUsdaPagingHelper
-import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.datastore.DataStoreFoodPreferencesDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.event.EventBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
@@ -42,13 +44,15 @@ data class SearchFoodQuery(
 @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
 internal class SearchFoodQueryHandler(
     private val eventBus: EventBus,
-    private val commandBus: CommandBus,
-    private val foodSearchSource: LocalFoodSearchDataSource,
-    private val foodPreferencesSource: DataStoreFoodPreferencesDataSource,
-    private val remoteMapper: RemoteProductMapper,
+    private val localFoodSearch: LocalFoodSearchDataSource,
+    private val localFoodPreferences: LocalFoodPreferencesDataSource,
+    private val localProduct: LocalProductDataSource,
+    private val localFoodEvent: LocalFoodEventDataSource,
+    private val transactionProvider: DatabaseTransactionProvider,
     private val offRemoteDataSource: OpenFoodFactsRemoteDataSource,
     private val offMapper: OpenFoodFactsProductMapper,
     private val openFoodFactsPagingHelper: LocalOpenFoodFactsPagingHelper,
+    private val remoteMapper: RemoteProductMapper,
     private val usdaRemoteDataSource: USDARemoteDataSource,
     private val usdaMapper: USDAProductMapper,
     private val usdaHelper: LocalUsdaPagingHelper,
@@ -63,10 +67,10 @@ internal class SearchFoodQueryHandler(
             eventBus.publish(FoodSearchEvent(queryType = queryType, date = LocalDateTime.now()))
         }
 
-        return foodPreferencesSource.observe().flatMapLatest { prefs ->
+        return localFoodPreferences.observe().flatMapLatest { prefs ->
             val mediatorFactory = mediatorFactory(queryType, source, prefs)
 
-            foodSearchSource.search(
+            localFoodSearch.search(
                 query = queryType,
                 source = source,
                 config = PagingConfig(pageSize = PAGE_SIZE),
@@ -96,11 +100,13 @@ internal class SearchFoodQueryHandler(
         object : RemoteMediatorFactory {
             override fun <K : Any, T : Any> create(): RemoteMediator<K, T>? =
                 OpenFoodFactsRemoteMediator(
-                    remoteDataSource = offRemoteDataSource,
                     query = query.query,
                     country = null,
                     isBarcode = query is QueryType.NotBlank.Barcode,
-                    commandBus = commandBus,
+                    transactionProvider = transactionProvider,
+                    localProduct = localProduct,
+                    localFoodEvent = localFoodEvent,
+                    remoteDataSource = offRemoteDataSource,
                     openFoodFactsPagingHelper = openFoodFactsPagingHelper,
                     offMapper = offMapper,
                     remoteMapper = remoteMapper,
@@ -114,10 +120,12 @@ internal class SearchFoodQueryHandler(
         object : RemoteMediatorFactory {
             override fun <K : Any, T : Any> create(): RemoteMediator<K, T>? =
                 USDARemoteMediator(
-                    remoteDataSource = usdaRemoteDataSource,
                     query = query.query,
                     apiKey = apiKey,
-                    commandBus = commandBus,
+                    transactionProvider = transactionProvider,
+                    localProduct = localProduct,
+                    localFoodEvent = localFoodEvent,
+                    remoteDataSource = usdaRemoteDataSource,
                     usdaHelper = usdaHelper,
                     productMapper = usdaMapper,
                     remoteMapper = remoteMapper,

@@ -4,26 +4,30 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.business.food.application.command.CreateProductCommand
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.business.food.domain.OpenFoodFactsPagingKey
+import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalOpenFoodFactsPagingHelper
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.ProductNotFoundException
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.OpenFoodFactsProduct
 import com.maksimowiczm.foodyou.shared.common.date.now
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)
 internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
-    private val remoteDataSource: OpenFoodFactsRemoteDataSource,
     private val query: String,
     private val country: String?,
     private val isBarcode: Boolean,
-    private val commandBus: CommandBus,
+    private val transactionProvider: DatabaseTransactionProvider,
+    private val localProduct: LocalProductDataSource,
+    private val localFoodEvent: LocalFoodEventDataSource,
+    private val remoteDataSource: OpenFoodFactsRemoteDataSource,
     private val openFoodFactsPagingHelper: LocalOpenFoodFactsPagingHelper,
     private val offMapper: OpenFoodFactsProductMapper,
     private val remoteMapper: RemoteProductMapper,
@@ -58,10 +62,10 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                                     }
                                 }
 
-                        val command = response.toCommand()
+                        val product = response.toDomainProduct()
 
-                        if (command != null) {
-                            commandBus.dispatch(command)
+                        if (product != null) {
+                            transactionProvider.withTransaction { product.insert() }
                         } else {
                             FoodYouLogger.d(TAG) {
                                 "Failed to convert product: (name=${response.name}, code=${response.barcode})"
@@ -113,7 +117,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
             val now = LocalDateTime.now()
             val products =
                 response.products.map { remoteProduct ->
-                    remoteProduct.toCommand(now).also {
+                    remoteProduct.toDomainProduct().also {
                         if (it == null) {
                             FoodYouLogger.d(TAG) {
                                 "Failed to convert product: (name=${remoteProduct.name}, code=${remoteProduct.barcode})"
@@ -122,7 +126,9 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                     }
                 }
 
-            products.filterNotNull().forEach { cmd -> commandBus.dispatch(cmd) }
+            transactionProvider.withTransaction {
+                products.filterNotNull().forEach { product -> product.insert() }
+            }
 
             val skipped = products.count { it == null }
             val endOfPaginationReached = (products.size + skipped) < PAGE_SIZE
@@ -140,26 +146,16 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
         }
     }
 
-    private fun OpenFoodFactsProduct.toCommand(
-        now: LocalDateTime = LocalDateTime.now()
-    ): CreateProductCommand? =
-        runCatching {
-                this.let(offMapper::toRemoteProduct)?.let(remoteMapper::toModel)?.let { product ->
-                    CreateProductCommand(
-                        name = product.name,
-                        brand = product.brand,
-                        nutritionFacts = product.nutritionFacts,
-                        barcode = product.barcode,
-                        packageWeight = product.packageWeight,
-                        servingWeight = product.servingWeight,
-                        note = product.note,
-                        source = product.source,
-                        isLiquid = product.isLiquid,
-                        event = FoodEvent.Downloaded(now, product.source.url),
-                    )
-                }
-            }
-            .getOrNull()
+    private fun OpenFoodFactsProduct.toDomainProduct(): Product? =
+        runCatching { this.let(offMapper::toRemoteProduct)?.let(remoteMapper::toModel) }.getOrNull()
+
+    private suspend fun Product.insert() {
+        val id = localProduct.insertProduct(this)
+        localFoodEvent.insert(
+            foodId = id,
+            event = FoodEvent.Downloaded(date = LocalDateTime.now(), url = this.source.url),
+        )
+    }
 
     private companion object {
         private const val TAG = "OpenFoodFactsRemoteMediator"

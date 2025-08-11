@@ -4,24 +4,28 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.business.food.application.command.CreateProductCommand
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
+import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.USDAPagingKey
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodEventDataSource
+import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalUsdaPagingHelper
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.model.Food
 import com.maksimowiczm.foodyou.shared.common.date.now
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalPagingApi::class)
 internal class USDARemoteMediator<K : Any, T : Any>(
-    private val remoteDataSource: USDARemoteDataSource,
     private val query: String,
     private val apiKey: String?,
-    private val commandBus: CommandBus,
+    private val transactionProvider: DatabaseTransactionProvider,
+    private val localProduct: LocalProductDataSource,
+    private val localFoodEvent: LocalFoodEventDataSource,
+    private val remoteDataSource: USDARemoteDataSource,
     private val usdaHelper: LocalUsdaPagingHelper,
     private val productMapper: USDAProductMapper,
     private val remoteMapper: RemoteProductMapper,
@@ -67,7 +71,7 @@ internal class USDARemoteMediator<K : Any, T : Any>(
 
             val products =
                 response.foods.map { remoteProduct ->
-                    remoteProduct.toCommand().also {
+                    remoteProduct.toDomainProduct().also {
                         if (it == null) {
                             FoodYouLogger.d(TAG) {
                                 "Failed to convert product: (name=${remoteProduct.description}, code = ${remoteProduct.barcode})"
@@ -76,7 +80,9 @@ internal class USDARemoteMediator<K : Any, T : Any>(
                     }
                 }
 
-            products.filterNotNull().forEach { cmd -> commandBus.dispatch(cmd) }
+            transactionProvider.withTransaction {
+                products.filterNotNull().forEach { product -> product.insert() }
+            }
 
             val skipped = products.count { it == null }
             val endOfPaginationReached = (products.size + skipped) < PAGE_SIZE
@@ -94,24 +100,17 @@ internal class USDARemoteMediator<K : Any, T : Any>(
         }
     }
 
-    private fun Food.toCommand(now: LocalDateTime = LocalDateTime.now()): CreateProductCommand? =
-        runCatching {
-                this.let(productMapper::toRemoteProduct).let(remoteMapper::toModel).let { product ->
-                    CreateProductCommand(
-                        name = product.name,
-                        brand = product.brand,
-                        barcode = product.barcode,
-                        note = product.note,
-                        isLiquid = product.isLiquid,
-                        packageWeight = product.packageWeight,
-                        servingWeight = product.servingWeight,
-                        source = product.source,
-                        nutritionFacts = product.nutritionFacts,
-                        event = FoodEvent.Downloaded(now, product.source.url),
-                    )
-                }
-            }
+    private fun Food.toDomainProduct(): Product? =
+        runCatching { this.let(productMapper::toRemoteProduct).let(remoteMapper::toModel) }
             .getOrNull()
+
+    private suspend fun Product.insert() {
+        val id = localProduct.insertProduct(this)
+        localFoodEvent.insert(
+            foodId = id,
+            event = FoodEvent.Downloaded(date = LocalDateTime.now(), url = this.source.url),
+        )
+    }
 
     private companion object {
         private const val TAG = "USDARemoteMediator"
