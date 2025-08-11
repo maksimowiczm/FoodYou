@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.Lo
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
 import com.maksimowiczm.foodyou.business.shared.application.event.FoodDiaryEntryCreatedEvent
 import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
@@ -34,6 +35,7 @@ internal class CreateDiaryEntryCommandHandler(
     private val diaryEntryDataSource: LocalDiaryEntryDataSource,
     private val mealDataSource: LocalMealDataSource,
     private val eventBus: EventBus,
+    private val transactionProvider: DatabaseTransactionProvider,
 ) : CommandHandler<CreateDiaryEntryCommand, Long, CreateDiaryEntryError> {
 
     override suspend fun handle(
@@ -53,7 +55,7 @@ internal class CreateDiaryEntryCommandHandler(
         }
 
         val entry = command.toDiaryEntry()
-        val id = diaryEntryDataSource.insert(entry)
+        val id = transactionProvider.withTransaction { diaryEntryDataSource.insert(entry) }
         eventBus.publish(
             FoodDiaryEntryCreatedEvent(
                 foodId = command.foodId,

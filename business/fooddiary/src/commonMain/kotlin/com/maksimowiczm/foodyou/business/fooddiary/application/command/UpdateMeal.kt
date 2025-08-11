@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.business.fooddiary.application.command
 
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
@@ -24,8 +25,10 @@ sealed interface UpdateMealError {
     data object InvalidTimeRange : UpdateMealError
 }
 
-internal class UpdateMealCommandHandler(private val mealDataSource: LocalMealDataSource) :
-    CommandHandler<UpdateMealCommand, Unit, UpdateMealError> {
+internal class UpdateMealCommandHandler(
+    private val mealDataSource: LocalMealDataSource,
+    private val transactionProvider: DatabaseTransactionProvider,
+) : CommandHandler<UpdateMealCommand, Unit, UpdateMealError> {
 
     override suspend fun handle(command: UpdateMealCommand): Result<Unit, UpdateMealError> {
         if (command.name.isBlank()) {
@@ -59,7 +62,8 @@ internal class UpdateMealCommandHandler(private val mealDataSource: LocalMealDat
 
         val updatedMeal = meal.copy(name = command.name, from = command.from, to = command.to)
 
-        mealDataSource.update(updatedMeal)
+        transactionProvider.withTransaction { mealDataSource.update(updatedMeal) }
+
         return Ok(Unit)
     }
 

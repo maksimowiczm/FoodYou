@@ -5,25 +5,24 @@ import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRecipeDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 
 data class DeleteFoodCommand(val foodId: FoodId) : Command<Unit, DeleteFoodError> {}
 
 sealed interface DeleteFoodError {
     data object FoodNotFound : DeleteFoodError
-
-    data object UnknownError : DeleteFoodError
 }
 
 internal class DeleteFoodCommandHandler(
     private val localProductDataSource: LocalProductDataSource,
     private val localRecipe: LocalRecipeDataSource,
+    private val transactionProvider: DatabaseTransactionProvider,
 ) : CommandHandler<DeleteFoodCommand, Unit, DeleteFoodError> {
 
     override suspend fun handle(command: DeleteFoodCommand): Result<Unit, DeleteFoodError> {
@@ -44,23 +43,14 @@ internal class DeleteFoodCommandHandler(
             )
         }
 
-        return try {
+        transactionProvider.withTransaction {
             when (food) {
                 is Product -> localProductDataSource.deleteProduct(food)
                 is Recipe -> localRecipe.deleteRecipe(food)
             }
-
-            Ok(Unit)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            ErrorLoggingUtils.logAndReturnFailure(
-                tag = TAG,
-                throwable = e,
-                error = DeleteFoodError.UnknownError,
-                message = { "Failed to delete food with ID $id: ${e.message}" },
-            )
         }
+
+        return Ok(Unit)
     }
 
     private companion object {

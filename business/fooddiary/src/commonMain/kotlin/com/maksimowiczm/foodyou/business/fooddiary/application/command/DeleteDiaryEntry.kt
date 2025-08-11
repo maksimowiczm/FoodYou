@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.business.fooddiary.application.command
 
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
@@ -14,8 +15,10 @@ sealed interface DeleteDiaryEntryError {
     data object EntryNotFound : DeleteDiaryEntryError
 }
 
-internal class DeleteDiaryEntryCommandHandler(private val localDiary: LocalDiaryEntryDataSource) :
-    CommandHandler<DeleteDiaryEntryCommand, Unit, DeleteDiaryEntryError> {
+internal class DeleteDiaryEntryCommandHandler(
+    private val localDiary: LocalDiaryEntryDataSource,
+    private val transactionProvider: DatabaseTransactionProvider,
+) : CommandHandler<DeleteDiaryEntryCommand, Unit, DeleteDiaryEntryError> {
 
     override suspend fun handle(
         command: DeleteDiaryEntryCommand
@@ -31,7 +34,8 @@ internal class DeleteDiaryEntryCommandHandler(private val localDiary: LocalDiary
             )
         }
 
-        localDiary.delete(entry)
+        transactionProvider.withTransaction { localDiary.delete(entry) }
+
         return Ok(Unit)
     }
 

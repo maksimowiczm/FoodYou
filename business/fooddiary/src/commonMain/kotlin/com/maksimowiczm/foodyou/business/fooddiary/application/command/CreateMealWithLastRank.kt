@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.business.fooddiary.application.command
 
 import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
@@ -12,11 +13,12 @@ data class CreateMealWithLastRankCommand(val name: String, val from: LocalTime, 
     Command<Unit, Unit>
 
 internal class CreateMealWithLastRankCommandHandler(
-    private val mealDataSource: LocalMealDataSource
+    private val mealDataSource: LocalMealDataSource,
+    private val transactionProvider: DatabaseTransactionProvider,
 ) : CommandHandler<CreateMealWithLastRankCommand, Unit, Unit> {
 
     override suspend fun handle(command: CreateMealWithLastRankCommand): Result<Unit, Unit> {
-        mealDataSource.insertWithLastRank(command.toMeal())
+        transactionProvider.withTransaction { mealDataSource.insertWithLastRank(command.toMeal()) }
         return Ok(Unit)
     }
 }
