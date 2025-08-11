@@ -1,5 +1,6 @@
 package com.maksimowiczm.foodyou.business.food.domain
 
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import kotlinx.serialization.Serializable
 
 @Serializable

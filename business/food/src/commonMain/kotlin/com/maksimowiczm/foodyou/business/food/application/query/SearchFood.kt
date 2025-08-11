@@ -7,7 +7,6 @@ import androidx.paging.RemoteMediator
 import com.maksimowiczm.foodyou.business.food.application.event.FoodSearchEvent
 import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
 import com.maksimowiczm.foodyou.business.food.domain.FoodSearch
-import com.maksimowiczm.foodyou.business.food.domain.FoodSource
 import com.maksimowiczm.foodyou.business.food.domain.QueryType
 import com.maksimowiczm.foodyou.business.food.domain.queryType
 import com.maksimowiczm.foodyou.business.food.infrastructure.network.RemoteProductMapper
@@ -21,6 +20,7 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalOp
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource

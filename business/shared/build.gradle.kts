@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.gmazzo.buildconfig)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 buildConfig {
@@ -46,6 +47,7 @@ kotlin {
             implementation(libs.androidx.room.paging)
             implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
         }
 
         commonTest.dependencies {

@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateProductCommand
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateProductError
-import com.maksimowiczm.foodyou.business.food.domain.FoodSource
 import com.maksimowiczm.foodyou.business.food.domain.Product
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.nutritionFacts
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase

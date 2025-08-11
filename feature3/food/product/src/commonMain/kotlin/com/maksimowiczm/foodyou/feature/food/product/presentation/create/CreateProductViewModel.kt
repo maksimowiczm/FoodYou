@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.command.CreateProductCommand
 import com.maksimowiczm.foodyou.business.food.application.command.CreateProductError
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
-import com.maksimowiczm.foodyou.business.food.domain.FoodSource
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.feature.food.product.ui.ProductFormState
 import com.maksimowiczm.foodyou.feature.food.product.ui.nutritionFacts
 import com.maksimowiczm.foodyou.shared.common.date.now

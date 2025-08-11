@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.network.openfoodfacts
 
-import com.maksimowiczm.foodyou.business.food.domain.FoodSource
 import com.maksimowiczm.foodyou.business.food.domain.RemoteNutritionFacts
 import com.maksimowiczm.foodyou.business.food.domain.RemoteProduct
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.OpenFoodFactsProduct
 
 internal class OpenFoodFactsProductMapper {

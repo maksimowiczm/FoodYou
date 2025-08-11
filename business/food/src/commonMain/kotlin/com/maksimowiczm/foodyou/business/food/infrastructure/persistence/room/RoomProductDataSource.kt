@@ -1,8 +1,8 @@
 package com.maksimowiczm.foodyou.business.food.infrastructure.persistence.room
 
-import com.maksimowiczm.foodyou.business.food.domain.FoodSource
 import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSourceType
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.ProductDao
