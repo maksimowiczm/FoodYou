@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.add.usecase
+package com.maksimowiczm.foodyou.feature.food.diary.shared.usecase
 
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsQuery
 import com.maksimowiczm.foodyou.business.fooddiary.domain.Meal

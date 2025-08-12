@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.add.ui
+package com.maksimowiczm.foodyou.feature.food.diary.shared.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,7 +38,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Composable
-internal fun ChipsDatePicker(state: ChipsDatePickerState, modifier: Modifier = Modifier) {
+fun ChipsDatePicker(state: ChipsDatePickerState, modifier: Modifier = Modifier) {
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
     if (showDatePicker) {
@@ -110,9 +110,9 @@ private fun LocalDate.stringResource(today: LocalDate): String {
 }
 
 @Composable
-internal fun rememberChipsDatePickerState(
-    today: LocalDate = LocalDate.now(),
-    initialDates: List<LocalDate> = listOf(LocalDate.now(), LocalDate.now().minus(1.days)),
+fun rememberChipsDatePickerState(
+    today: LocalDate,
+    initialDates: List<LocalDate>,
     selectedDate: LocalDate = initialDates.first(),
 ): ChipsDatePickerState =
     rememberSaveable(today, initialDates, selectedDate, saver = ChipsDatePickerState.saver) {
@@ -124,7 +124,7 @@ internal fun rememberChipsDatePickerState(
     }
 
 @Stable
-internal class ChipsDatePickerState(
+class ChipsDatePickerState(
     val today: LocalDate,
     initialDates: List<LocalDate>,
     initialSelectedDate: LocalDate?,

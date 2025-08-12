@@ -105,7 +105,7 @@ internal class CreateRecipeCommandHandler(
             )
 
         // Check for circular references in ingredients
-        val flatIngredients = recipe.allIngredients()
+        val flatIngredients = recipe.flatIngredients()
         val ingredientIds = flatIngredients.map { it.id }.toSet()
         if (flatIngredients.size != ingredientIds.size) {
             return ErrorLoggingUtils.logAndReturnFailure(

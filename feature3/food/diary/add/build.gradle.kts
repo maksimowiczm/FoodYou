@@ -17,6 +17,7 @@ kotlin {
         implementation(projects.business.food)
 
         implementation(projects.feature3.food.shared)
+        implementation(projects.feature3.food.diary.shared)
 
         implementation(libs.kotlinx.datetime)
     }

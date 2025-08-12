@@ -673,7 +673,7 @@ private fun NutrientGoal(
             )
 
         LinearProgressIndicator(
-            progress = { progress % 1f },
+            progress = { progress.coerceAtMost(1.99999f) % 1f },
             modifier = Modifier.fillMaxWidth().height(8.dp),
             color = progressBarColor,
             trackColor = trackColor,

@@ -9,7 +9,7 @@ import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.domain.Recipe
 import com.maksimowiczm.foodyou.business.food.domain.weight
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateDiaryEntryCommand
-import com.maksimowiczm.foodyou.feature.food.diary.add.usecase.ObserveMealsUseCase
+import com.maksimowiczm.foodyou.feature.food.diary.shared.usecase.ObserveMealsUseCase
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.defaultMeasurement
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
@@ -186,7 +186,7 @@ internal class AddEntryViewModel(
             }
 
             val weight = measurement.weight(food)
-            food.measuredIngredients(weight).map { (food, measurement) ->
+            food.unpack(weight).map { (food, measurement) ->
                 val diaryFood = food.toDiaryFood()
 
                 commandBus

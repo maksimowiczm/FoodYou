@@ -22,6 +22,8 @@ private fun Product.toDiaryProduct(): DiaryFoodProduct =
         servingWeight = servingWeight,
         totalWeight = totalWeight,
         isLiquid = isLiquid,
+        source = source,
+        note = note,
     )
 
 private fun Recipe.toDiaryRecipe(): DiaryFoodRecipe =
@@ -30,6 +32,7 @@ private fun Recipe.toDiaryRecipe(): DiaryFoodRecipe =
         servings = servings,
         ingredients = ingredients.map { it.toDiaryRecipeIngredient() },
         isLiquid = isLiquid,
+        note = note,
     )
 
 private fun RecipeIngredient.toDiaryRecipeIngredient(): DiaryFoodRecipeIngredient =

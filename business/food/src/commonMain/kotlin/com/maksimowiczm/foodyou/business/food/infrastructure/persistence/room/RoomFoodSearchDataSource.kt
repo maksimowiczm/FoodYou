@@ -16,6 +16,7 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMed
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearch as FoodSearchData
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearchDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.SearchEntry
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntity
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.from

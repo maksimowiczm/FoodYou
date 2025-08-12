@@ -13,7 +13,6 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventTypeConverter
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearchDao
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSourceTypeConverter
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.LatestMeasurementSuggestion
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.MeasurementSuggestionDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.MeasurementSuggestionEntity
@@ -36,6 +35,7 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.foodYou3Migration
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsPagingKeyEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.FoodSourceTypeConverter
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.MeasurementTypeConverter
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.sponsorship.SponsorshipDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.sponsorship.SponsorshipEntity

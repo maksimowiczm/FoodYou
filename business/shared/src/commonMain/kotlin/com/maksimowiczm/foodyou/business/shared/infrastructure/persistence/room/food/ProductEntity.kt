@@ -3,6 +3,7 @@ package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.FoodSourceType
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.Minerals
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.Nutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.Vitamins

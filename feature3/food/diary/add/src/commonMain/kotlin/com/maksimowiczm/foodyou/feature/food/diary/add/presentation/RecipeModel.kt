@@ -28,12 +28,12 @@ internal data class RecipeModel(
         note = recipe.note,
         totalWeight = recipe.totalWeight,
         servings = recipe.servings,
-        ingredients = buildIngredients(recipe),
+        ingredients = recipe.ingredients.map(::IngredientModel).sortedBy { it.name.lowercase() },
         allIngredients =
-            recipe.allIngredients().map { Triple(it.id, it.headline, it.nutritionFacts) },
+            recipe.flatIngredients().map { Triple(it.id, it.headline, it.nutritionFacts) },
     )
 
-    fun measuredIngredients(weight: Double): List<IngredientModel> {
+    fun unpack(weight: Double): List<IngredientModel> {
         val fraction = weight / totalWeight
 
         return ingredients.map { ingredient ->
@@ -65,6 +65,3 @@ internal data class RecipeModel(
             is Measurement.Serving -> totalWeight * measurement.quantity / servings
         }
 }
-
-internal fun buildIngredients(recipe: Recipe): List<IngredientModel> =
-    recipe.ingredients.map(::IngredientModel).sortedBy { it.name.lowercase() }

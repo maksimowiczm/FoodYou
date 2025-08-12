@@ -130,7 +130,7 @@ internal fun RecipeApp(
                             if (!facts.isComplete) {
                                 val foods =
                                     recipe
-                                        .allIngredients()
+                                        .flatIngredients()
                                         .filter { it is Product }
                                         .filter { !it.nutritionFacts.isComplete }
 

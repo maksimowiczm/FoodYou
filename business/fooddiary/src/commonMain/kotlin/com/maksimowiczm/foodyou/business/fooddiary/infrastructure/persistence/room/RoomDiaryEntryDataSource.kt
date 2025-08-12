@@ -6,11 +6,14 @@ import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodProduct
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipe
 import com.maksimowiczm.foodyou.business.fooddiary.domain.DiaryFoodRecipeIngredient
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalDiaryEntryDataSource
+import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.DiaryProductEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.DiaryRecipeEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.DiaryRecipeIngredientEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toDomain
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toNutritionFacts
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
@@ -23,6 +26,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -50,6 +54,9 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                         val createdAt =
                             Instant.fromEpochSeconds(entity.createdAt)
                                 .toLocalDateTime(TimeZone.currentSystemDefault())
+                        val updatedAt =
+                            Instant.fromEpochSeconds(entity.updatedAt)
+                                .toLocalDateTime(TimeZone.currentSystemDefault())
 
                         foodFlow.map {
                             DiaryEntry(
@@ -59,6 +66,7 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                                 measurement = Measurement.from(entity.measurement, entity.quantity),
                                 food = it,
                                 createdAt = createdAt,
+                                updatedAt = updatedAt,
                             )
                         }
                     }
@@ -72,6 +80,9 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                 val createdAt =
                     Instant.fromEpochSeconds(entity.createdAt)
                         .toLocalDateTime(TimeZone.currentSystemDefault())
+                val updatedAt =
+                    Instant.fromEpochSeconds(entity.updatedAt)
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
 
                 DiaryEntry(
                     id = entity.id,
@@ -80,6 +91,7 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                     measurement = Measurement.from(entity.measurement, entity.quantity),
                     food = food,
                     createdAt = createdAt,
+                    updatedAt = updatedAt,
                 )
             }
         }
@@ -122,13 +134,62 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                 quantity = diaryEntry.measurement.rawValue,
                 createdAt =
                     diaryEntry.createdAt.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
+                updatedAt =
+                    diaryEntry.updatedAt.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
             )
 
         return measurementDao.insertMeasurement(entity)
     }
 
     override suspend fun update(diaryEntry: DiaryEntry) {
-        TODO("Not yet implemented")
+        val entity = measurementDao.observeMeasurementById(diaryEntry.id).firstOrNull()
+
+        if (entity == null) {
+            error("Measurement with id ${diaryEntry.id} not found")
+        }
+
+        // Delete the existing product or recipe if it exists
+        val productId = entity.productId
+        val recipeId = entity.recipeId
+        if (productId != null) {
+            deleteProduct(productId)
+        } else if (recipeId != null) {
+            deleteRecipe(recipeId)
+        }
+
+        // Insert the new product or recipe
+        val newProductId = run {
+            if (diaryEntry.food is DiaryFoodProduct) {
+                insertProduct(diaryEntry.food)
+            } else {
+                null
+            }
+        }
+        val newRecipeId = run {
+            if (diaryEntry.food is DiaryFoodRecipe) {
+                insertRecipe(diaryEntry.food)
+            } else {
+                null
+            }
+        }
+
+        if (newProductId == null && newRecipeId == null) {
+            error("Diary entry must have either a product or a recipe")
+        }
+
+        val updatedEntity =
+            entity.copy(
+                mealId = diaryEntry.mealId,
+                epochDay = diaryEntry.date.toEpochDays(),
+                productId = newProductId,
+                recipeId = newRecipeId,
+                measurement = diaryEntry.measurement.type,
+                quantity = diaryEntry.measurement.rawValue,
+                updatedAt =
+                    diaryEntry.updatedAt.toInstant(TimeZone.currentSystemDefault()).epochSeconds,
+            )
+
+        measurementDao.updateMeasurement(updatedEntity)
     }
 
     override suspend fun delete(diaryEntry: DiaryEntry) {
@@ -163,6 +224,9 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                 name = diaryRecipe.name,
                 servings = diaryRecipe.servings,
                 isLiquid = diaryRecipe.isLiquid,
+                sourceType = null,
+                sourceUrl = null,
+                note = diaryRecipe.note,
             )
 
         val recipeId = measurementDao.insertDiaryRecipe(recipe)
@@ -245,10 +309,27 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                         servings = entity.servings,
                         ingredients = ingredients,
                         isLiquid = entity.isLiquid,
+                        note = entity.note,
                     )
                 }
             }
             .flatMapLatest { it }
+
+    private suspend fun deleteProduct(productId: Long) {
+        val product = measurementDao.observeDiaryProduct(productId).first()
+        if (product == null) {
+            error("Diary product with id $productId not found")
+        }
+        measurementDao.deleteDiaryProduct(product)
+    }
+
+    private suspend fun deleteRecipe(recipeId: Long) {
+        val recipe = measurementDao.observeDiaryRecipe(recipeId).first()
+        if (recipe == null) {
+            error("Diary recipe with id $recipeId not found")
+        }
+        measurementDao.deleteDiaryRecipe(recipe)
+    }
 }
 
 private fun DiaryFoodProduct.toEntity(): DiaryProductEntity {
@@ -262,6 +343,9 @@ private fun DiaryFoodProduct.toEntity(): DiaryProductEntity {
         servingWeight = servingWeight,
         packageWeight = totalWeight,
         isLiquid = isLiquid,
+        sourceType = source.type.toEntity(),
+        sourceUrl = source.url,
+        note = note,
     )
 }
 
@@ -272,4 +356,6 @@ private fun DiaryProductEntity.toModel(): DiaryFoodProduct =
         servingWeight = servingWeight,
         totalWeight = packageWeight,
         isLiquid = isLiquid,
+        source = FoodSource(type = sourceType.toDomain(), url = sourceUrl),
+        note = note,
     )

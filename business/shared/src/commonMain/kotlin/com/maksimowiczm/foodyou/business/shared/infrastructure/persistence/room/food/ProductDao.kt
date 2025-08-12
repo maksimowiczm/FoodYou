@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.FoodSourceType
 import kotlinx.coroutines.flow.Flow
 
 @Dao

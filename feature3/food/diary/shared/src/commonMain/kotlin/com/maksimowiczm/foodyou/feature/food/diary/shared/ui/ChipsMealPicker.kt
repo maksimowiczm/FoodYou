@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.add.ui
+package com.maksimowiczm.foodyou.feature.food.diary.shared.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun ChipsMealPicker(state: ChipsMealPickerState, modifier: Modifier = Modifier) {
+fun ChipsMealPicker(state: ChipsMealPickerState, modifier: Modifier = Modifier) {
     Row(modifier) {
         Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
             Icon(imageVector = Icons.Default.Restaurant, contentDescription = null)
@@ -45,10 +45,7 @@ internal fun ChipsMealPicker(state: ChipsMealPickerState, modifier: Modifier = M
 }
 
 @Composable
-internal fun rememberChipsMealPickerState(
-    meals: List<String>,
-    selectedMeal: String?,
-): ChipsMealPickerState {
+fun rememberChipsMealPickerState(meals: List<String>, selectedMeal: String?): ChipsMealPickerState {
     return rememberSaveable(
         meals,
         selectedMeal,
@@ -69,7 +66,7 @@ internal fun rememberChipsMealPickerState(
 }
 
 @Stable
-internal class ChipsMealPickerState(initialMeals: List<String>, selectedMeal: String?) {
+class ChipsMealPickerState(initialMeals: List<String>, selectedMeal: String?) {
     init {
         require(initialMeals.isNotEmpty()) { "Meals list cannot be empty" }
     }

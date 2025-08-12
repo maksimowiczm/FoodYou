@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.food.diary.add.ui
+package com.maksimowiczm.foodyou.feature.food.diary.shared.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -12,7 +12,7 @@ import com.maksimowiczm.foodyou.shared.common.domain.measurement.MeasurementType
 import kotlinx.datetime.LocalDate
 
 @Composable
-internal fun rememberFoodMeasurementFormState(
+fun rememberFoodMeasurementFormState(
     today: LocalDate,
     possibleDates: List<LocalDate>,
     selectedDate: LocalDate,
@@ -43,7 +43,7 @@ internal fun rememberFoodMeasurementFormState(
 }
 
 @Stable
-internal class FoodMeasurementFormState(
+class FoodMeasurementFormState(
     val dateState: ChipsDatePickerState,
     val mealsState: ChipsMealPickerState,
     val measurementState: MeasurementPickerState,

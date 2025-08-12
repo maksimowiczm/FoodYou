@@ -37,21 +37,31 @@ data class Recipe(
         }
     }
 
-    /** Returns a flat list of all ingredients in the recipe. */
-    fun allIngredients(): List<Food> =
+    /**
+     * Returns a list of all ingredients in the recipe, including those from nested recipes. If an
+     * ingredient is a recipe, it recursively includes its ingredients. Each food is included only
+     * once in the final list.
+     */
+    fun flatIngredients(): List<Food> =
         ingredients
             .flatMap { ingredient ->
                 val food = ingredient.food
                 if (food is Recipe) {
-                    listOf(food) + food.allIngredients()
+                    listOf(food) + food.flatIngredients()
                 } else {
                     listOf(food)
                 }
             }
             .distinct()
 
-    /** Calculates measurements for each ingredient based on the given weight. */
-    fun measuredIngredients(weight: Double): List<RecipeIngredient> {
+    /**
+     * Unpacks the recipe into a list of ingredients with their weights adjusted according to the
+     * specified measurement.
+     *
+     * @param weight The total weight to adjust the ingredients to.
+     * @return A list of [RecipeIngredient] with weights adjusted according to the specified weight.
+     */
+    fun unpack(weight: Double): List<RecipeIngredient> {
         val fraction = weight / totalWeight
 
         return ingredients.map { (food, measurement) ->

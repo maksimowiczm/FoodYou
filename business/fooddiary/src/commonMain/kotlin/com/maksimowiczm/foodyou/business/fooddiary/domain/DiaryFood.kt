@@ -17,4 +17,5 @@ sealed interface DiaryFood {
     val servingWeight: Double?
     val totalWeight: Double?
     val isLiquid: Boolean
+    val note: String?
 }

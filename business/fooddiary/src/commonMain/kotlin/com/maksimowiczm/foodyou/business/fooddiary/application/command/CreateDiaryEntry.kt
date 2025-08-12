@@ -29,6 +29,8 @@ data class CreateDiaryEntryCommand(
 
 sealed interface CreateDiaryEntryError {
     data object MealNotFound : CreateDiaryEntryError
+
+    data object InvalidMeasurement : CreateDiaryEntryError
 }
 
 internal class CreateDiaryEntryCommandHandler(
@@ -41,6 +43,48 @@ internal class CreateDiaryEntryCommandHandler(
     override suspend fun handle(
         command: CreateDiaryEntryCommand
     ): Result<Long, CreateDiaryEntryError> {
+
+        when (command.measurement) {
+            is Measurement.Gram ->
+                if (command.food.isLiquid) {
+                    return ErrorLoggingUtils.logAndReturnFailure(
+                        tag = TAG,
+                        throwable = null,
+                        error = CreateDiaryEntryError.InvalidMeasurement,
+                        message = { "Food must not be liquid for gram measurement" },
+                    )
+                }
+
+            is Measurement.Milliliter ->
+                if (!command.food.isLiquid) {
+                    return ErrorLoggingUtils.logAndReturnFailure(
+                        tag = TAG,
+                        throwable = null,
+                        error = CreateDiaryEntryError.InvalidMeasurement,
+                        message = { "Food must be liquid for milliliter measurement" },
+                    )
+                }
+
+            is Measurement.Package ->
+                if (command.food.totalWeight == null) {
+                    return ErrorLoggingUtils.logAndReturnFailure(
+                        tag = TAG,
+                        throwable = null,
+                        error = CreateDiaryEntryError.InvalidMeasurement,
+                        message = { "Total weight must be provided for package measurement" },
+                    )
+                }
+
+            is Measurement.Serving ->
+                if (command.food.servingWeight == null) {
+                    return ErrorLoggingUtils.logAndReturnFailure(
+                        tag = TAG,
+                        throwable = null,
+                        error = CreateDiaryEntryError.InvalidMeasurement,
+                        message = { "Total weight must be provided for serving measurement" },
+                    )
+                }
+        }
 
         val mealId = command.mealId
         val meal = mealDataSource.observeMealById(mealId).firstOrNull()
@@ -81,4 +125,5 @@ private fun CreateDiaryEntryCommand.toDiaryEntry(): DiaryEntry =
         measurement = measurement,
         food = food,
         createdAt = LocalDateTime.now(),
+        updatedAt = LocalDateTime.now(),
     )

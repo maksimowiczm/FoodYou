@@ -185,7 +185,7 @@ internal fun MeasureIngredientScreen(
                 item {
                     val incompleteIngredients =
                         food
-                            .allIngredients()
+                            .flatIngredients()
                             .filter { it is Product }
                             .filterNot { it.nutritionFacts.isComplete }
 

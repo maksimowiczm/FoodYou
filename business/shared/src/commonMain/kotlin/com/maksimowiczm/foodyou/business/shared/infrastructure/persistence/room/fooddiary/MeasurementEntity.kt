@@ -32,4 +32,6 @@ data class MeasurementEntity(
 
     /** Epoch seconds */
     val createdAt: Long,
+    /** Epoch seconds */
+    val updatedAt: Long,
 )

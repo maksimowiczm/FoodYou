@@ -90,4 +90,8 @@ abstract class MeasurementDao {
         """
     )
     abstract fun observeDiaryRecipeIngredients(id: Long): Flow<List<DiaryRecipeIngredientEntity>>
+
+    @Delete abstract suspend fun deleteDiaryProduct(diaryProduct: DiaryProductEntity)
+
+    @Delete abstract suspend fun deleteDiaryRecipe(diaryRecipe: DiaryRecipeEntity)
 }

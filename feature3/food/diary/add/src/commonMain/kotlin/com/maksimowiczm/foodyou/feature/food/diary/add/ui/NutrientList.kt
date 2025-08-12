@@ -39,7 +39,7 @@ internal fun NutrientList(
     food: FoodModel,
     measurement: Measurement,
     onEditFood: (FoodId) -> Unit,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
 ) {
     val facts =
         remember(food, measurement) {
@@ -51,14 +51,11 @@ internal fun NutrientList(
 
     Column(modifier) {
         Row(
-            modifier = Modifier.Companion.fillMaxWidth().padding(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.Companion.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier.Companion.size(48.dp),
-                contentAlignment = Alignment.Companion.Center,
-            ) {
+            Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
                 Icon(imageVector = Icons.AutoMirrored.Outlined.ViewList, contentDescription = null)
             }
 
@@ -71,7 +68,7 @@ internal fun NutrientList(
                     proteins = proteins.toFloat(),
                     carbohydrates = carbohydrates.toFloat(),
                     fats = fats.toFloat(),
-                    modifier = Modifier.Companion.weight(1f),
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -103,7 +100,7 @@ internal fun NutrientList(
 
         Text(
             text = text,
-            modifier = Modifier.Companion.padding(horizontal = 8.dp).padding(bottom = 8.dp),
+            modifier = Modifier.padding(horizontal = 8.dp).padding(bottom = 8.dp),
             style = MaterialTheme.typography.labelLarge,
         )
 
@@ -118,10 +115,10 @@ internal fun NutrientList(
             IncompleteFoodsList(
                 foods = foods.map { (_, name) -> name }.distinct(),
                 onFoodClick = { i -> onEditFood(foods[i].first) },
-                modifier = Modifier.Companion.padding(8.dp),
+                modifier = Modifier.padding(8.dp),
             )
         } else {
-            Spacer(Modifier.Companion.height(8.dp))
+            Spacer(Modifier.height(8.dp))
         }
     }
 }

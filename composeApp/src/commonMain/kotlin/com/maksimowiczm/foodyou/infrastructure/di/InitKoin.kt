@@ -48,12 +48,14 @@ fun initKoin(coroutineScope: CoroutineScope, config: KoinAppDeclaration? = null)
     modules(featureGoalsModule)
 
     // Food
+    modules(featureFoodProductModule, featureFoodRecipeModule, featureFoodSharedModule)
+
+    // Food Diary
     modules(
-        featureFoodDiarySearchModule,
         featureFoodDiaryAddModule,
-        featureFoodProductModule,
-        featureFoodRecipeModule,
-        featureFoodSharedModule,
+        featureFoodDiarySearchModule,
+        featureFoodDiarySharedModule,
+        featureFoodDiaryUpdateModule,
     )
 
     modules(openFoodFactsModule, usdaModule)

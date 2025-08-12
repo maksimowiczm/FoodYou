@@ -25,6 +25,7 @@ import com.maksimowiczm.foodyou.navigation.domain.SettingsLanguageDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
+import com.maksimowiczm.foodyou.navigation.domain.UpdateFoodDiaryEntryDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateRecipeDestination
 import com.maksimowiczm.foodyou.navigation.domain.UsdaApiKeyDestination
@@ -58,6 +59,9 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
                 navController.navigateSingleTop(GoalsCardSettingsDestination)
             },
             masterOnGoals = { navController.navigateSingleTop(GoalsMasterDestination(it)) },
+            masterOnEditDiaryEntry = {
+                navController.navigateSingleTop(UpdateFoodDiaryEntryDestination(it))
+            },
             mealsCardsSettingsOnBack = {
                 navController.popBackStack<MealsCardsSettingsDestination>(true)
             },
@@ -191,6 +195,8 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
                     is FoodId.Recipe -> UpdateRecipeDestination(foodId)
                 }.let(navController::navigateSingleTop)
             },
+            updateOnBack = { navController.popBackStack<UpdateFoodDiaryEntryDestination>(true) },
+            updateOnSave = { navController.popBackStack<UpdateFoodDiaryEntryDestination>(true) },
         )
         foodNavigationGraphBuilder(
             updateProductOnBack = { navController.popBackStack<UpdateProductDestination>(true) },

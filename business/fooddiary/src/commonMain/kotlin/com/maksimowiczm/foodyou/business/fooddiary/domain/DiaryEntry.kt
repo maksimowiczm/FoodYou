@@ -12,6 +12,7 @@ data class DiaryEntry(
     val measurement: Measurement,
     val food: DiaryFood,
     val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
 ) {
     val weight: Double
         get() = measurement.weight(food)

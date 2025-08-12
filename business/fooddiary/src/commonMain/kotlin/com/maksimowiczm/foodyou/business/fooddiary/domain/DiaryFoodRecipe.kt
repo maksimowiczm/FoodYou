@@ -2,6 +2,7 @@ package com.maksimowiczm.foodyou.business.fooddiary.domain
 
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 
 /**
  * Represents a food recipe in the food diary.
@@ -16,6 +17,7 @@ data class DiaryFoodRecipe(
     val servings: Int,
     val ingredients: List<DiaryFoodRecipeIngredient>,
     override val isLiquid: Boolean,
+    override val note: String?,
 ) : DiaryFood {
 
     /** The nutrition facts of the food item per 100g or 100ml. */
@@ -28,4 +30,45 @@ data class DiaryFoodRecipe(
 
     override val totalWeight: Double
         get() = ingredients.sumOf { it.weight }
+
+    /**
+     * Unpacks the recipe into a list of ingredients with their weights adjusted according to the
+     * specified measurement.
+     *
+     * @param measurement The measurement to adjust the weights of the ingredients.
+     * @return A list of [DiaryFoodRecipeIngredient] with weights adjusted according to the
+     *   specified measurement.
+     */
+    fun unpack(measurement: Measurement): List<DiaryFoodRecipeIngredient> {
+        return unpack(measurement.weight(this))
+    }
+
+    /**
+     * Unpacks the recipe into a list of ingredients with their weights adjusted according to the
+     * specified weight.
+     *
+     * @param weight The total weight to adjust the ingredients to.
+     * @return A list of [DiaryFoodRecipeIngredient] with weights adjusted according to the
+     *   specified weight.
+     */
+    fun unpack(weight: Double): List<DiaryFoodRecipeIngredient> {
+        val fraction = weight / totalWeight
+
+        return ingredients.map { ingredient ->
+            val measurement = ingredient.measurement
+            val newMeasurement =
+                when (measurement) {
+                    is Measurement.Gram -> Measurement.Gram(measurement.value * fraction)
+
+                    is Measurement.Milliliter ->
+                        Measurement.Milliliter(measurement.value * fraction)
+
+                    is Measurement.Package -> Measurement.Package(measurement.quantity * fraction)
+
+                    is Measurement.Serving -> Measurement.Serving(measurement.quantity * fraction)
+                }
+
+            ingredient.copy(measurement = newMeasurement)
+        }
+    }
 }

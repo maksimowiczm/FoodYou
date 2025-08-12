@@ -5,10 +5,13 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.command.CreateMea
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteDiaryEntryCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.DeleteMealCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.ReorderMealsCommandHandler
+import com.maksimowiczm.foodyou.business.fooddiary.application.command.UnpackDiaryEntryCommandHandler
+import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateDiaryEntryCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMealCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateMealsPreferencesCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateWeeklyGoalsCommandHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDailyGoalsQueryHandler
+import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryEntryQueryHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryMealsQueryHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealQueryHandler
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveMealsPreferencesQueryHandler
@@ -35,12 +38,16 @@ val businessFoodDiaryModule = module {
     commandHandlerOf(::ReorderMealsCommandHandler)
     commandHandlerOf(::UpdateWeeklyGoalsCommandHandler)
     commandHandlerOf(::UpdateMealsPreferencesCommandHandler)
+    commandHandlerOf(::UpdateDiaryEntryCommandHandler)
+    commandHandlerOf(::UnpackDiaryEntryCommandHandler)
+
     queryHandlerOf(::ObserveMealsQueryHandler)
     queryHandlerOf(::ObserveWeeklyGoalsQueryHandler)
     queryHandlerOf(::ObserveDiaryMealsQueryHandler)
     queryHandlerOf(::ObserveMealsPreferencesQueryHandler)
     queryHandlerOf(::ObserveDailyGoalsQueryHandler)
     queryHandlerOf(::ObserveMealQueryHandler)
+    queryHandlerOf(::ObserveDiaryEntryQueryHandler)
 
     factoryOf(::RoomDiaryEntryDataSource).bind<LocalDiaryEntryDataSource>()
     factoryOf(::RoomMealDataSource).bind<LocalMealDataSource>()

@@ -4,12 +4,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.maksimowiczm.foodyou.feature.food.diary.add.ui.AddEntryScreen
 import com.maksimowiczm.foodyou.feature.food.diary.search.ui.DiaryFoodSearchScreen
+import com.maksimowiczm.foodyou.feature.food.diary.update.ui.UpdateEntryScreen
 import com.maksimowiczm.foodyou.feature.food.product.ui.CreateProductScreen
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.CreateRecipeScreen
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddEntryDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateRecipeDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiarySearchDestination
+import com.maksimowiczm.foodyou.navigation.domain.UpdateFoodDiaryEntryDestination
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
@@ -28,6 +30,8 @@ internal fun NavGraphBuilder.foodDiaryNavigationGraph(
     createRecipeOnBack: () -> Unit,
     createRecipeOnCreate: (FoodId, LocalDate, mealId: Long) -> Unit,
     createOnEditFood: (FoodId) -> Unit,
+    updateOnBack: () -> Unit,
+    updateOnSave: () -> Unit,
 ) {
     forwardBackwardComposable<FoodDiarySearchDestination> {
         val route = it.toRoute<FoodDiarySearchDestination>()
@@ -77,6 +81,16 @@ internal fun NavGraphBuilder.foodDiaryNavigationGraph(
             onCreate = { foodId -> createRecipeOnCreate(foodId, route.date, route.mealId) },
             onEditFood = createOnEditFood,
             onUpdateUsdaApiKey = onUpdateUsdaApiKey,
+        )
+    }
+    forwardBackwardComposable<UpdateFoodDiaryEntryDestination> {
+        val route = it.toRoute<UpdateFoodDiaryEntryDestination>()
+
+        UpdateEntryScreen(
+            entryId = route.entryId,
+            onBack = updateOnBack,
+            onSave = updateOnSave,
+            animatedVisibilityScope = this,
         )
     }
 }

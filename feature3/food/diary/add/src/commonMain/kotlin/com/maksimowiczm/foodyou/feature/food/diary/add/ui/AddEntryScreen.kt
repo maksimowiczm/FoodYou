@@ -1,12 +1,12 @@
 package com.maksimowiczm.foodyou.feature.food.diary.add.ui
 
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -47,14 +47,19 @@ import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.AddEntryView
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.FoodModel
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.ProductModel
 import com.maksimowiczm.foodyou.feature.food.diary.add.presentation.RecipeModel
+import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.ChipsDatePicker
+import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.ChipsMealPicker
+import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.FoodMeasurementFormState
+import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.Source
+import com.maksimowiczm.foodyou.feature.food.diary.shared.ui.rememberFoodMeasurementFormState
 import com.maksimowiczm.foodyou.feature.food.shared.ui.MeasurementPicker
 import com.maksimowiczm.foodyou.shared.common.date.minus
+import com.maksimowiczm.foodyou.shared.common.date.plus
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.LaunchedCollectWithLifecycle
 import com.maksimowiczm.foodyou.shared.ui.ext.add
-import com.maksimowiczm.foodyou.shared.ui.utils.LocalClipboardManager
 import foodyou.app.generated.resources.*
 import kotlin.time.Duration.Companion.days
 import kotlinx.datetime.LocalDate
@@ -107,7 +112,10 @@ fun AddEntryScreen(
         val state =
             rememberFoodMeasurementFormState(
                 today = today,
-                possibleDates = remember { listOf(today.minus(1.days), today) },
+                possibleDates =
+                    listOf(today.minus(1.days), today, today.plus(1.days), date)
+                        .distinct()
+                        .sorted(),
                 selectedDate = date,
                 meals = meals.map { it.name },
                 selectedMeal =
@@ -252,28 +260,26 @@ private fun AddEntryScreen(
             item { HorizontalDivider() }
 
             item {
-                Column {
-                    ChipsDatePicker(
-                        state = state.dateState,
-                        modifier = Modifier.padding(vertical = 8.dp),
-                    )
-                    HorizontalDivider()
-                    ChipsMealPicker(
-                        state = state.mealsState,
-                        modifier = Modifier.padding(vertical = 8.dp),
-                    )
-                    HorizontalDivider()
-                    MeasurementPicker(
-                        state = state.measurementState,
-                        modifier = Modifier.padding(vertical = 8.dp),
-                    )
-                }
+                ChipsDatePicker(
+                    state = state.dateState,
+                    modifier = Modifier.padding(vertical = 8.dp),
+                )
+                HorizontalDivider()
+                ChipsMealPicker(
+                    state = state.mealsState,
+                    modifier = Modifier.padding(vertical = 8.dp),
+                )
+                HorizontalDivider()
+                MeasurementPicker(
+                    state = state.measurementState,
+                    modifier = Modifier.padding(vertical = 8.dp),
+                )
             }
 
             if (food is RecipeModel) {
                 item {
                     val measurement = state.measurementState.measurement
-                    val ingredients = food.measuredIngredients(food.weight(measurement))
+                    val ingredients = food.unpack(food.weight(measurement))
 
                     HorizontalDivider()
                     Ingredients(ingredients = ingredients, modifier = Modifier.padding(8.dp))
@@ -293,35 +299,30 @@ private fun AddEntryScreen(
             if (note != null) {
                 item {
                     HorizontalDivider()
-                    Text(
-                        text = note,
-                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp),
-                    )
+                    Column(Modifier.padding(vertical = 16.dp, horizontal = 8.dp)) {
+                        Text(
+                            text = stringResource(Res.string.headline_note),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(text = note, style = MaterialTheme.typography.bodyMedium)
+                    }
                 }
             }
 
             if (food is ProductModel) {
                 item {
                     HorizontalDivider()
-
-                    val clipboardManger = LocalClipboardManager.current
-                    val sourceStr = stringResource(Res.string.headline_source)
-
-                    Source(
-                        source = food.source,
-                        modifier =
-                            Modifier.clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null,
-                                    onClick = {
-                                        val url = food.source.url
-                                        if (url != null) {
-                                            clipboardManger.copy(label = sourceStr, text = url)
-                                        }
-                                    },
-                                )
-                                .padding(vertical = 16.dp, horizontal = 8.dp),
-                    )
+                    Column(Modifier.padding(vertical = 16.dp, horizontal = 8.dp)) {
+                        Text(
+                            text = stringResource(Res.string.headline_source),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Source(food.source)
+                    }
                 }
             }
 

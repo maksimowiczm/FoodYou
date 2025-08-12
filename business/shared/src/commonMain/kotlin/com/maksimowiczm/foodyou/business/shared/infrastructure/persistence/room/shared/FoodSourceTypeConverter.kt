@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food
+package com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared
 
 import androidx.room.TypeConverter
 

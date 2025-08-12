@@ -4,9 +4,10 @@ import com.maksimowiczm.foodyou.business.food.domain.Product
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalProductDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
-import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSourceType
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.ProductDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.ProductEntity
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toDomain
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toEntityNutrients
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.toNutritionFacts
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
@@ -46,17 +47,9 @@ private fun ProductEntity.toModel(): Product =
         isLiquid = this.isLiquid,
         packageWeight = this.packageWeight,
         servingWeight = this.servingWeight,
-        source = FoodSource(type = this.sourceType.toModel(), url = this.sourceUrl),
+        source = FoodSource(type = this.sourceType.toDomain(), url = this.sourceUrl),
         nutritionFacts = this.toNutritionFacts(),
     )
-
-private fun FoodSourceType.toModel(): FoodSource.Type =
-    when (this) {
-        FoodSourceType.User -> FoodSource.Type.User
-        FoodSourceType.OpenFoodFacts -> FoodSource.Type.OpenFoodFacts
-        FoodSourceType.USDA -> FoodSource.Type.USDA
-        FoodSourceType.SwissFoodCompositionDatabase -> FoodSource.Type.SwissFoodCompositionDatabase
-    }
 
 private fun ProductEntity.toNutritionFacts(): NutritionFacts =
     toNutritionFacts(nutrients, vitamins, minerals)
