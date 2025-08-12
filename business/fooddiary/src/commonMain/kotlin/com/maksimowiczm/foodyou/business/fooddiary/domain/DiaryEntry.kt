@@ -16,5 +16,9 @@ data class DiaryEntry(
     val weight: Double
         get() = measurement.weight(food)
 
+    /**
+     * Total nutrition facts for the entry based on the food's nutrition facts and the weight of the
+     * measurement.
+     */
     val nutritionFacts: NutritionFacts by lazy { weight.div(100).let { food.nutritionFacts * it } }
 }

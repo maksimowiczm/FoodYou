@@ -5,6 +5,16 @@ import com.maksimowiczm.foodyou.business.shared.domain.nutrients.sum
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 
+/**
+ * Represents a recipe in the food domain.
+ *
+ * @param id The unique identifier for the recipe.
+ * @param name The name of the recipe.
+ * @param servings The number of servings the recipe yields.
+ * @param ingredients The list of ingredients used in the recipe.
+ * @param note An optional note for the recipe.
+ * @param isLiquid Indicates whether the recipe is a liquid.
+ */
 data class Recipe(
     override val id: FoodId.Recipe,
     val name: String,
@@ -20,7 +30,7 @@ data class Recipe(
     override val servingWeight = totalWeight / servings
 
     override val nutritionFacts: NutritionFacts by lazy {
-        if (ingredients.isEmpty() || totalWeight == 0.0) {
+        if (ingredients.isEmpty()) {
             NutritionFacts.Empty
         } else {
             ingredients.mapNotNull { it.nutritionFacts }.sum() / totalWeight * 100.0
