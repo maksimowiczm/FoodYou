@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.externaldatabases.ui
+package com.maksimowiczm.foodyou.feature.settings.database.master.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn

@@ -1,9 +1,11 @@
 plugins { alias(libs.plugins.feature) }
 
 kotlin {
-    androidLibrary { namespace = "com.maksimowiczm.foodyou.feature.settings.database" }
+    androidLibrary {
+        namespace = "com.maksimowiczm.foodyou.feature.settings.database.externaldatabases"
+    }
 
-    val xcfName = "feature3:settings:externaldatabasesKit"
+    val xcfName = "feature3:settings:database:externaldatabasesKit"
 
     iosX64 { binaries.framework { baseName = xcfName } }
 

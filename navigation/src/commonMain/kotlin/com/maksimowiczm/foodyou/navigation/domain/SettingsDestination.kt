@@ -17,9 +17,3 @@ import kotlinx.serialization.Serializable
 @Serializable internal data object SettingsNutritionFactsDestination : NavigationDestination
 
 @Serializable internal data object SettingsHomeDestination : NavigationDestination
-
-@Serializable internal data object SettingsDatabaseDestination : NavigationDestination
-
-@Serializable internal data object SettingsExternalDatabasesDestination : NavigationDestination
-
-@Serializable internal data object UsdaApiKeyDestination : NavigationDestination

@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.externaldatabases.ui
+package com.maksimowiczm.foodyou.feature.settings.database.externaldatabases.ui
 
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.AlertDialog

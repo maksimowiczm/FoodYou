@@ -34,6 +34,7 @@ import com.maksimowiczm.foodyou.navigation.graph.food.foodNavigationGraphBuilder
 import com.maksimowiczm.foodyou.navigation.graph.fooddiary.foodDiaryNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.goals.goalsNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.home.homeNavigationGraph
+import com.maksimowiczm.foodyou.navigation.graph.settings.settingsDatabaseNavigationGraph
 import com.maksimowiczm.foodyou.navigation.graph.settings.settingsNavigationGraph
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 
@@ -115,8 +116,10 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             homeOnBack = { navController.popBackStack<SettingsHomeDestination>(true) },
             homeOnGoals = { navController.navigateSingleTop(GoalsCardSettingsDestination) },
             homeOnMeals = { navController.navigateSingleTop(MealsCardsSettingsDestination) },
-            databaseOnBack = { navController.popBackStack<SettingsDatabaseDestination>(true) },
-            databaseOnExternalDatabases = {
+        )
+        settingsDatabaseNavigationGraph(
+            masterOnBack = { navController.popBackStack<SettingsDatabaseDestination>(true) },
+            masterOnExternalDatabases = {
                 navController.navigateSingleTop(SettingsExternalDatabasesDestination)
             },
             externalDatabasesOnBack = {

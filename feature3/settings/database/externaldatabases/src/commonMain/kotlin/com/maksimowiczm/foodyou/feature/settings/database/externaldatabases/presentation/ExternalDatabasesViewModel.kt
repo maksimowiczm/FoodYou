@@ -1,11 +1,10 @@
-package com.maksimowiczm.foodyou.feature.settings.externaldatabases.presentation
+package com.maksimowiczm.foodyou.feature.settings.database.externaldatabases.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseOpenFoodFactsCommand
 import com.maksimowiczm.foodyou.business.food.application.command.UpdateUseUsda
 import com.maksimowiczm.foodyou.business.food.application.query.ObserveFoodPreferencesQuery
-import com.maksimowiczm.foodyou.business.food.domain.FoodPreferences
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +17,7 @@ internal class ExternalDatabasesViewModel(queryBus: QueryBus, private val comman
 
     val foodPreferences =
         queryBus
-            .dispatch<FoodPreferences>(ObserveFoodPreferencesQuery)
+            .dispatch(ObserveFoodPreferencesQuery)
             .map(::FoodPreferencesModel)
             .stateIn(
                 scope = viewModelScope,

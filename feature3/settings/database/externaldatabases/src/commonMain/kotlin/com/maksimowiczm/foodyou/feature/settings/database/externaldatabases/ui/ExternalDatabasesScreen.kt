@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.settings.externaldatabases.ui
+package com.maksimowiczm.foodyou.feature.settings.database.externaldatabases.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -44,8 +44,8 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.feature.settings.externaldatabases.presentation.ExternalDatabasesViewModel
-import com.maksimowiczm.foodyou.feature.settings.externaldatabases.presentation.FoodPreferencesModel
+import com.maksimowiczm.foodyou.feature.settings.database.externaldatabases.presentation.ExternalDatabasesViewModel
+import com.maksimowiczm.foodyou.feature.settings.database.externaldatabases.presentation.FoodPreferencesModel
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.ext.add
 import foodyou.app.generated.resources.*
