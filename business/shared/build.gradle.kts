@@ -48,7 +48,6 @@ kotlin {
             implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.io.core)
         }
 
         commonTest.dependencies {

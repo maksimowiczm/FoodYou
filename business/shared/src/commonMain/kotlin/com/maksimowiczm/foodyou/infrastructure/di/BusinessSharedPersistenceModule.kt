@@ -3,12 +3,8 @@ package com.maksimowiczm.foodyou.infrastructure.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.RoomDatabase
-import com.maksimowiczm.foodyou.business.shared.domain.file.FileReader
-import com.maksimowiczm.foodyou.business.shared.domain.file.FileWriter
 import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.network.NetworkConfig
-import com.maksimowiczm.foodyou.business.shared.infrastructure.file.KotlinxReader
-import com.maksimowiczm.foodyou.business.shared.infrastructure.file.KotlinxWriter
 import com.maksimowiczm.foodyou.business.shared.infrastructure.network.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase.Companion.buildDatabase
@@ -56,7 +52,4 @@ val businessSharedPersistenceModule = module {
     dataStoreDefinition()
 
     factoryOf(::FoodYouNetworkConfig).bind<NetworkConfig>()
-
-    factoryOf(::KotlinxReader).bind<FileReader>()
-    factoryOf(::KotlinxWriter).bind<FileWriter>()
 }
