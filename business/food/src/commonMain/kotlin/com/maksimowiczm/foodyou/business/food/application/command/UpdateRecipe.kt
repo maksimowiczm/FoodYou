@@ -7,15 +7,14 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalPr
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalRecipeDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
 import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.datetime.LocalDateTime
 
 data class UpdateRecipeCommand(
     val id: FoodId.Recipe,
@@ -45,6 +44,7 @@ internal class UpdateRecipeCommandHandler(
     private val productDataSource: LocalProductDataSource,
     private val eventDataSource: LocalFoodEventDataSource,
     private val transactionProvider: DatabaseTransactionProvider,
+    private val dateProvider: DateProvider,
 ) : CommandHandler<UpdateRecipeCommand, Unit, UpdateRecipeError> {
 
     override suspend fun handle(command: UpdateRecipeCommand): Result<Unit, UpdateRecipeError> {
@@ -129,7 +129,7 @@ internal class UpdateRecipeCommandHandler(
 
         transactionProvider.withTransaction {
             recipeDataSource.updateRecipe(updatedRecipe)
-            eventDataSource.insert(command.id, FoodEvent.Edited(LocalDateTime.now()))
+            eventDataSource.insert(command.id, FoodEvent.Edited(dateProvider.now()))
         }
 
         return Ok(Unit)

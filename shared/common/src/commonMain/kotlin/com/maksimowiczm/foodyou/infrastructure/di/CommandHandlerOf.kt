@@ -62,3 +62,18 @@ inline fun <
     noinline options: DefinitionOptions<CommandHandler<*, *, *>>? = null,
 ): KoinDefinition<CommandHandler<*, *, *>> =
     commandHandler(qualifier) { new(constructor) }.onOptions(options)
+
+inline fun <
+    reified H : CommandHandler<C, *, *>,
+    reified C : Command<*, *>,
+    reified T1,
+    reified T2,
+    reified T3,
+    reified T4,
+    reified T5,
+> Module.commandHandlerOf(
+    crossinline constructor: (T1, T2, T3, T4, T5) -> H,
+    qualifier: Qualifier = named(C::class.qualifiedName!!),
+    noinline options: DefinitionOptions<CommandHandler<*, *, *>>? = null,
+): KoinDefinition<CommandHandler<*, *, *>> =
+    commandHandler(qualifier) { new(constructor) }.onOptions(options)

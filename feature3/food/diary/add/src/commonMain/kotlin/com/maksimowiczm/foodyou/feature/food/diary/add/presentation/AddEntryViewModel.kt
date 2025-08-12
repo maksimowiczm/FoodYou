@@ -13,13 +13,13 @@ import com.maksimowiczm.foodyou.feature.food.diary.shared.usecase.ObserveMealsUs
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.defaultMeasurement
 import com.maksimowiczm.foodyou.feature.food.shared.presentation.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.ui.ext.now
 import kotlin.collections.emptyList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel

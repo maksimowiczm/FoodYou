@@ -6,12 +6,12 @@ import com.maksimowiczm.foodyou.business.fooddiary.application.command.UnpackDia
 import com.maksimowiczm.foodyou.business.fooddiary.application.command.UpdateDiaryEntryCommand
 import com.maksimowiczm.foodyou.business.fooddiary.application.query.ObserveDiaryEntryQuery
 import com.maksimowiczm.foodyou.feature.food.diary.shared.usecase.ObserveMealsUseCase
-import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.ui.ext.now
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow

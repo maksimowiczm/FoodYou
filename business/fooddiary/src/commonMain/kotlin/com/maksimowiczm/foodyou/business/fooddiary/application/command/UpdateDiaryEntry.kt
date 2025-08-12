@@ -4,16 +4,15 @@ import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.Lo
 import com.maksimowiczm.foodyou.business.fooddiary.infrastructure.persistence.LocalMealDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.error.ErrorLoggingUtils
 import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.Command
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandHandler
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
 import com.maksimowiczm.foodyou.shared.common.domain.result.Ok
 import com.maksimowiczm.foodyou.shared.common.domain.result.Result
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 
 data class UpdateDiaryEntryCommand(
     val id: Long,
@@ -34,6 +33,7 @@ internal class UpdateDiaryEntryCommandHandler(
     private val localEntry: LocalDiaryEntryDataSource,
     private val mealDataSource: LocalMealDataSource,
     private val transactionProvider: DatabaseTransactionProvider,
+    private val dateProvider: DateProvider,
 ) : CommandHandler<UpdateDiaryEntryCommand, Unit, UpdateDiaryEntryError> {
 
     override suspend fun handle(
@@ -110,7 +110,7 @@ internal class UpdateDiaryEntryCommandHandler(
                     measurement = command.measurement,
                     mealId = mealId,
                     date = command.date,
-                    updatedAt = LocalDateTime.now(),
+                    updatedAt = dateProvider.now(),
                 )
 
             localEntry.update(updated)

@@ -1,7 +1,7 @@
 package com.maksimowiczm.foodyou.feature.about.master.presentation
 
 import androidx.compose.runtime.*
-import com.maksimowiczm.foodyou.shared.common.date.now
+import com.maksimowiczm.foodyou.shared.ui.ext.now
 import foodyou.app.generated.resources.*
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource

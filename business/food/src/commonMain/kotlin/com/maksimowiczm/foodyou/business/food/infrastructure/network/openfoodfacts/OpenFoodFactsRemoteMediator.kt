@@ -15,7 +15,7 @@ import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistenc
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.ProductNotFoundException
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.model.OpenFoodFactsProduct
-import com.maksimowiczm.foodyou.shared.common.date.now
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
 import kotlinx.datetime.LocalDateTime
 
@@ -31,6 +31,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
     private val openFoodFactsPagingHelper: LocalOpenFoodFactsPagingHelper,
     private val offMapper: OpenFoodFactsProductMapper,
     private val remoteMapper: RemoteProductMapper,
+    private val dateProvider: DateProvider,
 ) : RemoteMediator<K, T>() {
 
     override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
@@ -114,7 +115,7 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
                 )
             )
 
-            val now = LocalDateTime.now()
+            val now = dateProvider.now()
             val products =
                 response.products.map { remoteProduct ->
                     remoteProduct.toDomainProduct().also {
@@ -149,11 +150,11 @@ internal class OpenFoodFactsRemoteMediator<K : Any, T : Any>(
     private fun OpenFoodFactsProduct.toDomainProduct(): Product? =
         runCatching { this.let(offMapper::toRemoteProduct)?.let(remoteMapper::toModel) }.getOrNull()
 
-    private suspend fun Product.insert() {
+    private suspend fun Product.insert(now: LocalDateTime = dateProvider.now()) {
         val id = localProduct.insertProduct(this)
         localFoodEvent.insert(
             foodId = id,
-            event = FoodEvent.Downloaded(date = LocalDateTime.now(), url = this.source.url),
+            event = FoodEvent.Downloaded(date = now, url = this.source.url),
         )
     }
 

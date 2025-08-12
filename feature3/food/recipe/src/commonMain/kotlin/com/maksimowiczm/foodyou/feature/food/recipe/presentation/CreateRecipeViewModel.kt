@@ -6,10 +6,10 @@ import com.maksimowiczm.foodyou.business.food.application.command.CreateRecipeEr
 import com.maksimowiczm.foodyou.business.food.domain.FoodEvent
 import com.maksimowiczm.foodyou.feature.food.recipe.ui.RecipeFormState
 import com.maksimowiczm.foodyou.feature.food.shared.usecase.ObserveFoodUseCase
-import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.command.CommandBus
 import com.maksimowiczm.foodyou.shared.common.log.FoodYouLogger
+import com.maksimowiczm.foodyou.shared.ui.ext.now
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch

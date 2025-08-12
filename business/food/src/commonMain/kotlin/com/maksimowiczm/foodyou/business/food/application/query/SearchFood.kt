@@ -25,15 +25,14 @@ import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistenc
 import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
-import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
+import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.date.DateProvider
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.event.EventBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.datetime.LocalDateTime
 
 data class SearchFoodQuery(
     val query: String?,
@@ -56,6 +55,7 @@ internal class SearchFoodQueryHandler(
     private val usdaRemoteDataSource: USDARemoteDataSource,
     private val usdaMapper: USDAProductMapper,
     private val usdaHelper: LocalUsdaPagingHelper,
+    private val dateProvider: DateProvider,
 ) : QueryHandler<SearchFoodQuery, PagingData<FoodSearch>> {
 
     override fun handle(query: SearchFoodQuery): Flow<PagingData<FoodSearch>> {
@@ -64,7 +64,7 @@ internal class SearchFoodQueryHandler(
         val queryType = queryType(query)
 
         if (queryType is QueryType.NotBlank.Text) {
-            eventBus.publish(FoodSearchEvent(queryType = queryType, date = LocalDateTime.now()))
+            eventBus.publish(FoodSearchEvent(queryType = queryType, date = dateProvider.now()))
         }
 
         return localFoodPreferences.observe().flatMapLatest { prefs ->
@@ -110,6 +110,7 @@ internal class SearchFoodQueryHandler(
                     openFoodFactsPagingHelper = openFoodFactsPagingHelper,
                     offMapper = offMapper,
                     remoteMapper = remoteMapper,
+                    dateProvider = dateProvider,
                 )
         }
 
@@ -129,6 +130,7 @@ internal class SearchFoodQueryHandler(
                     usdaHelper = usdaHelper,
                     productMapper = usdaMapper,
                     remoteMapper = remoteMapper,
+                    dateProvider = dateProvider,
                 )
         }
 

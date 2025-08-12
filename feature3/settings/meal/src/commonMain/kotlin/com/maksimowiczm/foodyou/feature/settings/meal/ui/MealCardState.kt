@@ -4,8 +4,8 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.maksimowiczm.foodyou.feature.settings.meal.presentation.MealModel
-import com.maksimowiczm.foodyou.shared.common.date.now
 import com.maksimowiczm.foodyou.shared.ui.ext.Saver
+import com.maksimowiczm.foodyou.shared.ui.ext.now
 import com.maksimowiczm.foodyou.shared.ui.form.FormField
 import com.maksimowiczm.foodyou.shared.ui.form.nonBlankStringValidator
 import com.maksimowiczm.foodyou.shared.ui.form.rememberFormField

@@ -19,9 +19,13 @@ import kotlinx.datetime.todayIn
 
 @OptIn(ExperimentalTime::class)
 internal class DateProviderImpl : DateProvider {
+
+    override fun now(): LocalDateTime =
+        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+
     override fun observeDateTime(): Flow<LocalDateTime> = flow {
         while (true) {
-            val dateTime = getCurrentDateTime()
+            val dateTime = now()
             emit(dateTime)
 
             val millisUntilNextSecond = 1000L - dateTime.nanosecond / 1_000_000
@@ -30,7 +34,7 @@ internal class DateProviderImpl : DateProvider {
     }
 
     override fun observeDate(): Flow<LocalDate> = flow {
-        var currentDate = getCurrentDateTime().date
+        var currentDate = now().date
 
         emit(currentDate)
 
@@ -47,7 +51,7 @@ internal class DateProviderImpl : DateProvider {
             delay(delayMillis)
             Logger.d(TAG) { "Woke up" }
 
-            val newDate = getCurrentDateTime().date
+            val newDate = now().date
             Logger.d(TAG) { "New date: $newDate" }
 
             if (newDate != currentDate) {
@@ -61,7 +65,7 @@ internal class DateProviderImpl : DateProvider {
 
     override fun observeTime(): Flow<LocalTime> = flow {
         while (true) {
-            val time = getCurrentDateTime().time
+            val time = now().time
             emit(time)
 
             // Delay until minute changes
@@ -69,9 +73,6 @@ internal class DateProviderImpl : DateProvider {
             delay(secondsUntilNextMinute * 1000L)
         }
     }
-
-    private fun getCurrentDateTime(): LocalDateTime =
-        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
     private companion object {
         private const val TAG = "DateProviderImpl"

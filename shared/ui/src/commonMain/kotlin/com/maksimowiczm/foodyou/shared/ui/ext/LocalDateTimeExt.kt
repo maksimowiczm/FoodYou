@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.shared.common.date
+package com.maksimowiczm.foodyou.shared.ui.ext
 
 import kotlin.time.Clock
 import kotlin.time.Duration

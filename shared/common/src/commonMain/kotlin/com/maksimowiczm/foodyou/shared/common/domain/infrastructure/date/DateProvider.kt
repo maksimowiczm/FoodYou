@@ -7,6 +7,8 @@ import kotlinx.datetime.LocalTime
 
 interface DateProvider {
 
+    fun now(): LocalDateTime
+
     /**
      * Returns a [kotlinx.coroutines.flow.Flow] that emits the current date and time and updates it
      * every second.
