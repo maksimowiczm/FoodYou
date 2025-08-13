@@ -5,14 +5,16 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase.Companion.buildDatabase
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
+import java.io.File
+import kotlinx.coroutines.flow.flow
 import okio.Path.Companion.toPath
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.scope.Scope
 
-actual fun Scope.createDatabaseBuilder(): RoomDatabase.Builder<FoodYouDatabase> =
+internal actual fun Scope.database(): FoodYouDatabase =
     Room.databaseBuilder(
             context = androidContext(),
             klass = FoodYouDatabase::class.java,
@@ -25,6 +27,16 @@ actual fun Scope.createDatabaseBuilder(): RoomDatabase.Builder<FoodYouDatabase> 
                 openHelperFactory(RequerySQLiteOpenHelperFactory())
             }
         }
+        .buildDatabase(
+            mealsCallback = get(),
+            databaseReader = {
+                flow {
+                    File(this@buildDatabase.openHelper.writableDatabase.path!!).inputStream().use {
+                        emit(it.readBytes())
+                    }
+                }
+            },
+        )
 
 actual fun Scope.createDataStore(): DataStore<Preferences> =
     PreferenceDataStoreFactory.createWithPath {

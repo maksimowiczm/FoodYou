@@ -4,9 +4,11 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.execSQL
 import androidx.room.immediateTransaction
 import androidx.room.migration.Migration
 import androidx.room.useWriterConnection
+import com.maksimowiczm.foodyou.business.shared.application.DatabaseDumpService
 import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.TransactionScope as DomainTransactionScope
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodEventDao
@@ -41,6 +43,7 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.sponsorship.SponsorshipEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.usda.USDAPagingKeyDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.usda.USDAPagingKeyEntity
+import kotlinx.coroutines.flow.Flow
 
 @Database(
     entities =
@@ -110,7 +113,7 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
     MeasurementTypeConverter::class,
     FoodEventTypeConverter::class,
 )
-abstract class FoodYouDatabase : RoomDatabase(), DatabaseTransactionProvider {
+abstract class FoodYouDatabase : RoomDatabase(), DatabaseTransactionProvider, DatabaseDumpService {
     abstract val productDao: ProductDao
     abstract val recipeDao: RecipeDao
     abstract val foodSearchDao: FoodSearchDao
@@ -130,6 +133,14 @@ abstract class FoodYouDatabase : RoomDatabase(), DatabaseTransactionProvider {
             }
         }
 
+    private lateinit var databaseFileReader: FoodYouDatabase.() -> Flow<ByteArray>
+
+    override suspend fun provideDatabaseDump(): Flow<ByteArray> {
+        // Create a checkpoint to ensure the database is in a consistent state
+        useWriterConnection { connection -> connection.execSQL("PRAGMA wal_checkpoint(FULL);") }
+        return databaseFileReader()
+    }
+
     companion object {
         const val VERSION = 26
 
@@ -147,11 +158,12 @@ abstract class FoodYouDatabase : RoomDatabase(), DatabaseTransactionProvider {
             )
 
         fun Builder<FoodYouDatabase>.buildDatabase(
-            mealsCallback: InitializeMealsCallback
+            mealsCallback: InitializeMealsCallback,
+            databaseReader: FoodYouDatabase.() -> Flow<ByteArray>,
         ): FoodYouDatabase {
             addMigrations(*migrations.toTypedArray())
             addCallback(mealsCallback)
-            return build()
+            return build().apply { databaseFileReader = databaseReader }
         }
     }
 }
