@@ -23,8 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.maksimowiczm.foodyou.core.ui.InteractiveLogo
-import com.maksimowiczm.foodyou.core.ui.ext.add
+import com.maksimowiczm.foodyou.shared.ui.InteractiveLogo
+import com.maksimowiczm.foodyou.shared.ui.ext.add
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -40,37 +40,34 @@ internal fun BeforeYouStartScreen(onAgree: () -> Unit, modifier: Modifier = Modi
                 title = {
                     Text(
                         text = stringResource(Res.string.headline_before_you_start),
-                        style = MaterialTheme.typography.displaySmall
+                        style = MaterialTheme.typography.displaySmall,
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
-                ),
-                scrollBehavior = scrollBehavior
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = paddingValues
-                    .add(bottom = 72.dp) // Button height + padding
-                    .add(vertical = 8.dp)
+                contentPadding =
+                    paddingValues
+                        .add(bottom = 72.dp) // Button height + padding
+                        .add(vertical = 8.dp),
             ) {
-                item {
-                    InteractiveLogo(Modifier.fillMaxWidth())
-                }
+                item { InteractiveLogo(Modifier.fillMaxWidth()) }
 
                 item {
                     Text(
                         text = stringResource(Res.string.description_before_you_start),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
@@ -78,12 +75,12 @@ internal fun BeforeYouStartScreen(onAgree: () -> Unit, modifier: Modifier = Modi
             Button(
                 onClick = onAgree,
                 shapes = ButtonDefaults.shapes(),
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .padding(bottom = paddingValues.calculateBottomPadding())
-                    .height(56.dp)
-                    .align(Alignment.BottomCenter)
-                    .zIndex(1f)
+                modifier =
+                    Modifier.padding(bottom = 8.dp)
+                        .padding(bottom = paddingValues.calculateBottomPadding())
+                        .height(56.dp)
+                        .align(Alignment.BottomCenter)
+                        .zIndex(1f),
             ) {
                 Text(stringResource(Res.string.action_agree_and_continue))
             }

@@ -60,5 +60,8 @@ fun initKoin(coroutineScope: CoroutineScope, config: KoinAppDeclaration? = null)
         featureFoodDiaryUpdateModule,
     )
 
+    // Onboarding
+    modules(featureOnboardingModule)
+
     modules(openFoodFactsModule, usdaModule)
 }

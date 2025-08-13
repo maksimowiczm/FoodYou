@@ -41,9 +41,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.ext.add
-import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.domain.Language
+import com.maksimowiczm.foodyou.externaldatabase.swissfoodcompositiondatabase.Language
+import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.ui.ext.add
 import foodyou.app.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -55,7 +55,7 @@ internal fun FoodDatabaseScreen(
     onAgree: () -> Unit,
     onSkip: () -> Unit,
     state: OnboardingState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -63,41 +63,35 @@ internal fun FoodDatabaseScreen(
         modifier = modifier,
         topBar = {
             LargeFlexibleTopAppBar(
-                title = {
-                    Text(stringResource(Res.string.headline_food_database))
-                },
-                navigationIcon = {
-                    ArrowBackIconButton(onBack)
-                },
-                actions = {
-                    TextButton(onSkip) {
-                        Text(stringResource(Res.string.action_skip))
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
-                ),
-                scrollBehavior = scrollBehavior
+                title = { Text(stringResource(Res.string.headline_food_database)) },
+                navigationIcon = { ArrowBackIconButton(onBack) },
+                actions = { TextButton(onSkip) { Text(stringResource(Res.string.action_skip)) } },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                    ),
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = paddingValues
-                    .add(bottom = 72.dp) // Button height + padding
-                    .add(vertical = 8.dp)
+                contentPadding =
+                    paddingValues
+                        .add(bottom = 72.dp) // Button height + padding
+                        .add(vertical = 8.dp),
             ) {
                 item {
                     Text(
                         text = stringResource(Res.string.description_food_database),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
 
@@ -105,7 +99,7 @@ internal fun FoodDatabaseScreen(
                     OpenFoodFactsCard(
                         selected = state.useOpenFoodFacts,
                         onSelectedChange = { state.useOpenFoodFacts = it },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
 
@@ -113,7 +107,7 @@ internal fun FoodDatabaseScreen(
                     UsdaCard(
                         selected = state.useUsda,
                         onSelectedChange = { state.useUsda = it },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
 
@@ -121,7 +115,7 @@ internal fun FoodDatabaseScreen(
                     SwissFoodCompositionDatabase(
                         languages = state.swissLanguages,
                         onLanguageChange = { state.swissLanguages = it },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }
@@ -129,17 +123,13 @@ internal fun FoodDatabaseScreen(
             Button(
                 onClick = onAgree,
                 shapes = ButtonDefaults.shapes(),
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 8.dp)
-                    .padding(
-                        bottom = paddingValues.calculateBottomPadding()
-                    )
-                    .height(56.dp)
+                modifier =
+                    Modifier.align(Alignment.BottomCenter)
+                        .padding(bottom = 8.dp)
+                        .padding(bottom = paddingValues.calculateBottomPadding())
+                        .height(56.dp),
             ) {
-                Text(
-                    stringResource(Res.string.action_agree_and_continue)
-                )
+                Text(stringResource(Res.string.action_agree_and_continue))
             }
         }
     }
@@ -151,15 +141,16 @@ private fun DatabaseCard(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(16.dp),
     onClick: (() -> Unit)? = null,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val inner = @Composable {
-        Column(Modifier.padding(contentPadding)) {
-            title()
-            Spacer(Modifier.height(8.dp))
-            content()
+    val inner =
+        @Composable {
+            Column(Modifier.padding(contentPadding)) {
+                title()
+                Spacer(Modifier.height(8.dp))
+                content()
+            }
         }
-    }
 
     if (onClick == null) {
         Surface(
@@ -167,7 +158,7 @@ private fun DatabaseCard(
             shape = MaterialTheme.shapes.medium,
             color = MaterialTheme.colorScheme.surfaceContainer,
             contentColor = MaterialTheme.colorScheme.onSurface,
-            content = inner
+            content = inner,
         )
     } else {
         Surface(
@@ -176,7 +167,7 @@ private fun DatabaseCard(
             shape = MaterialTheme.shapes.medium,
             color = MaterialTheme.colorScheme.surfaceContainer,
             contentColor = MaterialTheme.colorScheme.onSurface,
-            content = inner
+            content = inner,
         )
     }
 }
@@ -185,84 +176,66 @@ private fun DatabaseCard(
 private fun OpenFoodFactsCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val iterator =
         stringResource(Res.string.open_food_facts_terms_of_use_and_privacy_policy).iterator()
-    val tos = remember(iterator) {
-        buildAnnotatedString {
-            while (iterator.hasNext()) {
-                val char = iterator.nextChar()
+    val tos =
+        remember(iterator) {
+            buildAnnotatedString {
+                while (iterator.hasNext()) {
+                    val char = iterator.nextChar()
 
-                if (char != '{') {
-                    append(char)
-                    continue
-                }
+                    if (char != '{') {
+                        append(char)
+                        continue
+                    }
 
-                val label = iterator.readUntil(':')
-                val link = iterator.readUntil('}')
+                    val label = iterator.readUntil(':')
+                    val link = iterator.readUntil('}')
 
-                withLink(LinkAnnotation.Url(link)) {
-                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(label)
+                    withLink(LinkAnnotation.Url(link)) {
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(label) }
                     }
                 }
             }
         }
-    }
 
     DatabaseCard(
         title = {
             Row(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
                     Image(
                         painter = painterResource(Res.drawable.openfoodfacts_logo),
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
                 Text(
                     text = stringResource(Res.string.headline_open_food_facts),
                     style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Checkbox(
-                        checked = selected,
-                        onCheckedChange = null
-                    )
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Checkbox(checked = selected, onCheckedChange = null)
                 }
             }
         },
         modifier = modifier,
-        contentPadding = PaddingValues(
-            start = 16.dp,
-            end = 16.dp,
-            top = 8.dp,
-            bottom = 16.dp
-        ),
-        onClick = { onSelectedChange(!selected) }
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
+        onClick = { onSelectedChange(!selected) },
     ) {
         Column {
             Text(
                 text = stringResource(Res.string.description_open_food_facts),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(
-                text = tos,
-                style = MaterialTheme.typography.bodySmall
-            )
+            Text(text = tos, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -271,85 +244,65 @@ private fun OpenFoodFactsCard(
 private fun UsdaCard(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val iterator = stringResource(Res.string.usda_privacy_policy).iterator()
-    val tos = remember(iterator) {
-        buildAnnotatedString {
-            while (iterator.hasNext()) {
-                val char = iterator.nextChar()
+    val tos =
+        remember(iterator) {
+            buildAnnotatedString {
+                while (iterator.hasNext()) {
+                    val char = iterator.nextChar()
 
-                if (char != '{') {
-                    append(char)
-                    continue
-                }
+                    if (char != '{') {
+                        append(char)
+                        continue
+                    }
 
-                val label = iterator.readUntil(':')
-                val link = iterator.readUntil('}')
+                    val label = iterator.readUntil(':')
+                    val link = iterator.readUntil('}')
 
-                withLink(LinkAnnotation.Url(link)) {
-                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(label)
+                    withLink(LinkAnnotation.Url(link)) {
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(label) }
                     }
                 }
             }
         }
-    }
 
     DatabaseCard(
         title = {
             Row(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
                     Image(
                         painter = painterResource(Res.drawable.usda_logo),
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
                 Text(
                     text = stringResource(Res.string.headline_food_data_central_usda),
                     style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Checkbox(
-                        checked = selected,
-                        onCheckedChange = null
-                    )
+                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Checkbox(checked = selected, onCheckedChange = null)
                 }
             }
         },
         modifier = modifier,
-        contentPadding = PaddingValues(
-            start = 16.dp,
-            end = 16.dp,
-            top = 8.dp,
-            bottom = 16.dp
-        ),
-        onClick = {
-            onSelectedChange(!selected)
-        }
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
+        onClick = { onSelectedChange(!selected) },
     ) {
         Column {
             Text(
                 text = stringResource(Res.string.description_food_data_central_usda),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(
-                text = tos,
-                style = MaterialTheme.typography.bodySmall
-            )
+            Text(text = tos, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -358,22 +311,22 @@ private fun UsdaCard(
 private fun SwissFoodCompositionDatabase(
     languages: Set<Language>,
     onLanguageChange: (Set<Language>) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     DatabaseCard(
         title = {
             Text(
                 text = stringResource(Res.string.headline_swiss_food_composition_database),
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
             )
         },
-        modifier = modifier
+        modifier = modifier,
     ) {
         Column {
             Text(
                 text = stringResource(Res.string.description2_swiss_food_composition_database),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(8.dp))
             LanguageButton(
@@ -387,7 +340,7 @@ private fun SwissFoodCompositionDatabase(
                         }
                     )
                 },
-                selected = Language.ENGLISH in languages
+                selected = Language.ENGLISH in languages,
             )
             LanguageButton(
                 label = "Deutsch",
@@ -400,7 +353,7 @@ private fun SwissFoodCompositionDatabase(
                         }
                     )
                 },
-                selected = Language.GERMAN in languages
+                selected = Language.GERMAN in languages,
             )
             LanguageButton(
                 label = "Français",
@@ -413,7 +366,7 @@ private fun SwissFoodCompositionDatabase(
                         }
                     )
                 },
-                selected = Language.FRENCH in languages
+                selected = Language.FRENCH in languages,
             )
             LanguageButton(
                 label = "Italiano",
@@ -426,7 +379,7 @@ private fun SwissFoodCompositionDatabase(
                         }
                     )
                 },
-                selected = Language.ITALIAN in languages
+                selected = Language.ITALIAN in languages,
             )
         }
     }
@@ -438,40 +391,40 @@ private fun LanguageButton(
     label: String,
     onClick: () -> Unit,
     selected: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    val cornerRadius by animateDpAsState(
-        targetValue = if (isPressed) 4.dp else 16.dp,
-        animationSpec = MaterialTheme.motionScheme.fastSpatialSpec()
-    )
+    val cornerRadius by
+        animateDpAsState(
+            targetValue = if (isPressed) 4.dp else 16.dp,
+            animationSpec = MaterialTheme.motionScheme.fastSpatialSpec(),
+        )
 
     Surface(
         onClick = onClick,
         modifier = modifier,
         shape = RoundedCornerShape(cornerRadius),
-        color = if (selected) {
-            MaterialTheme.colorScheme.primaryContainer
-        } else {
-            MaterialTheme.colorScheme.surfaceVariant
-        },
-        contentColor = if (selected) {
-            MaterialTheme.colorScheme.onPrimaryContainer
-        } else {
-            MaterialTheme.colorScheme.onSurfaceVariant
-        },
-        interactionSource = interactionSource
+        color =
+            if (selected) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.surfaceVariant
+            },
+        contentColor =
+            if (selected) {
+                MaterialTheme.colorScheme.onPrimaryContainer
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            },
+        interactionSource = interactionSource,
     ) {
-        Box(
-            modifier = Modifier.padding(8.dp),
-            contentAlignment = Alignment.Center
-        ) {
+        Box(modifier = Modifier.padding(8.dp), contentAlignment = Alignment.Center) {
             Text(
                 text = label,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }
