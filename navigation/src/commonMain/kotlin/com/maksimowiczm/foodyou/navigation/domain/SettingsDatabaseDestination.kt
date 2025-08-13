@@ -8,6 +8,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable internal data object SettingsExternalDatabasesDestination : NavigationDestination
 
+@Serializable
+internal data object SettingsSwissFoodCompositionDatabaseDestination : NavigationDestination
+
 @Serializable internal data object UsdaApiKeyDestination : NavigationDestination
 
 @Serializable internal data object DumpDatabaseDestination : NavigationDestination

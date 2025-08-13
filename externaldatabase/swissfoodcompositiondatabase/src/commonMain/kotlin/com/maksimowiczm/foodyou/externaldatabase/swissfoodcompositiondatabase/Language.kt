@@ -16,12 +16,5 @@ enum class Language {
             ITALIAN -> Res.readBytes("files/swiss-food-composition-database/data-it-IT.csv")
         }
 
-    val sourceUrl: String
-        get() =
-            when (this) {
-                ENGLISH -> "https://www.naehrwertdaten.ch/en"
-                GERMAN -> "https://www.naehrwertdaten.ch/de"
-                FRENCH -> "https://www.naehrwertdaten.ch/fr"
-                ITALIAN -> "https://www.naehrwertdaten.ch/it"
-            }
+    val size = 1190
 }

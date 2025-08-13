@@ -1,4 +1,4 @@
-package com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.ui
+package com.maksimowiczm.foodyou.feature.settings.database.swissfoodcompositiondatabase.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -47,10 +47,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.core.ui.ArrowBackIconButton
-import com.maksimowiczm.foodyou.core.ui.BackHandler
-import com.maksimowiczm.foodyou.core.ui.ext.add
-import com.maksimowiczm.foodyou.feature.swissfoodcompositiondatabase.domain.Language
+import com.maksimowiczm.foodyou.externaldatabase.swissfoodcompositiondatabase.Language
+import com.maksimowiczm.foodyou.feature.settings.database.swissfoodcompositiondatabase.presentation.SwissFoodCompositionDatabaseUiState
+import com.maksimowiczm.foodyou.feature.settings.database.swissfoodcompositiondatabase.presentation.SwissFoodCompositionDatabaseViewModel
+import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
+import com.maksimowiczm.foodyou.shared.ui.BackHandler
+import com.maksimowiczm.foodyou.shared.ui.ext.add
 import foodyou.app.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -58,7 +60,7 @@ import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun SwissFoodCompositionDatabaseScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
+fun SwissFoodCompositionDatabaseScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val viewModel = koinInject<SwissFoodCompositionDatabaseViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -66,7 +68,7 @@ internal fun SwissFoodCompositionDatabaseScreen(onBack: () -> Unit, modifier: Mo
         uiState = uiState,
         onBack = onBack,
         onImport = viewModel::import,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -76,7 +78,7 @@ private fun SwissFoodCompositionDatabaseScreen(
     uiState: SwissFoodCompositionDatabaseUiState,
     onBack: () -> Unit,
     onImport: (Set<Language>) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val coroutinesScope = rememberCoroutineScope()
 
@@ -100,11 +102,7 @@ private fun SwissFoodCompositionDatabaseScreen(
 
     BackHandler(
         enabled = uiState is SwissFoodCompositionDatabaseUiState.Importing,
-        onBack = {
-            coroutinesScope.launch {
-                snackbarHostState.showSnackbar(pleaseWaitMessage)
-            }
-        }
+        onBack = { coroutinesScope.launch { snackbarHostState.showSnackbar(pleaseWaitMessage) } },
     )
 
     Scaffold(
@@ -117,76 +115,75 @@ private fun SwissFoodCompositionDatabaseScreen(
                 navigationIcon = {
                     ArrowBackIconButton(
                         onClick = onBack,
-                        enabled = uiState !is SwissFoodCompositionDatabaseUiState.Importing
+                        enabled = uiState !is SwissFoodCompositionDatabaseUiState.Importing,
                     )
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             when (uiState) {
-                SwissFoodCompositionDatabaseUiState.Finished -> ImportingFinished(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(paddingValues)
-                )
+                SwissFoodCompositionDatabaseUiState.Finished ->
+                    ImportingFinished(
+                        modifier = Modifier.align(Alignment.Center).padding(paddingValues)
+                    )
 
-                is SwissFoodCompositionDatabaseUiState.Importing -> ImportingProgress(
-                    progress = uiState.progress,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(paddingValues)
-                )
+                is SwissFoodCompositionDatabaseUiState.Importing ->
+                    ImportingProgress(
+                        progress = uiState.progress,
+                        modifier = Modifier.align(Alignment.Center).padding(paddingValues),
+                    )
 
-                SwissFoodCompositionDatabaseUiState.LanguagePick -> LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = paddingValues
-                        .add(bottom = 72.dp) // Button height + padding
-                        .add(vertical = 8.dp)
-                ) {
-                    item {
-                        Text(
-                            text = stringResource(
-                                Res.string.description2_swiss_food_composition_database
-                            ),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                SwissFoodCompositionDatabaseUiState.LanguagePick ->
+                    LazyColumn(
+                        modifier =
+                            Modifier.fillMaxSize()
+                                .nestedScroll(scrollBehavior.nestedScrollConnection),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding =
+                            paddingValues
+                                .add(bottom = 72.dp) // Button height + padding
+                                .add(vertical = 8.dp),
+                    ) {
+                        item {
+                            Text(
+                                text =
+                                    stringResource(
+                                        Res.string.description2_swiss_food_composition_database
+                                    ),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+
+                        item {
+                            LanguagePicker(selected = languages, onLanguages = { languages = it })
+                        }
                     }
-
-                    item {
-                        LanguagePicker(
-                            selected = languages,
-                            onLanguages = { languages = it }
-                        )
-                    }
-                }
             }
 
             AnimatedVisibility(
-                visible = uiState == SwissFoodCompositionDatabaseUiState.LanguagePick &&
-                    languages.isNotEmpty(),
-                modifier = Modifier
-                    .zIndex(10f)
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 8.dp)
-                    .padding(bottom = paddingValues.calculateBottomPadding()),
+                visible =
+                    uiState == SwissFoodCompositionDatabaseUiState.LanguagePick &&
+                        languages.isNotEmpty(),
+                modifier =
+                    Modifier.zIndex(10f)
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 8.dp)
+                        .padding(bottom = paddingValues.calculateBottomPadding()),
                 enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut()
+                exit = slideOutVertically { it } + fadeOut(),
             ) {
                 Button(
                     onClick = { onImport(languages) },
                     shapes = ButtonDefaults.shapes(),
-                    modifier = Modifier.height(56.dp)
+                    modifier = Modifier.height(56.dp),
                 ) {
                     Text(stringResource(Res.string.action_import))
                 }
@@ -194,17 +191,17 @@ private fun SwissFoodCompositionDatabaseScreen(
 
             AnimatedVisibility(
                 visible = uiState == SwissFoodCompositionDatabaseUiState.Finished,
-                modifier = Modifier
-                    .zIndex(10f)
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 8.dp)
-                    .padding(bottom = paddingValues.calculateBottomPadding()),
-                enter = slideInVertically { it } + fadeIn()
+                modifier =
+                    Modifier.zIndex(10f)
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 8.dp)
+                        .padding(bottom = paddingValues.calculateBottomPadding()),
+                enter = slideInVertically { it } + fadeIn(),
             ) {
                 Button(
                     onClick = onBack,
                     shapes = ButtonDefaults.shapes(),
-                    modifier = Modifier.height(56.dp)
+                    modifier = Modifier.height(56.dp),
                 ) {
                     Text(stringResource(Res.string.action_done))
                 }
@@ -217,12 +214,9 @@ private fun SwissFoodCompositionDatabaseScreen(
 private fun LanguagePicker(
     selected: Set<Language>,
     onLanguages: (Set<Language>) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         LanguageButton(
             label = "English",
             selected = Language.ENGLISH in selected,
@@ -232,7 +226,7 @@ private fun LanguagePicker(
                 } else {
                     onLanguages(selected + Language.ENGLISH)
                 }
-            }
+            },
         )
         LanguageButton(
             label = "Deutsch",
@@ -243,7 +237,7 @@ private fun LanguagePicker(
                 } else {
                     onLanguages(selected + Language.GERMAN)
                 }
-            }
+            },
         )
         LanguageButton(
             label = "Français",
@@ -254,7 +248,7 @@ private fun LanguagePicker(
                 } else {
                     onLanguages(selected + Language.FRENCH)
                 }
-            }
+            },
         )
         LanguageButton(
             label = "Italiano",
@@ -265,7 +259,7 @@ private fun LanguagePicker(
                 } else {
                     onLanguages(selected + Language.ITALIAN)
                 }
-            }
+            },
         )
     }
 }
@@ -276,31 +270,36 @@ private fun LanguageButton(
     label: String,
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
     val isPressed by interactionSource.collectIsPressedAsState()
 
-    val cornerRadius by animateDpAsState(
-        targetValue = if (isPressed) 24.dp else 16.dp,
-        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
-    )
+    val cornerRadius by
+        animateDpAsState(
+            targetValue = if (isPressed) 24.dp else 16.dp,
+            animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec(),
+        )
 
-    val color by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.primaryContainer
-        } else {
-            MaterialTheme.colorScheme.surfaceContainer
-        }
-    )
-    val contentColor by animateColorAsState(
-        targetValue = if (selected) {
-            MaterialTheme.colorScheme.onPrimaryContainer
-        } else {
-            MaterialTheme.colorScheme.onSurface
-        }
-    )
+    val color by
+        animateColorAsState(
+            targetValue =
+                if (selected) {
+                    MaterialTheme.colorScheme.primaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceContainer
+                }
+        )
+    val contentColor by
+        animateColorAsState(
+            targetValue =
+                if (selected) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
+        )
 
     Surface(
         onClick = onClick,
@@ -308,17 +307,17 @@ private fun LanguageButton(
         shape = RoundedCornerShape(cornerRadius),
         color = color,
         contentColor = contentColor,
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
     ) {
         Box(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = label,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
             )
         }
     }
@@ -327,18 +326,16 @@ private fun LanguageButton(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun ImportingProgress(progress: Float, modifier: Modifier = Modifier) {
-    val animatedProgress by animateFloatAsState(
-        targetValue = progress,
-        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
-    )
+    val animatedProgress by
+        animateFloatAsState(
+            targetValue = progress,
+            animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
+        )
 
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         CircularWavyProgressIndicator(
             progress = { animatedProgress },
-            modifier = Modifier.size(68.dp)
+            modifier = Modifier.size(68.dp),
         )
 
         Spacer(Modifier.height(24.dp))
@@ -348,7 +345,7 @@ private fun ImportingProgress(progress: Float, modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
 
         Spacer(Modifier.height(16.dp))
@@ -357,22 +354,19 @@ private fun ImportingProgress(progress: Float, modifier: Modifier = Modifier) {
             text = stringResource(Res.string.description_please_wait_while_importing_products),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
 
 @Composable
 private fun ImportingFinished(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Icon(
             imageVector = Icons.Default.Check,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(68.dp)
+            modifier = Modifier.size(68.dp),
         )
 
         Spacer(Modifier.height(24.dp))
@@ -382,7 +376,7 @@ private fun ImportingFinished(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
     }
 }

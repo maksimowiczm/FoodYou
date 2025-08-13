@@ -7,10 +7,12 @@ import com.maksimowiczm.foodyou.feature.settings.database.databasedump.ui.Databa
 import com.maksimowiczm.foodyou.feature.settings.database.externaldatabases.ui.ExternalDatabasesScreen
 import com.maksimowiczm.foodyou.feature.settings.database.externaldatabases.ui.UpdateUsdaApiKeyDialog
 import com.maksimowiczm.foodyou.feature.settings.database.master.ui.DatabaseSettingsScreen
+import com.maksimowiczm.foodyou.feature.settings.database.swissfoodcompositiondatabase.ui.SwissFoodCompositionDatabaseScreen
 import com.maksimowiczm.foodyou.navigation.domain.DumpDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDatabaseMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsExternalDatabasesDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsSwissFoodCompositionDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.UsdaApiKeyDestination
 import com.maksimowiczm.foodyou.shared.navigation.forwardBackwardComposable
 
@@ -24,6 +26,7 @@ internal fun NavGraphBuilder.settingsDatabaseNavigationGraph(
     usdaApiKeyOnSave: () -> Unit,
     databaseDumpOnBack: () -> Unit,
     databaseDumpOnSuccess: () -> Unit,
+    swissFoodCompositionDatabaseOnBack: () -> Unit,
 ) {
     navigation<SettingsDatabaseDestination>(startDestination = SettingsDatabaseMasterDestination) {
         forwardBackwardComposable<SettingsDatabaseMasterDestination> {
@@ -47,6 +50,9 @@ internal fun NavGraphBuilder.settingsDatabaseNavigationGraph(
         }
         forwardBackwardComposable<DumpDatabaseDestination> {
             DatabaseDumpScreen(onBack = databaseDumpOnBack, onSuccess = databaseDumpOnSuccess)
+        }
+        forwardBackwardComposable<SettingsSwissFoodCompositionDatabaseDestination> {
+            SwissFoodCompositionDatabaseScreen(onBack = swissFoodCompositionDatabaseOnBack)
         }
     }
 }

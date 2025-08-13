@@ -26,6 +26,7 @@ import com.maksimowiczm.foodyou.navigation.domain.SettingsLanguageDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsMealsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsNutritionFactsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsPersonalizationDestination
+import com.maksimowiczm.foodyou.navigation.domain.SettingsSwissFoodCompositionDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateFoodDiaryEntryDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.UpdateRecipeDestination
@@ -128,12 +129,15 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
                 navController.popBackStack<SettingsExternalDatabasesDestination>(true)
             },
             externalDatabasesOnSwissFoodCompositionDatabase = {
-                // TODO
+                navController.navigateSingleTop(SettingsSwissFoodCompositionDatabaseDestination)
             },
             usdaApiKeyOnDismiss = { navController.popBackStack<UsdaApiKeyDestination>(true) },
             usdaApiKeyOnSave = { navController.popBackStack<UsdaApiKeyDestination>(true) },
             databaseDumpOnBack = { navController.popBackStack<DumpDatabaseDestination>(true) },
             databaseDumpOnSuccess = { navController.popBackStack<DumpDatabaseDestination>(true) },
+            swissFoodCompositionDatabaseOnBack = {
+                navController.popBackStack<SettingsSwissFoodCompositionDatabaseDestination>(true)
+            },
         )
         goalsNavigationGraph(
             masterOnBack = { navController.popBackStack<GoalsMasterDestination>(true) }

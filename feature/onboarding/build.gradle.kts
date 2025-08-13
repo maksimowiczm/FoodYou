@@ -52,8 +52,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":feature:swissfoodcompositiondatabase"))
-
             implementation(libs.kotlinx.serialization.json)
         }
 

@@ -34,9 +34,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "FoodYou"
 include(":composeApp")
-include(":feature:swissfoodcompositiondatabase")
 include(":feature:onboarding")
-include(":feature:importexport")
 
 include(":shared:common")
 include(":shared:ui")
@@ -61,6 +59,7 @@ include(":feature3:settings:personalization")
 include(":feature3:settings:database:master")
 include(":feature3:settings:database:externaldatabases")
 include(":feature3:settings:database:databasedump")
+include(":feature3:settings:database:swissfoodcompositiondatabase")
 include(":feature3:home")
 include(":feature3:goals")
 include(":feature3:food:shared")
