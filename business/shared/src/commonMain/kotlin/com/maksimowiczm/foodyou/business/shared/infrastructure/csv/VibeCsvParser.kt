@@ -1,13 +1,15 @@
-package com.maksimowiczm.foodyou.feature.importexport.domain.csv
+package com.maksimowiczm.foodyou.business.shared.infrastructure.csv
+
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.csv.CsvParser
 
 // This is 100% vibe coded, seems to be working well
-internal class CsvParser {
+internal class VibeCsvParser : CsvParser {
 
     /**
      * Parses a single line of CSV input and returns a list of fields. Empty fields are represented
      * as null.
      */
-    fun parseLine(line: String): List<String?> {
+    override fun parseLine(line: String): List<String?> {
         val result = mutableListOf<String?>()
         val current = StringBuilder()
         var inQuotes = false
@@ -59,9 +61,10 @@ internal class CsvParser {
         return result
     }
 
-    private fun StringBuilder.toStringOrNull(wasQuoted: Boolean): String? = if (this.isEmpty()) {
-        if (wasQuoted) "" else null
-    } else {
-        this.toString()
-    }
+    private fun StringBuilder.toStringOrNull(wasQuoted: Boolean): String? =
+        if (this.isEmpty()) {
+            if (wasQuoted) "" else null
+        } else {
+            this.toString()
+        }
 }

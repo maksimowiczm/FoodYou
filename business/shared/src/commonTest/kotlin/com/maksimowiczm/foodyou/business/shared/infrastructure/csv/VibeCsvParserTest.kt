@@ -1,11 +1,11 @@
-package com.maksimowiczm.foodyou.feature.importexport.domain.csv
+package com.maksimowiczm.foodyou.business.shared.infrastructure.csv
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class CsvParserTest {
+class VibeCsvParserTest {
 
-    private val parser = CsvParser()
+    private val parser = VibeCsvParser()
 
     @Test
     fun testEmptyString() {

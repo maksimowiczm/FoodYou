@@ -3,8 +3,10 @@ package com.maksimowiczm.foodyou.infrastructure.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.maksimowiczm.foodyou.business.shared.application.DatabaseDumpService
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.csv.CsvParser
 import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
 import com.maksimowiczm.foodyou.business.shared.domain.network.NetworkConfig
+import com.maksimowiczm.foodyou.business.shared.infrastructure.csv.VibeCsvParser
 import com.maksimowiczm.foodyou.business.shared.infrastructure.network.FoodYouNetworkConfig
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.FoodYouDatabase
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.InitializeMealsCallback
@@ -53,4 +55,5 @@ val businessSharedPersistenceModule = module {
     dataStoreDefinition()
 
     factoryOf(::FoodYouNetworkConfig).bind<NetworkConfig>()
+    factoryOf(::VibeCsvParser).bind<CsvParser>()
 }
