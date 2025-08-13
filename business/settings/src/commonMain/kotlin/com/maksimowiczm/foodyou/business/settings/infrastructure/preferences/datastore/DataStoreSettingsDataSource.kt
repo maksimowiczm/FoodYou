@@ -27,6 +27,8 @@ internal class DataStoreSettingsDataSource(private val dataStore: DataStore<Pref
                 secureScreen = preferences[SettingsPreferencesKeys.secureScreen] ?: false,
                 homeCardOrder = preferences.getHomeCardOrder(SettingsPreferencesKeys.homeCardOrder),
                 expandGoalCard = preferences[SettingsPreferencesKeys.expandGoalCard] ?: true,
+                onboardingFinished =
+                    preferences[SettingsPreferencesKeys.onboardingFinished] ?: false,
             )
         }
 
@@ -52,6 +54,10 @@ internal class DataStoreSettingsDataSource(private val dataStore: DataStore<Pref
 
     override suspend fun updateExpandGoalCard(expand: Boolean) {
         updateData { set(SettingsPreferencesKeys.expandGoalCard, expand) }
+    }
+
+    override suspend fun updateOnboardingFinished(onboardingFinished: Boolean) {
+        updateData { set(SettingsPreferencesKeys.onboardingFinished, onboardingFinished) }
     }
 
     private suspend fun updateData(transform: suspend MutablePreferences.() -> Unit) {
@@ -92,4 +98,5 @@ private object SettingsPreferencesKeys {
     val secureScreen = booleanPreferencesKey("settings:secureScreen")
     val homeCardOrder = stringPreferencesKey("settings:homeCardOrder")
     val expandGoalCard = booleanPreferencesKey("settings:expandGoalCard")
+    val onboardingFinished = booleanPreferencesKey("settings:onboardingFinished")
 }

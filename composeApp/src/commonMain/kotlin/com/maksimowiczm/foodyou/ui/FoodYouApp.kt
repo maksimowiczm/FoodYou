@@ -3,38 +3,35 @@ package com.maksimowiczm.foodyou.ui
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.maksimowiczm.foodyou.business.settings.application.query.ObserveSettingsQuery
-import com.maksimowiczm.foodyou.business.settings.domain.NutrientsOrder
-import com.maksimowiczm.foodyou.business.settings.domain.Settings
 import com.maksimowiczm.foodyou.feature.about.master.ui.AppUpdateChangelogModalBottomSheet
 import com.maksimowiczm.foodyou.feature.about.master.ui.PreviewReleaseDialog
+import com.maksimowiczm.foodyou.feature.onboarding.ui.Onboarding
 import com.maksimowiczm.foodyou.feature.settings.language.ui.TranslationWarningStartupDialog
 import com.maksimowiczm.foodyou.feature.shared.ui.NutrientsOrderProvider
 import com.maksimowiczm.foodyou.navigation.FoodYouNavHost
-import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
+import com.maksimowiczm.foodyou.presentation.AppViewModel
 import com.maksimowiczm.foodyou.shared.ui.theme.FoodYouTheme
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun FoodYouApp() {
-    val queryBus: QueryBus = koinInject()
-    val nutrientsOrder by
-        queryBus.observeNutrientsOrder().collectAsStateWithLifecycle(NutrientsOrder.defaultOrder)
+    val viewModel: AppViewModel = koinViewModel()
+    val nutrientsOrder by viewModel.nutrientsOrder.collectAsStateWithLifecycle()
+    val onboardingFinished by viewModel.onboardingFinished.collectAsStateWithLifecycle()
 
     NutrientsOrderProvider(nutrientsOrder) {
         FoodYouTheme {
             PreviewReleaseDialog()
             TranslationWarningStartupDialog()
 
-            Surface {
-                FoodYouNavHost()
-                AppUpdateChangelogModalBottomSheet()
+            if (onboardingFinished) {
+                Surface {
+                    FoodYouNavHost()
+                    AppUpdateChangelogModalBottomSheet()
+                }
+            } else {
+                Onboarding(onFinish = viewModel::finishOnboarding)
             }
         }
     }
 }
-
-private fun QueryBus.observeNutrientsOrder(): Flow<List<NutrientsOrder>> =
-    dispatch<Settings>(ObserveSettingsQuery).map { it.nutrientsOrder }

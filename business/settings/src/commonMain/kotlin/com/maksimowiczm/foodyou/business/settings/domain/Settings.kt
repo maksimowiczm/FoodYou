@@ -7,4 +7,5 @@ data class Settings(
     val secureScreen: Boolean,
     val homeCardOrder: List<HomeCard>,
     val expandGoalCard: Boolean,
+    val onboardingFinished: Boolean,
 )

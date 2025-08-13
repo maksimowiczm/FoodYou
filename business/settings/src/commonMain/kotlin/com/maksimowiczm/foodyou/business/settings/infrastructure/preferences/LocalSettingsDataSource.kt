@@ -19,4 +19,6 @@ internal interface LocalSettingsDataSource {
     suspend fun updateHomeCardOrder(order: List<HomeCard>)
 
     suspend fun updateExpandGoalCard(expand: Boolean)
+
+    suspend fun updateOnboardingFinished(onboardingFinished: Boolean)
 }
