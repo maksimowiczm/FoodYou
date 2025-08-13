@@ -11,6 +11,7 @@ https://naehrwertdaten.ch/en/downloads
 Data cleaning rules applied:
 - Values with '<' (e.g., '<1.0') are interpreted as the number without '<' (e.g., '1.0')
 - Values marked as 'tr.' (trace) are interpreted as '0'
+- All nutritional values are converted to grams (mg → g, µg → g)
 
 Usage:
     python extract-swiss-database.py <input_file> <output_file>
@@ -29,27 +30,27 @@ COLUMN_MAPPING_EN = {
     "Sugars (g)": "sugars",
     "Salt (NaCl) (g)": "salt",
     "Dietary fibres (g)": "dietary_fiber",
-    "Cholesterol (mg)": "cholesterol_milli",
-    "Vitamin A activity, RE (µg-RE)": "vitamin_a_micro",
-    "Vitamin B1 (thiamine) (mg)": "vitamin_b1_milli",
-    "Vitamin B2 (riboflavin) (mg)": "vitamin_b2_milli",
-    "Niacin (mg)": "vitamin_b3_milli",
-    "Panthotenic acid (mg)": "vitamin_b5_milli",
-    "Vitamin B6 (pyridoxine) (mg)": "vitamin_b6_milli",
-    "Folate (µg)": "vitamin_b9_micro",
-    "Vitamin B12 (cobalamin) (µg)": "vitamin_b12_micro",
-    "Vitamin C (ascorbic acid) (mg)": "vitamin_c_milli",
-    "Vitamin D (calciferol) (µg)": "vitamin_d_micro",
-    "Vitamin E (α-tocopherol) (mg)": "vitamin_e_milli",
-    "Magnesium (Mg) (mg)": "magnesium_milli",
-    "Potassium (K) (mg)": "potassium_milli",
-    "Calcium (Ca) (mg)": "calcium_milli",
-    "Zinc (Zn) (mg)": "zinc_milli",
-    "Sodium (Na) (mg)": "sodium_milli",
-    "Iron (Fe) (mg)": "iron_milli",
-    "Phosphorus (P) (mg)": "phosphorus_milli",
-    "Selenium (Se) (µg)": "selenium_micro",
-    "Iodide (I) (µg)": "iodine_micro",
+    "Cholesterol (mg)": "cholesterol",
+    "Vitamin A activity, RE (µg-RE)": "vitamin_a",
+    "Vitamin B1 (thiamine) (mg)": "vitamin_b1",
+    "Vitamin B2 (riboflavin) (mg)": "vitamin_b2",
+    "Niacin (mg)": "vitamin_b3",
+    "Panthotenic acid (mg)": "vitamin_b5",
+    "Vitamin B6 (pyridoxine) (mg)": "vitamin_b6",
+    "Folate (µg)": "vitamin_b9",
+    "Vitamin B12 (cobalamin) (µg)": "vitamin_b12",
+    "Vitamin C (ascorbic acid) (mg)": "vitamin_c",
+    "Vitamin D (calciferol) (µg)": "vitamin_d",
+    "Vitamin E (α-tocopherol) (mg)": "vitamin_e",
+    "Magnesium (Mg) (mg)": "magnesium",
+    "Potassium (K) (mg)": "potassium",
+    "Calcium (Ca) (mg)": "calcium",
+    "Zinc (Zn) (mg)": "zinc",
+    "Sodium (Na) (mg)": "sodium",
+    "Iron (Fe) (mg)": "iron",
+    "Phosphorus (P) (mg)": "phosphorus",
+    "Selenium (Se) (µg)": "selenium",
+    "Iodide (I) (µg)": "iodine",
 }
 
 # Mapping from original Excel column names to desired field names - ITALIAN
@@ -65,27 +66,27 @@ COLUMN_MAPPING_IT = {
     "Zuccheri (g)": "sugars",
     "Sale (NaCl) (g)": "salt",
     "Fibra alimentare (g)": "dietary_fiber",
-    "Colesterolo (mg)": "cholesterol_milli",
-    "Attività di vitamina A, RE (µg-RE)": "vitamin_a_micro",
-    "Vitamina B1 (tiamina) (mg)": "vitamin_b1_milli",
-    "Vitamina B2 (riboflavina) (mg)": "vitamin_b2_milli",
-    "Niacina (mg)": "vitamin_b3_milli",
-    "Acido pantotenico (mg)": "vitamin_b5_milli",
-    "Vitamina B6 (piridossina) (mg)": "vitamin_b6_milli",
-    "Folati (µg)": "vitamin_b9_micro",
-    "Vitamina B12 (cobalamina) (µg)": "vitamin_b12_micro",
-    "Vitamina C (acido ascorbico) (mg)": "vitamin_c_milli",
-    "Vitamina D (calciferolo) (µg)": "vitamin_d_micro",
-    "Vitamina E (α-tocoferolo) (mg)": "vitamin_e_milli",
-    "Magnesio (Mg) (mg)": "magnesium_milli",
-    "Potassio (K) (mg)": "potassium_milli",
-    "Calcio (Ca) (mg)": "calcium_milli",
-    "Zinco (Zn)  (mg)": "zinc_milli",
-    "Sodio (Na) (mg)": "sodium_milli",
-    "Ferro (Fe) (mg)": "iron_milli",
-    "Fosforo (P) (mg)": "phosphorus_milli",
-    "Selenio (Se) (µg)": "selenium_micro",
-    "Iodio (I) (µg)": "iodine_micro",
+    "Colesterolo (mg)": "cholesterol",
+    "Attività di vitamina A, RE (µg-RE)": "vitamin_a",
+    "Vitamina B1 (tiamina) (mg)": "vitamin_b1",
+    "Vitamina B2 (riboflavina) (mg)": "vitamin_b2",
+    "Niacina (mg)": "vitamin_b3",
+    "Acido pantotenico (mg)": "vitamin_b5",
+    "Vitamina B6 (piridossina) (mg)": "vitamin_b6",
+    "Folati (µg)": "vitamin_b9",
+    "Vitamina B12 (cobalamina) (µg)": "vitamin_b12",
+    "Vitamina C (acido ascorbico) (mg)": "vitamin_c",
+    "Vitamina D (calciferolo) (µg)": "vitamin_d",
+    "Vitamina E (α-tocoferolo) (mg)": "vitamin_e",
+    "Magnesio (Mg) (mg)": "magnesium",
+    "Potassio (K) (mg)": "potassium",
+    "Calcio (Ca) (mg)": "calcium",
+    "Zinco (Zn)  (mg)": "zinc",
+    "Sodio (Na) (mg)": "sodium",
+    "Ferro (Fe) (mg)": "iron",
+    "Fosforo (P) (mg)": "phosphorus",
+    "Selenio (Se) (µg)": "selenium",
+    "Iodio (I) (µg)": "iodine",
 }
 
 # Mapping from original Excel column names to desired field names - GERMAN
@@ -101,27 +102,27 @@ COLUMN_MAPPING_DE = {
     "Zucker (g)": "sugars",
     "Salz (NaCl) (g)": "salt",
     "Nahrungsfasern (g)": "dietary_fiber",
-    "Cholesterin (mg)": "cholesterol_milli",
-    "Vitamin A-Aktivität, RE (µg-RE)": "vitamin_a_micro",
-    "Vitamin B1 (Thiamin) (mg)": "vitamin_b1_milli",
-    "Vitamin B2 (Riboflavin) (mg)": "vitamin_b2_milli",
-    "Niacin (mg)": "vitamin_b3_milli",
-    "Pantothensäure (mg)": "vitamin_b5_milli",
-    "Vitamin B6 (Pyridoxin) (mg)": "vitamin_b6_milli",
-    "Folat (µg)": "vitamin_b9_micro",
-    "Vitamin B12 (Cobalamin) (µg)": "vitamin_b12_micro",
-    "Vitamin C (Ascorbinsäure) (mg)": "vitamin_c_milli",
-    "Vitamin D (Calciferol) (µg)": "vitamin_d_micro",
-    "Vitamin E (α-Tocopherol) (mg)": "vitamin_e_milli",
-    "Magnesium (Mg) (mg)": "magnesium_milli",
-    "Kalium (K) (mg)": "potassium_milli",
-    "Calcium (Ca) (mg)": "calcium_milli",
-    "Zink (Zn)  (mg)": "zinc_milli",
-    "Natrium (Na) (mg)": "sodium_milli",
-    "Eisen (Fe) (mg)": "iron_milli",
-    "Phosphor (P) (mg)": "phosphorus_milli",
-    "Selen (Se) (µg)": "selenium_micro",
-    "Jod (I) (µg)": "iodine_micro",
+    "Cholesterin (mg)": "cholesterol",
+    "Vitamin A-Aktivität, RE (µg-RE)": "vitamin_a",
+    "Vitamin B1 (Thiamin) (mg)": "vitamin_b1",
+    "Vitamin B2 (Riboflavin) (mg)": "vitamin_b2",
+    "Niacin (mg)": "vitamin_b3",
+    "Pantothensäure (mg)": "vitamin_b5",
+    "Vitamin B6 (Pyridoxin) (mg)": "vitamin_b6",
+    "Folat (µg)": "vitamin_b9",
+    "Vitamin B12 (Cobalamin) (µg)": "vitamin_b12",
+    "Vitamin C (Ascorbinsäure) (mg)": "vitamin_c",
+    "Vitamin D (Calciferol) (µg)": "vitamin_d",
+    "Vitamin E (α-Tocopherol) (mg)": "vitamin_e",
+    "Magnesium (Mg) (mg)": "magnesium",
+    "Kalium (K) (mg)": "potassium",
+    "Calcium (Ca) (mg)": "calcium",
+    "Zink (Zn)  (mg)": "zinc",
+    "Natrium (Na) (mg)": "sodium",
+    "Eisen (Fe) (mg)": "iron",
+    "Phosphor (P) (mg)": "phosphorus",
+    "Selen (Se) (µg)": "selenium",
+    "Jod (I) (µg)": "iodine",
 }
 
 # Mapping from original Excel column names to desired field names - FRENCH
@@ -137,27 +138,27 @@ COLUMN_MAPPING_FR = {
     "Sucres (g)": "sugars",
     "Sel (NaCl) (g)": "salt",
     "Fibres alimentaires (g)": "dietary_fiber",
-    "Cholestérol (mg)": "cholesterol_milli",
-    "Activité de vitamine A, RE (µg-RE)": "vitamin_a_micro",
-    "Vitamine B1 (thiamine) (mg)": "vitamin_b1_milli",
-    "Vitamine B2 (riboflavine) (mg)": "vitamin_b2_milli",
-    "Niacine (mg)": "vitamin_b3_milli",
-    "Acide pantothénique (mg)": "vitamin_b5_milli",
-    "Vitamine B6 (pyridoxine) (mg)": "vitamin_b6_milli",
-    "Folate (µg)": "vitamin_b9_micro",
-    "Vitamine B12 (cobalamine) (µg)": "vitamin_b12_micro",
-    "Vitamine C (acide ascorbique) (mg)": "vitamin_c_milli",
-    "Vitamine D (calciférol) (µg)": "vitamin_d_micro",
-    "Vitamine E (α-tocophérol) (mg)": "vitamin_e_milli",
-    "Magnésium (Mg) (mg)": "magnesium_milli",
-    "Potassium (K) (mg)": "potassium_milli",
-    "Calcium (Ca) (mg)": "calcium_milli",
-    "Zinc (Zn)  (mg)": "zinc_milli",
-    "Sodium (Na) (mg)": "sodium_milli",
-    "Fer (Fe) (mg)": "iron_milli",
-    "Phosphore (P) (mg)": "phosphorus_milli",
-    "Sélénium (Se) (µg)": "selenium_micro",
-    "Iode (I) (µg)": "iodine_micro",
+    "Cholestérol (mg)": "cholesterol",
+    "Activité de vitamine A, RE (µg-RE)": "vitamin_a",
+    "Vitamine B1 (thiamine) (mg)": "vitamin_b1",
+    "Vitamine B2 (riboflavine) (mg)": "vitamin_b2",
+    "Niacine (mg)": "vitamin_b3",
+    "Acide pantothénique (mg)": "vitamin_b5",
+    "Vitamine B6 (pyridoxine) (mg)": "vitamin_b6",
+    "Folate (µg)": "vitamin_b9",
+    "Vitamine B12 (cobalamine) (µg)": "vitamin_b12",
+    "Vitamine C (acide ascorbique) (mg)": "vitamin_c",
+    "Vitamine D (calciférol) (µg)": "vitamin_d",
+    "Vitamine E (α-tocophérol) (mg)": "vitamin_e",
+    "Magnésium (Mg) (mg)": "magnesium",
+    "Potassium (K) (mg)": "potassium",
+    "Calcium (Ca) (mg)": "calcium",
+    "Zinc (Zn)  (mg)": "zinc",
+    "Sodium (Na) (mg)": "sodium",
+    "Fer (Fe) (mg)": "iron",
+    "Phosphore (P) (mg)": "phosphorus",
+    "Sélénium (Se) (µg)": "selenium",
+    "Iode (I) (µg)": "iodine",
 }
 
 # Dictionary of all mappings
@@ -203,6 +204,52 @@ def detect_language(df_columns):
     return None
 
 
+def clean_and_convert_values(df):
+    """
+    Clean values and convert units to grams
+    """
+    # First, clean string values (remove '<', replace 'tr.' with '0')
+    for col in df.columns:
+        if col == "name":  # Skip name column
+            continue
+
+        if df[col].dtype == object:
+            df[col] = df[col].astype(str).str.replace(r"^<\s*", "", regex=True)
+            df[col] = df[col].str.replace("tr.", "0", regex=False)
+            df[col] = df[col].str.replace("nan", "0", regex=False)
+
+            # Convert to numeric, coerce errors to NaN
+            df[col] = pd.to_numeric(df[col], errors='coerce')
+
+    # Fill any remaining NaN values with 0
+    df = df.fillna(0)
+
+    # Convert mg to g (divide by 1000)
+    mg_columns = [
+        "cholesterol", "vitamin_b1", "vitamin_b2", "vitamin_b3", "vitamin_b5",
+        "vitamin_b6", "vitamin_c", "vitamin_e", "magnesium", "potassium",
+        "calcium", "zinc", "sodium", "iron", "phosphorus"
+    ]
+
+    for col in mg_columns:
+        if col in df.columns:
+            df[col] = df[col] / 1000
+
+    # Convert µg to g (divide by 1,000,000)
+    microg_columns = [
+        "vitamin_a", "vitamin_b9", "vitamin_b12", "vitamin_d", "selenium", "iodine"
+    ]
+
+    for col in microg_columns:
+        if col in df.columns:
+            df[col] = df[col] / 1000000
+
+    # Note: Energy stays in kcal as it's typically expected in that unit
+    # If you want energy in grams equivalent, you'd need to specify the conversion
+
+    return df
+
+
 def extract_and_map(input_file, output_file, language=None):
     try:
         # Load sheet, skipping first two rows
@@ -224,8 +271,12 @@ def extract_and_map(input_file, output_file, language=None):
         # Rename columns based on mapping
         df = df.rename(columns=mapping)
 
-        # Keep only the mapped columns
-        df = df[[v for v in mapping.values() if v in df.columns]]
+        # Keep only the mapped columns that exist
+        available_cols = [v for v in mapping.values() if v in df.columns]
+        df = df[available_cols]
+
+        # Clean values and convert units
+        df = clean_and_convert_values(df)
 
         # Add missing columns with default values
         for col, default in EXTRA_COLUMNS.items():
@@ -248,32 +299,32 @@ def extract_and_map(input_file, output_file, language=None):
             "sugars",
             "salt",
             "dietary_fiber",
-            "cholesterol_milli",
+            "cholesterol",
             "caffeine_milli",
-            "vitamin_a_micro",
-            "vitamin_b1_milli",
-            "vitamin_b2_milli",
-            "vitamin_b3_milli",
-            "vitamin_b5_milli",
-            "vitamin_b6_milli",
+            "vitamin_a",
+            "vitamin_b1",
+            "vitamin_b2",
+            "vitamin_b3",
+            "vitamin_b5",
+            "vitamin_b6",
             "vitamin_b7_micro",
-            "vitamin_b9_micro",
-            "vitamin_b12_micro",
-            "vitamin_c_milli",
-            "vitamin_d_micro",
-            "vitamin_e_milli",
+            "vitamin_b9",
+            "vitamin_b12",
+            "vitamin_c",
+            "vitamin_d",
+            "vitamin_e",
             "vitamin_k_micro",
             "manganese_milli",
-            "magnesium_milli",
-            "potassium_milli",
-            "calcium_milli",
+            "magnesium",
+            "potassium",
+            "calcium",
             "copper_milli",
-            "zinc_milli",
-            "sodium_milli",
-            "iron_milli",
-            "phosphorus_milli",
-            "selenium_micro",
-            "iodine_micro",
+            "zinc",
+            "sodium",
+            "iron",
+            "phosphorus",
+            "selenium",
+            "iodine",
             "package_weight",
             "serving_weight",
         ]
@@ -285,21 +336,10 @@ def extract_and_map(input_file, output_file, language=None):
 
         df = df[final_columns]
 
-        # Clean values like '<1.0' → '1.0', then convert to numeric if possible
-        for col in df.columns:
-            if df[col].dtype == object:
-                df[col] = df[col].astype(str).str.replace(r"^<\s*", "", regex=True)
-                df.replace("tr.", "0", inplace=True)
-
-                # Try converting to numeric, skip if it fails
-                try:
-                    df[col] = pd.to_numeric(df[col])
-                except ValueError:
-                    pass
-
         # Export to CSV
         df.to_csv(output_file, index=False)
         print(f"Successfully exported to {output_file}")
+        print("All nutritional values are now in grams (mg and µg converted to g)")
 
     except Exception as e:
         print(f"Error: {e}")
