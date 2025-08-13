@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.maksimowiczm.foodyou.navigation.domain.AboutDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorDestination
 import com.maksimowiczm.foodyou.navigation.domain.AboutSponsorMessagesDestination
+import com.maksimowiczm.foodyou.navigation.domain.DumpDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryAddEntryDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateProductDestination
 import com.maksimowiczm.foodyou.navigation.domain.FoodDiaryCreateRecipeDestination
@@ -122,6 +123,7 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnExternalDatabases = {
                 navController.navigateSingleTop(SettingsExternalDatabasesDestination)
             },
+            masterOnDatabaseDump = { navController.navigateSingleTop(DumpDatabaseDestination) },
             externalDatabasesOnBack = {
                 navController.popBackStack<SettingsExternalDatabasesDestination>(true)
             },
@@ -130,6 +132,8 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             },
             usdaApiKeyOnDismiss = { navController.popBackStack<UsdaApiKeyDestination>(true) },
             usdaApiKeyOnSave = { navController.popBackStack<UsdaApiKeyDestination>(true) },
+            databaseDumpOnBack = { navController.popBackStack<DumpDatabaseDestination>(true) },
+            databaseDumpOnSuccess = { navController.popBackStack<DumpDatabaseDestination>(true) },
         )
         goalsNavigationGraph(
             masterOnBack = { navController.popBackStack<GoalsMasterDestination>(true) }

@@ -46,6 +46,7 @@ kotlin {
             implementation(projects.feature3.settings.personalization)
             implementation(projects.feature3.settings.database.master)
             implementation(projects.feature3.settings.database.externaldatabases)
+            implementation(projects.feature3.settings.database.databasedump)
 
             implementation(projects.feature3.food.diary.search)
             implementation(projects.feature3.food.diary.add)

@@ -446,4 +446,11 @@
     <string name="action_set_separate_goals">Set separate goals for each day</string>
     <string name="headline_percentages">Percentages</string>
 
+    <string name="headline_database_dump">Database dump</string>
+    <string name="description_database_dump">Export your SQL database to a file</string>
+
+    <string name="neutral_generating_database_dump">Generating database dump</string>
+    <string name="neutral_database_dump_generated_successfully">Database dump generated successfully</string>
+    <string name="error_failed_to_generate_database_dump">Failed to generate database dump</string>
+
 </resources>

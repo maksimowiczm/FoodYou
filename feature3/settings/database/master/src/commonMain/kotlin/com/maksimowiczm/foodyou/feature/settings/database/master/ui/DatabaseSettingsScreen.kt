@@ -17,6 +17,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.maksimowiczm.foodyou.shared.ui.ArrowBackIconButton
 import com.maksimowiczm.foodyou.shared.ui.SettingsListItem
 import foodyou.app.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -24,6 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 fun DatabaseSettingsScreen(
     onBack: () -> Unit,
     onExternalDatabases: () -> Unit,
+    onDatabaseDump: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -43,6 +45,7 @@ fun DatabaseSettingsScreen(
             contentPadding = paddingValues,
         ) {
             item { ExternalDatabasesSettingsListItem(onExternalDatabases) }
+            item { DatabaseDumpSettingsListItem(onDatabaseDump) }
         }
     }
 }
@@ -53,6 +56,17 @@ private fun ExternalDatabasesSettingsListItem(onClick: () -> Unit, modifier: Mod
         icon = { Icon(imageVector = Icons.Outlined.CloudDownload, contentDescription = null) },
         label = { Text(stringResource(Res.string.headline_external_databases)) },
         supportingContent = { Text(stringResource(Res.string.description_external_databases)) },
+        onClick = onClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun DatabaseDumpSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    SettingsListItem(
+        icon = { Icon(painterResource(Res.drawable.ic_file_export), null) },
+        label = { Text(stringResource(Res.string.headline_database_dump)) },
+        supportingContent = { Text(stringResource(Res.string.description_database_dump)) },
         onClick = onClick,
         modifier = modifier,
     )
