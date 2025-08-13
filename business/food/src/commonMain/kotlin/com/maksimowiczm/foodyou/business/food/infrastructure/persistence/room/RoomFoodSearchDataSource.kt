@@ -10,9 +10,9 @@ import com.maksimowiczm.foodyou.business.food.domain.QueryType
 import com.maksimowiczm.foodyou.business.food.domain.SearchHistory
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalFoodSearchDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutrientValue.Companion.toNutrientValue
 import com.maksimowiczm.foodyou.business.shared.domain.nutrients.NutritionFacts
-import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearch as FoodSearchData
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.FoodSearchDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.food.SearchEntry

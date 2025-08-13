@@ -4,7 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.RemoteMediator
-import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMediatorFactory
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.sponsorship.domain.Sponsorship
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.RemoteSponsorshipDataSource
 import com.maksimowiczm.foodyou.business.sponsorship.infrastructure.network.SponsorshipRemoteMediator

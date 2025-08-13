@@ -21,8 +21,8 @@ import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalPr
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalUsdaPagingHelper
 import com.maksimowiczm.foodyou.business.food.infrastructure.preferences.LocalFoodPreferencesDataSource
 import com.maksimowiczm.foodyou.business.shared.domain.food.FoodSource
+import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.business.shared.domain.infrastructure.persistence.DatabaseTransactionProvider
-import com.maksimowiczm.foodyou.business.shared.infrastructure.network.RemoteMediatorFactory
 import com.maksimowiczm.foodyou.externaldatabase.openfoodfacts.OpenFoodFactsRemoteDataSource
 import com.maksimowiczm.foodyou.externaldatabase.usda.USDARemoteDataSource
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
