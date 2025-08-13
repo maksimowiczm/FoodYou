@@ -48,7 +48,7 @@ internal class FeatureLibraryConventionPlugin : Plugin<Project> {
                 commonMain.dependencies {
                     implementation(project(":shared:common"))
                     implementation(project(":shared:ui"))
-                    implementation(project(":feature3:shared"))
+                    implementation(project(":feature:shared"))
 
                     implementation(libs.findBundle("feature.library.implementation").get())
 

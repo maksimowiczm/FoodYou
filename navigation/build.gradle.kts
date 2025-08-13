@@ -36,29 +36,29 @@ kotlin {
             implementation(projects.shared.common)
             implementation(projects.shared.ui)
 
-            implementation(projects.feature3.about.master)
-            implementation(projects.feature3.about.sponsor)
+            implementation(projects.feature.about.master)
+            implementation(projects.feature.about.sponsor)
 
-            implementation(projects.feature3.settings.master)
-            implementation(projects.feature3.settings.meal)
-            implementation(projects.feature3.settings.language)
-            implementation(projects.feature3.settings.goals)
-            implementation(projects.feature3.settings.personalization)
-            implementation(projects.feature3.settings.database.master)
-            implementation(projects.feature3.settings.database.externaldatabases)
-            implementation(projects.feature3.settings.database.databasedump)
-            implementation(projects.feature3.settings.database.swissfoodcompositiondatabase)
+            implementation(projects.feature.settings.master)
+            implementation(projects.feature.settings.meal)
+            implementation(projects.feature.settings.language)
+            implementation(projects.feature.settings.goals)
+            implementation(projects.feature.settings.personalization)
+            implementation(projects.feature.settings.database.master)
+            implementation(projects.feature.settings.database.externaldatabases)
+            implementation(projects.feature.settings.database.databasedump)
+            implementation(projects.feature.settings.database.swissfoodcompositiondatabase)
 
-            implementation(projects.feature3.food.diary.search)
-            implementation(projects.feature3.food.diary.add)
-            implementation(projects.feature3.food.diary.update)
+            implementation(projects.feature.food.diary.search)
+            implementation(projects.feature.food.diary.add)
+            implementation(projects.feature.food.diary.update)
 
-            implementation(projects.feature3.food.product)
-            implementation(projects.feature3.food.recipe)
+            implementation(projects.feature.food.product)
+            implementation(projects.feature.food.recipe)
 
-            implementation(projects.feature3.home)
+            implementation(projects.feature.home)
 
-            implementation(projects.feature3.goals)
+            implementation(projects.feature.goals)
         }
     }
 }
