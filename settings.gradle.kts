@@ -34,8 +34,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "FoodYou"
 include(":composeApp")
-include(":feature:onboarding")
-
 include(":shared:common")
 include(":shared:ui")
 include(":shared:barcodescanner")
