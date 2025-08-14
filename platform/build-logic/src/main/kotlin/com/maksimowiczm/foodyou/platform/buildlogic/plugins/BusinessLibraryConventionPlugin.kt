@@ -48,7 +48,7 @@ internal class BusinessLibraryConventionPlugin : Plugin<Project> {
 
                 getByName("androidDeviceTest").dependencies {
                     implementation(libs.findLibrary("androidx.runner").get())
-                    implementation(libs.findLibrary("androidx.core").get())
+                    implementation(libs.findLibrary("androidx.test.core").get())
                     implementation(libs.findLibrary("androidx.junit").get())
                 }
             }

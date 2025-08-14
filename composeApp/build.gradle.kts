@@ -119,7 +119,7 @@ kotlin {
         androidInstrumentedTest.dependencies {
             implementation(libs.androidx.test.core.ktx)
             implementation(libs.androidx.runner)
-            implementation(libs.androidx.core)
+            implementation(libs.androidx.test.core)
             implementation(libs.androidx.junit)
         }
     }
