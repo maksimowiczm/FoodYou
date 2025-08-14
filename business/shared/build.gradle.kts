@@ -58,7 +58,6 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.koin.android)
-            implementation(libs.androidx.sqlite.bundled)
             implementation(libs.sqlite.android)
         }
 
