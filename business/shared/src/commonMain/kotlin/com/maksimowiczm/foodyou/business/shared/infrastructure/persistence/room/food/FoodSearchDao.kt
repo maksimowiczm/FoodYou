@@ -57,7 +57,7 @@ interface FoodSearchDao {
         UNION ALL
         SELECT *, NULL AS measurementType, NULL AS measurementValue
         FROM RecipesSearch
-        ORDER BY headline ASC
+        ORDER BY headline COLLATE NOCASE ASC
         """
     )
     fun observeFoodByQuery(
@@ -109,7 +109,7 @@ interface FoodSearchDao {
         WHERE
             p.barcode = :barcode AND
             (:source IS NULL OR p.sourceType = :source)
-        ORDER BY headline ASC
+        ORDER BY headline COLLATE NOCASE ASC
         """
     )
     fun observeFoodByBarcode(
