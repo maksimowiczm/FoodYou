@@ -18,8 +18,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.binds
 import org.koin.dsl.module
 
-// internal const val DATABASE_NAME = "open_source_database.db"
-internal const val DATABASE_NAME = "testing.db"
+internal const val DATABASE_NAME = "open_source_database.db"
 
 internal expect fun Scope.database(): FoodYouDatabase
 

@@ -35,6 +35,7 @@ import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.fooddiary.MeasurementEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.LegacyMigrations
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.foodYou3Migration
+import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.unlinkDiaryMigration
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsDao
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.openfoodfacts.OpenFoodFactsPagingKeyEntity
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.shared.FoodSourceTypeConverter
@@ -155,6 +156,7 @@ abstract class FoodYouDatabase : RoomDatabase(), DatabaseTransactionProvider, Da
                 LegacyMigrations.MIGRATION_20_21,
                 LegacyMigrations.MIGRATION_21_22,
                 foodYou3Migration,
+                unlinkDiaryMigration,
             )
 
         fun Builder<FoodYouDatabase>.buildDatabase(
