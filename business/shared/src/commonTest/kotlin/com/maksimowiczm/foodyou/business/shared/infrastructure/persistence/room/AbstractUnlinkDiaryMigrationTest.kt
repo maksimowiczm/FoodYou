@@ -4,7 +4,7 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.execSQL
 import com.maksimowiczm.foodyou.business.shared.infrastructure.persistence.room.migration.unlinkDiaryMigration
 
-// It doesn't really checks if migration works correctly, but it checks if it doesn't crash
+// It doesn't really check if migration works correctly, but it checks if it doesn't crash
 abstract class AbstractUnlinkDiaryMigrationTest {
     abstract fun getTestHelper(): MigrationTestHelper
 
