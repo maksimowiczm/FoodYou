@@ -224,8 +224,6 @@ internal class RoomDiaryEntryDataSource(private val measurementDao: MeasurementD
                 name = diaryRecipe.name,
                 servings = diaryRecipe.servings,
                 isLiquid = diaryRecipe.isLiquid,
-                sourceType = null,
-                sourceUrl = null,
                 note = diaryRecipe.note,
             )
 
