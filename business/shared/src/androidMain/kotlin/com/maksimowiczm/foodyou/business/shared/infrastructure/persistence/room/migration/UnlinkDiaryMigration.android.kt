@@ -241,14 +241,14 @@ private fun SupportSQLiteDatabase.copyMeasurements() {
 
 private val measurementTypeConverter by lazy { MeasurementTypeConverter() }
 
-private fun SupportSQLiteDatabase.copyProduct(productId: Long): Long {
-    return query(
+private fun SupportSQLiteDatabase.copyProduct(productId: Long): Long =
+    query(
             """
-    INSERT INTO DiaryProduct (name, packageWeight, servingWeight, isLiquid, sourceType, sourceUrl, note, energy, proteins, fats, saturatedFats, transFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, carbohydrates, sugars, addedSugars, dietaryFiber, solubleFiber, insolubleFiber, salt, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro, chromiumMicro)
-    SELECT name, packageWeight, servingWeight, isLiquid, sourceType, sourceUrl, note, energy, proteins, fats, saturatedFats, transFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, carbohydrates, sugars, addedSugars, dietaryFiber, solubleFiber, insolubleFiber, salt, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro, chromiumMicro
-    FROM Product
-    WHERE id = ?
-    RETURNING id
+INSERT INTO DiaryProduct (name, packageWeight, servingWeight, isLiquid, sourceType, sourceUrl, note, energy, proteins, fats, saturatedFats, transFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, carbohydrates, sugars, addedSugars, dietaryFiber, solubleFiber, insolubleFiber, salt, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro, chromiumMicro)
+SELECT name, packageWeight, servingWeight, isLiquid, sourceType, sourceUrl, note, energy, proteins, fats, saturatedFats, transFats, monounsaturatedFats, polyunsaturatedFats, omega3, omega6, carbohydrates, sugars, addedSugars, dietaryFiber, solubleFiber, insolubleFiber, salt, cholesterolMilli, caffeineMilli, vitaminAMicro, vitaminB1Milli, vitaminB2Milli, vitaminB3Milli, vitaminB5Milli, vitaminB6Milli, vitaminB7Micro, vitaminB9Micro, vitaminB12Micro, vitaminCMilli, vitaminDMicro, vitaminEMilli, vitaminKMicro, manganeseMilli, magnesiumMilli, potassiumMilli, calciumMilli, copperMilli, zincMilli, sodiumMilli, ironMilli, phosphorusMilli, seleniumMicro, iodineMicro, chromiumMicro
+FROM Product
+WHERE id = ?
+RETURNING id
 """,
             arrayOf<Any?>(productId),
         )
@@ -256,7 +256,6 @@ private fun SupportSQLiteDatabase.copyProduct(productId: Long): Long {
             it.moveToNext()
             it.getLong(0)
         }
-}
 
 private fun SupportSQLiteDatabase.copyRecipe(recipeId: Long): Long {
     // We have to copy recursively, so we need to handle ingredients

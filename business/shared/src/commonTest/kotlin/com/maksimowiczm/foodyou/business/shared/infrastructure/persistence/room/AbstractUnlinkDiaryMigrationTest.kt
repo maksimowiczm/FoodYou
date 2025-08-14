@@ -15,77 +15,88 @@ abstract class AbstractUnlinkDiaryMigrationTest {
                 """
                 INSERT INTO Product (id, name, isLiquid, sourceType)
                 VALUES (1, 'Test Product', 0, 0)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
 
             execSQL(
                 """
                 INSERT INTO Recipe (id, name, servings, isLiquid)
                 VALUES (1, 'Depth 0 recipe', 2, 0)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
 
             execSQL(
                 """
                 INSERT INTO RecipeIngredient (recipeId, ingredientProductId, measurement, quantity)
                 VALUES (1, 1, 0, 100.0)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
 
             execSQL(
                 """
                 INSERT INTO Recipe (id, name, servings, isLiquid)
                 VALUES (2, 'Depth 1 recipe', 2, 0)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
 
             execSQL(
                 """
                 INSERT INTO RecipeIngredient (recipeId, ingredientProductId, measurement, quantity)
                 VALUES (2, 1, 0, 100.0)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
 
             execSQL(
                 """
                 INSERT INTO RecipeIngredient (recipeId, ingredientRecipeId, measurement, quantity)
                 VALUES (2, 1, 0, 100.0)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
 
             execSQL(
                 """
                 INSERT INTO Meal (name, fromHour, fromMinute, toHour, toMinute, rank)
                 VALUES ('Test Meal', 8, 0, 9, 0, 0)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
 
             execSQL(
                 """
                 INSERT INTO Measurement (mealId, epochDay, productId, recipeId, measurement, quantity, createdAt, isDeleted)
                 VALUES (1, 0, 1, NULL, 0, 100.0, 0, 0)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
 
             execSQL(
                 """
                 INSERT INTO Measurement (mealId, epochDay, productId, recipeId, measurement, quantity, createdAt, isDeleted)
                 VALUES (1, 0, NULL, 1, 0, 100.0, 0, 0)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
 
             execSQL(
                 """
                 INSERT INTO Measurement (mealId, epochDay, productId, recipeId, measurement, quantity, createdAt, isDeleted)
                 VALUES (1, 0, NULL, 2, 0, 100.0, 0, 0)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
 
             execSQL(
                 """
                 INSERT INTO Measurement (mealId, epochDay, productId, recipeId, measurement, quantity, createdAt, isDeleted)
                 VALUES (1, 0, NULL, 2, 0, 100.0, 0, 1)
-                """.trimIndent()
+                """
+                    .trimIndent()
             )
         }
         helper.runMigrationsAndValidate(26, listOf(unlinkDiaryMigration)).close()
