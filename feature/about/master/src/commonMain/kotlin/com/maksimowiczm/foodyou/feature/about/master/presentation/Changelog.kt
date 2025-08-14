@@ -14,6 +14,7 @@ internal class Changelog(private val appConfig: AppConfig) {
     val versions: List<Version>
         get() =
             listOfNotNull(
+                v_3_0_0_beta_3,
                 v_3_0_0_beta_2,
                 v_3_0_0_beta_1,
                 v2_10_1,
@@ -34,6 +35,35 @@ internal class Changelog(private val appConfig: AppConfig) {
                 v2_1_0,
                 v2_0_0,
             )
+
+    val v_3_0_0_beta_3 =
+        Version(
+            version = "3.0.0-beta.3",
+            date = LocalDate(2025, 8, 14),
+            newFeatures =
+                listOf(
+                    "Unlinked food diary from the food database.",
+                    "Added loading indicator to the Goals screen.",
+                    "Added database export, you can now export the app database as a SQLite file.",
+                ),
+            changes =
+                listOf(
+                    "Added option to hide the preview release dialog.",
+                    "Updated Translate button appearance.",
+                    "Recipe icon is now always visible.",
+                    "Goals screen progress tracks color now changes when the value is exceeded.",
+                ),
+            bugFixes =
+                listOf(
+                    "Prevented users from leaving the app while on boarding imports food.",
+                    "Fixed date picker to work correctly in all time zones.",
+                    "Creating a diary entry now shows the correct date.",
+                    "Goals screen progress bars now capped at 200%.",
+                ),
+            notes =
+                "This is a preview version. Please don't report missing features, as this is still a work-in-progress.",
+            isPreview = true,
+        )
 
     val v_3_0_0_beta_2 =
         Version(
