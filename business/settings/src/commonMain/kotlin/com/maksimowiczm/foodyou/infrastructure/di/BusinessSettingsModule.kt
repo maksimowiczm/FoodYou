@@ -6,6 +6,7 @@ import com.maksimowiczm.foodyou.business.settings.application.command.SetLastRem
 import com.maksimowiczm.foodyou.business.settings.application.command.SetNutrientsOrderCommandHandler
 import com.maksimowiczm.foodyou.business.settings.application.command.SetOnboardingFinishedCommandHandler
 import com.maksimowiczm.foodyou.business.settings.application.command.SetSecureScreenCommandHandler
+import com.maksimowiczm.foodyou.business.settings.application.command.SetShowPreviewWarningCommandHandler
 import com.maksimowiczm.foodyou.business.settings.application.command.SetTranslationCommandHandler
 import com.maksimowiczm.foodyou.business.settings.application.command.SetTranslationWarningCommandHandler
 import com.maksimowiczm.foodyou.business.settings.application.query.ObserveCurrentTranslationQueryHandler
@@ -29,6 +30,7 @@ val businessSettingsModule = module {
     commandHandlerOf(::SetHomeCardOrderCommandHandler)
     commandHandlerOf(::SetExpandGoalCardCommandHandler)
     commandHandlerOf(::SetOnboardingFinishedCommandHandler)
+    commandHandlerOf(::SetShowPreviewWarningCommandHandler)
 
     factoryOf(::DataStoreSettingsDataSource).bind<LocalSettingsDataSource>()
 }

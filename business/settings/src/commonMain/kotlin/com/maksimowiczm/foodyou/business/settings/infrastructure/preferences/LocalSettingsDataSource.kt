@@ -21,4 +21,6 @@ internal interface LocalSettingsDataSource {
     suspend fun updateExpandGoalCard(expand: Boolean)
 
     suspend fun updateOnboardingFinished(onboardingFinished: Boolean)
+
+    suspend fun updateHidePreviewDialog(hidePreviewDialog: Boolean)
 }

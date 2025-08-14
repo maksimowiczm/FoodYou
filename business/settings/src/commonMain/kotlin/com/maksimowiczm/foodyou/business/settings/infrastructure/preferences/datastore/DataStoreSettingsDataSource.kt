@@ -20,6 +20,7 @@ internal class DataStoreSettingsDataSource(private val dataStore: DataStore<Pref
         dataStore.data.map { preferences ->
             Settings(
                 lastRememberedVersion = preferences[SettingsPreferencesKeys.lastRememberedVersion],
+                hidePreviewDialog = preferences[SettingsPreferencesKeys.hidePreviewDialog] ?: false,
                 showTranslationWarning =
                     preferences[SettingsPreferencesKeys.showTranslationWarning] ?: true,
                 nutrientsOrder =
@@ -60,6 +61,10 @@ internal class DataStoreSettingsDataSource(private val dataStore: DataStore<Pref
         updateData { set(SettingsPreferencesKeys.onboardingFinished, onboardingFinished) }
     }
 
+    override suspend fun updateHidePreviewDialog(hidePreviewDialog: Boolean) {
+        updateData { set(SettingsPreferencesKeys.hidePreviewDialog, hidePreviewDialog) }
+    }
+
     private suspend fun updateData(transform: suspend MutablePreferences.() -> Unit) {
         dataStore.updateData { it.toMutablePreferences().apply { transform() } }
     }
@@ -93,6 +98,7 @@ private fun Preferences.getHomeCardOrder(key: Preferences.Key<String>): List<Hom
 
 private object SettingsPreferencesKeys {
     val lastRememberedVersion = stringPreferencesKey("settings:lastRememberedVersion")
+    val hidePreviewDialog = booleanPreferencesKey("settings:hidePreviewDialog")
     val showTranslationWarning = booleanPreferencesKey("settings:showTranslationWarning")
     val nutrientsOrder = stringPreferencesKey("settings:nutrientsOrder")
     val secureScreen = booleanPreferencesKey("settings:secureScreen")
