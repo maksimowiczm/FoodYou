@@ -36,6 +36,7 @@ fun initKoin(coroutineScope: CoroutineScope, config: KoinAppDeclaration? = null)
     modules(
         featureSettingsDatabaseDatabaseDumpModule,
         featureSettingsDatabaseExternalDatabasesModule,
+        featureSettingsDatabaseImportCsvProductsModule,
         featureSettingsDatabaseSwissFoodCompositionDatabaseModule,
         featureSettingsGoalsModule,
         featureSettingsLanguageModule,

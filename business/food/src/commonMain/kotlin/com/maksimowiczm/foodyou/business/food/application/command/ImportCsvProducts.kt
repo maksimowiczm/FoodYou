@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.channelFlow
  * Results in a flow of integers representing the number of products successfully imported.
  */
 data class ImportCsvProductsCommand(
-    val mapper: List<ProductField>,
+    val mapper: List<ProductField?>,
     val lines: Flow<String>,
     val source: FoodSource.Type,
 ) : Command<Flow<Int>, Unit>

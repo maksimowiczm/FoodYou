@@ -14,3 +14,5 @@ internal data object SettingsSwissFoodCompositionDatabaseDestination : Navigatio
 @Serializable internal data object UsdaApiKeyDestination : NavigationDestination
 
 @Serializable internal data object DumpDatabaseDestination : NavigationDestination
+
+@Serializable internal data object ImportCsvProductsDestination : NavigationDestination

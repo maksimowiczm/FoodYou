@@ -16,6 +16,7 @@ import com.maksimowiczm.foodyou.navigation.domain.FoodDiarySearchDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsCardSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.GoalsMasterDestination
 import com.maksimowiczm.foodyou.navigation.domain.HomeDestination
+import com.maksimowiczm.foodyou.navigation.domain.ImportCsvProductsDestination
 import com.maksimowiczm.foodyou.navigation.domain.MealsCardsSettingsDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDatabaseDestination
 import com.maksimowiczm.foodyou.navigation.domain.SettingsDestination
@@ -124,6 +125,9 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             masterOnExternalDatabases = {
                 navController.navigateSingleTop(SettingsExternalDatabasesDestination)
             },
+            masterOnImportCsvProducts = {
+                navController.navigateSingleTop(ImportCsvProductsDestination)
+            },
             masterOnDatabaseDump = { navController.navigateSingleTop(DumpDatabaseDestination) },
             externalDatabasesOnBack = {
                 navController.popBackStack<SettingsExternalDatabasesDestination>(true)
@@ -137,6 +141,12 @@ fun FoodYouNavHost(modifier: Modifier = Modifier) {
             databaseDumpOnSuccess = { navController.popBackStack<DumpDatabaseDestination>(true) },
             swissFoodCompositionDatabaseOnBack = {
                 navController.popBackStack<SettingsSwissFoodCompositionDatabaseDestination>(true)
+            },
+            importCsvProductsOnBack = {
+                navController.popBackStack<ImportCsvProductsDestination>(true)
+            },
+            importCsvProductsOnFinish = {
+                navController.popBackStack<ImportCsvProductsDestination>(true)
             },
         )
         goalsNavigationGraph(

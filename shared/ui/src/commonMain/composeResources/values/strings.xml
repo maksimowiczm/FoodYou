@@ -182,7 +182,6 @@
     <string name="action_download_product">Download product</string>
     <string name="action_suggest_external_database">Suggest external database</string>
     <string name="action_import_food_products">Import food products</string>
-    <string name="action_import_food_products_from_csv">Import food products from CSV file</string>
     <string name="action_export_food_products">Export food products</string>
     <string name="action_export_food_products_to_csv">Export food products to CSV file</string>
     <string name="action_share">Share</string>
@@ -452,5 +451,17 @@
     <string name="neutral_generating_database_dump">Generating database dump</string>
     <string name="neutral_database_dump_generated_successfully">Database dump generated successfully</string>
     <string name="error_failed_to_generate_database_dump">Failed to generate database dump</string>
+
+    <string name="action_import_csv_food_products">Import CSV food products</string>
+    <string name="description_import_csv_food_products">Import food products from CSV file</string>
+    <string name="description_import_csv_food_products_hint">We just need to know what’s what. Tell us which column in your file is the product name, brand, etc.</string>
+    <string name="description_import_csv_food_products_hint_2">All nutrient values must be given in grams or kcal per 100 g</string>
+
+    <string name="neutral_no_column">No column</string>
+
+    <plurals name="neutral_imported_x_food_products">
+        <item quantity="one">Imported %1$d food product</item>
+        <item quantity="other">Imported %1$d food products</item>
+    </plurals>
 
 </resources>

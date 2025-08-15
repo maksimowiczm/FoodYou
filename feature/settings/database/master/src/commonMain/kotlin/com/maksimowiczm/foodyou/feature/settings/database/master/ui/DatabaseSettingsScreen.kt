@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudDownload
+import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -25,6 +26,7 @@ import org.jetbrains.compose.resources.stringResource
 fun DatabaseSettingsScreen(
     onBack: () -> Unit,
     onExternalDatabases: () -> Unit,
+    onImportCsvProducts: () -> Unit,
     onDatabaseDump: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -45,6 +47,7 @@ fun DatabaseSettingsScreen(
             contentPadding = paddingValues,
         ) {
             item { ExternalDatabasesSettingsListItem(onExternalDatabases) }
+            item { ImportCsvProductsSettingsListItem(onImportCsvProducts) }
             item { DatabaseDumpSettingsListItem(onDatabaseDump) }
         }
     }
@@ -67,6 +70,19 @@ private fun DatabaseDumpSettingsListItem(onClick: () -> Unit, modifier: Modifier
         icon = { Icon(painterResource(Res.drawable.ic_file_export), null) },
         label = { Text(stringResource(Res.string.headline_database_dump)) },
         supportingContent = { Text(stringResource(Res.string.description_database_dump)) },
+        onClick = onClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun ImportCsvProductsSettingsListItem(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    SettingsListItem(
+        icon = { Icon(Icons.Outlined.FileOpen, null) },
+        label = { Text(stringResource(Res.string.action_import_csv_food_products)) },
+        supportingContent = {
+            Text(stringResource(Res.string.description_import_csv_food_products))
+        },
         onClick = onClick,
         modifier = modifier,
     )

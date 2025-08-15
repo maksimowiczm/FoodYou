@@ -85,6 +85,7 @@ kotlin {
             implementation(projects.feature.settings.database.externaldatabases)
             implementation(projects.feature.settings.database.databasedump)
             implementation(projects.feature.settings.database.swissfoodcompositiondatabase)
+            implementation(projects.feature.settings.database.importcsvproducts)
             implementation(projects.feature.home)
             implementation(projects.feature.goals)
             implementation(projects.feature.food.shared)

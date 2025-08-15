@@ -82,6 +82,8 @@ include(":feature:settings:database:databasedump")
 
 include(":feature:settings:database:swissfoodcompositiondatabase")
 
+include(":feature:settings:database:importcsvproducts")
+
 include(":feature:home")
 
 include(":feature:goals")
