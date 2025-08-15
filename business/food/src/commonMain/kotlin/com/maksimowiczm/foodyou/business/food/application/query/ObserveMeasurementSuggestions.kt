@@ -1,12 +1,14 @@
 package com.maksimowiczm.foodyou.business.food.application.query
 
 import com.maksimowiczm.foodyou.business.food.domain.Food
+import com.maksimowiczm.foodyou.business.food.domain.possibleMeasurementTypes
 import com.maksimowiczm.foodyou.business.food.infrastructure.persistence.LocalMeasurementSuggestionDataSource
 import com.maksimowiczm.foodyou.shared.common.domain.food.FoodId
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.Query
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryBus
 import com.maksimowiczm.foodyou.shared.common.domain.infrastructure.query.QueryHandler
 import com.maksimowiczm.foodyou.shared.common.domain.measurement.Measurement
+import com.maksimowiczm.foodyou.shared.common.domain.measurement.type
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -25,14 +27,15 @@ internal class ObserveMeasurementSuggestionsQueryHandler(
             if (food == null) {
                 flowOf(emptyList())
             } else {
-                localSuggestions.observeByFoodId(query.foodId, limit = 5).map { list ->
+                localSuggestions.observeByFoodId(query.foodId, limit = 5).flatMapLatest { list ->
                     list.fillMissingMeasurements(food)
                 }
             }
         }
 }
 
-private fun List<Measurement>.fillMissingMeasurements(food: Food): List<Measurement> {
+@OptIn(ExperimentalCoroutinesApi::class)
+private fun List<Measurement>.fillMissingMeasurements(food: Food): Flow<List<Measurement>> {
     val mutable = toMutableList()
 
     if (food.servingWeight != null) {
@@ -49,5 +52,7 @@ private fun List<Measurement>.fillMissingMeasurements(food: Food): List<Measurem
         mutable.add(Measurement.Gram(100.0))
     }
 
-    return mutable.distinct()
+    return food.possibleMeasurementTypes.map { possible ->
+        mutable.distinct().filter { it.type in possible }
+    }
 }
